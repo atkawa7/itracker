@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE form-validation PUBLIC
+        "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN"
+        "http://jakarta.apache.org/commons/dtds/validator_1_1_3.dtd">
+
+<form-validation>
+
+    <formset>
+        <form name="importForm">
+            <field property="importFile" depends="required">
+                <arg0 key="itracker.web.attr.file"/>
+            </field>
+        </form>
+
+        <form name="reportForm">
+            <field property="name" depends="required">
+                <arg0 key="itracker.web.attr.name"/>
+            </field>
+            <field property="nameKey" depends="required">
+                <arg0 key="itracker.web.attr.namekey"/>
+            </field>
+            <field property="description" depends="required">
+                <arg0 key="itracker.web.attr.description"/>
+            </field>
+            <field property="dataType" depends="required">
+                <arg0 key="itracker.web.attr.datatype"/>
+            </field>
+            <field property="reportType" depends="required">
+                <arg0 key="itracker.web.attr.reporttype"/>
+            </field>
+            <field property="fileData" depends="required">
+                <arg0 key="itracker.web.attr.file"/>
+            </field>
+            <field property="className" depends="required">
+                <arg0 key="itracker.web.attr.class"/>
+            </field>
+        </form>
+
+        <form name="componentForm">
+            <field property="name" depends="required">
+                <arg0 key="itracker.web.attr.name"/>
+            </field>
+            <field property="description" depends="required">
+                <arg0 key="itracker.web.attr.description"/>
+            </field>
+        </form>
+
+        <form name="versionForm">
+            <field property="description" depends="required">
+                <arg key="itracker.web.attr.description" position="0"/>
+            </field>
+            <field property="id" depends="required">
+                <arg key="itracker.web.attr.id" position="0"/>
+            </field>
+            <field property="number" depends="required">
+                <arg key="itracker.web.attr.number" position="0"/>
+            </field>
+        </form>
+    </formset>
+</form-validation>
