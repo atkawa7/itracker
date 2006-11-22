@@ -1,0 +1,291 @@
+<project name="itracker" default="makeWAR" basedir=".">
+
+  <description>
+  Build file for itracker
+  </description>
+
+	<!--  user defined properties   -->
+	<property file="${user.home}/build.properties" />
+	<property file="user.build.properties" />
+	<!-- Default Project properties -->
+	<property file="build.properties" />
+	<!-- project paths -->
+	<property name="src.dir" value="${basedir}/src/" />
+	<property name="lib.dir" value="${basedir}/web/WEB-INF/lib/" />
+	<property name="lib.bsh.dir" value="${basedir}/web/WEB-INF/lib/" />	
+	<property name="lib.j2ee.dir" value="${basedir}/web/WEB-INF/lib/" />	
+	<property name="lib.commons.dir" value="${basedir}/web/WEB-INF/lib/" />
+	<property name="lib.hibernate.dir" value="${basedir}/web/WEB-INF/lib/" />
+	<property name="lib.jstl.dir" value="${basedir}/web/WEB-INF/lib/" />	
+	<property name="lib.log4j.dir" value="${basedir}/web/WEB-INF/lib/" />	
+	<property name="lib.oro.dir" value="${basedir}/web/WEB-INF/lib/" />	
+	<property name="lib.poi.dir" value="${basedir}/web/WEB-INF/lib/" />	
+	<property name="lib.spring.dir" value="${basedir}/web/WEB-INF/lib/" />
+	<property name="lib.struts.dir" value="${basedir}/web/WEB-INF/lib/" />
+	<property name="build.dir" value="${basedir}/build" />
+	<property name="dist.dir" value="${basedir}/dist" />
+	<property name="war-src-files.dir" value="${basedir}/web"/>
+	<property name="war-dist-files.dir" value="${dist.dir}/war"/>
+	<property name="war.file" value="itracker.war" />
+	<!-- override this in user.build.properties -->
+    <property name="install.dir" value="${apphome}${appdeploy}"/>
+
+	<!-- ============================================================
+
+  libraries
+
+  ============================================================== -->
+
+	<!-- j2ee -->
+	<fileset id="j2ee.library" dir="${lib.j2ee.dir}">
+		<include name="servlet-api.jar" />	
+		<include name="jsp-api.jar" />	
+		<include name="jta.jar" />	
+		<include name="ejb.jar" />
+		<include name="mail.jar" />
+		<include name="jms.jar" />
+	</fileset>	
+	
+	<!-- jstl -->
+	<fileset id="jstl.library" dir="${lib.jstl.dir}">
+		<include name="standard.jar" />
+		<include name="jstl.jar" />	
+	</fileset>	
+
+	<!-- spring -->
+	<fileset id="spring.library" dir="${lib.spring.dir}">
+		<include name="spring.jar" />	
+		<include name="spring-aop.jar" />
+		<include name="spring-beans.jar" />
+		<!--include name="spring-beans.dtd" /-->
+		<include name="spring-context.jar" />
+		<include name="spring-core.jar" />
+		<include name="spring-dao.jar" />
+		<include name="spring-hibernate.jar" />
+		<include name="spring-remoting.jar" />
+		<include name="spring-support.jar" />
+		<include name="spring-web.jar" />
+	</fileset>	
+	
+	<!-- hibernate -->
+	<fileset id="hibernate.library" dir="${lib.hibernate.dir}">
+		<include name="hibernate3.jar" />
+		<include name="ehcache-1.1.jar" />
+		<include name="cglib-nodep-2.1_3.jar" />
+		<include name="dom4j-1.6.jar" />
+		<include name="hibernate-annotations.jar" />
+	</fileset>	
+	
+	<!-- struts -->
+	<fileset id="struts.library" dir="${lib.struts.dir}">
+		<include name="struts.jar" />		 						
+	</fileset>	
+
+	<!-- struts -->
+	<fileset id="commons.library" dir="${lib.commons.dir}">
+		<include name="commons-beanutils.jar" />
+		<include name="commons-collections.jar" />
+		<include name="commons-dbcp.jar" />
+		<include name="commons-pool.jar" />
+		<include name="commons-logging.jar" />
+		<include name="commons-validator.jar" />		
+		<include name="commons-digester.jar" />
+		<include name="commons-fileupload.jar" />
+	</fileset>	
+		
+	<!-- oro -->
+	<fileset id="oro.library" dir="${lib.oro.dir}">
+		<include name="oro-2.0.7.jar" />
+	</fileset>
+	
+	<!-- poi -->
+	<fileset id="poi.library" dir="${lib.poi.dir}">
+		<include name="poi-2.0-final-20040126.jar" />
+	</fileset>		
+	
+	<!-- log4j -->
+	<fileset id="log4j.library" dir="${lib.log4j.dir}">
+		<include name="log4j-1.2.8.jar" />
+	</fileset>
+	
+	<!-- bsh -->
+	<fileset id="bsh.library" dir="${lib.dir}">
+		<include name="bsh-1.3.0.jar" />
+	</fileset>
+	
+	<!-- junit -->
+	<fileset id="junit.library" dir="${lib.dir}">
+		<include name="junit.jar" />
+	</fileset>	
+	
+	<!-- jfreereport -->
+	<fileset id="jfreereport.library" dir="${lib.dir}">
+		<include name="jfreereport-0.8.7.jar" />
+		<include name="jcommon-1.0.1.jar" />		
+		<include name="jcommon-xml-1.0.1.jar" />
+		<include name="itext-1.01.jar" />		
+	</fileset>		
+
+	<!-- jfreereport -->
+	<fileset id="jasperreports.library" dir="${lib.dir}">
+		<include name="jasperreports-0.6.4.jar" />
+	</fileset>		
+	
+	<!-- jcifs -->
+	<fileset id="jcifs.library" dir="${lib.dir}">
+		<include name="jcifs-1.1.9.jar" />
+	</fileset>	
+	
+	
+	
+	<!-- ============================================================
+
+  path structures
+
+  ============================================================== -->
+
+	<path id="compile.classpath">
+		<fileset refid="hibernate.library" />
+		<fileset refid="spring.library" />		
+		<fileset refid="struts.library" />		
+		<fileset refid="commons.library" />		
+		<fileset refid="jstl.library" />			
+		<fileset refid="oro.library" />						
+		<fileset refid="log4j.library" />								
+		<fileset refid="bsh.library" />										
+		<fileset refid="junit.library" />												
+		<fileset refid="jfreereport.library" />	
+		<fileset refid="jasperreports.library" />
+		<!-- we currently need this for compiling; we don't need it in the .war because its important servlet.jar comes from the web container.  -->
+		<fileset refid="j2ee.library" />	
+	</path>
+
+	<!-- ============================================================
+
+  build targets
+
+  ============================================================== -->
+
+	<target name="init" description="Initializes this project">
+		<tstamp />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+	<!-- compile -->
+	<target name="compile" depends="init" description="Compile project files">
+		<!-- Compile Java classes -->
+		<javac destdir="${build.dir}" debug="on">
+			<src path="${src.dir}" />
+			<classpath refid="compile.classpath" />
+		</javac>
+		<!-- Copy support files from "src" tree to appropriate build directory -->
+		<copy todir="${build.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.xml" />
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>			
+	</target>
+
+	<!-- removes all output from the build process -->
+	<target name="clean" description="Clean project directory">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+	<!-- ============================================================
+
+  deployment targets
+
+  ============================================================== -->
+
+	<target name="makeWAR" depends="compile" description="Create project WAR">
+                <mkdir dir="${war-dist-files.dir}" />
+                
+                <copy todir="${war-dist-files.dir}">
+                    <fileset dir="${war-src-files.dir}">
+                        <include name="**" />
+                        <exclude name="WEB-INF/lib/**" />
+                        <exclude name="**/CVS/**" />
+                    </fileset>
+                </copy>
+		
+                <war destfile="${dist.dir}/${war.file}" basedir="${war-dist-files.dir}" webxml="${war-dist-files.dir}/WEB-INF/web.xml">
+			<lib refid="spring.library" />	 
+			<lib refid="hibernate.library" />
+			<lib refid="commons.library" />
+			<lib refid="struts.library" />		
+			<lib refid="jstl.library" />		
+			<lib refid="oro.library" />		
+			<lib refid="poi.library" />						
+			<lib refid="bsh.library" />										
+			<lib refid="jfreereport.library" />	
+			<lib refid="jasperreports.library" />					
+			<lib refid="jcifs.library" />	
+			<classes dir="${build.dir}" />
+		</war>
+	</target>
+	
+    <target name="deploy" depends="makeWAR" description="Deploy project WAR">
+    	<copy todir="${install.dir}" file="${dist.dir}/${war.file}" overwrite="true"/>    	
+    </target>	
+	
+    <target name="deployUnpacked" depends="makeWAR" description="Deploy unpacked project WAR">
+    	<unwar src="${dist.dir}/${war.file}" dest="${install.dir}/" overwrite="true"/>
+    </target>		
+	
+    <target name="copyClassesAndRedeploy" depends="init" description="Redeploy WAR classes only">
+    	<copy todir="${install.dir}/${war.file}/WEB-INF/classes" overwrite="true">
+            <fileset dir="${build.dir}"/>
+    	</copy>
+    	<touch file="${install.dir}/${war.file}/WEB-INF/web.xml"/>
+    </target>
+    
+   <!-- ================    jmeter targets  ============= -->
+    
+   <property name="jmeter.dir" value="${basedir}/tools/jmeter" />    
+   <property name="jmeter.log.dir" value="${jmeter.dir}/log" />    
+   <property name="jmeter.tests.dir" value="${jmeter.dir}/tests" />    
+   <property name="jmeter.html.dir" value="${jmeter.dir}/html" />      
+   <property name="jmeter.xslt.dir" value="${jmeter.dir}/xslt" />    
+   
+   <target name="javadoc">
+<javadoc access="public" author="true" classpath="lib/ehcache-1.1.jar;lib/junit.jar;lib/commons-digester.jar;lib/jcifs-1.1.9.jar;lib/odmg-3.0.jar;lib/commons-collections-2.1.1.jar;lib/aopalliance.jar;lib/struts.jar;lib/jstl.jar;lib/standard.jar;lib/jdbc2_0-stdext.jar;lib/commons-dbcp-1.2.1.jar;lib/jnp-client.jar;lib/asm.jar;lib/commons-lang-1.0.1.jar;lib/antlr-2.7.6rc1.jar;lib/jcommon-0.9.3.jar;lib/jta.jar;lib/log4j-1.2.8.jar;lib/c3p0-0.8.4.5.jar;lib/commons-validator.jar;lib/commons-logging-1.0.4.jar;lib/commons-beanutils.jar;lib/jfreereport-0.8.4_4-all.jar;lib/jboss-client.jar;lib/hibernate3.jar;lib/bsh-1.3.0.jar;lib/cglib-full-2.0.2.jar;lib/jdt-compiler.jar;lib/itext-1.01.jar;lib/cglib-2.1.3.jar;lib/jfreechart-0.9.18.jar;lib/jasperreports-0.6.4.jar;lib/hibernate2.jar;lib/ehcache-0.9.jar;lib/mysql-connector-java-3.1.12-bin.jar;lib/j2ee.jar;lib/commons-logging.jar;lib/asm-attrs.jar;lib/commons-collections.jar;lib/spring.jar;lib/c3p0-0.9.0.jar;lib/jbosssx-client.jar;lib/poi-2.0-final-20040126.jar;lib/jakarta-oro.jar;lib/oro-2.0.7.jar;lib/dom4j-1.6.1.jar;lib/dom4j-1.4.jar;lib/commons-fileupload.jar;lib/commons-pool-1.2.jar" destdir="docs/javadoc" doctitle="itracker Javadoc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="org.itracker.web.actions.admin.report,org.itracker.ejb.test,org.itracker.web.actions.project,org.itracker.services.authentication,org.itracker.web.actions.notyetsorted,org.itracker.web.forms,org.itracker.web.actions.issuesearch,org.itracker.ejb.client.util,org.itracker.web.actions.admin.user,org.itracker.services.exceptions,org.itracker.ejb.client.resources,org.itracker.web.util,org.itracker.services,org.itracker.core,org.itracker.web.actions.admin.configuration,org.itracker.web.actions.user,org.itracker.web.scheduler.tasks,org.itracker.model.deprecatedmodels,org.itracker.web.exceptions,org.itracker.web.filters,org.itracker.services,org.itracker.web.actions.report,org.itracker.web.actions.admin.project,org.itracker.services.util,org.itracker.web.scheduler,org.itracker.web.reports,org.itracker.web.actions.preferences,org.itracker.web.actions.admin.attachment,org.itracker.test.spring,org.itracker.model.message,org.itracker.web.actions.admin.workflow,org.itracker.services.authentication.adsson,org.itracker.web.actions.admin.language,org.itracker.web.resources,org.itracker.web.servlets,org.itracker.web.actions.admin.scheduler,org.itracker.ejb.beans.entity,org.itracker.web.taglib" source="1.4" sourcepath="src" splitindex="true" use="true" version="true"/>
+</target>
+
+   <taskdef name="jmeter" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask" 
+            classpath="${jmeter.dir}/lib/ant-jmeter.jar" />
+   
+   <target name="jmeter" description="a jmeter test">
+
+      <tstamp>        
+               <format property="verbose-date" pattern="dd. MMM yyyy hh:mm:ss"/>
+      </tstamp>
+      <jmeter
+         jmeterhome="${jmeter.home}"
+         testplan="${jmeter.tests.dir}/blackbox-all.jmx"
+         resultlog="${jmeter.log.dir}/blackbox-all-${DSTAMP}-${TSTAMP}.jtl"/>
+      
+   
+      <xslt
+         in="${jmeter.log.dir}/blackbox-all-${DSTAMP}-${TSTAMP}.jtl"
+         out="${jmeter.html.dir}/blackbox-all-${DSTAMP}-${TSTAMP}.html"
+         style="${jmeter.xslt.dir}/jmeter-results-report.xsl">
+         
+               <param name="title" expression="itracker blackbox test"/>
+               <param name="date" expression="${verbose-date}"/>
+      </xslt>
+   
+      <xslt
+         in="${jmeter.log.dir}/blackbox-all-${DSTAMP}-${TSTAMP}.jtl"
+         out="${jmeter.html.dir}/blackbox-all-detail-${DSTAMP}-${TSTAMP}.html"
+         style="${jmeter.xslt.dir}/jmeter-results-detail-report.xsl">
+         
+               <param name="title" expression="itracker blackbox test"/>
+               <param name="date" expression="${verbose-date}"/>
+      </xslt>
+   </target>
+
+</project>
+
