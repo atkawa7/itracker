@@ -322,6 +322,23 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
     }
     
     @SuppressWarnings("unchecked")
+    public List<Issue> findByVersion(Integer versionId) {
+        final String hql = "select issue "
+                + "from Issue as issue inner join issue.versions as version "
+                + "where version.id = :versionId";
+        final List<Issue> issues;
+        
+        try {
+            issues = getSession().createQuery(hql)
+                   .setInteger("versionId", versionId)
+                   .list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+    
+    @SuppressWarnings("unchecked")
     public Date latestModificationDate(Integer projectId) {
         final String hql = "select max(issue.lastModifiedDate) " +
                     "from Issue as issue " +

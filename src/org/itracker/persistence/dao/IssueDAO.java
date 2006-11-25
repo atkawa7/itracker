@@ -160,13 +160,21 @@ public interface IssueDAO extends BaseDAO<Issue> {
      */
     List<Issue> findByProjectId(Integer projectId);
 
-     /**
+    /**
      * Finds all issues of the component with the given ID. 
      * 
      * @param componentId ID of the component of which to retrieve all issues
      * @return list of issues in no particular order
      */
     List<Issue> findByComponent(Integer componentId);
+    
+    /**
+     * Finds all issues of the version with the given ID. 
+     * 
+     * @param versionId ID of the version of which to retrieve all issues
+     * @return list of issues in no particular order
+     */
+    List<Issue> findByVersion(Integer versionId);
     
     /**
      * Returns the modification date of the latest modified issue 
