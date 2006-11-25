@@ -19,7 +19,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @return issue with the given ID or <tt>null</tt> if none exits
      */
     Issue findByPrimaryKey(Integer issueId);
-
+    
     /**
      * Finds all existing issues in all projects. 
      * 
@@ -135,12 +135,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param status all issues under this status will be returned
      * @return list of issues matching the above filter, in an unspecified order
      */
-    List<Issue> findByProjectIdAndLowerStatus(Integer projectId, int status);
-
-    /**
-     * TODO: specify this method. 
-     */
-    List<Issue> findByIssueId(Integer issueId);
+    List<Issue> findByProjectAndLowerStatus(Integer projectId, int status);
 
     /**
      * Finds all issues of the given project with a status higher than 
@@ -150,7 +145,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param status all issues above this status will be returned
      * @return list of issues matching the above filter, in an unspecified order
      */
-    List<Issue> findByProjectIdAndHigherStatus(Integer projectId, int status);
+    List<Issue> findByProjectAndHigherStatus(Integer projectId, int status);
 
     /**
      * Finds all issues of the project with the given ID. 
@@ -158,7 +153,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param projectId ID of the project of which to retrieve all issues
      * @return list of issues in no particular order
      */
-    List<Issue> findByProjectId(Integer projectId);
+    List<Issue> findByProject(Integer projectId);
 
     /**
      * Finds all issues of the component with the given ID. 
