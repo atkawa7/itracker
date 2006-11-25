@@ -169,7 +169,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         try {
             final String hql = "select issue from Issue as issue " +
                     "inner join Notification as notification " +
-                    "where notification.user_id = :userId " + 
+                    "where notification.user.id = :userId " + 
                     " and issue.status = :status";
             
             issues = getSession().createQuery(hql)
@@ -304,6 +304,23 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         return issues;
     }
 
+    @SuppressWarnings("unchecked")
+    public List<Issue> findByComponent(Integer componentId) {
+        final String hql = "select issue "
+                + "from Issue as issue inner join issue.components as component "
+                + "where component.id = :componentId";
+        final List<Issue> issues;
+        
+        try {
+            issues = getSession().createQuery(hql)
+                   .setInteger("componentId", componentId)
+                   .list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+    
     @SuppressWarnings("unchecked")
     public Date latestModificationDate(Integer projectId) {
         final String hql = "select max(issue.lastModifiedDate) " +
