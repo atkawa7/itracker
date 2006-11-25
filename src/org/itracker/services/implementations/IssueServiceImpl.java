@@ -256,7 +256,7 @@ public class IssueServiceImpl implements IssueService {
     }
     
     public List<Issue> getIssuesByProjectId(Integer projectId, int status) {
-        List<Issue> issues = issueDAO.findByProjectIdAndLowerStatus(projectId, status);
+        List<Issue> issues = issueDAO.findByProjectAndLowerStatus(projectId, status);
         return issues;
     }
     
@@ -1424,7 +1424,7 @@ public class IssueServiceImpl implements IssueService {
     
     public int getOpenIssueCountByProjectId(Integer projectId) {
         
-        Collection issues = issueDAO.findByProjectIdAndLowerStatus(projectId, IssueUtilities.STATUS_RESOLVED);
+        Collection issues = issueDAO.findByProjectAndLowerStatus(projectId, IssueUtilities.STATUS_RESOLVED);
         
         return issues.size();
         
@@ -1432,7 +1432,7 @@ public class IssueServiceImpl implements IssueService {
     
     public int getResolvedIssueCountByProjectId(Integer projectId) {
         
-        Collection issues = issueDAO.findByProjectIdAndHigherStatus(projectId, IssueUtilities.STATUS_RESOLVED);
+        Collection issues = issueDAO.findByProjectAndHigherStatus(projectId, IssueUtilities.STATUS_RESOLVED);
         
         return issues.size();
         
@@ -1440,7 +1440,7 @@ public class IssueServiceImpl implements IssueService {
     
     public int getTotalIssueCountByProjectId(Integer projectId) {
         
-        Collection issues = issueDAO.findByProjectId(projectId);
+        Collection issues = issueDAO.findByProject(projectId);
         
         return issues.size();
         
