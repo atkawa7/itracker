@@ -253,7 +253,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
     }
 
     @SuppressWarnings("unchecked")
-    public List<Issue> findByProjectIdAndLowerStatus(Integer projectId, int status) {
+    public List<Issue> findByProjectAndLowerStatus(Integer projectId, int status) {
         final List<Issue> issues; 
         
         try {
@@ -269,12 +269,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
     }
 
     @SuppressWarnings("unchecked")
-    public List<Issue> findByIssueId(Integer issueId) {
-        throw new UnsupportedOperationException();
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Issue> findByProjectIdAndHigherStatus(Integer projectId, int status) {
+    public List<Issue> findByProjectAndHigherStatus(Integer projectId, int status) {
         final List<Issue> issues;
         
         try {
@@ -290,7 +285,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
     }
 
     @SuppressWarnings("unchecked")
-    public List<Issue> findByProjectId(Integer projectId) {
+    public List<Issue> findByProject(Integer projectId) {
         final List<Issue> issues;
         
         try {
@@ -361,12 +356,12 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         Object[] issueStats = new Object[4];
 
         int totalIssues = 0;
-        Collection openIds = findByProjectIdAndLowerStatus(projectId, IssueUtilities.STATUS_RESOLVED);
+        Collection openIds = findByProjectAndLowerStatus(projectId, IssueUtilities.STATUS_RESOLVED);
         // Collection openIds = ejbSelectIdByProjectAndStatusLessThan(projectId,
         // IssueUtilities.STATUS_RESOLVED);
         issueStats[0] = (openIds == null ? "0" : Integer.toString(openIds.size()));
         totalIssues += openIds.size();
-        Collection resolvedIds = findByProjectIdAndHigherStatus(projectId, IssueUtilities.STATUS_RESOLVED);
+        Collection resolvedIds = findByProjectAndHigherStatus(projectId, IssueUtilities.STATUS_RESOLVED);
         issueStats[1] = (resolvedIds == null ? "0" : Integer.toString(resolvedIds.size()));
         totalIssues += resolvedIds.size();
 
