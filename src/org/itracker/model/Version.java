@@ -32,13 +32,14 @@ import java.util.Date;
 public class Version extends AbstractBean implements Comparable<Version> {
 
     private String number;
-    private  int major;
-    private  int minor;
-    private  String description;
-    private  Project project;
+    private int major;
+    private int minor;
+    private String description;
+    private int status;
+    private Project project;
 
     /* TODO: remove this and use DAO to find issues by version instead */
-    private  Collection issues = new ArrayList();
+    private Collection issues = new ArrayList();
 
     private static final Comparator<Version> versionComparator = 
             new VersionComparator();
@@ -53,22 +54,6 @@ public class Version extends AbstractBean implements Comparable<Version> {
         super(id);
     }
     
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String getDescription) {
-        this.description = getDescription;
-    }
-
-    public Collection getIssues() {
-        return issues;
-    }
-
-    public void setIssues(Collection getIssues) {
-        this.issues = getIssues;
-    }
-
     public int getMajor() {
         return major;
     }
@@ -93,6 +78,14 @@ public class Version extends AbstractBean implements Comparable<Version> {
         this.number = getNumber;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String getDescription) {
+        this.description = getDescription;
+    }
+    
     public Project getProject() {
         return project;
     }
@@ -101,12 +94,40 @@ public class Version extends AbstractBean implements Comparable<Version> {
         this.project = getProject;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+    
+    /**
+     * Use IssueDAO.findByVersion instead. 
+     */
+    @Deprecated
+    public Collection getIssues() {
+        return issues;
+    }
+
+    /**
+     * Use IssueDAO.findByVersion instead. 
+     */
+    @Deprecated
+    public void setIssues(Collection getIssues) {
+        this.issues = getIssues;
+    }
+    
+    /**
+     * Use IssueDAO.findByVersion instead. 
+     */
+    @Deprecated
     public int getTotalNumberIssues() {
         return getIssues().size();
     }
 
     /**
-     * This convience method will set the number, major and minor
+     * Convience method to set the number, major and minor
      * fields with a single call.  It will first set the number to
      * the provided data, and then attempt to parse the info if in
      * the form major.minor into parts to set the other information.
@@ -136,14 +157,17 @@ public class Version extends AbstractBean implements Comparable<Version> {
         }
     }
     
-    public String toString() {
-        return "Version [" + this.id + "] Project: " + this.project + "  Number: " + this.number;
-    }
-
+    /**
+     * Compares two versions by their major and minor numbers. 
+     */
     public int compareTo(Version other) {
         return this.versionComparator.compare(this, other);
     }
 
+    /**
+     * Two versions are equal if they have the same major and minor numbers. 
+     */
+    @Override
     public boolean equals(Object obj) {
         if(! (obj instanceof Version)) {
             return false;
@@ -153,10 +177,21 @@ public class Version extends AbstractBean implements Comparable<Version> {
         return (this.major == other.major) && (this.minor == other.minor);
     }
 
+    /**
+     * Overridden to match implementation of method {@link #equals(Object) }
+     */
+    @Override
     public int hashCode() {
         return this.major ^ this.minor;
     }
 
+    /**
+     * @return <tt>Version [id=<id>, project=<project>, number=<number>]</tt>
+     */
+    @Override
+    public String toString() {
+        return "Version [id=" + this.id + ", project="  + this.project + ", number=" + this.number + "]";
+    }
     
     /**
      * Compares 2 Versions by major and minor number. 
@@ -193,8 +228,9 @@ public class Version extends AbstractBean implements Comparable<Version> {
                 result = a.major - b.major;
             }
             
-            return (ascending ? result : result * -1);
+            return (ascending ? result : -result);
         }
+        
     }
-    
+
 }
