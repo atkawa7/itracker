@@ -18,14 +18,14 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param issueId ID of the issue to retrieve
      * @return issue with the given ID or <tt>null</tt> if none exits
      */
-    public Issue findByPrimaryKey(Integer issueId);
+    Issue findByPrimaryKey(Integer issueId);
 
     /**
      * Finds all existing issues in all projects. 
      * 
      * @return list of exiting issues, in an unspecified order
      */
-    public List<Issue> findAll();
+    List<Issue> findAll();
 
     /**
      * Finds all issues created by the user with the given ID, in all active 
@@ -35,7 +35,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param status status of the issues to return
      * @return list of issues matching the above filter, in an unspecified order
      */
-    public List<Issue> findByCreatorInAvailableProjects(Integer userId, int status);
+    List<Issue> findByCreatorInAvailableProjects(Integer userId, int status);
 
     /**
      * Finds all issues created by the user with the given ID in all projects. 
@@ -44,7 +44,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param status status of the issues to return
      * @return list of issues matching the above filter, in an unspecified order
      */
-    public List<Issue> findByCreator(Integer userId, int status);
+    List<Issue> findByCreator(Integer userId, int status);
 
     /**
      * Finds all issues owned by the user with the given ID, in all active 
@@ -54,7 +54,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param status status of the issues to return
      * @return list of issues matching the above filter, in an unspecified order
      */
-    public List<Issue> findByOwnerInAvailableProjects(Integer userId, int status);
+    List<Issue> findByOwnerInAvailableProjects(Integer userId, int status);
 
     /**
      * Finds all issues owned by the user with the given ID in all projects. 
@@ -63,7 +63,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param status status of the issues to return
      * @return list of issues matching the above filter, in an unspecified order
      */
-    public List<Issue> findByOwner(Integer userId, int status);
+    List<Issue> findByOwner(Integer userId, int status);
 
     /**
      * Finds all issues with notifications for the user with the given ID,  
@@ -73,7 +73,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param status status of the issues to return
      * @return list of issues matching the above filter, in an unspecified order
      */
-    public List<Issue> findByNotificationInAvailableProjects(Integer userId, int status);
+    List<Issue> findByNotificationInAvailableProjects(Integer userId, int status);
 
     /**
      * Finds all issues with notifications for the user with the given ID 
@@ -83,7 +83,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param status status of the issues to return
      * @return list of issues matching the above filter, in an unspecified order
      */
-    public List<Issue> findByNotification(Integer userId, int status);
+    List<Issue> findByNotification(Integer userId, int status);
 
     /**
      * Finds all issues with a status less than or equal to the given status, 
@@ -92,7 +92,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param status all issues less that or equal to this status will be returned
      * @return list of issues matching the above filter, in an unspecified order
      */
-    public List<Issue> findByStatusLessThanEqualToInAvailableProjects(int status);
+    List<Issue> findByStatusLessThanEqualToInAvailableProjects(int status);
 
     /**
      * Finds all issues with a status less than or equal to the given status 
@@ -101,7 +101,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param status all issues less that or equal to this status will be returned
      * @return list of issues matching the above filter, in an unspecified order
      */
-    public List<Issue> findByStatusLessThanEqualTo(int status);
+    List<Issue> findByStatusLessThanEqualTo(int status);
 
     /**
      * Finds all issues in the given status in all projects. 
@@ -109,7 +109,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param status status of the issues to return
      * @return list of issues matching the above filter, in an unspecified order
      */
-    public List<Issue> findByStatus(int status);
+    List<Issue> findByStatus(int status);
 
     /**
      * Finds all issues with a status less than the given status in all projects. 
@@ -117,7 +117,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param status all issues under this status will be returned
      * @return list of issues matching the above filter, in an unspecified order
      */
-    public List<Issue> findByStatusLessThan(int status);
+    List<Issue> findByStatusLessThan(int status);
 
     /**
      * Finds all issues with the given severity in all projects. 
@@ -125,7 +125,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param severity severity of the issues to return
      * @return list of issues matching the above filter, in an unspecified order
      */
-    public List<Issue> findBySeverity(int severity);
+    List<Issue> findBySeverity(int severity);
 
     /**
      * Finds all issues of the given project with a status lower than 
@@ -135,12 +135,12 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param status all issues under this status will be returned
      * @return list of issues matching the above filter, in an unspecified order
      */
-    public List<Issue> findByProjectIdAndLowerStatus(Integer projectId, int status);
+    List<Issue> findByProjectIdAndLowerStatus(Integer projectId, int status);
 
     /**
      * TODO: specify this method. 
      */
-    public List<Issue> findByIssueId(Integer issueId);
+    List<Issue> findByIssueId(Integer issueId);
 
     /**
      * Finds all issues of the given project with a status higher than 
@@ -150,7 +150,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param status all issues above this status will be returned
      * @return list of issues matching the above filter, in an unspecified order
      */
-    public List<Issue> findByProjectIdAndHigherStatus(Integer projectId, int status);
+    List<Issue> findByProjectIdAndHigherStatus(Integer projectId, int status);
 
     /**
      * Finds all issues of the project with the given ID. 
@@ -158,8 +158,16 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param projectId ID of the project of which to retrieve all issues
      * @return list of issues in no particular order
      */
-    public List<Issue> findByProjectId(Integer projectId);
+    List<Issue> findByProjectId(Integer projectId);
 
+     /**
+     * Finds all issues of the component with the given ID. 
+     * 
+     * @param componentId ID of the component of which to retrieve all issues
+     * @return list of issues in no particular order
+     */
+    List<Issue> findByComponent(Integer componentId);
+    
     /**
      * Returns the modification date of the latest modified issue 
      * in the project with the given id. 
@@ -168,11 +176,11 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @return date of the most recent issue modification for the project. 
      *         <tt>null</tt> if no issue exists in the project
      */
-    public Date latestModificationDate(Integer projectId);
+    Date latestModificationDate(Integer projectId);
 
     /**
      * TODO: refactor this into countIssuesXXX methods. 
      */
-    public Object[] getIssueStats(Integer projectId);
+    Object[] getIssueStats(Integer projectId);
 
 }
