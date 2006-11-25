@@ -23,76 +23,147 @@ import java.util.Collection;
 import java.util.Comparator;
 
 /**
- * This is a POJO bean, and yes, a Hibernate bean. 
+ * A project component. 
+ * 
  * @author Jason
- *  
+ * @author Johnny
  */
 public class Component extends AbstractBean implements Comparable<Component> {
 
+    /** Project to which this component belongs. */
     private Project project;
+    
+    /** Unique name identifying this component within its project. */
     private String name;
+    
+    /** Component description. */
     private String description;
+    
+    /** Component status. */
+    private int status;
+    
+    /** 
+     * PENDING: move this association to the Issue class as it doesn't appear 
+     * in the component table, but in the issue_component_rel table, 
+     * which indicates that an Issue may be associated with more that 1 Component. 
+     */
     private Collection<Issue> issues = new ArrayList<Issue>();
     
     private static final Comparator<Component> comparator = new CompareByName();
     
+    /**
+     * Default constructor required by Hibernate. 
+     */
     public Component() {
+    }
+    
+    public Component(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("null name");
+        }
+        this.name = name;
+    }
+    
+    public Project getProject() {
+        return(project);
+    }
+    
+    public void setProject(Project value) {
+        this.project = value;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
     }
     
     public String getDescription() {
         return description;
     }
+    
     public void setDescription(String description) {
         this.description = description;
     }
+    
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+    
+    /**
+     * Use IssueDAO.findByComponent instead. 
+     */
+    @Deprecated
     public Collection<Issue> getIssues() {
         return issues;
     }
+    
+    /**
+     * Use IssueDAO.findByComponent instead. 
+     */
+    @Deprecated
     public void setIssues(Collection<Issue> issues) {
         this.issues = issues;
     }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public Project getProject() {
-        return(project);
-    }
-    public void setProject(Project value) {
-        this.project = value;
-    }
-
+    
+    /**
+     * Use IssueDAO.findByComponent instead. 
+     */
+    @Deprecated
     public int getTotalNumberIssues() {
         return getIssues().size();
     }
 
+    /**
+     * Compares 2 Components by name. 
+     */
     public int compareTo(Component other) {
         return this.comparator.compare(this, other);
     }
     
+    /**
+     * Two Components are equal if they have the same name. 
+     */
+    @Override
     public boolean equals(Object obj) {
-        if(! (obj instanceof Component)) {
-            return false;
+        if (this == obj) {
+            return true;
         }
-
-        Component other = (Component) obj;
-
-        if (this.name == null) {
-            return other.name == null;
+        
+        if (obj instanceof Component) {
+            final Component other = (Component)obj;
+            
+            return (this.name == null) 
+                ? (other.name == null) : this.name.equals(other.name);
         }
-        return this.name.equals(other.name);
+        return false;
     }
 
+    /**
+     * Overridden to match implementation of method {@link #equals(Object) }.
+     */
+    @Override
     public int hashCode() {
-        return (this.name == null ? 0 : this.name.hashCode());
+        return (this.name == null) ? 0 : this.name.hashCode();
     }
 
+    /**
+     * @return <tt>Component [&lt;name&gt;]</tt>
+     */
+    @Override
     public String toString() {
-        return "Component [" + this.id + "] Project: " + this.project + " Name: " + this.name;
+        return "Component [" + this.name + "]";
     }
 
+    /**
+     * Compares 2 Components by name. 
+     */
     public static class CompareByName implements Comparator<Component> {
         
         public int compare(Component ma, Component mb) {
@@ -107,5 +178,5 @@ public class Component extends AbstractBean implements Comparable<Component> {
             return ma.getName().compareTo(mb.getName());
         }
     }
-    
+
 }
