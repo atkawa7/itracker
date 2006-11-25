@@ -24,7 +24,11 @@ import java.util.Date;
 
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.
- *
+ * 
+ * <p>All entity Java Beans should inherit this class to make sure they 
+ * are Serializable and Cloneable and have the following fields : 
+ * an id, a creation date and a last modifiation date. </p>
+ * 
  * @author ready
  */
 public abstract class AbstractBean implements Serializable, Cloneable {
