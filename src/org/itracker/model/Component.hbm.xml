@@ -25,8 +25,7 @@
         </property>
         
         <property name="status">
-            <!-- Should be not-null="true"! -->
-            <column name="status"/>
+            <column name="status" not-null="true"/>
         </property>
         
         <property name="createDate">
