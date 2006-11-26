@@ -126,7 +126,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
 
                 List<Component> components = new ArrayList<Component>();
                 components = project.getComponents();
-                Collections.sort(components, new Component.CompareByName());
+                Collections.sort(components, new Component.NameComparator());
                 listOptions.put(new Integer(IssueUtilities.FIELD_COMPONENTS), Convert.componentsToNameValuePairs(components));
                 List<Version> versions = project.getVersions();
                 Collections.sort(versions, new Version.VersionComparator());
