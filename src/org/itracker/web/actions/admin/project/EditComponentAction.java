@@ -104,8 +104,7 @@ public class EditComponentAction extends ItrackerBaseAction {
                     logger.debug("Creating component for project " + componentForm.getProjectId());
                 }
                 
-                Component component = new Component();
-                component.setName(componentForm.getName());
+                Component component = new Component(project, componentForm.getName());
                 component.setDescription(componentForm.getDescription());
                 component.setCreateDate(new Date());
 
