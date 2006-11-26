@@ -585,7 +585,7 @@ public class IssueServiceImpl implements IssueService {
                 
                 Integer componentId = (Integer) iterator.next();
                 
-                Component component = componentDAO.findByPrimaryKey(componentId);
+                Component component = componentDAO.findById(componentId);
                 
                 wasChanged = true;
                 
