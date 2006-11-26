@@ -52,6 +52,9 @@ public class Version extends AbstractBean implements Comparable<Version> {
 
     public Version(Integer id) {
         super(id);
+        
+        // A new version is active by default. 
+        this.status = 1; // = ProjectUtilities.STATUS_ACTIVE
     }
     
     public int getMajor() {
