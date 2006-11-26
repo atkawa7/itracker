@@ -9,12 +9,18 @@
 <%@ taglib uri="/WEB-INF/tld/struts-tiles.tld" prefix="tiles" %>
 <%@ page import="org.itracker.services.util.UserUtilities" %>
 <%@ page import="org.itracker.web.scheduler.*" %>
- 
+<%@ page import="org.itracker.model.PermissionType" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
 
 <!--<it-:-checkLogin permission="<=- UserUtilities.PERMISSION_PRODUCT_ADMIN -->
 
 <!-- once there was page_init here, but now this has been moved into the ItrackerBaseAction -->
-<% if(! UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), UserUtilities.PERMISSION_USER_ADMIN)) { %>
+<% 
+    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
+        session.getAttribute("permissions");
+      
+      if(! UserUtilities.hasPermission(permissions, UserUtilities.PERMISSION_USER_ADMIN)) { %>
       <logic:forward name="listprojectsadmin"/>
 <% } else { %>
       <bean:define id="pageTitleKey" value="itracker.web.admin.index.title"/>
