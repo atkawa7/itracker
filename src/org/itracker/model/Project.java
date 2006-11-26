@@ -27,19 +27,19 @@ import java.util.List;
  * @author ready
  *
  */
-public  class Project extends AbstractBean {
+public class Project extends AbstractBean implements Comparable<Project> {
 
-    private  String name;
-    private  String description;
-    private  int status;
-    private  int options;
-    private  List<CustomField> customFields = new ArrayList<CustomField>();
-    private  List<Component> components = new ArrayList<Component>();
-    private  List<Version> versions = new ArrayList<Version>();
-    private  List<Issue> issues = new ArrayList<Issue>();
-    private  List<Permission> permissions = new ArrayList<Permission>();
-    private  List<User> owners = new ArrayList<User>();
-    private  List<ProjectScript> scripts = new ArrayList<ProjectScript>();
+    private String name;
+    private String description;
+    private int status;
+    private int options;
+    private List<CustomField> customFields = new ArrayList<CustomField>();
+    private List<Component> components = new ArrayList<Component>();
+    private List<Version> versions = new ArrayList<Version>();
+    private List<Issue> issues = new ArrayList<Issue>();
+    private List<Permission> permissions = new ArrayList<Permission>();
+    private List<User> owners = new ArrayList<User>();
+    private List<ProjectScript> scripts = new ArrayList<ProjectScript>();
 
     public String getDescription() {
         return description;
@@ -131,6 +131,46 @@ public  class Project extends AbstractBean {
 
     public int getTotalNumberIssues() {
         return getIssues().size();
+    }
+
+    /**
+     * Two project instances are equal if they have the same name. 
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        
+        if (obj instanceof Project) {
+            final Project other = (Project)obj;
+            
+            return this.name.equals(other.name);
+        }
+        return false;
+    }
+    
+    /**
+     * Overridden to match implementation of method {@link #equals(Object)}.
+     */
+    @Override
+    public int hashCode() {
+        return this.name.hashCode();
+    }
+    
+    /**
+     * @return <tt>Project [id=id, name=name]</tt>
+     */
+    @Override
+    public String toString() {
+        return "Project [id=" + this.id + ", name=" + this.name + "]";
+    }
+    
+    /**
+     * Compares 2 projects by name. 
+     */
+    public int compareTo(Project other) {
+        return this.name.compareTo(other.name);
     }
 
     public static class CompareByName implements Comparator<Project> {
