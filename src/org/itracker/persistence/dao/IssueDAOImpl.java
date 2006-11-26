@@ -316,6 +316,22 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         return issues;
     }
     
+    public int countByComponent(Integer componentId) {
+        final String hql = "select count(issue) "
+                + "from Issue as issue inner join issue.components as component "
+                + "where component.id = :componentId";
+        final Integer count;
+        
+        try {
+            count = (Integer)getSession().createQuery(hql)
+                   .setInteger("componentId", componentId)
+                   .uniqueResult();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return count;
+    }
+    
     @SuppressWarnings("unchecked")
     public List<Issue> findByVersion(Integer versionId) {
         final String hql = "select issue "
