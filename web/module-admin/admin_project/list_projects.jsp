@@ -9,12 +9,17 @@
 
 <%@ page import="java.util.Collections" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
 <%@ page import="org.itracker.services.util.*" %>
 <%@ page import="org.itracker.model.*" %>
 <%@ page import="org.itracker.services.*" %>
 
 <%-- <it: checkLogin permission="< % = UserUtilities.PERMISSION_PRODUCT_ADMIN % >"/> --%>
-
+<% 
+    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
+        session.getAttribute("permissions");
+%>
 <!-- once there was page_init here, but now this has been moved into the ItrackerBaseAction -->
 <bean:define id="pageTitleKey" value="itracker.web.admin.listprojects.title"/>
 <bean:define id="pageTitleArg" value=""/>
@@ -24,7 +29,7 @@
 <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
   <tr>
     <td class="editColumnTitle" colspan="6"><it:message key="itracker.web.attr.projects"/>:</td>
-    <% if(UserUtilities.isSuperUser((java.util.HashMap)request.getSession().getAttribute("permissions"))) { %>
+    <% if(UserUtilities.isSuperUser(permissions)) { %>
          <td align="right">
            <it:formatImageAction action="editprojectform" targetAction="create" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.project.alt" textActionKey="itracker.web.image.create.texttag"/>
            <it:formatImageAction forward="listattachments" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.attachments.alt" textActionKey="itracker.web.image.view.texttag"/>
@@ -48,7 +53,7 @@
   Collections.sort(projects, new Project.CompareByName());
 
   for(int i = 0; i < projects.size(); i++) {
-    if(! UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), projects.get(i).getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
+    if(! UserUtilities.hasPermission(permissions, projects.get(i).getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
         continue;
     }
     String style = "";
