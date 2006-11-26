@@ -85,20 +85,25 @@ public class EditComponentFormAction extends ItrackerBaseAction {
 
             if("create".equals(action)) {
                 Integer projectId = (Integer) PropertyUtils.getSimpleProperty(form, "projectId");
+                
                 if(action != null && action.equals("create")) {
                 	 pageTitleKey = "itracker.web.admin.editcomponent.title.create";
                 }
+                
                 if(projectId == null) {
-                	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
+                	errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                                new ActionMessage("itracker.web.error.invalidproject"));
                 } else {
                     project = projectService.getProject(projectId);
+                    
                     if(project == null) {
-                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-                    } else if(! UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
+                    	errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                                new ActionMessage("itracker.web.error.invalidproject"));
+                    } else if(! UserUtilities.hasPermission(userPermissions, 
+                            project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
                         return mapping.findForward("unauthorized");
                     } else {
-                        component = new Component();
-                        component.setId(new Integer(-1));
+                        component = new Component(project, componentForm.getName());
                         component.setProject(project);
                         componentForm.setAction("create");
                         componentForm.setId(component.getId());
