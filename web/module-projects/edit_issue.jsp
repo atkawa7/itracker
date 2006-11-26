@@ -9,7 +9,9 @@
 
 <%@ page import="org.itracker.web.util.*" %>
 <%@ page import="java.util.*" %>
- 
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
+<%@ page import="java.util.Locale" %>
 <%@ page import="org.itracker.model.*" %>
 <%@ page import="org.itracker.services.util.*" %>
 <%@ page import="org.itracker.services.*" %>
@@ -26,6 +28,9 @@
 	
     Issue issue = (Issue) session.getAttribute(Constants.ISSUE_KEY);
     HashMap listOptions = (HashMap) session.getAttribute(Constants.LIST_OPTIONS_KEY);
+    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
+        request.getSession().getAttribute("permissions");
+    
     Project project = (issue != null ? issue.getProject() : null);
     if(issue == null || project == null) {
 %>
@@ -38,7 +43,7 @@
       <%
       Integer issueId = issue.getId();
       Integer currUserId = um.getId();
-      boolean hasFullEdit = UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
+      boolean hasFullEdit = UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
 %>
 
       <bean:define id="pageTitleKey" value="itracker.web.editissue.title"/>
@@ -85,13 +90,13 @@
                     <% if(! ih.hasIssueNotification(issue.getId(), currUserId)) { %>
                          <it:formatImageAction forward="watchissue" paramName="id" paramValue="<%= issue.getId() %>" caller="editissue" src="/themes/defaulttheme/images/watch.gif" altKey="itracker.web.image.watch.issue.alt" arg0="<%= issue.getId() %>" textActionKey="itracker.web.image.watch.texttag"/>
                     <% } %>
-                    <% if(UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), project.getId(), UserUtilities.PERMISSION_EDIT)) { %>
+                    <% if(UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT)) { %>
                          <it:formatImageAction action="moveissueform" paramName="id" paramValue="<%= issue.getId() %>" caller="editissue" src="/themes/defaulttheme/images/move.gif" altKey="itracker.web.image.move.issue.alt" arg0="<%= issue.getId() %>" textActionKey="itracker.web.image.move.texttag"/>
                          <%-- TODO re-include this once relate issue correctly works 
                            <it:formatImageAction forward="relateissue" paramName="id" paramValue="<%= issue.getId() %>" caller="editissue" src="/themes/defaulttheme/images/link.gif" altKey="itracker.web.image.link.issue.alt" textActionKey="itracker.web.image.link.texttag"/>
                          --%>
                     <% } %>
-                    <% if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), project.getId(), UserUtilities.PERMISSION_CREATE)) { %>
+                    <% if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_CREATE)) { %>
                         <it:formatImageAction forward="createissue" paramName="projectId" paramValue="<%= project.getId() %>" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.issue.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.create.texttag"/>
                     <% } %>
                   </td>
@@ -226,7 +231,7 @@
                     <% } else { %>
                           <%
                               List<Component> issueComponents = issue.getComponents();
-                              Collections.sort(issueComponents, new Component.CompareByName());
+                              Collections.sort(issueComponents, new Component.NameComparator());
                               for(int i = 0; i < issueComponents.size(); i++) {
                           %>
                               <%= issueComponents.get(i).getName() %><br/>
