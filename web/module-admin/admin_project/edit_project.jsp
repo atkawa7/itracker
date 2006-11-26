@@ -304,7 +304,7 @@
                       <td><%= versions.get(i).getNumber() %></td>
                       <td><%= versions.get(i).getDescription() %></td>
                       <td><it:formatDate date="<%= versions.get(i).getLastModifiedDate() %>"/></td>
-                      <td align="left"><%= ph.getTotalNumberIssuesByVersion(versions.get(i).getId()) %></td>
+                      <td align="left"><%= ph.countIssuesByVersion(versions.get(i).getId()) %></td>
                     </tr>
               <%  } %>
               <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15"/></td></tr>
