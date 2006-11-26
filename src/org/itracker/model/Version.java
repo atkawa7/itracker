@@ -38,20 +38,18 @@ public class Version extends AbstractBean implements Comparable<Version> {
     private int status;
     private Project project;
 
-    /* TODO: remove this and use DAO to find issues by version instead */
-    private Collection issues = new ArrayList();
-
     private static final Comparator<Version> versionComparator = 
             new VersionComparator();
     
     /**
      * Default constructor. 
      */
-    public Version() {
+    private Version() {
     }
 
-    public Version(Integer id) {
-        super(id);
+    public Version(Project project, String number) {
+        setProject(project);
+        setVersionInfo(number);
         
         // A new version is active by default. 
         this.status = 1; // = ProjectUtilities.STATUS_ACTIVE
@@ -93,8 +91,11 @@ public class Version extends AbstractBean implements Comparable<Version> {
         return project;
     }
 
-    public void setProject(Project getProject) {
-        this.project = getProject;
+    public void setProject(Project project) {
+        if (project == null) {
+            throw new IllegalArgumentException("null project");
+        }
+        this.project = project;
     }
 
     public int getStatus() {
@@ -103,30 +104,6 @@ public class Version extends AbstractBean implements Comparable<Version> {
 
     public void setStatus(int status) {
         this.status = status;
-    }
-    
-    /**
-     * Use IssueDAO.findByVersion instead. 
-     */
-    @Deprecated
-    public Collection getIssues() {
-        return issues;
-    }
-
-    /**
-     * Use IssueDAO.findByVersion instead. 
-     */
-    @Deprecated
-    public void setIssues(Collection getIssues) {
-        this.issues = getIssues;
-    }
-    
-    /**
-     * Use IssueDAO.findByVersion instead. 
-     */
-    @Deprecated
-    public int getTotalNumberIssues() {
-        return getIssues().size();
     }
 
     /**
@@ -147,7 +124,7 @@ public class Version extends AbstractBean implements Comparable<Version> {
 
         try {
             setMajor(Integer.parseInt(major));
-        } catch(NumberFormatException nfe) {
+        } catch(NumberFormatException ex) {
             setMajor(0);
         }
 
@@ -155,7 +132,7 @@ public class Version extends AbstractBean implements Comparable<Version> {
         String minor = (secondDot > -1 ? versionNumber.substring(firstDot + 1, secondDot).trim() : versionNumber.substring(firstDot + 1).trim());
         try {
             setMinor(Integer.parseInt(minor));
-        } catch(NumberFormatException nfe) {
+        } catch(NumberFormatException ex) {
             setMinor(0);
         }
     }
@@ -193,7 +170,8 @@ public class Version extends AbstractBean implements Comparable<Version> {
      */
     @Override
     public String toString() {
-        return "Version [id=" + this.id + ", project="  + this.project + ", number=" + this.number + "]";
+        return "Version [id=" + this.id + ", project="  + this.project 
+             + ", number=" + this.number + "]";
     }
     
     /**
