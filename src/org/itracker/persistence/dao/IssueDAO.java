@@ -180,6 +180,14 @@ public interface IssueDAO extends BaseDAO<Issue> {
     List<Issue> findByVersion(Integer versionId);
     
     /**
+     * Counts the number of issues attached to a version. 
+     * 
+     * @param versionId ID of the version
+     * @return number of issues
+     */
+    int countByVersion(Integer versionId);
+    
+    /**
      * Returns the modification date of the latest modified issue 
      * in the project with the given id. 
      * 

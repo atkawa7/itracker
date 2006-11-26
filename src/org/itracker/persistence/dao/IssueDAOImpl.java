@@ -349,6 +349,22 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         return issues;
     }
     
+    public int countByVersion(Integer versionId) {
+        final String hql = "select count(issue) "
+                + "from Issue as issue inner join issue.versions as version "
+                + "where version.id = :versionId";
+        final Integer count;
+        
+        try {
+            count = (Integer)getSession().createQuery(hql)
+                   .setInteger("versionId", versionId)
+                   .uniqueResult();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return count;
+    }
+    
     @SuppressWarnings("unchecked")
     public Date latestModificationDate(Integer projectId) {
         final String hql = "select max(issue.lastModifiedDate) " +
