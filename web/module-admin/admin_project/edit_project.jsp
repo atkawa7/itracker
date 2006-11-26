@@ -18,7 +18,8 @@
 <%--<it : checkLogin permission="< % = UserUtilities.PERMISSION_PRODUCT_ADMIN % > "/>--%>
 
 <%
- 
+    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
+        session.getAttribute("permissions");
     ProjectService ph = (ProjectService) request.getAttribute("ph");
     UserService uh =  (UserService) request.getAttribute("uh");
    
@@ -93,7 +94,7 @@
             <% if(isUpdate) { %>
                 <td class="editColumnTitle" valign="top"><it:message key="itracker.web.attr.lastmodified"/>:</td>
                 <td class="editColumnText" valign="top"><it:formatDate date="<%= project.getLastModifiedDate() %>"/></td>
-            <% } else if(allowPermissionUpdate && UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), new Integer(-1), UserUtilities.PERMISSION_USER_ADMIN)) { %>
+            <% } else if(allowPermissionUpdate && UserUtilities.hasPermission(permissions, new Integer(-1), UserUtilities.PERMISSION_USER_ADMIN)) { %>
                 <td valign="top" class="editColumnTitle"><it:message key="itracker.web.admin.editproject.addusers"/>:</td>
                 <td valign="top" class="editColumnText" nowrap>
                   <html:select property="users" size="5" multiple="true" styleClass="editColumnText">
@@ -323,7 +324,7 @@
 
               <%
                   List<Component> components = project.getComponents();
-                  Collections.sort(components, new Component.CompareByName());
+                  Collections.sort(components, new Component.NameComparator());
 
                   for(int i = 0; i < components.size(); i++) {
                     if(i % 2 == 1) {
@@ -339,7 +340,7 @@
                     <td><%= components.get(i).getName() %></td>
                     <td><%= components.get(i).getDescription() %></td>
                     <td><it:formatDate date="<%= components.get(i).getLastModifiedDate() %>"/></td>
-                    <td align="left"><%= ph.getTotalNumberIssuesByComponent(components.get(i).getId()) %></td>
+                    <td align="left"><%= ph.countIssuesByComponent(components.get(i).getId()) %></td>
                     </tr>
               <%  } %>
             </table>
