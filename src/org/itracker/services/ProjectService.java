@@ -95,11 +95,23 @@ public interface ProjectService {
     
     public boolean removeProjectScript(Integer projectId, Integer scriptId);
 
+    /**
+     * Counts the number of issues for a given component. 
+     * 
+     * @param componentId Id of the component to which the issues must be associated
+     * @return 0 if the component has no issues or doesn't exist
+     */
     public int countIssuesByComponent(Integer componentId);
     
     public int getTotalNumberIssuesByProject(Integer projectId);
     
-    public int getTotalNumberIssuesByVersion(Integer versionId);
+    /**
+     * Counts the number of issues for a given version. 
+     * 
+     * @param versionId Id of the version to which the issues must be associated
+     * @return 0 if the version has no issues or doesn't exist
+     */
+    public int countIssuesByVersion(Integer versionId);
 
     public Object[] getProjectStats(Integer projectId);
     
