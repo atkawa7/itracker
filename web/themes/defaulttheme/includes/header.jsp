@@ -9,6 +9,10 @@
     import="org.itracker.services.util.*" %>
  <%-- <nitrox:var name="pageTitleKey" type="java.lang.String"/> --%>
     <%-- <nitrox:var name="pageTitleArg" type="java.lang.String"/> --%>
+<%
+    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
+        session.getAttribute("permissions");
+%>
 <html>
   <head>
     <title><it:message key="itracker.web.generic.itracker"/>: <it:message key="${pageTitleKey}" arg0="${pageTitleArg}"/>
@@ -58,17 +62,17 @@
                   <it:message key="itracker.web.header.menu.projectlist"/></html:link> | <html:link forward="searchissues" module="/module-searchissues" styleClass="headerLinks" titleKey="itracker.web.header.menu.search.alt">
                   <it:message key="itracker.web.header.menu.search"/></html:link>
         
-           <c:if test="<%=UserUtilities.hasPermission((Map<Integer, Set<PermissionType>>)request.getAttribute("permissions"), UserUtilities.PERMISSION_VIEW_ALL)%>">
+           <c:if test="<%=UserUtilities.hasPermission(permissions, UserUtilities.PERMISSION_VIEW_ALL)%>">
                       |
                       <html:link styleClass="headerLinks" titleKey="itracker.web.header.menu.reports.alt" module="/module-reports" action="/list_reports">
                         <it:message key="itracker.web.header.menu.reports"/></html:link>
                </c:if>
-           <c:if test="<%=UserUtilities.hasPermission((Map<Integer, Set<PermissionType>>)request.getAttribute("permissions"), UserUtilities.PERMISSION_USER_ADMIN)%>">
+           <c:if test="<%=UserUtilities.hasPermission(permissions, UserUtilities.PERMISSION_USER_ADMIN)%>">
                       |
                       <html:link styleClass="headerLinks" titleKey="itracker.web.header.menu.admin.alt" module="/module-admin" action="/adminhome">
                         <it:message key="itracker.web.header.menu.admin"/></html:link>
                    </c:if>        
-           <c:if test="<%=UserUtilities.hasPermission((Map<Integer, Set<PermissionType>>)request.getAttribute("permissions"), UserUtilities.PERMISSION_PRODUCT_ADMIN)%>">
+           <c:if test="<%=UserUtilities.hasPermission(permissions, UserUtilities.PERMISSION_PRODUCT_ADMIN)%>">
                |
                       <html:link styleClass="headerLinks" titleKey="itracker.web.header.menu.projectadmin.alt" module="/module-admin" action="/listprojectsadmin">
                         <it:message key="itracker.web.header.menu.projectadmin"/></html:link>
