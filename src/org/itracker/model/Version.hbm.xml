@@ -43,15 +43,6 @@
         <property name="lastModifiedDate">
             <column name="last_modified" sql-type="timestamp" not-null="true"/>
         </property>
-        
-        <bag name="issues" table="issue_version_rel" lazy="true">
-            <key>
-                <column name="version_id"/>
-            </key>
-            <many-to-many class="org.itracker.model.Issue">
-                <column name="issue_id"/>
-            </many-to-many>
-        </bag>
     </class>
     
 </hibernate-mapping>
