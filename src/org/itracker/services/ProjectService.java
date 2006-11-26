@@ -95,7 +95,7 @@ public interface ProjectService {
     
     public boolean removeProjectScript(Integer projectId, Integer scriptId);
 
-    public int getTotalNumberIssuesByComponent(Integer componentId);
+    public int countIssuesByComponent(Integer componentId);
     
     public int getTotalNumberIssuesByProject(Integer projectId);
     
