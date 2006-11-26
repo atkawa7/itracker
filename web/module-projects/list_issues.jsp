@@ -25,7 +25,9 @@
 <!-- once there was page_init here, but now this has been moved into the ItrackerBaseAction -->
 
 <%
- 
+    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
+        session.getAttribute("permissions");
+        
     User um = (User)session.getAttribute("currUser");
     Integer currUserId = um.getId();
     UserPreferences userPrefs = (UserPreferences) session.getAttribute("preferences");
@@ -56,7 +58,7 @@
         <tr>
           <td class="editColumnTitle" colspan="14"><it:message key="itracker.web.attr.issues"/>:</td>
           <td align="right">
-            <% if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), project.getId(), UserUtilities.PERMISSION_EDIT)) { %>
+            <% if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT)) { %>
                   <it:formatImageAction forward="createissue" paramName="projectId" paramValue="<%= project.getId() %>" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.issue.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.create.texttag"/>
             <% } %>
             <it:formatImageAction forward="searchissues" paramName="projectId" paramValue="<%= project.getId() %>" src="/themes/defaulttheme/images/search.gif" altKey="itracker.web.image.search.issue.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.search.texttag"/>
@@ -85,22 +87,22 @@
         int k = 0;
         int numViewable = 0;
         boolean hasIssues = false;
-        boolean hasViewAll = UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), project.getId(), UserUtilities.PERMISSION_VIEW_ALL);
-        Map<Integer, Set<PermissionType>> userPermissions = (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");
+        boolean hasViewAll = UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_VIEW_ALL);
+        
         if(hasViewAll) {
             numViewable = issues.size();
         } else {
         	
             for(int i = 0; i < issues.size(); i++) {
             	
-                if(IssueUtilities.canViewIssue(issues.get(i), currUserId, userPermissions)) {
+                if(IssueUtilities.canViewIssue(issues.get(i), currUserId, permissions)) {
                     numViewable++;
                 }
             }
         }
 
         for(int i = 0; i < issues.size(); i++) {
-          if(! hasViewAll && ! IssueUtilities.canViewIssue(issues.get(i), currUserId, userPermissions)) {
+          if(! hasViewAll && ! IssueUtilities.canViewIssue(issues.get(i), currUserId, permissions)) {
               continue;
           }
           hasIssues = true;
@@ -118,7 +120,7 @@
               <%
               
                  if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE) {
-                     if(IssueUtilities.canEditIssue(issues.get(i), currUserId,userPermissions)) {
+                     if(IssueUtilities.canEditIssue(issues.get(i), currUserId,permissions)) {
               %>
                         <it:formatImageAction action="editissueform" paramName="id" paramValue="<%= issues.get(i).getId() %>" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="<%= issues.get(i).getId() %>" textActionKey="itracker.web.image.edit.texttag"/>
               <%
