@@ -57,12 +57,6 @@ public class EditVersionFormAction extends ItrackerBaseAction {
             HttpServletResponse response)
             throws ServletException, IOException {
         
-        logger.info("EDIT VERSION FORM ACTION");
-        
-        if (true) {
-            return null;
-        }
-        
         ActionErrors errors = new ActionErrors();
         super.executeAlways(mapping,form,request,response);
         
@@ -100,7 +94,7 @@ public class EditVersionFormAction extends ItrackerBaseAction {
                 saveMessages(request, errors);
                 
                 return mapping.findForward("error");
-            } else if(!UserUtilities.hasPermission(userPermissions,
+            } else if (!UserUtilities.hasPermission(userPermissions,
                     project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
                 return mapping.findForward("unauthorized");
             }
@@ -111,13 +105,11 @@ public class EditVersionFormAction extends ItrackerBaseAction {
             Version version;
             
             if ("create".equals(action)) {
-                version = new Version();
-                version.setCreateDate(new Date());
-                version.setNumber(versionForm.getNumber());
+                version = new Version(project, versionForm.getNumber());
                 version.setDescription(versionForm.getDescription());
-                version.setProject(project);
+                version.setCreateDate(new Date());
                 
-                 pageTitleKey = "itracker.web.admin.editversion.title.create";
+                pageTitleKey = "itracker.web.admin.editversion.title.create";
             } else if ("update".equals(action)) {
                 Integer versionId = versionForm.getId();
                 
@@ -132,9 +124,9 @@ public class EditVersionFormAction extends ItrackerBaseAction {
                     
                     return mapping.findForward("error");
                 }
-                version.setLastModifiedDate(new Date());
                 version.setNumber(versionForm.getNumber());
                 version.setDescription(versionForm.getDescription());
+                version.setLastModifiedDate(new Date());
                 
                 pageTitleKey = "itracker.web.admin.editversion.title.update";
                 pageTitleArg = versionForm.getNumber();

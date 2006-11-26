@@ -174,7 +174,13 @@ public class EditIssueAction extends ItrackerBaseAction {
 
         Integer targetVersionId = (Integer) PropertyUtils.getSimpleProperty(form, "targetVersion");
         if(targetVersionId != null && targetVersionId.intValue() != -1) {
-            issue.setTargetVersion(new Version(targetVersionId));
+            ProjectService projectService = getITrackerServices().getProjectService();
+            Version targetVersion = projectService.getProjectVersion(targetVersionId);
+            
+            if (targetVersion == null) {
+                throw new RuntimeException("No version with Id " + targetVersionId);
+            }
+            issue.setTargetVersion(targetVersion);
         }
 
         Integer formStatus = (Integer) PropertyUtils.getSimpleProperty(form, "status");

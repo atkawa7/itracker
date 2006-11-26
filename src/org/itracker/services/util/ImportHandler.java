@@ -95,7 +95,8 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                     throw new SAXException("Attribute " + ATTR_SYSTEMID + " was null for component.");
                 }
                 
-                childModel = new Component((Project)parentModel, atts.getValue("name"));
+                // FIXME: pass component name instead of import/export ID. 
+                childModel = new Component((Project)parentModel, atts.getValue(ATTR_ID));
                 childModel.setId(new Integer(id));
             } else if(TAG_COMPONENTS.equals(qName)) {
                 itemList = new ArrayList<Object>();
@@ -198,7 +199,8 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                     throw new SAXException("Attribute " + ATTR_SYSTEMID + " was null for version.");
                 }
 
-                childModel = new Version();
+                // FIXME: pass version number instead of import/export ID. 
+                childModel = new Version((Project)parentModel, atts.getValue(ATTR_ID));
                 childModel.setId(new Integer(id));
             } else if(TAG_VERSIONS.equals(qName)) {
                 itemList = new ArrayList<Object>();
