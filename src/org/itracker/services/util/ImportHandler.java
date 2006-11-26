@@ -94,8 +94,8 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                 if(id == null) {
                     throw new SAXException("Attribute " + ATTR_SYSTEMID + " was null for component.");
                 }
-
-                childModel = new Component();
+                
+                childModel = new Component((Project)parentModel, atts.getValue("name"));
                 childModel.setId(new Integer(id));
             } else if(TAG_COMPONENTS.equals(qName)) {
                 itemList = new ArrayList<Object>();
