@@ -14,6 +14,8 @@
 
 <%@ page import="java.util.Collections" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
 <!-- import? UserUtilities? --> 
 <%@ page import="org.itracker.services.util.UserUtilities" %>
 <%@ page import="org.itracker.services.util.ProjectUtilities" %>
@@ -22,6 +24,9 @@
 <!-- once there was page_init here, but now this has been moved into the ItrackerBaseAction -->
 
 <%
+    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
+        session.getAttribute("permissions");
+        
     //UserPreferencesModel userPrefs = (UserPreferencesModel) session.getAttribute("preferences");
     Project project = (Project)request.getAttribute("project");
     //String orderParam = (String)request.getAttribute("orderParam");
@@ -50,7 +55,7 @@
         <tr>
           <td class="editColumnTitle" colspan="14"><it:message key="itracker.web.attr.issues"/>:</td>
           <td align="right">
-            <% if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), project.getId(), UserUtilities.PERMISSION_EDIT)) { %>
+            <% if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT)) { %>
                   <it:formatImageAction forward="createissue"
                                         paramName="projectId"
                                         paramValue="<%= project.getId() %>"
