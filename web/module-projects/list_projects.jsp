@@ -10,12 +10,17 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Collections" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
 <%@ page import="org.itracker.model.*" %>
 <%@ page import="org.itracker.services.util.*" %>
 <%@ page import="org.itracker.services.*" %>
 
 <%-- <it : checkLogin /> --%>
-
+<%
+    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
+        session.getAttribute("permissions");
+%>
 <!-- once there was page_init here, but now this has been moved into the ItrackerBaseAction -->
 <bean:define id="pageTitleKey" value="itracker.web.listprojects.title"/>
 <bean:define id="pageTitleArg" value=""/>
@@ -72,7 +77,7 @@
     <tr align="right" class="<%= (numDisplayed % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ) %>">
       <td>
         <it:formatImageAction forward="listissues" paramName="projectId" paramValue="<%= projects.get(i).getId() %>" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.project.alt" arg0="<%= projects.get(i).getName() %>" textActionKey="itracker.web.image.view.texttag"/>
-        <% if(projects.get(i).getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), projects.get(i).getId(), UserUtilities.PERMISSION_CREATE)) { %>
+        <% if(projects.get(i).getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission(permissions, projects.get(i).getId(), UserUtilities.PERMISSION_CREATE)) { %>
         <it:formatImageAction forward="createissue" paramName="projectId" paramValue="<%= projects.get(i).getId() %>" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.issue.alt" arg0="<%= projects.get(i).getName() %>" textActionKey="itracker.web.image.create.texttag"/>
         <% } %>
         <it:formatImageAction forward="searchissues" paramName="projectId" paramValue="<%= projects.get(i).getId() %>" src="/themes/defaulttheme/images/search.gif" altKey="itracker.web.image.search.issue.alt" arg0="<%= projects.get(i).getName() %>" textActionKey="itracker.web.image.search.texttag"/>

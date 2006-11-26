@@ -20,6 +20,8 @@
 <!-- once there was page_init here, but now this has been moved into the ItrackerBaseAction -->
 
 <%
+    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
+        session.getAttribute("permissions");
   IssueService ih = (IssueService)request.getAttribute("ih");
   User um = (User)request.getSession().getAttribute("currUser");
   Integer issueId = null;
@@ -52,8 +54,7 @@
 
           User owner = issue.getOwner();
           User creator = issue.getCreator();
-          Map<Integer, Set<PermissionType>> userPermissions = (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");
-          boolean canViewIssue = IssueUtilities.canViewIssue(issue, currUserId, userPermissions);
+          boolean canViewIssue = IssueUtilities.canViewIssue(issue, currUserId, permissions);
 
           if(project == null || ! canViewIssue) {
 %>
@@ -105,7 +106,7 @@
                                                    arg0="<%= issue.getId() %>"
                                                    textActionKey="itracker.web.image.watch.texttag"/>
                         <% } %>
-                        <% if(IssueUtilities.canEditIssue(issue, currUserId, userPermissions)) { %>
+                        <% if(IssueUtilities.canEditIssue(issue, currUserId, permissions)) { %>
 
                              <it:formatImageAction action="editissueform"
                                                    module="/module-projects"
@@ -183,7 +184,7 @@
                       <td valign="top" class="editColumnText">
                         <% List<Component> components = issue.getComponents();
 
-                            Collections.sort(components, new Component.CompareByName());
+                            Collections.sort(components, new Component.NameComparator());
 
                             for(int i = 0; i < components.size(); i++) {
                         %>

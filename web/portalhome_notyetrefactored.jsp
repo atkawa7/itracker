@@ -11,6 +11,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Collections" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Locale" %>
 
@@ -29,6 +31,9 @@
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 <%
+    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
+        session.getAttribute("permissions");
+        
   IssueService ih = (IssueService)request.getAttribute("ih");
   UserService uh = (UserService)request.getAttribute("uh");
   User currUser = (User) request.getSession().getAttribute("currUser");
@@ -141,7 +146,7 @@ if (null!=userPrefs) {
         <tr align="right" class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ) %>">
           <td style="white-space: nowrap">
             <it:formatImageAction forward="viewissue" paramName="id" paramValue="<%= ownedIssues.get(i).getId() %>" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="<%= ownedIssues.get(i).getId() %>" textActionKey="itracker.web.image.view.texttag"/>
-            <% if(IssueUtilities.canEditIssue(ownedIssues.get(i), currUser.getId(), (HashMap)request.getSession().getAttribute("permissions"))) { %>
+            <% if(IssueUtilities.canEditIssue(ownedIssues.get(i), currUser.getId(), permissions)) { %>
                  <it:formatImageAction action="/module-projects/editissueform" paramName="id" paramValue="<%= ownedIssues.get(i).getId() %>" caller="index" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="<%= ownedIssues.get(i).getId() %>" textActionKey="itracker.web.image.edit.texttag"/>
             <% } %>
           </td>
@@ -192,7 +197,7 @@ if (null!=userPrefs) {
       HashMap<Integer,List<User>> possibleOwnersMap = new HashMap<Integer,List<User>>();
       HashMap<Integer,List<User>> usersWithEditOwnMap = new HashMap<Integer,List<User>>();
       for(int i = 0; i < unassignedIssues.size(); i++) {
-        if(! IssueUtilities.canViewIssue(unassignedIssues.get(i), currUser.getId(), (HashMap)request.getSession().getAttribute("permissions"))) {
+        if(! IssueUtilities.canViewIssue(unassignedIssues.get(i), currUser.getId(), permissions)) {
             continue;
         }
         j++;
@@ -206,7 +211,7 @@ if (null!=userPrefs) {
         <tr align="right" class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ) %>">
           <td>
             <it:formatImageAction forward="viewissue" paramName="id" paramValue="<%= unassignedIssues.get(i).getId() %>" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="<%= unassignedIssues.get(i).getId() %>" textActionKey="itracker.web.image.view.texttag"/>
-            <% if(IssueUtilities.canEditIssue(unassignedIssues.get(i), currUser.getId(), (HashMap)request.getSession().getAttribute("permissions"))) { %>
+            <% if(IssueUtilities.canEditIssue(unassignedIssues.get(i), currUser.getId(), permissions)) { %>
                  <it:formatImageAction action="editissueform" paramName="id" paramValue="<%= unassignedIssues.get(i).getId() %>" caller="index" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="<%= unassignedIssues.get(i).getId() %>" textActionKey="itracker.web.image.edit.texttag"/>
             <%
                }
@@ -226,7 +231,7 @@ if (null!=userPrefs) {
           <td></td>
           <td><it:formatDescription><%= unassignedIssues.get(i).getDescription() %></it:formatDescription></td>
           <td></td>
-          <% if(UserUtilities.hasPermission((HashMap)request.getSession().getAttribute("permissions"), unassignedIssues.get(i).getProject().getId(), UserUtilities.PERMISSION_ASSIGN_OTHERS)) { %>
+          <% if(UserUtilities.hasPermission(permissions, unassignedIssues.get(i).getProject().getId(), UserUtilities.PERMISSION_ASSIGN_OTHERS)) { %>
                 <html:form action="/assignissue">
                   <html:hidden property="issueId" value="<%= unassignedIssues.get(i).getId().toString() %>"/>
                   <html:hidden property="projectId" value="<%= unassignedIssues.get(i).getProject().getId().toString() %>"/>
@@ -289,7 +294,7 @@ if (null!=userPrefs) {
                       %>
                   </html:select></td>
                 </html:form>
-          <% } else if(UserUtilities.hasPermission((HashMap)request.getSession().getAttribute("permissions"), unassignedIssues.get(i).getProject().getId(), UserUtilities.PERMISSION_ASSIGN_SELF)) { %>
+          <% } else if(UserUtilities.hasPermission(permissions, unassignedIssues.get(i).getProject().getId(), UserUtilities.PERMISSION_ASSIGN_SELF)) { %>
                 <html:form action="/assignissue">
                   <html:hidden property="issueId" value="<%= unassignedIssues.get(i).getId().toString() %>"/>
                   <html:hidden property="projectId" value="<%= unassignedIssues.get(i).getProject().getId().toString() %>"/>
@@ -347,7 +352,7 @@ if (null!=userPrefs) {
         <tr align="right" class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ) %>">
           <td>
             <it:formatImageAction forward="viewissue" paramName="id" paramValue="<%= createdIssues.get(i).getId() %>" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="<%= createdIssues.get(i).getId() %>" textActionKey="itracker.web.image.view.texttag"/>
-            <% if(IssueUtilities.canEditIssue(createdIssues.get(i), currUser.getId(), (HashMap)request.getSession().getAttribute("permissions"))) { %>
+            <% if(IssueUtilities.canEditIssue(createdIssues.get(i), currUser.getId(), permissions)) { %>
                  <it:formatImageAction action="editissueform" paramName="id" paramValue="<%= createdIssues.get(i).getId() %>" caller="index" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="<%= createdIssues.get(i).getId() %>" textActionKey="itracker.web.image.edit.texttag"/>
             <% } %>
           </td>
@@ -413,7 +418,7 @@ if (null!=userPrefs) {
         <tr align="right" class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ) %>">
           <td>
             <it:formatImageAction forward="viewissue" paramName="id" paramValue="<%= watchedIssues.get(i).getId() %>" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="<%= watchedIssues.get(i).getId() %>" textActionKey="itracker.web.image.view.texttag"/>
-            <% if(IssueUtilities.canEditIssue(watchedIssues.get(i), currUser.getId(), (HashMap)request.getSession().getAttribute("permissions"))) { %>
+            <% if(IssueUtilities.canEditIssue(watchedIssues.get(i), currUser.getId(), permissions)) { %>
                  <it:formatImageAction action="editissueform" paramName="id" paramValue="<%= watchedIssues.get(i).getId() %>" caller="index" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="<%= watchedIssues.get(i).getId() %>" textActionKey="itracker.web.image.edit.texttag"/>
             <% } %>
           </td>

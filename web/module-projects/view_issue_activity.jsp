@@ -8,6 +8,8 @@
 <%@ taglib uri="/tags/c" prefix="c" %>
  
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
 <%@ page import="org.itracker.model.*" %>
 <%@ page import="org.itracker.services.util.IssueUtilities" %>
 <%@ page import="org.itracker.services.util.UserUtilities" %>
@@ -18,6 +20,8 @@
 <!-- once there was page_init here, but now this has been moved into the ItrackerBaseAction -->
 
 <%
+    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
+        session.getAttribute("permissions");
     IssueService ih = (IssueService)request.getAttribute("ih");
     User um = (User)session.getAttribute("currUser");
     Integer issueId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
@@ -30,8 +34,8 @@
     User creator = ih.getIssueCreator(issueId);
 
     if(project == null ||
-        (! UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), project.getId(), UserUtilities.PERMISSION_VIEW_ALL) &&
-            ! (UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), project.getId(), UserUtilities.PERMISSION_VIEW_USERS) &&
+        (! UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_VIEW_ALL) &&
+            ! (UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_VIEW_USERS) &&
                   ((owner != null && owner.getId().equals(currUserId)) ||
                   (creator != null && creator.getId().equals(currUserId)))
               )

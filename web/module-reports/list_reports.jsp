@@ -59,6 +59,9 @@
   </tr>
 
 <%
+        final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
+            session.getAttribute("permissions");
+        
 	IssueService ih = (IssueService)request.getAttribute("ih");
 	ProjectService ph = (ProjectService)request.getAttribute("ph");
     ReportService rh = (ReportService)request.getAttribute("rh");
@@ -69,7 +72,7 @@
 
     boolean hasProjects = false;
     for(int i = 0; i < projects.length; i++) {
-        if(! UserUtilities.hasPermission((Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions"), projects[i].getId(), new int[] {UserUtilities.PERMISSION_VIEW_ALL, UserUtilities.PERMISSION_VIEW_USERS})) {
+        if(! UserUtilities.hasPermission(permissions, projects[i].getId(), new int[] {UserUtilities.PERMISSION_VIEW_ALL, UserUtilities.PERMISSION_VIEW_USERS})) {
              continue;
         }
         hasProjects = true;

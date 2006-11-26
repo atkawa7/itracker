@@ -28,7 +28,10 @@
     ProjectService ph = ServletContextUtils.getItrackerServices(getServletContext()).getProjectService();
 --%>
 
-<%  ReportService rh = (ReportService)request.getAttribute("rh");
+<%  
+        final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
+            session.getAttribute("permissions");
+        ReportService rh = (ReportService)request.getAttribute("rh");
 	UserService uh = (UserService)request.getAttribute("uh");
 	User um = (User)request.getSession().getAttribute("currUser");
     Integer currUserId = um.getId();
@@ -276,7 +279,7 @@
                                         arg0="<%= issues.get(i).getId() %>"
                                         textActionKey="itracker.web.image.view.texttag"/>
 
-                  <% if(UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), issues.get(i).getProject().getId(), UserUtilities.PERMISSION_EDIT)) { %>
+                  <% if(UserUtilities.hasPermission(permissions, issues.get(i).getProject().getId(), UserUtilities.PERMISSION_EDIT)) { %>
                         <it:formatImageAction forward="editissueform"
                                               module=""
                                               paramName="id"
