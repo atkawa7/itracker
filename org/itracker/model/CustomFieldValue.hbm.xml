@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="true">
+
+	<class name="org.itracker.model.CustomFieldValue" table="customfieldvaluebean">
+		<id name="id" column="id" type="int" unsaved-value="null">
+			<generator class="native"/>
+		</id>
+		<property name="createDate" column="create_date" not-null="true" unique="false"/>
+		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>		
+		<many-to-one name="customField" column="custom_field_id" class="org.itracker.model.CustomField"/>
+		<property name="value" column="option_value" not-null="true" unique="false"/>				
+		<property name="sortOrder" column="sort_order" not-null="true" unique="false"/>						
+	</class>
+
+</hibernate-mapping>

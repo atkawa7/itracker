@@ -1,0 +1,7 @@
+# Exported ITracker report Issue List JFReeReport
+name=Issue Severity Report
+namekey=itracker.report.issueseverity
+dataType=2
+reportType=2
+className=org.itracker.web.reports.predefined.ITrackerSeverityReport
+description=rO0ABXQALERpc3BsYXlzIGlzc3VlcyBmb3IgZWFjaCBwcm9qZWN0IGJ5IHNldmVyaXR5
