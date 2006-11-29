@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-
-Name: cowsultants/itracker
-Implementation-Title: Issue Tracker
-Implementation-Vendor: Cowsultants.com
-Implementation-Version: @version@
-
