@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="true">
+
+	<class name="org.itracker.model.ProjectScript" table="projectscriptbean">
+		<id name="id" column="id" type="int" unsaved-value="null">
+			<generator class="native"/>
+		</id>
+		<property name="createDate" column="create_date" not-null="true" unique="false"/>
+		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>		
+		<property name="fieldId" column="field_id" not-null="true" unique="false"/>		
+		<property name="priority" column="script_priority" not-null="true" unique="false"/>				
+		<!--  many-to-one name="project" column="project_id" class="org.itracker.model.Project"/>				
+		<many-to-one name="script" column="script_id" class="org.itracker.model.WorkflowScript"/ -->						
+	</class>
+
+</hibernate-mapping>

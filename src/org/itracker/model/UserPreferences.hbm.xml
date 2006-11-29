@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="true">
+
+	<class name="org.itracker.model.UserPreferences" table="userpreferencesbean">
+		<id name="id" column="id" type="int" unsaved-value="null">
+			<generator class="native"/>
+		</id>
+		<property name="createDate" column="create_date" not-null="true" unique="false"/>
+		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>		
+
+		<property name="saveLogin" column="save_login" not-null="true" unique="false"/>		
+		<property name="userLocale" column="user_locale" not-null="true" unique="false"/>				
+		<property name="numItemsOnIndex" column="num_items_index" not-null="true" unique="false"/>						
+		<property name="numItemsOnIssueList" column="num_items_issue_list" not-null="true" unique="false"/>										
+		<property name="showClosedOnIssueList" column="show_closed" not-null="true" unique="false"/>		
+		<property name="sortColumnOnIssueList" column="sort_column" not-null="true" unique="false"/>		
+		<property name="hiddenIndexSections" column="hidden_index_sections" not-null="true" unique="false"/>				
+		<property name="rememberLastSearch" column="remember_last_search" not-null="true" unique="false"/>						
+		<property name="useTextActions" column="use_text_actions" type="boolean" not-null="true" unique="false"/>										
+		<many-to-one name="user" column="user_id" class="org.itracker.model.User"/>		
+
+	</class>
+
+</hibernate-mapping>

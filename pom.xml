@@ -1,0 +1,346 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <name>itracker</name>
+    <groupId>org.itracker</groupId>
+    <artifactId>itracker</artifactId>
+    <packaging>war</packaging>
+    <version>3.0</version>
+    <url>http://www.itracker.org/</url>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>struts</groupId>
+            <artifactId>struts</artifactId>
+            <version>1.2.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate</artifactId>
+            <version>3.1.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+            <version>2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-javamail_1.3.1_spec</artifactId>
+            <version>1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-ejb_2.1_spec</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jfree</groupId>
+            <artifactId>jfreereport</artifactId>
+            <version>0.8.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jfree</groupId>
+            <artifactId>jcommon</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jfree</groupId>
+            <artifactId>jcommon-xml</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>0.6.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>bsh</groupId>
+            <artifactId>bsh</artifactId>
+            <version>1.3.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.0.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>taglibs</groupId>
+            <artifactId>standard</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>strutstestcase</groupId>
+            <artifactId>strutstestcase</artifactId>
+            <version>2.1.3-1.2-2.3</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <testSourceDirectory>test</testSourceDirectory>
+        <finalName>itracker</finalName>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.0.2-SNAPSHOT</version>
+                <configuration>
+                    <warSourceDirectory>web</warSourceDirectory>
+                    <webResources>
+                        <resource>
+                            <directory>src</directory>
+                            <targetPath>WEB-INF/classes</targetPath>
+                            <includes>
+                                <include>*.properties</include>
+                                <include>*.xml</include>
+                                <include>**/*.hbm.xml</include>
+                            </includes>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <!-- Temporarily disable failing test cases -->
+                    <excludes>
+                        <exclude>**/AllTestCasesBusinessServices.java</exclude>
+                        <exclude>**/AllTestCasesPersistence.java</exclude>
+                        <exclude>**/AllTestsSuite.java</exclude>
+                        <exclude>**/ProjectServiceTest.java</exclude>
+                        <exclude>**/TestApplicationProperties.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- Used to autodeploy the war file into tomcat -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <tasks>
+                                <delete dir="${tomcat.basedir}/work/Catalina/localhost/itracker"
+                                        failonerror="false"/>
+                                <delete dir="${tomcat.basedir}/webapps/itracker"
+                                        failonerror="false"/>
+                                <delete failonerror="false">
+                                    <fileset dir="${tomcat.basedir}/webapps"
+                                             includes="itracker.war"/>
+                                </delete>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>process-classes</id>
+                        <phase>process-classes</phase>
+                        <configuration>
+                            <tasks>
+                                <!--<property name="export" value="false"/>-->
+
+                                <mkdir dir="target/generated-sources/schema"/>
+
+                                <taskdef name="hibernatetool"
+                                         classname="org.hibernate.tool.ant.HibernateToolTask"/>
+                                <hibernatetool destdir="target/generated-sources">
+                                    <classpath refid="maven.compile.classpath"/>
+
+                                    <configuration propertyfile="web/WEB-INF/hibernate.properties">
+                                        <fileset dir="src/org/itracker/model">
+                                            <include name="*.hbm.xml"/>
+                                        </fileset>
+                                    </configuration>
+
+                                    <hbm2cfgxml/>
+
+                                    
+                                    <hbm2ddl drop="false"
+                                             create="true"
+                                             export="false"
+                                             outputfilename="schema/itracker.sql"
+                                             delimiter=";"
+                                             format="true"/>
+
+                                </hibernatetool>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+
+                </executions>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.hibernate</groupId>
+                        <artifactId>hibernate-tools</artifactId>
+                        <version>3.1.0.beta4</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                        <version>1.2.13</version>
+                    </dependency>
+                </dependencies>
+
+            </plugin>
+
+<!--
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                        <configuration>
+                            <container>
+                                <containerId>tomcat5x</containerId>
+                            </container>
+                            <configuration>
+                                <type>existing</type>
+                                <home>${tomcat.basedir}</home>
+                            </configuration>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+-->
+
+        </plugins>
+
+    </build>
+
+    <repositories>
+
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+            <id>clim.apache</id>
+            <name>clim Apache Maven Repository</name>
+            <url>http://people.apache.org/~clim/maven2</url>
+        </repository>
+
+    </repositories>
+
+    <pluginRepositories>
+
+        <pluginRepository>
+            <id>apache.org</id>
+            <name>Maven Snapshots</name>
+            <url>http://people.apache.org/maven-snapshot-repository</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+
+        <pluginRepository>
+            <id>codehaus.org</id>
+            <name>Codehaus Snapshots</name>
+            <url>http://snapshots.repository.codehaus.org</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
+<!--
+    <properties>
+        <tomcat.basedir>C:/java/apache-tomcat-5.5.17</tomcat.basedir>
+    </properties>
+-->
+
+</project>

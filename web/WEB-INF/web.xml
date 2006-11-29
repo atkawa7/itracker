@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee   http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+    <display-name>itracker</display-name>
+    <description>This application allows for issue tracking.</description>
+
+    <context-param>
+        <param-name>webmaster</param-name>
+        <param-value>itracker@itracker.org</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/application-context.xml</param-value>
+    </context-param>
+
+    <!--Authentication against windows smb server-->
+<!--
+   <filter>
+       <filter-name>NTLM HTTP Authentication Filter</filter-name>
+       <filter-class>jcifs.http.NtlmHttpFilter</filter-class>
+         For development, any SMB server is suitable for validating password hashes.
+       <init-param>
+           <param-name>jcifs.http.domainController</param-name>
+           <param-value>testpdc</param-value>
+       </init-param>
+   </filter>
+-->
+
+    <filter>
+        <filter-name>SetRequestCharacterEncoding</filter-name>
+        <filter-class>org.itracker.web.filters.SetRequestCharacterEncoding
+        </filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+
+    <filter>
+        <filter-name>OpenSessionInView</filter-name>
+        <filter-class>
+            org.springframework.orm.hibernate3.support.OpenSessionInViewFilter
+        </filter-class>
+    </filter>
+
+    <!-- NTLM HTTP Authentication -->
+<!--
+    <filter-mapping>
+       <filter-name>NTLM HTTP Authentication Filter</filter-name>
+       <url-pattern></url-pattern>
+    </filter-mapping
+-->
+
+    <filter-mapping>
+        <filter-name>SetRequestCharacterEncoding</filter-name>
+        <servlet-name>action</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>OpenSessionInView</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>action</servlet-name>
+        <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+        <init-param>
+            <param-name>config</param-name>
+            <param-value>/WEB-INF/config/struts-config.xml</param-value>
+        </init-param>
+        <init-param>
+            <param-name>config/module-admin</param-name>
+            <param-value>/WEB-INF/config/struts-module-admin-config.xml
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>config/module-preferences</param-name>
+            <param-value>/WEB-INF/config/struts-module-preferences-config.xml
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>config/module-reports</param-name>
+            <param-value>/WEB-INF/config/struts-module-reports-config.xml
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>config/module-projects</param-name>
+            <param-value>/WEB-INF/config/struts-module-projects-config.xml
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>config/module-searchissues</param-name>
+            <param-value>/WEB-INF/config/struts-module-searchissues-config.xml
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>config/module-help</param-name>
+            <param-value>/WEB-INF/config/struts-module-help-config.xml
+            </param-value>
+        </init-param>
+        <load-on-startup>3</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AttachmentDownloadController</servlet-name>
+        <servlet-class>org.itracker.web.servlets.AttachmentDownloadController
+        </servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ReportChartController</servlet-name>
+        <servlet-class>org.itracker.web.servlets.ReportChartController
+        </servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ReportDownloadController</servlet-name>
+        <servlet-class>org.itracker.web.servlets.ReportDownloadController
+        </servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>action_tmp</servlet-name>
+        <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+        <init-param>
+            <param-name>config</param-name>
+            <param-value>/WEB-INF/config/struts-config.xml</param-value>
+        </init-param>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>3</param-value>
+        </init-param>
+        <init-param>
+            <param-name>detail</param-name>
+            <param-value>3</param-value>
+        </init-param>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>action</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AttachmentDownloadController</servlet-name>
+        <url-pattern>/servlets/AttachmentDownloadController</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ReportChartController</servlet-name>
+        <url-pattern>/servlets/ReportChartController</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ReportDownloadController</servlet-name>
+        <url-pattern>/servlets/ReportDownloadController</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <jsp-config>
+        <taglib>
+            <taglib-uri>/itracker.tld</taglib-uri>
+            <taglib-location>/WEB-INF/tld/itracker.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/tags/c</taglib-uri>
+            <taglib-location>/WEB-INF/tld/c.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/tags/fmt</taglib-uri>
+            <taglib-location>/WEB-INF/tld/fmt.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/tags/sql</taglib-uri>
+            <taglib-location>/WEB-INF/tld/sql.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/tags/x</taglib-uri>
+            <taglib-location>/WEB-INF/tld/x.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/tags/fn</taglib-uri>
+            <taglib-location>/WEB-INF/tld/fn.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/tags/struts-bean</taglib-uri>
+            <taglib-location>/WEB-INF/tld/struts-bean.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/tags/struts-html</taglib-uri>
+            <taglib-location>/WEB-INF/tld/struts-html.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/tags/struts-logic</taglib-uri>
+            <taglib-location>/WEB-INF/tld/struts-logic.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/tags/struts-nested</taglib-uri>
+            <taglib-location>/WEB-INF/tld/struts-nested.tld</taglib-location>
+        </taglib>
+    </jsp-config>
+
+</web-app>

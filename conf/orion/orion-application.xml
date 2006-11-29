@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!DOCTYPE orion-application PUBLIC "-//Evermind//DTD J2EE Application runtime 1.2//EN" "http://www.orionserver.com/dtds/orion-application.dtd">
+
+<orion-application auto-create-tables="false" default-data-source="ITrackerDS">
+	<ejb-module remote="false" path="ejb-app.jar" />
+	<web-module id="web-app" path="web-app.war" />
+	<web-module id="axis" path="axis.war" />
+	<persistence path="persistence" />
+	<log>
+		<file path="application.log" />
+	</log>
+</orion-application>

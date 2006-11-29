@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<!DOCTYPE database-schema PUBLIC "-//Evermind//- Database schema" "http://www.orionserver.com/dtds/database-schema.dtd">
+
+<!-- This is a database schema for MySQL.  It should be placed in the config/database-schemas
+     directory and named mysql.xml -->
+
+<database-schema name="mySQL" not-null="not null" null="" primary-key="primary key">
+  <type-mapping type="byte" name="smallint" />
+  <type-mapping type="short" name="smallint" />
+  <type-mapping type="int" name="integer" />
+  <type-mapping type="long" name="bigint" />
+  <type-mapping type="float" name="float" />
+  <type-mapping type="double" name="double" />
+  <type-mapping type="char" name="char(1)" />
+  <type-mapping type="boolean" name="char(1)"/>
+  <type-mapping type="java.util.Date" name="datetime" />
+  <type-mapping type="java.lang.String" name="varchar(255) binary" /> <!-- case sensitive mode -->
+  <type-mapping type="java.io.Serializable" name="blob" /> <!-- could use tinyblob,mediumblob or longblob -->
+
+
+  <disallowed-field name="action" />
+  <disallowed-field name="add" />
+  <disallowed-field name="all" />
+  <disallowed-field name="alter" />
+  <disallowed-field name="and" />
+  <disallowed-field name="as" />
+  <disallowed-field name="asc" />
+  <disallowed-field name="auto_increment" />
+  <disallowed-field name="between" />
+  <disallowed-field name="bigint" />
+  <disallowed-field name="bit" />
+  <disallowed-field name="binary" />
+  <disallowed-field name="blob" />
+  <disallowed-field name="both" />
+  <disallowed-field name="by" />
+  <disallowed-field name="cascade" />
+  <disallowed-field name="char" />
+  <disallowed-field name="character" />
+  <disallowed-field name="change" />
+  <disallowed-field name="check" />
+  <disallowed-field name="column" />
+  <disallowed-field name="columns" />
+  <disallowed-field name="create" />
+  <disallowed-field name="data" />
+  <disallowed-field name="database" />
+  <disallowed-field name="databases" />
+  <disallowed-field name="date" />
+  <disallowed-field name="datetime" />
+  <disallowed-field name="day" />
+  <disallowed-field name="day_hour" />
+  <disallowed-field name="day_minute" />
+  <disallowed-field name="day_second" />
+  <disallowed-field name="dayofweek" />
+  <disallowed-field name="dec" />
+  <disallowed-field name="decimal" />
+  <disallowed-field name="default" />
+  <disallowed-field name="delete" />
+  <disallowed-field name="desc" />
+  <disallowed-field name="describe" />
+  <disallowed-field name="distinct" />
+  <disallowed-field name="double" />
+  <disallowed-field name="drop" />
+  <disallowed-field name="escaped" />
+  <disallowed-field name="enclosed" />
+  <disallowed-field name="enum" />
+  <disallowed-field name="explain" />
+  <disallowed-field name="fields" />
+  <disallowed-field name="float" />
+  <disallowed-field name="float4" />
+  <disallowed-field name="float8" />
+  <disallowed-field name="foreign" />
+  <disallowed-field name="from" />
+  <disallowed-field name="for" />
+  <disallowed-field name="full" />
+  <disallowed-field name="grant" />
+  <disallowed-field name="group" />
+  <disallowed-field name="having" />
+  <disallowed-field name="hour" />
+  <disallowed-field name="hour_minute" />
+  <disallowed-field name="hour_second" />
+  <disallowed-field name="ignore" />
+  <disallowed-field name="in" />
+  <disallowed-field name="index" />
+  <disallowed-field name="infile" />
+  <disallowed-field name="insert" />
+  <disallowed-field name="int" />
+  <disallowed-field name="integer" />
+  <disallowed-field name="interval" />
+  <disallowed-field name="int1" />
+  <disallowed-field name="int2" />
+  <disallowed-field name="int3" />
+  <disallowed-field name="int4" />
+  <disallowed-field name="int8" />
+  <disallowed-field name="into" />
+  <disallowed-field name="is" />
+  <disallowed-field name="join" />
+  <disallowed-field name="key" />
+  <disallowed-field name="keys" />
+  <disallowed-field name="leading" />
+  <disallowed-field name="left" />
+  <disallowed-field name="like" />
+  <disallowed-field name="lines" />
+  <disallowed-field name="limit" />
+  <disallowed-field name="lock" />
+  <disallowed-field name="load" />
+  <disallowed-field name="long" />
+  <disallowed-field name="longblob" />
+  <disallowed-field name="longtext" />
+  <disallowed-field name="match" />
+  <disallowed-field name="mediumblob" />
+  <disallowed-field name="mediumtext" />
+  <disallowed-field name="mediumint" />
+  <disallowed-field name="middleint" />
+  <disallowed-field name="minute" />
+  <disallowed-field name="minute_second" />
+  <disallowed-field name="month" />
+  <disallowed-field name="natural" />
+  <disallowed-field name="numeric" />
+  <disallowed-field name="no" />
+  <disallowed-field name="not" />
+  <disallowed-field name="null" />
+  <disallowed-field name="on" />
+  <disallowed-field name="option" />
+  <disallowed-field name="optionally" />
+  <disallowed-field name="or" />
+  <disallowed-field name="order" />
+  <disallowed-field name="outer" />
+  <disallowed-field name="outfile" />
+  <disallowed-field name="partial" />
+  <disallowed-field name="precision" />
+  <disallowed-field name="primary" />
+  <disallowed-field name="procedure" />
+  <disallowed-field name="privileges" />
+  <disallowed-field name="read" />
+  <disallowed-field name="real" />
+  <disallowed-field name="references" />
+  <disallowed-field name="rename" />
+  <disallowed-field name="regexp" />
+  <disallowed-field name="repeat" />
+  <disallowed-field name="replace" />
+  <disallowed-field name="restrict" />
+  <disallowed-field name="rlike" />
+  <disallowed-field name="select" />
+  <disallowed-field name="set" />
+  <disallowed-field name="show" />
+  <disallowed-field name="smallint" />
+  <disallowed-field name="sql_big_tables" />
+  <disallowed-field name="sql_big_selects" />
+  <disallowed-field name="sql_select_limit" />
+  <disallowed-field name="sql_log_off" />
+  <disallowed-field name="straight_join" />
+  <disallowed-field name="starting" />
+  <disallowed-field name="table" />
+  <disallowed-field name="tables" />
+  <disallowed-field name="terminated" />
+  <disallowed-field name="text" />
+  <disallowed-field name="time" />
+  <disallowed-field name="timestamp" />
+  <disallowed-field name="tinyblob" />
+  <disallowed-field name="tinytext" />
+  <disallowed-field name="tinyint" />
+  <disallowed-field name="trailing" />
+  <disallowed-field name="to" />
+  <disallowed-field name="use" />
+  <disallowed-field name="using" />
+  <disallowed-field name="unique" />
+  <disallowed-field name="unlock" />
+  <disallowed-field name="unsigned" />
+  <disallowed-field name="update" />
+  <disallowed-field name="usage" />
+  <disallowed-field name="values" />
+  <disallowed-field name="varchar" />
+  <disallowed-field name="varying" />
+  <disallowed-field name="varbinary" />
+  <disallowed-field name="with" />
+  <disallowed-field name="write" />
+  <disallowed-field name="where" />
+  <disallowed-field name="year" />
+  <disallowed-field name="year_month" />
+  <disallowed-field name="zerofill" />
+</database-schema>
