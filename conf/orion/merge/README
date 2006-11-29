@@ -1,9 +1,0 @@
-README
-
-This is a merge directory. Though we haven't added direct support for these appservers, 
-you can easily add it yourself by defining the merge files defined for XDoclet (look online).
-
-If there is demand, then we will add the relevant tags to the source code to generate these
-files automatically. 
-
-
