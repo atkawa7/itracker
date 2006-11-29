@@ -1,0 +1,11 @@
+    <JDBCTxDataSource JNDIName="ITrackerDS" Name="MySQL TxDataSource"
+        PoolName="MySQL ConnectionPool" Targets="myserver"/>
+    <JDBCConnectionPool DriverName="org.gjt.mm.mysql.Driver"
+        MaxCapacity="5" Name="MySQL ConnectionPool"
+        Password="{3DES}yf5Oat3PkXjH2QcQp8uSKg=="
+        Properties="user=itracker;password=itracker" Targets="myserver" URL="jdbc:mysql://localhost/dev"/>
+    <JMSConnectionFactory JNDIName="jms/ConnectionFactory"
+        Name="JMS Connection Factory" Targets="myserver"/>
+    <JMSServer Name="JMSServer" Targets="myserver">
+        <JMSQueue JNDIName="jms/ITrackerNotificationQueue" Name="ITracker Notification Queue"/>
+    </JMSServer>
