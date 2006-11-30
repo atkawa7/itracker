@@ -20,7 +20,7 @@ package org.itracker.model.deprecatedmodels;
 
 import java.util.Comparator;
 
-class ConfigurationModel extends GenericModel implements Comparator<ConfigurationModel> {
+public class ConfigurationModel extends GenericModel implements Comparator<ConfigurationModel> {
     private int type;
     private int order;
     private String version;

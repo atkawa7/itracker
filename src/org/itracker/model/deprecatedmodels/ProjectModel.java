@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-class ProjectModel extends GenericModel implements Comparator<ProjectModel> {
+public class ProjectModel extends GenericModel implements Comparator<ProjectModel> {
     private String name;
     private String description;
     private int status;

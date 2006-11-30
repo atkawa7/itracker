@@ -23,7 +23,7 @@ import java.util.*;
 import org.itracker.core.resources.*;
 import org.itracker.services.util.*;
 
-class CustomFieldModel extends GenericModel implements Comparator<CustomFieldModel> {
+public class CustomFieldModel extends GenericModel implements Comparator<CustomFieldModel> {
     private int fieldType = -1;
     private boolean required = false;
     private String dateFormat = CustomFieldUtilities.DATE_FORMAT_DATEONLY;

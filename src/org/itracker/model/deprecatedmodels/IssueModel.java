@@ -25,7 +25,7 @@ import java.util.List;
 
 
 
-class IssueModel extends GenericModel implements Comparator<IssueModel>, IIssue {
+public class IssueModel extends GenericModel implements Comparator<IssueModel>, IIssue {
     private String description;
     private int severity;
     private int status;
