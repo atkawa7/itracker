@@ -43,13 +43,11 @@ import org.itracker.model.Version;
 import org.itracker.services.IssueService;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.implementations.IssueServiceImpl;
-import org.itracker.services.implementations.ConfigurationServiceImpl;
 import org.itracker.services.util.EmailService;
 import org.itracker.services.util.HTMLUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NotificationUtilities;
 import org.itracker.services.util.ProjectUtilities;
-
 
 public class NotificationMessageBean implements MessageDrivenBean, MessageListener {
     
