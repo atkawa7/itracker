@@ -40,7 +40,7 @@ public class Version extends AbstractBean implements Comparable<Version> {
     /**
      * Default constructor. 
      */
-    private Version() {
+    public Version() {
     }
 
     public Version(Project project, String number) {
