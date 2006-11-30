@@ -4,7 +4,7 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping auto-import="true">
 
-	<class name="org.itracker.model.ComponentBean" table="componentbean">
+	<class name="org.itracker.model.Component" table="componentbean">
 		<id name="id" column="id" type="int" unsaved-value="null">
 			<generator class="native"/>
 		</id>
@@ -12,12 +12,12 @@
 		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>		
 		<property name="name" not-null="true" unique="false"/>		
 		<property name="description" not-null="true" unique="false"/>				
-		<many-to-one name="project" column="project_id" class="org.itracker.model.ProjectBean"/>		
+		<many-to-one name="project" column="project_id" class="org.itracker.model.Project"/>		
 		<bag name="issues" table="issue_component_rel" lazy="true">
 			<key>
 				<column name="component_id"/>
 			</key>
-			<many-to-many class="org.itracker.model.IssueBean" column="issue_id"/>
+			<many-to-many class="org.itracker.model.Issue" column="issue_id"/>
 		</bag>
 	</class>
 
