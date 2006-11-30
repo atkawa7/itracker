@@ -18,7 +18,6 @@
 
 package org.itracker.model;
 
-import bsh.This;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
