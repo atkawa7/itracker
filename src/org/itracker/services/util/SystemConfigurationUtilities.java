@@ -89,8 +89,7 @@ public class SystemConfigurationUtilities {
 
         configurationService.initializeLocale(ITrackerResources.BASE_LOCALE, forceReload);
 
-        Language definedLocalesString = configurationService.getLanguageItemByKey(
-                ITrackerResources.DEFINED_LOCALES_KEY, null);
+        Language definedLocalesString = configurationService.getLanguageItemByKey(ITrackerResources.DEFINED_LOCALES_KEY, null);
 
         if(definedLocalesString != null && definedLocalesString.getResourceValue() != null) {
             String locales = definedLocalesString.getResourceValue();
