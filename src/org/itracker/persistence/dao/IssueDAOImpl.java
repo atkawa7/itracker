@@ -1,12 +1,11 @@
 package org.itracker.persistence.dao;
 
-import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.ObjectNotFoundException;
 import org.hibernate.criterion.Expression;
 import org.itracker.model.Issue;
 import org.itracker.model.Project;

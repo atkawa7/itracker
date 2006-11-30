@@ -34,7 +34,6 @@ import org.itracker.model.Issue;
 import org.itracker.model.IssueAttachment;
 import org.itracker.model.IssueField;
 import org.itracker.model.IssueHistory;
-import org.itracker.model.Issue;
 import org.itracker.model.Project;
 import org.itracker.model.SystemConfiguration;
 import org.itracker.model.User;

@@ -1,16 +1,6 @@
 package org.itracker.web.ptos;
 
-import java.util.List;
-import org.itracker.model.Component;
-import org.itracker.model.IssueAttachment;
 import org.itracker.model.Issue;
-import org.itracker.model.IssueField;
-import org.itracker.model.IssueHistory;
-import org.itracker.model.IssueRelation;
-import org.itracker.model.Notification;
-import org.itracker.model.Project;
-import org.itracker.model.User;
-import org.itracker.model.Version;
 
 
 public class IssuePTO {
