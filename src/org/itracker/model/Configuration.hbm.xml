@@ -13,7 +13,7 @@
 		<property name="value" column="item_value" not-null="true" unique="false"/>		
 		<property name="version" column="item_version" not-null="true" unique="false"/>	
 		<property name="createDate" column="create_date" not-null="true" unique="false"/>	
-		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>		
+		<property name="lastModifiedDate" column="last_modified" not-null="false" unique="false"/>		
 	</class>	
 	
 </hibernate-mapping>
