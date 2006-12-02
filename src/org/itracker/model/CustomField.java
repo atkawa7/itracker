@@ -184,7 +184,8 @@ public class CustomField extends AbstractBean implements Comparable<CustomField>
      * @param locale the locale to use for the names
      */
     public void setLabels(Locale locale) {
-        String localeCode = locale.toString();
+        @SuppressWarnings("unused")
+		String localeCode = locale.toString();
         
         this.name = CustomFieldUtilities.getCustomFieldName(getId(), locale);
         
