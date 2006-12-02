@@ -59,7 +59,8 @@ public class NotificationMessageBean implements MessageDrivenBean, MessageListen
     public static final String DEFAULT_SMTP_HOST = "localhost";
 
     private final Logger logger;
-    private MessageDrivenContext ejbContext;
+    @SuppressWarnings("unused")
+	private MessageDrivenContext ejbContext;
     private Context jndiContext;
     private ConfigurationService configurationService;
     private EmailService emailService; 
