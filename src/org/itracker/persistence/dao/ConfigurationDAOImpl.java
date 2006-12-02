@@ -5,7 +5,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Expression;
 import org.itracker.model.Configuration;
-
+ 
 /**
  * 
  */
