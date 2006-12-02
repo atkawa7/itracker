@@ -32,10 +32,13 @@ import org.itracker.services.util.Convert;
 public class ScheduledTask extends AbstractBean {
 
     private String hours;
-    private String minutes;
-    private String daysOfMonth;
+    @SuppressWarnings("unused")
+	private String minutes;
+    @SuppressWarnings("unused")
+	private String daysOfMonth;
     private String months;
-    private String weekdays;
+    @SuppressWarnings("unused")
+	private String weekdays;
     private String className;
 
     private int[] hrs = new int[] { -1 };
