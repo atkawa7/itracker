@@ -1,5 +1,4 @@
-/*
- * This software was designed and created by Jason Carroll.
+/* This software was designed and created by Jason Carroll.
  * Copyright (c) 2002, 2003, 2004 Jason Carroll.
  * The author can be reached at jcarroll@cowsultants.com
  * ITracker website: http://www.cowsultants.com
@@ -15,34 +14,58 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
 package org.itracker.model;
 
 import java.util.Comparator;
 
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.
+ * 
  * @author ready
- *
  */
 public class Version extends AbstractBean implements Comparable<Version> {
 
+    /**
+     * Invariant: never <tt>null</tt>. 
+     */
+    private Project project;
+    
+    /**
+     * Invariant: never <tt>null</tt>. 
+     */
     private String number;
+    
+    /* major and minor are only used to compare Versions.  
+     * They can be computed from the <code>number</code> attribute,  
+     * PENDING: We should also allow to specify them separately 
+     * in order not to impose any constraint on the format of the version number.  
+     */
     private int major;
     private int minor;
+    
     private String description;
+    
     private int status;
-    private Project project;
 
     private static final Comparator<Version> versionComparator = 
             new VersionComparator();
     
     /**
-     * Default constructor. 
+     * Default constructor (required by Hibernate). 
+     * 
+     * <p>PENDING: should be <code>private</code> so that it can only be used 
+     * by Hibernate, to ensure that <code>project</code> and <code>number</code>, 
+     * which form an instance's identity, are never <tt>null</tt>. </p>
      */
     public Version() {
     }
 
+    /**
+     * Creates a new active Version for the given Project. 
+     * 
+     * @param project project to which this version belongs
+     * @param number unique within the project
+     */
     public Version(Project project, String number) {
         setProject(project);
         setVersionInfo(number);
