@@ -109,14 +109,14 @@ public class ITrackerResources {
                     logger.debug("Invalid locale '" + localeString + "' specified.  It must be either LN or LN_CN.");
                     throw new Exception("Invalid locale string");
                 }
-            } catch (Exception e) {
+            } catch (Exception ex) {
                 if (!localeString.equals(getDefaultLocale())) {
-                    logger.debug("Failed creating new locale for '" + localeString
-                            + "' attempting for default locale '" + getDefaultLocale() + "'");
+                    logger.error("Failed creating new locale for '" + localeString
+                            + "' attempting for default locale '" + getDefaultLocale() + "'", ex);
                     return getLocale(getDefaultLocale());
                 } else {
-                    logger.debug("Failed creating new default locale for '" + getDefaultLocale()
-                            + "' attempting for DEFAULT_LOCALE '" + DEFAULT_LOCALE + "'");
+                    logger.error("Failed creating new default locale for '" + getDefaultLocale()
+                            + "' attempting for DEFAULT_LOCALE '" + DEFAULT_LOCALE + "'", ex);
                     return getLocale(DEFAULT_LOCALE);
                 }
             }
@@ -261,19 +261,21 @@ public class ITrackerResources {
                 ((ITrackerResourceBundle) getBundle(locale)).updateValue(languageItem);
             }
             return getBundle(locale).getString(key);
-        } catch (NullPointerException npe) {
-            logger.error("Unable to get any resources.  The requested locale was " + locale);
+        } catch (NullPointerException ex) {
+            logger.error("Unable to get any resources.  The requested locale was " + locale, ex);
             return "MISSING BUNDLE: " + locale;
-        } catch (MissingResourceException mre) {
-            logger.info("MissingResourceException caught while retrieving translation key '" + key + "' for locale "
-                    + locale);
+        } catch (MissingResourceException ex) {
+            logger.warn("MissingResourceException caught while retrieving translation key '" + key + "' for locale "
+                    + locale, ex);
             return "MISSING KEY: " + key;
-        } catch (NoSuchEntityException mre) {
+        } catch (NoSuchEntityException ex) {
+            logger.warn("", ex);
+            
             try {
                 return getEditBundle(locale).getString(key);
-            } catch (Exception e ) {
-                logger.info("NoSuchEntityException caught while retrieving translation key '" + key + "' for locale "
-                    + locale);
+            } catch (Exception ex2) {
+                logger.warn("NoSuchEntityException caught while retrieving translation key '" + key + "' for locale "
+                    + locale, ex2);
                 return "MISSING KEY: " + key;
             }
         } 
@@ -311,8 +313,8 @@ public class ITrackerResources {
             return getBundle(locale).getString(key);
         } catch (ITrackerDirtyResourceException idre) {
             return getString(key, locale);
-        } catch (NullPointerException npe) {
-            logger.error("Unable to get ResourceBundle for locale " + locale);
+        } catch (NullPointerException ex) {
+            logger.error("Unable to get ResourceBundle for locale " + locale, ex);
             throw new MissingResourceException("MISSING LOCALE: " + locale, "ITrackerResources", key);
         }
     }
