@@ -38,10 +38,16 @@ import java.util.Comparator;
  */
 public class Component extends AbstractBean implements Comparable<Component> {
 
-    /** Project to which this component belongs. */
+    /**
+     * Project to which this component belongs. 
+     * Invariant: never <tt>null</tt>. 
+     */
     private Project project;
     
-    /** Unique name identifying this component within its project. */
+    /**
+     * Unique name identifying this component within its project. 
+     * Invariant: never <tt>null</tt>. 
+     */
     private String name;
     
     /** Component description. */
@@ -50,16 +56,19 @@ public class Component extends AbstractBean implements Comparable<Component> {
     /** Component status. */
     private int status;
     
-    private Collection<Issue> issues = new ArrayList<Issue>();
     
     /**
-     * Default constructor required by Hibernate. 
+     * Default constructor (required by Hibernate). 
+     *
+     * <p>PENDING: should be <code>private</code> so that it can only be used
+     * by Hibernate, to ensure that <code>project</code> and <code>name</code>, 
+     * which form an instance's identity, are never <tt>null</tt>. </p>
      */
     public Component() {
     }
     
     /**
-     * Creates a new Component of the given name for the given Project. 
+     * Creates a new active Component of the given name for the given Project. 
      * 
      * @param project owning this component
      * @param name unique component name within the project
@@ -71,12 +80,7 @@ public class Component extends AbstractBean implements Comparable<Component> {
         // A new component is active by default. 
         this.status = 1; // = ProjectUtilities.STATUS_ACTIVE
     }
-    public Collection<Issue> getIssues() {
-        return issues;
-    }
-    public void setIssues(Collection<Issue> issues) {
-        this.issues = issues;
-    }  
+    
     /**
      * Returns the project owning this component. 
      * 
