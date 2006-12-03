@@ -1,1 +1,0 @@
-We will establish a ToDo system and documentation for better collaboration. The ToDo list will be based on XDoclet @todo tags.
