@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.criterion.Expression;
 import org.itracker.model.Issue;
 import org.itracker.model.Project;
@@ -51,20 +52,15 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
     @SuppressWarnings("unchecked")
     public List<Issue> findByCreatorInAvailableProjects(Integer userId, int status) {
-        final String hql = 
-                "select issue from Issue as issue " + 
-                "inner join issue.project as project " +
-                "where project.status = :projectStatus " +
-                " and issue.creator.id = :creatorId " +
-                " and issue.status = :issueStatus";
         final List<Issue> issues;
         
         try {
-            issues = getSession().createQuery(hql)
-                    .setInteger("projectStatus", Integer.valueOf(1))
-                    .setInteger("creatorId", userId)
-                    .setInteger("issueStatus", status)
-                    .list();
+            Query query = getSession().getNamedQuery(
+                    "IssuesByCreatorInAvailableProjectsQuery");
+            query.setInteger("projectStatus", Integer.valueOf(1));
+            query.setInteger("creatorId", userId);
+            query.setInteger("issueStatus", status);
+            issues = query.list();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -145,16 +141,11 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         final List<Issue> issues;
         
         try {
-            final String hql = "select issue from Issue as issue " +
-                    "inner join issue.notifications as notification " +
-                    "inner join notification.user as user " +
-                    "where user.id = :userId " + 
-                    " and issue.status = :status";
-            
-            issues = getSession().createQuery(hql)
-                    .setInteger("userId", userId)
-                    .setInteger("status", status)
-                    .list();
+            final Query query = getSession().getNamedQuery(
+                    "IssuesByNotificationInAvailableProjectsQuery");
+            query.setInteger("userId", userId);
+            query.setInteger("status", status);
+            issues = query.list();
         } catch (HibernateException ex) { 
             throw convertHibernateAccessException(ex);
         }
@@ -166,15 +157,11 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         final List<Issue> issues; 
         
         try {
-            final String hql = "select issue from Issue as issue " +
-                    "inner join Notification as notification " +
-                    "where notification.user.id = :userId " + 
-                    " and issue.status = :status";
-            
-            issues = getSession().createQuery(hql)
-                    .setInteger("userId", userId)
-                    .setInteger("status", status)
-                    .list();
+            final Query query = getSession().getNamedQuery(
+                    "IssuesByNotificationQuery");
+            query.setInteger("userId", userId);
+            query.setInteger("status", status);
+            issues = query.list();
         } catch (HibernateException ex) { 
             throw convertHibernateAccessException(ex);
         }
@@ -300,15 +287,13 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
     @SuppressWarnings("unchecked")
     public List<Issue> findByComponent(Integer componentId) {
-        final String hql = "select issue "
-                + "from Issue as issue inner join issue.components as component "
-                + "where component.id = :componentId";
         final List<Issue> issues;
         
         try {
-            issues = getSession().createQuery(hql)
-                   .setInteger("componentId", componentId)
-                   .list();
+            final Query query = getSession().getNamedQuery(
+                    "IssuesByComponentQuery");
+            query.setInteger("componentId", componentId);
+            issues = query.list();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -316,15 +301,13 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
     }
     
     public int countByComponent(Integer componentId) {
-        final String hql = "select count(issue) "
-                + "from Issue as issue inner join issue.components as component "
-                + "where component.id = :componentId";
         final Integer count;
         
         try {
-            count = (Integer)getSession().createQuery(hql)
-                   .setInteger("componentId", componentId)
-                   .uniqueResult();
+            final Query query = getSession().getNamedQuery(
+                    "IssueCountByComponentQuery");
+            query.setInteger("componentId", componentId);
+            count = (Integer)query.uniqueResult();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -333,15 +316,13 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
     
     @SuppressWarnings("unchecked")
     public List<Issue> findByVersion(Integer versionId) {
-        final String hql = "select issue "
-                + "from Issue as issue inner join issue.versions as version "
-                + "where version.id = :versionId";
         final List<Issue> issues;
         
         try {
-            issues = getSession().createQuery(hql)
-                   .setInteger("versionId", versionId)
-                   .list();
+             final Query query = getSession().getNamedQuery(
+                     "IssuesByVersionQuery");
+             query.setInteger("versionId", versionId);
+             issues = query.list();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -349,15 +330,13 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
     }
     
     public int countByVersion(Integer versionId) {
-        final String hql = "select count(issue) "
-                + "from Issue as issue inner join issue.versions as version "
-                + "where version.id = :versionId";
         final Integer count;
         
         try {
-            count = (Integer)getSession().createQuery(hql)
-                   .setInteger("versionId", versionId)
-                   .uniqueResult();
+            final Query query = getSession().getNamedQuery(
+                    "IssueCountByVersionQuery");
+            query.setInteger("versionId", versionId);
+            count = (Integer)query.uniqueResult();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -366,15 +345,13 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
     
     @SuppressWarnings("unchecked")
     public Date latestModificationDate(Integer projectId) {
-        final String hql = "select max(issue.lastModifiedDate) " +
-                    "from Issue as issue " +
-                    "where issue.project.id = :projectId";
         final Date lastModifiedDate; 
         
         try {
-            lastModifiedDate = (Date) getSession().createQuery(hql)
-                .setInteger("projectId", projectId)
-                .uniqueResult();
+            final Query query = getSession().getNamedQuery(
+                    "MaxIssueModificationDateQuery");
+            query.setInteger("projectId", projectId);
+            lastModifiedDate = (Date)query.uniqueResult();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }

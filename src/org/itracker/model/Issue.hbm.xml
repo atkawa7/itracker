@@ -66,6 +66,68 @@
 				<column name="issue_id"/>
 			</key>
 			<one-to-many class="org.itracker.model.IssueActivity"/>
-		</bag>						
+		</bag>	
 	</class>
+    
+    <!-- Named queries (validated at application startup). -->
+    
+    <query name="IssuesByCreatorInAvailableProjectsQuery"><![CDATA[
+    select issue 
+    from Issue as issue 
+    inner join issue.project as project 
+    where project.status = :projectStatus 
+     and issue.creator.id = :creatorId
+     and issue.status = :issueStatus ]]>
+    </query>
+
+    <query name="IssuesByNotificationInAvailableProjectsQuery"><![CDATA[
+    select issue 
+    from Issue as issue 
+    inner join issue.notifications as notification 
+    inner join notification.user as user 
+    where user.id = :userId 
+     and issue.status = :status]]>
+    </query>
+
+    <query name="IssuesByNotificationQuery"><![CDATA[
+    select issue 
+    from Issue as issue 
+    inner join issue.notifications as notification 
+    where notification.user.id = :userId 
+     and issue.status = :status ]]>
+    </query>
+
+    <query name="IssuesByComponentQuery"><![CDATA[
+    select issue 
+    from Issue as issue 
+    inner join issue.components as component 
+    where component.id = :componentId ]]>
+    </query>
+
+    <query name="IssueCountByComponentQuery"><![CDATA[
+    select count(issue) 
+    from Issue as issue 
+    inner join issue.components as component 
+    where component.id = :componentId ]]>
+    </query>
+
+    <query name="IssuesByVersionQuery"><![CDATA[
+    select issue 
+    from Issue as issue 
+    inner join issue.versions as version 
+    where version.id = :versionId ]]>
+    </query>
+
+    <query name="IssueCountByVersionQuery"><![CDATA[
+    select count(issue) 
+    from Issue as issue 
+    inner join issue.versions as version 
+    where version.id = :versionId ]]>
+    </query>
+
+    <query name="MaxIssueModificationDateQuery"><![CDATA[
+    select max(issue.lastModifiedDate) 
+    from Issue as issue 
+    where issue.project.id = :projectId ]]>
+    </query>
 </hibernate-mapping>
