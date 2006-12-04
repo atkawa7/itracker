@@ -182,7 +182,7 @@
                 <directory>src</directory>
                 <includes>
                     <include>**/**.hbm.xml</include>
-                    <include>**/*.properties</include>
+                    <include>**/**.properties</include>
                 </includes>
             </resource>
         </resources>
