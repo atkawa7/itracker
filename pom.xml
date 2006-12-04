@@ -10,6 +10,12 @@
     <version>3.0</version>
     <url>http://www.itracker.org/</url>
 
+    <scm>
+      <connection>scm:svn:https://svn.sourceforge.net/svnroot/itracker/itracker/trunk/</connection>
+      <developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/itracker/itracker/trunk/</developerConnection>
+      <url>scm:svn:https://svn.sourceforge.net/svnroot/itracker/itracker/trunk/</url>
+    </scm>
+
     <dependencies>
 
         <dependency>
