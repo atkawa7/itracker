@@ -31,6 +31,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.services.util.UserUtilities;
+import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
 
@@ -57,6 +58,9 @@ public class CreateLanguageKeyFormAction extends ItrackerBaseAction {
             return mapping.findForward("unauthorized");
         }
 
+        super.executeAlways(mapping,form,request,response);
+	ConfigurationService configurationService = this.getITrackerServices().getConfigurationService();
+	request.setAttribute("sc",configurationService);
         try {
             saveToken(request);
             return mapping.getInputForward();

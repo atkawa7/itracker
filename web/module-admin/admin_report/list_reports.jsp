@@ -60,7 +60,7 @@
 		
       <td>
         <it:formatImageAction action="editreportform" paramName="id" paramValue="${report.id}" targetAction="update" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.report.alt" arg0="${report.name}" textActionKey="itracker.web.image.edit.texttag"/>
-        <it:formatImageAction forward="downloadreport" paramName="id" paramValue="${report.id}" src="/themes/defaulttheme/images/download.png" altKey="itracker.web.image.download.report.alt" arg0="${report.name}" textActionKey="itracker.web.image.download.texttag"/>
+        <it:formatImageAction action="downloadreport" paramName="id" paramValue="${report.id}" src="/themes/defaulttheme/images/download.png" altKey="itracker.web.image.download.report.alt" arg0="${report.name}" textActionKey="itracker.web.image.download.texttag"/>
         <it:formatImageAction action="exportreport" paramName="id" paramValue="${report.id}" src="/themes/defaulttheme/images/export.png" altKey="itracker.web.image.export.report.alt" arg0="${report.name}" textActionKey="itracker.web.image.export.texttag"/>
         <it:formatImageAction action="removereport" paramName="id" paramValue="${report.id}" src="/themes/defaulttheme/images/delete.gif" altKey="itracker.web.image.delete.report.alt" arg0="${report.name}" textActionKey="itracker.web.image.delete.texttag"/>
       </td>

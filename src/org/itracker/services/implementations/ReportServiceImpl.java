@@ -64,12 +64,14 @@ public class ReportServiceImpl implements ReportService {
 
     public Report createReport(Report report) {
         report.setCreateDate(new Date());
+        report.setLastModifiedDate(report.getCreateDate());
         reportDAO.save(report);
         return report;
     }
 
     public Report updateReport(Report report) {
         report.setCreateDate(new Date(report.getCreateDate().getTime()));
+        report.setLastModifiedDate(new Date());
         reportDAO.saveOrUpdate(report);
         return report;
     }

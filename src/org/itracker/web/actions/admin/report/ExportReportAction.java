@@ -60,7 +60,7 @@ public class ExportReportAction extends ItrackerBaseAction {
         }
 
         try {
-            Integer reportId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
+            Integer reportId = new Integer((request.getParameter("id") == null ? "-1" : request.getParameter("id")));
             if(reportId == null || reportId.intValue() < 0) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreport"));
             } else {

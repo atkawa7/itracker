@@ -34,6 +34,9 @@
 
 package org.itracker.model;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import org.itracker.services.util.Base64;
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.
  * @author ready
@@ -79,7 +82,7 @@ public class Report extends AbstractBean {
     }
 
     public void setFileData(byte[] fileData) {
-        this.fileData = fileData;
+        this.fileData = (fileData != null && fileData.length > 0 ? fileData : new byte[0]);
     }
 
     public String getName() {
@@ -104,6 +107,56 @@ public class Report extends AbstractBean {
 
     public void setReportType(int reportType) {
         this.reportType = reportType;
+    }
+    public Report getModel() {
+
+        Report model = new Report();
+        model.setId(this.getId());
+        model.setName(this.getName());
+        model.setNameKey(this.getNameKey());
+        model.setDescription(this.getDescription());
+        model.setDataType(this.getDataType());
+        model.setFileData(this.getFileData());
+        model.setReportType(this.getReportType());
+        model.setClassName(this.getClassName());
+        model.setLastModifiedDate(this.getLastModifiedDate());
+        model.setCreateDate(this.getCreateDate());
+
+        return model;
+
+    }
+
+
+
+    public void setModel(Report model) {
+
+        this.setName(model.getName());
+
+        this.setNameKey(model.getNameKey());
+
+        this.setDescription(model.getDescription());
+
+        this.setDataType(model.getDataType());
+
+        this.setFileData(model.getFileData());
+
+        this.setReportType(model.getReportType());
+
+        this.setClassName(model.getClassName());
+
+
+
+        if(model.getFileData().length > 0) {
+
+            this.setFileData(model.getFileData());
+
+        }
+
+
+
+        this.setCreateDate(new Timestamp(model.getCreateDate().getTime()));
+        this.setLastModifiedDate(new Timestamp(new Date().getTime()));
+
     }
 
 }

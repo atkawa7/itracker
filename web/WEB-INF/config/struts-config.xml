@@ -93,7 +93,7 @@
                 validate="true"/>
         <action path="/selfregisterform" type="org.itracker.web.actions.user.SelfRegisterFormAction"
                 name="preferencesForm" scope="request"
-                input="/themes/defaulttheme/module-portalhome-unauthenticated/self_register.jsp"
+                input="/self_register.jsp"
                 validate="false"/>
         <action path="/unauthorized" type="org.itracker.web.actions.UnauthorizedAction">
             <forward name="unauthorized" path="/unauthorized.jsp" module="/"/>
@@ -122,7 +122,7 @@
 
         <action
                 attribute="loginForm"
-                input="/themes/defaulttheme/login.jsp"
+                input="/login.jsp"
                 name="loginForm"
                 path="/autologin"
                 scope="request"

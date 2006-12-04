@@ -19,6 +19,7 @@ import org.apache.struts.action.ActionMessages;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Report;
 import org.itracker.services.ReportService;
+import org.itracker.services.util.Base64;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ReportForm;
@@ -89,6 +90,7 @@ public class EditReportFormAction extends ItrackerBaseAction {
                     reportForm.setReportType(new Integer(report.getReportType()));
                     reportForm.setDataType(new Integer(report.getDataType()));
                     reportForm.setClassName(report.getClassName());
+                    reportForm.setFileData(new String((byte[]) report.getFileData()));
                 }
             } else {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidaction"));

@@ -18,6 +18,8 @@
 
 package org.itracker.model;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Comparator;
 
 /**
@@ -120,6 +122,33 @@ public  class IssueAttachment extends AbstractBean {
         user = value;
     }
 
+    public IssueAttachment getModel() {
+        IssueAttachment model = new IssueAttachment();
+        model.setId(this.getId());
+        model.setOriginalFileName(this.getOriginalFileName());
+        model.setType(this.getType());
+        model.setFileName(this.getFileName());
+        model.setDescription(this.getDescription());
+        model.setSize(this.getSize());
+        model.setLastModifiedDate(this.getLastModifiedDate());
+        model.setCreateDate(this.getCreateDate());
+
+        model.setIssue(this.getIssue());
+
+        model.setUser(this.getUser());
+
+        return model;
+    }
+
+    public void setModel(IssueAttachment model) {
+        this.setOriginalFileName(model.getOriginalFileName());
+        this.setType(model.getType());
+        this.setFileName(model.getFileName());
+        this.setSize(model.getSize());
+        this.setDescription(model.getDescription());
+        this.setLastModifiedDate(new Timestamp(new Date().getTime()));
+    }
+    
     public static abstract class IssueAttachmentComparator implements Comparator<IssueAttachment> {
         protected boolean isAscending = true;
 

@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
+import org.itracker.services.util.Base64;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Language;
 import org.itracker.model.PermissionType;
@@ -78,21 +79,27 @@ public class EditReportAction extends ItrackerBaseAction {
             report = (Report) session.getAttribute(Constants.REPORT_KEY);
 
             report = new Report();
-            report.setId((Integer) PropertyUtils.getSimpleProperty(form, "id"));
+            Integer reportId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
+            report = reportService.getReport(reportId);
+//            report.setId((Integer) PropertyUtils.getSimpleProperty(form, "id"));
             report.setName((String) PropertyUtils.getSimpleProperty(form, "name"));
             report.setNameKey((String) PropertyUtils.getSimpleProperty(form, "nameKey"));
             report.setDescription((String) PropertyUtils.getSimpleProperty(form, "description"));
             report.setDataType(((Integer) PropertyUtils.getSimpleProperty(form, "dataType") != null ? ((Integer) PropertyUtils.getSimpleProperty(form, "dataType")).intValue() : ReportUtilities.DATATYPE_ISSUE));
             report.setReportType(((Integer) PropertyUtils.getSimpleProperty(form, "reportType") != null ? ((Integer) PropertyUtils.getSimpleProperty(form, "reportType")).intValue() : ReportUtilities.REPORTTYPE_JFREE));
+            String fileData = (String) PropertyUtils.getSimpleProperty(form, "fileData");
             try {
-                FormFile file = (FormFile) PropertyUtils.getSimpleProperty(form, "fileData");  
-                if(file.getFileData() == null ||
-                        file.getFileData().length == 0) {
-                    errorFound = true;
-                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingdatafile"));  
-                }
-                else {
-                    report.setFileData(file.getFileData());
+                if ( fileData == null || fileData.length() == 0 ) {
+                    FormFile file = (FormFile) PropertyUtils.getSimpleProperty(form, "fileDataFile");  
+                    if(file.getFileData() == null ||
+                            file.getFileData().length == 0) {
+                        errorFound = true;
+                        errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingdatafile"));  
+                    } else {
+                        report.setFileData(file.getFileData());
+                    }
+                } else {
+                    report.setFileData(fileData.getBytes());
                 }
             } catch(Exception e) {
                 logger.error("Exception while verifying import data.", e);

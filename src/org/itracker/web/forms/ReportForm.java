@@ -39,7 +39,8 @@ public class ReportForm extends ValidatorForm  {
      String description;
      Integer dataType;
      Integer reportType;
-     org.apache.struts.upload.FormFile fileData;
+     org.apache.struts.upload.FormFile fileDataFile;
+     String fileData;
      String className;
      
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
@@ -49,7 +50,8 @@ public class ReportForm extends ValidatorForm  {
 		nameKey = null;
 		description = null;   
 		dataType = null;   
-		reportType = null;   
+		reportType = null; 
+                fileDataFile = null;
 		fileData = null;   
 		className = null;   
     }
@@ -92,14 +94,21 @@ public class ReportForm extends ValidatorForm  {
 		this.description = description;
 	}
 
-	public org.apache.struts.upload.FormFile getFileData() {
+	public org.apache.struts.upload.FormFile getFileDataFile() {
+		return fileDataFile;
+	}
+
+	public void setFileDataFile(org.apache.struts.upload.FormFile fileDataFile) {
+		this.fileDataFile = fileDataFile;
+	}
+
+	public String getFileData() {
 		return fileData;
 	}
 
-	public void setFileData(org.apache.struts.upload.FormFile fileData) {
+	public void setFileData(String fileData) {
 		this.fileData = fileData;
 	}
-
 
 	public String getName() {
 		return name;

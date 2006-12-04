@@ -91,7 +91,15 @@
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td></tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.reportdefinition"/>:</td>
-            <td colspan="3" classs="editColumnText"><html:file property="fileData" styleClass="editColumnText"/></td>
+            <td colspan="3" classs="editColumnText"><html:file property="fileDataFile" styleClass="editColumnText"/></td>
+          </tr>
+
+          <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td></tr>
+          <tr>
+            <td class="editColumnTitle"><it:message key="itracker.web.attr.reportcontent"/>:</td>
+            <td colspan="3"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td>
+            <tr>
+            <td colspan="4" classs="editColumnText"><html:textarea onchange="setFileInfo();" cols="120" rows="10" property="fileData" styleClass="editColumnText"/></td>
           </tr>
 
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td></tr>

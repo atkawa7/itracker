@@ -36,6 +36,7 @@
         <forward name="logoff" path="/logoff.do" module="/"/>
         <forward name="index" path="/portalhome.do" module="/"/>
         <forward name="createissue" path="/createissueform.do"/>
+        <forward name="downloadattachment" module="/" path="/servlets/AttachmentDownloadController"/>
     </global-forwards>
 
     <!-- ==================================== Action Mappings    -->

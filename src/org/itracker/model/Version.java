@@ -17,6 +17,8 @@
 package org.itracker.model;
 
 import java.util.Comparator;
+import java.util.Collection;
+import java.util.ArrayList;
 
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.
@@ -47,6 +49,8 @@ public class Version extends AbstractBean implements Comparable<Version> {
     
     private int status;
 
+    private  Collection issues = new ArrayList();
+
     private static final Comparator<Version> versionComparator = 
             new VersionComparator();
     
@@ -74,6 +78,14 @@ public class Version extends AbstractBean implements Comparable<Version> {
         this.status = 1; // = ProjectUtilities.STATUS_ACTIVE
     }
     
+    public Collection getIssues() {
+        return issues;
+    }
+
+    public void setIssues(Collection getIssues) {
+        this.issues = getIssues;
+    }
+
     public int getMajor() {
         return major;
     }

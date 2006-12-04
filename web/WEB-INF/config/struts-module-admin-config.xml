@@ -55,7 +55,7 @@
         <forward name="index" path="/portalhome.do" module="/"/>
         <forward name="edituser" module="/module-admin" path="/edituserform.do"/>
         <forward name="listusers" module="/module-admin" path="/listusers.do"/>
-        <forward name="downloadreport" module="/" path="/servlets/ReportDownloadController"/>
+        <forward name="downloadreport" module="/module-admin" path="/servlets/ReportDownloadController"/>
     </global-forwards>
 
     <!-- ==================================== Action Mappings    -->
@@ -114,7 +114,10 @@
                 name="languageForm" scope="request" input="/admin_language/create_language_key.jsp"
                 validate="true">
         </action>
-        <action path="/editcomponent"
+        <action path="/downloadreport" 
+                type="org.itracker.web.actions.admin.report.ReportDownloadAction"
+                name="adminActionForm" scope="request" input="/admin_report/list_reports.jsp"/>
+       <action path="/editcomponent"
                 type="org.itracker.web.actions.admin.project.EditComponentAction"
                 name="componentForm" scope="request" input="/admin_project/edit_component.jsp"
                 validate="true">
@@ -160,7 +163,7 @@
         <action path="/editlanguageform"
                 type="org.itracker.web.actions.admin.language.EditLanguageFormAction"
                 name="languageForm" scope="request"
-                input="/themes/defaulttheme/admin/edit_language.jsp" validate="false"></action>
+                input="/admin_language/edit_language.jsp" validate="false"></action>
         <action path="/editproject" type="org.itracker.web.actions.admin.project.EditProjectAction"
                 name="projectForm" scope="request" input="/admin_project/edit_project.jsp">
 
@@ -266,7 +269,7 @@
                 validate="true"></action>
         <action path="/importdata"
                 type="org.itracker.web.actions.admin.configuration.ImportDataFormAction"
-                name="importForm" scope="request" input="/themes/defaulttheme/admin/import_data.jsp"
+                name="importForm" scope="request" input="/admin_configuration/import_data.jsp"
                 validate="false">
         </action>
         <action path="/importdataverify"
