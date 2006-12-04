@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    ITracker services layer context.
+
+    Declarative transaction management using Hibernate local transactions.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/beans/spring-util-2.0.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+    <!-- Registry of all ITracker services -->
+    <bean id="itrackerServices"
+        class="org.itracker.services.implementations.ITrackerServicesImpl"
+        autowire="byName" />
+
+    <!-- Hibernate local transaction manager -->
+    <bean id="transactionManager"
+        class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory" />
+        </property>
+    </bean>
+
+    <!-- Issue search service -->
+    <bean id="issueSearchService"
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+        <property name="target" ref="issueSearchServiceTarget" />
+        <property name="proxyInterfaces">
+            <value>org.itracker.services.IssueSearchService</value>
+        </property>
+    </bean>
+
+    <bean id="issueSearchServiceTarget"
+        class="org.itracker.services.implementations.IssueSearchServiceImpl"
+        autowire="byName">
+        <constructor-arg ref="configurationService" />
+    </bean>
+
+    <!-- Configuration service -->
+    <bean id="configurationService"
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+        <property name="target" ref="configurationServiceTarget" />
+        <property name="proxyInterfaces">
+            <value>org.itracker.services.ConfigurationService</value>
+        </property>
+    </bean>
+
+    <bean id="configurationServiceTarget"
+        class="org.itracker.services.implementations.ConfigurationServiceImpl"
+        autowire="byName" />
+
+    <!-- Issue Service -->
+    <bean id="issueService"
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+        <property name="target" ref="issueServiceTarget" />
+        <property name="proxyInterfaces">
+            <value>org.itracker.services.IssueService</value>
+        </property>
+    </bean>
+
+    <bean id="issueServiceTarget"
+        class="org.itracker.services.implementations.IssueServiceImpl"
+        autowire="byName" />
+
+    <!-- Project service -->
+    <bean id="projectService"
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+        <property name="target" ref="projectServiceTarget" />
+        <property name="proxyInterfaces">
+            <value>org.itracker.services.ProjectService</value>
+        </property>
+    </bean>
+
+    <bean id="projectServiceTarget"
+        class="org.itracker.services.implementations.ProjectServiceImpl"
+        autowire="byName" />
+
+    <!-- User service -->
+    <bean id="userService"
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+        <property name="target" ref="userServiceTarget" />
+        <property name="proxyInterfaces">
+            <value>org.itracker.services.UserService</value>
+        </property>
+    </bean>
+
+    <bean id="userServiceTarget"
+        class="org.itracker.services.implementations.UserServiceImpl"
+        autowire="autodetect">
+        <constructor-arg ref="configurationService" />
+        <constructor-arg ref="projectService" />
+        <constructor-arg ref="userDAO" />
+        <constructor-arg ref="projectDAO" />
+        <constructor-arg ref="reportDAO" />
+        <constructor-arg ref="permissionDAO" />
+        <constructor-arg ref="userPreferencesDAO" />
+    </bean>
+
+    <!-- Reporting service -->
+    <bean id="reportService"
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+        <property name="target" ref="reportServiceTarget" />
+        <property name="proxyInterfaces">
+            <value>org.itracker.services.ReportService</value>
+        </property>
+    </bean>
+
+    <bean id="reportServiceTarget"
+        class="org.itracker.services.implementations.ReportServiceImpl"
+        autowire="byName">
+        <constructor-arg ref="reportDAO" />
+    </bean>
+
+    <!-- Scheduler service -->
+    <bean id="schedulerService"
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+        <property name="target" ref="schedulerServiceTarget" />
+        <property name="proxyInterfaces">
+            <value>org.itracker.services.SchedulerService</value>
+        </property>
+    </bean>
+
+    <bean id="schedulerServiceTarget"
+        class="org.itracker.services.implementations.SchedulerServiceImpl">
+        <constructor-arg ref="scheduledTaskDAO" />
+    </bean>
+
+    <bean id="emailService"
+        class="org.itracker.services.util.EmailService">
+        <constructor-arg ref="configurationService" />
+    </bean>
+
+</beans>

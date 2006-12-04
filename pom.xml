@@ -134,10 +134,25 @@
             <version>1.1.2</version>
         </dependency>
 
+        <!-- Unit Testing related dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>2.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-mock</artifactId>
+            <version>2.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -148,12 +163,35 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.8.0.7</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
         <sourceDirectory>src</sourceDirectory>
         <testSourceDirectory>test</testSourceDirectory>
         <finalName>itracker</finalName>
+
+        <resources>
+            <resource>
+                <directory>src</directory>
+                <includes>
+                    <include>**/**.hbm.xml</include>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <testResources>
+            <testResource>
+                <directory>test/resources</directory>
+            </testResource>
+        </testResources>
 
         <plugins>
             <plugin>
@@ -184,22 +222,6 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <!-- Temporarily disable failing test cases -->
-                    <excludes>
-                        <exclude>**/AllTestCasesBusinessServices.java</exclude>
-                        <exclude>**/AllTestCasesPersistence.java</exclude>
-                        <exclude>**/AllTestsSuite.java</exclude>
-                        <exclude>**/ProjectServiceTest.java</exclude>
-                        <exclude>**/TestApplicationProperties.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-
             <!-- Used to autodeploy the war file into tomcat -->
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -225,8 +247,8 @@
                     </execution>
 
                     <execution>
-                        <id>process-classes</id>
-                        <phase>process-classes</phase>
+                        <id>generate-schema</id>
+                        <phase>package</phase>
                         <configuration>
                             <tasks>
                                 <!--<property name="export" value="false"/>-->
@@ -285,6 +307,21 @@
                     </dependency>
                 </dependencies>
 
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${basedir}</directory>
+                            <includes>
+                                <include>*.log</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
             </plugin>
 
 <!--
