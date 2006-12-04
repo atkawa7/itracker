@@ -178,6 +178,7 @@ public class SearchIssuesAction extends ItrackerBaseAction {
             } else {
                 isqm.setResolution(null);
             }
+
             Integer[] projectsArray = (Integer[])PropertyUtils.getSimpleProperty(form, "projects");
             List<Integer> projects = Arrays.asList(projectsArray);
             if(projects == null || projects.size() == 0) {
@@ -185,24 +186,28 @@ public class SearchIssuesAction extends ItrackerBaseAction {
             } else {
                 isqm.setProjects(projects);
             }
+
             Integer[] severitiesArray = (Integer[])PropertyUtils.getSimpleProperty(form, "severities");
-            List<Integer> severities = Arrays.asList(severitiesArray);
-            if(severities != null) {
+            if( severitiesArray != null && severitiesArray.length > 0 ) {
+                List<Integer> severities = Arrays.asList(severitiesArray);
                 isqm.setSeverities(severities);
             }
+
             Integer[] statusesArray = (Integer[])PropertyUtils.getSimpleProperty(form, "statuses");
-            List<Integer> statuses = Arrays.asList(statusesArray);
-            if(statuses != null) {
+            if( statusesArray != null && statusesArray.length > 0 ) {
+                List<Integer> statuses = Arrays.asList(statusesArray);
                 isqm.setStatuses(statuses);
             }
+
             Integer[] componentsArray = (Integer[])PropertyUtils.getSimpleProperty(form, "components");
-            List<Integer> components = Arrays.asList(componentsArray);
-            if(components != null) {
+            if( componentsArray != null && componentsArray.length > 0 ) {
+                List<Integer> components = Arrays.asList(componentsArray);
                 isqm.setComponents(components);
             }
+
             Integer[] versionsArray = (Integer[])PropertyUtils.getSimpleProperty(form, "versions");
-            List<Integer> versions = Arrays.asList(versionsArray);
-            if(versions != null) {
+            if( versionsArray != null && versionsArray.length > 0 ) {
+                List<Integer> versions = Arrays.asList(versionsArray);
                 isqm.setVersions(versions);
             }
             
