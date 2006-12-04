@@ -16,22 +16,28 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
                 "test_key", "test_locale" );
 
         assertNotNull( language );
-        assertEquals( new Integer( 999 ), language.getId() );
 
         Date date = new Date( 1136044800000L );
 
-        assertEquals( date, language.getCreateDate() );
-        assertEquals( date, language.getLastModifiedDate() );
+        assertLanguageEquals( language, 999, "test_locale",
+                              "test_key", "test_value", date, date );
 
     }
 
     public void testFindByKey() {
 
-        List<Language> languages = languageDAO.findByKey( "itracker.dateformat.full" );
+        List<Language> languages = languageDAO.findByKey( "test_key" );
 
         assertNotNull( languages );
 
-        // TODO: Need more assertions
+        assertEquals( 1, languages.size() );
+
+        Language language = languages.get( 0 );
+
+        Date date = new Date( 1136044800000L );
+
+        assertLanguageEquals( language, 999, "test_locale",
+                              "test_key", "test_value", date, date );
 
     }
 
@@ -40,6 +46,32 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
         List<Language> languages = languageDAO.findByLocale( "test_locale" );
 
         assertNotNull( languages );
+
+        assertEquals( 1, languages.size() );
+
+        Language language = languages.get( 0 );
+
+        Date date = new Date( 1136044800000L );
+
+        assertLanguageEquals( language, 999, "test_locale",
+                              "test_key", "test_value", date, date );
+
+    }
+
+    private void assertLanguageEquals( Language language,
+                                       Integer languageID,
+                                       String locale,
+                                       String key,
+                                       String value,
+                                       Date creationDate,
+                                       Date modificationDate ) {
+
+        assertEquals( languageID, language.getId() );
+        assertEquals( locale, language.getLocale() );
+        assertEquals( key, language.getResourceKey() );
+        assertEquals( value, language.getResourceValue() );
+        assertEquals( creationDate, language.getCreateDate() );
+        assertEquals( modificationDate, language.getLastModifiedDate() );
 
     }
 
