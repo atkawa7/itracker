@@ -103,7 +103,7 @@ public class EditComponentFormAction extends ItrackerBaseAction {
                             project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
                         return mapping.findForward("unauthorized");
                     } else {
-                        component = new Component(project, componentForm.getName());
+                        component = new Component();
                         component.setProject(project);
                         componentForm.setAction("create");
                         componentForm.setId(component.getId());
@@ -128,13 +128,15 @@ public class EditComponentFormAction extends ItrackerBaseAction {
                     } else {
                         componentForm.setAction("update");
                         componentForm.setId(component.getId());
+                        
                         componentForm.setProjectId(project.getId());
                         componentForm.setName(component.getName());
                         componentForm.setDescription(component.getDescription());
                     }
                 }
             } else {
-            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidaction"));
+            	errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                        new ActionMessage("itracker.web.error.invalidaction"));
             }
 
             if(errors.isEmpty()) {
@@ -146,7 +148,7 @@ public class EditComponentFormAction extends ItrackerBaseAction {
                 return mapping.getInputForward();
             }
         } catch(Exception e) {
-        	pageTitleKey = "itracker.web.error.title";         
+            pageTitleKey = "itracker.web.error.title";         
        
             request.setAttribute("pageTitleKey",pageTitleKey); 
             request.setAttribute("pageTitleArg",pageTitleArg); 

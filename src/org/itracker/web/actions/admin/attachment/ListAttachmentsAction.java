@@ -33,7 +33,7 @@ public class ListAttachmentsAction extends ItrackerBaseAction {
 			boolean hasAttachments;
 			long sizeOfAllAttachments = 0;
 			
-		    List<IssueAttachment> attachments = new ArrayList<IssueAttachment>();
+                        List<IssueAttachment> attachments = new ArrayList<IssueAttachment>();
 			try {
 				attachments = issueService.getAllIssueAttachments();
 			} catch (Exception e) {

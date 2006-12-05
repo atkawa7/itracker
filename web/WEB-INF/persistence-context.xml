@@ -36,7 +36,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
             <value>root</value>
         </property>
         <property name="password">
-            <value>admin01</value>
+            <value>password</value>
         </property>
     </bean>
     

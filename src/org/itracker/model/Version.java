@@ -49,7 +49,7 @@ public class Version extends AbstractBean implements Comparable<Version> {
     
     private int status;
 
-    private  Collection issues = new ArrayList();
+//    private  Collection issues = new ArrayList();
 
     private static final Comparator<Version> versionComparator = 
             new VersionComparator();
@@ -78,14 +78,14 @@ public class Version extends AbstractBean implements Comparable<Version> {
         this.status = 1; // = ProjectUtilities.STATUS_ACTIVE
     }
     
-    public Collection getIssues() {
+/*    public Collection getIssues() {
         return issues;
     }
 
     public void setIssues(Collection getIssues) {
         this.issues = getIssues;
     }
-
+*/
     public int getMajor() {
         return major;
     }

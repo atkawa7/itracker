@@ -56,7 +56,7 @@ public class Component extends AbstractBean implements Comparable<Component> {
     /** Component status. */
     private int status;
     
-    private Collection<Issue> issues = new ArrayList<Issue>();
+//    private Collection<Issue> issues = new ArrayList<Issue>();
     
     /**
      * Default constructor (required by Hibernate). 
@@ -81,12 +81,13 @@ public class Component extends AbstractBean implements Comparable<Component> {
         // A new component is active by default. 
         this.status = 1; // = ProjectUtilities.STATUS_ACTIVE
     }
-    public Collection<Issue> getIssues() {
+/*    public Collection<Issue> getIssues() {
         return issues;
     }
     public void setIssues(Collection<Issue> issues) {
         this.issues = issues;
     }  
+*/
     /**
      * Returns the project owning this component. 
      * 

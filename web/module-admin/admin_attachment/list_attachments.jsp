@@ -31,27 +31,28 @@
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><it:message key="itracker.web.attr.lastupdated"/></td>
   </tr>
-	<c:forEach items="${attachments}" var="i">
+	<c:forEach items="${attachments}" var="attachment" varStatus="i">
+	<!--c:forEach items="{attachments}" var="i" -->
 	
- 	<c:choose>
-			<c:when test="${i % 2 == 1}">
-			    <tr class="listRowShaded">
-			</c:when>
-			<c:otherwise>
-			<tr class="listRowUnshaded">
-			</c:otherwise>
-		</c:choose>
- 
+        <c:choose>
+            <c:when test="i % 2 == 1">
+                <tr class="listRowShaded">
+            </c:when>
+            <c:otherwise>
+                <tr class="listRowUnshaded">
+            </c:otherwise>
+        </c:choose>
+
       <td>
-        <it:formatImageAction action="removeattachment" paramName="id" paramValue="${attachments[i].getId}" src="/themes/defaulttheme/images/delete.gif" altKey="itracker.web.image.delete.attachment.alt" textActionKey="itracker.web.image.delete.texttag"/>
+        <it:formatImageAction action="removeattachment" paramName="id" paramValue="${attachment.id}" src="/themes/defaulttheme/images/delete.gif" altKey="itracker.web.image.delete.attachment.alt" textActionKey="itracker.web.image.delete.texttag"/>
       </td>
       <td></td>
-      <td><c:out value="${attachments[i].getIssueId}"/></td>
-      <td><c:out value="${attachments[i].getOriginalFileName}"/></td>
-      <td><c:out value="${attachments[i].getDescription}"/></td>
-      <td align="right"><c:out value="${attachments[i].getSize / 1024}"/></td>
+      <td><c:out value="${attachment.issue.id}"/></td>
+      <td><c:out value="${attachment.originalFileName}"/></td>
+      <td><c:out value="${attachment.description}"/></td>
+      <td align="right"><c:out value="${attachment.size / 1024}"/><it:message key="itracker.web.generic.kilobyte"/></td>
       <td></td>
-      <td><it:formatDate date="${$attachments[i].getLastModifiedDate}"></it:formatDate></td>
+      <td><it:formatDate date="${$attachment.lastModifiedDate}"></it:formatDate></td>
     </tr>
 	</c:forEach>
  

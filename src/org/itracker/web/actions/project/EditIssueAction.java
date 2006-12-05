@@ -321,6 +321,9 @@ public class EditIssueAction extends ItrackerBaseAction {
             FormFile file = (FormFile) PropertyUtils.getSimpleProperty(form, "attachment");
             if(file != null && ! "".equals(file.getFileName())) {
                 String origFileName = file.getFileName();
+                String contentType = file.getContentType();
+                int fileSize = file.getFileSize();
+                String attachmentDescription = (String) PropertyUtils.getSimpleProperty(form, "attachmentDescription");
 //                int numAttachments = issueService.getIssueAttachmentCount(issue.getId()) + 1;
 //                String filename = "proj" + project.getId() + "_issue" + issue.getId() + "_attachment" + numAttachments;
                 if(AttachmentUtilities.checkFile(file, this.getITrackerServices())) {
@@ -329,9 +332,9 @@ public class EditIssueAction extends ItrackerBaseAction {
                         origFileName = origFileName.substring(lastSlash + 1);
                     }
                     IssueAttachment attachmentModel = new IssueAttachment(origFileName,
-                                                                                    file.getContentType(),
-                                                                                    (String) PropertyUtils.getSimpleProperty(form, "attachmentDescription"),
-                                                                                    file.getFileSize(),
+                                                                                    contentType,
+                                                                                    attachmentDescription,
+                                                                                    fileSize,
                                                                                     issue, user);
                     issueService.addIssueAttachment(attachmentModel, file.getFileData());
                 }

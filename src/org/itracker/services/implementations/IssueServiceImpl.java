@@ -977,7 +977,8 @@ public class IssueServiceImpl implements IssueService {
         User user = model.getUser();
 
         IssueAttachment attachment = new IssueAttachment();
-        model.setFileName("attachment" + attachment.getId());
+        model.setFileName("attachment_issue_" + issue.getId()+"_"+model.getOriginalFileName());
+        attachment.setModel(model);
         attachment.setFileData((data == null ? new byte[0] : data));
         attachment.setIssue(issue);
         attachment.setUser(user);

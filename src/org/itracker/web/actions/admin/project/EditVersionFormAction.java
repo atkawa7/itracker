@@ -27,6 +27,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -67,103 +69,102 @@ public class EditVersionFormAction extends ItrackerBaseAction {
             return mapping.findForward("login");
         }
         
-        VersionForm versionForm = (VersionForm)form;
-                
         try {
+            ProjectService projectService = getITrackerServices().getProjectService();
+
             HttpSession session = request.getSession(true);
             String action = (String) request.getParameter("action");
-            final Map<Integer, Set<PermissionType>> userPermissions =
-                    getUserPermissions(session);
-            
-            Integer projectId = versionForm.getProjectId();
-            
-            if (projectId == null) {
-                errors.add(ActionMessages.GLOBAL_MESSAGE,
-                        new ActionMessage("itracker.web.error.invalidproject"));
-                saveMessages(request, errors);
-                
-                return mapping.findForward("error");
+            Map<Integer, Set<PermissionType>> userPermissions = (Map<Integer, Set<PermissionType>>) session.getAttribute(Constants.PERMISSIONS_KEY);
+             
+            Version version = null;
+            version = (Version) session.getAttribute(Constants.VERSION_KEY);
+      
+            Project project = null;
+          
+            VersionForm versionForm = (VersionForm) form;
+            if(versionForm == null) {
+                versionForm = new VersionForm();
             }
-            
-            ProjectService projectService = getITrackerServices().getProjectService();
-            Project project = projectService.getProject(projectId);
-            
-            if (project == null) {
-                errors.add(ActionMessages.GLOBAL_MESSAGE,
-                        new ActionMessage("itracker.web.error.invalidproject"));
-                saveMessages(request, errors);
-                
-                return mapping.findForward("error");
-            } else if (!UserUtilities.hasPermission(userPermissions,
-                    project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
-                return mapping.findForward("unauthorized");
-            }
-            
-            boolean authorized = UserUtilities.hasPermission(userPermissions,
-                    project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN);
-            
-            Version version;
-            
+
             if ("create".equals(action)) {
-                version = new Version(project, versionForm.getNumber());
-                version.setDescription(versionForm.getDescription());
-                version.setCreateDate(new Date());
+                Integer projectId = (Integer) PropertyUtils.getSimpleProperty(form, "projectId");
                 
-                pageTitleKey = "itracker.web.admin.editversion.title.create";
-            } else if ("update".equals(action)) {
-                Integer versionId = versionForm.getId();
-                
-                //version = (Version) session.getAttribute(Constants.VERSION_KEY);
-                version = projectService.getProjectVersion(versionId);
-                
-                if (version == null) {
-                    errors.add(ActionMessages.GLOBAL_MESSAGE,
-                            new ActionMessage("itracker.web.error.invalidversion"));
-                    
-                    saveMessages(request, errors);
-                    
-                    return mapping.findForward("error");
+                if(action != null && action.equals("create")) {
+                	 pageTitleKey = "itracker.web.admin.editversion.title.create";
                 }
-                version.setNumber(versionForm.getNumber());
-                version.setDescription(versionForm.getDescription());
-                version.setLastModifiedDate(new Date());
                 
-                pageTitleKey = "itracker.web.admin.editversion.title.update";
-                pageTitleArg = versionForm.getNumber();
+                if(projectId == null) {
+                	errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                                new ActionMessage("itracker.web.error.invalidproject"));
+                } else {
+                    project = projectService.getProject(projectId);
+                    
+                    if(project == null) {
+                    	errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                                new ActionMessage("itracker.web.error.invalidproject"));
+                    } else if(! UserUtilities.hasPermission(userPermissions, 
+                            project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
+                        return mapping.findForward("unauthorized");
+                    } else {
+                        version = new Version();
+                        version.setProject(project);
+                        versionForm.setAction("create");
+                        versionForm.setDescription(versionForm.getDescription());
+                        versionForm.setId(version.getId());
+                        versionForm.setProjectId(version.getProject().getId());
+                    }
+                }
+            } else if ("update".equals(action)) {
+                Integer versionId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
+                version = projectService.getProjectVersion(versionId);
+                if(action != null && action.equals("update")) {
+                    pageTitleKey = "itracker.web.admin.editversion.title.update";
+                    pageTitleArg = version.getNumber();
+                 }  
+                if(version == null) {
+                	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidversion"));
+                } else {
+                    project = version.getProject();
+                    if(version == null) {
+                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
+                    } else if(! UserUtilities.hasPermission(userPermissions, version.getProject().getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
+                        return mapping.findForward("unauthorized");
+                    } else {
+                        versionForm.setAction("update");
+                        versionForm.setId(version.getId());
+                        versionForm.setProjectId(project.getId());
+                        versionForm.setNumber(version.getNumber());
+                        versionForm.setDescription(version.getDescription());
+                    }
+                }
             } else {
                 errors.add(ActionMessages.GLOBAL_MESSAGE,
                         new ActionMessage("itracker.web.error.invalidaction"));
-                
-                saveMessages(request, errors);
-                
-                return mapping.findForward("error");
             }
             
-            if (version == null) {
-                throw new RuntimeException("null version");
+            if(errors.isEmpty()) {
+                request.setAttribute("versionForm", versionForm);
+                session.setAttribute(Constants.VERSION_KEY, version);
+                saveToken(request);
+                request.setAttribute("pageTitleKey",pageTitleKey); 
+                request.setAttribute("pageTitleArg",pageTitleArg); 
+                return mapping.getInputForward();
             }
-            
-            session.setAttribute(Constants.VERSION_KEY, version);
-            
-            if (!errors.isEmpty()) {
-                saveMessages(request, errors);
-                
-                return mapping.findForward("error");
-            }
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             pageTitleKey = "itracker.web.error.title";
+            
             request.setAttribute("pageTitleKey",pageTitleKey);
             request.setAttribute("pageTitleArg",pageTitleArg);
+            
             logger.error("Exception while creating edit version form.", ex);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
-        request.setAttribute("pageTitleKey",pageTitleKey);
-        request.setAttribute("pageTitleArg",pageTitleArg);
-        request.setAttribute("versionForm", versionForm);
-        
-        saveToken(request);
-
+        if(! errors.isEmpty()) {
+            saveMessages(request, errors);
+                
+            return mapping.findForward("error");
+        }
         return mapping.getInputForward();
     }
     

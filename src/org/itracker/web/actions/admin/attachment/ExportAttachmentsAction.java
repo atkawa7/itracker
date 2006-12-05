@@ -69,7 +69,7 @@ public class ExportAttachmentsAction extends ItrackerBaseAction {
                         logger.debug("Attempting export for: " + attachments.get(i));
                         byte[] attachmentData = issueService.getIssueAttachmentData(attachments.get(i).getId());
                         if(attachmentData.length > 0) {
-                            ZipEntry zipEntry = new ZipEntry(attachments.get(i).getFileName() + attachments.get(i).getFileExtension());
+                            ZipEntry zipEntry = new ZipEntry(attachments.get(i).getFileName());
                             zipEntry.setSize(attachmentData.length);
                             zipEntry.setTime(attachments.get(i).getLastModifiedDate().getTime());
                             zipOut.putNextEntry(zipEntry);

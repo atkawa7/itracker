@@ -212,11 +212,11 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                     listOptions.put(new Integer(IssueUtilities.FIELD_RESOLUTION), resolutions);
 
                     List<Component> components = project.getComponents();
-                    Collections.sort(components, new Component.NameComparator());
+//                    Collections.sort(components, new Component());
                     listOptions.put(new Integer(IssueUtilities.FIELD_COMPONENTS), Convert.componentsToNameValuePairs(components));
                     
                     List<Version> versions = project.getVersions();
-                    Collections.sort(versions, new Version.VersionComparator());
+//                    Collections.sort(versions, new Version());
                     listOptions.put(new Integer(IssueUtilities.FIELD_VERSIONS), Convert.versionsToNameValuePairs(versions));
                     listOptions.put(new Integer(IssueUtilities.FIELD_TARGET_VERSION), Convert.versionsToNameValuePairs(versions));
 

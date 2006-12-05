@@ -199,11 +199,18 @@
                 name="userForm" scope="request" input="/admin_user/edit_user.jsp" validate="false">
             <forward name="edituserform" path="/admin_user/edit_user.jsp" module="/module-admin"/>
         </action>
-        <action path="/editversion" type="org.itracker.web.actions.admin.project.EditVersionAction"
-                name="versionForm" scope="request" input="/admin_project/edit_version.jsp"></action>
+       <action path="/editversion"
+                type="org.itracker.web.actions.admin.project.EditVersionAction"
+                name="versionForm" scope="request" input="/admin_project/edit_version.jsp"
+                validate="true">
+            <!--  <forward name="editversion"/> -->
+        </action>
         <action path="/editversionform"
                 type="org.itracker.web.actions.admin.project.EditVersionFormAction"
-                name="versionForm" scope="request" input="/admin_project/edit_version.jsp"></action>
+                name="versionForm" scope="request" input="/admin_project/edit_version.jsp"
+                validate="false">
+            <!--     <forward name="editversionform"/> -->
+        </action>
         <action path="/editworkflowscript"
                 type="org.itracker.web.actions.admin.workflow.EditWorkflowScriptAction"
                 name="workflowScriptForm" scope="request"

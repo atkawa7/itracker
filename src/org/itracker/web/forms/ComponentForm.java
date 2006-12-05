@@ -30,12 +30,12 @@ import org.apache.struts.validator.ValidatorForm;
  *
  */
 public class ComponentForm extends ValidatorForm  {
-	  String action;
-	  Integer id;
-	  Integer projectId;
-	  String name;
-	  String description;
-	      
+	String action;
+	Integer id;
+	Integer projectId;
+        String name;
+        String description;
+        Integer status;     
  
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		action = null;    
@@ -43,6 +43,7 @@ public class ComponentForm extends ValidatorForm  {
 		projectId = null;
 		name = null;
 		description = null;
+                status = 0;   
     }
 
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
@@ -91,5 +92,12 @@ public class ComponentForm extends ValidatorForm  {
 		this.projectId = projectId;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
 }

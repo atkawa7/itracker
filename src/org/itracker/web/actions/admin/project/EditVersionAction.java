@@ -19,6 +19,7 @@
 package org.itracker.web.actions.admin.project;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,13 +50,12 @@ public class EditVersionAction extends ItrackerBaseAction {
     }
     
     @SuppressWarnings("unchecked")
-    public ActionForward execute(ActionMapping mapping,
-            ActionForm form,
-            HttpServletRequest request,
-            HttpServletResponse response)
+    public ActionForward execute(ActionMapping mapping, ActionForm form,
+            HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         ActionErrors errors = new ActionErrors();
+        
         super.executeAlways(mapping,form,request,response);
         
         if (!isLoggedIn(request, response)) {
@@ -101,10 +101,15 @@ public class EditVersionAction extends ItrackerBaseAction {
                     
                     if ("create".equals(action)) {
                         version = new Version(project, versionForm.getNumber());
+                        version.setStatus(1);
                         version.setDescription(versionForm.getDescription());
                         version = projectService.addProjectVersion(project.getId(), version);
                     } else if ("update".equals(action)) {
+                        version = projectService.getProjectVersion(versionForm.getId());
+                        version.setLastModifiedDate(new Date());
+                        version.setNumber(versionForm.getNumber());
                         version.setProject(project);
+                        version.setStatus(1);
                         version.setDescription(versionForm.getDescription());
                         version = projectService.updateProjectVersion(version);
                     }

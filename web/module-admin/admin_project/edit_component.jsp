@@ -13,7 +13,7 @@
 
 <%
 final Component component = (Component)session.getAttribute(Constants.COMPONENT_KEY);
-final boolean isNew = !component.isNew();
+final boolean isNew = component.isNew();
 %>
 <!-- once there was page_init here, but now this has been moved into the ItrackerBaseAction -->
 

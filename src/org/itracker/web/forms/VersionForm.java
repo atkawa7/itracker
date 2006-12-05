@@ -30,19 +30,20 @@ import org.apache.struts.validator.ValidatorForm;
  *
  */
 public class VersionForm extends ValidatorForm  {
-	 String action;
+     String action;
      Integer id;
      Integer projectId;
      String number;
      String description;
-	
+     Integer status;
+     
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		action = null;    
 		id = null;
 		projectId= null;
 		number= null;
 		description= null;
-     
+                status = 0;   
     }
 
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
@@ -91,5 +92,12 @@ public class VersionForm extends ValidatorForm  {
 		this.projectId = projectId;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
 }

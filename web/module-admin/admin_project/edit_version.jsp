@@ -7,6 +7,7 @@
 <%@ taglib uri="/WEB-INF/tld/struts-tiles.tld" prefix="tiles" %>
 <%@ taglib uri="/tags/fmt" prefix="fmt" %>
 <%@ taglib uri="/tags/c" prefix="c" %>
+
 <%@ page import="org.itracker.model.*" %>
 <%@ page import="org.itracker.web.util.*" %>
 
@@ -15,6 +16,7 @@ final Version version = (Version)session.getAttribute(Constants.VERSION_KEY);
 final boolean isNew = version.isNew();
 %>
 <!-- once there was page_init here, but now this has been moved into the ItrackerBaseAction -->
+
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 <html:form action="/editversion">
