@@ -138,6 +138,10 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
             Boolean allowPreferenceUpdate = userService.allowPreferenceUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
             request.setAttribute("allowPreferenceUpdate",allowPreferenceUpdate);
             }
+
+            request.setAttribute( "pageTitleKey", "itracker.web.editprefs.title" );
+            request.setAttribute( "pageTitleArg", "" );
+
             return mapping.findForward("editpreferencesform");
             
         } catch(Exception e) {

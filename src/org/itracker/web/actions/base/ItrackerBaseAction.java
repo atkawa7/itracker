@@ -260,6 +260,10 @@ public abstract class ItrackerBaseAction extends Action {
                 }
                 // IF WE ARE NOT ON THE LOGIN PAGE...
                 if(! requestPath.endsWith("/login.do")) {
+
+                    request.setAttribute( "pageTitleKey", "itracker.web.login.title" );
+                    request.setAttribute( "pageTitleArg", "" );
+
                     //       logger.logDebug("Request for page " + requestPath + " attempted by unknown user.");
                     request.setAttribute(Constants.AUTH_REDIRECT_KEY, redirectURL);
                     //           logger.logDebug("Setting redirect url to " + request.getAttribute(Constants.AUTH_REDIRECT_KEY));
