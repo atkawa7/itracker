@@ -1,6 +1,5 @@
 package org.itracker.persistence.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import org.itracker.AbstractDependencyInjectionTest;
@@ -17,10 +16,8 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
 
         assertNotNull( language );
 
-        Date date = new Date( 1136044800000L );
-
         assertLanguageEquals( language, 999, "test_locale",
-                              "test_key", "test_value", date, date );
+                              "test_key", "test_value" );
 
     }
 
@@ -34,10 +31,8 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
 
         Language language = languages.get( 0 );
 
-        Date date = new Date( 1136044800000L );
-
         assertLanguageEquals( language, 999, "test_locale",
-                              "test_key", "test_value", date, date );
+                              "test_key", "test_value" );
 
     }
 
@@ -51,10 +46,8 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
 
         Language language = languages.get( 0 );
 
-        Date date = new Date( 1136044800000L );
-
         assertLanguageEquals( language, 999, "test_locale",
-                              "test_key", "test_value", date, date );
+                              "test_key", "test_value" );
 
     }
 
@@ -62,16 +55,12 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
                                        Integer languageID,
                                        String locale,
                                        String key,
-                                       String value,
-                                       Date creationDate,
-                                       Date modificationDate ) {
+                                       String value ) {
 
         assertEquals( languageID, language.getId() );
         assertEquals( locale, language.getLocale() );
         assertEquals( key, language.getResourceKey() );
         assertEquals( value, language.getResourceValue() );
-        assertEquals( creationDate, language.getCreateDate() );
-        assertEquals( modificationDate, language.getLastModifiedDate() );
 
     }
 
