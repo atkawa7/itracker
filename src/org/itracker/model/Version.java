@@ -49,7 +49,7 @@ public class Version extends AbstractBean implements Comparable<Version> {
 
 //    private  Collection issues = new ArrayList();
 
-    private static final Comparator<Version> versionComparator = 
+    private static final Comparator<Version> VERSION_COMPARATOR = 
             new VersionComparator();
     
     /**
@@ -170,7 +170,7 @@ public class Version extends AbstractBean implements Comparable<Version> {
      * Compares two versions by their major and minor numbers. 
      */
     public int compareTo(Version other) {
-        return this.versionComparator.compare(this, other);
+        return VERSION_COMPARATOR.compare(this, other);
     }
 
     /**
