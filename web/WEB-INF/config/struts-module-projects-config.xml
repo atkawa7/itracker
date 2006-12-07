@@ -36,7 +36,6 @@
         <forward name="logoff" path="/logoff.do" module="/"/>
         <forward name="index" path="/portalhome.do" module="/"/>
         <forward name="createissue" path="/createissueform.do"/>
-        <forward name="downloadattachment" module="/" path="/servlets/AttachmentDownloadController"/>
     </global-forwards>
 
     <!-- ==================================== Action Mappings    -->
@@ -109,6 +108,10 @@
 
         <action path="/error" type="org.itracker.web.actions.ErrorAction">
             <forward name="error_page" module="/" path="/themes/defaulttheme/error.jsp"/>
+        </action>
+
+        <action path="/downloadAttachment" type="org.itracker.web.actions.admin.attachment.DownloadAttachmentAction">
+            <forward name="error_page" path="/themes/defaulttheme/error.jsp" module="/"/>
         </action>
 
     </action-mappings>

@@ -109,12 +109,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>AttachmentDownloadController</servlet-name>
-        <servlet-class>org.itracker.web.servlets.AttachmentDownloadController
-        </servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ReportChartController</servlet-name>
         <servlet-class>org.itracker.web.servlets.ReportChartController
         </servlet-class>
@@ -147,11 +141,6 @@
     <servlet-mapping>
         <servlet-name>action</servlet-name>
         <url-pattern>*.do</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AttachmentDownloadController</servlet-name>
-        <url-pattern>/servlets/AttachmentDownloadController</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

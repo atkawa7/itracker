@@ -35,7 +35,9 @@ import org.itracker.model.IssueAttachment;
 import org.itracker.model.User;
 import org.itracker.services.IssueService;
 
-
+/**
+ * @deprecated Use org.itracker.web.actions.admin.attachment.DownloadAttachmentAction instead.
+ */
 public class AttachmentDownloadController extends GenericController {
 
     public AttachmentDownloadController() {
