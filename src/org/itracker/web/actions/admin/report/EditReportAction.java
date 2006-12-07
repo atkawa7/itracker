@@ -35,7 +35,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
-import org.itracker.services.util.Base64;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Language;
 import org.itracker.model.PermissionType;
