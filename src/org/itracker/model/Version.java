@@ -17,8 +17,6 @@
 package org.itracker.model;
 
 import java.util.Comparator;
-import java.util.Collection;
-import java.util.ArrayList;
 
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.
