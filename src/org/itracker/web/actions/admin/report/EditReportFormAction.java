@@ -19,7 +19,6 @@ import org.apache.struts.action.ActionMessages;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Report;
 import org.itracker.services.ReportService;
-import org.itracker.services.util.Base64;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ReportForm;
