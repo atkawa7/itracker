@@ -51,7 +51,7 @@ public class Issue extends AbstractBean implements Comparable<Issue> {
     private List<IssueHistory> history = new LinkedList<IssueHistory>();
     private List<IssueRelation> relations = new LinkedList<IssueRelation>();
 
-    private static final Comparator<Issue> issueComparator = new CompareByStatus();
+    private static final Comparator<Issue> ISSUE_COMPARATOR = new CompareByStatus();
     
     public Issue() {
     }
@@ -199,7 +199,7 @@ public class Issue extends AbstractBean implements Comparable<Issue> {
      * Compares by status. 
      */
     public int compareTo(Issue other) {
-        return this.issueComparator.compare(this, other);
+        return ISSUE_COMPARATOR.compare(this, other);
     }
     
     /**
