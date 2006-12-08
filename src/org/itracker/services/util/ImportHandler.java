@@ -374,8 +374,8 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                 ((Project) parentModel).setStatus(ProjectUtilities.STATUS_LOCKED);
 
                 String currBuffer = getBuffer();
-                HashMap projectStatuses = ProjectUtilities.getStatusNames(EXPORT_LOCALE);
-                for(Iterator iter = projectStatuses.keySet().iterator(); iter.hasNext(); ) {
+                HashMap<String,String> projectStatuses = ProjectUtilities.getStatusNames(EXPORT_LOCALE);
+                for(Iterator<String> iter = projectStatuses.keySet().iterator(); iter.hasNext(); ) {
                     String key = (String) iter.next();
                     String keyValue = (String) projectStatuses.get(key);
                     if(keyValue != null && keyValue.equalsIgnoreCase(currBuffer)) {
@@ -392,8 +392,8 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                 ((User) parentModel).setStatus(UserUtilities.STATUS_LOCKED);
 
                 String currBuffer = getBuffer();
-                HashMap userStatuses = UserUtilities.getStatusNames(EXPORT_LOCALE);
-                for(Iterator iter = userStatuses.keySet().iterator(); iter.hasNext(); ) {
+                HashMap<String,String> userStatuses = UserUtilities.getStatusNames(EXPORT_LOCALE);
+                for(Iterator<String> iter = userStatuses.keySet().iterator(); iter.hasNext(); ) {
                     String key = (String) iter.next();
                     String keyValue = (String) userStatuses.get(key);
                     if(keyValue != null && keyValue.equalsIgnoreCase(currBuffer)) {
