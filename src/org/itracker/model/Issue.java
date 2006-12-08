@@ -56,7 +56,7 @@ public class Issue extends AbstractBean implements Comparable<Issue> {
     public Issue() {
     }
     
-    public List getActivities() {
+    public List<IssueActivity> getActivities() {
         return activities;
     }
     public void setActivities(List<IssueActivity> activities) {
