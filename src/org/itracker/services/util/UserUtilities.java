@@ -100,11 +100,11 @@ public class UserUtilities implements AuthenticationConstants {
         return ITrackerResources.getString(ITrackerResources.KEY_BASE_USER_STATUS + value, locale);
     }
     
-    public static HashMap getStatusNames() {
+    public static HashMap<String, String> getStatusNames() {
         return getStatusNames(ITrackerResources.getLocale());
     }
     
-    public static HashMap getStatusNames(Locale locale) {
+    public static HashMap<String, String> getStatusNames(Locale locale) {
         HashMap<String,String> statuses = new HashMap<String,String>();
         statuses.put(Integer.toString(STATUS_DELETED), getStatusName(STATUS_DELETED, locale));
         statuses.put(Integer.toString(STATUS_ACTIVE), getStatusName(STATUS_ACTIVE, locale));
