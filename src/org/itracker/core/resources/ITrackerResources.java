@@ -218,7 +218,7 @@ public class ITrackerResources {
     public static void clearKeyFromBundles(String key, boolean markDirty) {
         if (key != null) {
             synchronized (bundleLock) {
-                for (Iterator iter = languages.values().iterator(); iter.hasNext();) {
+                for (Iterator<ResourceBundle> iter = languages.values().iterator(); iter.hasNext();) {
                     ((ITrackerResourceBundle) iter.next()).removeValue(key, markDirty);
                 }
             }
