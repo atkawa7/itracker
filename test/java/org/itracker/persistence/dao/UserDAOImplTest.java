@@ -4,12 +4,13 @@ import java.util.Date;
 
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.User;
+import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
 
 public class UserDAOImplTest extends AbstractDependencyInjectionTest {
 
     private UserDAO userDAO;
 
-    public void testHelloWorld() {
+    public void testCreateUser() {
 
         User user = new User( "admin_test2","admin_test2", "admin firstname2", "admin lastname2", "", true );
         user.setCreateDate( new Date() );
@@ -22,6 +23,20 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
         assertEquals( "admin firstname2", foundUser.getFirstName() );
         assertEquals( "admin lastname2", foundUser.getLastName() );
         assertTrue( foundUser.isSuperUser() );
+
+    }
+
+    public void testCreateUserWithNotNullPK() {
+
+        try {
+            User user = new User( "admin_test3","admin_test3", "admin firstname3", "admin lastname3", "", true );
+            user.setId( -1 );
+            user.setCreateDate( new Date() );
+            userDAO.saveOrUpdate( user );
+        } catch( Exception e ) {
+            // Expected behavior
+            assertTrue( e instanceof HibernateOptimisticLockingFailureException );
+        }
 
     }
 
