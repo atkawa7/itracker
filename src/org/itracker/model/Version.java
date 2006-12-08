@@ -213,11 +213,13 @@ public class Version extends AbstractBean implements Comparable<Version> {
         public VersionComparator() {
         }
 
-        private VersionComparator(boolean ascending) {
+        @SuppressWarnings("unused")
+		private VersionComparator(boolean ascending) {
             setAscending(ascending);
         }
 
-        private boolean isAscending() {
+        @SuppressWarnings("unused")
+		private boolean isAscending() {
             return ascending;
         }
         
