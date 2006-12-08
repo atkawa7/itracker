@@ -47,7 +47,7 @@ import org.itracker.model.Permission;
 import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
-import org.itracker.persistence.dao.NotificationDAOImpl;
+import org.itracker.persistence.dao.NotificationDAO;
 import org.itracker.persistence.dao.PermissionDAO;
 import org.itracker.persistence.dao.ProjectDAO;
 import org.itracker.persistence.dao.ReportDAO;
@@ -88,11 +88,14 @@ public class UserServiceImpl implements UserService {
     private static boolean allowSelfRegister = false;
     
     private final Logger logger;
-    private InitialContext ic = null;
-    private NotificationDAOImpl nHome = null;
+    @SuppressWarnings("unused")
+	private InitialContext initialContext = null;
+    @SuppressWarnings("unused")
+	private NotificationDAO notificationDAO = null;
     private PermissionDAO permissionDAO = null;
     private ProjectDAO projectDAO = null;
-    private ReportDAO reportDAO = null;
+    @SuppressWarnings("unused")
+	private ReportDAO reportDAO = null;
     private UserDAO userDAO;
     private UserPreferencesDAO userPreferencesDAO = null;
     private ProjectService projectService;
@@ -115,7 +118,7 @@ public class UserServiceImpl implements UserService {
         this.permissionDAO = permissionDAO;
         
         try {
-            ic = new InitialContext();
+            initialContext = new InitialContext();
 
             allowSelfRegister = configurationService.getBooleanProperty("allow_self_register", false);
             systemBaseURL = configurationService.getProperty("system_base_url", "");
@@ -153,7 +156,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public int getNumberUsers() {
-        Collection users = userDAO.findAll();
+        Collection<User> users = userDAO.findAll();
         return users.size();
     }
 
@@ -333,7 +336,7 @@ public class UserServiceImpl implements UserService {
 
     public boolean clearOwnedProjects(Integer userId) {
         User user = userDAO.findByPrimaryKey(userId);
-        Collection projects = user.getProjects();
+        Collection<Project> projects = user.getProjects();
         projects.clear();
         return true;
     }
@@ -500,7 +503,7 @@ public class UserServiceImpl implements UserService {
             if (newPermissions == null || newPermissions.size() == 0) {
                 // delete all existing permissions if no permissions 
                 // have been submitted by http params
-                for (Iterator iterator = permissions.iterator(); iterator.hasNext();) {
+                for (Iterator<Permission> iterator = permissions.iterator(); iterator.hasNext();) {
                     iterator.next();
                     iterator.remove();
                 }
@@ -516,7 +519,7 @@ public class UserServiceImpl implements UserService {
                 
                 // - peek out permissions already granted
                 // - delete permission not granted anymore
-                for (Iterator iterator = permissions.iterator(); iterator.hasNext();) {
+                for (Iterator<Permission> iterator = permissions.iterator(); iterator.hasNext();) {
                     Permission permission = (Permission) iterator.next();
 
                     if (newPermissionsMap.containsKey("Perm" + permission.getPermissionType() + "Proj"
@@ -530,7 +533,7 @@ public class UserServiceImpl implements UserService {
                 }
                 // finally create all newPermissions which do not exist yet
                 if (newPermissionsMap.values() != null) {
-                    for (Iterator iterator = newPermissionsMap.values().iterator(); iterator.hasNext();) {
+                    for (Iterator<Permission> iterator = newPermissionsMap.values().iterator(); iterator.hasNext();) {
                         Permission model = (Permission) iterator.next();
                         if (model.getProject() != null) {
                             Project project = model.getProject();
@@ -715,7 +718,7 @@ public class UserServiceImpl implements UserService {
 
         int i = 0;
         List<User> userList = new ArrayList<User>();
-        for (Iterator iter = users.iterator(); iter.hasNext(); i++) {
+        for (Iterator<User> iter = users.iterator(); iter.hasNext(); i++) {
             userList.add((User)iter.next());
         }
         return userList;
@@ -757,7 +760,7 @@ public class UserServiceImpl implements UserService {
 
         int i = 0;
         List<User> userList = new ArrayList<User>();
-        for (Iterator iter = users.iterator(); iter.hasNext(); i++) {
+        for (Iterator<User> iter = users.iterator(); iter.hasNext(); i++) {
             userList.add((User)iter.next());
         }
         return userList;
@@ -978,9 +981,9 @@ public class UserServiceImpl implements UserService {
     /*
     public void sendNotification(String login, String email, String baseURL) {
         try {
-            QueueConnectionFactory factory = (QueueConnectionFactory) ic.lookup("java:comp/env/"
+            QueueConnectionFactory factory = (QueueConnectionFactory) initialContext.lookup("java:comp/env/"
                     + notificationFactoryName);
-            Queue notificationQueue = (Queue) ic.lookup("java:comp/env/" + notificationQueueName);
+            Queue notificationQueue = (Queue) initialContext.lookup("java:comp/env/" + notificationQueueName);
             QueueConnection connect = factory.createQueueConnection();
             QueueSession session = connect.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
 
