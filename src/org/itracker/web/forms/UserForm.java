@@ -47,7 +47,7 @@ public class UserForm extends ValidatorForm  {
 
     private boolean superUser = false;
 
-    private HashMap permissions = new HashMap();
+    private HashMap<String,String> permissions = new HashMap<String,String>();
 
     private String userLocale = null;
     private String saveLogin = null;
@@ -139,11 +139,11 @@ public class UserForm extends ValidatorForm  {
         superUser = value;
     }
 
-    public HashMap getPermissions() {
+    public HashMap<String, String> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(HashMap value) {
+    public void setPermissions(HashMap<String, String> value) {
         permissions = value;
     }
 
@@ -231,7 +231,7 @@ public class UserForm extends ValidatorForm  {
         email = null;
         superUser = false;
 
-        permissions = new HashMap();
+        permissions = new HashMap<String, String>();
 
         userLocale = null;
         saveLogin = null;

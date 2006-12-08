@@ -36,7 +36,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.model.Permission;
+import org.itracker.model.Project;
 import org.itracker.model.User;
+import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.UserUtilities;
@@ -77,7 +79,8 @@ public class EditUserAction extends ItrackerBaseAction {
 
         try {
             UserService userService = getITrackerServices().getUserService();
-
+            ProjectService projectService = getITrackerServices().getProjectService();
+            
             User editUser = new User();
             editUser.setId(userForm.getId());
             editUser.setLogin(userForm.getLogin());
@@ -132,15 +135,18 @@ public class EditUserAction extends ItrackerBaseAction {
             }
 
             if(errors.isEmpty() && userService.allowPermissionUpdates(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
-                HashMap permissions = userForm.getPermissions();
+                HashMap<String, String> permissions = userForm.getPermissions();
                 List<Permission> permissionsList = new ArrayList<Permission>();
-                for(Iterator iter = permissions.keySet().iterator(); iter.hasNext(); ) {
-                    String paramName = (String) iter.next();
+                for(Iterator<String> iter = permissions.keySet().iterator(); iter.hasNext(); ) {
+                    String paramName = iter.next();
+                    Integer projectIntValue = Integer.parseInt(paramName.substring(4,paramName.lastIndexOf('P')));
+                    Project project = projectService.getProject(projectIntValue);
+                    Integer permissionIntValue = new Integer(paramName.substring(paramName.lastIndexOf('j') + 1));
+                    permissionsList.add(new Permission(project,permissionIntValue)); 
+      
+                    // Perm7Proj5103
                     
-                    // XXX: What's this ?!?
-                    //permissionsList.add(new Permission(
-                    //        new Integer(paramName.substring(paramName.lastIndexOf('j') + 1)),
-                    //        Integer.parseInt(paramName.substring(4,paramName.lastIndexOf('P')))));
+              
                 }
                 List<Permission> newPermissions = new ArrayList<Permission>();
                 newPermissions = permissionsList;
