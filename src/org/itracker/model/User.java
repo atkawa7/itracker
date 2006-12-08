@@ -41,11 +41,11 @@ public class User extends AbstractBean implements Comparable<User> {
     private int registrationType;
     private UserPreferences preferences;
     private List<Permission> permissions = new LinkedList<Permission>();
-    private Collection notifications = new LinkedList();
-    private Collection activities = new LinkedList();
-    private Collection history = new LinkedList();
-    private Collection projects = new LinkedList();
-    private Collection attachments = new LinkedList();
+    private Collection<Notification> notifications = new LinkedList<Notification>();
+    private Collection<IssueActivity> activities = new LinkedList<IssueActivity>();
+    private Collection<IssueHistory> history = new LinkedList<IssueHistory>();
+    private Collection<Project> projects = new LinkedList<Project>();
+    private Collection<IssueAttachment> attachments = new LinkedList<IssueAttachment>();
     
     private static final Comparator<User> comparator = new CompareByName();
     
@@ -66,19 +66,19 @@ public class User extends AbstractBean implements Comparable<User> {
         setSuperUser(superUser);
     }
     
-    public Collection getActivities() {
+    public Collection<IssueActivity> getActivities() {
         return activities;
     }
 
-    public void setActivities(Collection activities) {
+    public void setActivities(Collection<IssueActivity> activities) {
         this.activities = activities;
     }
 
-    public Collection getAttachments() {
+    public Collection<IssueAttachment> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(Collection attachments) {
+    public void setAttachments(Collection<IssueAttachment> attachments) {
         this.attachments = attachments;
     }
 
@@ -90,19 +90,19 @@ public class User extends AbstractBean implements Comparable<User> {
         this.email = email;
     }
 
-    public Collection getHistory() {
+    public Collection<IssueHistory> getHistory() {
         return history;
     }
 
-    public void setHistory(Collection history) {
+    public void setHistory(Collection<IssueHistory> history) {
         this.history = history;
     }
 
-    public Collection getNotifications() {
+    public Collection<Notification> getNotifications() {
         return notifications;
     }
 
-    public void setNotifications(Collection notifications) {
+    public void setNotifications(Collection<Notification> notifications) {
         this.notifications = notifications;
     }
 
@@ -122,11 +122,11 @@ public class User extends AbstractBean implements Comparable<User> {
         this.preferences = preferences;
     }
 
-    public Collection getProjects() {
+    public Collection<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(Collection projects) {
+    public void setProjects(Collection<Project> projects) {
         this.projects = projects;
     }
 
