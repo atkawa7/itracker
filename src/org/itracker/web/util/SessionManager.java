@@ -94,7 +94,7 @@ public class SessionManager {
     }
 
     public static void setAllSessionsNeedsReset() {
-        for(Iterator iter = activeSessionsStarted.keySet().iterator(); iter.hasNext(); ) {
+        for(Iterator<String> iter = activeSessionsStarted.keySet().iterator(); iter.hasNext(); ) {
             activeSessionsReset.put((String) iter.next(), new Integer(1));
         }
     }
