@@ -95,7 +95,8 @@ public class IssueServiceImpl implements IssueService {
     private static String notificationQueueName = NotificationMessageBean.DEFAULT_QUEUE_NAME;
     private static String systemBaseURL = "";
     
-    private final Logger logger;
+    @SuppressWarnings("unused")
+	private final Logger logger;
     private CustomFieldDAO customFieldDAO;
     private UserDAO userDAO;
     private ProjectDAO projectDAO;
@@ -124,7 +125,7 @@ public class IssueServiceImpl implements IssueService {
     
     public int getNumberIssues() {
         // TODO: use select count(*)
-        Collection issues = issueDAO.findAll();
+        Collection<Issue> issues = issueDAO.findAll();
         return issues.size();
     }
     
@@ -500,7 +501,7 @@ public class IssueServiceImpl implements IssueService {
         Issue issue = issueDAO.findByPrimaryKey(issueId);
         List<IssueField> issueFields = issue.getFields();
         
-        for (Iterator iter = issueFields.iterator(); iter.hasNext();) {
+        for (Iterator<IssueField> iter = issueFields.iterator(); iter.hasNext();) {
             // TODO: clean this code
             // try {
             
@@ -558,7 +559,7 @@ public class IssueServiceImpl implements IssueService {
             
         } else {
             
-            for (Iterator iterator = components.iterator(); iterator.hasNext();) {
+            for (Iterator<Component> iterator = components.iterator(); iterator.hasNext();) {
                 
                 Component component = (Component) iterator.next();
                 
@@ -634,7 +635,7 @@ public class IssueServiceImpl implements IssueService {
             
         } else {
             
-            for (Iterator iterator = versions.iterator(); iterator.hasNext();) {
+            for (Iterator<Version> iterator = versions.iterator(); iterator.hasNext();) {
                 
                 Version version = (Version) iterator.next();
                 
@@ -956,9 +957,9 @@ public class IssueServiceImpl implements IssueService {
             
         }
         
-        Collection activity = issueActivityDAO.findByIssueId(issueId);
+        Collection<IssueActivity> activity = issueActivityDAO.findByIssueId(issueId);
         
-        for (Iterator iter = activity.iterator(); iter.hasNext();) {
+        for (Iterator<IssueActivity> iter = activity.iterator(); iter.hasNext();) {
             
             ((IssueActivity) iter.next()).setNotificationSent((notificationSent ? 1 : 0));
             
@@ -1074,13 +1075,13 @@ public class IssueServiceImpl implements IssueService {
         return project;
     }
     
-    public HashSet getIssueComponentIds(Integer issueId) {
+    public HashSet<Integer> getIssueComponentIds(Integer issueId) {
         
         HashSet<Integer> componentIds = new HashSet<Integer>();
         Issue issue = issueDAO.findByPrimaryKey(issueId);
-        Collection components = issue.getComponents();
+        Collection<Component> components = issue.getComponents();
         
-        for (Iterator iterator = components.iterator(); iterator.hasNext();) {
+        for (Iterator<Component> iterator = components.iterator(); iterator.hasNext();) {
             componentIds.add(((Component) iterator.next()).getId());
         }
         
@@ -1088,15 +1089,15 @@ public class IssueServiceImpl implements IssueService {
         
     }
     
-    public HashSet getIssueVersionIds(Integer issueId) {
+    public HashSet<Integer> getIssueVersionIds(Integer issueId) {
         
         HashSet<Integer> versionIds = new HashSet<Integer>();
         
         Issue issue = issueDAO.findByPrimaryKey(issueId);
         
-        Collection versions = issue.getVersions();
+        Collection<Version> versions = issue.getVersions();
         
-        for (Iterator iterator = versions.iterator(); iterator.hasNext();) {
+        for (Iterator<Version> iterator = versions.iterator(); iterator.hasNext();) {
             
             versionIds.add(((Version) iterator.next()).getId());
             
@@ -1112,11 +1113,11 @@ public class IssueServiceImpl implements IssueService {
         
         IssueActivity[] activityArray = new IssueActivity[0];
         
-        Collection activity = issueActivityDAO.findByIssueId(issueId);
+        Collection<IssueActivity> activity = issueActivityDAO.findByIssueId(issueId);
         
         activityArray = new IssueActivity[activity.size()];
         
-        for (Iterator iterator = activity.iterator(); iterator.hasNext(); i++) {
+        for (Iterator<IssueActivity> iterator = activity.iterator(); iterator.hasNext(); i++) {
             
             activityArray[i] = ((IssueActivity) iterator.next());// .getModel();
             
@@ -1132,11 +1133,11 @@ public class IssueServiceImpl implements IssueService {
         
         IssueActivity[] activityArray = new IssueActivity[0];
         
-        Collection activity = issueActivityDAO.findByIssueIdAndNotification(issueId, (notificationSent ? 1 : 0));
+        Collection<IssueActivity> activity = issueActivityDAO.findByIssueIdAndNotification(issueId, (notificationSent ? 1 : 0));
         
         activityArray = new IssueActivity[activity.size()];
         
-        for (Iterator iterator = activity.iterator(); iterator.hasNext(); i++) {
+        for (Iterator<IssueActivity> iterator = activity.iterator(); iterator.hasNext(); i++) {
             
             activityArray[i] = ((IssueActivity) iterator.next());// .getModel();
             
@@ -1197,7 +1198,7 @@ public class IssueServiceImpl implements IssueService {
         
         Issue issue = issueDAO.findByPrimaryKey(issueId);
         
-        Collection attachments = issue.getAttachments();
+        Collection<IssueAttachment> attachments = issue.getAttachments();
         
         i = attachments.size();
         
@@ -1226,9 +1227,9 @@ public class IssueServiceImpl implements IssueService {
         
         IssueHistory lastEntry = null;
         
-        Collection history = issueHistoryDAO.findByIssueId(issueId);
+        Collection<IssueHistory> history = issueHistoryDAO.findByIssueId(issueId);
         
-        Iterator iterator = history.iterator();
+        Iterator<IssueHistory> iterator = history.iterator();
         
         while (iterator.hasNext()) {
             
@@ -1361,9 +1362,9 @@ public class IssueServiceImpl implements IssueService {
         
         if (issue != null) {
             Project project = projectDAO.findByPrimaryKey(issue.getProject().getId());
-            Collection projectOwners = project.getOwners();
+            Collection<User> projectOwners = project.getOwners();
             
-            for (Iterator iterator = projectOwners.iterator(); iterator.hasNext();) {
+            for (Iterator<User> iterator = projectOwners.iterator(); iterator.hasNext();) {
                 User projectOwner = (User) iterator.next();
                 
                 if (projectOwner != null && (!activeOnly || projectOwner.getStatus() == UserUtilities.STATUS_ACTIVE)) {
@@ -1424,7 +1425,7 @@ public class IssueServiceImpl implements IssueService {
     
     public int getOpenIssueCountByProjectId(Integer projectId) {
         
-        Collection issues = issueDAO.findByProjectAndLowerStatus(projectId, IssueUtilities.STATUS_RESOLVED);
+        Collection<Issue> issues = issueDAO.findByProjectAndLowerStatus(projectId, IssueUtilities.STATUS_RESOLVED);
         
         return issues.size();
         
@@ -1432,7 +1433,7 @@ public class IssueServiceImpl implements IssueService {
     
     public int getResolvedIssueCountByProjectId(Integer projectId) {
         
-        Collection issues = issueDAO.findByProjectAndHigherStatus(projectId, IssueUtilities.STATUS_RESOLVED);
+        Collection<Issue> issues = issueDAO.findByProjectAndHigherStatus(projectId, IssueUtilities.STATUS_RESOLVED);
         
         return issues.size();
         
@@ -1440,7 +1441,7 @@ public class IssueServiceImpl implements IssueService {
     
     public int getTotalIssueCountByProjectId(Integer projectId) {
         
-        Collection issues = issueDAO.findByProject(projectId);
+        Collection<Issue> issues = issueDAO.findByProject(projectId);
         
         return issues.size();
         
@@ -1646,11 +1647,11 @@ public class IssueServiceImpl implements IssueService {
         
         int i = 0;
         
-        Collection attachments = issueAttachmentDAO.findAll();
+        Collection<IssueAttachment> attachments = issueAttachmentDAO.findAll();
         
         size = attachments.size();
         
-        for (Iterator iterator = attachments.iterator(); iterator.hasNext(); i++) {
+        for (Iterator<IssueAttachment> iterator = attachments.iterator(); iterator.hasNext(); i++) {
             
             size += ((IssueAttachment) iterator.next()).getSize();
             
