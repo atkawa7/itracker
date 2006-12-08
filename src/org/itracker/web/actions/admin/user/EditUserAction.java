@@ -82,7 +82,11 @@ public class EditUserAction extends ItrackerBaseAction {
             ProjectService projectService = getITrackerServices().getProjectService();
             
             User editUser = new User();
-            editUser.setId(userForm.getId());
+
+            if( userForm.getId() != -1 ) {
+                editUser.setId(userForm.getId());
+            }
+
             editUser.setLogin(userForm.getLogin());
             editUser.setFirstName(userForm.getFirstName());
             editUser.setLastName(userForm.getLastName());
@@ -145,7 +149,7 @@ public class EditUserAction extends ItrackerBaseAction {
                     permissionsList.add(new Permission(project,permissionIntValue)); 
       
                     // Perm7Proj5103
-                    
+
               
                 }
                 List<Permission> newPermissions = new ArrayList<Permission>();
@@ -169,7 +173,7 @@ public class EditUserAction extends ItrackerBaseAction {
                 session.removeAttribute(Constants.EDIT_USER_KEY);
                 return mapping.findForward("listusers");
             }
-        } catch(Exception e) {            
+        } catch(Exception e) {
             logger.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }

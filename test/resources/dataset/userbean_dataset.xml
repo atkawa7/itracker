@@ -1,0 +1,32 @@
+<dataset>
+
+    <table name="userbean">
+
+        <column>id</column>
+        <column>create_date</column>
+        <column>last_modified</column>
+        <column>login</column>
+        <column>user_password</column>
+        <column>first_name</column>
+        <column>last_name</column>
+        <column>email</column>
+        <column>status</column>
+        <column>super_user</column>
+        <column>registration_type</column>
+
+        <row>
+            <value>2</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>admin_test1</value>
+            <value>admin_test1</value>
+            <value>admin firstname</value>
+            <value>admin lastname</value>
+            <value>email@email.email</value>
+            <value>1</value>
+            <value>1</value>
+            <value>1</value>
+        </row>
+    </table>
+
+</dataset>
