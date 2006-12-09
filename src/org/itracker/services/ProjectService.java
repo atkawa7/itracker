@@ -77,7 +77,7 @@ public interface ProjectService {
     
     public List<User> getListOfProjectOwners(Integer projectId);
     
-    public boolean setProjectOwners(Project project, HashSet newOwners);
+    public boolean setProjectOwners(Project project, HashSet<Integer> newOwners);
  
     public List<CustomField> getProjectFields(Integer projectId);
     
@@ -87,7 +87,7 @@ public interface ProjectService {
     
     public List<CustomField> getListOfProjectFields(Integer projectId, Locale locale);
     
-    public boolean setProjectFields(Project project, HashSet newFields);
+    public boolean setProjectFields(Project project, HashSet<Integer> newFields);
 
     public ProjectScript updateProjectScript(ProjectScript model);
     
