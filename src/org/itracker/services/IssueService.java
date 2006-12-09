@@ -116,9 +116,9 @@ public interface IssueService {
     
     boolean setIssueFields(Integer issueId, List<IssueField> fields);
     
-    boolean setIssueComponents(Integer issueId, HashSet componentIds, Integer userId);
+    boolean setIssueComponents(Integer issueId, HashSet<Integer> componentIds, Integer userId);
     
-    boolean setIssueVersions(Integer issueId, HashSet versionIds, Integer userId);
+    boolean setIssueVersions(Integer issueId, HashSet<Integer> versionIds, Integer userId);
     
     boolean addIssueHistory(IssueHistory history);
     
@@ -162,11 +162,11 @@ public interface IssueService {
     
     List<Component> getIssueComponents(Integer issueId);
     
-    HashSet getIssueComponentIds(Integer issueId);
+    HashSet<Integer> getIssueComponentIds(Integer issueId);
     
     List<Version> getIssueVersions(Integer issueId);
     
-    HashSet getIssueVersionIds(Integer issueId);
+    HashSet<Integer> getIssueVersionIds(Integer issueId);
     
     User getIssueCreator(Integer issueId);
     
@@ -239,7 +239,7 @@ public interface IssueService {
     
     void sendNotification(Integer issueId, int type, String baseURL);
     
-    void sendNotification(Integer issueId, int type, String baseURL, HashSet addresses, Integer lastModifiedDays);
+    void sendNotification(Integer issueId, int type, String baseURL, HashSet<String> addresses, Integer lastModifiedDays);
     
     int getOpenIssueCountByProjectId(Integer projectId);
     
