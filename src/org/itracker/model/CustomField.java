@@ -42,7 +42,7 @@ public class CustomField extends AbstractBean implements Comparable<CustomField>
     private List<CustomFieldValue> values = new ArrayList<CustomFieldValue>();
     private List<Project> projects = new ArrayList<Project>();
 //  TODO: What's this ? What type is it? ok, let's now try CustomField.
-    private List<CustomField> fields = new ArrayList<CustomField>(); 
+    private List fields = new ArrayList(); 
     
     private static final Comparator<CustomField> comparator = new CompareById();
     
@@ -82,11 +82,11 @@ public class CustomField extends AbstractBean implements Comparable<CustomField>
         this.dateFormat = dateFormat;
     }
     
-    public Collection<CustomField> getFields() {
+    public Collection getFields() {
         return fields;
     }
     
-    public void setFields(List<CustomField> fields) {
+    public void setFields(List fields) {
         this.fields = fields;
     }
     
