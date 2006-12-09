@@ -83,7 +83,7 @@ public class EditUserAction extends ItrackerBaseAction {
             ProjectService projectService = getITrackerServices().getProjectService();
             
             User editUser = new User();
-
+            // if userForm.getID returns -1, then this is a new user.. 
             if( userForm.getId() != -1 ) {
                 editUser.setId(userForm.getId());
             }
