@@ -364,15 +364,18 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         Object[] issueStats = new Object[4];
 
         int totalIssues = 0;
-        Collection openIds = findByProjectAndLowerStatus(projectId, IssueUtilities.STATUS_RESOLVED);
+        Collection<Issue> openIds = findByProjectAndLowerStatus(projectId, IssueUtilities.STATUS_RESOLVED);
         // Collection openIds = ejbSelectIdByProjectAndStatusLessThan(projectId,
         // IssueUtilities.STATUS_RESOLVED);
         issueStats[0] = (openIds == null ? "0" : Integer.toString(openIds.size()));
-        totalIssues += openIds.size();
-        Collection resolvedIds = findByProjectAndHigherStatus(projectId, IssueUtilities.STATUS_RESOLVED);
+        if(openIds!=null){
+        	 totalIssues += openIds.size();
+        }
+        Collection<Issue> resolvedIds = findByProjectAndHigherStatus(projectId, IssueUtilities.STATUS_RESOLVED);
         issueStats[1] = (resolvedIds == null ? "0" : Integer.toString(resolvedIds.size()));
-        totalIssues += resolvedIds.size();
-
+        if(resolvedIds!=null){
+        	totalIssues += resolvedIds.size();
+        }
         issueStats[2] = Integer.toString(totalIssues);
         issueStats[3] = new Date();// ejbHomeLatestModificationDate(projectId);
 
