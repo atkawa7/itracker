@@ -30,6 +30,7 @@ public class WorkflowScript extends AbstractBean {
     private String name;
     private String script;
     private int event;
+    // TODO: what's the expected type here? 
     private Collection projectFields;
     private int numUses;
     
