@@ -152,6 +152,7 @@ public class Issue extends AbstractBean implements Comparable<Issue> {
     public void setVersions(List<Version> versions) {
         this.versions = versions;
     }
+    // TODO: do we really still this need this? it returns null... ?
     public  List ejbSelectLastModifiedDates(Integer projectId) {
         return(null);
     }
