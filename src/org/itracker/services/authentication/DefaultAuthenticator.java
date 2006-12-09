@@ -141,10 +141,11 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
             List<Permission> augmentedPermissions = new ArrayList<Permission>();
             
             // Super user has access to all projects (represented by the "null" project). 
-            Permission permissionModel = new Permission(null, -1, user);
-            augmentedPermissions.add(permissionModel);
+            Permission permission = new Permission(null, -1, user);
+            augmentedPermissions.add(permission);
+            augmentedPermissions.addAll(permissionList);
             return augmentedPermissions;
-            //permissionList.add((Permission)permissionModel);
+          
         } else{
             return permissionList;
         }
