@@ -93,12 +93,12 @@ public class EmailService {
         }
     }
 
-    public void sendEmail(HashSet addresses, String subject, String msgText) {
+    public void sendEmail(HashSet<String> addresses, String subject, String msgText) {
         int i = 0;
 
         try {
             InternetAddress[] recipients = new InternetAddress[addresses.size()];
-            for (Iterator iterator = addresses.iterator(); iterator.hasNext(); i++) {
+            for (Iterator<String> iterator = addresses.iterator(); iterator.hasNext(); i++) {
                 recipients[i] = new InternetAddress((String) iterator.next());
             }
 
