@@ -111,20 +111,20 @@ public class ProjectUtilities  {
       * @param permissions a HashMap of user permissions
       * @return true if the user has any access to the project
       */
-    public static boolean hasProjectAccess(Integer projectId, HashMap permissions) {
-        if(permissions == null) {
+    public static boolean hasProjectAccess(Integer projectId, HashMap permissionsHashMap) {
+        if(permissionsHashMap == null) {
             return false;
         }
 
-        Boolean superUser = (Boolean) permissions.get(Integer.toString(-1));
+        Boolean superUser = (Boolean) permissionsHashMap.get(Integer.toString(-1));
         if(superUser != null && superUser.booleanValue()) {
             return true;
         }
 
         if(projectId != null && projectId.intValue() > 0) {
-            HashSet projectPermissions = (HashSet) permissions.get(projectId);
+            HashSet projectPermissionsHashSet = (HashSet) permissionsHashMap.get(projectId);
 
-            if(projectPermissions != null && projectPermissions.size() > 0) {
+            if(projectPermissionsHashSet != null && projectPermissionsHashSet.size() > 0) {
                 return true;
             }
         }
