@@ -1,4 +1,4 @@
-/*
+/**
  * This package contains XXXService interface implementations, 
  * named XXXServiceImpl by convention. 
  * 
