@@ -62,7 +62,7 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
 
                 // Super user has access to all projects, which is indicated by the "null" project. 
                 final Integer projectId = (permission.getProject() == null) 
-                    ? null : permission.getProject().getId();;
+                    ? null : permission.getProject().getId(); 
 
                 Set<PermissionType> projectPermissions = permissionsByProjectId.get(projectId); 
 
