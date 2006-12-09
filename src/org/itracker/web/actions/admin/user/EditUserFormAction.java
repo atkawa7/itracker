@@ -134,19 +134,45 @@ public class EditUserFormAction extends ItrackerBaseAction {
 
                         List<Permission> permissionList = userService.getPermissionsByUserId(editUser.getId());
                         HashMap<String,String> formPermissions = new HashMap<String,String>();
+              
                         for(int i = 0; i < permissionList.size(); i++) {
-                            if(userPermissions.get(permissionList.get(i).getProject().getId()) == null) {
-                                HashMap<Integer,Permission> projectPermissions = new HashMap<Integer,Permission>();
-                                userPermissions.put(permissionList.get(i).getProject().getId(), projectPermissions);
-                            }
-                            formPermissions.put("Perm" + permissionList.get(i).getPermissionType() + "Proj" + permissionList.get(i).getProject().getId(), "on");
-                            
-                            Integer projectId = permissionList.get(i).getProject().getId();
-                            Integer permissionType = permissionList.get(i).getPermissionType();
-                            Permission thisPermissionModel = permissionList.get(i);
-                            HashMap<Integer,Permission> permissionHashMap = ((HashMap<Integer,Permission>) userPermissions.get(projectId));
-                            permissionHashMap.put(permissionType,thisPermissionModel);
+                        	logger.debug("Processing permission type: "+permissionList.get(i).getPermissionType());
+                     
+                            //if getPermissionType returned -1, this is a SuperUser. He will still be able to set project permissions.  
+                      
+                        	if (permissionList.size()>0 && permissionList.get(0).getPermissionType()==-1) {
+                        		if (permissionList.size()>1 && i!=0){
+                        			Integer projectId = permissionList.get(i).getProject().getId();
+                                    if(userPermissions.get(projectId) == null) {
+                                        HashMap<Integer,Permission> projectPermissions = new HashMap<Integer,Permission>();
+                                        userPermissions.put(permissionList.get(i).getProject().getId(), projectPermissions);
+                                    }
+                                    formPermissions.put("Perm" + permissionList.get(i).getPermissionType() + "Proj" + permissionList.get(i).getProject().getId(), "on");
+         
+                                    Integer permissionType = permissionList.get(i).getPermissionType();
+                                    
+                                    Permission thisPermission = permissionList.get(i);
+                                    HashMap<Integer,Permission> permissionHashMap = ((HashMap<Integer,Permission>) userPermissions.get(projectId));
+                                    permissionHashMap.put(permissionType,thisPermission);
+                        		}
+                        	} else {
+                        		Integer projectId = permissionList.get(i).getProject().getId();
+                                if(userPermissions.get(projectId) == null) {
+                                    HashMap<Integer,Permission> projectPermissions = new HashMap<Integer,Permission>();
+                                    userPermissions.put(permissionList.get(i).getProject().getId(), projectPermissions);
+                                }
+                                formPermissions.put("Perm" + permissionList.get(i).getPermissionType() + "Proj" + permissionList.get(i).getProject().getId(), "on");
+     
+                                Integer permissionType = permissionList.get(i).getPermissionType();
+                                
+                                Permission thisPermission = permissionList.get(i);
+                                HashMap<Integer,Permission> permissionHashMap = ((HashMap<Integer,Permission>) userPermissions.get(projectId));
+                                permissionHashMap.put(permissionType,thisPermission);
+                        	}
+                        	
+                        	
                         }
+                      
                         userForm.setPermissions(formPermissions);
                     }
                 }
