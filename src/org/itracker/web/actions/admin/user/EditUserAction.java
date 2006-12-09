@@ -20,6 +20,7 @@ package org.itracker.web.actions.admin.user;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List; 
@@ -143,10 +144,14 @@ public class EditUserAction extends ItrackerBaseAction {
                 List<Permission> permissionsList = new ArrayList<Permission>();
                 for(Iterator<String> iter = permissions.keySet().iterator(); iter.hasNext(); ) {
                     String paramName = iter.next();
-                    Integer projectIntValue = Integer.parseInt(paramName.substring(4,paramName.lastIndexOf('P')));
+                    Integer projectIntValue =  new Integer(paramName.substring(paramName.lastIndexOf('j') + 1));
+                    logger.debug("projectForPermission found: "+projectIntValue);
                     Project project = projectService.getProject(projectIntValue);
-                    Integer permissionIntValue = new Integer(paramName.substring(paramName.lastIndexOf('j') + 1));
-                    permissionsList.add(new Permission(project,permissionIntValue)); 
+                    Integer permissionIntValue = Integer.parseInt(paramName.substring(4,paramName.lastIndexOf('P')));
+                    logger.debug("permissionIntValue found: "+permissionIntValue);
+                    Permission newPermission = new Permission(project,permissionIntValue,editUser); 
+                    newPermission.setCreateDate(new Date());
+                    permissionsList.add(newPermission); 
       
                     // Perm7Proj5103
 
