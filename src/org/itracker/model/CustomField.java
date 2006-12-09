@@ -98,7 +98,7 @@ public class CustomField extends AbstractBean implements Comparable<CustomField>
         this.fieldType = fieldType;
     }
     
-    public Collection getProjects() {
+    public Collection<Project> getProjects() {
         return projects;
     }
     
