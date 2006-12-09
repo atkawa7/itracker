@@ -310,6 +310,7 @@ class SchedulerThread extends Thread {
         int month = startDate.get(Calendar.MONTH) + 1;
         int wday = startDate.get(Calendar.DAY_OF_WEEK);
         
+//      TODO: should we do something when task is null? how would we react?
         if(engine != null && tasks != null) {
             this.engine = engine;
             for(int i = 0; i < tasks.size(); i++) {
