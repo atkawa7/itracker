@@ -54,11 +54,11 @@ public class NotificationUtilities  {
         return ITrackerResources.getString("itracker.notification.role." + value, locale);
     }
 
-    public static HashMap getRoleNames() {
+    public static HashMap<String,String> getRoleNames() {
         return getRoleNames(ITrackerResources.getLocale());
     }
 
-    public static HashMap getRoleNames(Locale locale) {
+    public static HashMap<String,String> getRoleNames(Locale locale) {
         HashMap<String,String> roles = roleNames.get(locale);
         if(roles == null) {
             roles = new HashMap<String,String>();
