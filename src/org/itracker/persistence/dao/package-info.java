@@ -1,4 +1,4 @@
-/*
+/**
  * This package contains all Data Access Object (XxxDAO) interfaces 
  * along with their Hibernate implementations (XxxDAOImpl). 
  * 
