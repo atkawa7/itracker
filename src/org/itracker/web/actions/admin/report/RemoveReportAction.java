@@ -53,8 +53,8 @@ public class RemoveReportAction extends ItrackerBaseAction {
         
         try {
             HttpSession session = request.getSession(true);
-            Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
-            if(! UserUtilities.hasPermission(userPermissions, UserUtilities.PERMISSION_USER_ADMIN)) {
+            Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
+            if(! UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_USER_ADMIN)) {
                 return mapping.findForward("unauthorized");
             }
             

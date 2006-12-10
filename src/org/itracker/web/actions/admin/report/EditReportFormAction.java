@@ -43,11 +43,11 @@ public class EditReportFormAction extends ItrackerBaseAction {
 
             HttpSession session = request.getSession(true);
             String action = (String) request.getParameter("action");
-            Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
             // TODO: never used, therefore commented, task added
             // UserModel user = (UserModel) session.getAttribute(Constants.USER_KEY);
             
-            if(! UserUtilities.hasPermission(userPermissions, UserUtilities.PERMISSION_USER_ADMIN)) {
+            if(! UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_USER_ADMIN)) {
                 return mapping.findForward("unauthorized");
             }
             Report report = (Report) session.getAttribute(Constants.REPORT_KEY);
