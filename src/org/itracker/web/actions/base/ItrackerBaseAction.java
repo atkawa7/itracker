@@ -143,8 +143,8 @@ public abstract class ItrackerBaseAction extends Action {
     throws IOException, ServletException {
         if (isLoggedIn(request, response)) {
             HttpSession session = request.getSession(false);
-            Map<Integer, Set<PermissionType>> permissions = (session == null) ? null : getUserPermissions(session);
-            if (!UserUtilities.hasPermission(permissions, permissionNeeded)) {
+            Map<Integer, Set<PermissionType>> permissionsMap = (session == null) ? null : getUserPermissions(session);
+            if (!UserUtilities.hasPermission(permissionsMap, permissionNeeded)) {
                 return false;
             }
             return true;
@@ -243,9 +243,9 @@ public abstract class ItrackerBaseAction extends Action {
             if (login!=null) {
                 logger.info("Found Login:" +login+" in Session.");
             }
-            Map<Integer, Set<PermissionType>> permissions = getUserPermissions(session);
-            if (permissions != null) {
-                logger.info("Found Permissions:" + permissions + " in Session.");
+            Map<Integer, Set<PermissionType>> permissionsMap = getUserPermissions(session);
+            if (permissionsMap != null) {
+                logger.info("Found Permissions:" + permissionsMap + " in Session.");
             }
             
             // IF THERE IS NO LOGIN, THEN WHAT? THEN TRY A AUTOLOGIN?
@@ -306,7 +306,7 @@ public abstract class ItrackerBaseAction extends Action {
                     logger.info("else...");
                     logger.info("User, yes found...: "+ user.getLogin());
                     logger.info("If there is a user...");
-                    permissions = getUserPermissions(session);
+                    permissionsMap = getUserPermissions(session);
                     SessionManager.updateSessionLastAccess(login);
                     
                     
@@ -316,7 +316,7 @@ public abstract class ItrackerBaseAction extends Action {
                     logger.info("Start check if permissions for this user are found...");
                     if(getPermission() >= 0) {
                         logger.info("Permissions found...");
-                        if(! UserUtilities.hasPermission(permissions, getPermission())) {
+                        if(! UserUtilities.hasPermission(permissionsMap, getPermission())) {
                             logger.info("But this user is not allowed by his permissions");
                             hasGlobalPermission = false;
                             // check this...
