@@ -198,24 +198,21 @@ public class UserUtilities implements AuthenticationConstants {
      * @param permissions a Map of the user's permissions by project ID
      * @param permissionNeeded the permission to check for
      */
-    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissions, int permissionNeeded) {
-        if(permissions == null) {
+    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, int permissionNeeded) {
+        if(permissionsMap == null) {
             return false;
         }
         
-        if (isSuperUser(permissions)) {
+        if (isSuperUser(permissionsMap)) {
             return true;
         }
         
         // Set of project Ids for which the user has permissions. 
-        Set<Integer> keySet = permissions.keySet();
-        
-        final Set<PermissionType> permissionTypes = permissions.get(null);
-        
+        Set<Integer> keySet = permissionsMap.keySet();
+                
         for(Iterator<Integer> iterator = keySet.iterator(); iterator.hasNext(); ) {
             Integer projectId = iterator.next();
-            
-            if (hasPermission(permissions, projectId, permissionNeeded)) {
+            if (hasPermission(permissionsMap, projectId, permissionNeeded)) {
                 return true;
             }
         }
@@ -265,7 +262,11 @@ public class UserUtilities implements AuthenticationConstants {
         
         final Set<PermissionType> permissionTypes = permissions.get(projectId);
         
-        return (permissionTypes != null) && permissionTypes.contains(PermissionType.fromInt(permissionNeeded));
+        if ((permissionTypes != null) && permissionTypes.contains(PermissionType.fromInt(permissionNeeded))){
+        	return true;
+        } else {
+        	return false;
+        }
     }
     
     /**
