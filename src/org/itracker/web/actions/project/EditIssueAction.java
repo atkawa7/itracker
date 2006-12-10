@@ -248,14 +248,14 @@ public class EditIssueAction extends ItrackerBaseAction {
         }
     }
 
-    private void processLimitedEdit(Issue issue, Project project, User user, Map<Integer, Set<PermissionType>> userPermissions, Locale locale, ActionForm form, IssueService issueService) throws Exception {
+    private void processLimitedEdit(Issue issue, Project project, User user, Map<Integer, Set<PermissionType>> userPermissionsMap, Locale locale, ActionForm form, IssueService issueService) throws Exception {
         issue.setDescription((String) PropertyUtils.getSimpleProperty(form, "description"));
 
         Integer formStatus = (Integer) PropertyUtils.getSimpleProperty(form, "status");
         if(formStatus != null) {
             int newStatus = formStatus.intValue();
             if(issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && newStatus >= IssueUtilities.STATUS_CLOSED &&
-               UserUtilities.hasPermission(userPermissions, UserUtilities.PERMISSION_CLOSE)) {
+               UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_CLOSE)) {
                 issue.setStatus(newStatus);
             }
         }
@@ -263,19 +263,19 @@ public class EditIssueAction extends ItrackerBaseAction {
         issue = issueService.updateIssue(issue, user.getId());
 
         setIssueFields(issue, user, locale, form, issueService);
-        setOwner(issue, user, userPermissions, form, issueService);
+        setOwner(issue, user, userPermissionsMap, form, issueService);
         addHistoryEntry(issue, user, form, issueService);
         addAttachment(issue, project, user, form, issueService);
     }
 
-    private void setOwner(Issue issue, User user, Map<Integer, Set<PermissionType>> userPermissions, ActionForm form, IssueService issueService) throws Exception {
+    private void setOwner(Issue issue, User user, Map<Integer, Set<PermissionType>> userPermissionsMap, ActionForm form, IssueService issueService) throws Exception {
         Integer currentOwner = (issue.getOwner() == null) ? null : issue.getOwner().getId();
         Integer ownerId = (Integer) PropertyUtils.getSimpleProperty(form, "ownerId");
         
         if(ownerId != null && !ownerId.equals(currentOwner)) {
-            if(UserUtilities.hasPermission(userPermissions, UserUtilities.PERMISSION_ASSIGN_OTHERS) ||
-               (UserUtilities.hasPermission(userPermissions, UserUtilities.PERMISSION_ASSIGN_SELF) && user.getId().equals(ownerId)) ||
-               (UserUtilities.hasPermission(userPermissions, UserUtilities.PERMISSION_UNASSIGN_SELF) && user.getId().equals(currentOwner) && ownerId.intValue() == -1)
+            if(UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_ASSIGN_OTHERS) ||
+               (UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_ASSIGN_SELF) && user.getId().equals(ownerId)) ||
+               (UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_UNASSIGN_SELF) && user.getId().equals(currentOwner) && ownerId.intValue() == -1)
               ) {
                 issueService.assignIssue(issue.getId(), ownerId, user.getId());
             }

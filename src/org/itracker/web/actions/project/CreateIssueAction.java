@@ -93,7 +93,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
             
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
-            Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
             Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
             Integer currUserId = currUser.getId();
             
@@ -109,7 +109,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
             } else if(errors.isEmpty() && project.getStatus() != ProjectUtilities.STATUS_ACTIVE) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
-            } else if(! UserUtilities.hasPermission(userPermissions, projectId, UserUtilities.PERMISSION_CREATE)) {
+            } else if(! UserUtilities.hasPermission(userPermissionsMap, projectId, UserUtilities.PERMISSION_CREATE)) {
                 return mapping.findForward("unauthorized");
             } else {
                 List<ProjectScript> scripts = project.getScripts();
@@ -131,8 +131,8 @@ public class CreateIssueAction extends ItrackerBaseAction {
                 if(issue != null) {
                     Integer newOwner = (Integer) PropertyUtils.getSimpleProperty(form, "ownerId");
                     if(newOwner != null && newOwner.intValue() >= 0) {
-                        if(UserUtilities.hasPermission(userPermissions, UserUtilities.PERMISSION_ASSIGN_OTHERS) ||
-                                (UserUtilities.hasPermission(userPermissions, UserUtilities.PERMISSION_ASSIGN_SELF) &&
+                        if(UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_ASSIGN_OTHERS) ||
+                                (UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_ASSIGN_SELF) &&
                                 currUserId.equals(newOwner))) {
                             issueService.assignIssue(issue.getId(), newOwner, currUserId);
                         }
@@ -209,7 +209,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                             Issue relatedIssue = issueService.getIssue(relatedIssueId);
                             if(relatedIssue == null) {
                                 logger.debug("Unknown relation issue, relation not created.");
-                            } else if(relatedIssue.getProject() == null || ! IssueUtilities.canEditIssue(relatedIssue, currUserId, userPermissions)) {
+                            } else if(relatedIssue.getProject() == null || ! IssueUtilities.canEditIssue(relatedIssue, currUserId, userPermissionsMap)) {
                                 logger.info("User not authorized to add issue relation from issue " + issue.getId() + " to issue " + relatedIssueId);
                             } else if(IssueUtilities.hasIssueRelation(issue, relatedIssueId)) {
                                 logger.debug("Issue " + issue.getId() + " is already related to issue " + relatedIssueId + ", relation ot created.");
