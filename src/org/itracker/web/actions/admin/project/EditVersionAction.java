@@ -86,15 +86,14 @@ public class EditVersionAction extends ItrackerBaseAction {
             } else {
                 project = projectService.getProject(projectId);
                 
-                boolean authorized = UserUtilities.hasPermission(userPermissions, 
+                boolean authorised = UserUtilities.hasPermission(userPermissions, 
                         project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN);
                 
                 if (project == null) {
                     errors.add(ActionMessages.GLOBAL_MESSAGE, 
                             new ActionMessage("itracker.web.error.invalidproject"));
-                } else if (!UserUtilities.hasPermission(userPermissions, 
-                        project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
-                    return mapping.findForward("unauthorized");
+                } else if (!authorised) {
+                    return mapping.findForward("unauthorised");
                 } else {
                     
                     String action = (String) request.getParameter("action");
