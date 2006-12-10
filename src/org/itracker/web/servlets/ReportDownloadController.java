@@ -26,12 +26,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.itracker.model.Report;
-import javax.servlet.http.HttpSession;
-
-import org.itracker.model.User;
+  
 import org.itracker.services.ReportService;
-import org.itracker.web.util.Constants;
-
+ 
 
 public class ReportDownloadController extends GenericController {
  
@@ -47,10 +44,12 @@ public class ReportDownloadController extends GenericController {
             return;
         }
         
-        // TODO: the 2 lines are most propably not used; commented, task added
-        HttpSession session = request.getSession();
+        // TODO: the 2-3 lines are most propably not used; commented, task added
+        // Commented more not used lines, but added a task for testing. 
+        // HttpSession session = request.getSession();
         // UserModel user = (UserModel) session.getAttribute("user");
-        User user = (session == null ? null : (User) session.getAttribute(Constants.USER_KEY));
+        // User user = (session == null ? null : (User) session.getAttribute(Constants.USER_KEY));
+
         try {
             ReportService reportService = getITrackerServices(getServletContext()).getReportService();
 
