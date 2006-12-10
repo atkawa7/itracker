@@ -807,8 +807,8 @@ public class IssueServiceImpl implements IssueService {
 
 		if (currOwner == null || !currOwner.getId().equals(user.getId())) {
 			if (currOwner != null && !hasIssueNotification(issueId, currOwner.getId(), NotificationUtilities.ROLE_CONTRIBUTER)) {
-				Notification notification = new Notification();
-				Notification model = new Notification(NotificationUtilities.ROLE_CONTRIBUTER);
+				// Notification notification = new Notification();
+				Notification notification = new Notification(NotificationUtilities.ROLE_CONTRIBUTER);
 				notification.setIssue(issue);
 				notification.setUser(currOwner);
 			}
