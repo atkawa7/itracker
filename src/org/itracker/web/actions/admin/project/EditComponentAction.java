@@ -74,7 +74,7 @@ public class EditComponentAction extends ItrackerBaseAction {
             ProjectService projectService = getITrackerServices().getProjectService();
             
             HttpSession session = request.getSession(true);
-            Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
             
             Integer projectId = componentForm.getProjectId();
             
@@ -84,17 +84,15 @@ public class EditComponentAction extends ItrackerBaseAction {
             } else {
                 project = projectService.getProject(projectId);
                 
-                boolean authorized = UserUtilities.hasPermission(userPermissions, 
+                boolean authorised = UserUtilities.hasPermission(userPermissionsMap, 
                         project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN);
                 
                 if (project == null) {
                     errors.add(ActionMessages.GLOBAL_MESSAGE, 
                             new ActionMessage("itracker.web.error.invalidproject"));
-                } else if (!UserUtilities.hasPermission(userPermissions, 
-                        project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
+                } else if (!authorised) {
                     return mapping.findForward("unauthorized");
                 } else {
-                    
                     String action = (String) request.getParameter("action");
            
                     if ("create".equals(action)) {
