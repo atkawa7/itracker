@@ -182,13 +182,13 @@ public class UserUtilities implements AuthenticationConstants {
      * @param permissions map of user permissions by project Id
      * @return true is the user is a super user
      */
-    public static boolean isSuperUser(Map<Integer, Set<PermissionType>> permissions) {
-        if(permissions == null) {
+    public static boolean isSuperUser(Map<Integer, Set<PermissionType>> permissionsMap) {
+        if(permissionsMap == null) {
             return false;
         }
         
         // Super user has access to all projects, which is indicated by null. 
-        final Set<PermissionType> permissionTypes = permissions.get(null);
+        final Set<PermissionType> permissionTypes = permissionsMap.get(null);
         
         return (permissionTypes != null) && permissionTypes.contains(PermissionType.USER_ADMIN);
     }
@@ -224,21 +224,21 @@ public class UserUtilities implements AuthenticationConstants {
      * @param permissions a HashMap of the user's permissions
      * @param permissionsNeeded a list of permissions that can fulfill the permission check
      */
-    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissions, int[] permissionsNeeded) {
-        if(permissions == null) {
+    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, int[] permissionsNeeded) {
+        if(permissionsMap == null) {
             return false;
         }
         
-        if (isSuperUser(permissions)) {
+        if (isSuperUser(permissionsMap)) {
             return true;
         }
         
-        Set<Integer> keySet = permissions.keySet();
+        Set<Integer> keySet = permissionsMap.keySet();
         
         for (Iterator<Integer> iterator = keySet.iterator(); iterator.hasNext(); ) {
             Integer projectId = iterator.next();
             
-            if (hasPermission(permissions, projectId, permissionsNeeded)) {
+            if (hasPermission(permissionsMap, projectId, permissionsNeeded)) {
                 return true;
             }
         }
@@ -251,16 +251,16 @@ public class UserUtilities implements AuthenticationConstants {
      * @param projectId the project that the permission is required for
      * @param permissionNeeded the permission to check for
      */
-    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissions, Integer projectId, int permissionNeeded) {
-        if(permissions == null) {
+    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, Integer projectId, int permissionNeeded) {
+        if(permissionsMap == null) {
             return false;
         }
         
-        if (isSuperUser(permissions)) {
+        if (isSuperUser(permissionsMap)) {
             return true;
         }
         
-        final Set<PermissionType> permissionTypes = permissions.get(projectId);
+        final Set<PermissionType> permissionTypes = permissionsMap.get(projectId);
         
         if ((permissionTypes != null) && permissionTypes.contains(PermissionType.fromInt(permissionNeeded))){
         	return true;
@@ -275,16 +275,16 @@ public class UserUtilities implements AuthenticationConstants {
      * @param projectId the project that the permission is required for
      * @param permissionsNeeded a list of permissions that can fulfill the permission check
      */
-    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissions, Integer projectId, int[] permissionsNeeded) {
-        if(permissions == null) {
+    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, Integer projectId, int[] permissionsNeeded) {
+        if(permissionsMap == null) {
             return false;
         }
         
-        if (isSuperUser(permissions)) {
+        if (isSuperUser(permissionsMap)) {
             return true;
         }
         
-        final Set<PermissionType> permissionTypes = permissions.get(projectId);
+        final Set<PermissionType> permissionTypes = permissionsMap.get(projectId);
         
         if (permissionTypes != null) {
             for(int i = 0; i < permissionsNeeded.length; i++) {
