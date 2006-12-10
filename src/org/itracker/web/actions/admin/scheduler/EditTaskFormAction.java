@@ -62,8 +62,8 @@ public class EditTaskFormAction extends ItrackerBaseAction {
             SchedulerService schedulerService = getITrackerServices().getSchedulerService();
             HttpSession session = request.getSession(true);
             String action = (String) request.getParameter("action");
-            Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
-            if(! UserUtilities.hasPermission(userPermissions, UserUtilities.PERMISSION_USER_ADMIN)) {
+            Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
+            if(! UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_USER_ADMIN)) {
                 return mapping.findForward("unauthorized");
             }
             ScheduledTask task = (ScheduledTask) session.getAttribute(Constants.TASK_KEY);
