@@ -101,8 +101,8 @@ public abstract class GenericController extends HttpServlet {
             throws IOException, ServletException {
         if (isLoggedIn(request, response)) {
             HttpSession session = request.getSession(false);
-            Map<Integer, Set<PermissionType>> permissions = getPermissions(session);
-            if(! UserUtilities.hasPermission(permissions, permissionNeeded)) {
+            Map<Integer, Set<PermissionType>> permissionsMap = getPermissions(session);
+            if(! UserUtilities.hasPermission(permissionsMap, permissionNeeded)) {
                 forward("/unauthorized.jsp", request, response);
                 return false;
             }
