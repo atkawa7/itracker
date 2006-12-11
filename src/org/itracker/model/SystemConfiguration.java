@@ -85,30 +85,30 @@ public class SystemConfiguration extends AbstractBean {
         }
     }
 
-    public void addConfiguration(Configuration model) {
-        if(model != null) {
+    public void addConfiguration(Configuration configuration) {
+        if(configuration != null) {
             Configuration[] newArray;
 
-            if(model.getType() == SystemConfigurationUtilities.TYPE_RESOLUTION) {
+            if(configuration.getType() == SystemConfigurationUtilities.TYPE_RESOLUTION) {
                 newArray = new Configuration[getResolutions().size() + 1];
                 if(getResolutions().size() > 0) {
                     System.arraycopy((Object) resolutions, 0, (Object) newArray, 0, resolutions.size());
                 }
-                newArray[getResolutions().size()] = model;
+                newArray[getResolutions().size()] = configuration;
                 setResolutions(Arrays.asList(newArray));
-            } else if(model.getType() == SystemConfigurationUtilities.TYPE_SEVERITY) {
+            } else if(configuration.getType() == SystemConfigurationUtilities.TYPE_SEVERITY) {
                 newArray = new Configuration[getSeverities().size() + 1];
                 if(getSeverities().size() > 0) {
                     System.arraycopy((Object) severities, 0, (Object) newArray, 0, severities.size());
                 }
-                newArray[getSeverities().size()] = model;
+                newArray[getSeverities().size()] = configuration;
                 setSeverities(Arrays.asList(newArray));
-            } else if(model.getType() == SystemConfigurationUtilities.TYPE_STATUS) {
+            } else if(configuration.getType() == SystemConfigurationUtilities.TYPE_STATUS) {
                 newArray = new Configuration[getStatuses().size() + 1];
                 if(getStatuses().size() > 0) {
                     System.arraycopy((Object) statuses, 0, (Object) newArray, 0, statuses.size());
                 }
-                newArray[getStatuses().size()] = model;
+                newArray[getStatuses().size()] = configuration;
                 setStatuses(Arrays.asList(newArray));
             }
         }
