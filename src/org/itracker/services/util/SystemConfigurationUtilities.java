@@ -63,15 +63,15 @@ public class SystemConfigurationUtilities {
       * @param model the Configuration to return the key for
       * @return the key for the item
       */
-    public static String getLanguageKey(Configuration model) {
-        if(model != null) {
-            int type = model.getType();
+    public static String getLanguageKey(Configuration configuration) {
+        if(configuration != null) {
+            int type = configuration.getType();
             if(type == SystemConfigurationUtilities.TYPE_STATUS) {
-                return ITrackerResources.KEY_BASE_STATUS + model.getValue();
+                return ITrackerResources.KEY_BASE_STATUS + configuration.getValue();
             } else if(type == SystemConfigurationUtilities.TYPE_SEVERITY) {
-                return ITrackerResources.KEY_BASE_SEVERITY + model.getValue();
+                return ITrackerResources.KEY_BASE_SEVERITY + configuration.getValue();
             } else if(type == SystemConfigurationUtilities.TYPE_RESOLUTION) {
-                return ITrackerResources.KEY_BASE_RESOLUTION + model.getValue();
+                return ITrackerResources.KEY_BASE_RESOLUTION + configuration.getValue();
             }
         }
         return "";
