@@ -40,11 +40,11 @@ public class Configuration extends AbstractBean implements Comparable<Configurat
     public Configuration() {
     }
 
-    public Configuration(int type, NameValuePair model) {
+    public Configuration(int type, NameValuePair nvp) {
         setType(type);
-        if(model != null) {
-            setValue(model.getValue());
-            setName(model.getName());
+        if(nvp != null) {
+            setValue(nvp.getValue());
+            setName(nvp.getName());
         }
     }
 
