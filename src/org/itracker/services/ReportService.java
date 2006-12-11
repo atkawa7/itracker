@@ -31,9 +31,9 @@ public interface ReportService {
     
     public int getNumberReports()throws Exception;
 
-    public Report createReport(Report model);
+    public Report createReport(Report report);
     
-    public Report updateReport(Report model);
+    public Report updateReport(Report report);
     
     public boolean removeReport(Integer reportId);
     
