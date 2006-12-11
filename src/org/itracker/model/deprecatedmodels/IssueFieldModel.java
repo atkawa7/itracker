@@ -135,7 +135,8 @@ class IssueFieldModel extends GenericModel {
                 if(customField.getDateFormat() != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
                     SimpleDateFormat sdf = new SimpleDateFormat(bundle.getString("itracker.dateformat." + customField.getDateFormat()), locale);
                     try {
-                        Date dateValue = sdf.parse(value);
+                        @SuppressWarnings("unused")
+						Date dateValue = sdf.parse(value);
                     } catch (ParseException ex) {
                         throw new IssueException(
                                     "Unable to set custom field date. Data was '" + value + "'"
