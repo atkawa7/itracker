@@ -69,7 +69,7 @@ public class ImportExportUtilities implements ImportExportTags {
       * @exception ImportExportException thrown if the xml can not be parsed into the appropriate objects
       */
     public static AbstractBean[] importIssues(String xml) throws ImportExportException {
-        AbstractBean[] models = new AbstractBean[0];
+        AbstractBean[] abstractBeans = new AbstractBean[0];
 
         try {
             logger.debug("Starting XML data import.");
@@ -79,15 +79,15 @@ public class ImportExportUtilities implements ImportExportTags {
           	reader.setContentHandler(handler);
           	reader.setErrorHandler(handler);
             reader.parse(new InputSource(new StringReader(xml)));
-            models = handler.getModels();
+            abstractBeans = handler.getModels();
 
-            logger.debug("Imported a total of " + models.length + " models.");
+            logger.debug("Imported a total of " + abstractBeans.length + " beans.");
         } catch(Exception e) {
             logger.debug("Exception.", e);
             throw new ImportExportException(e.getMessage());
         }
 
-        return models;
+        return abstractBeans;
     }
 
 
@@ -176,17 +176,17 @@ public class ImportExportUtilities implements ImportExportTags {
       * @param model a modle that extends AbstractBean
       * @exception ImportExportException thrown if the given model can not be exported
       */
-    public static String exportModel(AbstractBean model) throws ImportExportException {
-        if(model == null) {
-            throw new ImportExportException("The model to export was null.");
-        } else if(model instanceof Issue) {
-            return getIssueXML((Issue) model);
-        } else if(model instanceof Project) {
-            return getProjectXML((Project) model);
-        } else if(model instanceof User) {
-            return getUserXML((User) model);
+    public static String exportModel(AbstractBean abstractBean) throws ImportExportException {
+        if(abstractBean == null) {
+            throw new ImportExportException("The bean to export was null.");
+        } else if(abstractBean instanceof Issue) {
+            return getIssueXML((Issue) abstractBean);
+        } else if(abstractBean instanceof Project) {
+            return getProjectXML((Project) abstractBean);
+        } else if(abstractBean instanceof User) {
+            return getUserXML((User) abstractBean);
         } else {
-            throw new ImportExportException("This model type can not be exported.");
+            throw new ImportExportException("This bean type can not be exported.");
         }
     }
 
