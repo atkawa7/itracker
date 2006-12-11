@@ -70,7 +70,7 @@ public interface ConfigurationService {
       * @param model the model to create the bean from
       * @returns and updated model with the information from the newly created bean
       */
-    public Configuration createConfigurationItem(Configuration model);
+    public Configuration createConfigurationItem(Configuration configuration);
  
     /**
       * This method updates a configuration item in the database.  It does not include any updates
@@ -78,13 +78,13 @@ public interface ConfigurationService {
       * @param model a Configuration of the item to update
       * @return a Configuration with the updated item
       */
-    public Configuration updateConfigurationItem(Configuration model);
+    public Configuration updateConfigurationItem(Configuration configuration);
     
-    public List<Configuration> updateConfigurationItems(List<Configuration> models, int type);
+    public List<Configuration> updateConfigurationItems(List<Configuration> configurations, int type);
 
-    public boolean configurationItemExists(Configuration model);
+    public boolean configurationItemExists(Configuration configuration);
     
-    public boolean configurationItemUpToDate(Configuration model);
+    public boolean configurationItemUpToDate(Configuration configuration);
 
     /**
       * This method will remove the configuration item with the supplied id.
@@ -105,7 +105,7 @@ public interface ConfigurationService {
       * It is normally called prior to a create to remove any older copies of this item.
       * @param model the model to determine the type and value from
       */
-    public void removeConfigurationItems(Configuration model);
+    public void removeConfigurationItems(Configuration configuration);
 
     /**
       * This method will reset any caches in the system of configuration items for all configuration
@@ -136,13 +136,13 @@ public interface ConfigurationService {
       * @param model the model to create the script from
       * @returns and updated model with the information from the newly created script
       */
-    public WorkflowScript createWorkflowScript(WorkflowScript model);
+    public WorkflowScript createWorkflowScript(WorkflowScript workflowScript);
     /**
       * This method updates a workflow script in the database.
       * @param model a WorkflowScript of the item to update
       * @return a WorkflowScript with the updated item
       */
-    public WorkflowScript updateWorkflowScript(WorkflowScript model);
+    public WorkflowScript updateWorkflowScript(WorkflowScript workflowScript);
     /**
       * This method removes a workflow script in the database.
       * @param id  The id of the workflow script
@@ -173,7 +173,7 @@ public interface ConfigurationService {
       * @param model the model to create the field from
       * @returns and updated model with the information from the newly created field
       */
-    public CustomField createCustomField(CustomField model);
+    public CustomField createCustomField(CustomField customField);
     /**
       * This method updates a custom field in the database.  It does not include any updates
       * to language items that would be used to display the localized label for the field.
@@ -181,7 +181,7 @@ public interface ConfigurationService {
       * @param model a CustomField of the item to update
       * @return a CustomField with the updated item
       */
-    public CustomField updateCustomField(CustomField model);
+    public CustomField updateCustomField(CustomField customField);
     /**
       * Removes a single custom field from the database.
       * @param customFieldValueId the id of the custom field to remove
@@ -198,14 +198,14 @@ public interface ConfigurationService {
       * @param model the model to create the field from
       * @returns and updated model with the information from the newly created field
       */
-    public CustomFieldValue createCustomFieldValue(CustomFieldValue model);
+    public CustomFieldValue createCustomFieldValue(CustomFieldValue customFieldValue);
     /**
       * This method updates a custom field value in the database.  It does not include any updates
       * to language items that would be used to display the localized label for the field value.
       * @param model a CustomFieldValue of the item to update
       * @return a CustomFieldValue with the updated item
       */
-    public CustomFieldValue updateCustomFieldValue(CustomFieldValue model);
+    public CustomFieldValue updateCustomFieldValue(CustomFieldValue customFieldValue);
     /**
       * This method updates a set of custom field values in the database.  If the array of values
       * is null or zero length, it will remove all existing values from the custom field.  Otherwise
@@ -217,7 +217,7 @@ public interface ConfigurationService {
       * @return a array of CustomFieldValueModels with the updated items
       */
  
-    public List<CustomFieldValue> updateCustomFieldValues(Integer customFieldId, List<CustomFieldValue> models);
+    public List<CustomFieldValue> updateCustomFieldValues(Integer customFieldId, List<CustomFieldValue> customFieldValues);
     /**
       * Removes a single custom field value from the database.
       * @param customFieldValueId the id of the custom field value to remove
@@ -247,7 +247,7 @@ public interface ConfigurationService {
       * @param model A Language for the key to update
       * @return a Language with the updated translation
       */
-    public Language updateLanguageItem(Language model);
+    public Language updateLanguageItem(Language language);
     /**
       * This method will remove all language items with the supplied key regardless
       * of locale.
@@ -255,7 +255,7 @@ public interface ConfigurationService {
       */
     public void removeLanguageKey(String key);
     
-    public void removeLanguageItem(Language model);
+    public void removeLanguageItem(Language language);
 
     /**
       * This method will return the current configuration of the system.
@@ -281,9 +281,9 @@ public interface ConfigurationService {
     
     public List<Language> getLanguage(Locale locale);
     
-    public void updateLanguage(Locale locale, List<Language> models);
+    public void updateLanguage(Locale locale, List<Language> languages);
     
-    public void updateLanguage(Locale locale, List<Language> models, Configuration config);
+    public void updateLanguage(Locale locale, List<Language> languages, Configuration config);
 
     /**
       * This method will load the specified locale.  It will look for the appropriate properties file,
