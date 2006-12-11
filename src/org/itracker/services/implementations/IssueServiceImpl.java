@@ -88,7 +88,7 @@ import org.itracker.services.util.UserUtilities;
  * 
  */
 public class IssueServiceImpl implements IssueService {
-
+//	 this class needs some clean up. The code can be made smaller. There was some model stuff here, that needs clean out.
 	// TODO: work on these 3 not yet used items: notificationFactoryName,
 	// notificationQueueName, systemBaseURL;
 	private static String notificationFactoryName = NotificationMessageBean.DEFAULT_CONNECTION_FACTORY;
@@ -361,14 +361,14 @@ public class IssueServiceImpl implements IssueService {
 		return issue;
 	}
 
-	public Issue updateIssue(Issue model, Integer userId) throws ProjectException {
+	public Issue updateIssue(Issue issuePojo, Integer userId) throws ProjectException {
 		String existingTargetVersion = null;
-		Issue issue = issueDAO.findByPrimaryKey(model.getId());
+		Issue issue = issueDAO.findByPrimaryKey(issuePojo.getId());
 		User user = userDAO.findByPrimaryKey(userId);
 		if (issue.getProject().getStatus() != ProjectUtilities.STATUS_ACTIVE) {
 			throw new ProjectException("Project is not active.");
 		}
-		if (issue.getDescription() != null && model.getDescription() != null && !issue.getDescription().equalsIgnoreCase(model.getDescription())) {
+		if (issue.getDescription() != null && issuePojo.getDescription() != null && !issue.getDescription().equalsIgnoreCase(issuePojo.getDescription())) {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_DESCRIPTION_CHANGE);
@@ -378,7 +378,7 @@ public class IssueServiceImpl implements IssueService {
 
 		}
 
-		if (issue.getResolution() != null && model.getResolution() != null && !issue.getResolution().equalsIgnoreCase(model.getResolution())) {
+		if (issue.getResolution() != null && issuePojo.getResolution() != null && !issue.getResolution().equalsIgnoreCase(issuePojo.getResolution())) {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_RESOLUTION_CHANGE);
@@ -387,31 +387,31 @@ public class IssueServiceImpl implements IssueService {
 			activity.setUser(user);
 		}
 
-		if (issue.getStatus() != model.getStatus() && model.getStatus() != -1) {
+		if (issue.getStatus() != issuePojo.getStatus() && issuePojo.getStatus() != -1) {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_STATUS_CHANGE);
-			activity.setDescription(IssueUtilities.getStatusName(issue.getStatus()) + " " + ITrackerResources.getString("itracker.web.generic.to") + " " + IssueUtilities.getStatusName(model.getStatus()));
+			activity.setDescription(IssueUtilities.getStatusName(issue.getStatus()) + " " + ITrackerResources.getString("itracker.web.generic.to") + " " + IssueUtilities.getStatusName(issuePojo.getStatus()));
 			activity.setIssue(issue);
 			activity.setUser(user);
 		}
 
-		if (issue.getSeverity() != model.getSeverity() && model.getSeverity() != -1) {
+		if (issue.getSeverity() != issuePojo.getSeverity() && issuePojo.getSeverity() != -1) {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_SEVERITY_CHANGE);
-			activity.setDescription(IssueUtilities.getSeverityName(issue.getSeverity()) + " " + ITrackerResources.getString("itracker.web.generic.to") + " " + IssueUtilities.getSeverityName(model.getSeverity()));
+			activity.setDescription(IssueUtilities.getSeverityName(issue.getSeverity()) + " " + ITrackerResources.getString("itracker.web.generic.to") + " " + IssueUtilities.getSeverityName(issuePojo.getSeverity()));
 			activity.setIssue(issue);
 			activity.setUser(user);
 		}
 
-		if (issue.getTargetVersion() != null && model.getTargetVersion() != null && !issue.getTargetVersion().getId().equals(model.getTargetVersion().getId())) {
+		if (issue.getTargetVersion() != null && issuePojo.getTargetVersion() != null && !issue.getTargetVersion().getId().equals(issuePojo.getTargetVersion().getId())) {
 			existingTargetVersion = issue.getTargetVersion().getNumber();
 
 		}
 
-		if (model.getTargetVersion() != null) {
-			Version version = this.versionDAO.findByPrimaryKey(model.getTargetVersion().getId());
+		if (issuePojo.getTargetVersion() != null) {
+			Version version = this.versionDAO.findByPrimaryKey(issuePojo.getTargetVersion().getId());
 
 			issue.setTargetVersion(version);
 
@@ -924,13 +924,13 @@ public class IssueServiceImpl implements IssueService {
 	 * @param data
 	 *            The byte data
 	 */
-	public boolean addIssueAttachment(IssueAttachment model, byte[] data) {
-		Issue issue = model.getIssue();
-		User user = model.getUser();
+	public boolean addIssueAttachment(IssueAttachment issueAttachment, byte[] data) {
+		Issue issue = issueAttachment.getIssue();
+		User user = issueAttachment.getUser();
 
 		IssueAttachment attachment = new IssueAttachment();
-		model.setFileName("attachment_issue_" + issue.getId() + "_" + model.getOriginalFileName());
-		attachment.setModel(model);
+		issueAttachment.setFileName("attachment_issue_" + issue.getId() + "_" + issueAttachment.getOriginalFileName());
+		attachment.setModel(issueAttachment);
 		attachment.setFileData((data == null ? new byte[0] : data));
 		attachment.setIssue(issue);
 		attachment.setUser(user);
@@ -1174,7 +1174,7 @@ public class IssueServiceImpl implements IssueService {
 
 	public IssueHistory getLastIssueHistory(Integer issueId) {
 
-		IssueHistory model = null;
+		IssueHistory issueHistory = null;
 
 		IssueHistory lastEntry = null;
 
@@ -1212,7 +1212,7 @@ public class IssueServiceImpl implements IssueService {
 
 		}
 
-		return model;
+		return issueHistory;
 
 	}
 
@@ -1331,10 +1331,10 @@ public class IssueServiceImpl implements IssueService {
 
 	}
 
-	public boolean addIssueNotification(Notification model) {
-		User user = model.getUser();
+	public boolean addIssueNotification(Notification notifi) {
+		User user = notifi.getUser();
 
-		Issue issue = model.getIssue();
+		Issue issue = notifi.getIssue();
 
 		Notification notification = new Notification();
 
