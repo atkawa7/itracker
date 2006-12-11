@@ -171,8 +171,8 @@ public class WorkflowUtilities  {
         return currentValue;
     }
     
-    public static Object ProcessFieldScript(ProjectScript model, int event, Integer fieldId, Object currentValue, ActionErrors currentErrors, ValidatorForm form) throws WorkflowException {
-        if(model == null) {
+    public static Object ProcessFieldScript(ProjectScript projectScript, int event, Integer fieldId, Object currentValue, ActionErrors currentErrors, ValidatorForm form) throws WorkflowException {
+        if(projectScript == null) {
             throw new WorkflowException("ProjectScript was null.", WorkflowException.INVALID_ARGS);
         }
         
@@ -187,12 +187,12 @@ public class WorkflowUtilities  {
             bshInterpreter.set("currentValue", currentValue);
             bshInterpreter.set("currentErrors", currentErrors);
             bshInterpreter.set("currentForm", form);
-            bshInterpreter.eval(model.getScript().getScript());
+            bshInterpreter.eval(projectScript.getScript().getScript());
             currentValue = bshInterpreter.get("currentValue");
             logger.debug("Script returned current value of '" + currentValue + "' (" + (currentValue != null ? currentValue.getClass().getName() : "NULL") + ")");
             if(event == EVENT_FIELD_ONSETDEFAULT && form != null && currentValue != null) {
-                logger.debug("Setting current form field value for field " + IssueUtilities.getFieldName(model.getFieldId()) + " to '" + currentValue + "'");
-                setFormProperty(form, model.getFieldId(), currentValue);
+                logger.debug("Setting current form field value for field " + IssueUtilities.getFieldName(projectScript.getFieldId()) + " to '" + currentValue + "'");
+                setFormProperty(form, projectScript.getFieldId(), currentValue);
             }
         } catch(Exception e) {
             logger.error("Error processing field script.", e);
