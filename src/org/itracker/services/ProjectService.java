@@ -43,11 +43,11 @@ public interface ProjectService {
     
     public List<Project> getListOfAllAvailableProjects();
     
-    public Project createProject(Project model);
+    public Project createProject(Project project);
     
-    public Project updateProject(Project model);
+    public Project updateProject(Project project);
     
-    public boolean deleteProject(Project model);
+    public boolean deleteProject(Project project);
 
     public Component getProjectComponent(Integer componentId);
   
@@ -55,9 +55,9 @@ public interface ProjectService {
     
     public List<Component> getListOfProjectComponents(Integer projectId);
     
-    public Component updateProjectComponent(Component model);
+    public Component updateProjectComponent(Component component);
     
-    public Component addProjectComponent(Integer projectId, Component model);
+    public Component addProjectComponent(Integer projectId, Component component);
     
     public boolean removeProjectComponent(Integer projectId, Integer componentId);
 
@@ -67,9 +67,9 @@ public interface ProjectService {
     
     public List<Version> getListOfProjectVersions(Integer projectId);
     
-    public Version updateProjectVersion(Version model);
+    public Version updateProjectVersion(Version version);
     
-    public Version addProjectVersion(Integer projectId, Version model);
+    public Version addProjectVersion(Integer projectId, Version version);
     
     public boolean removeProjectVersion(Integer projectId, Integer versionId);
  
@@ -89,9 +89,9 @@ public interface ProjectService {
     
     public boolean setProjectFields(Project project, HashSet<Integer> newFields);
 
-    public ProjectScript updateProjectScript(ProjectScript model);
+    public ProjectScript updateProjectScript(ProjectScript projectScript);
     
-    public ProjectScript addProjectScript(Integer projectId, ProjectScript model);
+    public ProjectScript addProjectScript(Integer projectId, ProjectScript projectScript);
     
     public boolean removeProjectScript(Integer projectId, Integer scriptId);
 
