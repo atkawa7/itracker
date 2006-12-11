@@ -123,29 +123,29 @@ public  class IssueAttachment extends AbstractBean {
     }
 
     public IssueAttachment getModel() {
-        IssueAttachment model = new IssueAttachment();
-        model.setId(this.getId());
-        model.setOriginalFileName(this.getOriginalFileName());
-        model.setType(this.getType());
-        model.setFileName(this.getFileName());
-        model.setDescription(this.getDescription());
-        model.setSize(this.getSize());
-        model.setLastModifiedDate(this.getLastModifiedDate());
-        model.setCreateDate(this.getCreateDate());
+        IssueAttachment issueAttachment = new IssueAttachment();
+        issueAttachment.setId(this.getId());
+        issueAttachment.setOriginalFileName(this.getOriginalFileName());
+        issueAttachment.setType(this.getType());
+        issueAttachment.setFileName(this.getFileName());
+        issueAttachment.setDescription(this.getDescription());
+        issueAttachment.setSize(this.getSize());
+        issueAttachment.setLastModifiedDate(this.getLastModifiedDate());
+        issueAttachment.setCreateDate(this.getCreateDate());
 
-        model.setIssue(this.getIssue());
+        issueAttachment.setIssue(this.getIssue());
 
-        model.setUser(this.getUser());
+        issueAttachment.setUser(this.getUser());
 
-        return model;
+        return issueAttachment;
     }
 
-    public void setModel(IssueAttachment model) {
-        this.setOriginalFileName(model.getOriginalFileName());
-        this.setType(model.getType());
-        this.setFileName(model.getFileName());
-        this.setSize(model.getSize());
-        this.setDescription(model.getDescription());
+    public void setModel(IssueAttachment issueAttachment) {
+        this.setOriginalFileName(issueAttachment.getOriginalFileName());
+        this.setType(issueAttachment.getType());
+        this.setFileName(issueAttachment.getFileName());
+        this.setSize(issueAttachment.getSize());
+        this.setDescription(issueAttachment.getDescription());
         this.setLastModifiedDate(new Timestamp(new Date().getTime()));
     }
     
