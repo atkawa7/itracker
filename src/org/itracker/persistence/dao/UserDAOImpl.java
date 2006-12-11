@@ -21,9 +21,9 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
 
     public User findByPrimaryKey(Integer userId) {
         try {
-            return (User)getSession().load(User.class, userId);
+            return (User)getSession().get(User.class, userId);
         } catch (ObjectNotFoundException ex) {
-            // PENDING: throw NoSuchEntityException instead of returning null ?
+            // PENDING: throw NoSuchEntityException instead of returning null ? Yes, please. 
             return null;
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
