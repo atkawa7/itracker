@@ -33,7 +33,8 @@ public class MailNotification implements SchedulableTask {
     /**
      *  
      */
-    private String getProjectId() {
+    @SuppressWarnings("unused")
+	private String getProjectId() {
         return projectId;
     }
 
