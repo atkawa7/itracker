@@ -68,7 +68,8 @@ public abstract class AbstractDependencyInjectionTest extends AbstractDependency
     }
 
     private List getDataSet() throws Exception {
-        dataSets = new ArrayList();
+    	// TODO: Can't we add a Generic type here? For example IDataSet?
+    	dataSets = new ArrayList();
 
         String[] aDataSet = getDataSetFiles();
 
