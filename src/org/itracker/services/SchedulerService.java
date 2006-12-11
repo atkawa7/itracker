@@ -27,9 +27,9 @@ public interface SchedulerService {
     
     public List<ScheduledTask> getAllTasks();
     
-    public ScheduledTask createTask(ScheduledTask model);
+    public ScheduledTask createTask(ScheduledTask scheduledTask);
     
-    public ScheduledTask updateTask(ScheduledTask model);
+    public ScheduledTask updateTask(ScheduledTask scheduledTask);
     
     public boolean removeTask(Integer taskId);
     
