@@ -13,6 +13,11 @@ public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
 
         Project project = new Project();
         project.setCreateDate( new Date() );
+        project.setLastModifiedDate( new Date() );
+        project.setName("dbunit Testproject 1");
+        project.setDescription("Testproject 1 description");
+        project.setStatus(1);
+        project.setOptions(1);
         projectDAO.saveOrUpdate( project );
 
         Project foundProject = projectDAO.findByPrimaryKey(2);
@@ -21,7 +26,7 @@ public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
         assertEquals( "dbunit Testproject 1", foundProject.getName() );
         assertEquals( "Testproject 1 description", foundProject.getDescription() );
         assertEquals( 1, foundProject.getStatus() );
-        assertEquals( 0, foundProject.getOptions() );
+        assertEquals( 1, foundProject.getOptions() );
 
     }
 
