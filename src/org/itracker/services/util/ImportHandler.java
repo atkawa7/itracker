@@ -50,7 +50,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class ImportHandler extends DefaultHandler implements ImportExportTags {
     
     private final Logger logger;
-    private List<Object> models;
+    private List<Object> items;
     private StringBuffer tagBuffer;
     private SAXException endException;
 
@@ -61,13 +61,13 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
 
     public ImportHandler() {
         this.logger = Logger.getLogger(getClass());
-        this.models = new ArrayList<Object>();
+        this.items = new ArrayList<Object>();
         this.endException = null;
     }
 
     public AbstractBean[] getModels() {
-        AbstractBean[] modelsArray = new AbstractBean[models.size()];
-        modelsArray = (AbstractBean[])models.toArray();
+        AbstractBean[] modelsArray = new AbstractBean[items.size()];
+        modelsArray = (AbstractBean[])items.toArray();
         return modelsArray;
     }
 
@@ -219,19 +219,19 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
 
         try {
             if(TAG_ISSUE.equals(qName) || TAG_PROJECT.equals(qName) || TAG_USER.equals(qName) || TAG_CONFIGURATION.equals(qName)) {
-                models.add(parentModel.clone());
+            	items.add(parentModel.clone());
                 parentModel = null;
                 childModel = null;
                 itemList = null;
             } else if(TAG_RESOLUTION.equals(qName) || TAG_SEVERITY.equals(qName) || TAG_STATUS.equals(qName)) {
                 ((Configuration) childModel).setName(getBuffer());
-                models.add(childModel.clone());
+                items.add(childModel.clone());
                 ((SystemConfiguration) parentModel).addConfiguration((Configuration) childModel);
                 childModel = null;
             } else if(TAG_COMPONENT.equals(qName) || TAG_VERSION.equals(qName) || TAG_CUSTOM_FIELD.equals(qName)) {
                 // Add to both so we can search the the models for components, customfields, and versions later
                 // Make sure they are double added when processed
-                models.add(childModel.clone());
+            	items.add(childModel.clone());
                 itemList.add(childModel.clone());
                 childModel = null;
             } else if(TAG_HISTORY_ENTRY.equals(qName)) {
@@ -464,16 +464,16 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
         }
     }
 
-    private AbstractBean findModel(String modelTypeId) {
-        if(modelTypeId != null && ! modelTypeId.equals("")) {
-            for(int i = 0; i < models.size(); i++) {
-                AbstractBean model = (AbstractBean) models.get(i);
-                if(getModelTypeIdString(model).equalsIgnoreCase(modelTypeId)) {
+    private AbstractBean findModel(String itemTypeId) {
+        if(itemTypeId != null && ! itemTypeId.equals("")) {
+            for(int i = 0; i < items.size(); i++) {
+                AbstractBean model = (AbstractBean) items.get(i);
+                if(getModelTypeIdString(model).equalsIgnoreCase(itemTypeId)) {
                     return model;
                 }
             }
         }
-        logger.debug("Unable to find model id " + modelTypeId + " during import.");
+        logger.debug("Unable to find model id " + itemTypeId + " during import.");
         return null;
     }
 
