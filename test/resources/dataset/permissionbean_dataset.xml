@@ -1,0 +1,38 @@
+<dataset>
+
+    <table name="permissionbean">
+
+        <column>id</column>
+        <column>create_date</column>
+        <column>last_modified</column>
+        <column>permission_type</column>
+        <column>user_id</column>
+        <column>project_id</column>
+     
+        <row>
+            <value>1</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>1</value>
+            <value>1</value>
+            <value>1</value>
+        </row>
+		<row>
+            <value>2</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>2</value>
+            <value>1</value>
+            <value>1</value>
+        </row>
+        <row>
+            <value>3</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>3</value>
+            <value>1</value>
+            <value>1</value>
+        </row>
+    </table>
+
+</dataset>
