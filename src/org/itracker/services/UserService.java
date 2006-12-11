@@ -56,15 +56,15 @@ public interface UserService {
     
     public List<User> getListOfPossibleOwners(Issue issue, Integer projectId, Integer userId);
     
-    public User createUser(User model) throws UserException;
+    public User createUser(User user) throws UserException;
     
-    public User updateUser(User model) throws UserException;
+    public User updateUser(User user) throws UserException;
     
-    public String generateUserPassword(User model) throws PasswordException;
+    public String generateUserPassword(User user) throws PasswordException;
     
-    public boolean deleteUser(User model);
+    public boolean deleteUser(User user);
     
-    public UserPreferences updateUserPreferences(UserPreferences model) throws UserException;
+    public UserPreferences updateUserPreferences(UserPreferences user) throws UserException;
     
     public boolean setUserStatus(Integer userId, int status);
     
@@ -141,7 +141,7 @@ public interface UserService {
      * @return a Map of permission types by project ID
      * @see UserUtilities#hasPermission
      */
-    public Map<Integer, Set<PermissionType>> getUserPermissions(User model, int reqSource);
+    public Map<Integer, Set<PermissionType>> getUserPermissions(User user, int reqSource);
     
     /**
      * This method will return a list of users with a specific permission, either explicitly, or
@@ -150,7 +150,7 @@ public interface UserService {
      * be the local datastore.
      * @param projectId the project to find the permission for
      * @param permission the permission to check for
-     * @return an array of UserModels that represent the users that have the permission
+     * @return an array of Users that represent the users that have the permission
      */
     public List<User> getUsersWithProjectPermission(Integer projectId, int permission);
     
