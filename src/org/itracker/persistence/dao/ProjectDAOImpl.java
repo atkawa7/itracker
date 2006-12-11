@@ -16,7 +16,7 @@ public class ProjectDAOImpl extends BaseHibernateDAOImpl<Project>
 
     public Project findByPrimaryKey(Integer projectId) {        
         try {
-            return (Project)getSession().load(Project.class, projectId);
+            return (Project)getSession().get(Project.class, projectId);
         } catch (HibernateException e) {
             throw convertHibernateAccessException(e);
         }
