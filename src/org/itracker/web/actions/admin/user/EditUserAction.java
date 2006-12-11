@@ -140,10 +140,12 @@ public class EditUserAction extends ItrackerBaseAction {
             }
 
             if(errors.isEmpty() && userService.allowPermissionUpdates(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
-                HashMap<String, String> permissions = userForm.getPermissions();
-                List<Permission> permissionsList = new ArrayList<Permission>();
-                for(Iterator<String> iter = permissions.keySet().iterator(); iter.hasNext(); ) {
+                HashMap<String, String> permissionsMap = userForm.getPermissions();
+                List<Permission> newPermissions = new ArrayList<Permission>();
+                for(Iterator<String> iter = permissionsMap.keySet().iterator(); iter.hasNext(); ) {
                     String paramName = iter.next();
+                    logger.debug("permission paramName: "+paramName);
+                    // Perm7Proj5103
                     Integer projectIntValue =  new Integer(paramName.substring(paramName.lastIndexOf('j') + 1));
                     logger.debug("projectForPermission found: "+projectIntValue);
                     Project project = projectService.getProject(projectIntValue);
@@ -151,15 +153,22 @@ public class EditUserAction extends ItrackerBaseAction {
                     logger.debug("permissionIntValue found: "+permissionIntValue);
                     Permission newPermission = new Permission(project,permissionIntValue,editUser); 
                     newPermission.setCreateDate(new Date());
-                    permissionsList.add(newPermission); 
-      
-                    // Perm7Proj5103
-
-              
+                    logger.debug("new Permission found: "+newPermission.getCreateDate());
+                    logger.debug("new Permission found: "+newPermission.getLastModifiedDate());
+                    logger.debug("new Permission found: "+newPermission.getPermissionType());
+                    logger.debug("new Permission found: "+newPermission.getProject().getName());
+                    logger.debug("new Permission found: "+newPermission.getUser().getLogin());            
+                    newPermissions.add(newPermission); 
                 }
-                List<Permission> newPermissions = new ArrayList<Permission>();
-                newPermissions = permissionsList;
-                userService.setUserPermissions(editUser.getId(), newPermissions);
+                logger.debug("setting Permissions for userID: "+editUser.getId());    
+                boolean successful = userService.setUserPermissions(editUser.getId(), newPermissions);
+                if (successful == true) { 
+                	logger.debug("User Permissions have been nicely set.");
+                
+                } else {
+                	logger.debug("No good. User Permissions have not been nicely set.");
+                 
+                }
             }
 
             if(errors.isEmpty()) {
