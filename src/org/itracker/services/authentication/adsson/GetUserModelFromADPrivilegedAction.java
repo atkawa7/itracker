@@ -102,18 +102,18 @@ public class GetUserModelFromADPrivilegedAction implements PrivilegedAction {
 
         logger.info("Got at least givenName and sn from A.D. for user " + login);
 
-        // create user model
-        User userModel = new User();
+        // create user 
+        User user = new User();
 
-        userModel.setEmail(mail);
-        userModel.setFirstName(firstName);
-        userModel.setLastName(lastName);
-        userModel.setLogin(login);
-        userModel.setPassword("notused=");
+        user.setEmail(mail);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setLogin(login);
+        user.setPassword("notused=");
 
         // if user belongs to "ITracker Super Users" group
         // make him a super user
-        userModel.setSuperUser(false);
+        user.setSuperUser(false);
 
         logger.info("About to check if user " + login + " is a super user");
         logger.debug("User attributes for user " + login + " " + attributes);
@@ -122,15 +122,15 @@ public class GetUserModelFromADPrivilegedAction implements PrivilegedAction {
                 String group = (String) groups.nextElement();
                 logger.info(login + " belongs to NT Group " + group);
                 if (group.indexOf(ITRACKER_SUPER_USERS_GROUP) > 0) {
-                    userModel.setSuperUser(true);
-                    logger.info("User " + userModel.getLogin() + " was made an administrator ");
+                	user.setSuperUser(true);
+                    logger.info("User " + user.getLogin() + " was made an administrator ");
                 }
             }
         } else {
             logger.info("User attributes didn't contain memberOf...Looks like the A.D. user you specified in the adauth.properties properties file doesn't have enough permissions to check group membership for other users. Give that user enough privileges to read the memberOf attribute from A.D.");
         }
 
-        if (userModel.isSuperUser()) {
+        if (user.isSuperUser()) {
             logger.info(login + " is a super user");
         } else {
             logger.info(login + " is not a super user");
@@ -138,6 +138,6 @@ public class GetUserModelFromADPrivilegedAction implements PrivilegedAction {
 
         ctx.close();
 
-        return userModel;
+        return user;
     }
 }
