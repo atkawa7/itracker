@@ -237,7 +237,7 @@
             <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
               <tr>
                 <td class="editColumnTitle" colspan="5"><it:message key="itracker.web.attr.scripts"/>:</td>
-                <td align="right"><it:formatImageAction action="editprojectscriptform" paramName="projectId" paramValue="<%= project.getId() %>" targetAction="create" src="/images/create.gif" altKey="itracker.web.image.create.projectscript.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.create.texttag"/></td>
+                <td align="right"><it:formatImageAction action="editprojectscriptform" paramName="projectId" paramValue="<%= project.getId() %>" targetAction="create" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.projectscript.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.create.texttag"/></td>
               </tr>
               <tr align="left" class="listHeading">
                 <td width="40"></td>
@@ -262,7 +262,7 @@
                       <tr align="right" class="listRowUnshaded">
               <%    } %>
                     <td align="right">
-                      <it:formatImageAction action="removeprojectscript" paramName="id" paramValue="<%= scripts.get(i).getId() %>" src="/images/delete.gif" altKey="itracker.web.image.delete.projectscript.alt" textActionKey="itracker.web.image.delete.texttag"/>
+                      <it:formatImageAction action="removeprojectscript" paramName="id" paramValue="<%= scripts.get(i).getId() %>" src="/themes/defaulttheme/images/delete.gif" altKey="itracker.web.image.delete.projectscript.alt" textActionKey="itracker.web.image.delete.texttag"/>
                     </td>
                     <td></td>
                     <td><%= IssueUtilities.getFieldName(scripts.get(i).getFieldId(), customFields, (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>
@@ -275,7 +275,7 @@
 
               <tr>
                 <td class="editColumnTitle" colspan="5"><it:message key="itracker.web.attr.versions"/>:</td>
-                <td align="right"><it:formatImageAction action="editversionform" paramName="projectId" paramValue="<%= project.getId() %>" targetAction="create" src="/images/create.gif" altKey="itracker.web.image.create.version.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.createtexttag"/></td>
+                <td align="right"><it:formatImageAction action="editversionform" paramName="projectId" paramValue="<%= project.getId() %>" targetAction="create" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.version.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.createtexttag"/></td>
               </tr>
               <tr align="left" class="listHeading">
                 <td width="40"></td>
@@ -298,7 +298,7 @@
                       <tr align="right" class="listRowUnshaded">
               <%    } %>
                       <td align="right">
-                        <it:formatImageAction action="editversionform" paramName="id" paramValue="<%= versions.get(i).getId() %>" targetAction="update" src="/images/edit.gif" altKey="itracker.web.image.edit.version.alt" arg0="<%= versions.get(i).getNumber() %>" textActionKey="itracker.web.image.edit.texttag"/>
+                        <it:formatImageAction action="editversionform" paramName="id" paramValue="<%= versions.get(i).getId() %>" targetAction="update" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.version.alt" arg0="<%= versions.get(i).getNumber() %>" textActionKey="itracker.web.image.edit.texttag"/>
                       </td>
                       <td></td>
                       <td><%= versions.get(i).getNumber() %></td>
@@ -311,7 +311,7 @@
 
               <tr>
                 <td class="editColumnTitle" colspan="5"><it:message key="itracker.web.attr.components"/>:</td>
-                <td align="right"><it:formatImageAction action="editcomponentform" paramName="projectId" paramValue="<%= project.getId() %>" targetAction="create" src="/images/create.gif" altKey="itracker.web.image.create.component.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.create.texttag"/></td>
+                <td align="right"><it:formatImageAction action="editcomponentform" paramName="projectId" paramValue="<%= project.getId() %>" targetAction="create" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.component.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.create.texttag"/></td>
               </tr>
               <tr align="left" class="listHeading">
                 <td width="40"></td>
@@ -334,7 +334,7 @@
                       <tr align="right" class="listRowUnshaded">
               <%    } %>
                     <td align="right">
-                      <it:formatImageAction action="editcomponentform" paramName="id" paramValue="<%= components.get(i).getId() %>" targetAction="update" src="/images/edit.gif" altKey="itracker.web.image.edit.component.alt" arg0="<%= components.get(i).getName() %>" textActionKey="itracker.web.image.edit.texttag"/>
+                      <it:formatImageAction action="editcomponentform" paramName="id" paramValue="<%= components.get(i).getId() %>" targetAction="update" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.component.alt" arg0="<%= components.get(i).getName() %>" textActionKey="itracker.web.image.edit.texttag"/>
                     </td>
                     <td></td>
                     <td><%= components.get(i).getName() %></td>
@@ -348,6 +348,6 @@
          </td>
          </tr>
      </table>
-      <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
 <% } %>
+<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
 

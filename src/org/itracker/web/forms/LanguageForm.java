@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
-
+import java.util.HashMap;
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
  * @author ready
@@ -31,66 +31,63 @@ import org.apache.struts.validator.ValidatorForm;
  */
 public class LanguageForm extends ValidatorForm  {
     
-    String action;
-    String parentLocale;
-    String key;
-    String locale;
-    java.util.HashMap items;
+    private String action = null;
+    private String parentLocale = null;
+    private String key = null;
+    private String locale = null;
+    private HashMap<String,String> items = new HashMap<String,String>();
     
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		action = null;    
-		parentLocale = null;
-		key= null;
-		locale= null;
-		items= null;
-     
+/*    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        action = null;
+        parentLocale = null;
+        key= null;
+        locale= null;
+        HashMap<String,String> items = new HashMap<String,String>();
     }
-
+*/    
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = super.validate(mapping, request);
-      
         return errors;
     }
-
-	public String getAction() {
-		return action;
-	}
-
-	public void setAction(String action) {
-		this.action = action;
-	}
-
-	public java.util.HashMap getItems() {
-		return items;
-	}
-
-	public void setItems(java.util.HashMap items) {
-		this.items = items;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
-	}
-
-	public String getLocale() {
-		return locale;
-	}
-
-	public void setLocale(String locale) {
-		this.locale = locale;
-	}
-
-	public String getParentLocale() {
-		return parentLocale;
-	}
-
-	public void setParentLocale(String parentLocale) {
-		this.parentLocale = parentLocale;
-	}
-
-
+    
+    public String getAction() {
+        return action;
+    }
+    
+    public void setAction(String action) {
+        this.action = action;
+    }
+    
+    public HashMap<String,String> getItems() {
+        return items;
+    }
+    
+    public void setItems(HashMap<String,String> items) {
+        this.items = items;
+    }
+    
+    public String getKey() {
+        return key;
+    }
+    
+    public void setKey(String key) {
+        this.key = key;
+    }
+    
+    public String getLocale() {
+        return locale;
+    }
+    
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+    
+    public String getParentLocale() {
+        return parentLocale;
+    }
+    
+    public void setParentLocale(String parentLocale) {
+        this.parentLocale = parentLocale;
+    }
+    
 }

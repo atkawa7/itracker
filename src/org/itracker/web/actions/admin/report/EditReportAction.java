@@ -40,6 +40,7 @@ import org.itracker.model.Language;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Report;
 import org.itracker.services.ReportService;
+import org.itracker.web.forms.ReportForm;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.ReportUtilities;
 import org.itracker.services.util.UserUtilities;
@@ -64,9 +65,13 @@ public class EditReportAction extends ItrackerBaseAction {
             return mapping.findForward("listreports");
         }
         resetToken(request);
-
+        
+        ReportForm reportForm = (ReportForm) form;
+        if ( reportForm == null )
+             return mapping.findForward("listreportsadmin");
+       
         HttpSession session = request.getSession(true);
-        Report report = null;
+        Report editreport = null;
         try {
             boolean errorFound = false;
             ReportService reportService = getITrackerServices().getReportService();
@@ -75,60 +80,59 @@ public class EditReportAction extends ItrackerBaseAction {
             if(! UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_USER_ADMIN)) {
                 return mapping.findForward("unauthorized");
             }
-            report = (Report) session.getAttribute(Constants.REPORT_KEY);
+            
+            editreport = (Report) session.getAttribute(Constants.REPORT_KEY);
 
-            report = new Report();
-            Integer reportId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
-            report = reportService.getReport(reportId);
-//            report.setId((Integer) PropertyUtils.getSimpleProperty(form, "id"));
-            report.setName((String) PropertyUtils.getSimpleProperty(form, "name"));
-            report.setNameKey((String) PropertyUtils.getSimpleProperty(form, "nameKey"));
-            report.setDescription((String) PropertyUtils.getSimpleProperty(form, "description"));
-            report.setDataType(((Integer) PropertyUtils.getSimpleProperty(form, "dataType") != null ? ((Integer) PropertyUtils.getSimpleProperty(form, "dataType")).intValue() : ReportUtilities.DATATYPE_ISSUE));
-            report.setReportType(((Integer) PropertyUtils.getSimpleProperty(form, "reportType") != null ? ((Integer) PropertyUtils.getSimpleProperty(form, "reportType")).intValue() : ReportUtilities.REPORTTYPE_JFREE));
-            String fileData = (String) PropertyUtils.getSimpleProperty(form, "fileData");
+            editreport = new Report();
+            if( reportForm.getId() != -1 ) {
+                editreport.setId(reportForm.getId());
+            }
+            editreport.setName(reportForm.getName());
+            editreport.setNameKey(reportForm.getNameKey());
+            editreport.setDescription(reportForm.getDescription());
+            editreport.setDataType((reportForm.getDataType() != null ? reportForm.getDataType() : ReportUtilities.DATATYPE_ISSUE));
+            editreport.setReportType((reportForm.getReportType() != null ? reportForm.getReportType() : ReportUtilities.REPORTTYPE_JFREE));
+            String fileData = reportForm.getFileData();
             try {
                 if ( fileData == null || fileData.length() == 0 ) {
-                    FormFile file = (FormFile) PropertyUtils.getSimpleProperty(form, "fileDataFile");  
+                    FormFile file = reportForm.getFileDataFile();  
                     if(file.getFileData() == null ||
                             file.getFileData().length == 0) {
                         errorFound = true;
                         errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingdatafile"));  
                     } else {
-                        report.setFileData(file.getFileData());
+                        editreport.setFileData(file.getFileData());
                     }
                 } else {
-                    report.setFileData(fileData.getBytes());
+                    editreport.setFileData(fileData.getBytes());
                 }
             } catch(Exception e) {
                 logger.error("Exception while verifying import data.", e);
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingdatafile"));
             }
 
-            String className = (String) PropertyUtils.getSimpleProperty(form, "className");
-            if(className == null || className.equals("")) {
-                report.setClassName("");
-            } else {
-                report.setClassName((String) PropertyUtils.getSimpleProperty(form, "className"));
-            }
+            editreport.setClassName((reportForm.getClassName() != null ? reportForm.getClassName() : ""));
                 
             String action = (String) request.getParameter("action");
             if(!errorFound) {
                 if("create".equals(action)) {
-                    report = reportService.createReport(report);
+                    editreport = reportService.createReport(editreport);
                 } else if ("update".equals(action)) {
-                    report = reportService.updateReport(report);
+                    Report existingreport = reportService.getReport(editreport.getId());
+                    if ( existingreport != null ) {
+                        editreport = reportService.updateReport(editreport);
+                    }
                 }
             }
 
-            if(report == null && !errorFound) {
+            if(editreport == null && !errorFound) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.save"));
             } else if("create".equals(action)) {
                 // If it was a create, add a new language key in the base for it.
                 ConfigurationService configurationService = getITrackerServices().getConfigurationService();
 
-                configurationService.updateLanguageItem(new Language(ITrackerResources.BASE_LOCALE, report.getNameKey(), report.getName()));
-                ITrackerResources.clearKeyFromBundles(report.getNameKey(), true);
+                configurationService.updateLanguageItem(new Language(ITrackerResources.BASE_LOCALE, editreport.getNameKey(), editreport.getName()));
+                ITrackerResources.clearKeyFromBundles(editreport.getNameKey(), true);
             }
         } catch(Exception e) {
             logger.error("Exception processing form data", e);

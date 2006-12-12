@@ -21,8 +21,11 @@ package org.itracker.model;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import org.itracker.services.util.UserUtilities;
+import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.
@@ -40,12 +43,12 @@ public class User extends AbstractBean implements Comparable<User> {
     private boolean superUser;
     private int registrationType;
     private UserPreferences preferences;
-    private List<Permission> permissions = new LinkedList<Permission>();
-    private Collection<Notification> notifications = new LinkedList<Notification>();
-    private Collection<IssueActivity> activities = new LinkedList<IssueActivity>();
-    private Collection<IssueHistory> history = new LinkedList<IssueHistory>();
-    private Collection<Project> projects = new LinkedList<Project>();
-    private Collection<IssueAttachment> attachments = new LinkedList<IssueAttachment>();
+    private List<Permission> permissions = new ArrayList<Permission>();
+    private Collection<Notification> notifications = new ArrayList<Notification>();
+    private Collection<IssueActivity> activities = new ArrayList<IssueActivity>();
+    private Collection<IssueHistory> history = new ArrayList<IssueHistory>();
+    private Collection<Project> projects = new ArrayList<Project>();
+    private Collection<IssueAttachment> attachments = new ArrayList<IssueAttachment>();
     
     private static final Comparator<User> comparator = new CompareByName();
     
@@ -70,16 +73,16 @@ public class User extends AbstractBean implements Comparable<User> {
         return activities;
     }
 
-    public void setActivities(Collection<IssueActivity> activities) {
-        this.activities = activities;
+    public void setActivities(Collection<IssueActivity> getActivities) {
+        this.activities = getActivities;
     }
 
     public Collection<IssueAttachment> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(Collection<IssueAttachment> attachments) {
-        this.attachments = attachments;
+    public void setAttachments(Collection<IssueAttachment> getAttachments) {
+        this.attachments = getAttachments;
     }
 
     public String getEmail() {
@@ -94,40 +97,40 @@ public class User extends AbstractBean implements Comparable<User> {
         return history;
     }
 
-    public void setHistory(Collection<IssueHistory> history) {
-        this.history = history;
+    public void setHistory(Collection<IssueHistory> getHistory) {
+        this.history = getHistory;
     }
 
     public Collection<Notification> getNotifications() {
         return notifications;
     }
 
-    public void setNotifications(Collection<Notification> notifications) {
-        this.notifications = notifications;
+    public void setNotifications(Collection<Notification> getNotifications) {
+        this.notifications = getNotifications;
     }
 
     public List<Permission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<Permission> permissions) {
-        this.permissions = permissions;
+    public void setPermissions(List<Permission> getPermissions) {
+        this.permissions = getPermissions;
     }
 
     public UserPreferences getPreferences() {
         return preferences;
     }
 
-    public void setPreferences(UserPreferences preferences) {
-        this.preferences = preferences;
+    public void setPreferences(UserPreferences getPreferences) {
+        this.preferences = getPreferences;
     }
 
     public Collection<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(Collection<Project> projects) {
-        this.projects = projects;
+    public void setProjects(Collection<Project> getProjects) {
+        this.projects = getProjects;
     }
 
     public int getRegistrationType() {

@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts.upload.FormFile;
 import org.itracker.services.IssueService;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.implementations.ITrackerServices;
+import org.itracker.services.ITrackerServices;
  
 public class AttachmentUtilities {
     

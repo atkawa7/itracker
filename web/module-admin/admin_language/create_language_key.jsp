@@ -9,6 +9,7 @@
 
 <%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.core.resources.*" %>
+<%@ page import="java.util.List" %>
  
 
 <%-- <it: checkLogin permission="< % = UserUtilities.PERMISSION_USER_ADMIN %>"/> --%>
@@ -22,16 +23,16 @@
 
 <html:form action="/createlanguagekey">
   <html:hidden property="action" value="create"/>
-  <table border="0" cellspacing="0"  cellspacing="1"  width="100%"align="left">
+  <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
   <%
     ConfigurationService sc = (ConfigurationService)request.getAttribute("sc");
     java.util.HashMap languages = sc.getAvailableLanguages();
   %>
     <tr>
-      <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/>
-      <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/>
-      <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/>
-      <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/>
+      <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
+      <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
+      <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
+      <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
     </tr>
     <tr>
       <td colspan="4"><span class="editColumnTitle"><it:message key="itracker.web.attr.key"/>:</span> <html:text property="key" styleClass="editColumnText"/></td>
@@ -41,31 +42,37 @@
     <tr class="listHeading"><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
     <tr class="listRowUnshaded">
       <td colspan="3" valign="top"><it:message key="itracker.web.attr.baselocale"/></td>
+      <% String localeKey = "items(" + ITrackerResources.BASE_LOCALE + ")"; %>
       <td>
-        <html:textarea rows="2" cols="60" property="<%= "items(" + ITrackerResources.BASE_LOCALE + ")"%>" styleClass="editColumnText"/> 
+        <html:textarea rows="2" cols="60" property="<%=localeKey%>" styleClass="editColumnText"/>
       </td>
     </tr>
     <%
         for(java.util.Iterator iter = languages.keySet().iterator(); iter.hasNext(); ) {
             String language = (String) iter.next();
-            java.util.Vector locales = (java.util.Vector) languages.get(language);
+//            java.util.Vector locales = (java.util.Vector) languages.get(language);
+          List locales = (List) languages.get(language);
     %>
             <tr class="listRowUnshaded">
-              <td></td>
+              <td>&nbsp;</td>
               <td colspan="2" valign="top">
                 <%= ITrackerResources.getString("itracker.locale.name", language) %>
               </td>
+              <% localeKey = "items(" + language + ")"; %>
+              <c:set var="localeKey" value="<%=localeKey%>"/>
               <td>
-                <html:textarea rows="2" cols="60" property="<%= "items(" + language + ")" %>" styleClass="editColumnText"/> 
+                <html:textarea rows="2" cols="60" property="<%=localeKey%>"  styleClass="editColumnText"/>
               </td>
             </tr>
     <%      for(int i = 0; i < locales.size(); i++) { %>
                 <tr class="listRowUnshaded">
-                  <td></td>
-                  <td></td>
-                  <td valign="top"><%= ITrackerResources.getString("itracker.locale.name", (String) locales.elementAt(i)) %></td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td valign="top"><%= ITrackerResources.getString("itracker.locale.name", (String) locales.get(i)) %></td>
+                  <% localeKey = "items(" + (String) locales.get(i) + ")"; %>
+                   <c:set var="localeKey" value="<%=localeKey%>"/>
                   <td>
-                    <html:textarea rows="2" cols="60" property="<%= "items(" + locales.elementAt(i) + ")" %>" styleClass="editColumnText"/> 
+                    <html:textarea rows="2" cols="60" property="<%=localeKey%>" styleClass="editColumnText"/>
                   </td>
                 </tr>
     <%      }

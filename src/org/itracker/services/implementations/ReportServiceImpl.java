@@ -70,10 +70,17 @@ public class ReportServiceImpl implements ReportService {
     }
 
     public Report updateReport(Report report) {
-        report.setCreateDate(new Date(report.getCreateDate().getTime()));
-        report.setLastModifiedDate(new Date());
-        reportDAO.saveOrUpdate(report);
-        return report;
+        Report editReport = reportDAO.findByPrimaryKey(report.getId());
+        editReport.setName(report.getName());
+        editReport.setNameKey(report.getNameKey());
+        editReport.setDescription(report.getDescription());
+        editReport.setDataType(report.getDataType());
+        editReport.setFileData(report.getFileData());
+        editReport.setReportType(report.getReportType());
+        editReport.setClassName(report.getClassName());
+        editReport.setLastModifiedDate(new Date());
+        reportDAO.saveOrUpdate(editReport);
+        return editReport;
     }
 
     public boolean removeReport(Integer reportId) {

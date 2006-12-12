@@ -16,6 +16,7 @@ import org.itracker.persistence.dao.ScheduledTaskDAO;
 import org.itracker.persistence.dao.UserDAO;
 import org.itracker.persistence.dao.UserPreferencesDAO;
 import org.itracker.persistence.dao.WorkflowScriptDAO;
+import org.itracker.services.ITrackerServices;
 import org.itracker.services.IssueService;
 import org.itracker.services.IssueSearchService;
 import org.itracker.services.ProjectService;

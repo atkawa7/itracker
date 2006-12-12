@@ -122,33 +122,6 @@ public  class IssueAttachment extends AbstractBean {
         user = value;
     }
 
-    public IssueAttachment getModel() {
-        IssueAttachment issueAttachment = new IssueAttachment();
-        issueAttachment.setId(this.getId());
-        issueAttachment.setOriginalFileName(this.getOriginalFileName());
-        issueAttachment.setType(this.getType());
-        issueAttachment.setFileName(this.getFileName());
-        issueAttachment.setDescription(this.getDescription());
-        issueAttachment.setSize(this.getSize());
-        issueAttachment.setLastModifiedDate(this.getLastModifiedDate());
-        issueAttachment.setCreateDate(this.getCreateDate());
-
-        issueAttachment.setIssue(this.getIssue());
-
-        issueAttachment.setUser(this.getUser());
-
-        return issueAttachment;
-    }
-
-    public void setModel(IssueAttachment issueAttachment) {
-        this.setOriginalFileName(issueAttachment.getOriginalFileName());
-        this.setType(issueAttachment.getType());
-        this.setFileName(issueAttachment.getFileName());
-        this.setSize(issueAttachment.getSize());
-        this.setDescription(issueAttachment.getDescription());
-        this.setLastModifiedDate(new Timestamp(new Date().getTime()));
-    }
-    
     public static abstract class IssueAttachmentComparator implements Comparator<IssueAttachment> {
         protected boolean isAscending = true;
 

@@ -2,7 +2,7 @@ package org.itracker.web.util;
 
 import javax.servlet.ServletContext;
 
-import org.itracker.services.implementations.ITrackerServices;
+import org.itracker.services.ITrackerServices;
 import org.springframework.web.context.WebApplicationContext;
 
 /**

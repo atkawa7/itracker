@@ -36,117 +36,75 @@ package org.itracker.model;
 
 import java.sql.Timestamp;
 import java.util.Date;
-
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.
- * 
  * @author ready
- * 
+ *
  */
 
 public class Report extends AbstractBean {
 
-	private String name;
+    private String name;
+    private String nameKey;
+    private String description;
+    private int dataType;
+    private int reportType;
+    private byte[] fileData;
+    private String className;
 
-	private String nameKey;
+    public String getClassName() {
+        return className;
+    }
 
-	private String description;
+    public void setClassName(String className) {
+        this.className = className;
+    }
 
-	private int dataType;
+    public int getDataType() {
+        return dataType;
+    }
 
-	private int reportType;
+    public void setDataType(int dataType) {
+        this.dataType = dataType;
+    }
 
-	private byte[] fileData;
+    public String getDescription() {
+        return description;
+    }
 
-	private String className;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    public byte[] getFileData() {
+        return fileData;
+    }
 
-	public String getClassName() {
-		return className;
-	}
+    public void setFileData(byte[] fileData) {
+        this.fileData = (fileData != null && fileData.length > 0 ? fileData : new byte[0]);
+    }
 
-	public void setClassName(String className) {
-		this.className = className;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public int getDataType() {
-		return dataType;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setDataType(int dataType) {
-		this.dataType = dataType;
-	}
+    public String getNameKey() {
+        return nameKey;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setNameKey(String nameKey) {
+        this.nameKey = nameKey;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public int getReportType() {
+        return reportType;
+    }
 
-	public byte[] getFileData() {
-		return fileData;
-	}
-
-	public void setFileData(byte[] fileData) {
-		this.fileData = (fileData != null && fileData.length > 0 ? fileData : new byte[0]);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getNameKey() {
-		return nameKey;
-	}
-
-	public void setNameKey(String nameKey) {
-		this.nameKey = nameKey;
-	}
-
-	public int getReportType() {
-		return reportType;
-	}
-
-	public void setReportType(int reportType) {
-		this.reportType = reportType;
-	}
-
-	public Report getModel() {
-
-		Report report = new Report();
-		report.setId(this.getId());
-		report.setName(this.getName());
-		report.setNameKey(this.getNameKey());
-		report.setDescription(this.getDescription());
-		report.setDataType(this.getDataType());
-		report.setFileData(this.getFileData());
-		report.setReportType(this.getReportType());
-		report.setClassName(this.getClassName());
-		report.setLastModifiedDate(this.getLastModifiedDate());
-		report.setCreateDate(this.getCreateDate());
-
-		return report;
-
-	}
-
-	public void setModel(Report report) {
-		this.setName(report.getName());
-		this.setNameKey(report.getNameKey());
-		this.setDescription(report.getDescription());
-		this.setDataType(report.getDataType());
-		this.setFileData(report.getFileData());
-		this.setReportType(report.getReportType());
-		this.setClassName(report.getClassName());
-		if (report.getFileData().length > 0) {
-			this.setFileData(report.getFileData());
-		}
-		this.setCreateDate(new Timestamp(report.getCreateDate().getTime()));
-		this.setLastModifiedDate(new Timestamp(new Date().getTime()));
-	}
-
+    public void setReportType(int reportType) {
+        this.reportType = reportType;
+    }
 }

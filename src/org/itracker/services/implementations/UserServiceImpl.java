@@ -20,6 +20,7 @@ package org.itracker.services.implementations;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -96,7 +97,7 @@ public class UserServiceImpl implements UserService {
     private ProjectDAO projectDAO = null;
     @SuppressWarnings("unused")
 	private ReportDAO reportDAO = null;
-    private UserDAO userDAO;
+    private UserDAO userDAO = null;
     private UserPreferencesDAO userPreferencesDAO = null;
     private ProjectService projectService;
     private ConfigurationService configurationService;
@@ -221,7 +222,8 @@ public class UserServiceImpl implements UserService {
             user.setStatus(UserUtilities.STATUS_ACTIVE);
             user.setRegistrationType(user.getRegistrationType());
             user.setCreateDate(new Date());
-            userDAO.saveOrUpdate(user);
+            user.setLastModifiedDate(user.getCreateDate());
+            userDAO.save(user);
             return user;
         } catch (AuthenticatorException ex) {
             throw new UserException("Could not create user.", ex);
@@ -259,7 +261,23 @@ public class UserServiceImpl implements UserService {
         } catch (AuthenticatorException ex) {
             throw new UserException("Unable to update user.", ex);
         }
-        return user;
+        User existinguser = userDAO.findByPrimaryKey(user.getId());
+        existinguser.setLogin(user.getLogin());
+        existinguser.setFirstName(user.getFirstName());
+        existinguser.setLastName(user.getLastName());
+        existinguser.setEmail(user.getEmail());
+        existinguser.setSuperUser(user.isSuperUser());
+        existinguser.setProjects(user.getProjects());
+        existinguser.setLastModifiedDate(new Timestamp(new Date().getTime()));
+
+        // Only set the password if it is a new value...
+        if (user.getPassword() != null && !user.getPassword().equals("")
+                && !user.getPassword().equals(user.getPassword())) {
+            existinguser.setPassword(user.getPassword());
+        }
+        
+        userDAO.saveOrUpdate(existinguser);
+        return existinguser;
     }
 
     public String generateUserPassword(User user) throws PasswordException {
@@ -270,7 +288,9 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserPreferences updateUserPreferences(UserPreferences userPrefs) throws UserException {
-        try {
+         UserPreferences NewUserPrefs;
+         
+         try {
             User user = userPrefs.getUser();
             user.setPreferences(userPrefs);
             
@@ -304,23 +324,37 @@ public class UserServiceImpl implements UserService {
                         AuthenticatorException.SYSTEM_ERROR, ex);
             }
 
-            userPrefs = userPreferencesDAO.findByUserId(user.getId());
+            NewUserPrefs = userPreferencesDAO.findByUserId(user.getId());
  
-            if ( userPrefs == null ) {
-                userPrefs = new UserPreferences();
+            if ( NewUserPrefs == null ) {
+                NewUserPrefs = new UserPreferences();
             }
-            userPrefs.setUser(user);
+            NewUserPrefs.setSaveLogin(userPrefs.getSaveLogin());
+            NewUserPrefs.setUserLocale(userPrefs.getUserLocale());
+            NewUserPrefs.setNumItemsOnIndex(userPrefs.getNumItemsOnIndex());
+            NewUserPrefs.setNumItemsOnIssueList(userPrefs.getNumItemsOnIssueList());
+            NewUserPrefs.setShowClosedOnIssueList(userPrefs.getShowClosedOnIssueList());
+            NewUserPrefs.setSortColumnOnIssueList(userPrefs.getSortColumnOnIssueList());
+            NewUserPrefs.setHiddenIndexSections(userPrefs.getHiddenIndexSections());
+
+            NewUserPrefs.setRememberLastSearch(userPrefs.getRememberLastSearch());
+            NewUserPrefs.setUseTextActions(userPrefs.getUseTextActions());
+
+            NewUserPrefs.setUser(user);
+            NewUserPrefs.setLastModifiedDate(new Date());
             
             if ( userPrefs.getId() == null ) {
                 userPrefs.setCreateDate(new Date());
-                this.userPreferencesDAO.saveOrUpdate( userPrefs );
+                userPrefs.setLastModifiedDate(userPrefs.getCreateDate());
             }
+            this.userPreferencesDAO.saveOrUpdate( NewUserPrefs );
+            return NewUserPrefs;
             
-            userPrefs.setUser(user);
         } catch (AuthenticatorException ex) {
             throw new UserException("Unable to create new preferences.", ex);
+        } finally {
+            return userPrefs;
         }
-        return userPrefs;
     }
 
     public boolean deleteUser(User user) {
@@ -400,9 +434,9 @@ public class UserServiceImpl implements UserService {
         if (newPermissions == null || newPermissions.size() == 0) {
             return false;
         }
-
+        User user = null;
         try {
-            User user = userDAO.findByPrimaryKey(userId);
+            user = userDAO.findByPrimaryKey(userId);
             user.setPermissions(newPermissions);
             try {
                 PluggableAuthenticator authenticator = (PluggableAuthenticator) authenticatorClass.newInstance();
@@ -432,27 +466,32 @@ public class UserServiceImpl implements UserService {
                         + " does not extend the PluggableAuthenticator class.");
                 throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
             }
-
-            Collection<Permission> permissions = permissionDAO.findByUserId(userId);
-
+//            Collection<Permission> permissions = null;
+//            try {
+//                permissions = permissionDAO.findByUserId(userId);
+//            } catch (Exception pex) {
+//                logger.info("No Permissions Found");
+//            }
             Integer projectId = null;
             Project project = null;
-            for (int i = 0; i < newPermissions.size(); i++) {
-                if (newPermissions.get(i).getProject() == null) {
+            
+            for(Iterator iterator = newPermissions.iterator(); iterator.hasNext(); ) {
+//            for (int i = 0; i < newPermissions.size(); i++) {
+                Permission permission = (Permission) iterator.next();
+                if (permission.getProject() == null) {
                     continue;
                 }
 
-                if (projectId == null || projectId.intValue() != newPermissions.get(i).getProject().getId()) {
-                    projectId = newPermissions.get(i).getProject().getId();
+                if (projectId == null || projectId.intValue() != permission.getProject().getId()) {
+                    projectId = permission.getProject().getId();
                     project = projectDAO.findByPrimaryKey(projectId);
                 }
 
-                Permission permission = new Permission();
-                permission.setCreateDate(new Date());
+                permission.setCreateDate(new Timestamp(new Date().getTime()));
+                permission.setLastModifiedDate(permission.getCreateDate());
                 permission.setProject(project);
                 permission.setUser(user);
                 permissionDAO.saveOrUpdate(permission);
-                permissions.add(permission);
             }
             successful = true;
         } catch (AuthenticatorException ae) {
@@ -543,7 +582,6 @@ public class UserServiceImpl implements UserService {
                             permission.setProject(project);
                             permission.setUser(user);
                             permissionDAO.saveOrUpdate(permission);
-                            permissions.add(permission);
                         }
                     }
                 }

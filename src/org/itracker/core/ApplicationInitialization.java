@@ -25,8 +25,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.ArrayList;
 import org.apache.log4j.Logger;
 import org.hibernate.*;
+import java.util.Iterator;
 
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Report;
@@ -55,13 +57,13 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  *
  */
 public class ApplicationInitialization {
-
+    
     private final Logger logger;
     private UserService userService;
     private SessionFactory sessionFactory;
     private ConfigurationService configurationService;
     private ReportService reportService;
-
+    
     public ApplicationInitialization(UserService userService, SessionFactory sessionFactory, ConfigurationService configurationService, ReportService reportService) {
         this.userService = userService;
         this.sessionFactory = sessionFactory;
@@ -70,38 +72,38 @@ public class ApplicationInitialization {
         this.logger = Logger.getLogger(getClass());
         init();
     }
-
-    public void init() {        
+    
+    public void init() {
         try {
             Session session = sessionFactory.openSession();
             TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
-
+            
             ITrackerResources.setDefaultLocale(configurationService.getProperty("default_locale", ITrackerResources.DEFAULT_LOCALE));
             logger.info("Set system default locale to '" + ITrackerResources.getDefaultLocale() + "'");
-
+            
             logger.info("Checking and initializing languages in the database.");
             SystemConfigurationUtilities.initializeAllLanguages(configurationService, false);
-
+            
             logger.info("Checking and initializing default system configuration in the database.");
             configurationService.initializeConfiguration();
-
-            logger.info("Checking for issue attachment files.");
-            processAttachmentFiles(configurationService.getProperty("attachment_dir", IssueAttachmentUtilities.DEFAULT_ATTACHMENT_DIR));
-
+            
+//            logger.info("Checking for issue attachment files.");
+//            processAttachmentFiles(configurationService.getProperty("attachment_dir", IssueAttachmentUtilities.DEFAULT_ATTACHMENT_DIR));
+            
             logger.info("Checking for predefined reports.");
             processReports();
-
+            
             logger.info("Setting up cached configuration entries");
             configurationService.resetConfigurationCache();
-
+            
             // Pre-initialize all of the PDF fonts available. Do it in a
             // seperate thread to speed up the
             // rest of the startup.
             // TODO I think this should be removed... why do we need to pre-init ? (rjst)
             // old code to pre-init fonts for jfree reports. make sure we can delete it
             //BaseFontFactory fontFactory = BaseFontFactory.getFontFactory();
-            //fontFactory.registerDefaultFontPath();            
-
+            //fontFactory.registerDefaultFontPath();
+            
             // check for and create admin user, if so configured
             createAdminUser(configurationService);
         } catch (PasswordException pe) {
@@ -113,13 +115,13 @@ public class ApplicationInitialization {
         } finally {
             org.springframework.orm.hibernate3.SessionHolder holder = (org.springframework.orm.hibernate3.SessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);
             Session session = holder.getSession();
-
+            
             try {
                 session.flush();
             } catch (HibernateException e) {
                 logger.error(e.getMessage(), e);
             }
-
+            
             TransactionSynchronizationManager.unbindResource(sessionFactory);
             SessionFactoryUtils.releaseSession(session, sessionFactory);
         }
@@ -127,7 +129,7 @@ public class ApplicationInitialization {
     
     /**
      * Check if we should create the admin user, if so, do it.
-     * 
+     *
      * @param configurationService
      * @throws PasswordException
      * @throws UserException
@@ -146,21 +148,21 @@ public class ApplicationInitialization {
             }
         }
     }
-
+    
     private void processAttachmentFiles(String attachmentDirectory) {
         if (attachmentDirectory == null || attachmentDirectory.equals("")) {
             return;
         }
-
+        
         try {
             File directory = new File(attachmentDirectory.replace('/', File.separatorChar));
             if (directory == null || !directory.isDirectory()) {
                 throw new Exception("Invalid attachment directory.");
             }
             File[] attachments = directory.listFiles();
-
+            
             IssueService issueService = null;
-
+            
             for (int i = 0; i < attachments.length; i++) {
                 try {
                     if (attachments[i].length() > Integer.MAX_VALUE) {
@@ -177,7 +179,7 @@ public class ApplicationInitialization {
                     if (issueService.setIssueAttachmentData(attachments[i].getName(), data)) {
                         // attachments[i].delete();
                         logger.debug("Successfully moved attachment " + attachments[i].getName()
-                                + " to the database.");
+                        + " to the database.");
                     }
                 } catch (IOException ioe) {
                     logger.error("Unable to save attachment: " + ioe.getMessage());
@@ -187,12 +189,13 @@ public class ApplicationInitialization {
             logger.error("Unable to check for existing file attachments: " + e.getMessage());
         }
     }
-
+    
     private void processReports() {
         try {
- 
+            
             List<Report> reports = reportService.getAllReports();
-
+            logger.info("size is " + reports.size());
+            
             String line;
             InputStream is = getClass().getResourceAsStream("/org/itracker/web/reports/predefined/predefinedReports.properties");
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -204,15 +207,16 @@ public class ApplicationInitialization {
                 if (splitChar < 0) {
                     continue;
                 }
-
+                
                 String key = line.substring(0, splitChar);
                 String value = line.substring(splitChar + 1);
-
+                
                 if ("report".equalsIgnoreCase(key)) {
                     try {
                         String repLine;
                         Report report = new Report();
-
+                        Report chkreport = new Report();
+                        
                         InputStream reportStream = getClass().getResourceAsStream("/org/itracker/web/reports/predefined/" + value);
                         if (reportStream == null) {
                             throw new IOException("Could not access predefined report '" + value + "'");
@@ -228,7 +232,7 @@ public class ApplicationInitialization {
                             }
                             String repKey = repLine.substring(0, repSplitChar);
                             String repValue = (repLine.length() > repSplitChar ? repLine.substring(repSplitChar + 1)
-                                    : "");
+                            : "");
                             if (repValue == null || "".equals(repValue)) {
                                 continue;
                             } else if ("id".equals(repKey)) {
@@ -254,15 +258,24 @@ public class ApplicationInitialization {
                             throw new Exception("Invalid report definition found.");
                         }
                         logger.debug("Loading " + report.toString());
-                        for (int i = 0; i < reports.size(); i++) {
-                            if (reports.get(i).equals(report)) {
+                        
+                        for (Iterator<Report> iter = reports.iterator(); iter.hasNext();) {
+                            Report existingReport = (Report) iter.next();
+                            if ( existingReport.getName() == null ) {
+                                break;
+                            }
+                            if ( existingReport.getClassName().equals(report.getClassName()) &&
+                                    existingReport.getDataType() == report.getDataType() &&
+                                    existingReport.getName().equals(report.getName()) &&
+                                    existingReport.getNameKey().equals(report.getNameKey()) &&
+                                    existingReport.getReportType()== report.getReportType() ) {
                                 logger.debug("Found existing report, updating.");
-                                report.setId(reports.get(i).getId());
+                                report.setId(existingReport.getId());
                                 reportService.updateReport(report);
                                 continue LINE;
                             }
                         }
-                        logger.debug("No existing report found, creating new report.");
+                        logger.debug(report.getName() + " - Not found, creating new report.");
                         reportService.createReport(report);
                     } catch (Exception e) {
                         logger.error("Unable to process report '" + value + "': " + e.getMessage());

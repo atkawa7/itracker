@@ -2,7 +2,7 @@ package org.itracker.model.deprecatedmodels;
 
 import java.util.List;
 
-interface IIssue {
+public interface IIssue {
 
 	public abstract String getDescription();
 

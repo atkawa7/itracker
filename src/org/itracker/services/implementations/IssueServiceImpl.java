@@ -88,7 +88,7 @@ import org.itracker.services.util.UserUtilities;
  * 
  */
 public class IssueServiceImpl implements IssueService {
-//	 this class needs some clean up. The code can be made smaller. There was some model stuff here, that needs clean out.
+
 	// TODO: work on these 3 not yet used items: notificationFactoryName,
 	// notificationQueueName, systemBaseURL;
 	private static String notificationFactoryName = NotificationMessageBean.DEFAULT_CONNECTION_FACTORY;
@@ -350,70 +350,79 @@ public class IssueServiceImpl implements IssueService {
 
 		}
 
-		issue.setProject(project);
-
+//                issue.setModel(issue);
+		
+                issue.setProject(project);
+                
 		issue.setCreator(creator);
 
 		// save
-		issue.setCreateDate(new Date());
+		issue.setCreateDate(new Timestamp(new Date().getTime()));
+                issue.setLastModifiedDate(issue.getCreateDate());
 		issueDAO.save(issue);
 
 		return issue;
 	}
 
-	public Issue updateIssue(Issue issuePojo, Integer userId) throws ProjectException {
+	public Issue updateIssue(Issue issue, Integer userId) throws ProjectException {
 		String existingTargetVersion = null;
-		Issue issue = issueDAO.findByPrimaryKey(issuePojo.getId());
+		Issue Updateissue = issueDAO.findByPrimaryKey(issue.getId());
 		User user = userDAO.findByPrimaryKey(userId);
-		if (issue.getProject().getStatus() != ProjectUtilities.STATUS_ACTIVE) {
+		if (Updateissue.getProject().getStatus() != ProjectUtilities.STATUS_ACTIVE) {
 			throw new ProjectException("Project is not active.");
 		}
-		if (issue.getDescription() != null && issuePojo.getDescription() != null && !issue.getDescription().equalsIgnoreCase(issuePojo.getDescription())) {
+		if (Updateissue.getDescription() != null && issue.getDescription() != null && !Updateissue.getDescription().equalsIgnoreCase(issue.getDescription())) {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_DESCRIPTION_CHANGE);
-			activity.setDescription(ITrackerResources.getString("itracker.web.generic.from") + ": " + issue.getDescription());
+			activity.setDescription(ITrackerResources.getString("itracker.web.generic.from") + ": " + Updateissue.getDescription());
 			activity.setUser(user);
-			activity.setIssue(issue);
+			activity.setIssue(Updateissue);
 
 		}
 
-		if (issue.getResolution() != null && issuePojo.getResolution() != null && !issue.getResolution().equalsIgnoreCase(issuePojo.getResolution())) {
+		if (Updateissue.getResolution() != null && issue.getResolution() != null && !Updateissue.getResolution().equalsIgnoreCase(issue.getResolution())) {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_RESOLUTION_CHANGE);
-			activity.setDescription(ITrackerResources.getString("itracker.web.generic.from") + ": " + issue.getResolution());
-			activity.setIssue(issue);
+			activity.setDescription(ITrackerResources.getString("itracker.web.generic.from") + ": " + Updateissue.getResolution());
+			activity.setIssue(Updateissue);
 			activity.setUser(user);
 		}
 
-		if (issue.getStatus() != issuePojo.getStatus() && issuePojo.getStatus() != -1) {
+		if (Updateissue.getStatus() != issue.getStatus() && issue.getStatus() != -1) {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_STATUS_CHANGE);
-			activity.setDescription(IssueUtilities.getStatusName(issue.getStatus()) + " " + ITrackerResources.getString("itracker.web.generic.to") + " " + IssueUtilities.getStatusName(issuePojo.getStatus()));
-			activity.setIssue(issue);
+			activity.setDescription(IssueUtilities.getStatusName(Updateissue.getStatus()) + " " + ITrackerResources.getString("itracker.web.generic.to") + " " + IssueUtilities.getStatusName(issue.getStatus()));
+			activity.setIssue(Updateissue);
 			activity.setUser(user);
 		}
 
-		if (issue.getSeverity() != issuePojo.getSeverity() && issuePojo.getSeverity() != -1) {
+		if (Updateissue.getSeverity() != issue.getSeverity() && issue.getSeverity() != -1) {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_SEVERITY_CHANGE);
-			activity.setDescription(IssueUtilities.getSeverityName(issue.getSeverity()) + " " + ITrackerResources.getString("itracker.web.generic.to") + " " + IssueUtilities.getSeverityName(issuePojo.getSeverity()));
-			activity.setIssue(issue);
+			activity.setDescription(IssueUtilities.getSeverityName(Updateissue.getSeverity()) + " " + ITrackerResources.getString("itracker.web.generic.to") + " " + IssueUtilities.getSeverityName(issue.getSeverity()));
+			activity.setIssue(Updateissue);
 			activity.setUser(user);
 		}
 
-		if (issue.getTargetVersion() != null && issuePojo.getTargetVersion() != null && !issue.getTargetVersion().getId().equals(issuePojo.getTargetVersion().getId())) {
-			existingTargetVersion = issue.getTargetVersion().getNumber();
+		if (Updateissue.getTargetVersion() != null && issue.getTargetVersion() != null && !Updateissue.getTargetVersion().getId().equals(issue.getTargetVersion().getId())) {
+			existingTargetVersion = Updateissue.getTargetVersion().getNumber();
 
 		}
 
-		if (issuePojo.getTargetVersion() != null) {
-			Version version = this.versionDAO.findByPrimaryKey(issuePojo.getTargetVersion().getId());
+                Updateissue.setDescription(issue.getDescription());
+                Updateissue.setSeverity(issue.getSeverity());
+                Updateissue.setStatus(issue.getStatus());
+                Updateissue.setResolution(issue.getResolution());
+                Updateissue.setLastModifiedDate(new Date());
+                
+		if (issue.getTargetVersion() != null) {
+			Version version = this.versionDAO.findByPrimaryKey(issue.getTargetVersion().getId());
 
-			issue.setTargetVersion(version);
+			Updateissue.setTargetVersion(version);
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_TARGETVERSION_CHANGE);
@@ -421,15 +430,15 @@ public class IssueServiceImpl implements IssueService {
 			description += version.getNumber();
 			activity.setDescription(description);
 			activity.setUser(user);
-			activity.setIssue(issue);
+			activity.setIssue(Updateissue);
 		} else {
-			issue.setTargetVersion(null);
+			Updateissue.setTargetVersion(null);
 		}
 
 		// save
-		issueDAO.saveOrUpdate(issue);
+		issueDAO.saveOrUpdate(Updateissue);
 
-		return issue;
+		return Updateissue;
 	}
 
 	/**
@@ -476,8 +485,8 @@ public class IssueServiceImpl implements IssueService {
 
 	}
 
-	public boolean deleteIssue(Issue model) {
-		Issue issue = issueDAO.findByPrimaryKey(model.getId());
+	public boolean deleteIssue(Issue issue) {
+		issue = issueDAO.findByPrimaryKey(issue.getId());
 		issueDAO.delete(issue);
 
 		return true;
@@ -924,17 +933,16 @@ public class IssueServiceImpl implements IssueService {
 	 * @param data
 	 *            The byte data
 	 */
-	public boolean addIssueAttachment(IssueAttachment issueAttachment, byte[] data) {
-		Issue issue = issueAttachment.getIssue();
-		User user = issueAttachment.getUser();
+	public boolean addIssueAttachment(IssueAttachment attachment, byte[] data) {
+		Issue issue = attachment.getIssue();
+		User user = attachment.getUser();
 
-		IssueAttachment attachment = new IssueAttachment();
-		issueAttachment.setFileName("attachment_issue_" + issue.getId() + "_" + issueAttachment.getOriginalFileName());
-		attachment.setModel(issueAttachment);
+		attachment.setFileName("attachment_issue_" + issue.getId() + "_" + attachment.getOriginalFileName());
 		attachment.setFileData((data == null ? new byte[0] : data));
 		attachment.setIssue(issue);
 		attachment.setUser(user);
-		attachment.setCreateDate(new Timestamp(System.currentTimeMillis()));
+		attachment.setCreateDate(new Date());
+                attachment.setLastModifiedDate(attachment.getCreateDate());
 
 		// save attachment
 		this.issueAttachmentDAO.saveOrUpdate(attachment);
@@ -1070,7 +1078,7 @@ public class IssueServiceImpl implements IssueService {
 
 		for (Iterator<IssueActivity> iterator = activity.iterator(); iterator.hasNext(); i++) {
 
-			activityArray[i] = ((IssueActivity) iterator.next());// .getModel();
+			activityArray[i] = ((IssueActivity) iterator.next());
 
 		}
 
@@ -1090,7 +1098,7 @@ public class IssueServiceImpl implements IssueService {
 
 		for (Iterator<IssueActivity> iterator = activity.iterator(); iterator.hasNext(); i++) {
 
-			activityArray[i] = ((IssueActivity) iterator.next());// .getModel();
+			activityArray[i] = ((IssueActivity) iterator.next());
 
 		}
 
@@ -1174,7 +1182,7 @@ public class IssueServiceImpl implements IssueService {
 
 	public IssueHistory getLastIssueHistory(Integer issueId) {
 
-		IssueHistory issueHistory = null;
+		IssueHistory model = null;
 
 		IssueHistory lastEntry = null;
 
@@ -1212,7 +1220,7 @@ public class IssueServiceImpl implements IssueService {
 
 		}
 
-		return issueHistory;
+		return model;
 
 	}
 
@@ -1331,10 +1339,10 @@ public class IssueServiceImpl implements IssueService {
 
 	}
 
-	public boolean addIssueNotification(Notification notifi) {
-		User user = notifi.getUser();
+	public boolean addIssueNotification(Notification model) {
+		User user = model.getUser();
 
-		Issue issue = notifi.getIssue();
+		Issue issue = model.getIssue();
 
 		Notification notification = new Notification();
 

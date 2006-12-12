@@ -116,7 +116,8 @@
         </action>
         <action path="/downloadreport" 
                 type="org.itracker.web.actions.admin.report.ReportDownloadAction"
-                name="adminActionForm" scope="request" input="/admin_report/list_reports.jsp"/>
+                name="adminActionForm" scope="request" input="/admin_report/list_reports.jsp">
+        </action>
        <action path="/editcomponent"
                 type="org.itracker.web.actions.admin.project.EditComponentAction"
                 name="componentForm" scope="request" input="/admin_project/edit_component.jsp"

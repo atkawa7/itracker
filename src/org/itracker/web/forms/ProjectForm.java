@@ -32,7 +32,7 @@ import org.apache.struts.validator.ValidatorForm;
 public class ProjectForm extends ValidatorForm  {
     
 	String action;
-    Integer id;
+        Integer id;
 	String name;
 	Integer status;
 	String description;

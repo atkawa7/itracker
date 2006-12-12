@@ -129,7 +129,7 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                     }
                     languageForm.setItems(formItems);
                 }
-
+                languageForm.setKey("this");
                 session.setAttribute(Constants.EDIT_LANGUAGE_KEYS_KEY, sortedKeys);
                 session.setAttribute(Constants.EDIT_LANGUAGE_BASE_KEY, baseItems);
                 session.setAttribute(Constants.EDIT_LANGUAGE_LANG_KEY, langItems);

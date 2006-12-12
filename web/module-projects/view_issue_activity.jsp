@@ -52,7 +52,7 @@
 <%      if(activity == null || activity.size() == 0) { %>
             <center><span style="color: red;"><it:message key="itracker.web.error.noactivity"/></span></center>
 <%      } else { %>
-            <table border="0" cellspacing="0"  cellspacing="1"  width="95%" align="left">
+            <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
               <tr>
                 <td class="editColumnTitle" colspan="7">Activity:</td>
               </tr>

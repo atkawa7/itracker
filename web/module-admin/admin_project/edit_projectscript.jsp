@@ -40,7 +40,7 @@
 			<html:form action="/editworkflowscript">
                             <html:hidden property="action"/>
                             <html:hidden property="id"/>
-                            <table border="0" cellspacing="0" cellspacing="1"  width="100%" align="left">
+                            <table border="0" cellspacing="0" cellspacing="1"  width="100%">
                                 <tr>
                                     <td colspan="2" width="48%"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
                                     <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="10" height="1"/></td>

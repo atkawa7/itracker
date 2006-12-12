@@ -27,6 +27,14 @@ import java.util.LinkedList;
 import java.util.List;
 import org.itracker.services.util.IssueUtilities;
 
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.
  * @author ready
@@ -42,14 +50,14 @@ public class Issue extends AbstractBean implements Comparable<Issue> {
     private User creator;
     private User owner;
     private Version targetVersion;
-    private List<Component> components = new LinkedList<Component>();
-    private List<Version> versions = new LinkedList<Version>();
-    private List<Notification> notifications = new LinkedList<Notification>();
-    private List<IssueActivity> activities = new LinkedList<IssueActivity>();
-    private List<IssueAttachment> attachments = new LinkedList<IssueAttachment>();
-    private List<IssueField> fields = new LinkedList<IssueField>();
-    private List<IssueHistory> history = new LinkedList<IssueHistory>();
-    private List<IssueRelation> relations = new LinkedList<IssueRelation>();
+    private List<Component> components = new ArrayList<Component>();
+    private List<Version> versions = new ArrayList<Version>();
+    private List<Notification> notifications = new ArrayList<Notification>();
+    private List<IssueActivity> activities = new ArrayList<IssueActivity>();
+    private List<IssueAttachment> attachments = new ArrayList<IssueAttachment>();
+    private List<IssueField> fields = new ArrayList<IssueField>();
+    private List<IssueHistory> history = new ArrayList<IssueHistory>();
+    private List<IssueRelation> relations = new ArrayList<IssueRelation>();
 
     private static final Comparator<Issue> ISSUE_COMPARATOR = new CompareByStatus();
     

@@ -18,6 +18,11 @@
 
 package org.itracker.model;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Iterator;
+
+import org.itracker.model.CustomFieldValue;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;

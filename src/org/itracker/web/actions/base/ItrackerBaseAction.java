@@ -41,7 +41,7 @@ import org.apache.struts.action.ActionMessages;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.implementations.ITrackerServices;
+import org.itracker.services.ITrackerServices;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.user.LoginAction;
 import org.itracker.web.util.Constants;

@@ -1,7 +1,7 @@
 package org.itracker.web.forms;
 
 import org.apache.struts.validator.ValidatorForm;
-import org.itracker.services.implementations.ITrackerServices;
+import org.itracker.services.ITrackerServices;
 import org.itracker.web.util.ServletContextUtils;
 
 
