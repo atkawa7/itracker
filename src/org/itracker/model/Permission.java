@@ -18,6 +18,8 @@
 
 package org.itracker.model;
 
+import java.util.Date;
+
 /**
  * A user permission on a project. 
  * 
@@ -41,6 +43,13 @@ public class Permission extends AbstractBean {
 
     public Permission(Project project, int type, User user) {
         this(project, type);
+        // TODO: please check this strategy for constructing objects! shall this be done in the abstract superclass?
+    	if (this.createDate==null) {
+    		this.createDate=new Date();
+    	}
+    	if (this.lastModifiedDate==null) {
+    		this.lastModifiedDate=new Date();
+    	}
         this.user = user;
     }
     
