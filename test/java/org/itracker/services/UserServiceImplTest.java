@@ -30,7 +30,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     }
 
     public void testSetUserPermissions() {
-    	Integer userId = 3;
+    	Integer userId = 2;
     	List<Permission> newPermissions = new ArrayList<Permission>();
     	User user = new User();
     	user = userDAO.findByPrimaryKey(1);
