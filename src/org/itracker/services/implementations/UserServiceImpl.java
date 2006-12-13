@@ -18,9 +18,9 @@
 
 package org.itracker.services.implementations;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,35 +29,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-// import javax.jms.JMSException;
-// import javax.jms.MapMessage;
-// import javax.jms.Queue;
-// import javax.jms.QueueConnection;
-// import javax.jms.QueueConnectionFactory;
-// import javax.jms.QueueSender;
-// import javax.jms.QueueSession;
-// import javax.jms.Session;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
 import org.apache.log4j.Logger;
 import org.itracker.model.Issue;
-import org.itracker.model.PermissionType;
-
-import org.itracker.services.authentication.PluggableAuthenticator;
 import org.itracker.model.Permission;
+import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
+import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.persistence.dao.NotificationDAO;
 import org.itracker.persistence.dao.PermissionDAO;
 import org.itracker.persistence.dao.ProjectDAO;
 import org.itracker.persistence.dao.ReportDAO;
 import org.itracker.persistence.dao.UserDAO;
 import org.itracker.persistence.dao.UserPreferencesDAO;
-import org.itracker.persistence.dao.NoSuchEntityException;
-import org.itracker.services.ProjectService;
 import org.itracker.services.ConfigurationService;
+import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
+import org.itracker.services.authentication.PluggableAuthenticator;
 import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.exceptions.UserException;

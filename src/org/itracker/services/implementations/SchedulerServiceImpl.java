@@ -20,8 +20,8 @@ package org.itracker.services.implementations;
 
 import java.util.Date;
 import java.util.List;
-import org.itracker.model.ScheduledTask;
 
+import org.itracker.model.ScheduledTask;
 import org.itracker.persistence.dao.ScheduledTaskDAO;
 import org.itracker.services.SchedulerService;
 
