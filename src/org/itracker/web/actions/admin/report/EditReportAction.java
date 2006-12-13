@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -39,12 +38,12 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Language;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Report;
-import org.itracker.services.ReportService;
-import org.itracker.web.forms.ReportForm;
 import org.itracker.services.ConfigurationService;
+import org.itracker.services.ReportService;
 import org.itracker.services.util.ReportUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.forms.ReportForm;
 import org.itracker.web.util.Constants;
 
 

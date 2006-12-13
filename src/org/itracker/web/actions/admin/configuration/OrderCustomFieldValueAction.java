@@ -19,7 +19,6 @@
 package org.itracker.web.actions.admin.configuration;
 
 import java.io.IOException;
- 
 import java.util.List;
 
 import javax.servlet.ServletException;

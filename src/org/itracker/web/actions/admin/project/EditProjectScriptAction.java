@@ -40,7 +40,6 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 
 import bsh.ParseException;
-//import bsh.Parser;
 
 
 public class EditProjectScriptAction extends ItrackerBaseAction {

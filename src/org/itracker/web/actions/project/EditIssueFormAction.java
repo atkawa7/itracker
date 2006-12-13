@@ -20,7 +20,6 @@ package org.itracker.web.actions.project;
 
 import java.io.IOException;
 import java.util.ArrayList;
- 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;

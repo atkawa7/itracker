@@ -38,7 +38,6 @@ import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectScriptForm;
-//import org.itracker.web.forms.WorkflowScriptForm;
 import org.itracker.web.util.Constants;
 
 

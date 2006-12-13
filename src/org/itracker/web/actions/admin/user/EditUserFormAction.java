@@ -19,24 +19,20 @@
 package org.itracker.web.actions.admin.user;
 
 import java.io.IOException;
- 
 import java.util.HashMap;
 import java.util.List;
- 
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
- 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
- 
 import org.itracker.model.Permission;
 import org.itracker.model.User;
 import org.itracker.services.ProjectService;
