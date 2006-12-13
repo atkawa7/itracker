@@ -27,16 +27,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueSearchQuery;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
-
 import org.itracker.persistence.dao.IssueDAO;
-import org.itracker.services.IssueService;
-import org.itracker.services.IssueSearchService;
 import org.itracker.services.ConfigurationService;
+import org.itracker.services.IssueSearchService;
+import org.itracker.services.IssueService;
 import org.itracker.services.exceptions.IssueSearchException;
 import org.itracker.services.util.HTMLUtilities;
 import org.itracker.services.util.IssueUtilities;
