@@ -18,11 +18,11 @@
 
 package org.itracker.model;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.exceptions.IssueException;
 import org.itracker.services.util.CustomFieldUtilities;

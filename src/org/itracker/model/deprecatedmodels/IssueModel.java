@@ -21,7 +21,6 @@ package org.itracker.model.deprecatedmodels;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import org.itracker.model.deprecatedmodels.IIssue;
 
 
 

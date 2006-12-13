@@ -34,8 +34,6 @@
 
 package org.itracker.model;
 
-import java.sql.Timestamp;
-import java.util.Date;
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.
  * @author ready

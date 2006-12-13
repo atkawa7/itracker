@@ -4,9 +4,10 @@
 package org.itracker.services.authentication.adsson;
 
 import java.io.IOException;
-import javax.security.auth.login.LoginException;
-import org.itracker.model.User;
 
+import javax.security.auth.login.LoginException;
+
+import org.itracker.model.User;
 import org.itracker.services.exceptions.AuthenticatorException;
 
 /**

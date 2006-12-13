@@ -18,12 +18,15 @@
 
 package org.itracker.model.deprecatedmodels;
 
-import java.text.*;
-import java.util.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
-import org.itracker.core.resources.*;
-import org.itracker.services.exceptions.*;
-import org.itracker.services.util.*;
+import org.itracker.core.resources.ITrackerResources;
+import org.itracker.services.exceptions.IssueException;
+import org.itracker.services.util.CustomFieldUtilities;
 
 
 class IssueFieldModel extends GenericModel {

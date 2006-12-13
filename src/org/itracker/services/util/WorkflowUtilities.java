@@ -20,23 +20,22 @@ package org.itracker.services.util;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import org.apache.log4j.Logger;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.validator.ValidatorForm;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.NameValuePair;
+import org.itracker.model.ProjectScript;
 import org.itracker.services.exceptions.WorkflowException;
 
 import bsh.Interpreter;
-import org.itracker.model.NameValuePair;
-import org.itracker.model.ProjectScript;
 
 /**
  * Contains utilities used when displaying and processing workflow and field events

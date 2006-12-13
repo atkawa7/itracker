@@ -21,12 +21,12 @@ package org.itracker.services;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.itracker.model.Issue;
 import org.itracker.model.Permission;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
-
 import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.exceptions.PasswordException;

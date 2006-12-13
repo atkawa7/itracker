@@ -20,6 +20,7 @@ package org.itracker.services.util;
 
 import java.util.HashMap;
 import java.util.Locale;
+
 import org.itracker.core.resources.ITrackerResources;
 
 public class NotificationUtilities  {

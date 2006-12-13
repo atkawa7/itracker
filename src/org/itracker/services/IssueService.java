@@ -21,11 +21,11 @@ package org.itracker.services;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import org.itracker.model.Component;
 
+import org.itracker.model.Component;
+import org.itracker.model.Issue;
 import org.itracker.model.IssueActivity;
 import org.itracker.model.IssueAttachment;
-import org.itracker.model.Issue;
 import org.itracker.model.IssueField;
 import org.itracker.model.IssueHistory;
 import org.itracker.model.IssueRelation;

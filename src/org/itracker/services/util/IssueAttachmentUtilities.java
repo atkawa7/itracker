@@ -18,7 +18,7 @@
 
 package org.itracker.services.util;
 
-import java.util.*;
+import java.util.HashSet;
 
 public class IssueAttachmentUtilities  {
     public static final String DEFAULT_ATTACHMENT_DIR = "./itracker/attachments";

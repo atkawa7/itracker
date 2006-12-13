@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+
 import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;

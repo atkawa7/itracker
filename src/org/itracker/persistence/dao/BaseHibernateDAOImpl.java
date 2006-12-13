@@ -1,6 +1,7 @@
 package org.itracker.persistence.dao;
 
 import java.sql.Connection;
+
 import org.hibernate.HibernateException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 

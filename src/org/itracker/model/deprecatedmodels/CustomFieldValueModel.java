@@ -18,7 +18,7 @@
 
 package org.itracker.model.deprecatedmodels;
 
-import java.util.*;
+import java.util.Comparator;
 
 class CustomFieldValueModel extends GenericModel implements Comparator<CustomFieldValueModel> {
     private Integer customFieldId;

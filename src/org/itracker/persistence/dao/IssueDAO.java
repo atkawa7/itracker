@@ -2,6 +2,7 @@ package org.itracker.persistence.dao;
 
 import java.util.Date;
 import java.util.List;
+
 import org.itracker.model.Issue;
 
 /**

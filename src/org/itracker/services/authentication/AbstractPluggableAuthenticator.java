@@ -20,10 +20,10 @@ package org.itracker.services.authentication;
 
 import java.util.HashMap;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.itracker.model.Permission;
 import org.itracker.model.User;
-
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.AuthenticatorException;

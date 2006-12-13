@@ -1,8 +1,9 @@
 package org.itracker.persistence.dao;
 
 import java.util.List;
-import org.itracker.model.IssueActivity;
+
 import org.itracker.model.Issue;
+import org.itracker.model.IssueActivity;
 
 
 public class IssueActivityDAOImpl extends BaseHibernateDAOImpl<IssueActivity> 

@@ -16,6 +16,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
+
 import org.apache.log4j.Logger;
 import org.itracker.model.User;
 
@@ -93,13 +94,14 @@ public class GetUserModelFromADPrivilegedAction implements PrivilegedAction {
             return (null);
         }
 
-        if (attributes.get("mail") != null)
-            mail = (String) attributes.get("Mail").get();
+        if (attributes.get("mail") != null) {
+            mail = (String) attributes.get("Mail").get(); 
+        }
         if (attributes.get("givenName") != null)
             firstName = (String) attributes.get("givenName").get();
-        if (attributes.get("sn") != null)
+        if (attributes.get("sn") != null) {
             lastName = (String) attributes.get("sn").get();
-
+        }
         logger.info("Got at least givenName and sn from A.D. for user " + login);
 
         // create user 

@@ -1,6 +1,6 @@
-package org.itracker.services.implementations;
+package org.itracker.services;
 
-import org.hibernate.*;
+import org.hibernate.SessionFactory;
 import org.itracker.persistence.dao.ComponentDAO;
 import org.itracker.persistence.dao.ConfigurationDAO;
 import org.itracker.persistence.dao.CustomFieldDAO;
@@ -16,13 +16,6 @@ import org.itracker.persistence.dao.ScheduledTaskDAO;
 import org.itracker.persistence.dao.UserDAO;
 import org.itracker.persistence.dao.UserPreferencesDAO;
 import org.itracker.persistence.dao.WorkflowScriptDAO;
-import org.itracker.services.IssueService;
-import org.itracker.services.IssueSearchService;
-import org.itracker.services.ProjectService;
-import org.itracker.services.ReportService;
-import org.itracker.services.SchedulerService;
-import org.itracker.services.ConfigurationService;
-import org.itracker.services.UserService;
 import org.itracker.services.util.EmailService;
 
 /**

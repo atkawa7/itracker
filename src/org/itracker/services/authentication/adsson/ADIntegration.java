@@ -3,14 +3,15 @@
  */
 package org.itracker.services.authentication.adsson;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.AccessControlException;
 import java.util.Properties;
-import java.io.InputStream;
-import java.io.IOException;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
+
 import org.apache.log4j.Logger;
 
 /**

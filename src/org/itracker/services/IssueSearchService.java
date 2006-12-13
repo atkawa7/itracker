@@ -21,6 +21,7 @@ package org.itracker.services;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.itracker.model.Issue;
 import org.itracker.model.IssueSearchQuery;
 import org.itracker.model.PermissionType;

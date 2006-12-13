@@ -19,7 +19,7 @@
 package org.itracker.model.deprecatedmodels;
 
 import java.util.ArrayList;
-import java.util.Arrays; 
+import java.util.Arrays;
 import java.util.List;
 
 import org.itracker.services.util.SystemConfigurationUtilities;

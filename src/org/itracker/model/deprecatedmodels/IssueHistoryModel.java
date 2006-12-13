@@ -20,7 +20,7 @@ package org.itracker.model.deprecatedmodels;
 
 import java.util.Comparator;
 
-import org.itracker.services.util.*;
+import org.itracker.services.util.IssueUtilities;
 
 
 class IssueHistoryModel extends GenericModel implements Comparator<IssueHistoryModel> {

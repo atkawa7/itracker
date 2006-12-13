@@ -19,21 +19,14 @@
 package org.itracker.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import org.itracker.services.util.IssueUtilities;
 
-import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ArrayList;
+import org.itracker.services.util.IssueUtilities;
 
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.

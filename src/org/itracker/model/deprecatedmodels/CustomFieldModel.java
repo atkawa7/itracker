@@ -18,10 +18,14 @@
 
 package org.itracker.model.deprecatedmodels;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 
-import org.itracker.core.resources.*;
-import org.itracker.services.util.*;
+import org.itracker.core.resources.ITrackerResources;
+import org.itracker.services.util.CustomFieldUtilities;
 
 public class CustomFieldModel extends GenericModel implements Comparator<CustomFieldModel> {
     private int fieldType = -1;

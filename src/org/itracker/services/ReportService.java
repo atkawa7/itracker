@@ -19,6 +19,7 @@
 package org.itracker.services;
 
 import java.util.List;
+
 import org.itracker.model.Report;
 
 public interface ReportService {

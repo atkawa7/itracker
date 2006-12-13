@@ -30,6 +30,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.NameValuePair;
 import org.itracker.model.Permission;
@@ -37,6 +38,7 @@ import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.services.exceptions.PasswordException;
+
 import sun.misc.BASE64Encoder;
 
 public class UserUtilities implements AuthenticationConstants {

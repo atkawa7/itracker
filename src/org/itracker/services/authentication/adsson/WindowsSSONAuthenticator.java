@@ -7,9 +7,9 @@ import java.rmi.RemoteException;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
-
 import org.itracker.services.UserService;
 import org.itracker.services.authentication.DefaultAuthenticator;
 import org.itracker.services.exceptions.AuthenticatorException;

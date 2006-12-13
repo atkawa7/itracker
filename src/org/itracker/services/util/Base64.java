@@ -528,8 +528,9 @@ public class Base64 {
                         b4Posn = 0;
 
                         // If that was the equals sign, break out of 'for' loop
-                        if( sbiCrop == EQUALS_SIGN )
-                            break;
+                        if( sbiCrop == EQUALS_SIGN ) {
+							break;
+						}
                     }   // end if: quartet built
 
                 }   // end if: equals sign or better
@@ -726,9 +727,9 @@ public class Base64 {
                             }
                         } catch( java.io.IOException e ) {
                             // Only a problem if we got no data at all.
-                            if( i == 0 )
+                            if( i == 0 ) {
                                 throw e;
-
+                            }
                         }
                     }
 
@@ -750,9 +751,9 @@ public class Base64 {
                         do{ b = in.read(); }
                         while( b >= 0 && DECODABET[ b & 0x7f ] <= WHITE_SPACE_ENC );
 
-                        if( b < 0 )
+                        if( b < 0 ) {
                             break; // Reads a -1 if end of stream
-
+                        }
                         b4[i] = (byte)b;
                     }   // end for: each needed input byte
 

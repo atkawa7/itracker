@@ -18,7 +18,8 @@
 
 package org.itracker.services.util;
 
-import javax.mail.*;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
 
 public class EmailAuthenticator extends Authenticator {
     private PasswordAuthentication pAuth;

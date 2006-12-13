@@ -23,13 +23,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.log4j.Logger;
 
+import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.AbstractBean;
 import org.itracker.model.Component;
 import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
-import org.itracker.model.AbstractBean;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueAttachment;
 import org.itracker.model.IssueField;

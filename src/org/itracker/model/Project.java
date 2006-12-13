@@ -21,8 +21,6 @@ package org.itracker.model;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.sql.Timestamp;
-import java.util.Date;
 
 /**
  * This is a POJO Business Domain Object, Hibernate Bean.

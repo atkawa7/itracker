@@ -18,8 +18,8 @@
 
 package org.itracker.model.deprecatedmodels;
 
-import java.util.Date;
 import java.io.Serializable;
+import java.util.Date;
 
 public class GenericModel implements Serializable, Cloneable {
     protected Integer id = null;
