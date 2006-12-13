@@ -22,11 +22,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
 import javax.swing.table.AbstractTableModel;
+
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
-
 import org.itracker.services.util.IssueUtilities;
 
 public abstract class ReportTableModel extends AbstractTableModel {

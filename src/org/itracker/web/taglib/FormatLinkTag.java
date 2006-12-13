@@ -28,8 +28,6 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.web.util.Constants;
-// import org.apache.struts.util.RequestUtils;
-// import org.apache.struts.util.ResponseUtils;
 
 
 public final class FormatLinkTag extends BodyTagSupport {

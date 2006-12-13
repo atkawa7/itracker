@@ -18,12 +18,14 @@
 
 package org.itracker.web.taglib;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.struts.Globals;
-import org.apache.struts.action.*;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 public final class AddErrorTag extends TagSupport {
     /**

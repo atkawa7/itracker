@@ -24,9 +24,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
-//import org.apache.struts.util.RequestUtils;
-//import org.apache.struts.util.RequestUtils;
-//import org.apache.struts.util.ResponseUtils;
 
 public final class FormatPaginationLinkTag extends BodyTagSupport {
     /**

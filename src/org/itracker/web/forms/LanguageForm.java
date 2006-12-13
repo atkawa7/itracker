@@ -18,12 +18,13 @@
 
 package org.itracker.web.forms;
 
+import java.util.HashMap;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
-import java.util.HashMap;
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
  * @author ready

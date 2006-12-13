@@ -20,6 +20,7 @@ package org.itracker.web.reports;
 
 import java.util.List;
 import java.util.Locale;
+
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;

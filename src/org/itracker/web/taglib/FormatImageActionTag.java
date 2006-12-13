@@ -29,8 +29,6 @@ import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.UserPreferences;
 import org.itracker.web.util.Constants;
-//import org.apache.struts.util.RequestUtils;
-//import org.apache.struts.util.ResponseUtils;
 
 
 public final class FormatImageActionTag extends TagSupport {

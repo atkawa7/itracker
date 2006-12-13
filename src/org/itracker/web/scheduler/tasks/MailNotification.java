@@ -1,6 +1,7 @@
 package org.itracker.web.scheduler.tasks;
 
 import java.util.Properties;
+
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -9,6 +10,7 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.search.FlagTerm;
+
 import org.apache.log4j.Logger;
 import org.itracker.web.scheduler.SchedulableTask;
 
@@ -88,9 +90,9 @@ public class MailNotification implements SchedulableTask {
         //
         Folder src_folder = store.getFolder(folderName);
 
-        if (src_folder == null)
+        if (src_folder == null) {
             throw new NotificationException("Unable to get folder: " + src_folder);
-
+        }
         // Get message count
         //
         src_folder.open(Folder.READ_WRITE);

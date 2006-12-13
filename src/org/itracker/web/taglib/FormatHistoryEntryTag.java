@@ -32,8 +32,6 @@ import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.oro.text.regex.Perl5Substitution;
 import org.apache.oro.text.regex.Util;
-//import org.apache.struts.util.RequestUtils;
-//import org.apache.struts.util.ResponseUtils;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.util.HTMLUtilities;

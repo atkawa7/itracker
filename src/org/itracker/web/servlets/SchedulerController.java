@@ -19,8 +19,8 @@
 package org.itracker.web.servlets;
 
 import java.util.List;
-import org.itracker.model.ScheduledTask;
 
+import org.itracker.model.ScheduledTask;
 import org.itracker.services.SchedulerService;
 import org.itracker.web.scheduler.Scheduler;
 

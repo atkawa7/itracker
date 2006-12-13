@@ -29,7 +29,6 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.web.util.Constants;
-//import org.apache.struts.util.ResponseUtils;
 
 
 public class FormatDateTag extends TagSupport {

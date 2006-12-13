@@ -21,6 +21,7 @@ package org.itracker.web.reports;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
 import org.itracker.model.Issue;
 import org.itracker.services.util.IssueUtilities;
 

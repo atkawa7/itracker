@@ -18,9 +18,9 @@ package org.itracker.web.util;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.upload.FormFile;
-import org.itracker.services.IssueService;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ITrackerServices;
+import org.itracker.services.IssueService;
  
 public class AttachmentUtilities {
     

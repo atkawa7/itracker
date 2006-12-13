@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.itracker.model.Issue;
 import org.itracker.model.Notification;

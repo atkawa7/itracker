@@ -24,8 +24,8 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.apache.log4j.Logger;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.model.Issue;
 import org.itracker.model.Report;

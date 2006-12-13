@@ -18,7 +18,7 @@
 
 package org.itracker.web.taglib;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 

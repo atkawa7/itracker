@@ -29,7 +29,6 @@ import org.apache.struts.taglib.TagUtils;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.web.util.Constants;
-// import org.apache.struts.util.ResponseUtils;
 
 
 /**
