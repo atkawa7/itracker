@@ -259,7 +259,9 @@
             <source-roots>
                 <root id="src.dir"/>
             </source-roots>
-            <test-roots/>
+            <test-roots>
+                <root id="test.nb_test.dir"/>
+            </test-roots>
         </data>
     </configuration>
 </project>

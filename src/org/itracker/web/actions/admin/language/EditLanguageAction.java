@@ -48,10 +48,10 @@ import org.itracker.web.util.Constants;
 
 
 public class EditLanguageAction extends ItrackerBaseAction {
-
+    
     public EditLanguageAction() {
     }
-
+    
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         super.executeAlways(mapping,form,request,response);
@@ -64,31 +64,42 @@ public class EditLanguageAction extends ItrackerBaseAction {
         }
         resetToken(request);
         HttpSession session = request.getSession(true);
-
+        
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
-
+            
             String action = (String) PropertyUtils.getSimpleProperty(form, "action");
             String locale = (String) PropertyUtils.getSimpleProperty(form, "locale");
+            String localeTitle = (String) PropertyUtils.getSimpleProperty(form, "localeTitle");
             HashMap items = (HashMap) PropertyUtils.getSimpleProperty(form, "items");
-
+            
             if(items == null) {
                 return mapping.findForward("listlanguages");
             }
-
+            
             // Fixes added for bug in beanutils.  Can remove all of the replace calls in the following
             // code once the bug is fixed.  Make sure the fix in EditLanguageFormAction is also removed.
-
+            
             if(locale == null || "".equals(locale.trim())) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidlocale"));
             } else if("create".equals(action)) {
                 if(locale.length() != 2 && (locale.length() != 5 || locale.indexOf('_') != 2)) {
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidlocale"));
                 } else {
+                    Language languageItem = null;
+                    
+                    // This will update the Base Locale to include the new language.
+                    languageItem = configurationService.getLanguageItemByKey("itracker.locales",null);
+                    String localeString = languageItem.getResourceValue();
+                    languageItem.setResourceValue(localeString+","+locale);
+                    configurationService.updateLanguageItem(languageItem);
+                    
                     Configuration localeConfig = new Configuration(SystemConfigurationUtilities.TYPE_LOCALE, locale);
                     if(configurationService.configurationItemExists(localeConfig)) {
                         errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidlocale"));
                     } else {
+                        
+                        configurationService.updateLanguageItem(new Language(locale, "itracker.locale.name", localeTitle));
                         for(Iterator iter = items.keySet().iterator(); iter.hasNext(); ) {
                             String key = (String) iter.next();
                             if(key != null) {
@@ -104,6 +115,15 @@ public class EditLanguageAction extends ItrackerBaseAction {
                     }
                 }
             } else if("update".equals(action)) {
+                Language languageItem = null;
+                
+                // This will update the Base Locale to include the new language.
+                languageItem = configurationService.getLanguageItemByKey("itracker.locales",null);
+                String localeString = languageItem.getResourceValue();
+                languageItem.setResourceValue(localeString+","+locale);
+                configurationService.updateLanguageItem(languageItem);
+                
+                configurationService.updateLanguageItem(new Language(locale, "itracker.locale.name", localeTitle));
                 Locale updateLocale = ITrackerResources.getLocale(locale);
                 for(Iterator iter = items.keySet().iterator(); iter.hasNext(); ) {
                     String key = (String) iter.next();
@@ -118,7 +138,7 @@ public class EditLanguageAction extends ItrackerBaseAction {
                                 } catch ( NoSuchEntityException e ) {
                                     // do nothing; we want to delete it, so...
                                 }
-                                        
+                                
                             } else if(! value.equals(currValue)) {
                                 configurationService.updateLanguageItem(new Language(locale, key.replace('/', '.'), value));
                                 ITrackerResources.clearKeyFromBundles(key.replace('/', '.'), true);
@@ -140,18 +160,18 @@ public class EditLanguageAction extends ItrackerBaseAction {
             logger.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
-
+        
         if(! errors.isEmpty()) {
             saveMessages(request, errors);
             saveToken(request);
             return mapping.getInputForward();
         }
-
+        
         clearSessionObjects(session);
         return mapping.findForward("error");
     }
-
-
+    
+    
     private void clearSessionObjects(HttpSession session) {
         session.removeAttribute(Constants.EDIT_LANGUAGE_KEYS_KEY);
         session.removeAttribute(Constants.EDIT_LANGUAGE_BASE_KEY);
@@ -160,4 +180,3 @@ public class EditLanguageAction extends ItrackerBaseAction {
         session.removeAttribute(Constants.EDIT_LANGUAGE_TYPE_KEY);
     }
 }
-  

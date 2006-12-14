@@ -60,32 +60,41 @@
         <% } %>
 
        <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
-          <% if(! isUpdate) { %>
-                <tr>
-                  <td colspan="4">
-                  <% if(localeType == SystemConfigurationUtilities.LOCALE_TYPE_LOCALE) { %>
-                        <span class="editColumnTitle"><it:message key="itracker.web.attr.localeiso"/>: </span>
-                        <html:text property="locale" styleClass="editColumnText" maxlength="5" size="5"/>
-                  <% } else { %>
-                        <span class="editColumnTitle"><it:message key="itracker.web.attr.localeiso"/>: </span>
-                        <html:text property="locale" styleClass="editColumnText" maxlength="2" size="2"/>
-                  <% } %>
-                  </td>
-                </tr>
-          <% } %>
+          <%  
+              String maxLength="2";
+              String maxSize = "2";   
+              String LocMsg = "itracker.web.attr.language";
+              String afterTd = "<td> </td>";
+              String beforeTd = "";
+              if(localeType == SystemConfigurationUtilities.LOCALE_TYPE_LOCALE) {
+                    afterTd="";
+                    beforeTd = "<td> </td>";
+                    LocMsg = "itracker.web.attr.locale";
+                    maxLength = "5";    
+                    maxSize = "5";     
+              }
+              boolean Readonly = false;
+              if( isUpdate) { 
+                 Readonly = true;
+              }
+          %>
+            
+             <tr>
+                <td colspan="2">
+                      <span class="editColumnTitle"><it:message key="itracker.web.attr.localeiso"/>: </span>
+                      <html:text readonly="<%=Readonly%>" property="locale" styleClass="editColumnText" maxlength="<%=maxLength%>" size="<%=maxSize%>"/>
+                </td>
+                <td colspan="2">
+                      <span class="editColumnTitle"><it:message key="itracker.web.attr.language"/>: </span>
+                      <html:text property="localeTitle" styleClass="editColumnText" maxlength="20" size="20"/>
+                </td>
+             </tr>
           <tr align="left" class="listHeading">
             <td><it:message key="itracker.web.attr.key"/></td>
             <td><it:message key="itracker.web.attr.baselocale"/></td>
-            <% if(localeType >= SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE) { %>
-                <td><it:message key="itracker.web.attr.language"/></td>
-            <% } else { %>
-                <td>&nbsp;</td>
-            <% } %>
-            <% if(localeType == SystemConfigurationUtilities.LOCALE_TYPE_LOCALE) { %>
-                <td><it:message key="itracker.web.attr.locale"/></td>
-            <% } else { %>
-                <td>&nbsp;</td>
-            <% } %>
+            <%=beforeTd%>
+            <td><it:message key="<%=LocMsg%>"/></td>
+            <%=afterTd%>
           </tr>
           <% int i = 0; %>
           <logic:iterate id="itemlangs" name="languageForm" property="items">
@@ -97,35 +106,24 @@
                 String Skey = key.replace('/', '.');
                 String styleClass = (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded" );
                 i++;
+                if ( ! Skey.equals("itracker.locales") && ! Skey.equals("itracker.locale.name")) {
           %>
                 <tr class="<%= styleClass %>">
                   <td valign="top"><%= Skey %></td>
-                  <% if(localeType == SystemConfigurationUtilities.LOCALE_TYPE_BASE) { %>
-                      <% if(ITrackerResources.isLongString(Skey)) { %>
-                          <td valign="top"><html:textarea indexed="false" name="languageForm"  rows="4" cols="40" property="<%= propertyKey %>" value="<%=value%>" styleClass="<%= styleClass %>"/></td>
-                      <% } else { %>
-                          <td valign="top"><html:text indexed="false" name="languageForm" property="<%= propertyKey %>" value="<%=value%>" size="40" styleClass="<%= styleClass %>"/></td>
-                      <% } %>
-                  <% } else { %>
-                      <td valign="top"><it:message key="<%= Skey %>" locale="<%= ITrackerResources.BASE_LOCALE %>"/></td>
-                      <% if(localeType == SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE) { %>
-                          <% if(ITrackerResources.isLongString(Skey)) { %>
-                              <td valign="top"><html:textarea indexed="false" name="languageForm" rows="4" cols="40" property="<%= propertyKey %>" value="<%=value%>" styleClass="<%= styleClass %>"/></td>
-                          <% } else { %>
-                              <td valign="top"><html:text indexed="false" name="languageForm" property="<%= propertyKey %>" value="<%=value%>" size="40" styleClass="<%= styleClass %>"/></td>
-                          <% } %>
-                      <% } else { %>
-                          <td valign="top"><it:message key="<%= Skey %>" locale="<%= parentLocale %>"/></td>
-                          <% if(ITrackerResources.isLongString(Skey)) { %>
-                              <td valign="top"><html:textarea indexed="false" name="languageForm" rows="4" cols="40" property="<%= propertyKey %>" value="<%=value%>" styleClass="<%= styleClass %>"/></td>
-                          <% } else { %>
-                              <td valign="top"><html:text indexed="false" name="languageForm" property="<%= propertyKey %>" value="<%=value%>" size="40" styleClass="<%= styleClass %>"/></td>
-                          <% } %>
-                      <% } %>
+                  <% if(localeType != SystemConfigurationUtilities.LOCALE_TYPE_BASE) { %>
+                          <td valign="top"><it:message key="<%= Skey %>" locale="<%= ITrackerResources.BASE_LOCALE %>"/></td>
                   <% } %>
-                  <td>&nbsp;</td>
+                  <% if(localeType != SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE) { %>
+                           <td valign="top"><it:message key="<%= Skey %>" locale="<%= parentLocale %>"/></td>
+                  <% }  %>
+                  <% if(ITrackerResources.isLongString(Skey)) { %>
+                         <td valign="top"><html:textarea indexed="false" name="languageForm"  rows="4" cols="40" property="<%= propertyKey %>" value="<%=value%>" styleClass="<%= styleClass %>"/></td>
+                  <% } else { %>
+                          <td valign="top"><html:text indexed="false" name="languageForm" property="<%= propertyKey %>" value="<%=value%>" size="40" styleClass="<%= styleClass %>"/></td>
+                  <% } %>
+                  <%=afterTd%>
                 </tr>
-          <% //} %>
+          <%   } %>
           </logic:iterate>
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="12" width="1"/></td></tr>
           <% if ( isUpdate ) { %>

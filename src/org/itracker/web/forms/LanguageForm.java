@@ -36,6 +36,7 @@ public class LanguageForm extends ValidatorForm  {
     private String parentLocale = null;
     private String key = null;
     private String locale = null;
+    private String localeTitle = null;
     private HashMap<String,String> items = new HashMap<String,String>();
     
 /*    public void reset(ActionMapping mapping, HttpServletRequest request) {
@@ -89,6 +90,14 @@ public class LanguageForm extends ValidatorForm  {
     
     public void setParentLocale(String parentLocale) {
         this.parentLocale = parentLocale;
+    }
+    
+    public String getLocaleTitle() {
+        return localeTitle;
+    }
+    
+    public void setLocaleTitle(String localeTitle) {
+        this.localeTitle = localeTitle;
     }
     
 }

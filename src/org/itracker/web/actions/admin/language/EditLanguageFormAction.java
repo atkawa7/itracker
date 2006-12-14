@@ -21,6 +21,7 @@ package org.itracker.web.actions.admin.language;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +42,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.LanguageForm;
 import org.itracker.web.util.Constants;
+import org.itracker.model.Language;
 
 
 
@@ -122,14 +124,38 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                     // Fix for bug in beanutils.  Can remove this logic here and in EditLanguageAction
                     // once the bug is fixed.
                     // languageForm.set("items", items);
+                    for ( Iterator iter = baseItems.keySet().iterator(); iter.hasNext(); ) {
+                        String key = (String) iter.next();
+                        String itemStr = (String) items.get(key);
+                        if ( itemStr == null || itemStr.length() == 0 )
+                            items.put(key,"");
+                    }
+
+                    HashMap<String,String> formItems = new HashMap<String,String>();
+                    for(Iterator iter = items.keySet().iterator(); iter.hasNext(); ) {
+                            String key = (String) iter.next();
+                            formItems.put(key.replace('.', '/'), (String) items.get(key));
+                    }
+                    languageForm.setItems(formItems);
+                } else {
+                    String parentLocale = null;
+                    if(! locale.equalsIgnoreCase(ITrackerResources.BASE_LOCALE)) {
+                        parentLocale = SystemConfigurationUtilities.getLocalePart(locale, SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE);
+                    }
+                    langItems = configurationService.getDefinedKeys(parentLocale);
                     HashMap<String,String> formItems = new HashMap<String,String>();
                     for(Iterator iter = items.keySet().iterator(); iter.hasNext(); ) {
                         String key = (String) iter.next();
-                        formItems.put(key.replace('.', '/'), (String) items.get(key));
+                        formItems.put(key.replace('.', '/'), (String) langItems.get(key));
                     }
                     languageForm.setItems(formItems);
+                    
                 }
-                languageForm.setKey("this");
+                Language languageItem = null;
+                Locale curLocale = ITrackerResources.getLocale(locale);
+                languageItem = configurationService.getLanguageItemByKey("itracker.locale.name", curLocale);
+                languageForm.setLocaleTitle(languageItem.getResourceValue());
+
                 session.setAttribute(Constants.EDIT_LANGUAGE_KEYS_KEY, sortedKeys);
                 session.setAttribute(Constants.EDIT_LANGUAGE_BASE_KEY, baseItems);
                 session.setAttribute(Constants.EDIT_LANGUAGE_LANG_KEY, langItems);

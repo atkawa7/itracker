@@ -2,6 +2,7 @@ package org.itracker.web.actions.admin.workflow;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletRequest;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
