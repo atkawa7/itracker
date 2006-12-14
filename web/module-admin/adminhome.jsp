@@ -8,6 +8,7 @@
 <%@ taglib uri="/tags/c" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tld/struts-tiles.tld" prefix="tiles" %>
 <%@ page import="org.itracker.services.util.UserUtilities" %>
+<%@ page import="org.itracker.services.util.ReportUtilities" %>
 <%@ page import="org.itracker.web.scheduler.*" %>
 <%@ page import="org.itracker.model.PermissionType" %>
 <%@ page import="java.util.Map" %>
@@ -93,10 +94,10 @@
         <tr>
           <td colspan="3" class="editColumnTitle"><it:message key="itracker.web.admin.index.configadmin"/></td>
           <td colspan="2" align="right">
-             <!-- < % String exportReport = "type=all&reportOutput=XML&reportId=" + ReportUtilities.REPORT_EXPORT_XML; % > 
+             <% String exportReport = "type=all&reportOutput=XML&reportId=" + ReportUtilities.REPORT_EXPORT_XML; %> 
              <it:link action="importdata" titleKey="itracker.web.admin.index.config.import.alt" styleClass="editColumnText">[<it:message key="itracker.web.attr.import"/>]</it:link>
-             <it:link action="displayreport" target="_blank" queryString="< %= exportReport % >" titleKey="itracker.web.admin.index.config.export.alt" styleClass="editColumnText">[<it:message key="itracker.web.attr.export"/>]</it:link>
-             <it:link forward="listconfiguration" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link> -->
+             <it:link action="displayreport" target="_blank" queryString="<%= exportReport %>" titleKey="itracker.web.admin.index.config.export.alt" styleClass="editColumnText">[<it:message key="itracker.web.attr.export"/>]</it:link>
+             <it:link forward="listconfiguration" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link>
           </td>
         </tr>
         <tr class="listHeading"><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>

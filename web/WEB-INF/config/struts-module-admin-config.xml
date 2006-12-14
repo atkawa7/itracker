@@ -44,6 +44,7 @@
         <forward name="listprojectsadmin" path="/listprojectsadmin.do"/>
         <forward name="listreports" module="/module-reports" path="/list_reports.do"/>
         <forward name="listreportsadmin" module="/module-admin" path="/listreportsadmin.do"/>
+        <forward name="listconfiguration" module="/module-admin" path="/listconfiguration.do"/>
         <forward name="listlanguages" module="/module-admin" path="/listlanguages.do"/>
         <forward name="listprojects" path="/listprojects.do"/>
         <forward name="error" module="/" path="/error.do"/>
