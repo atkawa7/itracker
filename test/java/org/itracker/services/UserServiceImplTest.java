@@ -31,16 +31,38 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 
     public void testSetUserPermissions() {
     	Integer userId = 2;
+    	Integer projectId = 2;
     	List<Permission> newPermissions = new ArrayList<Permission>();
     	User user = new User();
-    	user = userDAO.findByPrimaryKey(1);
+    	user = userDAO.findByPrimaryKey(userId);
         Project project = new Project();
-        project = projectDAO.findByPrimaryKey(2);
+        project = projectDAO.findByPrimaryKey(projectId);
     	newPermissions.add(new Permission(project,4,user));
     	boolean successful = userService.setUserPermissions(userId, newPermissions);
     	if (successful) {
     		assertEquals(newPermissions, userService.getPermissionsByUserId(userId));
     	}
+    }
+    
+    public void testSetAndUnsetUserPermissions() {
+    	Integer userId = 2;
+    	Integer projectId = 2;
+    	List<Permission> newPermissions = new ArrayList<Permission>();
+    	User user = new User();
+    	user = userDAO.findByPrimaryKey(userId);
+        Project project = new Project();
+        project = projectDAO.findByPrimaryKey(projectId);
+    	newPermissions.add(new Permission(project,4,user));
+    	boolean successfulset = userService.setUserPermissions(userId, newPermissions);
+    	if (successfulset) {
+    		assertEquals(newPermissions, userService.getPermissionsByUserId(userId));
+    	}
+    	newPermissions.clear();
+    	boolean successfulunset = userService.setUserPermissions(userId, newPermissions);
+    	if (successfulunset) {
+    		assertEquals(newPermissions, userService.getPermissionsByUserId(userId));
+    	}
+    	
     }
 
     public void testGetPermissionsByUserId() {
