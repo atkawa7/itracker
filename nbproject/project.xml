@@ -254,13 +254,21 @@
                     <file>${file.reference.commons-digester.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
+                <library files="1">
+                    <file>${file.reference.dbunit-2.1.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="1">
+                    <file>${file.reference.spring-mock.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
             </web-module-libraries>
             <web-module-additional-libraries/>
             <source-roots>
                 <root id="src.dir"/>
             </source-roots>
             <test-roots>
-                <root id="test.nb_test.dir"/>
+                <root id="test.nbtest.dir"/>
             </test-roots>
         </data>
     </configuration>
