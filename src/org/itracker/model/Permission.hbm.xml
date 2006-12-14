@@ -11,8 +11,8 @@
 		<property name="createDate" column="create_date" not-null="true" unique="false"/>
 		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>		
 		<property name="permissionType" column="permission_type" not-null="true" unique="false"/>		
-		<many-to-one name="user" column="user_id" class="org.itracker.model.User"/>		
-		<many-to-one name="project" column="project_id" class="org.itracker.model.Project"/>				
+		<many-to-one name="user" column="user_id" class="org.itracker.model.User" lazy="false"/>		
+		<many-to-one name="project" column="project_id" class="org.itracker.model.Project" lazy="false"/>				
 	</class>
 
 </hibernate-mapping>
