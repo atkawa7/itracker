@@ -1,10 +1,10 @@
 package org.itracker.services;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.itracker.AbstractDependencyInjectionTest;
+import org.itracker.model.Issue;
 import org.itracker.model.Permission;
 import org.itracker.model.Project;
 import org.itracker.model.User;
@@ -29,61 +29,96 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 
     }
 
-    public void testSetUserPermissions() {
-    	Integer userId = 2;
+    public void testGetPermissionsByUserId() {
+    	Integer userId = 3;
     	Integer projectId = 2;
+    	List<Permission> currentPermissions = new ArrayList<Permission>();
+    	
+    	Project project = new Project();
+    	project = projectDAO.findByPrimaryKey(projectId);
+        
+        User user = new User();
+        user = userDAO.findByPrimaryKey(userId);
+        
+        List<Permission> assertedPermissions = new ArrayList<Permission>();
+        assertedPermissions.add(new Permission(project,1,user));
+    	assertedPermissions.add(new Permission(project,2,user));
+    	assertedPermissions.add(new Permission(project,3,user));
+    	
+    	currentPermissions = userService.getPermissionsByUserId(userId);
+    	assertEquals(assertedPermissions.get(0).getProject().getName(), currentPermissions.get(0).getProject().getName());
+    	assertEquals(assertedPermissions.get(1).getProject().getName(), currentPermissions.get(1).getProject().getName());
+    	assertEquals(assertedPermissions.get(2).getProject().getName(), currentPermissions.get(2).getProject().getName());
+    	assertEquals(assertedPermissions.get(0).getPermissionType(), currentPermissions.get(0).getPermissionType());
+    	assertEquals(assertedPermissions.get(1).getPermissionType(), currentPermissions.get(1).getPermissionType());
+    	assertEquals(assertedPermissions.get(2).getPermissionType(), currentPermissions.get(2).getPermissionType());
+    	assertEquals(assertedPermissions.get(0).getUser().getEmail(), currentPermissions.get(0).getUser().getEmail());
+    	assertEquals(assertedPermissions.get(1).getUser().getEmail(), currentPermissions.get(1).getUser().getEmail());
+    	assertEquals(assertedPermissions.get(2).getUser().getEmail(), currentPermissions.get(2).getUser().getEmail());
+    }
+    
+    public void testSetUserPermissions() {
+    	Integer userId = 3;
+    	Integer projectId = 2;
+    	
     	List<Permission> newPermissions = new ArrayList<Permission>();
     	User user = new User();
     	user = userDAO.findByPrimaryKey(userId);
         Project project = new Project();
         project = projectDAO.findByPrimaryKey(projectId);
+        
     	newPermissions.add(new Permission(project,4,user));
-    	boolean successful = userService.setUserPermissions(userId, newPermissions);
-    	if (successful) {
-    		assertEquals(newPermissions, userService.getPermissionsByUserId(userId));
-    	}
+    	
+    	userService.setUserPermissions(userId, newPermissions);
+     	
+    	assertEquals(newPermissions.get(0).getPermissionType(), userService.getPermissionsByUserId(userId).get(0).getPermissionType());
+     
     }
     
     public void testSetAndUnsetUserPermissions() {
-    	Integer userId = 2;
+    	Integer userId = 3;
     	Integer projectId = 2;
     	List<Permission> newPermissions = new ArrayList<Permission>();
     	User user = new User();
     	user = userDAO.findByPrimaryKey(userId);
         Project project = new Project();
         project = projectDAO.findByPrimaryKey(projectId);
+        
     	newPermissions.add(new Permission(project,4,user));
-    	boolean successfulset = userService.setUserPermissions(userId, newPermissions);
-    	if (successfulset) {
-    		assertEquals(newPermissions, userService.getPermissionsByUserId(userId));
-    	}
-    	newPermissions.clear();
-    	boolean successfulunset = userService.setUserPermissions(userId, newPermissions);
-    	if (successfulunset) {
-    		assertEquals(newPermissions, userService.getPermissionsByUserId(userId));
-    	}
+    	userService.setUserPermissions(userId, newPermissions);
     	
+    	assertEquals(newPermissions.get(0).getPermissionType(), userService.getPermissionsByUserId(userId).get(0).getPermissionType());
+    	  
+    	newPermissions.clear();
+    	userService.setUserPermissions(userId, newPermissions);
+     
+    	
+    	newPermissions.add(new Permission(project,7,user));
+    	userService.setUserPermissions(userId, newPermissions);
+    	assertEquals(7, userService.getPermissionsByUserId(userId).get(0).getPermissionType());
+
+    	
+    	  
     }
 
-    public void testGetPermissionsByUserId() {
-    	Integer userId = 1;
-    	List<Permission> assertedPermissions = new ArrayList<Permission>();
-    	List<Permission> currentPermissions = new ArrayList<Permission>();
-    	Project project = new Project();
-        project.setCreateDate( new Date() );
-        project.setLastModifiedDate( new Date() );
-        project.setName("test_name");
-        project.setDescription("test_description");
-        project.setStatus(1);
-        project.setOptions(1);
-        User user = new User( "admin_test2","admin_test2", "admin firstname2", "admin lastname2", "", true );
-    	assertedPermissions.add(new Permission(project,1,user));
-    	assertedPermissions.add(new Permission(project,2,user));
-    	assertedPermissions.add(new Permission(project,3,user));
-    	currentPermissions = userService.getPermissionsByUserId(userId);
-    	assertEquals(assertedPermissions, currentPermissions);
-    	
+ 
+    
+    public void testGetUsersWithProjectPermission() {
+    	Integer projectId=2;
+    	Integer permissionId=1;
+    	List<User> users = userService.getUsersWithProjectPermission(projectId,permissionId);
+    	assertNotNull(users);   
     }
+    
+    public void testGetPossibleOwners() {
+    	Issue issue = new Issue(); 
+    	Integer projectId=2;
+    	Integer userId=2;
+    	List<User> users = userService.getPossibleOwners(issue, projectId, userId);
+    	assertNotNull(users);   
+    }
+    
+
     
     private void assertUsersEqual( List<User> users,
                                        Integer userID,
