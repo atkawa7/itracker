@@ -85,7 +85,7 @@
         <action path="/assignissue" type="org.itracker.web.actions.project.AssignIssueAction"
                 name="assignIssueForm" scope="request" input="/index.jsp"/>
         <action path="/portalhome" type="org.itracker.web.actions.PortalHomeAction">
-            <forward name="portalhome" path="/portalhome_refactored.jsp"/>
+            <forward name="portalhome" path="/portalhome_notyetrefactored.jsp"/>
         </action>
 
         <action path="/selfregister" type="org.itracker.web.actions.user.SelfRegisterAction"
