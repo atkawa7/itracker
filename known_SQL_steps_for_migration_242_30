@@ -1,3 +1,23 @@
+alter table languagebean change id id INT NOT NULL AUTO_INCREMENT; 
+alter table configurationbean change id id INT NOT NULL AUTO_INCREMENT; 
+alter table issuehistorybean change id id INT NOT NULL AUTO_INCREMENT;
+alter table issuebean change id id INT NOT NULL AUTO_INCREMENT
+alter table versionbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table userpreferencesbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table userbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table scheduledtaskbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table projectbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table permissionbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table notificationbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table issuefieldbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table issueattachmentbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table issueactivitybean change id id INT NOT NULL AUTO_INCREMENT;
+alter table customfieldvaluebean change id id INT NOT NULL AUTO_INCREMENT;
+alter table customfieldbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table componentbean change id id INT NOT NULL AUTO_INCREMENT;
+
+
+
 create table issuerelationbean (
   id                    INT      NOT NULL auto_increment,
   issue_id              INT,
