@@ -14,9 +14,13 @@
 <%@ page import="org.itracker.services.util.*" %>
  
 <%-- <it: checkLogin permission="< % = UserUtilities.PERMISSION_USER_ADMIN %>"/> --%>
-<%-- former edit_workflowscript.jsp --%>
-      <bean:define property="isUpdate" id="isUpdate"  name="isUpdate" type="java.lang.Boolean"/>
+<%-- former edit_workflowscript.jsp  --%>
+ <%  boolean isUpdate = false; %>
+  <bean:parameter id="action" name="action"/>
 <%
+   if ( "update".equals(action) )
+                isUpdate = true;
+
     WorkflowScript script = (WorkflowScript) session.getAttribute(Constants.WORKFLOW_SCRIPT_KEY);
     if(script == null) {
 %>
