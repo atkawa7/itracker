@@ -1,0 +1,45 @@
+create table issuerelationbean (
+  id                    INT      NOT NULL auto_increment,
+  issue_id              INT,
+  rel_issue_id          INT,
+  relation_type         INT,
+  matching_relation_id  INT,
+  create_date           DATETIME,
+  last_modified         DATETIME,
+  PRIMARY KEY(id)
+) DEFAULT CHARACTER SET utf8;
+
+
+
+create table workflowscriptbean (
+  id                    INT       NOT NULL auto_increment,
+  script_name           VARCHAR(255),
+  event_type            INT,
+  script_data           TEXT,
+  create_date           DATETIME,
+  last_modified         DATETIME,
+  PRIMARY KEY(id)
+) DEFAULT CHARACTER SET utf8;
+
+create table projectscriptbean (
+  id                    INT       NOT NULL auto_increment,
+  project_id            INT,
+  field_id              INT,
+  script_id             INT,
+  script_priority       INT,
+  create_date           DATETIME,
+  last_modified         DATETIME,
+  PRIMARY KEY(id)
+) DEFAULT CHARACTER SET utf8;
+
+
+ALTER TABLE `userpreferencesbean` ADD `use_text_actions` INT NOT NULL AFTER `remember_last_search` ;
+
+
+org.itracker.web.reports.predefined.ITrackerJasperReport
+in "reportbean" to column  "class_name"
+
+org.itracker.web.reports.predefined.ITrackerJFreeReport
+in "reportbean" to column  "class_name"
+
+delete * scheduledtaskbean
