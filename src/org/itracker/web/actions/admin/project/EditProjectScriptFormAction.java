@@ -67,8 +67,13 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
                 workflowScriptForm = new ProjectScriptForm();
             }
             String action = (String) request.getParameter("action");
-            action = (String) PropertyUtils.getSimpleProperty(workflowScriptForm, "action");
+            if ( action == null )
+                action = (String) PropertyUtils.getSimpleProperty(workflowScriptForm, "action");
 
+            String projectId = (String) request.getParameter("projectId");
+            if ( projectId == null )
+                projectId = (String) PropertyUtils.getSimpleProperty(workflowScriptForm, "projectId");
+            
             if(action != null && action.equals("update")) {
                 isUpdate = true;
                 pageTitleKey = "itracker.web.admin.editworkflowscript.title.update";
@@ -92,6 +97,7 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
                 workflowScriptForm.setId(workflowScript.getId());
                 workflowScriptForm.setName(workflowScript.getName());
                 workflowScriptForm.setEvent(new Integer(workflowScript.getEvent()));
+
                 workflowScriptForm.setScript(workflowScript.getScript());
             }
 

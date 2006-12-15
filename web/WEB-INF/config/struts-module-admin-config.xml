@@ -168,15 +168,16 @@
                 input="/admin_language/edit_language.jsp" validate="false"></action>
         <action path="/editproject" type="org.itracker.web.actions.admin.project.EditProjectAction"
                 name="projectForm" scope="request" input="/admin_project/edit_project.jsp">
-
         </action>
         <action path="/editprojectform"
                 type="org.itracker.web.actions.admin.project.EditProjectFormAction"
-                name="projectForm" scope="request" input="/admin_project/edit_project.jsp"></action>
+                name="projectForm" scope="request" input="/admin_project/edit_project.jsp">
+        </action>
         <action path="/editprojectscript"
                 type="org.itracker.web.actions.admin.project.EditProjectScriptAction"
                 name="projectScriptForm" scope="request"
-                input="/admin_project/edit_projectscript.jsp" validate="true"></action>
+                input="/admin_project/edit_projectscript.jsp" validate="true">
+        </action>
         <action path="/editprojectscriptform"
                 type="org.itracker.web.actions.admin.project.EditProjectScriptFormAction"
                 name="projectScriptForm" scope="request"

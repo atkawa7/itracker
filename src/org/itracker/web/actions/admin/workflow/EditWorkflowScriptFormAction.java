@@ -66,6 +66,7 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
      
         try {
             WorkflowScriptForm workflowScriptForm = (WorkflowScriptForm) form;
+            
             if(workflowScriptForm == null) {
                 workflowScriptForm = new WorkflowScriptForm();
             }
@@ -102,7 +103,7 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
             }
 
             if(errors.isEmpty()) {
-								HttpSession session = request.getSession(true);
+		HttpSession session = request.getSession(true);
                 request.setAttribute("workflowScriptForm", workflowScriptForm);
                 session.setAttribute(Constants.WORKFLOW_SCRIPT_KEY, workflowScript);
                 request.setAttribute("action",action);
@@ -122,6 +123,7 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
         if(! errors.isEmpty()) {
             saveMessages(request, errors);
         }
+
         request.setAttribute("pageTitleKey",pageTitleKey); 
         request.setAttribute("pageTitleArg",pageTitleArg); 
         request.setAttribute("isUpdate",new Boolean(isUpdate)); 

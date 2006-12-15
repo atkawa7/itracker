@@ -111,7 +111,6 @@ public class EditProjectAction extends ItrackerBaseAction {
                     owners.add(ownerIds[i]);
                 }
             }
-            
             //TODO: commented this because it was causing authentication problems (rjst), why is it needed anyway ?
             //SessionManager.setAllSessionsNeedsReset();
 
@@ -124,9 +123,11 @@ public class EditProjectAction extends ItrackerBaseAction {
                 if(project == null) {
                     throw new Exception("Error creating new project.");
                 }
-                projectService.updateProject(project);
+                projectService.createProject(project);
                 projectService.setProjectOwners(project, owners);
                 projectService.setProjectFields(project, fields);
+
+                projectService.updateProject(project);
 
                 Integer[] userIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "users");
                 Integer[] permissions = (Integer[]) PropertyUtils.getSimpleProperty(form, "permissions");
@@ -143,9 +144,9 @@ public class EditProjectAction extends ItrackerBaseAction {
                 if(! UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
                     return mapping.findForward("unauthorized");
                 }
-                projectService.updateProject(project);
                 projectService.setProjectOwners(project, owners);
                 projectService.setProjectFields(project, fields);
+                projectService.updateProject(project);
             }
             session.removeAttribute(Constants.PROJECT_KEY);
             return mapping.findForward("listprojectsadmin");

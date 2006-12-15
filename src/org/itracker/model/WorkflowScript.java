@@ -31,7 +31,7 @@ public class WorkflowScript extends AbstractBean {
     private String script;
     private int event;
     // TODO: what's the expected type here? 
-    private Collection projectFields;
+//    private Collection projectFields;
     private int numUses;
     
     public int getEvent() {
@@ -50,6 +50,7 @@ public class WorkflowScript extends AbstractBean {
         this.name = name;
     }
     
+/*
     public Collection getProjectFields() {
         return projectFields;
     }
@@ -57,7 +58,7 @@ public class WorkflowScript extends AbstractBean {
     public void setProjectFields(Collection projectFields) {
         this.projectFields = projectFields;
     }
-    
+*/    
     public String getScript() {
         return script;
     }

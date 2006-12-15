@@ -60,8 +60,8 @@ public class ProjectScript extends AbstractBean {
         return script;
     }
 
-    public void setScript(WorkflowScript sript) {
-        this.script = sript;
+    public void setScript(WorkflowScript script) {
+        this.script = script;
     }
 
     public static class CompareByFieldAndPriority implements Comparator<ProjectScript> {
