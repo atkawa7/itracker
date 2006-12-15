@@ -259,7 +259,7 @@ public class ApplicationInitialization {
                         logger.debug("Loading " + report.toString());
                         
                         for (Iterator<Report> iter = reports.iterator(); iter.hasNext();) {
-                            Report existingReport = (Report) iter.next();
+                            Report existingReport = iter.next();
                             if ( existingReport.getName() == null ) {
                                 break;
                             }
