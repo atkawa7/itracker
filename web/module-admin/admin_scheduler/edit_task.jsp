@@ -45,7 +45,7 @@
         <html:hidden property="action"/>
         <html:hidden property="id"/>
 
-        <table border="0" cellspacing="0"  cellspacing="1"  width="100%"align="left">
+        <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.predefinedtask"/>:</td>
             <td>
