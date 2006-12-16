@@ -104,8 +104,8 @@ public class SystemConfigurationUtilities {
             }
         }
 
-        for(Iterator iter = definedLocales.iterator(); iter.hasNext(); ) {
-            String locale = (String) iter.next();
+        for(Iterator<String> iter = definedLocales.iterator(); iter.hasNext(); ) {
+            String locale = iter.next();
             configurationService.initializeLocale(locale, forceReload);
         }
     }
