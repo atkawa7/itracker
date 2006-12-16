@@ -10,7 +10,7 @@
  
 <%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.core.resources.*" %>
- 
+ <%@ page import="java.util.List" %>
 
 <%-- <it: checkLogin permission="< % = UserUtilities.PERMISSION_USER_ADMIN %>"/> --%>
 
@@ -24,7 +24,7 @@
 <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
 <%
   ConfigurationService sc = (ConfigurationService)request.getAttribute("sc");
-  java.util.HashMap languages = sc.getAvailableLanguages();
+  java.util.HashMap<String,List<String>> languages = sc.getAvailableLanguages();
   String baseLocaleName = ITrackerResources.getString("itracker.web.attr.baselocale");
 %>
   <tr>
@@ -46,11 +46,11 @@
   </tr>
   <%
       int lineCount = 0;
-      for(java.util.Iterator iter = languages.keySet().iterator(); iter.hasNext(); ) {
+      for(java.util.Iterator<String> iter = languages.keySet().iterator(); iter.hasNext(); ) {
           lineCount++;
-          String language = (String) iter.next();
+          String language = iter.next();
           String languageName = ITrackerResources.getString("itracker.locale.name", language);
-          java.util.List locales = (java.util.List) languages.get(language);
+          java.util.List<String> locales = (java.util.List<String>) languages.get(language);
   %>
           <tr class="listRowUnshaded">
             <td></td>
