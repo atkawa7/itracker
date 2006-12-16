@@ -291,8 +291,8 @@ public class LoginAction extends ItrackerBaseAction {
         if (logger.isDebugEnabled()) {
             logger.debug("Setting permissions for user " + user.getLogin());
         }
-        Map<Integer, Set<PermissionType>> permissions = userService.getUserPermissions(user, AuthenticationConstants.REQ_SOURCE_WEB);
-        session.setAttribute(Constants.PERMISSIONS_KEY, permissions);
+        Map<Integer, Set<PermissionType>> usersMapOfProjectIdsAndSetOfPermissionTypes = userService.getUsersMapOfProjectIdsAndSetOfPermissionTypes(user, AuthenticationConstants.REQ_SOURCE_WEB);
+        session.setAttribute(Constants.PERMISSIONS_KEY, usersMapOfProjectIdsAndSetOfPermissionTypes);
 
         // Reset some session forms
         session.setAttribute(Constants.SEARCH_QUERY_KEY, null);

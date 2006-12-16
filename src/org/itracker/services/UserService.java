@@ -141,7 +141,7 @@ public interface UserService {
      * @return a Map of permission types by project ID
      * @see UserUtilities#hasPermission
      */
-    public Map<Integer, Set<PermissionType>> getUserPermissions(User user, int reqSource);
+    public Map<Integer, Set<PermissionType>> getUsersMapOfProjectIdsAndSetOfPermissionTypes(User user, int reqSource);
     
     /**
      * This method will return a list of users with a specific permission, either explicitly, or

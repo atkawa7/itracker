@@ -77,20 +77,20 @@ public class AddIssueRelationAction extends ItrackerBaseAction {
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
             // HashMap<Integer,HashSet<Object>> userPermissions = (HashMap) session.getAttribute(Constants.PERMISSIONS_KEY);
             
-            Map<Integer, Set<PermissionType>> userPermissions = 
-                    userService.getUserPermissions(currUser, AuthenticationConstants.REQ_SOURCE_WEB);
+            Map<Integer, Set<PermissionType>> usersMapOfProjectIdsAndSetOfPermissionTypes = 
+                    userService.getUsersMapOfProjectIdsAndSetOfPermissionTypes(currUser, AuthenticationConstants.REQ_SOURCE_WEB);
             
             Integer currUserId = currUser.getId();
 
             Issue issue = issueService.getIssue(issueId);
-            if(issue == null || issue.getProject() == null || ! IssueUtilities.canEditIssue(issue, currUserId, userPermissions)) {
+            if(issue == null || issue.getProject() == null || ! IssueUtilities.canEditIssue(issue, currUserId, usersMapOfProjectIdsAndSetOfPermissionTypes)) {
                 return mapping.findForward("unauthorized");
             }
 
             Issue relatedIssue = issueService.getIssue(relatedIssueId);
             if(relatedIssue == null) {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.relation.invalidissue"));
-            } else if(relatedIssue.getProject() == null || ! IssueUtilities.canEditIssue(relatedIssue, currUserId, userPermissions)) {
+            } else if(relatedIssue.getProject() == null || ! IssueUtilities.canEditIssue(relatedIssue, currUserId, usersMapOfProjectIdsAndSetOfPermissionTypes)) {
                 return mapping.findForward("unauthorized");
             } else {
                 if(IssueUtilities.hasIssueRelation(issue, relatedIssueId)) {

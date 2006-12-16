@@ -587,7 +587,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Deprecated
-    public Map<Integer, Set<PermissionType>> getUserPermissions(User user, int reqSource) {
+    public Map<Integer, Set<PermissionType>> getUsersMapOfProjectIdsAndSetOfPermissionTypes(User user, int reqSource) {
         Map<Integer, Set<PermissionType>> permissionsMap = new HashMap<Integer, Set<PermissionType>>();
 
         if (user == null) {
@@ -729,7 +729,7 @@ public class UserServiceImpl implements UserService {
             // the owner
             User creator = issue.getCreator();
             
-            if (UserUtilities.hasPermission(getUserPermissions(creator, 0), projectId,
+            if (UserUtilities.hasPermission(getUsersMapOfProjectIdsAndSetOfPermissionTypes(creator, 0), projectId,
                     UserUtilities.PERMISSION_EDIT_USERS)) {
                 users.add(creator);
             }
@@ -740,7 +740,7 @@ public class UserServiceImpl implements UserService {
         } else if (userId != null) {
             // New issue, so add in the creator if needed
             User creator = getUser(userId);
-            if (UserUtilities.hasPermission(getUserPermissions(creator, 0), projectId,
+            if (UserUtilities.hasPermission(getUsersMapOfProjectIdsAndSetOfPermissionTypes(creator, 0), projectId,
                     UserUtilities.PERMISSION_EDIT_USERS)) {
                 users.add(creator);
             }
@@ -771,7 +771,7 @@ public class UserServiceImpl implements UserService {
             // Now add in the creator if the have edit own issues, and always
             // the owner
             User creator = issue.getCreator();
-            if (UserUtilities.hasPermission(getUserPermissions(creator, 0), projectId,
+            if (UserUtilities.hasPermission(getUsersMapOfProjectIdsAndSetOfPermissionTypes(creator, 0), projectId,
                     UserUtilities.PERMISSION_EDIT_USERS)) {
                 users.add(creator);
             }
@@ -782,7 +782,7 @@ public class UserServiceImpl implements UserService {
         } else if (userId != null) {
             // New issue, so add in the creator if needed
             User creator = getUser(userId);
-            if (UserUtilities.hasPermission(getUserPermissions(creator, 0), projectId,
+            if (UserUtilities.hasPermission(getUsersMapOfProjectIdsAndSetOfPermissionTypes(creator, 0), projectId,
                     UserUtilities.PERMISSION_EDIT_USERS)) {
                 users.add(creator);
             }
