@@ -11,6 +11,7 @@
 <%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.core.resources.*" %>
 <%@ page import="org.itracker.web.util.*" %>
+<%@ page import="java.util.List" %>
  
 
 <%-- <it: checkLogin permission="< % = UserUtilities.PERMISSION_USER_ADMIN %>"/> --%>
@@ -46,7 +47,7 @@
         <%
          ConfigurationService sc = (ConfigurationService)request.getAttribute("sc");
 
-          java.util.HashMap languages = sc.getAvailableLanguages();
+          java.util.HashMap<String,List<String>> languages = sc.getAvailableLanguages();
         %>
           <tr>
             <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
@@ -72,10 +73,10 @@
  
           </tr>
           <%
-              for(java.util.Iterator iter = languages.keySet().iterator(); iter.hasNext(); ) {
-                  String language = (String) iter.next();
+              for(java.util.Iterator<String> iter = languages.keySet().iterator(); iter.hasNext(); ) {
+                  String language = iter.next();
                   String languageKey = "translations(" + language + ")";
-                  java.util.Vector locales = (java.util.Vector) languages.get(language);
+                  java.util.List<String> locales = (java.util.List<String>) languages.get(language);
           %>
                   <tr class="listRowUnshaded">
                     <td></td>
@@ -88,13 +89,13 @@
                   </tr>
           <%
                   for(int i = 0; i < locales.size(); i++) {
-                      String localeKey = "translations(" + locales.elementAt(i) + ")";
+                      String localeKey = "translations(" + locales.get(i) + ")";
           %>
                       <tr class="listRowUnshaded">
                         <td></td>
                         <td></td>
                         <td>
-                          <%= ITrackerResources.getString("itracker.locale.name", (String) locales.elementAt(i)) %>
+                          <%= ITrackerResources.getString("itracker.locale.name", (String) locales.get(i)) %>
                         </td>
                         <td>
                           <html:text property="<%= localeKey %>" styleClass="editColumnText"/></td>
