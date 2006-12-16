@@ -116,8 +116,8 @@
                 validate="true">
         </action>
         <action path="/downloadreport" 
-                type="org.itracker.web.actions.admin.report.ReportDownloadAction"
-                name="adminActionForm" scope="request" input="/admin_report/list_reports.jsp">
+                type="org.itracker.web.servlets.ReportDownloadController"
+                name="adminActionForm" scope="request" input="/admin_report/list_reports.jsp" validate="true">
         </action>
        <action path="/editcomponent"
                 type="org.itracker.web.actions.admin.project.EditComponentAction"
