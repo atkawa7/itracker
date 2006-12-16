@@ -477,9 +477,9 @@ public class IssueServiceImpl implements IssueService {
 		// The versions and components are per project so we need to delete
 		// these
 
-		setIssueComponents(issue.getId(), new HashSet(), userId);
+		setIssueComponents(issue.getId(), new HashSet<Integer>(), userId);
 
-		setIssueVersions(issue.getId(), new HashSet(), userId);
+		setIssueVersions(issue.getId(), new HashSet<Integer>(), userId);
 
 		return issue;
 
@@ -540,7 +540,7 @@ public class IssueServiceImpl implements IssueService {
 		return true;
 	}
 
-	public boolean setIssueComponents(Integer issueId, HashSet componentIds, Integer userId) {
+	public boolean setIssueComponents(Integer issueId, HashSet<Integer> componentIds, Integer userId) {
 
 		boolean wasChanged = false;
 
@@ -585,9 +585,9 @@ public class IssueServiceImpl implements IssueService {
 
 			}
 
-			for (Iterator iterator = componentIds.iterator(); iterator.hasNext();) {
+			for (Iterator<Integer> iterator = componentIds.iterator(); iterator.hasNext();) {
 
-				Integer componentId = (Integer) iterator.next();
+				Integer componentId = iterator.next();
 
 				Component component = componentDAO.findById(componentId);
 
@@ -617,7 +617,7 @@ public class IssueServiceImpl implements IssueService {
 
 	}
 
-	public boolean setIssueVersions(Integer issueId, HashSet versionIds, Integer userId) {
+	public boolean setIssueVersions(Integer issueId, HashSet<Integer> versionIds, Integer userId) {
 
 		boolean wasChanged = false;
 
@@ -661,7 +661,7 @@ public class IssueServiceImpl implements IssueService {
 
 			}
 
-			for (Iterator iterator = versionIds.iterator(); iterator.hasNext();) {
+			for (Iterator<Integer> iterator = versionIds.iterator(); iterator.hasNext();) {
 
 				Integer versionId = (Integer) iterator.next();
 
@@ -1421,7 +1421,7 @@ public class IssueServiceImpl implements IssueService {
 
 	}
 
-	public void sendNotification(Integer issueId, int type, String baseURL, HashSet addresses, Integer lastModifiedDays) {
+	public void sendNotification(Integer issueId, int type, String baseURL, HashSet<String> addresses, Integer lastModifiedDays) {
 		// notifications are disabled for now
 
 		/*
