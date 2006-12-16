@@ -76,33 +76,33 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 
                 
                 // POPULATING ISSUE MODELS
-                final List<Issue> createdIssueModels;
-                final List<Issue> ownedIssueModels;
-                final List<Issue> unassignedIssueModels;
-                final List<Issue> watchedIssueModels;
+                final List<Issue> createdIssues;
+                final List<Issue> ownedIssues;
+                final List<Issue> unassignedIssues;
+                final List<Issue> watchedIssues;
                 
                 if(UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_CREATED, hiddenSections)) {
-                    createdIssueModels  = new ArrayList<Issue>();
+                    createdIssues  = new ArrayList<Issue>();
                 } else {
-                    createdIssueModels = issueService.getIssuesCreatedByUser(currUser.getId());
+                    createdIssues = issueService.getIssuesCreatedByUser(currUser.getId());
                 }
                 
                 if(UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_ASSIGNED, hiddenSections)) {
-                    ownedIssueModels = new ArrayList<Issue>();
+                    ownedIssues = new ArrayList<Issue>();
                 } else {
-                    ownedIssueModels = issueService.getIssuesOwnedByUser(currUser.getId());
+                    ownedIssues = issueService.getIssuesOwnedByUser(currUser.getId());
                 }
                 
                 if(UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_UNASSIGNED, hiddenSections)) {
-                    unassignedIssueModels = new ArrayList<Issue>();
+                    unassignedIssues = new ArrayList<Issue>();
                 } else {
-                    unassignedIssueModels = issueService.getUnassignedIssues();
+                    unassignedIssues = issueService.getUnassignedIssues();
                 }
 
                 if(UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_WATCHED, hiddenSections)) {
-                    watchedIssueModels = new ArrayList<Issue>();
+                    watchedIssues = new ArrayList<Issue>();
                 } else {
-                    watchedIssueModels = issueService.getIssuesWatchedByUser(currUser.getId());
+                    watchedIssues = issueService.getIssuesWatchedByUser(currUser.getId());
                 }
                 
                 // SORTING ISSUES ACCORDING TO USER PREFS
@@ -110,35 +110,35 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     String order = userPrefs.getSortColumnOnIssueList();
                     
                     if("id".equals(order)) {
-                        Collections.sort(createdIssueModels, new Issue.CompareById());
-                        Collections.sort(ownedIssueModels, new Issue.CompareById());
-                        Collections.sort(unassignedIssueModels, new Issue.CompareById());
-                        Collections.sort(watchedIssueModels, new Issue.CompareById());
+                        Collections.sort(createdIssues, new Issue.CompareById());
+                        Collections.sort(ownedIssues, new Issue.CompareById());
+                        Collections.sort(unassignedIssues, new Issue.CompareById());
+                        Collections.sort(watchedIssues, new Issue.CompareById());
                     } else if("sev".equals(order)) {
-                        Collections.sort(createdIssueModels, new Issue.CompareBySeverity());
-                        Collections.sort(ownedIssueModels, new Issue.CompareBySeverity());
-                        Collections.sort(unassignedIssueModels, new Issue.CompareBySeverity());
-                        Collections.sort(watchedIssueModels, new Issue.CompareBySeverity());
+                        Collections.sort(createdIssues, new Issue.CompareBySeverity());
+                        Collections.sort(ownedIssues, new Issue.CompareBySeverity());
+                        Collections.sort(unassignedIssues, new Issue.CompareBySeverity());
+                        Collections.sort(watchedIssues, new Issue.CompareBySeverity());
                     } else if("stat".equals(order)) {
-                        Collections.sort(createdIssueModels, new Issue.CompareByStatus());
-                        Collections.sort(ownedIssueModels, new Issue.CompareBySeverity());
-                        Collections.sort(unassignedIssueModels, new Issue.CompareByStatus());
-                        Collections.sort(watchedIssueModels, new Issue.CompareByStatus());
+                        Collections.sort(createdIssues, new Issue.CompareByStatus());
+                        Collections.sort(ownedIssues, new Issue.CompareBySeverity());
+                        Collections.sort(unassignedIssues, new Issue.CompareByStatus());
+                        Collections.sort(watchedIssues, new Issue.CompareByStatus());
                     } else if("lm".equals(order)) {
-                        Collections.sort(createdIssueModels, new Issue.LastModifiedDateComparator());
-                        Collections.sort(ownedIssueModels, new Issue.LastModifiedDateComparator());
-                        Collections.sort(unassignedIssueModels, new Issue.LastModifiedDateComparator());
-                        Collections.sort(watchedIssueModels, new Issue.LastModifiedDateComparator());
+                        Collections.sort(createdIssues, new Issue.LastModifiedDateComparator());
+                        Collections.sort(ownedIssues, new Issue.LastModifiedDateComparator());
+                        Collections.sort(unassignedIssues, new Issue.LastModifiedDateComparator());
+                        Collections.sort(watchedIssues, new Issue.LastModifiedDateComparator());
                     } else if("own".equals(order)) {
-                        Collections.sort(createdIssueModels, new Issue.CompareByOwnerAndStatus());
-                        Collections.sort(ownedIssueModels, new Issue.CompareBySeverity());
-                        Collections.sort(unassignedIssueModels, new Issue.CompareByOwnerAndStatus());
-                        Collections.sort(watchedIssueModels, new Issue.CompareByOwnerAndStatus());
+                        Collections.sort(createdIssues, new Issue.CompareByOwnerAndStatus());
+                        Collections.sort(ownedIssues, new Issue.CompareBySeverity());
+                        Collections.sort(unassignedIssues, new Issue.CompareByOwnerAndStatus());
+                        Collections.sort(watchedIssues, new Issue.CompareByOwnerAndStatus());
                     } else {
-                        Collections.sort(createdIssueModels, new Issue.CompareByStatus());
-                        Collections.sort(ownedIssueModels, new Issue.CompareBySeverity());
-                        Collections.sort(unassignedIssueModels, new Issue.CompareByStatus());
-                        Collections.sort(watchedIssueModels, new Issue.CompareByStatus());
+                        Collections.sort(createdIssues, new Issue.CompareByStatus());
+                        Collections.sort(ownedIssues, new Issue.CompareBySeverity());
+                        Collections.sort(unassignedIssues, new Issue.CompareByStatus());
+                        Collections.sort(watchedIssues, new Issue.CompareByStatus());
                     }
                 }
                 
@@ -146,8 +146,8 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 
                 // SETTING USER PERMISSIONS ON THE ISSUES
                 
-                for (int i=0;i<ownedIssueModels.size();i++) {
-                    Issue issue = ownedIssueModels.get(i);
+                for (int i=0;i<ownedIssues.size();i++) {
+                    Issue issue = ownedIssues.get(i);
                     
                     IssuePTO issuePTO = new IssuePTO(issue);
                     boolean canEditIssue = IssueUtilities.canEditIssue(issue, currUser.getId(), permissions);
@@ -161,16 +161,16 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     ownedIssuePTOs.add(issuePTO);
                 }
                 
-                for (int i=0;i<unassignedIssueModels.size();i++) {
-                    Issue issue = unassignedIssueModels.get(i);
+                for (int i=0;i<unassignedIssues.size();i++) {
+                    Issue issue = unassignedIssues.get(i);
                     IssuePTO issuePTO = new IssuePTO(issue);
                     
                     boolean canEditIssue = IssueUtilities.canEditIssue(issue, currUser.getId(), permissions);
-                    String statusLocalizedString = IssueUtilities.getStatusName(unassignedIssueModels.get(i).getStatus(), currLocale);
-                    String severityLocalizedString = IssueUtilities.getSeverityName(unassignedIssueModels.get(i).getSeverity(), currLocale);
-                    boolean canViewIssue = IssueUtilities.canViewIssue(unassignedIssueModels.get(i), currUser.getId(), permissions);
+                    String statusLocalizedString = IssueUtilities.getStatusName(unassignedIssues.get(i).getStatus(), currLocale);
+                    String severityLocalizedString = IssueUtilities.getSeverityName(unassignedIssues.get(i).getSeverity(), currLocale);
+                    boolean canViewIssue = IssueUtilities.canViewIssue(unassignedIssues.get(i), currUser.getId(), permissions);
                     issuePTO.setUserCanEdit(canViewIssue);
-                    boolean userHasIssueNotification = IssueUtilities.hasIssueNotification(unassignedIssueModels.get(i), currUser.getId());
+                    boolean userHasIssueNotification = IssueUtilities.hasIssueNotification(unassignedIssues.get(i), currUser.getId());
                     issuePTO.setUserCanEdit(userHasIssueNotification);
                     issuePTO.setStatusLocalizedString(statusLocalizedString);
                     issuePTO.setSeverityLocalizedString(severityLocalizedString);
@@ -179,16 +179,16 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     unassignedIssuePTOs.add(issuePTO);
                 }
                 
-                for (int i=0;i<createdIssueModels.size();i++) {
-                    Issue issue = createdIssueModels.get(i);
+                for (int i=0;i<createdIssues.size();i++) {
+                    Issue issue = createdIssues.get(i);
                     IssuePTO issuePTO = new IssuePTO(issue);
                     
                     boolean canEditIssue = IssueUtilities.canEditIssue(issue, currUser.getId(), permissions);
-                    String statusLocalizedString = IssueUtilities.getStatusName(createdIssueModels.get(i).getStatus(), currLocale);
-                    String severityLocalizedString = IssueUtilities.getSeverityName(createdIssueModels.get(i).getSeverity(), currLocale);
-                    boolean canViewIssue = IssueUtilities.canViewIssue(createdIssueModels.get(i), currUser.getId(), permissions);
+                    String statusLocalizedString = IssueUtilities.getStatusName(createdIssues.get(i).getStatus(), currLocale);
+                    String severityLocalizedString = IssueUtilities.getSeverityName(createdIssues.get(i).getSeverity(), currLocale);
+                    boolean canViewIssue = IssueUtilities.canViewIssue(createdIssues.get(i), currUser.getId(), permissions);
                     issuePTO.setUserCanEdit(canViewIssue);
-                    boolean userHasIssueNotification = IssueUtilities.hasIssueNotification(createdIssueModels.get(i), currUser.getId());
+                    boolean userHasIssueNotification = IssueUtilities.hasIssueNotification(createdIssues.get(i), currUser.getId());
                     issuePTO.setUserCanEdit(userHasIssueNotification);
                     issuePTO.setStatusLocalizedString(statusLocalizedString);
                     issuePTO.setSeverityLocalizedString(severityLocalizedString);
@@ -196,16 +196,16 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     
                     createdIssuePTOs.add(issuePTO);
                 }
-                for (int i=0;i<watchedIssueModels.size();i++) {
-                    Issue issue = watchedIssueModels.get(i);
+                for (int i=0;i<watchedIssues.size();i++) {
+                    Issue issue = watchedIssues.get(i);
                     IssuePTO issuePTO = new IssuePTO(issue);
                     
                     boolean canEditIssue = IssueUtilities.canEditIssue(issue, currUser.getId(), permissions);
-                    String statusLocalizedString = IssueUtilities.getStatusName(watchedIssueModels.get(i).getStatus(), currLocale);
-                    String severityLocalizedString = IssueUtilities.getSeverityName(watchedIssueModels.get(i).getSeverity(), currLocale);
-                    boolean canViewIssue = IssueUtilities.canViewIssue(watchedIssueModels.get(i), currUser.getId(), permissions);
+                    String statusLocalizedString = IssueUtilities.getStatusName(watchedIssues.get(i).getStatus(), currLocale);
+                    String severityLocalizedString = IssueUtilities.getSeverityName(watchedIssues.get(i).getSeverity(), currLocale);
+                    boolean canViewIssue = IssueUtilities.canViewIssue(watchedIssues.get(i), currUser.getId(), permissions);
                     issuePTO.setUserCanEdit(canViewIssue);
-                    boolean userHasIssueNotification = IssueUtilities.hasIssueNotification(watchedIssueModels.get(i), currUser.getId());
+                    boolean userHasIssueNotification = IssueUtilities.hasIssueNotification(watchedIssues.get(i), currUser.getId());
                     issuePTO.setUserCanEdit(userHasIssueNotification);
                     issuePTO.setStatusLocalizedString(statusLocalizedString);
                     issuePTO.setSeverityLocalizedString(severityLocalizedString);
@@ -221,7 +221,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 // creator isn't already in the project list, check to see if the creator has EDIT_USERS
                 // permissions, if so then add them to the list of owners and resort.
                 
-                for (int i = 0; i < unassignedIssueModels.size(); i++) {
+                for (int i = 0; i < unassignedIssues.size(); i++) {
                     
                     HashMap<Integer,List<User>> possibleOwnersMap = new HashMap<Integer,List<User>>();
                     HashMap<Integer,List<User>> usersWithEditOwnMap = new HashMap<Integer,List<User>>();
