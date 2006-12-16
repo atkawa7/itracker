@@ -26,7 +26,7 @@
   <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
   <%
     ConfigurationService sc = (ConfigurationService)request.getAttribute("sc");
-    java.util.HashMap languages = sc.getAvailableLanguages();
+    java.util.HashMap<String,List<String>> languages = sc.getAvailableLanguages();
   %>
     <tr>
       <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
@@ -48,10 +48,9 @@
       </td>
     </tr>
     <%
-        for(java.util.Iterator iter = languages.keySet().iterator(); iter.hasNext(); ) {
-            String language = (String) iter.next();
-//            java.util.Vector locales = (java.util.Vector) languages.get(language);
-          List locales = (List) languages.get(language);
+        for(java.util.Iterator<String> iter = languages.keySet().iterator(); iter.hasNext(); ) {
+            String language = iter.next();
+          List<String> locales = (List<String>) languages.get(language);
     %>
             <tr class="listRowUnshaded">
               <td>&nbsp;</td>
