@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.itracker.model.Permission;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 
@@ -34,8 +35,11 @@ public interface UserDAO extends BaseDAO<User> {
      * @param sourceRequest 
      * @return set of permission types mapped by project id
      */
+    
     public Map<Integer, Set<PermissionType>> getUsersMapOfProjectsAndPermissionTypes(User user, int sourceRequest);
 
+    public List<Permission> getUsersPermissions(User user);
+    
     /**
      * Finds a user by login. 
      * 

@@ -81,7 +81,21 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
         }
         return permissionsByProjectId;
     }
-
+    
+    @SuppressWarnings("unchecked")
+    public List<Permission> getUsersPermissions(User user) {
+  
+    	 User userBean = (User) getSession().load(User.class, user.getId());
+         // create criteria
+         Criteria criteria = getSession().createCriteria(Permission.class);
+         criteria.add( Expression.eq ("user" , userBean) );
+         criteria.addOrder( Order.asc( "project" ));
+         // perform search
+         List<Permission> permissions = criteria.list();
+         
+    	 return permissions; 
+    	
+    }
     public User findByLogin(String login) {
         Criteria criteria = getSession().createCriteria(User.class);
         criteria.add(Expression.eq("login", login));
