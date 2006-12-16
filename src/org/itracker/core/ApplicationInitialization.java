@@ -148,7 +148,8 @@ public class ApplicationInitialization {
         }
     }
     
-    private void processAttachmentFiles(String attachmentDirectory) {
+    @SuppressWarnings("unused")
+	private void processAttachmentFiles(String attachmentDirectory) {
         if (attachmentDirectory == null || attachmentDirectory.equals("")) {
             return;
         }
