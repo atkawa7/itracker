@@ -20,7 +20,6 @@ package org.itracker.services.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,7 +54,7 @@ public class ProjectUtilities  {
         return ITrackerResources.getString(ITrackerResources.KEY_BASE_PROJECT_STATUS + value, locale);
     }
 
-    public static HashMap getStatusNames() {
+    public static HashMap<String,String> getStatusNames() {
         return getStatusNames(ITrackerResources.getLocale());
     }
 
@@ -105,29 +104,4 @@ public class ProjectUtilities  {
         return optionsArray;
     }
 
-    /**
-      * Returns true if the user has any access at all for the requested project.
-      * @param projectId the id of the project to check
-      * @param permissions a HashMap of user permissions
-      * @return true if the user has any access to the project
-      */
-    public static boolean hasProjectAccess(Integer projectId, HashMap permissionsHashMap) {
-        if(permissionsHashMap == null) {
-            return false;
-        }
-
-        Boolean superUser = (Boolean) permissionsHashMap.get(Integer.toString(-1));
-        if(superUser != null && superUser.booleanValue()) {
-            return true;
-        }
-
-        if(projectId != null && projectId.intValue() > 0) {
-            HashSet projectPermissionsHashSet = (HashSet) permissionsHashMap.get(projectId);
-
-            if(projectPermissionsHashSet != null && projectPermissionsHashSet.size() > 0) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
