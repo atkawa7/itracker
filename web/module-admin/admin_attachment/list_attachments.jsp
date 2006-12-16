@@ -32,8 +32,6 @@
     <td><it:message key="itracker.web.attr.lastupdated"/></td>
   </tr>
 	<c:forEach items="${attachments}" var="attachment" varStatus="i">
-	<!--c:forEach items="{attachments}" var="i" -->
-	
         <c:choose>
             <c:when test="i % 2 == 1">
                 <tr class="listRowShaded">
@@ -52,7 +50,7 @@
       <td><c:out value="${attachment.description}"/></td>
       <td align="right"><c:out value="${attachment.size / 1024}"/><it:message key="itracker.web.generic.kilobyte"/></td>
       <td></td>
-      <td><it:formatDate date="${$attachment.lastModifiedDate}"></it:formatDate></td>
+      <td><it:formatDate date="${attachment.lastModifiedDate}"></it:formatDate></td>
     </tr>
 	</c:forEach>
  
