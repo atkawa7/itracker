@@ -50,6 +50,8 @@ public interface UserService {
     
     public List<User> getSuperUsers();
     
+    public boolean isSuperUser(User user);
+    
     public UserPreferences getUserPreferencesByUserId(Integer userId);
     
     public List<User> getPossibleOwners(Issue issue, Integer projectId, Integer userId);

@@ -163,6 +163,21 @@ public class UserServiceImpl implements UserService {
         List<User> superUsers = userDAO.findSuperUsers();
         return superUsers;
     }
+    
+    public boolean isSuperUser(User user) {
+        if(user == null) {
+            return false;
+        }
+        
+        // Super user has access to all projects, which is indicated by null. 
+        List<User> users = userDAO.findSuperUsers();
+        
+        if(users.contains(user)) {
+        	return true;
+        } else
+        { return false; }
+        
+    }
 
     public UserPreferences getUserPreferencesByUserId(Integer userId) {
 
