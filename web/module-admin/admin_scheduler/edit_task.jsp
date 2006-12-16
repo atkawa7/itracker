@@ -52,10 +52,10 @@
               <html:select property="className" styleClass="editColumnText">
                 <option value=""></option>
                 <%
-                   java.util.HashMap classes = SchedulerUtilities.getDefinedTasks();
-                   for(java.util.Iterator iter = classes.keySet().iterator(); iter.hasNext(); ) {
-                      String className = (String) iter.next();
-                      String classNameKey = (String) classes.get(className);
+                   java.util.HashMap<String,String> classes = SchedulerUtilities.getDefinedTasks();
+                   for(java.util.Iterator<String> iter = classes.keySet().iterator(); iter.hasNext(); ) {
+                      String className = iter.next();
+                      String classNameKey = classes.get(className);
                 %>
                       <html:option value="<%= className %>" styleClass="editColumnText"><it:message key="<%= classNameKey %>"/></html:option>
                 <% } %>
