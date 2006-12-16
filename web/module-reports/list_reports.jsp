@@ -59,14 +59,13 @@
   </tr>
 
 <%
-        final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
-            session.getAttribute("permissions");
+    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)session.getAttribute("permissions");
         
-	IssueService ih = (IssueService)request.getAttribute("ih");
-	ProjectService ph = (ProjectService)request.getAttribute("ph");
-    ReportService rh = (ReportService)request.getAttribute("rh");
+	IssueService is = (IssueService)request.getAttribute("ih");
+	ProjectService ps = (ProjectService)request.getAttribute("ph");
+    ReportService rs = (ReportService)request.getAttribute("rh");
 
-    List projectsList = ph.getAllAvailableProjects();
+    List<Project> projectsList = ps.getAllAvailableProjects();
     Project[] projects = (Project[])projectsList.toArray(new Project[projectsList.size()]);
     Arrays.sort(projects, new Project.CompareByName());
 
@@ -80,8 +79,8 @@
         int totalIssueCount = 0;
         Date newestIssueDate = null;
 
-        totalIssueCount = ih.getTotalIssueCountByProjectId(projects[i].getId());
-        newestIssueDate = (totalIssueCount == 0 ? null : ih.getLatestIssueDateByProjectId(projects[i].getId()));
+        totalIssueCount = is.getTotalIssueCountByProjectId(projects[i].getId());
+        newestIssueDate = (totalIssueCount == 0 ? null : is.getLatestIssueDateByProjectId(projects[i].getId()));
 %>
         <tr align="right" class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ) %>">
           <td><html:multibox property="projectIds" value="<%= projects[i].getId().toString() %>"/></td>
@@ -106,7 +105,7 @@
 				    List<Report> reports = new ArrayList<Report>();
     	try { 
     	
-      		reports = rh.getAllReports();
+      		reports = rs.getAllReports();
 		} catch (Exception e) {
 			e.printStackTrace(); 
 		}
