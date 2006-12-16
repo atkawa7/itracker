@@ -198,11 +198,11 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
                     }
                     projectService.setProjectOwners(project, setOfOwnerIDs);
 
-                    HashSet<Integer> fieldIDs = new HashSet<Integer>();
+                    HashSet<Integer> setOfFieldIds = new HashSet<Integer>();
                     for(int j = 0; j < project.getCustomFields().size(); j++) {
-                    	fieldIDs.add(project.getCustomFields().get(j).getId());
+                    	setOfFieldIds.add(project.getCustomFields().get(j).getId());
                     }
-                    projectService.setProjectFields(project, fieldIDs);
+                    projectService.setProjectFields(project, setOfFieldIds);
 
                     List<Component> components = project.getComponents();
                     for(int j = 0; j < components.size(); j++) {
