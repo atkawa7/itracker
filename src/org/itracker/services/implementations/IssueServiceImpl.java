@@ -1478,7 +1478,7 @@ public class IssueServiceImpl implements IssueService {
 
 		Issue issue = getIssue(issueId);
 
-		Map<Integer, Set<PermissionType>> permissions = userDAO.getUserPermissions(user, AuthenticationConstants.REQ_SOURCE_WEB);
+		Map<Integer, Set<PermissionType>> permissions = userDAO.getUsersMapOfProjectsAndPermissionTypes(user, AuthenticationConstants.REQ_SOURCE_WEB);
 
 		return IssueUtilities.canViewIssue(issue, user.getId(), permissions);
 
@@ -1486,7 +1486,7 @@ public class IssueServiceImpl implements IssueService {
 
 	public boolean canViewIssue(Issue issue, User user) {
 
-		Map<Integer, Set<PermissionType>> permissions = userDAO.getUserPermissions(user, AuthenticationConstants.REQ_SOURCE_WEB);
+		Map<Integer, Set<PermissionType>> permissions = userDAO.getUsersMapOfProjectsAndPermissionTypes(user, AuthenticationConstants.REQ_SOURCE_WEB);
 
 		return IssueUtilities.canViewIssue(issue, user.getId(), permissions);
 

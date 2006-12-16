@@ -42,7 +42,7 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
      * @return HashMap of permission keyed by project ids
      */
     @SuppressWarnings("unchecked")
-    public Map<Integer, Set<PermissionType>> getUserPermissions(User user, int requestSource) {
+    public Map<Integer, Set<PermissionType>> getUsersMapOfProjectsAndPermissionTypes(User user, int requestSource) {
         
         // create hashMap to hold permission by project id as key
         final Map<Integer, Set<PermissionType>> permissionsByProjectId = 

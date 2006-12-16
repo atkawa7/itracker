@@ -27,14 +27,14 @@ public interface UserDAO extends BaseDAO<User> {
     public User findByPrimaryKey(Integer userId);
 
     /**
-     * Finds the set of permission types of the given user for all projects 
+     * Finds of the given user the set of permission types for all projects 
      * on which the user has permissions. 
      * 
      * @param user 
      * @param sourceRequest 
      * @return set of permission types mapped by project id
      */
-    public Map<Integer, Set<PermissionType>> getUserPermissions(User user, int sourceRequest);
+    public Map<Integer, Set<PermissionType>> getUsersMapOfProjectsAndPermissionTypes(User user, int sourceRequest);
 
     /**
      * Finds a user by login. 
