@@ -131,7 +131,7 @@
                       <%
                       String language = (String)pageContext.getAttribute("language");
                       String languageKey = "translations(" + language + ")";
-                      java.util.Vector locales = (java.util.Vector) sc.getAvailableLanguages().get(language);
+                      java.util.List<String> locales = (java.util.List<String>) sc.getAvailableLanguages().get(language);
                       pageContext.setAttribute("locales", locales);
                        %>
                        <tr class="listRowUnshaded">
