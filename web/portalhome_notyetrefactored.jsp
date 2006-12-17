@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
-<%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
@@ -29,7 +28,7 @@
 <font color="red">We are refactoring still this portalhome JSP for less scriplets
 	and proper MVC. For this reason many details on this page don't yet work properly.<br/>
 	<br/>
-	- unassigned, <br/> 
+	- unassigned, (little progress...) <br/> 
 - created, <br/> 
 - and watched issues <br/> 
 	are temporarily unavailable...). <br/>
@@ -131,7 +130,7 @@
       
   		<c:forEach items="${unassignedIssues}" var="unassignedIssues" step="1" varStatus="i">    
 
-  <%--  <c:if test="${unassignedIssues.userCanViewIssue}"> --%>
+ <c:if test="${unassignedIssues.userCanViewIssue}">  
       
 <c:if test="${userPrefs.numItemsOnIndex > 0 && i >= userPrefs.numItemsOnIndex && ! showAll}">
        <tr class="listRowUnshaded"><td align="left" colspan="15"><html:link page="/index.jsp?showAll=true"><it:message key="itracker.web.index.moreissues"/></html:link></td></tr>
@@ -168,10 +167,8 @@
           <td><it:formatDescription>${unassignedIssues.issue.description}</it:formatDescription></td>
           <td></td>
  
-          	<%-- <c:set var="userHasPermission" value="UserUtilities.hasPermission((HashMap)request.getSession().getAttribute("permissions"), unassignedIssues[i].getProjectId(), UserUtilities.PERMISSION_ASSIGN_OTHERS)"/>
-          	<c:if test="${userHasPermission}"> --%>
-           
-                <html:form action="/assignissue">
+       	<c:if test="${unassignedIssues.userHasPermission_PERMISSION_ASSIGN_OTHERS}">  
+              	     <html:form action="/assignissue">
                   <html:hidden property="issueId" value="${unassignedIssues.issue.id}"/>
                   <html:hidden property="projectId" value="${unassignedIssues.issue.project.id}"/>
                   <%! String styleClass1 = "(i % 2 == 1 ? \"listRowShaded\" : \"listRowUnshaded\")"; %>
@@ -217,12 +214,10 @@
 
                   </html:select></td>
                 </html:form>
-                                   
-   	<%-- </c:if> --%>
+   </c:if>  
  
-  <%-- boolean hasPermission = UserUtilities.hasPermission((HashMap)request.getSession().getAttribute("permissions"), unassignedIssues[i].getProjectId(), UserUtilities.PERMISSION_ASSIGN_SELF);
         	<c:choose>
-        		<c:when test="${hasPermission}"> --%> 
+        		<c:when test="${unassignedIssues.userHasPermission_PERMISSION_ASSIGN_SELF}"> 
         	  	 <html:form action="/assignissue">
                   <html:hidden property="issueId" value="<%-- unassignedIssues[i].getId().toString() --%>"/>
                   <html:hidden property="projectId" value="<%-- unassignedIssues[i].getProjectId().toString() --%>"/>
@@ -231,30 +226,32 @@
                   <td>
                   <html:select property="userId" styleClass="<%=styleClass2 %>" onchange="this.form.submit();">
                     <c:choose>
-                  		<c:when test="${unassignedIssues.issue.owner.id==-1}">
+                  		<c:when test="${unassignedIssues.unassigned}">
                   		<option value="-1"><c:out value="${itracker_web_generic_unassigned}"/></option>
                   		</c:when>
                   		<c:otherwise>
                   		<option value="${unassignedIssues.issue.owner.id}"><c:out value="${unassignedIssues.issue.owner.firstName}"/> <c:out value="${unassignedIssues.issue.owner.lastName}"/>Test2</option>
                   		</c:otherwise>
                   	</c:choose>
-       
-                    <option value="${currUser.id}" <c:if test="${unassignedIssues.issue.id==currUser.id}">selected</c:if>> 
-                   ${currUser.firstInitial} ${currUser.lastName}</option>
+        
+                  		     <option value="${currUser.id}" <c:if test="${unassignedIssues.issue.id==currUser.id}">selected</c:if>> 
+                   ${currUser.firstInitial} ${currUser.lastName}</option>			
+               
                   </html:select></td>
                 </html:form>
-        <%-- 	</c:when>
+    	</c:when>
         	<c:otherwise>
-        	          <td><it:formatIssueOwner issue="${unassignedIssues}" format="short"/></td>
+        	          <td>Owner</td>
         	</c:otherwise>
-        </c:choose> --%>
+        </c:choose>  
          
           <td align="right" style="white-space: nowrap"><it:formatDate date="${unassignedIssues.issue.lastModifiedDate}"/></td>
         
-  <%-- 	  </c:if>   --%>
+ 	  </c:if>   
 	</c:forEach>
       <tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
  	</c:if>  
+
 
 <!-- created issues -->
 
@@ -284,12 +281,13 @@
       
 <c:forEach items="${createdIssues}" var="createdIssues" step="1" varStatus="i"> 
 
-	<c:if test="${(userPrefs.numItemsOnIndex > 0) && (createdIssues >= userPrefs.numItemsOnIndex) && ! showAll}">
-	   <tr class="listRowUnshaded"><td align="left" colspan="15"><html:link page="/index.jsp?showAll=true"><it:message key="itracker.web.index.moreissues"/></html:link></td></tr>
-	    <%--
-          break;
---%>
-	</c:if>
+<%--	<c:if test="${(userPrefs.numItemsOnIndex > 0) && (createdIssues >= userPrefs.numItemsOnIndex) && ! showAll}">
+	   <tr class="listRowUnshaded"><td align="left" colspan="15"><html:link page="/index.jsp?showAll=true">
+	   <it:message key="itracker.web.index.moreissues"/></html:link></td></tr>
+	    <% --
+          break; this meant that we break out of the for each loop... but that's not possible in JSTL, I guess. So let's not break out for now. 
+--% >
+	</c:if>  --%>
 	 
    
 <%--
@@ -300,7 +298,8 @@
         	    <tr align="right" class="listRowUnshaded">	
         		</tr></c:otherwise>
         	</c:choose> --%>
-        	<!-- remove this after uncommenting the above -->
+        	
+        	<%-- remove this after uncommenting the above 
         	  <tr align="right" class="listRowUnshaded">	
           <td>
             <it:formatImageAction forward="viewissue" paramName="id" paramValue="${createdIssues.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${createdIssues.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
@@ -322,10 +321,12 @@
           <td><it:formatIssueOwner issue="${createdIssues}" format="short"/></td>
           <td></td>
           <td align="right" style="white-space: nowrap">${createdIssues.issue.lastModifiedDate}"/></td>
-        
+        --%>
 </c:forEach>
       <tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
 	</c:if>
+	
+	
 	
 <!-- watched issues -->
  
@@ -359,15 +360,18 @@
         <td></td>
         <td align="right" style="white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
       </tr>
-      
+   	
 	<c:forEach items="${watchedIssues}" var="watchedIssues" step="1" varStatus="z">
-	 
-	<tr class="listRowUnshaded">
-		 
+	  <tr class="listRowUnshaded">	
+	  <%-- 
 		<c:if test="${(userPrefs.numItemsOnIndex > 0) && (watchedIssues >=userPrefs.numItemsOnIndex) && ! showAll}">
-			<td align="left" colspan="15"><html:link page="/index.jsp?showAll=true"><it:message key="itracker.web.index.moreissues"/></html:link></td></tr>
-		</c:if>
-		 
+		<td align="left" colspan="15">
+			<html:link page="/index.jsp?showAll=true">
+			<it:message key="itracker.web.index.moreissues"/>
+			</html:link>
+			</td></tr>
+			</c:if> 
+		
  
 <c:choose><c:when test="${z.count % 2 == 1}">
         		    <tr align="right" class="listRowShaded">
@@ -389,9 +393,9 @@
           <td></td>
           <td style="white-space: nowrap">${watchedIssues.issue.project.name}</td>
           <td></td>
-          <td>//TODO statusLocalizedString<%-- ${ownedIssues.statusLocalizedString} --%></td>
+          <td>//TODO statusLocalizedString<%-- ${ownedIssues.statusLocalizedString} -- %></td>
           <td></td>
-          <td>//TODO severityLocalizedString<%-- ${ownedIssues.severityLocalizedString} --%></td>
+          <td>//TODO severityLocalizedString<%-- ${ownedIssues.severityLocalizedString} -- %></td>
           <td></td>
           <td><it:formatDescription>${watchedIssues.issue.description}</it:formatDescription></td>
           <td></td>
@@ -399,16 +403,17 @@
           <td></td>
           <td align="right" style="white-space: nowrap"><it:formatDate date="${watchedIssues.issue.lastModifiedDate}"/></td>
         </tr>
+--%>
 	</c:forEach>
       <tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
 	</c:if>
-
 
 <!-- view hidden sections link -->
 
 	<c:if test="${userPrefs.hiddenIndexSections>0}">
       <tr align="left" class="listRowUnshaded">
-        <td colspan="15" align="left"><html:link page="/index.jsp?sections=all"><it:message key="itracker.web.index.viewhidden"/></html:link></td>
+        <td colspan="15" align="left"><html:link page="/index.jsp?sections=all">
+        <it:message key="itracker.web.index.viewhidden"/></html:link></td>
       </tr>
       <tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
 	</c:if>
