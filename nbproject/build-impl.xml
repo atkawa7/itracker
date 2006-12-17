@@ -21,9 +21,7 @@
     <import file="ant-deploy.xml"/>
     <target name="default" depends="dist,javadoc" description="Build whole project."/>
     <!--
-                ======================
                 INITIALIZATION SECTION
-                ======================
             -->
     <target name="-pre-init">
         <!-- Empty placeholder for easier customization. -->
@@ -50,7 +48,8 @@
     <target name="-do-init" depends="-pre-init,-init-private,-init-user,-init-project,-init-macrodef-property, -do-ear-init">
         <condition property="have.tests">
             <or>
-                <available file="${test.nbtest.dir}"/>
+                <available file="${test.resources.dir}"/>
+                <available file="${test.java.dir}"/>
             </or>
         </condition>
         <condition property="have.sources">
@@ -104,6 +103,14 @@
         <property value="${build.web.dir}/META-INF" name="build.meta.inf.dir"/>
         <property name="build.classes.dir.real" value="${build.classes.dir}"/>
         <property name="build.web.dir.real" value="${build.web.dir}"/>
+        <condition property="application.args.param" value="${application.args}" else="">
+            <and>
+                <isset property="application.args"/>
+                <not>
+                    <equals arg1="${application.args}" arg2="" trim="true"/>
+                </not>
+            </and>
+        </condition>
     </target>
     <target name="-post-init">
         <!-- Empty placeholder for easier customization. -->
@@ -111,7 +118,8 @@
     </target>
     <target name="-init-check" depends="-pre-init,-init-private,-init-user,-init-project,-do-init">
         <fail unless="src.dir">Must set src.dir</fail>
-        <fail unless="test.nbtest.dir">Must set test.nbtest.dir</fail>
+        <fail unless="test.resources.dir">Must set test.resources.dir</fail>
+        <fail unless="test.java.dir">Must set test.java.dir</fail>
         <fail unless="build.dir">Must set build.dir</fail>
         <fail unless="build.web.dir">Must set build.web.dir</fail>
         <fail unless="build.generated.dir">Must set build.generated.dir</fail>
@@ -156,7 +164,8 @@
             <sequential>
                 <junit showoutput="true" fork="true" dir="${basedir}" failureproperty="tests.failed" errorproperty="tests.failed">
                     <batchtest todir="${build.test.results.dir}">
-                        <fileset dir="${test.nbtest.dir}" includes="@{includes}"/>
+                        <fileset dir="${test.resources.dir}" includes="@{includes}"/>
+                        <fileset dir="${test.java.dir}" includes="@{includes}"/>
                     </batchtest>
                     <classpath>
                         <path path="${run.test.classpath}"/>
@@ -215,7 +224,7 @@
         <macrodef name="debug" uri="http://www.netbeans.org/ns/web-project/1">
             <attribute name="classname" default="${main.class}"/>
             <attribute name="classpath" default="${debug.classpath}"/>
-            <attribute name="args" default="${application.args}"/>
+            <attribute name="args" default="${application.args.param}"/>
             <sequential>
                 <java fork="true" classname="@{classname}">
                     <jvmarg value="-Xdebug"/>
@@ -268,9 +277,7 @@
     </target>
     <target name="init" depends="-pre-init,-init-private,-init-user,-init-project,-do-init,-post-init,-init-check,-init-macrodef-property,-init-macrodef-javac,-init-macrodef-junit,-init-macrodef-java,-init-macrodef-nbjpda,-init-macrodef-debug,-init-macrodef-copy-ear-war"/>
     <!--
-                ======================
                 COMPILATION SECTION
-                ======================
             -->
     <target name="deps-module-jar" depends="init" if="no.dist.ear.dir" unless="no.deps"/>
     <target name="deps-ear-jar" depends="init" if="dist.ear.dir" unless="no.deps"/>
@@ -321,6 +328,9 @@
                 <patternset includes="${javac.includes}"/>
             </customize>
         </webproject2:javac>
+        <copy todir="${build.classes.dir.real}">
+            <fileset dir="${src.dir}" excludes="${build.classes.excludes}"/>
+        </copy>
     </target>
     <target name="-post-compile-single">
         <!-- Empty placeholder for easier customization. -->
@@ -365,9 +375,7 @@
         <antcall target="-do-compile-single-jsp"/>
     </target>
     <!--
-                ======================
                 DIST BUILDING SECTION
-                ======================
             -->
     <target name="-pre-dist">
         <!-- Empty placeholder for easier customization. -->
@@ -389,52 +397,34 @@
     </target>
     <target name="do-dist" depends="init,compile,compile-jsps,-pre-dist,-do-dist-with-manifest,-do-dist-without-manifest"/>
     <target name="library-inclusion-in-manifest" depends="init" if="dist.ear.dir">
-        <basename property="included.lib.file.reference.c3p0-0.8.5.2.jar" file="${file.reference.c3p0-0.8.5.2.jar}"/>
-        <copy-ear-war file="${file.reference.c3p0-0.8.5.2.jar}" propname="included.lib.file.reference.c3p0-0.8.5.2.jar.X"/>
         <basename property="included.lib.file.reference.jms.jar" file="${file.reference.jms.jar}"/>
         <copy-ear-war file="${file.reference.jms.jar}" propname="included.lib.file.reference.jms.jar.X"/>
         <basename property="included.lib.file.reference.bsh-1.3.0.jar" file="${file.reference.bsh-1.3.0.jar}"/>
         <copy-ear-war file="${file.reference.bsh-1.3.0.jar}" propname="included.lib.file.reference.bsh-1.3.0.jar.X"/>
-        <basename property="included.lib.file.reference.cglib-2.1.3.jar" file="${file.reference.cglib-2.1.3.jar}"/>
-        <copy-ear-war file="${file.reference.cglib-2.1.3.jar}" propname="included.lib.file.reference.cglib-2.1.3.jar.X"/>
         <basename property="included.lib.file.reference.jakarta-oro.jar" file="${file.reference.jakarta-oro.jar}"/>
         <copy-ear-war file="${file.reference.jakarta-oro.jar}" propname="included.lib.file.reference.jakarta-oro.jar.X"/>
         <basename property="included.lib.file.reference.spring-hibernate3.jar" file="${file.reference.spring-hibernate3.jar}"/>
         <copy-ear-war file="${file.reference.spring-hibernate3.jar}" propname="included.lib.file.reference.spring-hibernate3.jar.X"/>
         <basename property="included.lib.file.reference.commons-collections.jar" file="${file.reference.commons-collections.jar}"/>
         <copy-ear-war file="${file.reference.commons-collections.jar}" propname="included.lib.file.reference.commons-collections.jar.X"/>
-        <basename property="included.lib.file.reference.cglib-2.1.jar" file="${file.reference.cglib-2.1.jar}"/>
-        <copy-ear-war file="${file.reference.cglib-2.1.jar}" propname="included.lib.file.reference.cglib-2.1.jar.X"/>
         <basename property="included.lib.file.reference.commons-fileupload.jar" file="${file.reference.commons-fileupload.jar}"/>
         <copy-ear-war file="${file.reference.commons-fileupload.jar}" propname="included.lib.file.reference.commons-fileupload.jar.X"/>
-        <basename property="included.lib.file.reference.ehcache-1.1.jar" file="${file.reference.ehcache-1.1.jar}"/>
-        <copy-ear-war file="${file.reference.ehcache-1.1.jar}" propname="included.lib.file.reference.ehcache-1.1.jar.X"/>
         <basename property="included.lib.file.reference.jta.jar" file="${file.reference.jta.jar}"/>
         <copy-ear-war file="${file.reference.jta.jar}" propname="included.lib.file.reference.jta.jar.X"/>
         <basename property="included.lib.file.reference.spring-remoting.jar" file="${file.reference.spring-remoting.jar}"/>
         <copy-ear-war file="${file.reference.spring-remoting.jar}" propname="included.lib.file.reference.spring-remoting.jar.X"/>
-        <basename property="included.lib.file.reference.cglib-nodep-2.1_3.jar" file="${file.reference.cglib-nodep-2.1_3.jar}"/>
-        <copy-ear-war file="${file.reference.cglib-nodep-2.1_3.jar}" propname="included.lib.file.reference.cglib-nodep-2.1_3.jar.X"/>
         <basename property="included.lib.file.reference.commons-lang-1.0.1.jar" file="${file.reference.commons-lang-1.0.1.jar}"/>
         <copy-ear-war file="${file.reference.commons-lang-1.0.1.jar}" propname="included.lib.file.reference.commons-lang-1.0.1.jar.X"/>
-        <basename property="included.lib.file.reference.commons-collections-2.1.1.jar" file="${file.reference.commons-collections-2.1.1.jar}"/>
-        <copy-ear-war file="${file.reference.commons-collections-2.1.1.jar}" propname="included.lib.file.reference.commons-collections-2.1.1.jar.X"/>
         <basename property="included.lib.file.reference.commons-beanutils.jar" file="${file.reference.commons-beanutils.jar}"/>
         <copy-ear-war file="${file.reference.commons-beanutils.jar}" propname="included.lib.file.reference.commons-beanutils.jar.X"/>
         <basename property="included.lib.file.reference.hibernate3.jar" file="${file.reference.hibernate3.jar}"/>
         <copy-ear-war file="${file.reference.hibernate3.jar}" propname="included.lib.file.reference.hibernate3.jar.X"/>
         <basename property="included.lib.file.reference.jfreereport-0.8.7.jar" file="${file.reference.jfreereport-0.8.7.jar}"/>
         <copy-ear-war file="${file.reference.jfreereport-0.8.7.jar}" propname="included.lib.file.reference.jfreereport-0.8.7.jar.X"/>
-        <basename property="included.lib.file.reference.jdbc2_0-stdext.jar" file="${file.reference.jdbc2_0-stdext.jar}"/>
-        <copy-ear-war file="${file.reference.jdbc2_0-stdext.jar}" propname="included.lib.file.reference.jdbc2_0-stdext.jar.X"/>
         <basename property="included.lib.file.reference.postgresql-8.1-407.jdbc3.jar" file="${file.reference.postgresql-8.1-407.jdbc3.jar}"/>
         <copy-ear-war file="${file.reference.postgresql-8.1-407.jdbc3.jar}" propname="included.lib.file.reference.postgresql-8.1-407.jdbc3.jar.X"/>
         <basename property="included.lib.file.reference.spring-jmx.jar" file="${file.reference.spring-jmx.jar}"/>
         <copy-ear-war file="${file.reference.spring-jmx.jar}" propname="included.lib.file.reference.spring-jmx.jar.X"/>
-        <basename property="included.lib.file.reference.dom4j-1.6.jar" file="${file.reference.dom4j-1.6.jar}"/>
-        <copy-ear-war file="${file.reference.dom4j-1.6.jar}" propname="included.lib.file.reference.dom4j-1.6.jar.X"/>
-        <basename property="included.lib.file.reference.spring-portlet.jar" file="${file.reference.spring-portlet.jar}"/>
-        <copy-ear-war file="${file.reference.spring-portlet.jar}" propname="included.lib.file.reference.spring-portlet.jar.X"/>
         <basename property="included.lib.file.reference.commons-attributes-compiler.jar" file="${file.reference.commons-attributes-compiler.jar}"/>
         <copy-ear-war file="${file.reference.commons-attributes-compiler.jar}" propname="included.lib.file.reference.commons-attributes-compiler.jar.X"/>
         <basename property="included.lib.file.reference.jasperreports-0.6.4.jar" file="${file.reference.jasperreports-0.6.4.jar}"/>
@@ -457,14 +447,8 @@
         <copy-ear-war file="${file.reference.spring-core.jar}" propname="included.lib.file.reference.spring-core.jar.X"/>
         <basename property="included.lib.file.reference.c3p0-0.9.0.jar" file="${file.reference.c3p0-0.9.0.jar}"/>
         <copy-ear-war file="${file.reference.c3p0-0.9.0.jar}" propname="included.lib.file.reference.c3p0-0.9.0.jar.X"/>
-        <basename property="included.lib.file.reference.spring.jar" file="${file.reference.spring.jar}"/>
-        <copy-ear-war file="${file.reference.spring.jar}" propname="included.lib.file.reference.spring.jar.X"/>
-        <basename property="included.lib.file.reference.junit.jar" file="${file.reference.junit.jar}"/>
-        <copy-ear-war file="${file.reference.junit.jar}" propname="included.lib.file.reference.junit.jar.X"/>
         <basename property="included.lib.file.reference.commons-validator.jar" file="${file.reference.commons-validator.jar}"/>
         <copy-ear-war file="${file.reference.commons-validator.jar}" propname="included.lib.file.reference.commons-validator.jar.X"/>
-        <basename property="included.lib.file.reference.commons-logging.jar" file="${file.reference.commons-logging.jar}"/>
-        <copy-ear-war file="${file.reference.commons-logging.jar}" propname="included.lib.file.reference.commons-logging.jar.X"/>
         <basename property="included.lib.file.reference.spring-jms.jar" file="${file.reference.spring-jms.jar}"/>
         <copy-ear-war file="${file.reference.spring-jms.jar}" propname="included.lib.file.reference.spring-jms.jar.X"/>
         <basename property="included.lib.file.reference.commons-dbcp.jar" file="${file.reference.commons-dbcp.jar}"/>
@@ -493,8 +477,6 @@
         <copy-ear-war file="${file.reference.hibernate-annotations.jar}" propname="included.lib.file.reference.hibernate-annotations.jar.X"/>
         <basename property="included.lib.file.reference.struts.jar" file="${file.reference.struts.jar}"/>
         <copy-ear-war file="${file.reference.struts.jar}" propname="included.lib.file.reference.struts.jar.X"/>
-        <basename property="included.lib.file.reference.antlr-2.7.5H3.jar" file="${file.reference.antlr-2.7.5H3.jar}"/>
-        <copy-ear-war file="${file.reference.antlr-2.7.5H3.jar}" propname="included.lib.file.reference.antlr-2.7.5H3.jar.X"/>
         <basename property="included.lib.file.reference.log4j-1.2.11.jar" file="${file.reference.log4j-1.2.11.jar}"/>
         <copy-ear-war file="${file.reference.log4j-1.2.11.jar}" propname="included.lib.file.reference.log4j-1.2.11.jar.X"/>
         <basename property="included.lib.file.reference.mail.jar" file="${file.reference.mail.jar}"/>
@@ -513,40 +495,49 @@
         <copy-ear-war file="${file.reference.ejb.jar}" propname="included.lib.file.reference.ejb.jar.X"/>
         <basename property="included.lib.file.reference.commons-digester.jar" file="${file.reference.commons-digester.jar}"/>
         <copy-ear-war file="${file.reference.commons-digester.jar}" propname="included.lib.file.reference.commons-digester.jar.X"/>
-        <basename property="included.lib.file.reference.dbunit-2.1.jar" file="${file.reference.dbunit-2.1.jar}"/>
-        <copy-ear-war file="${file.reference.dbunit-2.1.jar}" propname="included.lib.file.reference.dbunit-2.1.jar.X"/>
+        <basename property="included.lib.file.reference.spring-dao.jar" file="${file.reference.spring-dao.jar}"/>
+        <copy-ear-war file="${file.reference.spring-dao.jar}" propname="included.lib.file.reference.spring-dao.jar.X"/>
+        <basename property="included.lib.file.reference.spring-web.jar" file="${file.reference.spring-web.jar}"/>
+        <copy-ear-war file="${file.reference.spring-web.jar}" propname="included.lib.file.reference.spring-web.jar.X"/>
         <basename property="included.lib.file.reference.spring-mock.jar" file="${file.reference.spring-mock.jar}"/>
         <copy-ear-war file="${file.reference.spring-mock.jar}" propname="included.lib.file.reference.spring-mock.jar.X"/>
+        <basename property="included.lib.file.reference.spring-aspects.jar" file="${file.reference.spring-aspects.jar}"/>
+        <copy-ear-war file="${file.reference.spring-aspects.jar}" propname="included.lib.file.reference.spring-aspects.jar.X"/>
+        <basename property="included.lib.file.reference.cglib-2.1.3.jar" file="${file.reference.cglib-2.1.3.jar}"/>
+        <copy-ear-war file="${file.reference.cglib-2.1.3.jar}" propname="included.lib.file.reference.cglib-2.1.3.jar.X"/>
+        <basename property="included.lib.file.reference.dbunit-2.1.jar" file="${file.reference.dbunit-2.1.jar}"/>
+        <copy-ear-war file="${file.reference.dbunit-2.1.jar}" propname="included.lib.file.reference.dbunit-2.1.jar.X"/>
+        <basename property="included.lib.file.reference.spring-jdbc.jar" file="${file.reference.spring-jdbc.jar}"/>
+        <copy-ear-war file="${file.reference.spring-jdbc.jar}" propname="included.lib.file.reference.spring-jdbc.jar.X"/>
+        <basename property="included.lib.file.reference.junit.jar" file="${file.reference.junit.jar}"/>
+        <copy-ear-war file="${file.reference.junit.jar}" propname="included.lib.file.reference.junit.jar.X"/>
+        <basename property="included.lib.file.reference.aopalliance-1.0.jar" file="${file.reference.aopalliance-1.0.jar}"/>
+        <copy-ear-war file="${file.reference.aopalliance-1.0.jar}" propname="included.lib.file.reference.aopalliance-1.0.jar.X"/>
+        <basename property="included.lib.file.reference.hsqldb-1.8.0.7.jar" file="${file.reference.hsqldb-1.8.0.7.jar}"/>
+        <copy-ear-war file="${file.reference.hsqldb-1.8.0.7.jar}" propname="included.lib.file.reference.hsqldb-1.8.0.7.jar.X"/>
+        <basename property="included.lib.file.reference.antlr-2.7.5H3.jar" file="${file.reference.antlr-2.7.5H3.jar}"/>
+        <copy-ear-war file="${file.reference.antlr-2.7.5H3.jar}" propname="included.lib.file.reference.antlr-2.7.5H3.jar.X"/>
         <mkdir dir="${build.web.dir.real}/META-INF"/>
         <manifest file="${build.web.dir.real}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${included.lib.file.reference.c3p0-0.8.5.2.jar} ${included.lib.file.reference.jms.jar} ${included.lib.file.reference.bsh-1.3.0.jar} ${included.lib.file.reference.cglib-2.1.3.jar} ${included.lib.file.reference.jakarta-oro.jar} ${included.lib.file.reference.spring-hibernate3.jar} ${included.lib.file.reference.commons-collections.jar} ${included.lib.file.reference.cglib-2.1.jar} ${included.lib.file.reference.commons-fileupload.jar} ${included.lib.file.reference.ehcache-1.1.jar} ${included.lib.file.reference.jta.jar} ${included.lib.file.reference.spring-remoting.jar} ${included.lib.file.reference.cglib-nodep-2.1_3.jar} ${included.lib.file.reference.commons-lang-1.0.1.jar} ${included.lib.file.reference.commons-collections-2.1.1.jar} ${included.lib.file.reference.commons-beanutils.jar} ${included.lib.file.reference.hibernate3.jar} ${included.lib.file.reference.jfreereport-0.8.7.jar} ${included.lib.file.reference.jdbc2_0-stdext.jar} ${included.lib.file.reference.postgresql-8.1-407.jdbc3.jar} ${included.lib.file.reference.spring-jmx.jar} ${included.lib.file.reference.dom4j-1.6.jar} ${included.lib.file.reference.spring-portlet.jar} ${included.lib.file.reference.commons-attributes-compiler.jar} ${included.lib.file.reference.jasperreports-0.6.4.jar} ${included.lib.file.reference.commons-logging-1.0.4.jar} ${included.lib.file.reference.asm.jar} ${included.lib.file.reference.spring-beans.jar} ${included.lib.file.reference.commons-attributes-api.jar} ${included.lib.file.reference.spring-struts.jar} ${included.lib.file.reference.antlr-2.7.6rc1.jar} ${included.lib.file.reference.ehcache-1.2.jar} ${included.lib.file.reference.spring-core.jar} ${included.lib.file.reference.c3p0-0.9.0.jar} ${included.lib.file.reference.spring.jar} ${included.lib.file.reference.junit.jar} ${included.lib.file.reference.commons-validator.jar} ${included.lib.file.reference.commons-logging.jar} ${included.lib.file.reference.spring-jms.jar} ${included.lib.file.reference.commons-dbcp.jar} ${included.lib.file.reference.jcommon-xml-1.0.1.jar} ${included.lib.file.reference.spring-aop.jar} ${included.lib.file.reference.spring-support.jar} ${included.lib.file.reference.itext-1.01.jar} ${included.lib.file.reference.commons-codec.jar} ${included.lib.file.reference.standard.jar} ${included.lib.file.reference.commons-httpclient.jar} ${included.lib.file.reference.jcommon-1.0.1.jar} ${included.lib.file.reference.spring-context.jar} ${included.lib.file.reference.asm-attrs.jar} ${included.lib.file.reference.hibernate-annotations.jar} ${included.lib.file.reference.struts.jar} ${included.lib.file.reference.antlr-2.7.5H3.jar} ${included.lib.file.reference.log4j-1.2.11.jar} ${included.lib.file.reference.mail.jar} ${included.lib.file.reference.commons-discovery.jar} ${included.lib.file.reference.commons-pool.jar} ${included.lib.file.reference.jstl.jar} ${included.lib.file.reference.dom4j-1.6.1.jar} ${included.lib.file.reference.jaxen-1.1-beta-4.jar} ${included.lib.file.reference.ejb.jar} ${included.lib.file.reference.commons-digester.jar} ${included.lib.file.reference.dbunit-2.1.jar} ${included.lib.file.reference.spring-mock.jar} "/>
+            <attribute name="Class-Path" value="${included.lib.file.reference.jms.jar} ${included.lib.file.reference.bsh-1.3.0.jar} ${included.lib.file.reference.jakarta-oro.jar} ${included.lib.file.reference.spring-hibernate3.jar} ${included.lib.file.reference.commons-collections.jar} ${included.lib.file.reference.commons-fileupload.jar} ${included.lib.file.reference.jta.jar} ${included.lib.file.reference.spring-remoting.jar} ${included.lib.file.reference.commons-lang-1.0.1.jar} ${included.lib.file.reference.commons-beanutils.jar} ${included.lib.file.reference.hibernate3.jar} ${included.lib.file.reference.jfreereport-0.8.7.jar} ${included.lib.file.reference.postgresql-8.1-407.jdbc3.jar} ${included.lib.file.reference.spring-jmx.jar} ${included.lib.file.reference.commons-attributes-compiler.jar} ${included.lib.file.reference.jasperreports-0.6.4.jar} ${included.lib.file.reference.commons-logging-1.0.4.jar} ${included.lib.file.reference.asm.jar} ${included.lib.file.reference.spring-beans.jar} ${included.lib.file.reference.commons-attributes-api.jar} ${included.lib.file.reference.spring-struts.jar} ${included.lib.file.reference.antlr-2.7.6rc1.jar} ${included.lib.file.reference.ehcache-1.2.jar} ${included.lib.file.reference.spring-core.jar} ${included.lib.file.reference.c3p0-0.9.0.jar} ${included.lib.file.reference.commons-validator.jar} ${included.lib.file.reference.spring-jms.jar} ${included.lib.file.reference.commons-dbcp.jar} ${included.lib.file.reference.jcommon-xml-1.0.1.jar} ${included.lib.file.reference.spring-aop.jar} ${included.lib.file.reference.spring-support.jar} ${included.lib.file.reference.itext-1.01.jar} ${included.lib.file.reference.commons-codec.jar} ${included.lib.file.reference.standard.jar} ${included.lib.file.reference.commons-httpclient.jar} ${included.lib.file.reference.jcommon-1.0.1.jar} ${included.lib.file.reference.spring-context.jar} ${included.lib.file.reference.asm-attrs.jar} ${included.lib.file.reference.hibernate-annotations.jar} ${included.lib.file.reference.struts.jar} ${included.lib.file.reference.log4j-1.2.11.jar} ${included.lib.file.reference.mail.jar} ${included.lib.file.reference.commons-discovery.jar} ${included.lib.file.reference.commons-pool.jar} ${included.lib.file.reference.jstl.jar} ${included.lib.file.reference.dom4j-1.6.1.jar} ${included.lib.file.reference.jaxen-1.1-beta-4.jar} ${included.lib.file.reference.ejb.jar} ${included.lib.file.reference.commons-digester.jar} ${included.lib.file.reference.spring-dao.jar} ${included.lib.file.reference.spring-web.jar} ${included.lib.file.reference.spring-mock.jar} ${included.lib.file.reference.spring-aspects.jar} ${included.lib.file.reference.cglib-2.1.3.jar} ${included.lib.file.reference.dbunit-2.1.jar} ${included.lib.file.reference.spring-jdbc.jar} ${included.lib.file.reference.junit.jar} ${included.lib.file.reference.aopalliance-1.0.jar} ${included.lib.file.reference.hsqldb-1.8.0.7.jar} ${included.lib.file.reference.antlr-2.7.5H3.jar} "/>
         </manifest>
         <delete dir="${dist.ear.dir}/temp"/>
     </target>
     <target name="library-inclusion-in-archive" depends="init" unless="dist.ear.dir">
-        <copy file="${file.reference.c3p0-0.8.5.2.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.jms.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.bsh-1.3.0.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
-        <copy file="${file.reference.cglib-2.1.3.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.jakarta-oro.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.spring-hibernate3.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.commons-collections.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
-        <copy file="${file.reference.cglib-2.1.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.commons-fileupload.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
-        <copy file="${file.reference.ehcache-1.1.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.jta.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.spring-remoting.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
-        <copy file="${file.reference.cglib-nodep-2.1_3.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.commons-lang-1.0.1.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
-        <copy file="${file.reference.commons-collections-2.1.1.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.commons-beanutils.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.hibernate3.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.jfreereport-0.8.7.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
-        <copy file="${file.reference.jdbc2_0-stdext.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.postgresql-8.1-407.jdbc3.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.spring-jmx.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
-        <copy file="${file.reference.dom4j-1.6.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
-        <copy file="${file.reference.spring-portlet.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.commons-attributes-compiler.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.jasperreports-0.6.4.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.commons-logging-1.0.4.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
@@ -558,10 +549,7 @@
         <copy file="${file.reference.ehcache-1.2.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.spring-core.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.c3p0-0.9.0.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
-        <copy file="${file.reference.spring.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
-        <copy file="${file.reference.junit.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.commons-validator.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
-        <copy file="${file.reference.commons-logging.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.spring-jms.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.commons-dbcp.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.jcommon-xml-1.0.1.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
@@ -576,7 +564,6 @@
         <copy file="${file.reference.asm-attrs.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.hibernate-annotations.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.struts.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
-        <copy file="${file.reference.antlr-2.7.5H3.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.log4j-1.2.11.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.mail.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.commons-discovery.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
@@ -586,8 +573,17 @@
         <copy file="${file.reference.jaxen-1.1-beta-4.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.ejb.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.commons-digester.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
-        <copy file="${file.reference.dbunit-2.1.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.spring-dao.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.spring-web.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${file.reference.spring-mock.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.spring-aspects.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.cglib-2.1.3.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.dbunit-2.1.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.spring-jdbc.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.junit.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.aopalliance-1.0.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.hsqldb-1.8.0.7.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.antlr-2.7.5H3.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
     </target>
     <target name="do-ear-dist" depends="init,compile,compile-jsps,-pre-dist,library-inclusion-in-manifest">
         <dirname property="dist.jar.dir" file="${dist.ear.war}"/>
@@ -603,12 +599,29 @@
     <target name="dist" depends="init,compile,-pre-dist,do-dist,-post-dist" description="Build distribution (WAR)."/>
     <target name="dist-ear" depends="init,compile,-pre-dist,do-ear-dist,-post-dist" description="Build distribution (WAR) to be packaged into an EAR."/>
     <!--
-                ======================
                 EXECUTION SECTION
-                ======================
             -->
     <target name="run" depends="run-deploy,run-display-browser" description="Deploy to server and show in browser."/>
-    <target name="run-deploy" depends="init,compile,compile-jsps,-do-compile-single-jsp,dist,-run-deploy-nb,-init-deploy-ant,-deploy-ant"/>
+    <target name="-pre-run-deploy">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target name="-post-run-deploy">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target name="-pre-nbmodule-run-deploy">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- This target can be overriden by NetBeans modules. Don't override it directly, use -pre-run-deploy task instead. -->
+    </target>
+    <target name="-post-nbmodule-run-deploy">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- This target can be overriden by NetBeans modules. Don't override it directly, use -post-run-deploy task instead. -->
+    </target>
+    <target name="-run-deploy-am">
+        <!-- Task to deploy to the Access Manager runtime. -->
+    </target>
+    <target name="run-deploy" depends="init,compile,compile-jsps,-do-compile-single-jsp,dist,-pre-run-deploy,-pre-nbmodule-run-deploy,-run-deploy-nb,-init-deploy-ant,-deploy-ant,-run-deploy-am,-post-nbmodule-run-deploy,-post-run-deploy"/>
     <target name="-run-deploy-nb" if="netbeans.home">
         <nbdeploy debugmode="false" clientUrlPart="${client.urlPart}" forceRedeploy="${forceRedeploy}"/>
     </target>
@@ -691,9 +704,7 @@
         <webproject1:java classname="${run.class}"/>
     </target>
     <!--
-                ======================
                 DEBUGGING SECTION
-                ======================
             -->
     <target name="debug" description="Debug project in IDE." depends="init,compile,compile-jsps,-do-compile-single-jsp,dist" if="netbeans.home">
         <nbdeploy debugmode="true" clientUrlPart="${client.urlPart}"/>
@@ -731,9 +742,7 @@
     </target>
     <target name="debug-fix" if="netbeans.home" depends="init,-pre-debug-fix,-do-debug-fix"/>
     <!--
-                ======================
                 JAVADOC SECTION
-                ======================
             -->
     <target name="javadoc-build" depends="init">
         <mkdir dir="${dist.javadoc.dir}"/>
@@ -753,10 +762,8 @@
     </target>
     <target name="javadoc" depends="init,javadoc-build,javadoc-browse" description="Build Javadoc."/>
     <!--
-
-                =========================
+                
                 JUNIT COMPILATION SECTION
-                =========================
             -->
     <target name="-pre-pre-compile-test" if="have.tests" depends="init,compile">
         <mkdir dir="${build.test.classes.dir}"/>
@@ -766,9 +773,10 @@
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target name="-do-compile-test" if="have.tests" depends="init,compile,-pre-pre-compile-test,-pre-compile-test">
-        <webproject2:javac srcdir="${test.nbtest.dir}" destdir="${build.test.classes.dir}" debug="true" classpath="${javac.test.classpath}:${j2ee.platform.classpath}"/>
+        <webproject2:javac srcdir="${test.resources.dir}:${test.java.dir}" destdir="${build.test.classes.dir}" debug="true" classpath="${javac.test.classpath}:${j2ee.platform.classpath}"/>
         <copy todir="${build.test.classes.dir}">
-            <fileset dir="${test.nbtest.dir}" excludes="**/*.java"/>
+            <fileset dir="${test.resources.dir}" excludes="**/*.java"/>
+            <fileset dir="${test.java.dir}" excludes="**/*.java"/>
         </copy>
     </target>
     <target name="-post-compile-test">
@@ -782,13 +790,14 @@
     </target>
     <target name="-do-compile-test-single" if="have.tests" depends="init,compile,-pre-pre-compile-test,-pre-compile-test-single">
         <fail unless="javac.includes">Must select some files in the IDE or set javac.includes</fail>
-        <webproject2:javac srcdir="${test.nbtest.dir}" destdir="${build.test.classes.dir}" debug="true" classpath="${javac.test.classpath}:${j2ee.platform.classpath}">
+        <webproject2:javac srcdir="${test.resources.dir}:${test.java.dir}" destdir="${build.test.classes.dir}" debug="true" classpath="${javac.test.classpath}:${j2ee.platform.classpath}">
             <customize>
                 <patternset includes="${javac.includes}"/>
             </customize>
         </webproject2:javac>
         <copy todir="${build.test.classes.dir}">
-            <fileset dir="${test.nbtest.dir}" excludes="**/*.java"/>
+            <fileset dir="${test.resources.dir}" excludes="**/*.java"/>
+            <fileset dir="${test.java.dir}" excludes="**/*.java"/>
         </copy>
     </target>
     <target name="-post-compile-test-single">
@@ -797,10 +806,8 @@
     </target>
     <target name="compile-test-single" depends="init,compile,-pre-pre-compile-test,-pre-compile-test-single,-do-compile-test-single,-post-compile-test-single"/>
     <!--
-
-                =======================
+                
                 JUNIT EXECUTION SECTION
-                =======================
             -->
     <target name="-pre-test-run" if="have.tests" depends="init">
         <mkdir dir="${build.test.results.dir}"/>
@@ -826,10 +833,8 @@
     </target>
     <target name="test-single" depends="init,compile-test-single,-pre-test-run-single,-do-test-run-single,-post-test-run-single" description="Run single unit test."/>
     <!--
-
-                =======================
+                
                 JUNIT DEBUGGING SECTION
-                =======================
             -->
     <target name="-debug-start-debuggee-test" if="have.tests" depends="init,compile-test">
         <fail unless="test.class">Must select one file in the IDE or set test.class</fail>
@@ -844,10 +849,8 @@
     </target>
     <target name="debug-fix-test" if="netbeans.home" depends="init,-pre-debug-fix,-do-debug-fix-test"/>
     <!--
-
-                ======================
+                
                 CLEANUP SECTION
-                ======================
             -->
     <target name="deps-clean" depends="init" if="no.dist.ear.dir" unless="no.deps"/>
     <target name="do-clean" depends="init">
@@ -858,9 +861,7 @@
         <delete includeEmptyDirs="true" quiet="true">
             <fileset dir="${build.dir.to.clean}/WEB-INF/lib"/>
         </delete>
-        <delete includeEmptyDirs="true" quiet="true">
-            <fileset dir="${build.dir}" excludes="${build.dir.to.clean}/WEB-INF/lib/**"/>
-        </delete>
+        <delete dir="${build.dir}"/>
         <available file="${build.dir.to.clean}/WEB-INF/lib" type="dir" property="status.clean-failed"/>
         <delete dir="${dist.dir}"/>
     </target>
