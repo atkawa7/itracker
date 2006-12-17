@@ -18,6 +18,8 @@
 
 package org.itracker.web.forms;
 
+import java.util.HashMap;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
@@ -33,7 +35,9 @@ public class CustomFieldValueForm extends ValidatorForm  {
     
     Integer id;
     String value;
-    java.util.HashMap translations;
+    
+//  let's try to put String,String here:
+    HashMap<String,String> translations;
     
 	public Integer getId() {
 		return id;
@@ -42,12 +46,12 @@ public class CustomFieldValueForm extends ValidatorForm  {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	public java.util.HashMap getTranslations() {
+//  let's try to put String,String here:
+	public HashMap<String,String> getTranslations() {
 		return translations;
 	}
-
-	public void setTranslations(java.util.HashMap translations) {
+//  let's try to put String,String here:
+	public void setTranslations(HashMap<String,String> translations) {
 		this.translations = translations;
 	}
 
