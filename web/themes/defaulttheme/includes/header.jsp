@@ -1,14 +1,20 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page language="java" contentType="text/html;charset=UTF-8" %>
-<%@ taglib uri="/tags/c" prefix="c" %>
-<%@ taglib uri="/itracker.tld" prefix="it" %>
-<%@ taglib uri="/WEB-INF/tld/struts-html.tld" prefix="html" %>
 <%@ page import="java.util.Map"
     import="java.util.Set"
     import="org.itracker.model.PermissionType"
     import="org.itracker.services.util.*" %>
- <%-- <nitrox:var name="pageTitleKey" type="java.lang.String"/> --%>
-    <%-- <nitrox:var name="pageTitleArg" type="java.lang.String"/> --%>
+    
+<%@ taglib uri="/tags/itracker" prefix="it" %>
+<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
+<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
+<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
+<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>    
+
+<%-- <nitrox:var name="pageTitleKey" type="java.lang.String"/> --%>
+<%-- <nitrox:var name="pageTitleArg" type="java.lang.String"/> --%>
 <%
     final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
         session.getAttribute("permissions");

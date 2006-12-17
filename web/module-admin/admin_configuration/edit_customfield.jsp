@@ -1,39 +1,37 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<%@ page language="java" contentType="text/html;charset=UTF-8" %>
-<%@ taglib uri="/WEB-INF/tld/itracker.tld" prefix="it" %>
-<%@ taglib uri="/WEB-INF/tld/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/tld/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/tld/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/tld/fmt.tld" prefix="fmt" %>
-<%@ taglib uri="/WEB-INF/tld/c.tld" prefix="c" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
- 
 <%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.core.resources.ITrackerResources" %>
 <%@ page import="org.itracker.web.util.*" %>
  
 <%@ page import="org.itracker.services.util.CustomFieldUtilities" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<%@ taglib uri="/tags/itracker" prefix="it" %>
+<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
+<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
+<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
+<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!-- Marky: check the NitroX types here. Are they right? -->
 <%-- <nitrox:var name="action" type="java.lang.String"/> --%>
 <%-- <nitrox:var name="languages" type="java.lang.String"/> --%>
 <%-- <nitrox:var name="CustomFieldType_List" type="java.lang.String"/> --%>
 
-<%-- <it: checkLogin permission="< % = UserUtilities.PERMISSION_USER_ADMIN %>"/> --%>
+<bean:define id="pageTitleKey" value="itracker.web.admin.editcustomfield.title.create"/>
+<bean:define id="pageTitleArg" value=""/>
+
 <bean:define id="field" name="<%=Constants.CUSTOMFIELD_KEY%>" type="org.itracker.model.CustomField"/>
+
+<%-- TODO : move redirect logic to Action --%>
 <c:choose>
     <c:when test="${field == null}">
         <logic:forward name="unauthorized"/>
     </c:when>
     <c:otherwise>
 
-       <!-- once there was page_init here, but now this has been moved into the ItrackerBaseAction -->
- 
-     
-<%@ taglib uri="/WEB-INF/tld/struts-tiles.tld" prefix="tiles" %>
+        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
         <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
         <logic:messagesPresent>

@@ -1,24 +1,21 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<%@ page language="java" contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ taglib uri="/itracker.tld" prefix="it" %>
-<%@ taglib uri="/WEB-INF/tld/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/tld/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/tld/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/tags/fmt" prefix="fmt" %>
-<%@ taglib uri="/tags/c" prefix="c" %>
-<%@ taglib uri="/WEB-INF/tld/struts-tiles.tld" prefix="tiles" %>
- 
 <%@ page import="org.itracker.services.*" %>
- <%@ page import="java.util.List" %>
+<%@ page import="java.util.List" %>
 <%@ page import="org.itracker.core.resources.*" %>
- 
- 
 
-<%-- <it: checkLogin permission="< % = UserUtilities.PERMISSION_USER_ADMIN %>"/> --%>
+<%@ taglib uri="/tags/itracker" prefix="it" %>
+<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
+<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
+<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
+<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<!-- once there was page_init here, but now this has been moved into the ItrackerBaseAction -->
+<bean:define id="pageTitleKey" value="itracker.web.admin.editconfiguration.title.create"/>
+<bean:define id="pageTitleArg" value=""/>
 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 <html:form action="/editconfiguration">
@@ -26,7 +23,6 @@
   <html:hidden property="id"/>
   <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
   <%
- 
     ConfigurationService sc = (ConfigurationService)request.getAttribute("sc");
       
     java.util.HashMap<String,List<String>> languages = sc.getAvailableLanguages();
@@ -100,4 +96,6 @@
   </table>
 </html:form>
 
-<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
+<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/>
+</body>
+</html>

@@ -1,4 +1,5 @@
-  <%@ taglib uri="/itracker.tld" prefix="it" %>
+<%@ taglib uri="/tags/itracker" prefix="it" %>
+
    <table border="0" width="100%" cellpadding="1" class="footer">
       <tr>
       	<td align="left" width="" style="text-align: left;" nowrap colspan="2">

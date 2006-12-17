@@ -1,27 +1,24 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<%@ page language="java" contentType="text/html;charset=UTF-8" %>
-<%@ taglib uri="/itracker.tld" prefix="it" %>
-<%@ taglib uri="/WEB-INF/tld/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/tld/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/tld/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/tags/fmt" prefix="fmt" %>
-<%@ taglib uri="/tags/c" prefix="c" %>
-
-<%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.services.util.IssueUtilities" %>
-<%@ page import="org.itracker.services.*" %>
-<%@ page import="org.itracker.core.resources.*" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <%@ page import="java.util.Collections" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Set" %>
-<!-- import? UserUtilities? --> 
+
+<%@ page import="org.itracker.core.resources.*" %>
+<%@ page import="org.itracker.model.*" %>
+<%@ page import="org.itracker.services.util.IssueUtilities" %>
+<%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.services.util.UserUtilities" %>
 <%@ page import="org.itracker.services.util.ProjectUtilities" %>
 
-<%-- <it:checkLogin/> --%>
-<!-- once there was page_init here, but now this has been moved into the ItrackerBaseAction -->
+<%@ taglib uri="/tags/itracker" prefix="it" %>
+<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
+<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
+<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
+<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%
     final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
@@ -33,7 +30,7 @@
     //Integer numViewable = (Integer)request.getAttribute("numViewable");
     //Integer k = (Integer)request.getAttribute("k");
     %>
- 
+ <%-- TODO : move redirect logic to the Action class. --%>
 <c:choose>
 	<c:when test="${project == null}">
 	    <it:addError key="itracker.web.error.invalidproject"/>
@@ -44,10 +41,10 @@
       <logic:forward name="error"/>
 	</c:when>
 	<c:otherwise>
-      <bean:define id="pageTitleKey" value="itracker.web.listissues.title"/>
-      <bean:define id="pageTitleArg" value="<%= project.getName() %>"/>
-     <%@ taglib uri="/WEB-INF/tld/struts-tiles.tld" prefix="tiles" %>
-
+            
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<bean:define id="pageTitleKey" value="itracker.web.listissues.title"/>
+<bean:define id="pageTitleArg" value="<%= project.getName() %>"/>
 
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
