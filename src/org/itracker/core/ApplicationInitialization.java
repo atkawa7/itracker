@@ -215,7 +215,7 @@ public class ApplicationInitialization {
                     try {
                         String repLine;
                         Report report = new Report();
-                        Report chkreport = new Report();
+                        // Report chkreport = new Report();
                         
                         InputStream reportStream = getClass().getResourceAsStream("/org/itracker/web/reports/predefined/" + value);
                         if (reportStream == null) {
