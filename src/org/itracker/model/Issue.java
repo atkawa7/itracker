@@ -18,15 +18,9 @@
 
 package org.itracker.model;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-
-import org.itracker.services.util.IssueUtilities;
 
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.
@@ -153,50 +147,51 @@ public class Issue extends AbstractBean implements Comparable<Issue> {
     public void setVersions(List<Version> versions) {
         this.versions = versions;
     }
-    // TODO: do we really still this need this? it returns null... ?
-    public  List ejbSelectLastModifiedDates(Integer projectId) {
-        return(null);
-    }
-    public  List ejbSelectIdByProjectAndStatusLessThan(Integer projectId, int status) {
-        return(null);
-    }
-    public  List ejbSelectIdByProjectAndStatusGreaterThanEqualTo(Integer projectId, int status) {
-        return(null);
-    }
+    // TODO: do we really still this need this? it returns null... ? I don't know: let's out-comment them:
+    
+    // public  List ejbSelectLastModifiedDates(Integer projectId) {
+    //    return(null);
+    //}
+    //public  List ejbSelectIdByProjectAndStatusLessThan(Integer projectId, int status) {
+    //    return(null);
+    // }
+    //public  List ejbSelectIdByProjectAndStatusGreaterThanEqualTo(Integer projectId, int status) {
+    //    return(null);
+    //}
+    //
+    //public Date ejbHomeLatestModificationDate(Integer projectId) {
+    //    Timestamp latestDate = null;
+    //
+    //       Collection dates = ejbSelectLastModifiedDates(projectId);
+    //        for(Iterator iterator = dates.iterator(); iterator.hasNext(); ) {
+    //            Timestamp lastModDate = (Timestamp) iterator.next();
+    //            if(latestDate == null) {
+    //                latestDate = lastModDate;
+    //            }
+    //            if(lastModDate.after(latestDate)) {
+    //                latestDate = lastModDate;
+    //            }
+    //        }
+    //    return (Date) latestDate;
+    //}
 
-    public Date ejbHomeLatestModificationDate(Integer projectId) {
-        Timestamp latestDate = null;
+    //public Object[] ejbHomeGetIssueStats(Integer projectId) {
+    //    Object[] issueStats = new Object[4];
 
-           Collection dates = ejbSelectLastModifiedDates(projectId);
-            for(Iterator iterator = dates.iterator(); iterator.hasNext(); ) {
-                Timestamp lastModDate = (Timestamp) iterator.next();
-                if(latestDate == null) {
-                    latestDate = lastModDate;
-                }
-                if(lastModDate.after(latestDate)) {
-                    latestDate = lastModDate;
-                }
-            }
-        return (Date) latestDate;
-    }
+    //        int totalIssues = 0;
+    //        Collection openIds = ejbSelectIdByProjectAndStatusLessThan(projectId, IssueUtilities.STATUS_RESOLVED);
+    //        issueStats[0] = (openIds == null ? "0" : Integer.toString(openIds.size()));
+    //        totalIssues += openIds.size();
+    //        Collection resolvedIds = ejbSelectIdByProjectAndStatusGreaterThanEqualTo(projectId, IssueUtilities.STATUS_RESOLVED);
+    //        issueStats[1] = (resolvedIds == null ? "0" : Integer.toString(resolvedIds.size()));
+    //        totalIssues += resolvedIds.size();
 
-    public Object[] ejbHomeGetIssueStats(Integer projectId) {
-        Object[] issueStats = new Object[4];
+    //    issueStats[2] = Integer.toString(totalIssues);
+    //    issueStats[3] = ejbHomeLatestModificationDate(projectId);
 
-        int totalIssues = 0;
-            Collection openIds = ejbSelectIdByProjectAndStatusLessThan(projectId, IssueUtilities.STATUS_RESOLVED);
-            issueStats[0] = (openIds == null ? "0" : Integer.toString(openIds.size()));
-            totalIssues += openIds.size();
-            Collection resolvedIds = ejbSelectIdByProjectAndStatusGreaterThanEqualTo(projectId, IssueUtilities.STATUS_RESOLVED);
-            issueStats[1] = (resolvedIds == null ? "0" : Integer.toString(resolvedIds.size()));
-            totalIssues += resolvedIds.size();
-
-        issueStats[2] = Integer.toString(totalIssues);
-        issueStats[3] = ejbHomeLatestModificationDate(projectId);
-
-        return issueStats;
-    }
-
+    //    return issueStats;
+    //}
+    //
     /**
      * Compares by status. 
      */
