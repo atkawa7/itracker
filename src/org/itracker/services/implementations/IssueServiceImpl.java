@@ -551,57 +551,63 @@ public class IssueServiceImpl implements IssueService {
 		List<Component> components = new ArrayList<Component>();
 		components = issue.getComponents();
 
-		if (componentIds.isEmpty() && components != null && !components.isEmpty()) {
+		if (components!=null) {
+			
+			if (componentIds.isEmpty() && !components.isEmpty()) {
 
-			wasChanged = true;
+				wasChanged = true;
 
-			changesBuf.append(ITrackerResources.getString("itracker.web.generic.all") + " "
+				changesBuf.append(ITrackerResources.getString("itracker.web.generic.all") + " "
 
-			+ ITrackerResources.getString("itracker.web.generic.removed"));
+				+ ITrackerResources.getString("itracker.web.generic.removed"));
 
-			components.clear();
+				components.clear();
 
-		} else {
+			} else {
 
-			for (Iterator<Component> iterator = components.iterator(); iterator.hasNext();) {
+				for (Iterator<Component> iterator = components.iterator(); iterator.hasNext();) {
 
-				Component component = (Component) iterator.next();
+					Component component = (Component) iterator.next();
 
-				if (componentIds.contains(component.getId())) {
+					if (componentIds.contains(component.getId())) {
 
-					componentIds.remove(component.getId());
+						componentIds.remove(component.getId());
 
-				} else {
+					} else {
+
+						wasChanged = true;
+
+						changesBuf.append(ITrackerResources.getString("itracker.web.generic.removed") + ": "
+
+						+ component.getName() + "; ");
+
+						iterator.remove();
+
+					}
+
+				}
+
+				for (Iterator<Integer> iterator = componentIds.iterator(); iterator.hasNext();) {
+
+					Integer componentId = iterator.next();
+
+					Component component = componentDAO.findById(componentId);
 
 					wasChanged = true;
 
-					changesBuf.append(ITrackerResources.getString("itracker.web.generic.removed") + ": "
+					changesBuf.append(ITrackerResources.getString("itracker.web.generic.added") + ": "
 
 					+ component.getName() + "; ");
 
-					iterator.remove();
+					components.add(component);
 
 				}
 
 			}
-
-			for (Iterator<Integer> iterator = componentIds.iterator(); iterator.hasNext();) {
-
-				Integer componentId = iterator.next();
-
-				Component component = componentDAO.findById(componentId);
-
-				wasChanged = true;
-
-				changesBuf.append(ITrackerResources.getString("itracker.web.generic.added") + ": "
-
-				+ component.getName() + "; ");
-
-				components.add(component);
-
-			}
-
+		} else { 
+			logger.debug("components was null!");
 		}
+	
 
 		if (wasChanged) {
 
@@ -626,58 +632,65 @@ public class IssueServiceImpl implements IssueService {
 		Issue issue = issueDAO.findByPrimaryKey(issueId);
 
 		List<Version> versions = issue.getVersions();
+		
+		if (versions != null) {
+		
+			if (versionIds.isEmpty() && !versions.isEmpty()) {
 
-		if (versionIds.isEmpty() && versions != null && !versions.isEmpty()) {
+				wasChanged = true;
 
-			wasChanged = true;
+				changesBuf.append(ITrackerResources.getString("itracker.web.generic.all") + " "
 
-			changesBuf.append(ITrackerResources.getString("itracker.web.generic.all") + " "
+				+ ITrackerResources.getString("itracker.web.generic.removed"));
 
-			+ ITrackerResources.getString("itracker.web.generic.removed"));
+				versions.clear();
 
-			versions.clear();
+			} else {
 
-		} else {
+				for (Iterator<Version> iterator = versions.iterator(); iterator.hasNext();) {
 
-			for (Iterator<Version> iterator = versions.iterator(); iterator.hasNext();) {
+					Version version = (Version) iterator.next();
 
-				Version version = (Version) iterator.next();
+					if (versionIds.contains(version.getId())) {
 
-				if (versionIds.contains(version.getId())) {
+						versionIds.remove(version.getId());
 
-					versionIds.remove(version.getId());
+					} else {
 
-				} else {
+						wasChanged = true;
+
+						changesBuf.append(ITrackerResources.getString("itracker.web.generic.removed") + ": "
+
+						+ version.getNumber() + "; ");
+
+						iterator.remove();
+
+					}
+
+				}
+
+				for (Iterator<Integer> iterator = versionIds.iterator(); iterator.hasNext();) {
+
+					Integer versionId = (Integer) iterator.next();
+
+					Version version = versionDAO.findByPrimaryKey(versionId);
 
 					wasChanged = true;
 
-					changesBuf.append(ITrackerResources.getString("itracker.web.generic.removed") + ": "
+					changesBuf.append(ITrackerResources.getString("itracker.web.generic.added") + ": "
 
 					+ version.getNumber() + "; ");
 
-					iterator.remove();
+					versions.add(version);
 
 				}
 
 			}
-
-			for (Iterator<Integer> iterator = versionIds.iterator(); iterator.hasNext();) {
-
-				Integer versionId = (Integer) iterator.next();
-
-				Version version = versionDAO.findByPrimaryKey(versionId);
-
-				wasChanged = true;
-
-				changesBuf.append(ITrackerResources.getString("itracker.web.generic.added") + ": "
-
-				+ version.getNumber() + "; ");
-
-				versions.add(version);
-
-			}
-
+			
+		} else {
+			logger.debug("Versions were null!");
 		}
+
 
 		if (wasChanged) {
 
