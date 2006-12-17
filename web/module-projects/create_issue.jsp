@@ -15,7 +15,7 @@
 
 <% // TODO : move redirect logic to Action class. 
     Project project = (Project) session.getAttribute(Constants.PROJECT_KEY);
-    HashMap listOptions = (HashMap) session.getAttribute(Constants.LIST_OPTIONS_KEY);
+    HashMap<Integer,List<NameValuePair>> listOptions = (HashMap<Integer,List<NameValuePair>>) session.getAttribute(Constants.LIST_OPTIONS_KEY);
     if(project == null) {
 %>
       <logic:forward name="unauthorized"/>

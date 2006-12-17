@@ -339,7 +339,7 @@
           currentValue - the current value of the field
           displayType - whether to output a form field, or just viewable text [view|edit] (default edit)
           formName - name of the form this element belongs to
-          listOptions - array of NameValuePairs to use for options in a select list
+          listOptions - List of NameValuePairs to use for options in a select list
     </info>
     <attribute>
       <name>field</name>

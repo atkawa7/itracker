@@ -116,7 +116,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                 }
 
                 if(errors.isEmpty()) {
-                    HashMap<Integer,List> listOptions = new HashMap<Integer,List>();
+                    HashMap<Integer,List<NameValuePair>> listOptions = new HashMap<Integer,List<NameValuePair>>();
                     boolean hasFullEdit = UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
 
                     List<NameValuePair> ownersList = new ArrayList<NameValuePair>();

@@ -102,7 +102,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
             }
 
             if(errors.isEmpty()) {
-                Map<Integer,List> listOptions = new HashMap<Integer,List>();
+                Map<Integer,List<NameValuePair>> listOptions = new HashMap<Integer,List<NameValuePair>>();
                 if(UserUtilities.hasPermission(Permissions, project.getId(), UserUtilities.PERMISSION_ASSIGN_OTHERS)) {
                     List<User> possibleOwners = userService.getPossibleOwners(null, project.getId(), currUser.getId());
                     Collections.sort(possibleOwners, new User.CompareByFirstName());

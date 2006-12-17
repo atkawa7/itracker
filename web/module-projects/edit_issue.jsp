@@ -24,9 +24,8 @@
 	User um = (User)request.getSession().getAttribute("currUser");
 	
     Issue issue = (Issue) session.getAttribute(Constants.ISSUE_KEY);
-    HashMap listOptions = (HashMap) session.getAttribute(Constants.LIST_OPTIONS_KEY);
-    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
-        request.getSession().getAttribute("permissions");
+    HashMap<Integer,List<NameValuePair>> listOptions = (HashMap<Integer,List<NameValuePair>>) session.getAttribute(Constants.LIST_OPTIONS_KEY);
+    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>) request.getSession().getAttribute("permissions");
     
     Project project = (issue != null ? issue.getProject() : null);
     if(issue == null || project == null) {
