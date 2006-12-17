@@ -9,6 +9,8 @@ public class IssuePTO {
     private boolean userCanEdit;
     private boolean userCanViewIssue;
     private boolean userHasIssueNotification;
+    private boolean userHasPermission_PERMISSION_ASSIGN_SELF;
+    private boolean userHasPermission_PERMISSION_ASSIGN_OTHERS;
     private boolean unassigned;
     private String severityLocalizedString;
     private String statusLocalizedString;
@@ -80,6 +82,23 @@ public class IssuePTO {
 
 	public void setUnassigned(boolean unassigned) {
 		this.unassigned = unassigned;
+	}
+
+	public boolean getUserHasPermission_PERMISSION_ASSIGN_SELF() {
+		return userHasPermission_PERMISSION_ASSIGN_SELF;
+	}
+
+	public void setUserHasPermission_PERMISSION_ASSIGN_SELF(boolean userHasPermission) {
+		this.userHasPermission_PERMISSION_ASSIGN_SELF = userHasPermission;
+	}
+
+	public boolean getUserHasPermission_PERMISSION_ASSIGN_OTHERS() {
+		return userHasPermission_PERMISSION_ASSIGN_OTHERS;
+	}
+
+	public void setUserHasPermission_PERMISSION_ASSIGN_OTHERS(
+			boolean userHasPermission_PERMISSION_ASSIGN_OTHERS) {
+		this.userHasPermission_PERMISSION_ASSIGN_OTHERS = userHasPermission_PERMISSION_ASSIGN_OTHERS;
 	}
     
 }

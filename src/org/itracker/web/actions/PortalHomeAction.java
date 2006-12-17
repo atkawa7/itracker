@@ -169,13 +169,16 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     String statusLocalizedString = IssueUtilities.getStatusName(unassignedIssues.get(i).getStatus(), currLocale);
                     String severityLocalizedString = IssueUtilities.getSeverityName(unassignedIssues.get(i).getSeverity(), currLocale);
                     boolean canViewIssue = IssueUtilities.canViewIssue(unassignedIssues.get(i), currUser.getId(), permissions);
-                    issuePTO.setUserCanEdit(canViewIssue);
+                    issuePTO.setUserCanViewIssue(canViewIssue);
+                    
                     boolean userHasIssueNotification = IssueUtilities.hasIssueNotification(unassignedIssues.get(i), currUser.getId());
                     issuePTO.setUserCanEdit(userHasIssueNotification);
                     issuePTO.setStatusLocalizedString(statusLocalizedString);
                     issuePTO.setSeverityLocalizedString(severityLocalizedString);
                     issuePTO.setUserCanEdit(canEditIssue);
-                    
+                    issuePTO.setUnassigned(true);
+                    issuePTO.setUserHasPermission_PERMISSION_ASSIGN_SELF(UserUtilities.hasPermission(permissions, unassignedIssues.get(i).getProject().getId(), UserUtilities.PERMISSION_ASSIGN_SELF));
+                    issuePTO.setUserHasPermission_PERMISSION_ASSIGN_OTHERS(UserUtilities.hasPermission(permissions, unassignedIssues.get(i).getProject().getId(), UserUtilities.PERMISSION_ASSIGN_OTHERS));
                     unassignedIssuePTOs.add(issuePTO);
                 }
                 
