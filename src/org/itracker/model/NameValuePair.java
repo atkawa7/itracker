@@ -70,7 +70,7 @@ public class NameValuePair implements Comparator<NameValuePair>, Serializable {
         return new NameValuePair.CompareByName().compare(a, b);
     }
 
-    // let's try to put the generic Object here: 
+    // let's try to put the generic Object here (or is this stupid?): 
     public static class CompareByName implements Comparator<Object> {
         protected boolean isAscending = true;
 
