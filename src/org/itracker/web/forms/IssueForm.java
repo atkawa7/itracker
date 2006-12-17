@@ -20,6 +20,7 @@ package org.itracker.web.forms;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -65,7 +66,8 @@ public class IssueForm extends ITrackerForm  {
     private String attachmentDescription;
     private org.apache.struts.upload.FormFile attachment;
     private String history;
-    private java.util.HashMap customFields;
+    // lets try to put Integer,String here:
+    private HashMap<Integer,String> customFields;
     private Integer relationType;
     private Integer relatedIssueId;
     
@@ -108,12 +110,12 @@ public class IssueForm extends ITrackerForm  {
     public void setCreatorId(Integer creatorId) {
         this.creatorId = creatorId;
     }
-    
-    public java.util.HashMap getCustomFields() {
+    // let's try to put Integer,String here:
+    public HashMap<Integer,String> getCustomFields() {
         return customFields;
     }
-    
-    public void setCustomFields(java.util.HashMap customFields) {
+//  let's try to put Integer,String here:
+    public void setCustomFields(HashMap<Integer,String> customFields) {
         this.customFields = customFields;
     }
     
