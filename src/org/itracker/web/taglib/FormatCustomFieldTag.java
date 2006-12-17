@@ -47,7 +47,7 @@ public final class FormatCustomFieldTag extends TagSupport {
     private String currentValue;
     private String displayType;
     private String formName;
-    private HashMap<String,String> listOptions;
+    private HashMap<Integer,List<NameValuePair>> listOptions;
     
     public CustomField getField() {
         return field;
@@ -81,11 +81,11 @@ public final class FormatCustomFieldTag extends TagSupport {
         formName = value;
     }
     
-    public HashMap<String,String> getListOptions() {
-        return (listOptions == null ? new HashMap<String,String>() : listOptions);
+    public HashMap<Integer,List<NameValuePair>> getListOptions() {
+        return (listOptions == null ? new HashMap<Integer,List<NameValuePair>>() : listOptions);
     }
     
-    public void setListOptions(HashMap<String,String> value) {
+    public void setListOptions(HashMap<Integer,List<NameValuePair>> value) {
         listOptions = value;
     }
     
