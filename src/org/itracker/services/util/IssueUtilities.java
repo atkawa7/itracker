@@ -409,33 +409,33 @@ public class IssueUtilities  {
       * Compares the severity of two issues.  The int returned will be negative if the
       * the severity of issue A is less than the severity of issue B, positive if issue
       * A is a higher severity than issue B, or 0 if the two issues have the same severity.
-      * @param ma IssueModel A
-      * @param mb IssueModel B
+      * @param issueA IssueModel A
+      * @param issueB IssueModel B
       * @returns an int representing the compared severities
       */
-    public static int compareSeverity(Issue ma, Issue mb) {
-        if(ma == null && mb == null) {
+    public static int compareSeverity(Issue issueA, Issue issueB) {
+        if(issueA == null && issueB == null) {
             return 0;
-        } else if(ma == null && mb != null) {
+        } else if(issueA == null && issueB != null) {
             return -1;
-        } else if(ma != null && mb == null) {
+        } else if(issueA != null && issueB == null) {
             return 1;
         } else {
-            int maIndex = Integer.MAX_VALUE;
-            int mbIndex = Integer.MAX_VALUE;
+            int issueAIndex = Integer.MAX_VALUE;
+            int issueBIndex = Integer.MAX_VALUE;
             for(int i = 0; i < severities.size(); i++) {
                 if(severities.get(i) != null) {
-                    if(severities.get(i).getValue().equalsIgnoreCase(Integer.toString(ma.getSeverity()))) {
-                        maIndex = i;
+                    if(severities.get(i).getValue().equalsIgnoreCase(Integer.toString(issueA.getSeverity()))) {
+                        issueAIndex = i;
                     }
-                    if(severities.get(i).getValue().equalsIgnoreCase(Integer.toString(mb.getSeverity()))) {
-                        mbIndex = i;
+                    if(severities.get(i).getValue().equalsIgnoreCase(Integer.toString(issueB.getSeverity()))) {
+                        issueBIndex = i;
                     }
                 }
             }
-            if(maIndex > mbIndex) {
+            if(issueAIndex > issueBIndex) {
                 return -1;
-            } else if(maIndex < mbIndex) {
+            } else if(issueAIndex < issueBIndex) {
                 return 1;
             }
         }
