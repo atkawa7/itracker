@@ -38,7 +38,8 @@ public class ConfigurationForm extends ValidatorForm  {
      String value;
      Integer order;
 	 String key;
-     HashMap translations;
+//	  let's try to put String,String here:
+     HashMap<String,String> translations;
      
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		action = null;    
@@ -86,12 +87,12 @@ public class ConfigurationForm extends ValidatorForm  {
 	public void setOrder(Integer order) {
 		this.order = order;
 	}
-
-	public HashMap getTranslations() {
+//  let's try to put String,String here:
+	public HashMap<String,String> getTranslations() {
 		return translations;
 	}
-
-	public void setTranslations(HashMap translations) {
+//  let's try to put String,String here:
+	public void setTranslations(HashMap<String,String> translations) {
 		this.translations = translations;
 	}
 
