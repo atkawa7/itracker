@@ -85,11 +85,11 @@
                 name="issueForm" scope="request" input="/create_issue.jsp" validate="false"/>
 
         <action path="/createissue" type="org.itracker.web.actions.project.CreateIssueAction"
-                name="issueForm" scope="request" input="/create_issue.jsp" validate="false">
+                name="issueForm" scope="request" input="/create_issue.jsp" validate="true">
         </action>
 
         <action path="/editissue" type="org.itracker.web.actions.project.EditIssueAction"
-                name="issueForm" scope="request" input="/edit_issue.jsp" validate="true">
+                name="issueForm" scope="request" input="/edit_issue.jsp" validate="false">
             <forward name="index" module="/" path="/index.jsp" redirect="true"/>
         </action>
         <action path="/editissueform" type="org.itracker.web.actions.project.EditIssueFormAction"
