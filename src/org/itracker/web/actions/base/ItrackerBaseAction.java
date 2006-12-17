@@ -102,8 +102,9 @@ public abstract class ItrackerBaseAction extends Action {
         // pasted from page_init (which is now empty, since we are moving logic into actions):
         String baseURL = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
         User currUser = (User)request.getSession().getAttribute("currUser");
-        // logger.info("Got current User: "+currUser.getFirstName()+currUser.getLastName());
-        HashMap permissions = (HashMap) request.getSession().getAttribute(Constants.PERMISSIONS_KEY);
+        
+        // TODO: think about this: are permissions put into the request? or into the session? Markys knowledge: permissions are being set, when login happens... do we really need the following line then? 
+        Map<Integer, Set<PermissionType>> permissions = (HashMap<Integer, Set<PermissionType>>) request.getSession().getAttribute(Constants.PERMISSIONS_KEY);
         currLocale = LoginUtilities.getCurrentLocale(request);
         String currLogin = (currUser == null ? null : currUser.getLogin());
         // now these are put into the request scope... (new).
@@ -114,11 +115,6 @@ public abstract class ItrackerBaseAction extends Action {
         request.setAttribute("currLocale",currLocale);
         request.setAttribute("currLogin",currLogin);
         
-        // if(logger.isDebugEnabled()) {
-        //	logger.logDebug("Request: " + request.getRequestURI() + "?" + request.getQueryString() + "  " +
-        //			"From: " + request.getRemoteHost() + "(" + request.getRemoteAddr() + ")  " +
-        //				"User: " + currLogin);
-        //	}
     }
     
     @SuppressWarnings("unchecked")
