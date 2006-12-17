@@ -96,7 +96,7 @@ public class ITrackerResources {
             return getLocale(getDefaultLocale());
         }
 
-        Locale locale = (Locale) locales.get(localeString);
+        Locale locale = locales.get(localeString);
         if (locale == null && localeString != null && !localeString.trim().equals("")) {
             try {
                 logger.debug("Creating new locale for '" + localeString + "'");
