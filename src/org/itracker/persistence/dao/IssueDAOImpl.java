@@ -57,7 +57,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         try {
             Query query = getSession().getNamedQuery(
                     "IssuesByCreatorInAvailableProjectsQuery");
-            query.setInteger("projectStatus", Integer.valueOf(1));
+            query.setInteger("projectStatus", 1);
             query.setInteger("creatorId", userId);
             query.setInteger("issueStatus", status);
             issues = query.list();
@@ -95,7 +95,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         try {
             Criteria criteria = getSession().createCriteria(Issue.class)
                 .createAlias("project","project")
-                .add(Expression.eq("project.status", new Integer(1)));
+                .add(Expression.eq("project.status", 1));
             criteria.add(Expression.eq("owner.id", userId));
             criteria.add(Expression.ne("status", status));
             
