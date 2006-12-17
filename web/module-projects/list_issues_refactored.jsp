@@ -1,14 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="java.util.Collections" %>
-<%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Set" %>
-
-<%@ page import="org.itracker.core.resources.*" %>
 <%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.services.util.IssueUtilities" %>
-<%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.services.util.UserUtilities" %>
 <%@ page import="org.itracker.services.util.ProjectUtilities" %>
 
@@ -111,8 +105,16 @@
             <td>${issuePTO.componentsSize}</td>
             <td></td>
             <td><it:formatDescription>${issuePTO.issue.description}</it:formatDescription></td>
-            <td></td>
-            <td>${issuePTO.issue.owner.firstInitial}. ${issuePTO.issue.owner.lastName}<%-- it: formatIssueOwner issue="${issuePTOs.owner.}" format="short" / --%></td>
+            <td></td>  <td>
+                  	<c:choose>
+            		<c:when test="${issuePTO.unassigned}"> Unassigned (this needs internationalization...)
+            	 
+            		</c:when>
+            		<c:otherwise>${issuePTO.issue.owner.firstName}. ${issuePTO.issue.owner.lastName}
+            		  <%-- it: formatIssueOwner issue="${issuePTOs.owner.}" format="short" / --%>
+            		</c:otherwise>
+            	</c:choose>
+       </td>
             <td></td>
             <td><it:formatDate date="${issuePTO.issue.lastModifiedDate}"/></td>
           </tr>

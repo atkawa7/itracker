@@ -54,8 +54,8 @@ public class ListIssuesAction extends ItrackerBaseAction {
         // do some service calls
         Project project = projectService.getProject(projectId);
         logger.info("projectModel_Name: " +project.getName());
-        List<Issue> listIssueModels = issueService.getIssuesByProjectId(projectId, status);
-        logger.info("issueModels_Found: " +listIssueModels.size());
+        List<Issue> listIssues = issueService.getIssuesByProjectId(projectId, status);
+        logger.info("issues found for this project: " +listIssues.size());
         
         // prepare PTOs
         List<IssuePTO> issuePTOs = new ArrayList<IssuePTO>();
@@ -73,17 +73,17 @@ public class ListIssuesAction extends ItrackerBaseAction {
         }
         
         if("id".equals(order)) {
-            Collections.sort(listIssueModels, new Issue.CompareById());
+            Collections.sort(listIssues, new Issue.CompareById());
         } else if("sev".equals(order)) {
-            Collections.sort(listIssueModels, new Issue.CompareBySeverity());
+            Collections.sort(listIssues, new Issue.CompareBySeverity());
         } else if("stat".equals(order)) {
-            Collections.sort(listIssueModels, new Issue.CompareByStatus());
+            Collections.sort(listIssues, new Issue.CompareByStatus());
         } else if("lm".equals(order)) {
-            Collections.sort(listIssueModels, new Issue.LastModifiedDateComparator(false));
+            Collections.sort(listIssues, new Issue.LastModifiedDateComparator(false));
         } else if("own".equals(order)) {
-            Collections.sort(listIssueModels, new Issue.CompareByOwnerAndStatus());
+            Collections.sort(listIssues, new Issue.CompareByOwnerAndStatus());
         } else {
-            Collections.sort(listIssueModels, new Issue.CompareByStatus());
+            Collections.sort(listIssues, new Issue.CompareByStatus());
         }
         
         int start = 0;
@@ -99,10 +99,10 @@ public class ListIssuesAction extends ItrackerBaseAction {
         boolean hasViewAll = UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_VIEW_ALL);
         
         if(hasViewAll) {
-            numViewable = listIssueModels.size();
+            numViewable = listIssues.size();
         } else {
-            for(int i = 0; i < listIssueModels.size(); i++) {
-                if(IssueUtilities.canViewIssue(listIssueModels.get(i), currUserId, userPermissions)) {
+            for(int i = 0; i < listIssues.size(); i++) {
+                if(IssueUtilities.canViewIssue(listIssues.get(i), currUserId, userPermissions)) {
                     numViewable++;
                 }
             }
@@ -111,28 +111,31 @@ public class ListIssuesAction extends ItrackerBaseAction {
         int k = 0;
         
         // start copying from Models to PTOs
-        for(int i = 0; i < listIssueModels.size(); i++) {
-            Issue issue = listIssueModels.get(i);
+        for(int i = 0; i < listIssues.size(); i++) {
+            Issue issue = listIssues.get(i);
             IssuePTO issuePTO = new IssuePTO(issue);
             
-            String statusLocalizedString=IssueUtilities.getStatusName(listIssueModels.get(i).getStatus(), currLocale);
-            String severityLocalizedString = IssueUtilities.getSeverityName(listIssueModels.get(i).getSeverity(), currLocale) ;
-            String componentsSize = (listIssueModels.get(i).getComponents().size() == 0 ? ITrackerResources.getString("itracker.web.generic.unknown", currLocale) : listIssueModels.get(i).getComponents().get(0).getName() + (listIssueModels.get(i).getComponents().size() > 1 ? " (+)" : ""));
+            String statusLocalizedString=IssueUtilities.getStatusName(listIssues.get(i).getStatus(), currLocale);
+            String severityLocalizedString = IssueUtilities.getSeverityName(listIssues.get(i).getSeverity(), currLocale) ;
+            String componentsSize = (listIssues.get(i).getComponents().size() == 0 ? ITrackerResources.getString("itracker.web.generic.unknown", currLocale) : listIssues.get(i).getComponents().get(0).getName() + (listIssues.get(i).getComponents().size() > 1 ? " (+)" : ""));
             issuePTO.setStatusLocalizedString(statusLocalizedString);
             issuePTO.setSeverityLocalizedString(severityLocalizedString);
             issuePTO.setComponentsSize(componentsSize);
+            if(issue.getOwner()==null) {
+            	issuePTO.setUnassigned(true);
+            }
             
-            if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && ! IssueUtilities.hasIssueNotification(listIssueModels.get(i), project, currUserId)) {
+            if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && ! IssueUtilities.hasIssueNotification(listIssues.get(i), project, currUserId)) {
                 issuePTO.setUserHasIssueNotification(true);
             }
             if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE) {
-                if(IssueUtilities.canEditIssue(listIssueModels.get(i), currUserId, userPermissions)) {
+                if(IssueUtilities.canEditIssue(listIssues.get(i), currUserId, userPermissions)) {
                     issuePTO.setUserCanEdit(true);
                 }
             }
             
             // TODO: check from here...
-            if(! hasViewAll && ! IssueUtilities.canViewIssue(listIssueModels.get(i), currUserId, userPermissions)) {
+            if(! hasViewAll && ! IssueUtilities.canViewIssue(listIssues.get(i), currUserId, userPermissions)) {
                 continue;
             }
             hasIssues = true;

@@ -9,6 +9,7 @@ public class IssuePTO {
     private boolean userCanEdit;
     private boolean userCanViewIssue;
     private boolean userHasIssueNotification;
+    private boolean unassigned;
     private String severityLocalizedString;
     private String statusLocalizedString;
     private String componentsSize;
@@ -72,5 +73,13 @@ public class IssuePTO {
     public void setComponentsSize(String componentsSize) {
         this.componentsSize = componentsSize;
     }
+
+	public boolean isUnassigned() {
+		return unassigned;
+	}
+
+	public void setUnassigned(boolean unassigned) {
+		this.unassigned = unassigned;
+	}
     
 }
