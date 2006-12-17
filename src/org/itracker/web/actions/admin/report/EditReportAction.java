@@ -126,7 +126,7 @@ public class EditReportAction extends ItrackerBaseAction {
 
             if(editreport == null && !errorFound) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.save"));
-            } else if("create".equals(action)) {
+            } else if("create".equals(action) && editreport!=null) {
                 // If it was a create, add a new language key in the base for it.
                 ConfigurationService configurationService = getITrackerServices().getConfigurationService();
 
