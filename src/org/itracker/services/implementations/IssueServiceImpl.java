@@ -1305,25 +1305,25 @@ public class IssueServiceImpl implements IssueService {
 
 		boolean hasOwner = false;
 		Issue issue = issueDAO.findByPrimaryKey(issueId);
-
-		if (issue.getOwner() != null) {
-			User ownerModel = issue.getOwner();
-
-			if (ownerModel != null && (!activeOnly || ownerModel.getStatus() == UserUtilities.STATUS_ACTIVE)) {
-				issueNotifications.add(new Notification(ownerModel, issue, NotificationUtilities.ROLE_OWNER));
-				hasOwner = true;
-			}
-		}
-
-		if (!primaryOnly || !hasOwner) {
-			User creatorModel = issue.getCreator();
-
-			if (creatorModel != null && (!activeOnly || creatorModel.getStatus() == UserUtilities.STATUS_ACTIVE)) {
-				issueNotifications.add(new Notification(creatorModel, issue, NotificationUtilities.ROLE_CREATOR));
-			}
-		}
-
 		if (issue != null) {
+			if (issue.getOwner() != null) {
+				User ownerModel = issue.getOwner();
+	
+				if (ownerModel != null && (!activeOnly || ownerModel.getStatus() == UserUtilities.STATUS_ACTIVE)) {
+					issueNotifications.add(new Notification(ownerModel, issue, NotificationUtilities.ROLE_OWNER));
+					hasOwner = true;
+				}
+			}
+	
+			if (!primaryOnly || !hasOwner) {
+				User creatorModel = issue.getCreator();
+	
+				if (creatorModel != null && (!activeOnly || creatorModel.getStatus() == UserUtilities.STATUS_ACTIVE)) {
+					issueNotifications.add(new Notification(creatorModel, issue, NotificationUtilities.ROLE_CREATOR));
+				}
+			}
+	
+
 			Project project = projectDAO.findByPrimaryKey(issue.getProject().getId());
 			Collection<User> projectOwners = project.getOwners();
 
