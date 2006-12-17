@@ -282,9 +282,11 @@ public class EditIssueAction extends ItrackerBaseAction {
         }
     }
 
-    private void setIssueFields(Issue issue, User user, Locale locale, ActionForm form, IssueService issueService) throws Exception {
+    @SuppressWarnings("unchecked")
+	private void setIssueFields(Issue issue, User user, Locale locale, ActionForm form, IssueService issueService) throws Exception {
         List<IssueField> issueFields = new ArrayList<IssueField>();
-        HashMap customFields = (HashMap) PropertyUtils.getSimpleProperty(form, "customFields");
+        // here you see some of the ugly side of Struts 1.3 - the forms... they can only contain Strings and some simple objects types... 
+        HashMap<Integer,String> customFields = (HashMap<Integer,String>) PropertyUtils.getSimpleProperty(form, "customFields");
         if(customFields != null && customFields.size() > 0) {
             List<IssueField> issueFieldsList = new ArrayList<IssueField>();
             for(Iterator iter = customFields.keySet().iterator(); iter.hasNext(); ) {
