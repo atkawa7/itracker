@@ -82,18 +82,19 @@ public class WatchIssueAction extends ItrackerBaseAction {
                 return mapping.findForward("unauthorized");
             }
 
-            Notification model = new Notification();
-            model.setUser(currUser);
-            model.setIssue(issue);
-            model.setNotificationRole(NotificationUtilities.ROLE_IP);
+            Notification notification = new Notification();
+            notification.setUser(currUser);
+            notification.setIssue(issue);
+            notification.setNotificationRole(NotificationUtilities.ROLE_IP);
 
-            issueService.addIssueNotification(model);
+            issueService.addIssueNotification(notification);
 
             String caller = request.getParameter("caller");
             if("editissue".equals(caller)) {
                 return new ActionForward(mapping.findForward("editissue").getPath() + "?id=" + issueId);
             } else if("viewissue".equals(caller)) {
                 return new ActionForward(mapping.findForward("viewissue").getPath() + "?id=" + issueId);
+                //index was the old name for portalhome, we have to clean the naming in this area... 
             } else if("index".equals(caller)) {
                 return mapping.findForward("index");
             } else {

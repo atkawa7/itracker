@@ -36,6 +36,7 @@
         <forward name="logoff" path="/logoff.do" module="/"/>
         <forward name="index" path="/portalhome.do" module="/"/>
         <forward name="createissue" path="/createissueform.do"/>
+        <forward name="watchissue" path="/watchissue.do"/>
     </global-forwards>
 
     <!-- ==================================== Action Mappings    -->
@@ -65,6 +66,9 @@
                      redirect="true"/>
         </action>
 
+ <action path="/watchissue" type="org.itracker.web.actions.project.WatchIssueAction"
+                name="watchIssueForm" scope="request" input="/index.jsp" validate="false"/>
+                
         <action path="/unauthorized" type="org.itracker.web.actions.UnauthorizedAction">
             <forward name="unauthorized" path="/unauthorized.jsp" module="/" redirect="true"/>
         </action>
