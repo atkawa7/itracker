@@ -26,14 +26,14 @@
 </logic:messagesPresent>
 
 <font color="red">We are refactoring still this portalhome JSP for less scriplets
-	and proper MVC. For this reason many details on this page don't yet work properly.<br/>
+	and proper MVC. For this reason many details on this page don't yet work properly. Especially we should get the "Watched Issues" working (this has to do with Notifications).<br/>
 	<br/>
 	- unassigned, (little progress...) <br/> 
-- created, <br/> 
-- and watched issues <br/> 
-	are temporarily unavailable...). <br/>
+- created, (little progress...)  <br/> 
+- and watched issues (this should work if the notifications get properly handeld / stored in the Services layer.<br/> 
+ 
 	<br/>
-	We are currently working on the unassinged issues section, and we make progress every day...</font><br/><br/>
+ </font><br/><br/>
 	 <!-- assigned issues -->
          
 <table border="0" cellspacing="0" cellpadding="1" width="100%">
@@ -182,9 +182,7 @@
                   		<option value="${unassignedIssues.issue.owner.id}">${unassignedIssues.issue.owner.firstName} ${unassignedIssues.issue.owner.lastName}</option> 
                   		</c:otherwise>
                   	</c:choose>
-                  	
-			<!-- HERE WAS THE POSSIBLE OWNERS CODE -->
-          
+ 
                   	<c:choose>
                   		<c:when test="${creatorPresent}">
                   			<c:forEach items="${possibleIssueOwners}" var="possibleIssueOwners" varStatus="k">
@@ -234,7 +232,6 @@
                   		<option value="${unassignedIssues.issue.owner.id}"><c:out value="${unassignedIssues.issue.owner.firstName}"/> <c:out value="${unassignedIssues.issue.owner.lastName}"/>Test2</option>
                   		</c:otherwise>
                   	</c:choose>
-        
                   		     <option value="${currUser.id}" <c:if test="${unassignedIssues.issue.id==currUser.id}">selected</c:if>> 
                    ${currUser.firstInitial} ${currUser.lastName}</option>			
                
@@ -279,28 +276,28 @@
         <td></td>
         <td align="right" style="white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
       </tr>
-      
+   
 <c:forEach items="${createdIssues}" var="createdIssues" step="1" varStatus="i"> 
-
+<tr class="listRowUnshaded"> 
 <%--	<c:if test="${(userPrefs.numItemsOnIndex > 0) && (createdIssues >= userPrefs.numItemsOnIndex) && ! showAll}">
 	   <tr class="listRowUnshaded"><td align="left" colspan="15"><html:link page="/index.jsp?showAll=true">
 	   <it:message key="itracker.web.index.moreissues"/></html:link></td></tr>
-	    <% --
+	  
           break; this meant that we break out of the for each loop... but that's not possible in JSTL, I guess. So let's not break out for now. 
---% >
+ 
 	</c:if>  --%>
 	 
    
-<%--
+
 <c:choose><c:when test="${z.count % 2 == 1}">
         		    <tr align="right" class="listRowShaded">
         		</tr></c:when>
         		<c:otherwise>
         	    <tr align="right" class="listRowUnshaded">	
         		</tr></c:otherwise>
-        	</c:choose> --%>
+        	</c:choose>  
         	
-        	<%-- remove this after uncommenting the above 
+         
         	  <tr align="right" class="listRowUnshaded">	
           <td>
             <it:formatImageAction forward="viewissue" paramName="id" paramValue="${createdIssues.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${createdIssues.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
@@ -319,10 +316,10 @@
           <td></td>
           <td><it:formatDescription>${createdIssues.issue.description}</it:formatDescription></td>
           <td></td>
-          <td><it:formatIssueOwner issue="${createdIssues}" format="short"/></td>
+          <td><%--<it:formatIssueOwner issue="${createdIssues}" format="short"/>--%></td>
           <td></td>
           <td align="right" style="white-space: nowrap">${createdIssues.issue.lastModifiedDate}"/></td>
-        --%>
+    </tr>
 </c:forEach>
       <tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
 	</c:if>
@@ -342,7 +339,7 @@
 	<c:if test="${! UserUtilities_PREF_HIDE_WATCHED}"> 
 
       <tr>
-        <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.watched"/>:</td>
+        <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.watched"/>: If you don't see anything following, there might be no watched issues (notificatios):</td>
       </tr>
       <tr align="left" class="listHeading">
         <td></td>
@@ -361,18 +358,18 @@
         <td></td>
         <td align="right" style="white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
       </tr>
-   	
+   	  
 	<c:forEach items="${watchedIssues}" var="watchedIssues" step="1" varStatus="z">
-	  <tr class="listRowUnshaded">	
-	  <%-- 
+	  <tr class="listRowUnshaded">	 <td align="left" colspan="15">- watched issue</td>
+	
 		<c:if test="${(userPrefs.numItemsOnIndex > 0) && (watchedIssues >=userPrefs.numItemsOnIndex) && ! showAll}">
-		<td align="left" colspan="15">
+	  <tr class="listRowUnshaded">		<td align="left" colspan="15">
 			<html:link page="/index.jsp?showAll=true">
 			<it:message key="itracker.web.index.moreissues"/>
 			</html:link>
-			</td></tr>
+			</td>		</tr>
 			</c:if> 
-		
+
  
 <c:choose><c:when test="${z.count % 2 == 1}">
         		    <tr align="right" class="listRowShaded">
@@ -383,6 +380,7 @@
         	</c:choose>
           <td>
             <it:formatImageAction forward="viewissue" paramName="id" paramValue="${watchedIssues.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${watchedIssues.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
+    
           	<c:if test="${watchedIssues.canEditIssue}">
           	<it:formatImageAction action="/module-projects/editissueform" paramName="id" paramValue="${watchedIssues.issue.id}" caller="index" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="${watchedIssues.issue.id}" textActionKey="itracker.web.image.edit.texttag"/>
           	</c:if>
@@ -394,17 +392,19 @@
           <td></td>
           <td style="white-space: nowrap">${watchedIssues.issue.project.name}</td>
           <td></td>
-          <td>//TODO statusLocalizedString<%-- ${ownedIssues.statusLocalizedString} -- %></td>
+          <td><c:out value="${ownedIssues.statusLocalizedString}"/></td>
           <td></td>
-          <td>//TODO severityLocalizedString<%-- ${ownedIssues.severityLocalizedString} -- %></td>
+          <td><c:out value="${ownedIssues.serverityLocalizedString}"/></td>
           <td></td>
           <td><it:formatDescription>${watchedIssues.issue.description}</it:formatDescription></td>
           <td></td>
-          <td><it:formatIssueOwner issue="${watchedIssues}" format="short"/></td>
+          <td><%--<it:formatIssueOwner issue="${watchedIssues}" format="short"/>--%></td>
           <td></td>
           <td align="right" style="white-space: nowrap"><it:formatDate date="${watchedIssues.issue.lastModifiedDate}"/></td>
+      
+
         </tr>
---%>
+ 
 	</c:forEach>
       <tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
 	</c:if>
