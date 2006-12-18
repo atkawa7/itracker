@@ -172,7 +172,8 @@
                   <html:hidden property="issueId" value="${unassignedIssues.issue.id}"/>
                   <html:hidden property="projectId" value="${unassignedIssues.issue.project.id}"/>
                   <%! String styleClass1 = "(i % 2 == 1 ? \"listRowShaded\" : \"listRowUnshaded\")"; %>
-                  <td><html:select property="userId" styleClass="<%=styleClass1 %>" onchange="this.form.submit();">
+                  <td>
+                  <html:select property="userId" styleClass="<%=styleClass1 %>" onchange="this.form.submit();">
                   	<c:choose>
                   		<c:when test="unassignedIssues.owner.id == -1">
                   		<option value="-1"><c:out value="${itracker_web_generic_unassigned}"/></option>
@@ -219,8 +220,8 @@
         	<c:choose>
         		<c:when test="${unassignedIssues.userHasPermission_PERMISSION_ASSIGN_SELF}"> 
         	  	 <html:form action="/assignissue">
-                  <html:hidden property="issueId" value="<%-- unassignedIssues[i].getId().toString() --%>"/>
-                  <html:hidden property="projectId" value="<%-- unassignedIssues[i].getProjectId().toString() --%>"/>
+                  <html:hidden property="issueId" value="${unassignedIssues.issue.id}"/>
+                  <html:hidden property="projectId" value="${unassignedIssues.issue.project.id}"/>
                  
                   <%! String styleClass2="(i % 2 == 1 ? \"listRowShaded\" : \"listRowUnshaded\")"; %>
                   <td>
