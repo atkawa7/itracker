@@ -107,9 +107,9 @@
             <td><it:formatDescription>${issuePTO.issue.description}</it:formatDescription></td>
             <td></td>  <td>
                   	<c:choose>
-            		<c:when test="${issuePTO.unassigned}"> Unassigned (this needs internationalization...)
-            	 
-            		</c:when>
+            		<c:when test="${issuePTO.unassigned}">
+            			<c:out value="${itracker_web_generic_unassigned}"/>
+            	 	</c:when>
             		<c:otherwise>${issuePTO.issue.owner.firstName}. ${issuePTO.issue.owner.lastName}
             		  <%-- it: formatIssueOwner issue="${issuePTOs.owner.}" format="short" / --%>
             		</c:otherwise>

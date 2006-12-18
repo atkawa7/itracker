@@ -169,7 +169,8 @@ public class ListIssuesAction extends ItrackerBaseAction {
         request.setAttribute("hasViewAll", new Boolean(hasViewAll));
         request.setAttribute("numViewable", new Integer(numViewable));
         request.setAttribute("k", new Integer(k));
-        
+         
+        request.setAttribute("itracker_web_generic_unassigned", ITrackerResources.getString("itracker.web.generic.unassigned", currLocale));
         String pageTitleKey = "itracker.web.listissues.title";
         String pageTitleArg = project.getName();
         request.setAttribute("pageTitleKey",pageTitleKey);
