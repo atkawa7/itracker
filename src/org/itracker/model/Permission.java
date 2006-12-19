@@ -39,6 +39,12 @@ public class Permission extends AbstractBean {
     public Permission(Project project, int type) {
         this.project = project;
         this.type = type;
+    	if (this.createDate==null) {
+    		this.createDate=new Date();
+    	}
+    	if (this.lastModifiedDate==null) {
+    		this.lastModifiedDate=this.createDate;
+    	}
     }
 
     public Permission(Project project, int type, User user) {
@@ -47,7 +53,7 @@ public class Permission extends AbstractBean {
     		this.createDate=new Date();
     	}
     	if (this.lastModifiedDate==null) {
-    		this.lastModifiedDate=new Date();
+    		this.lastModifiedDate=this.createDate;
     	}
         this.user = user;
     }

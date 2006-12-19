@@ -73,17 +73,18 @@
             <td class="editColumnTitle"><it:message key="itracker.web.attr.created"/>:</td>
             <td class="editColumnText"><it:formatDate date="<%= project.getCreateDate() %>"/></td>
           </tr>
+          <%  List<User> owners = uh.getUsersWithProjectPermission(project.getId(), UserUtilities.PERMISSION_VIEW_ALL);
+              Collections.sort(owners, new User.CompareByName());
+          %>
           <tr>
             <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.owners"/>:</td>
             <td valign="top" class="editColumnText">
               <html:select property="owners" size="5" multiple="true" styleClass="editColumnText">
-              <%  List<User> owners = uh.getUsersWithProjectPermission(project.getId(), UserUtilities.PERMISSION_VIEW_ALL);
-                  Collections.sort(owners, new User.CompareByName());
-
+              <%
                   for(int i = 0; i < owners.size(); i++) {
               %>
                       <html:option value="<%= owners.get(i).getId().toString() %>"><%= owners.get(i).getFirstName() + " " + owners.get(i).getLastName() %></html:option>
-              <% } %>
+              <%  } %>
               </html:select>
             </td>
             <% if(isUpdate) { %>
@@ -96,8 +97,11 @@
                     <% List<User> users = uh.getAllUsers();
                        Collections.sort(users, new User.CompareByName());
                        for(int i = 0; i < users.size(); i++) {
+                           if ( owners.contains(users.get(i)) ) {
+                                continue;
+                           }
                     %>
-                          <html:option value="<%= users.get(i).getId().toString() %>"><%= users.get(i).getFirstName() + " " + users.get(i).getLastName() %></html:option>
+                            <html:option value="<%= users.get(i).getId().toString() %>"><%= users.get(i).getFirstName() + " " + users.get(i).getLastName() %></html:option>
                     <% } %>
                   </html:select>
                   <html:select property="permissions" size="5" multiple="true" styleClass="editColumnText">

@@ -20,6 +20,7 @@ package org.itracker.web.actions.admin.project;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.NameValuePair;
 import org.itracker.model.Permission;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
@@ -75,9 +78,13 @@ public class EditProjectAction extends ItrackerBaseAction {
             HttpSession session = request.getSession(true);
             Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
             User user = (User) session.getAttribute(Constants.USER_KEY);
+            String action = (String) request.getParameter("action");
 
             project = new Project();
             project.setId((Integer) PropertyUtils.getSimpleProperty(form, "id"));
+            if ("update".equals(action)) {
+                project = projectService.getProject(project.getId());
+            }
             project.setDescription((String) PropertyUtils.getSimpleProperty(form, "description"));
             project.setName((String) PropertyUtils.getSimpleProperty(form, "name"));
             Integer projectStatus = (Integer) PropertyUtils.getSimpleProperty(form, "status");
@@ -114,7 +121,6 @@ public class EditProjectAction extends ItrackerBaseAction {
             //TODO: commented this because it was causing authentication problems (rjst), why is it needed anyway ?
             //SessionManager.setAllSessionsNeedsReset();
 
-            String action = (String) request.getParameter("action");
             if("create".equals(action)) {
                 if(! user.isSuperUser()) {
                     return mapping.findForward("unauthorized");
@@ -123,27 +129,80 @@ public class EditProjectAction extends ItrackerBaseAction {
                 if(project == null) {
                     throw new Exception("Error creating new project.");
                 }
-                projectService.createProject(project);
+
+                Integer[] userIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "users");
+                Integer[] permissions = (Integer[]) PropertyUtils.getSimpleProperty(form, "permissions");
+                List<User> users = new ArrayList<User>();
+                
+                List<Permission> userPermissionModels = new ArrayList<Permission>();
+                List<NameValuePair> superUserPermissions = UserUtilities.getPermissionNames(ITrackerResources.getLocale());
+                for(int i = 0; i < ownerIds.length; i++) {
+                    User usermodel = userService.getUser(ownerIds[i]);
+                    userPermissionModels = usermodel.getPermissions();
+                    for ( int j = 0; j < superUserPermissions.size(); j++ ) {
+                        userPermissionModels.add(new Permission(project, Integer.parseInt(superUserPermissions.get(j).getValue()), usermodel));
+                    }
+                    userService.addUserPermissions(ownerIds[i],userPermissionModels);
+                }
+                
+                if(userIds != null && permissions != null && userIds.length > 0 && permissions.length > 0) {
+                    for(int i = 0; i < userIds.length; i++) {
+                        users.add(userService.getUser(userIds[i]));
+                    }
+                    userPermissionModels = new ArrayList<Permission>();
+                    for(Iterator iterator = users.iterator(); iterator.hasNext(); ) {
+                        User usermodel = (User) iterator.next();
+                        userPermissionModels = usermodel.getPermissions();
+                        for(int i = 0; i < permissions.length; i++) {
+                            userPermissionModels.add(new Permission(project, permissions[i], usermodel));
+                        }
+                        userService.setUserPermissions(usermodel.getId(), userPermissionModels );
+                        userService.UpdateAuthenticator(usermodel.getId(), userPermissionModels);
+                    }
+                }
+                for(int i = 0; i < userIds.length; i++) {
+                    owners.add(userIds[i]);
+                }
                 projectService.setProjectOwners(project, owners);
                 projectService.setProjectFields(project, fields);
 
                 projectService.updateProject(project);
 
-                Integer[] userIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "users");
-                Integer[] permissions = (Integer[]) PropertyUtils.getSimpleProperty(form, "permissions");
-                if(userIds != null && permissions != null && userIds.length > 0 && permissions.length > 0) {
-                    List<Permission> userPermissionModels = new ArrayList<Permission>();
-                    for(int i = 0; i < permissions.length; i++) {
-                        userPermissionModels.add(new Permission(project, permissions[i]));
-                    }
-                    for(int i = 0; i < userIds.length; i++) {
-                        userService.addUserPermissions(userIds[i], userPermissionModels);
-                    }
-                }
             } else if ("update".equals(action)) {
                 if(! UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
                     return mapping.findForward("unauthorized");
                 }
+                List<User> users = project.getOwners();
+                
+                List<Permission> userPermissionModels = project.getPermissions();
+                for(Iterator iterator = users.iterator(); iterator.hasNext(); ) {
+                    user = (User) iterator.next();
+                    boolean fndUser = false;
+                    for(int i = 0; i < ownerIds.length; i++) {
+                        int userid = user.getId();
+                        int ownerid = ownerIds[i];
+                        if ( userid == ownerid ) {
+                            fndUser = true;
+                        }
+                    }
+                    if ( fndUser ) {
+                        iterator.remove();
+                    }
+                }
+                
+                for(Iterator iterator = users.iterator(); iterator.hasNext(); ) {
+                    user = (User) iterator.next();
+                    List<Permission> permissionModels = user.getPermissions();
+                    for(Iterator iter = permissionModels.iterator(); iter.hasNext(); ) {
+                        Permission permission = (Permission) iter.next();
+                        if ( permission.getProject().getId() == project.getId()) {
+                            iter.remove();
+                        } 
+                    }
+                    userService.setUserPermissions(user.getId(), userPermissionModels);
+                    userService.UpdateAuthenticator(user.getId(), userPermissionModels);
+                }
+
                 projectService.setProjectOwners(project, owners);
                 projectService.setProjectFields(project, fields);
                 projectService.updateProject(project);

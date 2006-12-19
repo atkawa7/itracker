@@ -101,7 +101,8 @@ public interface UserService {
      * @param newPermissions an array of PermissionModels that represent the new permissions to add to the user
      * @return true if the operation was successful
      */
-    public boolean addUserPermissions(Integer userId, List<Permission> newPermissions);
+
+    public boolean UpdateAuthenticator(Integer userId, List<Permission> newPermissions);
     
     /**
      * Resets all of the permissions for a user in the database.  The new permissions for the user are contained in a
@@ -114,6 +115,21 @@ public interface UserService {
      * @return true if the operation was successful
      * @see UserUtilities
      */
+
+    public boolean addUserPermissions( Integer userId, List<Permission> newPermissions);
+    
+    /**
+     * Resets all of the permissions for a user in the database.  The new permissions for the user are contained in a
+     * HashMap object.  The keys of this map MUST be in the format Perm<permission type>Prod<productId>.  For example to add the
+     * VIEW_ALL permission to project 3, the key would be Perm7Prod3.  The value of the key would be a Permission
+     * object.  Before updating the permissions, this method will call the pluggable authenticator to have the permission
+     * set augmented.  This augmented set of permissions will then be used for the actual update.
+     * @param userId the userId, not login, of the user to add the permissions to
+     * @param newPermissions a HashMap containing keys and Permission values as described in the method description.
+     * @return true if the operation was successful
+     * @see UserUtilities
+     */
+    
     public boolean setUserPermissions(Integer userId, List<Permission> newPermissions);
     
     /**
@@ -121,6 +137,7 @@ public interface UserService {
      * @param userId the userId, not the login, to find the permissions of
      * @returns an array of PermissionModels
      */
+    
     public List<Permission> getPermissionsByUserId(Integer userId);
     
     /**
