@@ -300,16 +300,16 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 
                 // PUTTING PREFERENCES INTO THE REQUEST SCOPE
                 if (UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_CREATED, hiddenSections)) {
-                    request.setAttribute("UserUtilities_PREF_HIDE_CREATED",new Integer(UserUtilities.PREF_HIDE_CREATED));
+                    request.setAttribute("UserUtilities_PREF_HIDE_CREATED",new Boolean(true));
                 }
                 if (UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_ASSIGNED, hiddenSections)) {
-                    request.setAttribute("UserUtilities_PREF_HIDE_ASSIGNED",new Integer(UserUtilities.PREF_HIDE_ASSIGNED));
+                    request.setAttribute("UserUtilities_PREF_HIDE_ASSIGNED",new Boolean(true));
                 }
                 if (UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_UNASSIGNED, hiddenSections)) {
-                    request.setAttribute("UserUtilities_PREF_HIDE_UNASSIGNED",new Integer(UserUtilities.PREF_HIDE_UNASSIGNED));
+                    request.setAttribute("UserUtilities_PREF_HIDE_UNASSIGNED",new Boolean(true));
                 }
                 if (UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_WATCHED, hiddenSections)) {
-                    request.setAttribute("UserUtilities_PREF_HIDE_WATCHED",new Integer(UserUtilities.PREF_HIDE_WATCHED));
+                    request.setAttribute("UserUtilities_PREF_HIDE_WATCHED",new Boolean(true));
                 }
                 
                 request.setAttribute("itracker_web_generic_unassigned", ITrackerResources.getString("itracker.web.generic.unassigned", currLocale));
