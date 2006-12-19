@@ -52,10 +52,20 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * projects.  
      * 
      * @param userId ID of the user who owns the issues to return
-     * @param status status of the issues to return
+     * @param excludestatus exclude status of the issues to return
      * @return list of issues matching the above filter, in an unspecified order
      */
-    List<Issue> findByOwnerInAvailableProjects(Integer userId, int status);
+    List<Issue> findByOwnerInAvailableProjects(Integer userId, int excludestatus);
+    
+    /**
+     * Finds all issues owned by the user with the given ID, in all active 
+     * projects.  
+     * 
+     * @param userId ID of the user who owns the issues to return
+     * @param excludestatus exclude status of the issues to return
+     * @return list of issues matching the above filter, in an unspecified order
+     */
+    List<Issue> findByOwnerInAvailableProjects(Integer userId, int excludestatus1,int excludestatus2);
 
     /**
      * Finds all issues owned by the user with the given ID in all projects. 

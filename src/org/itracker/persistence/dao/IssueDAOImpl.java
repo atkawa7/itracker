@@ -89,7 +89,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
      * @author ready
      */
     @SuppressWarnings("unchecked")
-    public List<Issue> findByOwnerInAvailableProjects(Integer userId, int status) {
+    public List<Issue> findByOwnerInAvailableProjects(Integer userId, int excludestatus) {
         final List<Issue> issues; 
         
         try {
@@ -97,7 +97,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
                 .createAlias("project","project")
                 .add(Expression.eq("project.status", 1));
             criteria.add(Expression.eq("owner.id", userId));
-            criteria.add(Expression.ne("status", status));
+            criteria.add(Expression.ne("status", excludestatus));
             
             issues = (List<Issue>)criteria.list();
          
@@ -115,6 +115,32 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 //                    .setInteger("ownerId", userId)
 //                    .setInteger("issueStatus", status)
 //                    .list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+
+    /*
+     * Improved this criteria to only show the issues in available projecs.
+     * I guess that's a join... I found documentation here
+     * http://www.javalobby.org/articles/hibernatequery102/
+     * @author ready
+     */
+    @SuppressWarnings("unchecked")
+    public List<Issue> findByOwnerInAvailableProjects(Integer userId, int excludestatus1, int excludestatus2 ) {
+        final List<Issue> issues; 
+        
+        try {
+            Criteria criteria = getSession().createCriteria(Issue.class)
+                .createAlias("project","project")
+                .add(Expression.eq("project.status", 1));
+            criteria.add(Expression.eq("owner.id", userId));
+            criteria.add(Expression.ne("status", excludestatus1));
+            criteria.add(Expression.ne("status", excludestatus2));
+            issues = (List<Issue>)criteria.list();
+         
+
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }

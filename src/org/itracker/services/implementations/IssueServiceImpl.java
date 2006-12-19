@@ -167,7 +167,7 @@ public class IssueServiceImpl implements IssueService {
 		final List<Issue> issues;
 
 		if (availableProjectsOnly) {
-			issues = issueDAO.findByOwnerInAvailableProjects(userId, IssueUtilities.STATUS_RESOLVED);
+			issues = issueDAO.findByOwnerInAvailableProjects(userId, IssueUtilities.STATUS_RESOLVED, IssueUtilities.STATUS_CLOSED);
 		} else {
 			issues = issueDAO.findByOwner(userId, IssueUtilities.STATUS_RESOLVED);
 		}
