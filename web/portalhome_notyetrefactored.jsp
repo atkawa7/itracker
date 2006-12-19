@@ -25,13 +25,7 @@
   <br>
 </logic:messagesPresent>
 
-<font color="red">We are refactoring still this portalhome JSP for less scriplets
-	and proper MVC. For this reason many details on this page don't yet work properly. Especially we should get the "Watched Issues" working (this has to do with Notifications).<br/>
-	<br/>
-	- unassigned, (little progress...) <br/> 
-- created, (little progress...)  <br/> 
-- and watched issues (this should work if the notifications get properly handeld / stored in the Services layer.<br/> 
- 
+<font color="red">This portalhome might still contain bugs, but it's progressing.. 
 	<br/>
  </font><br/><br/>
 	 <!-- assigned issues -->
