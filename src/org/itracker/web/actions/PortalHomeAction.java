@@ -73,8 +73,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 List<IssuePTO> ownedIssuePTOs = new ArrayList<IssuePTO>();
                 List<IssuePTO> unassignedIssuePTOs = new ArrayList<IssuePTO>();
                 List<IssuePTO> watchedIssuePTOs = new ArrayList<IssuePTO>();
-                
-                
+       
                 // POPULATING ISSUE MODELS
                 final List<Issue> createdIssues;
                 final List<Issue> ownedIssues;

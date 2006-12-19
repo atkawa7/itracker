@@ -381,9 +381,9 @@
           <td>
             <it:formatImageAction forward="viewissue" paramName="id" paramValue="${watchedIssues.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${watchedIssues.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
     
-          	<c:if test="${watchedIssues.canEditIssue}">
+          <%-- %>	<c:if test="${watchedIssues.canEditIssue}">
           	<it:formatImageAction action="/module-projects/editissueform" paramName="id" paramValue="${watchedIssues.issue.id}" caller="index" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="${watchedIssues.issue.id}" textActionKey="itracker.web.image.edit.texttag"/>
-          	</c:if>
+          	</c:if> --%>
       
              
           </td>
@@ -392,9 +392,9 @@
           <td></td>
           <td style="white-space: nowrap">${watchedIssues.issue.project.name}</td>
           <td></td>
-          <td><c:out value="${ownedIssues.statusLocalizedString}"/></td>
+          <td><%-- ${watchedIssues.statusLocalizedString}--%></td>
           <td></td>
-          <td><c:out value="${ownedIssues.serverityLocalizedString}"/></td>
+          <td><%-- ${watchedIssues.serverityLocalizedString}--%></td>
           <td></td>
           <td><it:formatDescription>${watchedIssues.issue.description}</it:formatDescription></td>
           <td></td>
