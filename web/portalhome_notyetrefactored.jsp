@@ -253,7 +253,6 @@
 
 <!-- created issues -->
 
-
 	<c:if test="${! UserUtilities_PREF_HIDE_CREATED}"> 
 
       <tr>
@@ -360,8 +359,7 @@
       </tr>
    	  
 	<c:forEach items="${watchedIssues}" var="watchedIssues" step="1" varStatus="z">
-	  <tr class="listRowUnshaded">	 <td align="left" colspan="15">- watched issue</td>
-	
+	 
 		<c:if test="${(userPrefs.numItemsOnIndex > 0) && (watchedIssues >=userPrefs.numItemsOnIndex) && ! showAll}">
 	  <tr class="listRowUnshaded">		<td align="left" colspan="15">
 			<html:link page="/index.jsp?showAll=true">
