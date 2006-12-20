@@ -248,7 +248,7 @@
               </tr>
 
               <%
-           
+                      List<CustomField> customFields = IssueUtilities.getCustomFields();
                   List<ProjectScript> scripts = project.getScripts();
 
                   Collections.sort(scripts, new ProjectScript.CompareByFieldAndPriority());
