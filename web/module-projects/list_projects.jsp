@@ -76,7 +76,7 @@
     totalIssues += Integer.parseInt((String) projectStats[2]);
 %>
     <tr align="right" class="<%= (numDisplayed % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ) %>">
-      <td>
+      <td nowrap>
         <it:formatImageAction forward="listissues" paramName="projectId" paramValue="<%= projects.get(i).getId() %>" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.project.alt" arg0="<%= projects.get(i).getName() %>" textActionKey="itracker.web.image.view.texttag"/>
         <% if(projects.get(i).getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission(permissions, projects.get(i).getId(), UserUtilities.PERMISSION_CREATE)) { %>
         <it:formatImageAction forward="createissue" paramName="projectId" paramValue="<%= projects.get(i).getId() %>" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.issue.alt" arg0="<%= projects.get(i).getName() %>" textActionKey="itracker.web.image.create.texttag"/>
