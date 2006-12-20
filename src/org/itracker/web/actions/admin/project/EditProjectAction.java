@@ -53,10 +53,10 @@ import org.itracker.web.util.Constants;
 
 
 public class EditProjectAction extends ItrackerBaseAction {
-
+    
     public EditProjectAction() {
     }
-
+    
     @SuppressWarnings("unchecked")
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
@@ -69,7 +69,7 @@ public class EditProjectAction extends ItrackerBaseAction {
             return mapping.findForward("listprojectsadmin");
         }
         resetToken(request);
-
+        
         Project project = null;
         try {
             ProjectService projectService = getITrackerServices().getProjectService();
@@ -79,7 +79,7 @@ public class EditProjectAction extends ItrackerBaseAction {
             Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
             User user = (User) session.getAttribute(Constants.USER_KEY);
             String action = (String) request.getParameter("action");
-
+            
             project = new Project();
             project.setId((Integer) PropertyUtils.getSimpleProperty(form, "id"));
             if ("update".equals(action)) {
@@ -93,7 +93,7 @@ public class EditProjectAction extends ItrackerBaseAction {
             } else {
                 project.setStatus(ProjectUtilities.STATUS_ACTIVE);
             }
-
+            
             Integer[] optionValues = (Integer[]) PropertyUtils.getSimpleProperty(form, "options");
             int optionmask = 0;
             if(optionValues != null) {
@@ -102,7 +102,7 @@ public class EditProjectAction extends ItrackerBaseAction {
                 }
             }
             project.setOptions(optionmask);
-
+            
             HashSet<Integer> fields = new HashSet<Integer>();
             Integer[] fieldIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "fields");
             if(fieldIds != null) {
@@ -110,7 +110,7 @@ public class EditProjectAction extends ItrackerBaseAction {
                     fields.add(fieldIds[i]);
                 }
             }
-
+            
             HashSet<Integer> owners = new HashSet<Integer>();
             Integer[] ownerIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "owners");
             if(ownerIds != null) {
@@ -120,7 +120,7 @@ public class EditProjectAction extends ItrackerBaseAction {
             }
             //TODO: commented this because it was causing authentication problems (rjst), why is it needed anyway ?
             //SessionManager.setAllSessionsNeedsReset();
-
+            
             if("create".equals(action)) {
                 if(! user.isSuperUser()) {
                     return mapping.findForward("unauthorized");
@@ -129,18 +129,23 @@ public class EditProjectAction extends ItrackerBaseAction {
                 if(project == null) {
                     throw new Exception("Error creating new project.");
                 }
-
+                
                 Integer[] userIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "users");
                 Integer[] permissions = (Integer[]) PropertyUtils.getSimpleProperty(form, "permissions");
                 List<User> users = new ArrayList<User>();
                 
                 List<Permission> userPermissionModels = new ArrayList<Permission>();
+                
                 List<NameValuePair> superUserPermissions = UserUtilities.getPermissionNames(ITrackerResources.getLocale());
+                boolean fndprojectAdmins = false;
                 for(int i = 0; i < ownerIds.length; i++) {
                     User usermodel = userService.getUser(ownerIds[i]);
-                    userPermissionModels = usermodel.getPermissions();
+                    userPermissionModels = userService.getUserPermissionsLocal(usermodel);
                     for ( int j = 0; j < superUserPermissions.size(); j++ ) {
-                        userPermissionModels.add(new Permission(project, Integer.parseInt(superUserPermissions.get(j).getValue()), usermodel));
+                        int superUserPermission = Integer.parseInt(superUserPermissions.get(j).getValue());
+                        if ( superUserPermission == UserUtilities.PERMISSION_PRODUCT_ADMIN )
+                            fndprojectAdmins = true;
+                        userPermissionModels.add(new Permission(project, superUserPermission, usermodel));
                     }
                     userService.addUserPermissions(ownerIds[i],userPermissionModels);
                 }
@@ -152,7 +157,7 @@ public class EditProjectAction extends ItrackerBaseAction {
                     userPermissionModels = new ArrayList<Permission>();
                     for(Iterator iterator = users.iterator(); iterator.hasNext(); ) {
                         User usermodel = (User) iterator.next();
-                        userPermissionModels = usermodel.getPermissions();
+                        userPermissionModels = userService.getUserPermissionsLocal(usermodel);
                         for(int i = 0; i < permissions.length; i++) {
                             userPermissionModels.add(new Permission(project, permissions[i], usermodel));
                         }
@@ -161,13 +166,14 @@ public class EditProjectAction extends ItrackerBaseAction {
                     }
                 }
                 for(int i = 0; i < userIds.length; i++) {
-                    owners.add(userIds[i]);
+                    if ( fndprojectAdmins )
+                        owners.add(userIds[i]);
                 }
                 projectService.setProjectOwners(project, owners);
                 projectService.setProjectFields(project, fields);
-
+                
                 projectService.updateProject(project);
-
+                
             } else if ("update".equals(action)) {
                 if(! UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
                     return mapping.findForward("unauthorized");
@@ -191,18 +197,18 @@ public class EditProjectAction extends ItrackerBaseAction {
                 }
                 
                 for(Iterator iterator = users.iterator(); iterator.hasNext(); ) {
-                    user = (User) iterator.next();
-                    List<Permission> permissionModels = user.getPermissions();
-                    for(Iterator iter = permissionModels.iterator(); iter.hasNext(); ) {
-                        Permission permission = (Permission) iter.next();
-                        if ( permission.getProject().getId() == project.getId()) {
-                            iter.remove();
-                        } 
-                    }
-                    userService.setUserPermissions(user.getId(), userPermissionModels);
-                    userService.UpdateAuthenticator(user.getId(), userPermissionModels);
+                    User usermodel = (User) iterator.next();
+                        List<Permission> permissionModels = userService.getUserPermissionsLocal(usermodel);
+                        for(Iterator iter = permissionModels.iterator(); iter.hasNext(); ) {
+                            Permission permission = (Permission) iter.next();
+                            if ( permission.getProject().getId() == project.getId()) {
+                                iter.remove();
+                            }
+                        }
+                        userService.setUserPermissions(usermodel.getId(), permissionModels);
+                        userService.UpdateAuthenticator(usermodel.getId(), permissionModels);
                 }
-
+                
                 projectService.setProjectOwners(project, owners);
                 projectService.setProjectFields(project, fields);
                 projectService.updateProject(project);
@@ -213,12 +219,11 @@ public class EditProjectAction extends ItrackerBaseAction {
             logger.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
-
+        
         if(! errors.isEmpty()) {
             saveMessages(request, errors);
         }
         return mapping.findForward("error");
     }
-
+    
 }
-  

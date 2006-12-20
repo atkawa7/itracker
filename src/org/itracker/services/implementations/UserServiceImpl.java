@@ -450,8 +450,8 @@ public class UserServiceImpl implements UserService {
                     authenticator.initialize(values);
                     if (authenticator
                             .updateProfile(user, AuthenticationConstants.UPDATE_TYPE_PERMISSION_SET, null,
-                                    AuthenticationConstants.AUTH_TYPE_UNKNOWN,
-                                    AuthenticationConstants.REQ_SOURCE_UNKNOWN)) {
+                            AuthenticationConstants.AUTH_TYPE_UNKNOWN,
+                            AuthenticationConstants.REQ_SOURCE_UNKNOWN)) {
                         permissions = user.getPermissions();
                     }
                 } else {
@@ -470,7 +470,7 @@ public class UserServiceImpl implements UserService {
                         + " does not extend the PluggableAuthenticator class.");
                 throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
             }
- 
+            
         } catch (AuthenticatorException ae) {
             logger.warn("Error setting user (" + userId + ") permissions.  AuthenticatorException.", ae);
             successful = false;
@@ -499,13 +499,13 @@ public class UserServiceImpl implements UserService {
         boolean successful = true;
         List<Permission> delPermissions = new ArrayList<Permission>();
         List<Permission> addPermissions = new ArrayList<Permission>();
-            
+        
         
         try {
+            User usermodel = this.getUser(userId);
+            List<Permission> setPermissions = this.getUserPermissionsLocal(usermodel); // get assigned permissions from database
             
-            List<Permission> setPermissions = permissionDAO.findByUserId(userId); // get assigned permissions from database
-
-            if ( setPermissions != null && setPermissions.size() > 0 && newPermissions != null && newPermissions.size() > 0 ) {
+            if ( ! setPermissions.isEmpty() && ! newPermissions.isEmpty() ) {
                 for ( Iterator<Permission> setPerms = setPermissions.iterator(); setPerms.hasNext(); ) {
                     Permission permission = setPerms.next();
                     if ( ! newPermissions.contains(permission)) {
@@ -518,27 +518,32 @@ public class UserServiceImpl implements UserService {
                         addPermissions.add(permission);
                     }
                 }
-           } else {
+            } else if (!  setPermissions.isEmpty() && newPermissions.isEmpty() ) {
+                for ( Iterator<Permission> setPerms = setPermissions.iterator(); setPerms.hasNext(); ) {
+                    Permission delpermission = setPerms.next();
+                    delPermissions.add(delpermission);
+                }
+            } else {
                 for ( Iterator<Permission> newPerms = newPermissions.iterator(); newPerms.hasNext(); ) {
-                    Permission permission = newPerms.next();
-                    addPermissions.add(permission);
+                    Permission addpermission = newPerms.next();
+                    addPermissions.add(addpermission);
                 }
             }
             
             // finally create all newPermissions which do not exist yet
-            if (delPermissions != null && delPermissions.size() > 0 ) {
-                    for (Iterator<Permission> iterator = addPermissions.iterator(); iterator.hasNext();) {
-                        Permission permission = (Permission) iterator.next();
-                        permissionDAO.delete(permission);
-                    }
+            if (! delPermissions.isEmpty() ) {
+                for (Iterator<Permission> iterator = delPermissions.iterator(); iterator.hasNext();) {
+                    Permission permission = (Permission) iterator.next();
+                    permissionDAO.delete(permission);
+                }
             }
-            if (addPermissions != null && addPermissions.size() > 0 ) {
-                    for (Iterator<Permission> iterator = addPermissions.iterator(); iterator.hasNext();) {
-                        Permission permission = (Permission) iterator.next();
-                        permissionDAO.saveOrUpdate(permission);
-                    }
+            if (! addPermissions.isEmpty() ) {
+                for (Iterator<Permission> iterator = addPermissions.iterator(); iterator.hasNext();) {
+                    Permission permission = (Permission) iterator.next();
+                    permissionDAO.saveOrUpdate(permission);
+                }
             }
-                                    
+            
         } catch (AuthenticatorException ae) {
             logger.warn("Error setting user (" + userId + ") permissions.  AuthenticatorException.", ae);
             successful = false;
@@ -547,7 +552,27 @@ public class UserServiceImpl implements UserService {
         return successful;
     }
     
-   @Deprecated
+    public boolean removeUserPermissions(Integer userId, List<Permission> newPermissions) {
+        boolean successful = false;
+        if (newPermissions == null || newPermissions.size() == 0) {
+            return successful;
+        }
+        
+        try {
+            User user = userDAO.findByPrimaryKey(userId);
+            for (Iterator<Permission> delIterator = newPermissions.iterator(); delIterator.hasNext(); ) {
+                Permission permission = (Permission) delIterator.next();
+                permissionDAO.delete(permission);
+            }
+        } catch (AuthenticatorException ae) {
+            logger.warn("Error setting user (" + userId + ") permissions.  AuthenticatorException.", ae);
+            successful = false;
+        }
+        
+        return successful;
+    }
+    
+    @Deprecated
     public Map<Integer, Set<PermissionType>> getUsersMapOfProjectIdsAndSetOfPermissionTypes(User user, int reqSource) {
         Map<Integer, Set<PermissionType>> permissionsMap = new HashMap<Integer, Set<PermissionType>>();
         

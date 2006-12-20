@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -144,23 +145,25 @@ public class EditUserAction extends ItrackerBaseAction {
                 List<Permission> newPermissions = new ArrayList<Permission>();
                 for(Iterator<String> iter = permissionsMap.keySet().iterator(); iter.hasNext(); ) {
                     String paramName = iter.next();
-                    logger.debug("permission paramName: "+paramName);
-                    // Perm7Proj5103
                     Integer projectIntValue =  new Integer(paramName.substring(paramName.lastIndexOf('j') + 1));
-                    logger.debug("projectForPermission found: "+projectIntValue);
                     Project project = projectService.getProject(projectIntValue);
                     Integer permissionIntValue = Integer.parseInt(paramName.substring(4,paramName.lastIndexOf('P')));
-                    logger.debug("permissionIntValue found: "+permissionIntValue);
                     Permission newPermission = new Permission(project,permissionIntValue,editUser); 
                     newPermission.setCreateDate(new Date());
-                    logger.debug("new Permission found: "+newPermission.getCreateDate());
-                    logger.debug("new Permission found: "+newPermission.getLastModifiedDate());
-                    logger.debug("new Permission found: "+newPermission.getPermissionType());
-                    logger.debug("new Permission found: "+newPermission.getProject().getName());
-                    logger.debug("new Permission found: "+newPermission.getUser().getLogin());            
                     newPermissions.add(newPermission); 
+                
+                    if ( permissionIntValue == UserUtilities.PERMISSION_PRODUCT_ADMIN ) {
+                        List<User> users = projectService.getProjectOwners(projectIntValue);
+                        HashSet<Integer> owners = new HashSet<Integer>();
+                        for ( Iterator userIterator = users.iterator(); userIterator.hasNext(); ) {
+                            User user = (User) userIterator.next();
+                            owners.add(user.getId());
+                        }
+                        owners.add(editUser.getId());
+                        projectService.setProjectOwners(project,owners);
+                    }
                 }
-                logger.debug("setting Permissions for userID: "+editUser.getId());    
+                
                 boolean successful = userService.setUserPermissions(editUser.getId(), newPermissions);
                 if (successful == true) { 
                 	logger.debug("User Permissions have been nicely set.");
