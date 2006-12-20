@@ -66,9 +66,13 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         </property>
     </bean>
     
+    <util:properties id="configurationProperties" location="/WEB-INF/configuration.properties"/>
+    
     <bean id="configurationServiceTarget"
         class="org.itracker.services.implementations.ConfigurationServiceImpl"
-        autowire="byName" />
+        autowire="byName">
+        <constructor-arg ref="configurationProperties"/>
+    </bean>
 
     <!-- Issue Service -->
     <bean id="issueService" 
