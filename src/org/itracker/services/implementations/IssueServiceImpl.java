@@ -167,7 +167,7 @@ public class IssueServiceImpl implements IssueService {
 		final List<Issue> issues;
 
 		if (availableProjectsOnly) {
-			issues = issueDAO.findByOwnerInAvailableProjects(userId, IssueUtilities.STATUS_RESOLVED, IssueUtilities.STATUS_CLOSED);
+			issues = issueDAO.findByOwnerInAvailableProjects(userId, IssueUtilities.STATUS_RESOLVED);
 		} else {
 			issues = issueDAO.findByOwner(userId, IssueUtilities.STATUS_RESOLVED);
 		}
@@ -1105,7 +1105,7 @@ public class IssueServiceImpl implements IssueService {
 
 		IssueActivity[] activityArray = new IssueActivity[0];
 
-		Collection<IssueActivity> activity = issueActivityDAO.findByIssueIdAndNotification(issueId, (notificationSent ? 1 : 0));
+		Collection<IssueActivity> activity = issueActivityDAO.findByIssueIdAndNotification(issueId, notificationSent);
 
 		activityArray = new IssueActivity[activity.size()];
 

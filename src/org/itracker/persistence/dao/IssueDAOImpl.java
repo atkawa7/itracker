@@ -43,179 +43,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         final List<Issue> issues;
         
         try {
-            issues = getSession().createCriteria(Issue.class).list();
-        } catch (HibernateException ex) {
-            throw convertHibernateAccessException(ex);
-        }
-        return issues;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Issue> findByCreatorInAvailableProjects(Integer userId, int status) {
-        final List<Issue> issues;
-        
-        try {
-            Query query = getSession().getNamedQuery(
-                    "IssuesByCreatorInAvailableProjectsQuery");
-            query.setInteger("projectStatus", 1);
-            query.setInteger("creatorId", userId);
-            query.setInteger("issueStatus", status);
-            issues = query.list();
-        } catch (HibernateException ex) {
-            throw convertHibernateAccessException(ex);
-        }
-        return (List<Issue>)issues;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Issue> findByCreator(Integer userId, int status) {
-        final List<Issue> issues;
-        
-        try {
-            issues = getSession().createCriteria(Issue.class)
-                    .add(Expression.eq("creator.id", userId))
-                    .add(Expression.eq("issue.status", status))
-                    .list();
-        } catch (HibernateException ex) {
-            throw convertHibernateAccessException(ex);
-        }
-        return issues;
-    }
-
-    /*
-     * Improved this criteria to only show the issues in available projecs.
-     * I guess that's a join... I found documentation here
-     * http://www.javalobby.org/articles/hibernatequery102/
-     * @author ready
-     */
-    @SuppressWarnings("unchecked")
-    public List<Issue> findByOwnerInAvailableProjects(Integer userId, int excludestatus) {
-        final List<Issue> issues; 
-        
-        try {
-            Criteria criteria = getSession().createCriteria(Issue.class)
-                .createAlias("project","project")
-                .add(Expression.eq("project.status", 1));
-            criteria.add(Expression.eq("owner.id", userId));
-            criteria.add(Expression.ne("status", excludestatus));
-            
-            issues = (List<Issue>)criteria.list();
-         
-          // Equivalent HQL query: 
-//        final String hql = 
-//                "select issue from Issue as issue " + 
-//                "inner join issue.project as project " +
-//                "where project.status = :projectStatus " +
-//                " and issue.owner.id = :ownerId " +
-//                " and issue.status = :issueStatus";
-//        
-//        try {
-//            return getSession().createQuery(hql)
-//                    .setInteger("projectStatus", Integer.valueOf(1))
-//                    .setInteger("ownerId", userId)
-//                    .setInteger("issueStatus", status)
-//                    .list();
-        } catch (HibernateException ex) {
-            throw convertHibernateAccessException(ex);
-        }
-        return issues;
-    }
-
-    /*
-     * Improved this criteria to only show the issues in available projecs.
-     * I guess that's a join... I found documentation here
-     * http://www.javalobby.org/articles/hibernatequery102/
-     * @author ready
-     */
-    @SuppressWarnings("unchecked")
-    public List<Issue> findByOwnerInAvailableProjects(Integer userId, int excludestatus1, int excludestatus2 ) {
-        final List<Issue> issues; 
-        
-        try {
-            Criteria criteria = getSession().createCriteria(Issue.class)
-                .createAlias("project","project")
-                .add(Expression.eq("project.status", 1));
-            criteria.add(Expression.eq("owner.id", userId));
-            criteria.add(Expression.ne("status", excludestatus1));
-            criteria.add(Expression.ne("status", excludestatus2));
-            issues = (List<Issue>)criteria.list();
-         
-
-        } catch (HibernateException ex) {
-            throw convertHibernateAccessException(ex);
-        }
-        return issues;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Issue> findByOwner(Integer userId, int status) {
-        final List<Issue> issues;
-        
-        try {
-            issues = getSession().createCriteria(Issue.class)
-                    .add(Expression.eq("owner.id", userId))
-                    .add(Expression.eq("status", status))
-                    .list();
-        } catch (HibernateException ex) {
-            throw convertHibernateAccessException(ex);
-        }
-        return issues;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Issue> findByNotificationInAvailableProjects(Integer userId, int status) {
-        final List<Issue> issues;
-        
-        try {
-            final Query query = getSession().getNamedQuery(
-                    "IssuesByNotificationInAvailableProjectsQuery");
-            query.setInteger("userId", userId);
-            query.setInteger("status", status);
-            issues = query.list();
-        } catch (HibernateException ex) { 
-            throw convertHibernateAccessException(ex);
-        }
-        return issues;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Issue> findByNotification(Integer userId, int status) {
-        final List<Issue> issues; 
-        
-        try {
-            final Query query = getSession().getNamedQuery(
-                    "IssuesByNotificationQuery");
-            query.setInteger("userId", userId);
-            query.setInteger("status", status);
-            issues = query.list();
-        } catch (HibernateException ex) { 
-            throw convertHibernateAccessException(ex);
-        }
-        return issues;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Issue> findByStatusLessThanEqualToInAvailableProjects(int status) {
-        final List<Issue> issues; 
-        
-        try {
-            issues = getSession().createCriteria(Issue.class)
-                    .add(Expression.le("status", status))
-                    .list();
-        } catch (HibernateException ex) {
-            throw convertHibernateAccessException(ex);
-        }
-        return issues;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Issue> findByStatusLessThanEqualTo(int status) {
-        final List<Issue> issues;
-        
-        try {
-            issues = getSession().createCriteria(Issue.class)
-                    .add(Expression.le("status", status))
-                    .list();
+            issues = getSession().getNamedQuery("IssuesAllQuery").list();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -224,88 +52,267 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
     @SuppressWarnings("unchecked")
     public List<Issue> findByStatus(int status) {
-        final List<Issue> issues;
-        
-        try {
-            issues = getSession().createCriteria(Issue.class)
-                    .add(Expression.le("status", status))
-                    .list();
-        } catch (HibernateException ex) {
-            throw convertHibernateAccessException(ex);
-        }
-        return issues;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Issue> findByStatusLessThan(int status) {
         final List<Issue> issues; 
         
         try {
-            issues = getSession().createCriteria(Issue.class)
-                    .add(Expression.lt("status", status))
-                    .list();
+            Query query = getSession().getNamedQuery("IssuesByStatusQuery");
+            query.setInteger("issueStatus", status);
+            issues = query.list();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
         return issues;
     }
-
+    
+    @SuppressWarnings("unchecked")
+    public List<Issue> findByStatusLessThan(int maxExclusiveStatus) {
+        final List<Issue> issues; 
+        
+        try {
+            Query query = getSession().getNamedQuery(
+                    "IssuesByStatusLessThanQuery");
+            query.setInteger("maxExclusiveStatus", maxExclusiveStatus);
+            issues = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Issue> findByStatusLessThanEqualTo(int maxStatus) {
+        final List<Issue> issues; 
+        
+        try {
+            Query query = getSession().getNamedQuery(
+                    "IssuesByStatusLessThanEqualToQuery");
+            query.setInteger("maxStatus", maxStatus);
+            issues = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Issue> findByStatusLessThanEqualToInAvailableProjects(
+            int maxStatus) {
+        final List<Issue> issues; 
+        
+        try {
+            Query query = getSession().getNamedQuery(
+                    "IssuesByStatusLessThanEqualToInAvailableProjectsQuery");
+            query.setInteger("maxStatus", maxStatus);
+            issues = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+    
     @SuppressWarnings("unchecked")
     public List<Issue> findBySeverity(int severity) {
         final List<Issue> issues;
         
         try {
-            issues = getSession().createCriteria(Issue.class)
-                    .add(Expression.eq("severity", severity))
-                    .list();
+            Query query = getSession().getNamedQuery("IssuesBySeverityQuery");
+            query.setInteger("severity", severity);
+            issues = query.list();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
         return issues;
     }
-
-    @SuppressWarnings("unchecked")
-    public List<Issue> findByProjectAndLowerStatus(Integer projectId, int status) {
-        final List<Issue> issues; 
-        
-        try {
-            Project project = (Project) getSession().load(Project.class, projectId);
-            issues = getSession().createCriteria(Issue.class)
-                    .add(Expression.eq("project", project))
-                    .add(Expression.lt("status", status))
-                    .list();
-        } catch (HibernateException ex) {
-            throw convertHibernateAccessException(ex);
-        }
-        return issues;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Issue> findByProjectAndHigherStatus(Integer projectId, int status) {
-        final List<Issue> issues;
-        
-        try {
-            Project project = (Project) getSession().load(Project.class, projectId);
-            issues = getSession().createCriteria(Issue.class)
-                   .add(Expression.eq("project", project))
-                   .add(Expression.lt("status", status))
-                   .list();
-        } catch (HibernateException ex) {
-            throw convertHibernateAccessException(ex);
-        }
-        return issues;
-    }
-
+    
     @SuppressWarnings("unchecked")
     public List<Issue> findByProject(Integer projectId) {
         final List<Issue> issues;
         
         try {
-            Project project = (Project) getSession().load(Project.class, projectId);
-            issues = getSession().createCriteria(Issue.class)
-                   .add(Expression.eq("project", project))
-                   .list();
+            Query query = getSession().getNamedQuery("IssuesByProjectQuery");
+            query.setInteger("projectId", projectId);
+            issues = query.list();
         } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Issue> findByProjectAndLowerStatus(Integer projectId, 
+            int maxExclusiveStatus) {
+        final List<Issue> issues;
+        
+        try {
+            Query query = getSession().getNamedQuery(
+                    "IssuesByProjectAndLowerStatusQuery");
+            query.setInteger("projectId", projectId);
+            query.setInteger("maxExclusiveStatus", maxExclusiveStatus);
+            issues = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+    
+    public int countByProjectAndLowerStatus(Integer projectId, 
+            int maxExclusiveStatus) {
+        final Integer count;
+        
+        try {
+            final Query query = getSession().getNamedQuery(
+                    "IssueCountByProjectAndLowerStatusQuery");
+            query.setInteger("projectId", projectId);
+            query.setInteger("maxExclusiveStatus", maxExclusiveStatus);
+            count = (Integer)query.uniqueResult();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return count;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Issue> findByProjectAndHigherStatus(Integer projectId, 
+            int status) {
+        final List<Issue> issues;
+        
+        try {
+            Query query = getSession().getNamedQuery(
+                    "IssuesByProjectAndHigherStatusQuery");
+            query.setInteger("projectId", projectId);
+            query.setInteger("minStatus", status);
+            issues = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+    
+    public int countByProjectAndHigherStatus(Integer projectId, int minStatus) {
+        final Integer count;
+        
+        try {
+            final Query query = getSession().getNamedQuery(
+                    "IssueCountByProjectAndHigherStatusQuery");
+            query.setInteger("projectId", projectId);
+            query.setInteger("minStatus", minStatus);
+            count = (Integer)query.uniqueResult();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return count;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Issue> findByOwner(Integer ownerId, int maxExclusiveStatus) {
+        final List<Issue> issues;
+        
+        try {
+            Query query = getSession().getNamedQuery("IssuesByOwnerQuery");
+            query.setInteger("ownerId", ownerId);
+            query.setInteger("maxExclusiveStatus", maxExclusiveStatus);
+            issues = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Issue> findByOwnerInAvailableProjects(Integer ownerId, 
+            int maxExclusiveStatus) {
+        final List<Issue> issues; 
+        
+        try {
+            Query query = getSession().getNamedQuery(
+                    "IssuesByOwnerInAvailableProjectsQuery");
+            query.setInteger("ownerId", ownerId);
+            query.setInteger("maxExclusiveStatus", maxExclusiveStatus);
+            
+            issues = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Issue> findUnassignedIssues(int maxStatus) {
+        final List<Issue> issues; 
+        
+        try {
+            Query query = getSession().getNamedQuery("IssuesUnassignedQuery");
+            query.setInteger("maxStatus", maxStatus);
+            
+            issues = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Issue> findByCreator(Integer creatorId, 
+            int maxExclusiveStatus) {
+        final List<Issue> issues;
+        
+        try {
+            Query query = getSession().getNamedQuery("IssuesByCreatorQuery");
+            query.setInteger("creatorId", creatorId);
+            query.setInteger("maxExclusiveStatus", maxExclusiveStatus);
+            issues = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Issue> findByCreatorInAvailableProjects(Integer creatorId, 
+            int maxExclusiveStatus) {
+        final List<Issue> issues;
+        
+        try {
+            Query query = getSession().getNamedQuery(
+                    "IssuesByCreatorInAvailableProjectsQuery");
+            query.setInteger("creatorId", creatorId);
+            query.setInteger("maxExclusiveStatus", maxExclusiveStatus);
+            issues = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Issue> findByNotification(Integer userId, 
+            int maxExclusiveStatus) {
+        final List<Issue> issues; 
+        
+        try {
+            final Query query = getSession().getNamedQuery(
+                    "IssuesByNotificationQuery");
+            query.setInteger("userId", userId);
+            query.setInteger("maxExclusiveStatus", maxExclusiveStatus);
+            issues = query.list();
+        } catch (HibernateException ex) { 
+            throw convertHibernateAccessException(ex);
+        }
+        return issues;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Issue> findByNotificationInAvailableProjects(Integer userId, 
+            int maxExclusiveStatus) {
+        final List<Issue> issues;
+        
+        try {
+            final Query query = getSession().getNamedQuery(
+                    "IssuesByNotificationInAvailableProjectsQuery");
+            query.setInteger("userId", userId);
+            query.setInteger("maxExclusiveStatus", maxExclusiveStatus);
+            issues = query.list();
+        } catch (HibernateException ex) { 
             throw convertHibernateAccessException(ex);
         }
         return issues;
@@ -382,30 +389,6 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
             throw convertHibernateAccessException(ex);
         }
         return lastModifiedDate;
-    }
-
-    public Object[] getIssueStats(Integer projectId) {
-        /* TODO: move this method to IssueServiceImpl */
-        
-        Object[] issueStats = new Object[4];
-
-        int totalIssues = 0;
-        Collection<Issue> openIds = findByProjectAndLowerStatus(projectId, IssueUtilities.STATUS_RESOLVED);
-        // Collection openIds = ejbSelectIdByProjectAndStatusLessThan(projectId,
-        // IssueUtilities.STATUS_RESOLVED);
-        issueStats[0] = (openIds == null ? "0" : Integer.toString(openIds.size()));
-        if(openIds!=null){
-        	 totalIssues += openIds.size();
-        }
-        Collection<Issue> resolvedIds = findByProjectAndHigherStatus(projectId, IssueUtilities.STATUS_RESOLVED);
-        issueStats[1] = (resolvedIds == null ? "0" : Integer.toString(resolvedIds.size()));
-        if(resolvedIds!=null){
-        	totalIssues += resolvedIds.size();
-        }
-        issueStats[2] = Integer.toString(totalIssues);
-        issueStats[3] = new Date();// ejbHomeLatestModificationDate(projectId);
-
-        return issueStats;
     }
 
 }
