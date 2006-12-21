@@ -21,21 +21,31 @@ package org.itracker.model;
 import java.util.Comparator;
 
 /**
- * This is a POJO Business Domain Object. Hibernate Bean.
+ * This is a POJO Business Domain Object modelling an attachment to an Issue. 
+ * 
+ * <p>Hibernate Bean. </p>
+ * 
  * @author ready
- *
  */
-public  class IssueAttachment extends AbstractBean {
+public class IssueAttachment extends AbstractBean {
 
     private String originalFileName;
     private String type;
     private String fileName;
+    
+    /** 
+     * PENDING: this should probably not be saved in the DB nor be loaded 
+     * in memory for good resource management. 
+     */
     private byte[] fileData;
     private String description;
     private long size;
     private Issue issue;
     private User user;
 
+    /**
+     * Default constructor required by Hibernate. 
+     */
     public IssueAttachment() {
     }
 
