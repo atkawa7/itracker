@@ -23,22 +23,38 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * This is a POJO Business Domain Object. Hibernate Bean.
+ * This is a POJO Business Domain Object modelling an issue. 
+ * 
+ * <p>Hibernate Bean. </p>
+ * 
  * @author ready
- *
  */
 public class Issue extends AbstractBean implements Comparable<Issue> {
 
     private String description;
-    private int severity;    
+    
+    private int severity;
+    
     private int status;
+    
+    /* PENDING: consider using an int enumeration like severity and status. */
     private String resolution;
+    
     private Project project;
+    
     private User creator;
+    
     private User owner;
+    
     private Version targetVersion;
+    
     private List<Component> components = new ArrayList<Component>();
+    
     private List<Version> versions = new ArrayList<Version>();
+    
+    /* PENDING: do we really need to navigate these relationships from an Issue ? 
+     * Moving these as DAO methods would make an Issue more light-weight. 
+     */
     private List<Notification> notifications = new ArrayList<Notification>();
     private List<IssueActivity> activities = new ArrayList<IssueActivity>();
     private List<IssueAttachment> attachments = new ArrayList<IssueAttachment>();
