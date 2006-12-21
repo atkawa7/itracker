@@ -932,7 +932,7 @@ public class IssueServiceImpl implements IssueService {
 
 		for (Iterator<IssueActivity> iter = activity.iterator(); iter.hasNext();) {
 
-			((IssueActivity) iter.next()).setNotificationSent((notificationSent ? 1 : 0));
+			((IssueActivity) iter.next()).setNotificationSent(notificationSent);
 
 		}
 
