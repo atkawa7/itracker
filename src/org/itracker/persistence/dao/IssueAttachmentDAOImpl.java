@@ -3,6 +3,7 @@ package org.itracker.persistence.dao;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.criterion.Expression;
 import org.itracker.model.IssueAttachment;
 
@@ -16,28 +17,54 @@ public class IssueAttachmentDAOImpl extends BaseHibernateDAOImpl<IssueAttachment
 	
     public IssueAttachment findByPrimaryKey(Integer attachmentId) {
         try {
-            return (IssueAttachment) (getSession().load(IssueAttachment.class, attachmentId));
-        } catch (HibernateException e) {
-            throw convertHibernateAccessException(e);
+            return (IssueAttachment)getSession().get(IssueAttachment.class, 
+                    attachmentId);
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
         }
     }
     
     public IssueAttachment findByFileName(String fileName) {
+        IssueAttachment attachment;
+        
         try {
-            return ((IssueAttachment) getSession()
-                .createCriteria(IssueAttachment.class)
-                .add(Expression.eq("fileName", fileName)).uniqueResult());
-        } catch (HibernateException e) {
-            throw convertHibernateAccessException(e);
+            Query query = getSession().getNamedQuery(
+                    "AttachmentByFileNameQuery");
+            query.setString("fileName", fileName);
+            attachment = (IssueAttachment)query.uniqueResult();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
         }
+        return attachment;
     }
 
     @SuppressWarnings("unchecked")
     public List<IssueAttachment> findAll() {
+        List<IssueAttachment> attachments;
+        
         try {
-            return  getSession().createCriteria(IssueAttachment.class).list();
-        } catch (HibernateException e) {
-            throw convertHibernateAccessException(e);
+            Query query = getSession().getNamedQuery(
+                    "AttachmentsAllQuery");
+            attachments = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
         }
+        return attachments;
     }
+    
+    @SuppressWarnings("unchecked")
+    public List<IssueAttachment> findByIssue(Integer issueId) {
+        List<IssueAttachment> attachments;
+        
+        try {
+            Query query = getSession().getNamedQuery(
+                    "AttachmentsByIssueQuery");
+            query.setInteger("issueId", issueId);
+            attachments = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return attachments;
+    }
+    
 }
