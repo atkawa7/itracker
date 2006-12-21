@@ -17,4 +17,19 @@
 		<many-to-one name="user" column="user_id" class="User"/>						
 	</class>
 
+    <!-- Named queries (loaded, validated and cached at application startup). -->
+    
+    <query name="IssueActivitiesByIssueQuery"><![CDATA[
+    select activity 
+    from IssueActivity as activity
+    where activity.issue.id = :issueId ]]>
+    </query>
+    
+    <query name="IssueActivitiesByIssueAndNotificationQuery"><![CDATA[
+    select activity 
+    from IssueActivity as activity
+    where activity.issue.id = :issueId 
+    and activity.notificationSent = :notificationSent ]]>
+    </query>
+    
 </hibernate-mapping>
