@@ -18,7 +18,7 @@
 
 package org.itracker.web.forms;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,8 +38,9 @@ public class ConfigurationForm extends ValidatorForm  {
      String value;
      Integer order;
 	 String key;
+
 //	  let's try to put String,String here:
-     HashMap<String,String> translations;
+     Map<String,String> translations;
      
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		action = null;    
@@ -87,12 +88,14 @@ public class ConfigurationForm extends ValidatorForm  {
 	public void setOrder(Integer order) {
 		this.order = order;
 	}
+
 //  let's try to put String,String here:
-	public HashMap<String,String> getTranslations() {
+	public Map<String,String> getTranslations() {
 		return translations;
 	}
+
 //  let's try to put String,String here:
-	public void setTranslations(HashMap<String,String> translations) {
+	public void setTranslations(Map<String,String> translations) {
 		this.translations = translations;
 	}
 
