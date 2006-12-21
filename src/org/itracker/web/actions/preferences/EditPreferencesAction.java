@@ -118,7 +118,7 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                 logger.debug("Passed required checks.  Updating user info for " + user.getLogin());
                 user = userService.updateUser(existingUser);
 
-                UserPreferences userPrefs = new UserPreferences();
+                UserPreferences userPrefs = userService.getUserPreferencesByUserId(user.getId());
                 if(userService.allowPreferenceUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
                     userPrefs.setUser(existingUser);
 
