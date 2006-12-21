@@ -56,43 +56,46 @@
 <%
   ProjectService ph = (ProjectService)request.getAttribute("ph");
   List<Project> projects = (List<Project>)request.getAttribute("projects");
- %> 
-  
-  <%
+
   boolean hasProjects = false;
   int numDisplayed = 0;
-  int totalIssues = 0;
   int totalOpenIssues = 0;
   int totalResolvedIssues = 0;
+  
   for(int i = 0; i < projects.size(); i++) {
-    if(! UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), projects.get(i).getId(), new int[] { UserUtilities.PERMISSION_VIEW_ALL, UserUtilities.PERMISSION_VIEW_USERS })) {
+      Project project = projects.get(i);
+    
+    // TODO: move this to the Action class. 
+    if(! UserUtilities.hasPermission((Map)request.getSession().getAttribute("permissions"), project.getId(), new int[] { UserUtilities.PERMISSION_VIEW_ALL, UserUtilities.PERMISSION_VIEW_USERS })) {
          continue;
     }
     hasProjects = true;
-
-    Object[] projectStats = ph.getProjectStats(projects.get(i).getId());
-    totalOpenIssues += Integer.parseInt((String) projectStats[0]);
-    totalResolvedIssues += Integer.parseInt((String) projectStats[1]);
-    totalIssues += Integer.parseInt((String) projectStats[2]);
+    
+    // PENDING: Not scalable, should fetch all in 1 query. 
+    int[] projectStats = ph.getProjectStats(project.getId());
+    totalOpenIssues += projectStats[0];
+    totalResolvedIssues += projectStats[1];
 %>
     <tr align="right" class="<%= (numDisplayed % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ) %>">
       <td nowrap>
-        <it:formatImageAction forward="listissues" paramName="projectId" paramValue="<%= projects.get(i).getId() %>" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.project.alt" arg0="<%= projects.get(i).getName() %>" textActionKey="itracker.web.image.view.texttag"/>
-        <% if(projects.get(i).getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission(permissions, projects.get(i).getId(), UserUtilities.PERMISSION_CREATE)) { %>
-        <it:formatImageAction forward="createissue" paramName="projectId" paramValue="<%= projects.get(i).getId() %>" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.issue.alt" arg0="<%= projects.get(i).getName() %>" textActionKey="itracker.web.image.create.texttag"/>
+        <it:formatImageAction forward="listissues" paramName="projectId" paramValue="<%= project.getId() %>" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.project.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.view.texttag"/>
+        <% if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_CREATE)) { %>
+        <it:formatImageAction forward="createissue" paramName="projectId" paramValue="<%= project.getId() %>" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.issue.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.create.texttag"/>
         <% } %>
-        <it:formatImageAction forward="searchissues" paramName="projectId" paramValue="<%= projects.get(i).getId() %>" src="/themes/defaulttheme/images/search.gif" altKey="itracker.web.image.search.issue.alt" arg0="<%= projects.get(i).getName() %>" textActionKey="itracker.web.image.search.texttag"/>
+        <it:formatImageAction forward="searchissues" paramName="projectId" paramValue="<%= project.getId() %>" src="/themes/defaulttheme/images/search.gif" altKey="itracker.web.image.search.issue.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.search.texttag"/>
       </td>
       <td></td>
-      <td><%= projects.get(i).getName() %></td>
+      <td><%= project.getName() %></td>
       <td align="left"><%= projectStats[0] %></td>
       <td align="left"><%= projectStats[1] %></td>
-      <td align="left"><%= projectStats[2] %></td>
-      <td align="right"><it:formatDate date="<%= (Date) projectStats[3] %>" emptyKey="itracker.web.generic.notapplicable"/></td>
+      <td align="left"><%= projectStats[0] + projectStats[1] %></td>
+      <td align="right"><it:formatDate date="<%= new Date() %>" emptyKey="itracker.web.generic.notapplicable"/></td>
     </tr>
 <%
     numDisplayed++;
-  } %>
+  } 
+  int totalIssues = totalOpenIssues + totalResolvedIssues;
+  %>
   
  <% if(hasProjects) {
 %>

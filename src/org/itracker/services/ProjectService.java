@@ -114,7 +114,15 @@ public interface ProjectService {
      */
     public int countIssuesByVersion(Integer versionId);
 
-    public Object[] getProjectStats(Integer projectId);
+    /**
+     * Returns the number of open and resolved issues in the given project. 
+     * 
+     * <p>PENDING: should use a class to hold statistics info to improve type-
+     * safety. </p>
+     * 
+     * @return int[0] = open issues, int[1] = resolved issues
+     */
+    public int[] getProjectStats(Integer projectId);
     
     public List<Object> getListOfProjectStats(Integer projectId);
     
