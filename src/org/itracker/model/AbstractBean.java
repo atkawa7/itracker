@@ -56,17 +56,32 @@ public abstract class AbstractBean implements Serializable, Cloneable {
         return createDate;
     }
     
-    public void setCreateDate(Date value) {
-        this.createDate = value;
-        this.lastModifiedDate = value;
+    /**
+     * Sets the creation and last modification date and time. 
+     * 
+     * <p>The creation time stamp should never change once initialized. </p>
+     * 
+     * @param dateTime creation time stamp
+     */
+    public void setCreateDate(Date dateTime) {
+        this.createDate = dateTime;
+        this.lastModifiedDate = dateTime;
     }
 
     public Date getLastModifiedDate() {
         return lastModifiedDate;
     }
     
-    public void setLastModifiedDate(Date value) {
-        this.lastModifiedDate = value;       
+    /**
+     * Sets the last modification date and time. 
+     * 
+     * <p>Note that the last modification time stamp is automatically 
+     * set to the creation time stamp when the latter is defined. </p>
+     * 
+     * @param dateTime last modification time stamp
+     */
+    public void setLastModifiedDate(Date dateTime) {
+        this.lastModifiedDate = dateTime;       
     }
 
     /**
