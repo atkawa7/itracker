@@ -1,22 +1,49 @@
 <?xml version="1.0"?>
+
 <!DOCTYPE hibernate-mapping PUBLIC 
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+    
 <hibernate-mapping auto-import="true" package="org.itracker.model">
-
-	<class name="IssueActivity" table="issueactivitybean">
-		<id name="id" column="id" type="int" unsaved-value="null">
-			<generator class="native"/>
-		</id>
-		<property name="type" column="activity_type" not-null="true" unique="false"/>		
-		<property name="description" not-null="true" unique="false"/>		
-		<property name="notificationSent" column="notification_sent" not-null="true" unique="false"/>						
-		<property name="createDate" column="create_date" not-null="true" unique="false"/>
-		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>		
-		<many-to-one name="issue" column="issue_id" class="Issue"/>		
-		<many-to-one name="user" column="user_id" class="User"/>						
-	</class>
-
+    
+    <class name="IssueActivity" table="issueactivitybean">
+        
+        <id name="id" unsaved-value="null">
+            <column name="id" not-null="true"/>
+            <generator class="native"/>
+        </id>
+        
+        <many-to-one name="issue" class="Issue">
+            <column name="issue_id" not-null="true"/>
+        </many-to-one>
+        
+        <many-to-one name="user" class="User">
+            <column name="user_id" not-null="true"/>
+        </many-to-one>
+        
+        <property name="type">
+            <column name="activity_type" not-null="true"/>
+        </property>
+        
+        <property name="description">
+            <column name="description" length="255" not-null="false"/>
+        </property>
+        
+        <property name="notificationSent" 
+                type="org.itracker.persistence.dao.IntBooleanType">
+            <column name="notification_sent" sql-type="int" not-null="true"/>
+        </property>
+        
+        <property name="createDate">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="lastModifiedDate">
+            <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+    </class>
+    
     <!-- Named queries (loaded, validated and cached at application startup). -->
     
     <query name="IssueActivitiesByIssueQuery"><![CDATA[
