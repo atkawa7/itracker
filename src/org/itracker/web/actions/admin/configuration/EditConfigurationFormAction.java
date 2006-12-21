@@ -21,6 +21,7 @@ package org.itracker.web.actions.admin.configuration;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -68,13 +69,16 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
                 configurationForm = new ConfigurationForm();
             }
 
-            String action = (String) PropertyUtils.getSimpleProperty(configurationForm, "action");
-            String formValue = (String) PropertyUtils.getSimpleProperty(form, "value");
-            if("update".equals(action)) {
-                Integer id = (Integer) PropertyUtils.getSimpleProperty(configurationForm, "id");
+            String action = configurationForm.getAction();
+            
+            String formValue = configurationForm.getValue();
+            
+            if ("update".equals(action)) {
+                Integer id = configurationForm.getId();
                 formValue = String.valueOf(id);
                 Configuration configItem = configurationService.getConfigurationItem(id);
-                if(configItem == null) {
+                
+                if (configItem == null) {
                     throw new SystemConfigurationException("Invalid configuration item id " + id);
                 }
                 configurationForm.setId(id);
@@ -83,24 +87,31 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
                     configurationForm.setValue(configItem.getValue());
                 }
 
-                HashMap<String,String> translations = new HashMap<String,String>();
-                List<Language> languageItems = configurationService.getLanguageItemsByKey(SystemConfigurationUtilities.getLanguageKey(configItem));
-                for(int i = 0; i < languageItems.size(); i++) {
-                    translations.put(languageItems.get(i).getLocale(), languageItems.get(i).getResourceValue());
+                Map<String,String> translations = new HashMap<String,String>();
+                List<Language> languageItems = configurationService.getLanguageItemsByKey(
+                        SystemConfigurationUtilities.getLanguageKey(configItem));
+                
+                for (int i = 0; i < languageItems.size(); i++) {
+                    translations.put(languageItems.get(i).getLocale(), 
+                            languageItems.get(i).getResourceValue());
                 }
                 configurationForm.setTranslations(translations);
             }
 
+            request.setAttribute("sc", configurationService);
             request.setAttribute("configurationForm", configurationForm);
             request.setAttribute("action",action);
             request.setAttribute("value",formValue);
             saveToken(request);
+            
             return mapping.getInputForward();
         } catch(SystemConfigurationException sce) {
-        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidconfiguration"));
+        	errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                        new ActionMessage("itracker.web.error.invalidconfiguration"));
         } catch(Exception e) {
             logger.error("Exception while creating edit configuration form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                    new ActionMessage("itracker.web.error.system"));
         }
 
         if(! errors.isEmpty()) {
