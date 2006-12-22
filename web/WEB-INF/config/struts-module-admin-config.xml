@@ -56,7 +56,7 @@
         <forward name="index" path="/portalhome.do" module="/"/>
         <forward name="edituser" module="/module-admin" path="/edituserform.do"/>
         <forward name="listusers" module="/module-admin" path="/listusers.do"/>
-        <forward name="downloadreport" module="/module-admin" path="/servlets/ReportDownloadController"/>
+        <!--forward name="downloadreport" module="/module-admin" path="/servlets/ReportDownloadController"/-->
     </global-forwards>
 
     <!-- ==================================== Action Mappings    -->
@@ -116,9 +116,13 @@
                 validate="true">
         </action>
         <action path="/downloadreport" 
-                type="org.itracker.web.servlets.ReportDownloadController"
-                name="adminActionForm" scope="request" input="/admin_report/list_reports.jsp" validate="true">
+                type="org.itracker.web.actions.admin.report.DownloadReportAction"
+                name="adminActionForm" scope="request" input="/admin_report/list_reports.jsp">
         </action>
+        <action path="/exportattachments"
+                type="org.itracker.web.actions.admin.attachment.ExportAttachmentsAction"
+                name="adminActionForm" scope="request"
+                input="/admin_attachment/list_attachments.jsp"></action>
        <action path="/editcomponent"
                 type="org.itracker.web.actions.admin.project.EditComponentAction"
                 name="componentForm" scope="request" input="/admin_project/edit_component.jsp"
