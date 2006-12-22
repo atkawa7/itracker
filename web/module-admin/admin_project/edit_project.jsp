@@ -236,7 +236,7 @@
             <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
               <tr>
                 <td class="editColumnTitle" colspan="5"><it:message key="itracker.web.attr.scripts"/>:</td>
-                <td align="right"><it:formatImageAction action="editprojectscriptform" paramName="projectId" paramValue="<%= project.getId() %>" targetAction="create" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.projectscript.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.create.texttag"/></td>
+                <td align="right"><it:formatImageAction action="editprojectscriptform" paramName="projectId" paramValue="<%= project.getId() %>" targetAction="update" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.projectscript.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.create.texttag"/></td>
               </tr>
               <tr align="left" class="listHeading">
                 <td width="40"></td>
@@ -248,7 +248,7 @@
               </tr>
 
               <%
-                      List<CustomField> customFields = IssueUtilities.getCustomFields();
+                  List<CustomField> customFields = IssueUtilities.getCustomFields();
                   List<ProjectScript> scripts = project.getScripts();
 
                   Collections.sort(scripts, new ProjectScript.CompareByFieldAndPriority());
@@ -261,7 +261,7 @@
                       <tr align="right" class="listRowUnshaded">
               <%    } %>
                     <td align="right">
-                      <it:formatImageAction action="removeprojectscript" paramName="id" paramValue="<%= scripts.get(i).getId() %>" src="/themes/defaulttheme/images/delete.gif" altKey="itracker.web.image.delete.projectscript.alt" textActionKey="itracker.web.image.delete.texttag"/>
+                      <it:formatImageAction action="removeprojectscript" paramName="delId" paramValue="<%= scripts.get(i).getId() %>" src="/themes/defaulttheme/images/delete.gif" altKey="itracker.web.image.delete.projectscript.alt" textActionKey="itracker.web.image.delete.texttag"/>
                     </td>
                     <td></td>
                     <td><%= IssueUtilities.getFieldName(scripts.get(i).getFieldId(), customFields, (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>

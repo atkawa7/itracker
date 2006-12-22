@@ -41,7 +41,7 @@ public class Constants {
     public static final String LIST_OPTIONS_KEY = "listoptions";
     public static final String PROJECT_KEY = "project";
     public static final String PROJECTS_KEY = "projects";
-    public static final String PROJECTFLOW_SCRIPT_KEY = "projectflowscript";
+    public static final String PROJECT_SCRIPT_KEY = "projectScript";
     public static final String REPORT_KEY = "report";
     public static final String SEARCH_QUERY_KEY = "searchquery";
     public static final String TASK_KEY = "task";

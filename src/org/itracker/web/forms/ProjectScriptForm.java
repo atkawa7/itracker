@@ -18,11 +18,13 @@
 
 package org.itracker.web.forms;
 
+import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
+import org.itracker.model.WorkflowScript;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
@@ -32,64 +34,96 @@ import org.apache.struts.validator.ValidatorForm;
 public class ProjectScriptForm extends ValidatorForm  {
     
     String action;
-    Integer id;
-    String name;
-    Integer event;
-    String script;
+    Integer delId;
+    Integer projectId;
+//    Integer[] fieldId;
+//    Integer[] priority;
+    HashMap<String,String> id = new HashMap<String,String>();
+    HashMap<String,String> fieldId = new HashMap<String,String>();
+    HashMap<String,String> priority = new HashMap<String,String>();
+    HashMap<String,String> scriptDescs = new HashMap<String,String>();
+    HashMap<String,String> scriptItems = new HashMap<String,String>();
     
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		action = null;    
-		id = null;
-		name= null;
-		event= null;
-		script= null;
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        action = null;
+        delId = null;
+        projectId = null;
+//        fieldId = null;
+//        priority= null;
+        HashMap<String,String> id = new HashMap<String,String>();
+        HashMap<String,String> fieldId = new HashMap<String,String>();
+        HashMap<String,String> priority = new HashMap<String,String>();
+        HashMap<String,String> scriptDescs = new HashMap<String,String>();
+        HashMap<String,String> scriptItems = new HashMap<String,String>();
     }
-
+    
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = super.validate(mapping, request);
-      
+        
         return errors;
     }
+    
+    public String getAction() {
+        return action;
+    }
+    
+    public void setAction(String action) {
+        this.action = action;
+    }
+    
+    public Integer getDelId() {
+        return delId;
+    }
+    
+    public void setId(Integer delId) {
+        this.delId = delId;
+    }
+    
+    public HashMap<String,String> getId() {
+        return id;
+    }
+    
+    public void setId(HashMap<String,String> id) {
+        this.id = id;
+    }
+    
+    public Integer getProjectId() {
+        return projectId;
+    }
+    
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
+    }
+    
+    public HashMap<String,String> getFieldId() {
+        return fieldId;
+    }
+    
+    public void setFieldId(HashMap<String,String> fieldId) {
+        this.fieldId = fieldId;
+    }
+    
+    public HashMap<String,String> getPriority() {
+        return priority;
+    }
+    
+    public void setPriority(HashMap<String,String> priority) {
+        this.priority = priority;
+    }
+    
+    public HashMap<String,String> getScriptDescs() {
+        return scriptDescs;
+    }
+    
+    public void setScriptDescs(HashMap<String,String> scriptDescs) {
+        this.scriptDescs = scriptDescs;
+    }
 
-	public String getAction() {
-		return action;
-	}
-
-	public void setAction(String action) {
-		this.action = action;
-	}
-
-	public Integer getEvent() {
-		return event;
-	}
-
-	public void setEvent(Integer event) {
-		this.event = event;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getScript() {
-		return script;
-	}
-
-	public void setScript(String script) {
-		this.script = script;
-	}
-
-
+    public HashMap<String,String> getScriptItems() {
+        return scriptItems;
+    }
+    
+    public void setScriptItems(HashMap<String,String> scriptItems) {
+        this.scriptItems = scriptItems;
+    }
 }

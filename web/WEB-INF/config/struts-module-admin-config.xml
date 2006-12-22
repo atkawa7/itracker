@@ -185,6 +185,9 @@
             <forward name="editprojectscriptform" path="/admin_project/edit_projectscript.jsp"
                      module="/module-admin"/>
         </action>
+        <action path="/removeprojectscript"
+                type="org.itracker.web.actions.admin.project.RemoveProjectScriptAction"
+                name="projectScriptForm" scope="request" validate="false"></action>
         <action path="/editreport" type="org.itracker.web.actions.admin.report.EditReportAction"
                 name="reportForm" scope="request" input="/admin_report/edit_report.jsp"></action>
         <action path="/editreportform"

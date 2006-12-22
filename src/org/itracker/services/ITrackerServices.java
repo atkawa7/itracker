@@ -11,6 +11,7 @@ import org.itracker.persistence.dao.LanguageDAO;
 import org.itracker.persistence.dao.NotificationDAO;
 import org.itracker.persistence.dao.PermissionDAO;
 import org.itracker.persistence.dao.ProjectDAO;
+import org.itracker.persistence.dao.ProjectScriptDAO;
 import org.itracker.persistence.dao.ReportDAO;
 import org.itracker.persistence.dao.ScheduledTaskDAO;
 import org.itracker.persistence.dao.UserDAO;
@@ -55,6 +56,10 @@ public interface ITrackerServices {
     ProjectDAO getProjectDAO();
 
     void setProjectDAO(ProjectDAO projectDAO);
+    
+    ProjectScriptDAO getProjectScriptDAO();
+    
+    void setProjectScriptDAO(ProjectScriptDAO projectScriptDAO);
     
     UserPreferencesDAO getUserPreferencesDAO();
 

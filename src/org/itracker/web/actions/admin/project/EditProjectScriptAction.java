@@ -20,6 +20,9 @@ package org.itracker.web.actions.admin.project;
 
 //import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -33,81 +36,92 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.itracker.model.Project;
+import org.itracker.model.ProjectScript;
 import org.itracker.model.WorkflowScript;
 import org.itracker.services.ConfigurationService;
+import org.itracker.services.ProjectService;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.forms.ProjectScriptForm;
 import org.itracker.web.util.Constants;
 
 import bsh.ParseException;
 
 
 public class EditProjectScriptAction extends ItrackerBaseAction {
-
+    
     public EditProjectScriptAction() {
     }
-
+    
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         super.executeAlways(mapping,form,request,response);
         if(! isLoggedIn(request, response)) {
             return mapping.findForward("login");
         }
-
+        
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
-
+        
         if(! isTokenValid(request)) {
             logger.debug("Invalid request token while editing workflow script.");
             return mapping.findForward("listworkflow");
         }
         resetToken(request);
-
-        WorkflowScript workflowScript = null;
+        ProjectScriptForm projectScriptForm = (ProjectScriptForm) form;
         
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
-
-            String scriptData = (String) PropertyUtils.getSimpleProperty(form, "script");
-            if ( scriptData != null && scriptData.trim().length() > 0 ) {
-                //ByteArrayInputStream sbis = new ByteArrayInputStream(scriptData.getBytes());
-                //Parser parser = new Parser(sbis);
-//                try {
-//                    while(!parser.Line()) {
-                        // do nothing, if script is syntactically correct
-                        // no exception is thrown
-//                    }
-//                } catch(Throwable t) {
-//                    throw new ParseException(t.getMessage());
-//                }
+            ProjectService projectService = getITrackerServices().getProjectService();
+            String action = request.getParameter("action");
+            if ( action == null  )
+                action = (String) projectScriptForm.getAction();
+            Integer projectId = (Integer) projectScriptForm.getProjectId();
+            Project project = projectService.getProject(projectId);
+            HashMap<String,String> fieldIds = (HashMap<String,String>) projectScriptForm.getFieldId();
+            HashMap<String,String> priorities = (HashMap<String,String>) projectScriptForm.getPriority();
+            HashMap<String,String> scriptItems = (HashMap<String,String>) projectScriptForm.getScriptItems();
+            HashMap<String,String> ids = (HashMap<String,String>) projectScriptForm.getId();
+            for ( Iterator siIterator = scriptItems.keySet().iterator(); siIterator.hasNext(); ) {
+                String key = (String) siIterator.next();
+                if(key != null) {
+                    String scriptItemsvalue = (String) scriptItems.get(key);
+                    if(scriptItemsvalue != null && ! scriptItemsvalue.trim().equals("")&& scriptItemsvalue.trim().equals("on")) {
+                        Integer wfsIds = Integer.valueOf(key);
+                        Integer fieldId = Integer.valueOf((String) fieldIds.get(key));
+                        Integer priority = Integer.valueOf((String) priorities.get(key));
+                        WorkflowScript workflowScript = configurationService.getWorkflowScript(wfsIds);
+                        ProjectScript projectScript = new ProjectScript();
+                        Integer id = Integer.valueOf((String) ids.get(key));
+                        projectScript.setId(id);
+                        ProjectScript chkprojectScript = projectService.getProjectScript(id);
+                       
+                        projectScript.setFieldId(fieldId);
+                        projectScript.setPriority(priority);
+                        projectScript.setProject(project);
+                        projectScript.setScript(workflowScript);
+                        if("create".equals(action) || chkprojectScript == null ) {
+                            projectScript = projectService.addProjectScript(projectId, projectScript);
+                        } else {
+                            projectScript = projectService.updateProjectScript(projectScript);
+                        }
+                        if (projectScript == null) {
+                            throw new Exception("Error creating/updating project script.");
+                        }
+                    }
+                }
             }
-
-            logger.info("Kimba:  using this module action 1" );
-            workflowScript = new WorkflowScript();
-            workflowScript.setId((Integer) PropertyUtils.getSimpleProperty(form, "id"));
-            workflowScript.setName((String) PropertyUtils.getSimpleProperty(form, "name"));
-            workflowScript.setEvent(((Integer) PropertyUtils.getSimpleProperty(form, "event")).intValue());
-            workflowScript.setScript(scriptData);
-
-            String action = (String) PropertyUtils.getSimpleProperty(form, "action");
-            logger.info("Kimba:  using this module action 2"+action );
-            if("create".equals(action)) {
-                workflowScript = configurationService.createWorkflowScript(workflowScript);
-            } else if ("update".equals(action)) {
-                workflowScript = configurationService.updateWorkflowScript(workflowScript);
-            }
-
-            if (workflowScript == null) {
-                throw new Exception("Error creating/updating workflow script.");
-            }
-
+            
+            
             HttpSession session = request.getSession(true);
-            session.removeAttribute(Constants.WORKFLOW_SCRIPT_KEY);
+            session.removeAttribute(Constants.PROJECT_SCRIPT_KEY);
             request.setAttribute("action",action);
             saveToken(request);
-//            return mapping.findForward("listworkflow");
-            return new ActionForward(mapping.findForward("listworkflow").getPath() + "?id=" + workflowScript.getId() +"&action=update");
+            return new ActionForward(
+                    mapping.findForward("editproject").getPath()
+                    + "?id=" + project.getId() +"&action=update");
         } catch(ParseException pe) {
             logger.debug("Error parseing script.  Redisplaying form for correction.", pe);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidscriptdata", pe.getMessage()));
@@ -118,12 +132,11 @@ public class EditProjectScriptAction extends ItrackerBaseAction {
             logger.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
-
+        
         if(! errors.isEmpty()) {
             saveMessages(request, errors);
         }
         return mapping.findForward("error");
     }
-
+    
 }
-  

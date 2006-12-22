@@ -90,6 +90,10 @@ public interface ProjectService {
     
     public boolean setProjectFields(Project project, HashSet<Integer> newFields);
 
+    public ProjectScript getProjectScript(Integer scriptId);
+    
+    public List<ProjectScript> getProjectScripts();
+
     public ProjectScript updateProjectScript(ProjectScript projectScript);
     
     public ProjectScript addProjectScript(Integer projectId, ProjectScript projectScript);

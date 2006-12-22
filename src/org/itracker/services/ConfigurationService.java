@@ -30,6 +30,7 @@ import org.itracker.model.Language;
 import org.itracker.model.NameValuePair;
 import org.itracker.model.SystemConfiguration;
 import org.itracker.model.WorkflowScript;
+import org.itracker.model.ProjectScript;
 
 
 public interface ConfigurationService {
@@ -122,6 +123,35 @@ public interface ConfigurationService {
     public void resetConfigurationCache(int type);
 
     /**
+      * This method will return the requested project script.
+      * @param id the id of the requested script
+      * @return a ProjectScript with the requested script, or null if not found
+      */
+    public ProjectScript getProjectScript(Integer id);
+    /**
+      * This method will return all defined project scripts.
+      * @return a ProjectScript array with all defined scripts
+      */
+    public List<ProjectScript> getProjectScripts();
+    /**
+      * This method will create a new project script for persistance in the database.
+      * @param model the model to create the script from
+      * @returns and updated model with the information from the newly created script
+      */
+    public ProjectScript createProjectScript(ProjectScript projectScript);
+    /**
+      * This method updates a project script in the database.
+      * @param model a ProjectScript of the item to update
+      * @return a ProjectScript with the updated item
+      */
+    public ProjectScript updateProjectScript(ProjectScript projectScript);
+    /**
+      * This method removes a project script in the database.
+      * @param id  The id of the project script
+      */
+    public void removeProjectScript(Integer id);
+
+    /**
       * This method will return the requested workflow script.
       * @param id the id of the requested script
       * @return a WorkflowScript with the requested script, or null if not found
@@ -155,6 +185,7 @@ public interface ConfigurationService {
       * @param id the id of the requested field
       * @return a CustomField with the requested field, or null if not found
       */
+    
     public CustomField getCustomField(Integer id);
     /**
       * This method will return all the custom fields defined in the system.
