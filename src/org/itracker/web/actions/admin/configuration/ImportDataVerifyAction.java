@@ -36,7 +36,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.AbstractBean;
+import org.itracker.model.AbstractEntity;
 import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
 import org.itracker.model.ImportDataModel;
@@ -92,7 +92,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
             String xmlData = new String(file.getFileData());
 
             ImportDataModel model = new ImportDataModel();
-            AbstractBean[] importData = ImportExportUtilities.importIssues(xmlData);
+            AbstractEntity[] importData = ImportExportUtilities.importIssues(xmlData);
             boolean[] existingModel = new boolean[importData.length];
 
             model.setReuseUsers((Boolean) PropertyUtils.getSimpleProperty(form, "optionreuseusers"));
@@ -156,7 +156,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                 maxResolutionValue = Math.max(maxResolutionValue, Integer.parseInt(resolutions.get(i).getValue()));
             }
 
-            AbstractBean[] importData = model.getData();
+            AbstractEntity[] importData = model.getData();
             for(int i = 0; i < importData.length; i++) {
                 if(importData[i] instanceof Configuration) {
                     // Need to check to see if it finds a matching name.  If so change value.
@@ -257,7 +257,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
         try {
             UserService userService = getITrackerServices().getUserService();
 
-            AbstractBean[] importData = model.getData();
+            AbstractEntity[] importData = model.getData();
 
             for(int i = 0; i < importData.length; i++) {
                 if(importData[i] instanceof User) {
@@ -297,7 +297,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                 return;
             }
 
-            AbstractBean[] importData = model.getData();
+            AbstractEntity[] importData = model.getData();
 
             for(int i = 0; i < importData.length; i++) {
                 if(importData[i] instanceof Project) {
@@ -332,7 +332,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
     }
 
     private void checkIssues(ImportDataModel model, InitialContext ic) throws ImportExportException {
-        AbstractBean[] importData = model.getData();
+        AbstractEntity[] importData = model.getData();
 
         for(int i = 0; i < importData.length; i++) {
             if(importData[i] instanceof Issue) {
@@ -341,7 +341,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
         }
     }
 
-    private void updateIssues(AbstractBean[] models, int updateType, String currentValue, String newValue) throws ImportExportException {
+    private void updateIssues(AbstractEntity[] models, int updateType, String currentValue, String newValue) throws ImportExportException {
         if(models == null || currentValue == null || newValue == null) {
             return;
         }
