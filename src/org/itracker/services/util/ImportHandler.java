@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.AbstractBean;
+import org.itracker.model.AbstractEntity;
 import org.itracker.model.Component;
 import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
@@ -54,8 +54,8 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
     private StringBuffer tagBuffer;
     private SAXException endException;
 
-    private AbstractBean parentModel;
-    private AbstractBean childModel;
+    private AbstractEntity parentModel;
+    private AbstractEntity childModel;
     private List<Object> itemList;
     private String tempStorage;
 
@@ -65,9 +65,9 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
         this.endException = null;
     }
 
-    public AbstractBean[] getModels() {
-        AbstractBean[] modelsArray = new AbstractBean[items.size()];
-        modelsArray = (AbstractBean[])items.toArray();
+    public AbstractEntity[] getModels() {
+        AbstractEntity[] modelsArray = new AbstractEntity[items.size()];
+        modelsArray = (AbstractEntity[])items.toArray();
         return modelsArray;
     }
 
@@ -147,7 +147,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                 if(id == null) {
                     throw new SAXException("Attribute " + ATTR_SYSTEMID + " was null for issue field.");
                 }
-                childModel = new IssueField((CustomField) findModel(id));
+                childModel = new IssueField((Issue) parentModel, (CustomField) findModel(id));
             } else if(TAG_ISSUE_FIELDS.equals(qName)) {
                 itemList = new ArrayList<Object>();
             } else if(TAG_ISSUE_HISTORY.equals(qName)) {
@@ -464,10 +464,10 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
         }
     }
 
-    private AbstractBean findModel(String itemTypeId) {
+    private AbstractEntity findModel(String itemTypeId) {
         if(itemTypeId != null && ! itemTypeId.equals("")) {
             for(int i = 0; i < items.size(); i++) {
-                AbstractBean model = (AbstractBean) items.get(i);
+                AbstractEntity model = (AbstractEntity) items.get(i);
                 if(getModelTypeIdString(model).equalsIgnoreCase(itemTypeId)) {
                     return model;
                 }
@@ -477,7 +477,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
         return null;
     }
 
-    private String getModelTypeIdString(AbstractBean model) {
+    private String getModelTypeIdString(AbstractEntity model) {
         String idString = "UNKNOWN";
 
         if(model != null && model.getId() != null) {
