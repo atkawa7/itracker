@@ -21,12 +21,11 @@ package org.itracker.web.actions.admin.configuration;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -51,13 +50,12 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         super.executeAlways(mapping,form,request,response);
-        logger.info("Kimba Went To Form");
-
-        if(! isLoggedIn(request, response)) {
+        
+        if (! isLoggedIn(request, response)) {
             return mapping.findForward("login");
         }
 
-        if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
@@ -67,18 +65,20 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
             // TODO: it looks like to following 3 lines can be removed, we comment them and add a task.
             // HttpSession session = request.getSession(true);
             // Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
-            // HashMap languages = configurationService.getAvailableLanguages();
+            Map<String, List<String>> languages = configurationService.getAvailableLanguages();
             
             CustomFieldValueForm customFieldValueForm = (CustomFieldValueForm) form;
-            if(customFieldValueForm == null) {
+            
+            if (customFieldValueForm == null) {
                 customFieldValueForm = new CustomFieldValueForm();
             }
 
             CustomFieldValue customFieldValue = new CustomFieldValue();
-            String action = (String) PropertyUtils.getSimpleProperty(customFieldValueForm, "action");
-            logger.info("Kimba Action:: "+ action);
-            if("update".equals(action)) {
-                Integer id = (Integer) PropertyUtils.getSimpleProperty(form, "id");
+            
+            String action = customFieldValueForm.getAction();
+            
+            if ("update".equals(action)) {
+                Integer id = customFieldValueForm.getId();
                 customFieldValue = configurationService.getCustomFieldValue(id);
                 if(customFieldValue == null) {
                     throw new SystemConfigurationException("Invalid custom field value id " + id);
@@ -86,14 +86,16 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
                 customFieldValueForm.setId(id);
                 customFieldValueForm.setValue(customFieldValue.getValue());
 
-                HashMap<String,String> translations = new HashMap<String,String>();
+                Map<String, String> translations = new HashMap<String, String>();
                 List<Language> languageItems = configurationService.getLanguageItemsByKey(CustomFieldUtilities.getCustomFieldOptionLabelKey(customFieldValue.getCustomField().getId(), customFieldValue.getId()));
-                for(int i = 0; i < languageItems.size(); i++) {
+                
+                for (int i = 0; i < languageItems.size(); i++) {
                     translations.put(languageItems.get(i).getLocale(), languageItems.get(i).getResourceValue());
                 }
                 customFieldValueForm.setTranslations(translations);
             }
 
+            request.setAttribute("languages", languages);
             request.setAttribute("customFieldValueForm", customFieldValueForm);
             request.setAttribute("action",action);
             saveToken(request);
