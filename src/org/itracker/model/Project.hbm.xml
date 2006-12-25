@@ -1,62 +1,113 @@
 <?xml version="1.0"?>
+
 <!DOCTYPE hibernate-mapping PUBLIC 
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping auto-import="true">
-
-	<class name="org.itracker.model.Project" table="projectbean">
-		<id name="id" column="id" type="int" unsaved-value="null">
-			<generator class="native"/>
-		</id>
-		<property name="createDate" column="create_date" not-null="true" unique="false"/>
-		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>		
-
-		<property name="name" not-null="true" unique="false"/>		
-		<property name="description" not-null="true" unique="false"/>		
-		<property name="status" not-null="true" unique="false"/>		
-		<property name="options" not-null="true" unique="false"/>				
-		<bag name="customFields" table="project_field_rel" lazy="true">
-			<key>
-				<column name="project_id"/>
-			</key>
-			<many-to-many class="org.itracker.model.CustomField" column="field_id"/>
-		</bag>
-		<bag name="components" table="Component" cascade="all" lazy="true">
-			<key>
-				<column name="project_id"/>
-			</key>
-			<one-to-many class="org.itracker.model.Component"/>
-		</bag>		
-		<bag name="versions" table="versionbean" cascade="all" lazy="true">
-			<key>
-				<column name="project_id"/>
-			</key>
-			<one-to-many class="org.itracker.model.Version"/>
-		</bag>
-		<bag name="issues" table="Issue" cascade="all" lazy="true">
-			<key>
-				<column name="project_id"/>
-			</key>
-			<one-to-many class="org.itracker.model.Issue"/>
-		</bag>		
-		<bag name="permissions" table="Permission" cascade="all" lazy="true">
-			<key>
-				<column name="project_id"/>
-			</key>
-			<one-to-many class="org.itracker.model.Permission"/>
-		</bag>	
-		<bag name="owners" table="project_owner_rel" lazy="true">
-			<key>
-				<column name="project_id"/>
-			</key>
-			<many-to-many class="org.itracker.model.User" column="user_id"/>			
-		</bag>		
-		<bag name="scripts" table="ProjectScript" cascade="all" lazy="true">
-			<key>
-				<column name="project_id"/>
-			</key>
-			<one-to-many class="org.itracker.model.ProjectScript"/>
-		</bag>								
-	</class>
-
+    
+<hibernate-mapping auto-import="true" package="org.itracker.model">
+    
+    <class name="Project" table="projectbean">
+        <id name="id" unsaved-value="null">
+            <column name="id" not-null="true"/>
+            <generator class="native"/>
+        </id>		
+        
+        <natural-id mutable="true">
+            
+            <property name="name">
+                <column name="name" not-null="true" unique-key="project_ak"/>
+            </property>
+        
+        </natural-id>
+            
+        <property name="description">
+            <column name="description" not-null="true"/>
+        </property>
+        
+        <property name="status">
+            <column name="status" not-null="true"/>
+        </property>
+        
+        <property name="options">
+            <column name="options" not-null="true"/>
+        </property>
+        
+        <property name="createDate">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="lastModifiedDate">
+            <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <bag name="customFields" table="project_field_rel" lazy="true">
+            <key>
+                <column name="project_id"/>
+            </key>
+            <many-to-many class="org.itracker.model.CustomField" column="field_id"/>
+        </bag>
+        
+        <bag name="components" table="Component" cascade="all" lazy="true">
+            <key>
+                <column name="project_id"/>
+            </key>
+            <one-to-many class="org.itracker.model.Component"/>
+        </bag>
+        
+        <bag name="versions" table="versionbean" cascade="all" lazy="true">
+            <key>
+                <column name="project_id"/>
+            </key>
+            <one-to-many class="Version"/>
+        </bag>
+        
+        <!--bag name="issues" table="Issue" cascade="all" lazy="true">
+            <key>
+                <column name="project_id"/>
+            </key>
+            <one-to-many class="org.itracker.model.Issue"/>
+        </bag-->
+        
+        <bag name="permissions" table="Permission" cascade="all" lazy="true">
+            <key>
+                <column name="project_id"/>
+            </key>
+            <one-to-many class="Permission"/>
+        </bag>
+        
+        <bag name="owners" table="project_owner_rel" lazy="true">
+            <key>
+                <column name="project_id"/>
+            </key>
+            <many-to-many class="User" column="user_id"/>			
+        </bag>
+        
+        <bag name="scripts" table="ProjectScript" cascade="all" lazy="true">
+            <key>
+                <column name="project_id"/>
+            </key>
+            <one-to-many class="ProjectScript"/>
+        </bag>
+        
+    </class>
+    
+    <!-- Named queries (loaded, validated and cached at application startup). -->
+    
+    <query name="ProjectsAllQuery"><![CDATA[
+    select project 
+    from Project as project ]]>
+    </query>
+    
+    <query name="ProjectsByStatusQuery"><![CDATA[
+    select project 
+    from Project as project
+    where project.status = :projectStatus ]]>
+    </query>
+    
+    <query name="ProjectsAvailableQuery"><![CDATA[
+    select project 
+    from Project as project
+    where project.status in (1, 2) ]]>
+    </query>
+    
 </hibernate-mapping>
