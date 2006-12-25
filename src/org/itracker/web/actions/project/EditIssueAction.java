@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -43,6 +44,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 import org.apache.struts.validator.ValidatorForm;
+import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueAttachment;
@@ -131,7 +133,7 @@ public class EditIssueAction extends ItrackerBaseAction {
             }
 
             List<ProjectScript> scripts = project.getScripts();
-            WorkflowUtilities.ProcessFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, null, errors, (ValidatorForm) form);
+            WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, null, errors, (ValidatorForm) form);
 
             if(UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL)) {
                 previousStatus = issue.getStatus();
@@ -144,7 +146,7 @@ public class EditIssueAction extends ItrackerBaseAction {
             sendNotification(issue, previousStatus, getBaseURL(request), issueService);
             session.removeAttribute(Constants.ISSUE_KEY);
 
-            WorkflowUtilities.ProcessFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, null, errors, (ValidatorForm) form);
+            WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, null, errors, (ValidatorForm) form);
 
             ProjectService projectService = getITrackerServices().getProjectService();
             request.setAttribute("projects",projectService.getAllProjects());
@@ -289,14 +291,16 @@ public class EditIssueAction extends ItrackerBaseAction {
         HashMap<Integer,String> customFields = (HashMap<Integer,String>) PropertyUtils.getSimpleProperty(form, "customFields");
         if(customFields != null && customFields.size() > 0) {
             List<IssueField> issueFieldsList = new ArrayList<IssueField>();
+            ResourceBundle bundle = ITrackerResources.getBundle(locale);
+            
             for(Iterator iter = customFields.keySet().iterator(); iter.hasNext(); ) {
                 try {
                     Integer fieldId = new Integer((String) iter.next());
                     CustomField field = IssueUtilities.getCustomField(fieldId);
                     String fieldValue = (String) PropertyUtils.getMappedProperty(form, "customFields(" + fieldId + ")");
                     if(fieldValue != null && ! fieldValue.equals("")) {
-                        IssueField issueField = new IssueField(field, issue);
-                        issueField.setValue(fieldValue, locale);
+                        IssueField issueField = new IssueField(issue, field);
+                        issueField.setValue(fieldValue, locale, bundle);
                         issueFieldsList.add(issueField);
                     }
                 } catch(Exception e) {
@@ -311,7 +315,8 @@ public class EditIssueAction extends ItrackerBaseAction {
     private void addHistoryEntry(Issue issue, User user, ActionForm form, IssueService issueService) throws Exception {
         String history = (String) PropertyUtils.getSimpleProperty(form, "history");
         if(history != null && ! history.equals("")) {
-            IssueHistory issueHistory = new IssueHistory(history, IssueUtilities.HISTORY_STATUS_AVAILABLE, issue, user);
+            IssueHistory issueHistory = new IssueHistory(issue, user, history, 
+                    IssueUtilities.HISTORY_STATUS_AVAILABLE);
             issueHistory.setDescription(((IssueForm)form).getHistory());
             issueHistory.setCreateDate(new Date());
             issueService.addIssueHistory(issueHistory);
@@ -333,11 +338,11 @@ public class EditIssueAction extends ItrackerBaseAction {
                     if(lastSlash > -1) {
                         origFileName = origFileName.substring(lastSlash + 1);
                     }
-                    IssueAttachment attachmentModel = new IssueAttachment(origFileName,
+                    IssueAttachment attachmentModel = new IssueAttachment(issue, origFileName,
                                                                                     contentType,
                                                                                     attachmentDescription,
                                                                                     fileSize,
-                                                                                    issue, user);
+                                                                                    user);
                     issueService.addIssueAttachment(attachmentModel, file.getFileData());
                 }
             }
