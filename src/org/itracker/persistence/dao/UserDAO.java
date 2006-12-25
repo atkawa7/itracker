@@ -25,8 +25,53 @@ public interface UserDAO extends BaseDAO<User> {
      * @param userId ID of the user to retrieve
      * @return user with the given ID or <tt>null</tt> if none exits
      */
-    public User findByPrimaryKey(Integer userId);
+    User findByPrimaryKey(Integer userId);
+    
+    /**
+     * Finds a user by login. 
+     * 
+     * @param login login name of the user to find
+     * @return user with the given login or <tt>null</tt> if login is unknown
+     */
+    User findByLogin(String login);
 
+    /**
+     * Finds all users. 
+     * 
+     * @return list of all users, in unspecified order
+     */
+    List<User> findAll();
+
+    /**
+     * Finds all active users. 
+     * 
+     * @return list of users with a status &gt; 0, in unspecified order
+     */
+    List<User> findActive();
+
+    /**
+     * Finds users with the given status. 
+     * 
+     * @param status status code 
+     * @return list of users with the given status, in unspecified order
+     */
+    List<User> findByStatus(int status);
+    
+    /**
+     * Finds all super users.
+     * 
+     * @return list of super users, in unspecified order
+     */
+    List<User> findSuperUsers();
+
+    /**
+     * Finds users with the given registration type.
+     *
+     * @param registrationType 
+     * @return list of users with the given registration type, in unspecified order
+     */
+    List<User> findByRegistrationType(int registrationType);
+    
     /**
      * Finds of the given user the set of permission types for all projects 
      * on which the user has permissions. 
@@ -35,54 +80,6 @@ public interface UserDAO extends BaseDAO<User> {
      * @param sourceRequest 
      * @return set of permission types mapped by project id
      */
-    
-    public Map<Integer, Set<PermissionType>> getUsersMapOfProjectsAndPermissionTypes(User user, int sourceRequest);
-
-    public List<Permission> getUsersPermissions(User user);
-    
-    /**
-     * Finds a user by login. 
-     * 
-     * @param login login name of the user to find
-     * @return user with the given login or <tt>null</tt> if login is unknown
-     */
-    public User findByLogin(String login);
-
-    /**
-     * Finds all users. 
-     * 
-     * @return list of all users, in unspecified order
-     */
-    public List<User> findAll();
-
-    /**
-     * Finds all active users. 
-     * 
-     * @return list of users with a status &gt; 0, in unspecified order
-     */
-    public List<User> findActive();
-
-    /**
-     * Finds users with the given status. 
-     * 
-     * @param status status code 
-     * @return list of users with the given status, in unspecified order
-     */
-    public List<User> findByStatus(int status);
-    
-    /**
-     * Finds all super users.
-     * 
-     * @return list of super users, in unspecified order
-     */
-    public List<User> findSuperUsers();
-
-    /**
-     * Finds users with the given registration type.
-     *
-     * @param registrationType 
-     * @return list of users with the given registration type, in unspecified order
-     */
-    public List<User> findByRegistrationType(int registrationType);
+    Map<Integer, Set<PermissionType>> getUsersMapOfProjectsAndPermissionTypes(User user, int sourceRequest);
     
 }
