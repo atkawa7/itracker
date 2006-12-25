@@ -274,7 +274,7 @@ public class UserServiceImpl implements UserService {
         existinguser.setLastName(user.getLastName());
         existinguser.setEmail(user.getEmail());
         existinguser.setSuperUser(user.isSuperUser());
-        existinguser.setProjects(user.getProjects());
+        existinguser.getProjects().addAll(user.getProjects());
         existinguser.setLastModifiedDate(new Timestamp(new Date().getTime()));
         
         // Only set the password if it is a new value...
@@ -382,13 +382,12 @@ public class UserServiceImpl implements UserService {
         return true;
     }
     
-    public List<User> getUsersWithPermissionLocal(Permission permission) {
-        // TODO: implement findUserByPermission in UserDAO!
+    public List<User> getUsersWithPermissionLocal(Integer projectId, int permissionType) {
         List<User> users = new ArrayList<User>();
         
-        if (permission.getProject() != null) {
+        if (projectId != null) {
             List<Permission> permissions = permissionDAO.findByProjectIdAndPermission(
-                    permission.getProject().getId(), permission.getPermissionType());
+                    projectId, permissionType);
             
             int i = 0;
             
@@ -637,52 +636,52 @@ public class UserServiceImpl implements UserService {
         return permissionsMap;
     }
     
-    public List<User> getUsersWithProjectPermission(Integer projectId, int permission) {
-        return getUsersWithProjectPermission(projectId, permission, true);
+    public List<User> getUsersWithProjectPermission(Integer projectId, int permissionType) {
+        return getUsersWithProjectPermission(projectId, permissionType, true);
     }
     
-    public List<User> getUsersWithProjectPermission(Integer projectId, int permission, boolean activeOnly) {
-        return getUsersWithAnyProjectPermission(projectId, new int[] { permission }, activeOnly);
+    public List<User> getUsersWithProjectPermission(Integer projectId, int permissionType, boolean activeOnly) {
+        return getUsersWithAnyProjectPermission(projectId, new int[] { permissionType }, activeOnly);
     }
     
-    public List<User> getUsersWithAnyProjectPermission(Integer projectId, int[] permissions) {
-        return getUsersWithAnyProjectPermission(projectId, permissions, true);
+    public List<User> getUsersWithAnyProjectPermission(Integer projectId, int[] permissionTypes) {
+        return getUsersWithAnyProjectPermission(projectId, permissionTypes, true);
     }
     
-    public List<User> getUsersWithAnyProjectPermission(Integer projectId, int[] permissions, boolean activeOnly) {
-        return getUsersWithProjectPermission(projectId, permissions, false, activeOnly);
+    public List<User> getUsersWithAnyProjectPermission(Integer projectId, int[] permissionTypes, boolean activeOnly) {
+        return getUsersWithProjectPermission(projectId, permissionTypes, false, activeOnly);
     }
     
-    public List<User> getUsersWithProjectPermission(Integer projectId, int[] permissions, boolean requireAll,
+    public List<User> getUsersWithProjectPermission(Integer projectId, int[] permissionTypes, boolean requireAll,
             boolean activeOnly) {
         List<User> userList = new ArrayList<User>();
-        List<Permission> reqPermissions = new ArrayList<Permission>();
-        Project project = projectDAO.findByPrimaryKey(projectId);
-        
-        for (int i = 0; i < permissions.length; i++) {
-            reqPermissions.add(i, new Permission(project, permissions[i]));
-        }
         
         try {
+            // TODO: use a factory to hide this. 
             PluggableAuthenticator authenticator = (PluggableAuthenticator) authenticatorClass.newInstance();
+            
             if (authenticator != null) {
-                HashMap<String,Object> values = new HashMap<String,Object>();
+                Map<String, Object> values = new HashMap<String, Object>();
                 values.put("userService", this);
                 values.put("configurationService", configurationService);
                 authenticator.initialize(values);
-                userList = authenticator.getUsersWithProjectPermission(reqPermissions, requireAll, activeOnly,
+                
+                userList = authenticator.getUsersWithProjectPermission(projectId, permissionTypes, requireAll, activeOnly,
                         AuthenticationConstants.REQ_SOURCE_UNKNOWN);
             }
+            
             if (logger.isDebugEnabled()) {
                 StringBuffer permissionsString = new StringBuffer("{ ");
-                for (int i = 0; i < permissions.length; i++) {
-                    permissionsString.append(permissions[i] + " ");
+                for (int i = 0; i < permissionTypes.length; i++) {
+                    permissionsString.append(permissionTypes[i] + " ");
                 }
                 permissionsString.append("}");
                 logger.debug("Found " + userList.size() + " users with project " + projectId + " permissions "
                         + permissionsString.toString() + (requireAll ? "[AllReq," : "[AnyReq,")
                         + (activeOnly ? "ActiveUsersOnly]" : "AllUsers]"));
             }
+            
+        // TODO : don't swallow exceptions!! MUST be propagated to the caller!!
         } catch (IllegalAccessException iae) {
             logger.error("Authenticator class " + authenticatorClassName + " can not be instantiated.");
         } catch (InstantiationException ie) {
