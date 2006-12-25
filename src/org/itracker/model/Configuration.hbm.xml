@@ -1,19 +1,54 @@
 <?xml version="1.0"?>
+
 <!DOCTYPE hibernate-mapping PUBLIC 
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping auto-import="true">
+    
+<hibernate-mapping auto-import="true" package="org.itracker.model">
+    
+    <class name="Configuration" table="configurationbean">
+        
+        <id name="id" unsaved-value="null">
+            <column name="id" not-null="true"/>
+            <generator class="native"/>
+        </id>
+        
+        <natural-id mutable="true">
+        
+            <property name="type">
+                <column name="item_type" not-null="true"/>
+            </property>
 
-	<class name="org.itracker.model.Configuration" table="configurationbean">
-		<id name="id" column="id" type="int" unsaved-value="null">
-			<generator class="native"/>
-		</id>
-		<property name="type" column="item_type" not-null="true" unique="false"/>
-		<property name="order" column="item_order" not-null="true" unique="false"/>
-		<property name="value" column="item_value" not-null="true" unique="false"/>		
-		<property name="version" column="item_version" not-null="true" unique="false"/>	
-		<property name="createDate" column="create_date" not-null="true" unique="false"/>	
-		<property name="lastModifiedDate" column="last_modified" not-null="false" unique="false"/>		
-	</class>	
-	
+            <property name="value">
+                <column name="item_value" not-null="true"/>
+            </property>
+        
+        </natural-id>
+        
+        <!--natural-id mutable="false"-->
+            
+            <!--property name="name">
+                <column name="item_name" not-null="true"/>
+            </property-->
+
+            <property name="version">
+                <column name="item_version" not-null="true"/>
+            </property>
+        
+        <!--/natural-id-->
+        
+        <property name="order">
+            <column name="item_order" not-null="true"/>
+        </property>
+        
+        <property name="createDate">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="lastModifiedDate">
+            <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+    </class>	
+    
 </hibernate-mapping>
