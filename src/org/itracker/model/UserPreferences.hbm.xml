@@ -1,27 +1,66 @@
 <?xml version="1.0"?>
+
 <!DOCTYPE hibernate-mapping PUBLIC 
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping auto-import="true">
-
-	<class name="org.itracker.model.UserPreferences" table="userpreferencesbean">
-		<id name="id" column="id" type="int" unsaved-value="null">
-			<generator class="native"/>
-		</id>
-		<property name="createDate" column="create_date" not-null="true" unique="false"/>
-		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>		
-
-		<property name="saveLogin" column="save_login" not-null="true" unique="false"/>		
-		<property name="userLocale" column="user_locale" not-null="true" unique="false"/>				
-		<property name="numItemsOnIndex" column="num_items_index" not-null="true" unique="false"/>						
-		<property name="numItemsOnIssueList" column="num_items_issue_list" not-null="true" unique="false"/>										
-		<property name="showClosedOnIssueList" column="show_closed" not-null="true" unique="false"/>		
-		<property name="sortColumnOnIssueList" column="sort_column" not-null="true" unique="false"/>		
-		<property name="hiddenIndexSections" column="hidden_index_sections" not-null="true" unique="false"/>				
-		<property name="rememberLastSearch" column="remember_last_search" not-null="true" unique="false"/>						
-		<property name="useTextActions" column="use_text_actions" type="boolean" not-null="true" unique="false"/>										
-		<many-to-one name="user" column="user_id" class="org.itracker.model.User"/>		
-
-	</class>
-
+    
+<hibernate-mapping auto-import="true" package="org.itracker.model">
+    
+    <class name="UserPreferences" table="userpreferencesbean">
+        
+        <id name="id" unsaved-value="null">
+            <column name="id" not-null="true"/>
+            <generator class="native"/>
+        </id>	
+        
+        <many-to-one name="user" class="User">
+            <column name="user_id" not-null="true"/>
+        </many-to-one>
+        
+        <property name="saveLogin">
+            <column name="save_login" not-null="true"/>
+        </property>
+        
+        <property name="userLocale">
+            <column name="user_locale" not-null="true"/>
+        </property>
+        
+        <property name="numItemsOnIndex">
+            <column name="num_items_index" not-null="true"/>
+        </property>
+        
+        <property name="numItemsOnIssueList">
+            <column name="num_items_issue_list" not-null="true"/>
+        </property>
+        
+        <property name="showClosedOnIssueList">
+            <column name="show_closed" not-null="true"/>
+        </property>
+        
+        <property name="sortColumnOnIssueList">
+            <column name="sort_column" not-null="true"/>
+        </property>
+        
+        <property name="hiddenIndexSections">
+            <column name="hidden_index_sections" not-null="true"/>
+        </property>
+        
+        <property name="rememberLastSearch">
+            <column name="remember_last_search" not-null="true"/>
+        </property>
+        
+        <property name="useTextActions" type="boolean">
+            <column name="use_text_actions" not-null="true"/>
+        </property>
+        
+        <property name="createDate">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="lastModifiedDate">
+            <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+    </class>
+    
 </hibernate-mapping>
