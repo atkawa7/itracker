@@ -1,18 +1,60 @@
 <?xml version="1.0"?>
+
 <!DOCTYPE hibernate-mapping PUBLIC 
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping auto-import="true">
+    
+<hibernate-mapping auto-import="true" package="org.itracker.model">
+    
+    <class name="Permission" table="permissionbean">
+        
+        <id name="id" unsaved-value="null">
+            <column name="id" not-null="true"/>
+            <generator class="native"/>
+        </id>
+        
+        <natural-id mutable="true">
+            
+            <property name="permissionType">
+                <column name="permission_type" not-null="true" 
+                    unique-key="permission_ak"/>
+            </property>
 
-	<class name="org.itracker.model.Permission" table="permissionbean">
-		<id name="id" column="id" type="int" unsaved-value="null">
-			<generator class="native"/>
-		</id>
-		<property name="createDate" column="create_date" not-null="true" unique="false"/>
-		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>		
-		<property name="permissionType" column="permission_type" not-null="true" unique="false"/>		
-		<many-to-one name="user" column="user_id" class="org.itracker.model.User" lazy="false"/>		
-		<many-to-one name="project" column="project_id" class="org.itracker.model.Project" lazy="false"/>				
-	</class>
+            <many-to-one name="project" class="Project" lazy="false">
+                <!-- May be null to indicate a permission on all projects. -->
+                <column name="project_id" unique-key="permission_ak"/>
+            </many-to-one>
 
+            <many-to-one name="user" class="User" lazy="false">
+                <column name="user_id" not-null="true" 
+                    unique-key="permission_ak"/>
+            </many-to-one>
+       
+        </natural-id>
+            
+        <property name="createDate">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="lastModifiedDate">
+            <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+    </class>
+    
+    <!-- Named queries (loaded, validated and cached at application startup). -->
+    
+    <query name="PermissionsByUserQuery"><![CDATA[
+    select permission 
+    from Permission as permission
+    where permission.user.id = :userId ]]>
+    </query>
+    
+    <query name="PermissionsByProjectAndTypeQuery"><![CDATA[
+    select permission 
+    from Permission as permission
+    where permission.project.id = :projectId
+    and permission.permissionType = :permissionType ]]>
+    </query>
+    
 </hibernate-mapping>
