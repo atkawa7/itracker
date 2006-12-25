@@ -4,7 +4,6 @@ import java.sql.Connection;
 
 import org.hibernate.HibernateException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import org.hibernate.Transaction;
 
 /**
  * Contains common behaviour to all hibernate factories
@@ -23,9 +22,7 @@ public abstract class BaseHibernateDAOImpl<T> extends HibernateDaoSupport
 
     public void save(T entity) {
         try {
-            Transaction tx = getSession().beginTransaction();
             getSession().save(entity);
-            tx.commit();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -36,9 +33,7 @@ public abstract class BaseHibernateDAOImpl<T> extends HibernateDaoSupport
      */
     public void saveOrUpdate(T entity) {
         try {
-            Transaction tx = getSession().beginTransaction();
             getSession().saveOrUpdate(entity);
-            tx.commit();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -46,9 +41,7 @@ public abstract class BaseHibernateDAOImpl<T> extends HibernateDaoSupport
 
     public void delete(T entity) {
         try {
-            Transaction tx = getSession().beginTransaction();
             getSession().delete(entity);
-            tx.commit();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }    

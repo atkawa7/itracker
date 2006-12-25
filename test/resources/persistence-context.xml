@@ -476,7 +476,27 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         <property name="sessionFactory">
             <ref bean="sessionFactory" />
         </property>
-        <constructor-arg ref="issueDAO" />
+    </bean>    
+
+    <!-- The project script DAO -->
+    <bean id="projectScriptDAO"
+        class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="target" ref="projectScriptDAOTarget" />
+        <property name="proxyInterfaces">
+            <value>org.itracker.persistence.dao.ProjectScriptDAO</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>hibernateInterceptor</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="projectScriptDAOTarget"
+        class="org.itracker.persistence.dao.ProjectScriptDAOImpl">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory" />
+        </property>
     </bean>
 
     <!-- The workflow script DAO -->

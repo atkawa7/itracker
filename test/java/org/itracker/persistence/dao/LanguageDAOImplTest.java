@@ -16,7 +16,7 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
 
         assertNotNull( language );
 
-        assertLanguageEquals( language, 999, "test_locale",
+        assertLanguageEquals( language, "test_locale",
                               "test_key", "test_value" );
 
     }
@@ -31,7 +31,7 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
 
         Language language = languages.get( 0 );
 
-        assertLanguageEquals( language, 999, "test_locale",
+        assertLanguageEquals( language, "test_locale",
                               "test_key", "test_value" );
 
     }
@@ -46,18 +46,16 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
 
         Language language = languages.get( 0 );
 
-        assertLanguageEquals( language, 999, "test_locale",
+        assertLanguageEquals( language, "test_locale",
                               "test_key", "test_value" );
 
     }
 
     private void assertLanguageEquals( Language language,
-                                       Integer languageID,
                                        String locale,
                                        String key,
                                        String value ) {
 
-        assertEquals( languageID, language.getId() );
         assertEquals( locale, language.getLocale() );
         assertEquals( key, language.getResourceKey() );
         assertEquals( value, language.getResourceValue() );
