@@ -77,10 +77,11 @@ public interface UserService {
      * This method is used by the deafult authenticator to manage permissions locally.
      * If a pluggable authenticator is implemented that stores permissions in an
      * external system, calling this method may not have up to date information.
-     * @param permission the permission to search for
+     * @param projectId id of the project on which the returned users have permissions
+     * @param permissionType the type of permission to search for
      * @return an array of UserModels containing the users with the permission
      */
-    public List<User> getUsersWithPermissionLocal(Permission permission);
+    public List<User> getUsersWithPermissionLocal(Integer projectId, int permissionType);
     
     /**
      * This method will call local EJBs to find all permissions for a user.
