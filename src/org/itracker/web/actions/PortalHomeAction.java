@@ -109,35 +109,35 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     String order = userPrefs.getSortColumnOnIssueList();
                     
                     if("id".equals(order)) {
-                        Collections.sort(createdIssues, new Issue.CompareById());
-                        Collections.sort(ownedIssues, new Issue.CompareById());
-                        Collections.sort(unassignedIssues, new Issue.CompareById());
-                        Collections.sort(watchedIssues, new Issue.CompareById());
+                        Collections.sort(createdIssues, Issue.ID_COMPARATOR);
+                        Collections.sort(ownedIssues, Issue.ID_COMPARATOR);
+                        Collections.sort(unassignedIssues, Issue.ID_COMPARATOR);
+                        Collections.sort(watchedIssues, Issue.ID_COMPARATOR);
                     } else if("sev".equals(order)) {
-                        Collections.sort(createdIssues, new Issue.CompareBySeverity());
-                        Collections.sort(ownedIssues, new Issue.CompareBySeverity());
-                        Collections.sort(unassignedIssues, new Issue.CompareBySeverity());
-                        Collections.sort(watchedIssues, new Issue.CompareBySeverity());
+                        Collections.sort(createdIssues, Issue.SEVERITY_COMPARATOR);
+                        Collections.sort(ownedIssues, Issue.SEVERITY_COMPARATOR);
+                        Collections.sort(unassignedIssues, Issue.SEVERITY_COMPARATOR);
+                        Collections.sort(watchedIssues, Issue.SEVERITY_COMPARATOR);
                     } else if("stat".equals(order)) {
-                        Collections.sort(createdIssues, new Issue.CompareByStatus());
-                        Collections.sort(ownedIssues, new Issue.CompareBySeverity());
-                        Collections.sort(unassignedIssues, new Issue.CompareByStatus());
-                        Collections.sort(watchedIssues, new Issue.CompareByStatus());
+                        Collections.sort(createdIssues, Issue.STATUS_COMPARATOR);
+                        Collections.sort(ownedIssues, Issue.SEVERITY_COMPARATOR);
+                        Collections.sort(unassignedIssues, Issue.STATUS_COMPARATOR);
+                        Collections.sort(watchedIssues,Issue.STATUS_COMPARATOR);
                     } else if("lm".equals(order)) {
-                        Collections.sort(createdIssues, new Issue.LastModifiedDateComparator());
-                        Collections.sort(ownedIssues, new Issue.LastModifiedDateComparator());
-                        Collections.sort(unassignedIssues, new Issue.LastModifiedDateComparator());
-                        Collections.sort(watchedIssues, new Issue.LastModifiedDateComparator());
+                        Collections.sort(createdIssues, Issue.LAST_MODIFIED_DATE_COMPARATOR);
+                        Collections.sort(ownedIssues, Issue.LAST_MODIFIED_DATE_COMPARATOR);
+                        Collections.sort(unassignedIssues, Issue.LAST_MODIFIED_DATE_COMPARATOR);
+                        Collections.sort(watchedIssues, Issue.LAST_MODIFIED_DATE_COMPARATOR);
                     } else if("own".equals(order)) {
-                        Collections.sort(createdIssues, new Issue.CompareByOwnerAndStatus());
-                        Collections.sort(ownedIssues, new Issue.CompareBySeverity());
-                        Collections.sort(unassignedIssues, new Issue.CompareByOwnerAndStatus());
-                        Collections.sort(watchedIssues, new Issue.CompareByOwnerAndStatus());
+                        Collections.sort(createdIssues, Issue.OWNER_AND_STATUS_COMPARATOR);
+                        Collections.sort(ownedIssues, Issue.SEVERITY_COMPARATOR);
+                        Collections.sort(unassignedIssues, Issue.OWNER_AND_STATUS_COMPARATOR);
+                        Collections.sort(watchedIssues, Issue.OWNER_AND_STATUS_COMPARATOR);
                     } else {
-                        Collections.sort(createdIssues, new Issue.CompareByStatus());
-                        Collections.sort(ownedIssues, new Issue.CompareBySeverity());
-                        Collections.sort(unassignedIssues, new Issue.CompareByStatus());
-                        Collections.sort(watchedIssues, new Issue.CompareByStatus());
+                        Collections.sort(createdIssues, Issue.STATUS_COMPARATOR);
+                        Collections.sort(ownedIssues, Issue.SEVERITY_COMPARATOR);
+                        Collections.sort(unassignedIssues, Issue.STATUS_COMPARATOR);
+                        Collections.sort(watchedIssues, Issue.STATUS_COMPARATOR);
                     }
                 }
                 
@@ -235,7 +235,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     
                     if(possibleIssueOwners == null) {
                         possibleIssueOwners = userService.getPossibleOwners(null, issue.getProject().getId(), null);
-                        Collections.sort(possibleIssueOwners, new User.CompareByName());
+                        Collections.sort(possibleIssueOwners, User.NAME_COMPARATOR);
                         possibleOwnersMap.put(issue.getProject().getId(), possibleIssueOwners);
                     }
                     
@@ -275,7 +275,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                                     tempOwners.add(m,possibleIssueOwners.get(m));
                                 }
                                 tempOwners.add(tempOwners.size() == 0 ? 0 : tempOwners.size() - 1,(User)editOwnUsers.get(k));
-                                Collections.sort(tempOwners, new User.CompareByName());
+                                Collections.sort(tempOwners, User.NAME_COMPARATOR);
                                 creatorPresent = false;
                             }
                         }
