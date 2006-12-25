@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -96,18 +97,20 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                     sortedKeys[i] = sortedKeys[i].replace('.', '/');
                 }
 
-                HashMap baseItems = new HashMap();
-                HashMap langItems = new HashMap();
-                HashMap locItems = new HashMap();
-                HashMap items = new HashMap();
+                Map<String,String> baseItems = new HashMap<String,String>();
+                Map<String,String> langItems = new HashMap<String,String>();
+                Map<String,String> locItems = new HashMap<String,String>();
+                Map<String,String> items = new HashMap<String,String>();
                 logger.debug("Loading language elements for edit.  Edit type is " + localeType);
-                if(localeType >= SystemConfigurationUtilities.LOCALE_TYPE_BASE) {
+                
+                if (localeType >= SystemConfigurationUtilities.LOCALE_TYPE_BASE) {
                     baseItems = configurationService.getDefinedKeys(null);
                     items = baseItems;
                     logger.debug("Base Locale has " + baseItems.size() + " keys defined.");
                 }
-                if(localeType >= SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE) {
-                    if(! locale.equalsIgnoreCase(ITrackerResources.BASE_LOCALE)) {
+                
+                if (localeType >= SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE) {
+                    if (!locale.equalsIgnoreCase(ITrackerResources.BASE_LOCALE)) {
                         String parentLocale = SystemConfigurationUtilities.getLocalePart(locale, SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE);
                         languageForm.setParentLocale(parentLocale );
                         langItems = configurationService.getDefinedKeys(parentLocale);
@@ -115,23 +118,26 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                         logger.debug("Language " + parentLocale + " has " + langItems.size() + " keys defined.");
                     }
                 }
-                if(localeType == SystemConfigurationUtilities.LOCALE_TYPE_LOCALE) {
+                
+                if (localeType == SystemConfigurationUtilities.LOCALE_TYPE_LOCALE) {
                     locItems = configurationService.getDefinedKeys(locale);
                     items = locItems;
                     logger.debug("Locale " + locale + " has " + locItems.size() + " keys defined.");
                 }
-                if(! "create".equals((String) PropertyUtils.getSimpleProperty(form, "action"))) {
+                
+                if (! "create".equals((String) PropertyUtils.getSimpleProperty(form, "action"))) {
                     // Fix for bug in beanutils.  Can remove this logic here and in EditLanguageAction
                     // once the bug is fixed.
                     // languageForm.set("items", items);
-                    for ( Iterator iter = baseItems.keySet().iterator(); iter.hasNext(); ) {
+                    for (Iterator iter = baseItems.keySet().iterator(); iter.hasNext(); ) {
                         String key = (String) iter.next();
                         String itemStr = (String) items.get(key);
                         if ( itemStr == null || itemStr.length() == 0 )
                             items.put(key,"");
                     }
 
-                    HashMap<String,String> formItems = new HashMap<String,String>();
+                    Map<String,String> formItems = new HashMap<String,String>();
+                    
                     for(Iterator iter = items.keySet().iterator(); iter.hasNext(); ) {
                             String key = (String) iter.next();
                             formItems.put(key.replace('.', '/'), (String) items.get(key));
@@ -139,12 +145,14 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                     languageForm.setItems(formItems);
                 } else {
                     String parentLocale = null;
-                    if(! locale.equalsIgnoreCase(ITrackerResources.BASE_LOCALE)) {
+                    
+                    if (!locale.equalsIgnoreCase(ITrackerResources.BASE_LOCALE)) {
                         parentLocale = SystemConfigurationUtilities.getLocalePart(locale, SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE);
                     }
                     langItems = configurationService.getDefinedKeys(parentLocale);
-                    HashMap<String,String> formItems = new HashMap<String,String>();
-                    for(Iterator iter = items.keySet().iterator(); iter.hasNext(); ) {
+                    Map<String,String> formItems = new HashMap<String,String>();
+                    
+                    for (Iterator iter = items.keySet().iterator(); iter.hasNext(); ) {
                         String key = (String) iter.next();
                         formItems.put(key.replace('.', '/'), (String) langItems.get(key));
                     }
