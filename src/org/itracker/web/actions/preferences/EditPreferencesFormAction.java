@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -67,7 +68,7 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
             request.setAttribute("uh",userService);
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
             request.setAttribute("sc",configurationService);
-            HashMap<String,List<String>> languagesMap = configurationService.getAvailableLanguages();
+            Map<String,List<String>> languagesMap = configurationService.getAvailableLanguages();
             request.setAttribute("languagesMap",languagesMap);
             Set<String> languageCodes = new HashSet<String>();
             languageCodes = languagesMap.keySet();
