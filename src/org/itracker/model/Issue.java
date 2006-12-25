@@ -23,14 +23,24 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * This is a POJO Business Domain Object modelling an issue. 
- * 
- * <p>Hibernate Bean. </p>
+ * A project issue. 
  * 
  * @author ready
  */
-public class Issue extends AbstractBean implements Comparable<Issue> {
+public class Issue extends AbstractEntity implements Comparable<Issue> {
 
+    public static final Comparator<Issue> STATUS_COMPARATOR = 
+            new StatusComparator();
+    
+    public static final Comparator<Issue> PROJECT_AND_STATUS_COMPARATOR =
+            new ProjectAndStatusComparator();
+    
+    public static final Comparator<Issue> OWNER_AND_STATUS_COMPARATOR =
+            new OwnerAndStatusComparator();
+    
+    public static final Comparator<Issue> SEVERITY_COMPARATOR =
+            new SeverityComparator();
+    
     private String description;
     
     private int severity;
@@ -46,363 +56,259 @@ public class Issue extends AbstractBean implements Comparable<Issue> {
     
     private User owner;
     
+    /** Project version for which this issue must be fixed. */
     private Version targetVersion;
     
+    /** List of project components affected by this Issue. */
     private List<Component> components = new ArrayList<Component>();
     
+    /** List of project versions affected by this Issue. */
     private List<Version> versions = new ArrayList<Version>();
+    
+    /** List of custom fields and values. */
+    private List<IssueField> fields = new ArrayList<IssueField>();
+    
+    private List<IssueAttachment> attachments = new ArrayList<IssueAttachment>();
+    
+    private List<IssueRelation> relations = new ArrayList<IssueRelation>();
     
     /* PENDING: do we really need to navigate these relationships from an Issue ? 
      * Moving these as DAO methods would make an Issue more light-weight. 
      */
     private List<Notification> notifications = new ArrayList<Notification>();
     private List<IssueActivity> activities = new ArrayList<IssueActivity>();
-    private List<IssueAttachment> attachments = new ArrayList<IssueAttachment>();
-    private List<IssueField> fields = new ArrayList<IssueField>();
     private List<IssueHistory> history = new ArrayList<IssueHistory>();
-    private List<IssueRelation> relations = new ArrayList<IssueRelation>();
-
-    private static final Comparator<Issue> ISSUE_COMPARATOR = new CompareByStatus();
     
+    
+    /**
+     * Default constructor (required by Hibernate). 
+     * 
+     * <p>PENDING: should be <code>private</code> so that it can only be used
+     * by Hibernate, to ensure that the fields which form an instance's 
+     * identity are always initialized/never <tt>null</tt>. </p>
+     */
     public Issue() {
     }
     
     public List<IssueActivity> getActivities() {
         return activities;
     }
+    
     public void setActivities(List<IssueActivity> activities) {
         this.activities = activities;
     }
+    
     public List<IssueAttachment> getAttachments() {
         return attachments;
     }
+    
     public void setAttachments(List<IssueAttachment> attachments) {
         this.attachments = attachments;
     }
+    
     public List<Component> getComponents() {
         return components;
     }
+    
     public void setComponents(List<Component> components) {
         this.components = components;
     }
+    
     public User getCreator() {
         return creator;
     }
+    
     public void setCreator(User creator) {
         this.creator = creator;
     }
+    
     public String getDescription() {
         return description;
     }
+    
     public void setDescription(String description) {
         this.description = description;
     }
+    
     public List<IssueField> getFields() {
         return fields;
     }
+    
     public void setFields(List<IssueField> fields) {
         this.fields = fields;
     }
+    
     public List<IssueHistory> getHistory() {
         return history;
     }
+    
     public void setHistory(List<IssueHistory> history) {
         this.history = history;
     }
+    
     public List<Notification> getNotifications() {
         return notifications;
     }
+    
     public void setNotifications(List<Notification> notifications) {
         this.notifications = notifications;
     }
+    
     public User getOwner() {
         return owner;
     }
+    
     public void setOwner(User owner) {
         this.owner = owner;
     }
+    
     public Project getProject() {
         return project;
     }
+    
     public void setProject(Project project) {
         this.project = project;
     }
+    
     public List<IssueRelation> getRelations() {
         return relations;
     }
+    
     public void setRelations(List<IssueRelation> relations) {
         this.relations = relations;
     }
+    
     public String getResolution() {
         return resolution;
     }
+    
     public void setResolution(String resolution) {
         this.resolution = resolution;
     }
+    
     public int getSeverity() {
         return severity;
     }
+    
     public void setSeverity(int severity) {
         this.severity = severity;
     }
+    
     public int getStatus() {
         return status;
     }
+    
     public void setStatus(int status) {
         this.status = status;
     }
+    
     public Version getTargetVersion() {
         return targetVersion;
     }
+    
     public void setTargetVersion(Version targetVersion) {
         this.targetVersion = targetVersion;
     }
+    
     public List<Version> getVersions() {
         return versions;
     }
+    
     public void setVersions(List<Version> versions) {
         this.versions = versions;
     }
-    // TODO: do we really still this need this? it returns null... ? I don't know: let's out-comment them:
     
-    // public  List ejbSelectLastModifiedDates(Integer projectId) {
-    //    return(null);
-    //}
-    //public  List ejbSelectIdByProjectAndStatusLessThan(Integer projectId, int status) {
-    //    return(null);
-    // }
-    //public  List ejbSelectIdByProjectAndStatusGreaterThanEqualTo(Integer projectId, int status) {
-    //    return(null);
-    //}
-    //
-    //public Date ejbHomeLatestModificationDate(Integer projectId) {
-    //    Timestamp latestDate = null;
-    //
-    //       Collection dates = ejbSelectLastModifiedDates(projectId);
-    //        for(Iterator iterator = dates.iterator(); iterator.hasNext(); ) {
-    //            Timestamp lastModDate = (Timestamp) iterator.next();
-    //            if(latestDate == null) {
-    //                latestDate = lastModDate;
-    //            }
-    //            if(lastModDate.after(latestDate)) {
-    //                latestDate = lastModDate;
-    //            }
-    //        }
-    //    return (Date) latestDate;
-    //}
-
-    //public Object[] ejbHomeGetIssueStats(Integer projectId) {
-    //    Object[] issueStats = new Object[4];
-
-    //        int totalIssues = 0;
-    //        Collection openIds = ejbSelectIdByProjectAndStatusLessThan(projectId, IssueUtilities.STATUS_RESOLVED);
-    //        issueStats[0] = (openIds == null ? "0" : Integer.toString(openIds.size()));
-    //        totalIssues += openIds.size();
-    //        Collection resolvedIds = ejbSelectIdByProjectAndStatusGreaterThanEqualTo(projectId, IssueUtilities.STATUS_RESOLVED);
-    //        issueStats[1] = (resolvedIds == null ? "0" : Integer.toString(resolvedIds.size()));
-    //        totalIssues += resolvedIds.size();
-
-    //    issueStats[2] = Integer.toString(totalIssues);
-    //    issueStats[3] = ejbHomeLatestModificationDate(projectId);
-
-    //    return issueStats;
-    //}
-    //
     /**
      * Compares by status. 
      */
     public int compareTo(Issue other) {
-        return ISSUE_COMPARATOR.compare(this, other);
+        return STATUS_COMPARATOR.compare(this, other);
     }
     
     /**
      * TODO: fix this!
      */
+    @Override
     public boolean equals(Object obj) {
-        if (! (obj instanceof Issue)) {
-            return false;
+        if (this == obj) {
+            return true;
         }
-        final Issue other = (Issue) obj;
-        return this.id == other.id;
+        
+        if (obj instanceof Issue) {
+            final Issue other = (Issue)obj;
+            
+            return this.id == other.id;
+        }
+        return false;
     }
     
     /**
      * TODO: fix this!
      */
+    @Override
     public int hashCode() {
         return (this.id == null) ? 0 : this.id.intValue();
     }
     
-    public static abstract class IssueComparator implements Comparator<Issue> {
-        protected boolean isAscending = true;
-
-        public IssueComparator() {
-        }
-
-        public IssueComparator(boolean isAscending) {
-            setAscending(isAscending);
-        }
-
-        public void setAscending(boolean value) {
-            this.isAscending = value;
-        }
-
-        protected abstract int doComparison(Issue ma, Issue mb);
-
-
-        public final int compare(Issue a, Issue b) {
-            int result = doComparison(a, b);
-            if(! isAscending) {
-                result = result * -1;
-            }
-            return result;
-        }
+    @Override
+    public String toString() {
+        return "Issue [id=" + this.id + "]";
     }
+    
+    
+    /**
+     * Compares 2 Issues by status and severity. 
+     */
+    private static class StatusComparator implements Comparator<Issue> {
 
-    public static class CompareByStatus extends IssueComparator {
+        public int compare(Issue a, Issue b) {
+            final int statusComparison = a.status - b.status;
+            
+            if (statusComparison == 0) {
+                return a.severity - b.severity;
+            }
+            return statusComparison;
+        }
         
-        public CompareByStatus(){
-          super();
-        }
-
-        public CompareByStatus(boolean isAscending) {
-          super(isAscending);
-        }
-
-        protected int doComparison(Issue ma, Issue mb) {
-            if(ma.getStatus() == mb.getStatus()) {
-                if(ma.getSeverity() == mb.getSeverity()) {
-                    return 0;
-                } else if(ma.getSeverity() > mb.getSeverity()) {
-                    return 1;
-                } else if(ma.getSeverity() < mb.getSeverity()) {
-                    return -1;
-                }
-            } else if(ma.getStatus() > mb.getStatus()) {
-                return 1;
-            } else if(ma.getStatus() < mb.getStatus()) {
-                return -1;
-            }
-
-            return 0;
-        }
     }
 
-    public static class CompareByProjectAndStatus extends IssueComparator {
-        public CompareByProjectAndStatus() {
-            super();
-        }
+    private static class ProjectAndStatusComparator implements Comparator<Issue> {
 
-        public CompareByProjectAndStatus(boolean isAscending) {
-            super(isAscending);
-        }
-
-        protected int doComparison(Issue ma, Issue mb) {
-            if(ma.getProject().getName().equals(mb.getProject().getName())) {
-                if(ma.getStatus() == mb.getStatus()) {
-                    if(ma.getSeverity() == mb.getSeverity()) {
-                        return 0;
-                    } else if(ma.getSeverity() > mb.getSeverity()) {
-                        return 1;
-                    } else if(ma.getSeverity() < mb.getSeverity()) {
-                        return -1;
-                    }
-                } else if(ma.getStatus() > mb.getStatus()) {
-                    return 1;
-                } else if(mb.getStatus() < mb.getStatus()) {
-                    return -1;
-                }
-            } else {
-                return ma.getProject().getName().compareTo(mb.getProject().getName());
+        public int compare(Issue a, Issue b) {
+            final int projectComparison = a.project.compareTo(b.project);
+            
+            if (projectComparison == 0) {
+                return STATUS_COMPARATOR.compare(a, b);
             }
-
-            return 0;
+            return projectComparison;
         }
-    }
-
-    public static class CompareByOwnerAndStatus extends IssueComparator {
-        public CompareByOwnerAndStatus() {
-            super();
-        }
-
-        public CompareByOwnerAndStatus(boolean isAscending) {
-            super(isAscending);
-        }
-
-        protected int doComparison(Issue ma, Issue mb) {
-            if(ma.getOwner().getLastName().equals(mb.getOwner().getLastName())) {
-                if(ma.getOwner().getFirstName().equals(mb.getOwner().getFirstName())) {
-                    if(ma.getStatus() == mb.getStatus()) {
-                        if(ma.getSeverity() == mb.getSeverity()) {
-                            return 0;
-                        } else if(ma.getSeverity() > mb.getSeverity()) {
-                            return 1;
-                        } else if(ma.getSeverity() < mb.getSeverity()) {
-                            return -1;
-                        }
-                    } else if(ma.getStatus() > mb.getStatus()) {
-                        return 1;
-                    } else if(ma.getStatus() < mb.getStatus()) {
-                        return -1;
-                    }
-                } else {
-                    return ma.getOwner().getFirstName().compareTo(mb.getOwner().getFirstName());
-                }
-            } else {
-                return ma.getOwner().getLastName().compareTo(mb.getOwner().getLastName());
-            }
-
-            return 0;
-        }
-    }
-
-    public static class CompareById extends IssueComparator {
-        public CompareById() {
-            super();
-        }
-
-        public CompareById(boolean isAscending) {
-            super(isAscending);
-        }
-
-        protected int doComparison(Issue ma, Issue mb) {
-            if(ma.getId().intValue() > mb.getId().intValue()) {
-                return 1;
-            } else if(ma.getId().intValue() < mb.getId().intValue()) {
-                return -1;
-            }
-
-            return 0;
-        }
-    }
-
-    public static class CompareBySeverity extends IssueComparator {
         
-        public CompareBySeverity() {
-            super();
-        }
+    }
 
-        public CompareBySeverity(boolean isAscending) {
-            super(isAscending);
-        }
+    private static class OwnerAndStatusComparator implements Comparator<Issue> {
 
-        protected int doComparison(Issue ma, Issue mb) {
-            if(ma.getSeverity() == mb.getSeverity()) {
-                if(ma.getStatus() == mb.getStatus()) {
-                    return 0;
-                } else if(ma.getStatus() > mb.getStatus()) {
-                    return 1;
-                } else if(ma.getStatus() < mb.getStatus()) {
-                    return -1;
-                }
-            } else if(ma.getSeverity() > mb.getSeverity()) {
-                return 1;
-            } else if(ma.getSeverity() < mb.getSeverity()) {
-                return -1;
+        public int compare(Issue a, Issue b) {
+            // PENDING : Used to be a last + first name comparison. 
+            final int ownerComparison = a.owner.compareTo(b.owner);
+            
+            if (ownerComparison == 0) {
+                return STATUS_COMPARATOR.compare(a, b);
             }
-
-            return 0;
+            return ownerComparison;
         }
+    }
+
+    private static class SeverityComparator implements Comparator<Issue> {
+        
+        public int compare(Issue a, Issue b) {
+            final int severityComparison = a.severity - b.severity;
+            
+            if(severityComparison == 0) {
+                return a.status - b.status;
+            }
+            return severityComparison;
+        }
+        
     }
     
 }
