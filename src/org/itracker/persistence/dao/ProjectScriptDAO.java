@@ -13,16 +13,33 @@ public interface ProjectScriptDAO extends BaseDAO<ProjectScript> {
     /**
      * Find a <code>ProjectScript</code> by its primary key
      *
-     * @param id primary key of the <code>ProjectScript</code>
-     * @return The <code>ProjectScript</code> found
+     * @param scriptId system ID
+     * @return project script or <tt>null</tt> if none exists with the given id
      */
-    public ProjectScript findByPrimaryKey(Integer scriptId);
+    ProjectScript findByPrimaryKey(Integer scriptId);
     
     /**
      * Finds all <code>ProjectScript</code>s
      *
-     * @return a <code>Collection</code> with all <code>ProjectScript</code>s
+     * @return all <code>ProjectScript</code>s
      */
-    public List<ProjectScript> findAll();
+    List<ProjectScript> findAll();
+    
+    /**
+     * Finds all scripts applied to fields on a particular project. 
+     *
+     * @param projectId
+     * @return list of project scripts
+     */
+    List<ProjectScript> findByProject(Integer projectId);
+    
+    /**
+     * Finds all scripts applied to fields on a particular project. 
+     *
+     * @param projectId
+     * @param fieldId
+     * @return list of project scripts
+     */
+    List<ProjectScript> findByProjectField(Integer projectId, Integer fieldId);
 
 }
