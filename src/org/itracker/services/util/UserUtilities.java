@@ -264,7 +264,7 @@ public class UserUtilities implements AuthenticationConstants {
         
         final Set<PermissionType> permissionTypes = permissionsMap.get(projectId);
         
-        if ((permissionTypes != null) && permissionTypes.contains(PermissionType.fromInt(permissionNeeded))){
+        if ((permissionTypes != null) && permissionTypes.contains(PermissionType.fromCode(permissionNeeded))){
         	return true;
         } else {
         	return false;
@@ -290,7 +290,7 @@ public class UserUtilities implements AuthenticationConstants {
         
         if (permissionTypes != null) {
             for(int i = 0; i < permissionsNeeded.length; i++) {
-                if(permissionTypes.contains(PermissionType.fromInt(permissionsNeeded[i]))) {
+                if(permissionTypes.contains(PermissionType.fromCode(permissionsNeeded[i]))) {
                     return true;
                 }
             }
@@ -308,11 +308,11 @@ public class UserUtilities implements AuthenticationConstants {
         List<Permission> permissionsList = new ArrayList<Permission>();
         
         if (user.isSuperUser()) {
-            permissionsList.add(new Permission((Project) null, -1, user));
+            permissionsList.add(new Permission(-1, user, (Project) null));
         }
         
         for (int i = 0; i < permissions.length; i++) {
-            permissionsList.add(new Permission(project, permissions[i], user));
+            permissionsList.add(new Permission(permissions[i], user, project));
         }
         permissionsArray = new Permission[permissionsList.size()];
         permissionsArray = (Permission[])permissionsList.toArray();
@@ -344,7 +344,7 @@ public class UserUtilities implements AuthenticationConstants {
                 permissionsByProjectId.put(projectId, projectPermissions);
             } //else { // Add the permission to the existing set of permissions for the project. }
             
-            PermissionType permissionType = PermissionType.fromInt(permission.getPermissionType());
+            PermissionType permissionType = PermissionType.fromCode(permission.getPermissionType());
             projectPermissions.add(permissionType);
         }
         return permissionsByProjectId;
