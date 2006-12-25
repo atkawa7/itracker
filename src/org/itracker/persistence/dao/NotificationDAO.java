@@ -9,5 +9,14 @@ import org.itracker.model.Notification;
  */
 public interface NotificationDAO {
     
-    public List<Notification> findByIssueId(Integer issueId);
+    Notification findById(Integer id);
+    
+    /**
+     * Finds all Notifications for an Issue. 
+     * 
+     * @param issueId 
+     * @return list of notification for the given issue, in unspecified order
+     */
+    List<Notification> findByIssueId(Integer issueId);
+    
 }
