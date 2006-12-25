@@ -1,18 +1,42 @@
 <?xml version="1.0"?>
+
 <!DOCTYPE hibernate-mapping PUBLIC 
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping auto-import="true">
+    
+<hibernate-mapping auto-import="true" package="org.itracker.model">
+    
+    <class name="IssueField" table="issuefieldbean">
+        
+        <id name="id" unsaved-value="null">
+            <column name="id" not-null="true"/>
+            <generator class="native"/>
+        </id>
+        
+        <natural-id mutable="true">
+            
+            <many-to-one name="issue" class="Issue">
+                <column name="issue_id" not-null="true" unique-key="issue_field_ak"/>
+            </many-to-one>
 
-	<class name="org.itracker.model.IssueField" table="issuefieldbean">
-		<id name="id" column="id" type="int" unsaved-value="null">
-			<generator class="native"/>
-		</id>
-		<property name="stringValue" column="string_value" not-null="true" unique="false"/>		
-		<property name="intValue" column="int_value" not-null="true" unique="false"/>				
-		<property name="dateValue" column="date_value" not-null="true" unique="false"/>		
-		<many-to-one name="issue" column="issue_id" class="org.itracker.model.Issue"/>		
-		<many-to-one name="customField" column="field_id" class="org.itracker.model.CustomField"/>		
-	</class>
-
+            <many-to-one name="customField" class="CustomField">
+                <column name="field_id" not-null="true" unique-key="issue_field_ak"/>
+            </many-to-one>
+        
+        </natural-id>
+            
+        <property name="stringValue">
+            <column name="string_value"/>
+        </property>
+        
+        <property name="intValue">
+            <column name="int_value"/>
+        </property>
+        
+        <property name="dateValue">
+            <column name="date_value"/>
+        </property>
+        
+    </class>
+    
 </hibernate-mapping>
