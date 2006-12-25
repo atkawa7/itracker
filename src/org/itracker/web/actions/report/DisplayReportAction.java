@@ -92,7 +92,7 @@ public class DisplayReportAction extends ItrackerBaseAction {
 
                 IssueService issueService = getITrackerServices().getIssueService();
                 reportDataArray = issueService.getAllIssues();
-                Collections.sort(reportDataArray, new Issue.CompareById());
+                Collections.sort(reportDataArray, Issue.ID_COMPARATOR);
             } else if("project".equalsIgnoreCase(type)) {
                 if(projectIds != null && projectIds.length > 0) {
                     // This wasn't a regular search.  So instead, take all the selected projects and find all the
@@ -114,7 +114,7 @@ public class DisplayReportAction extends ItrackerBaseAction {
                     }
                     reportDataArray = new ArrayList<Issue>();
                     reportDataArray=reportDataList;
-                    Collections.sort(reportDataArray, new Issue.CompareById());
+                    Collections.sort(reportDataArray, Issue.ID_COMPARATOR);
                 } else {
                 	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectrequired"));
                     throw new ReportException();
