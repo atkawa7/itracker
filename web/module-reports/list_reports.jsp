@@ -10,6 +10,7 @@
 <%@ page import="org.itracker.services.util.*" %>
 <%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.services.IssueService" %>
+<%@ page import="org.itracker.web.util.RequestHelper" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -57,7 +58,8 @@
   </tr>
 
 <%
-    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)session.getAttribute("permissions");
+final Map<Integer, Set<PermissionType>> permissions = 
+    RequestHelper.getUserPermissions(session);
         
 	IssueService is = (IssueService)request.getAttribute("ih");
 	ProjectService ps = (ProjectService)request.getAttribute("ph");
@@ -65,7 +67,7 @@
 
     List<Project> projectsList = ps.getAllAvailableProjects();
     Project[] projects = (Project[])projectsList.toArray(new Project[projectsList.size()]);
-    Arrays.sort(projects, new Project.CompareByName());
+    Arrays.sort(projects);
 
     boolean hasProjects = false;
     for(int i = 0; i < projects.length; i++) {

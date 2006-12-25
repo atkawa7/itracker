@@ -27,11 +27,13 @@
 --%>
 
 <% // TODO : move redirect logic to the Action. 
-        final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
-            session.getAttribute("permissions");
+final Map<Integer, Set<PermissionType>> permissions = 
+    RequestHelper.getUserPermissions(session);
+User um = RequestHelper.getCurrentUser(session);
+        
         ReportService rh = (ReportService)request.getAttribute("rh");
 	UserService uh = (UserService)request.getAttribute("uh");
-	User um = (User)request.getSession().getAttribute("currUser");
+	
     Integer currUserId = um.getId();
 
     IssueSearchQuery query = (IssueSearchQuery) session.getAttribute(Constants.SEARCH_QUERY_KEY);
@@ -58,7 +60,7 @@
 <%
           }
           possibleContributors = uh.getUsersWithAnyProjectPermission(query.getProjectId(), new int[] { UserUtilities.PERMISSION_CREATE, UserUtilities.PERMISSION_EDIT, UserUtilities.PERMISSION_EDIT_USERS });
-          Collections.sort(possibleContributors, new User.CompareByName());
+          Collections.sort(possibleContributors, User.NAME_COMPARATOR);
       }
 %>
 
