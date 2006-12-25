@@ -1,37 +1,78 @@
 package org.itracker.persistence.dao;
 
 import java.util.List;
-
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.itracker.model.ProjectScript;
 
-public class ProjectScriptDAOImpl extends BaseHibernateDAOImpl<ProjectScript> 
+/**
+ * ProjectScript DAO implementation. 
+ * 
+ * @author johnny
+ */
+public class ProjectScriptDAOImpl  extends BaseHibernateDAOImpl<ProjectScript> 
         implements ProjectScriptDAO {
+    
+    /**
+     * 
+     */
+    public ProjectScriptDAOImpl() {
+    }
 
     public ProjectScript findByPrimaryKey(Integer scriptId) {
-        // TODO Auto-generated method stub
+        ProjectScript script;
+        
         try {
-            ProjectScript projectScriptBean = new ProjectScript();
-            projectScriptBean = (ProjectScript) getSession().get(ProjectScript.class, scriptId);
-            return projectScriptBean;
+            script = (ProjectScript)getSession().get(ProjectScript.class, scriptId);
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
+        return script;
     }
-    /** 
-     * Finds all <code>ProjectScript</code>s
-     *
-     * @return a <code>Collection</code> with all <code>ProjectScript</code>s
-     */
+    
     @SuppressWarnings("unchecked")
-    public List<ProjectScript> findAll() {        
-        Criteria criteria = getSession().createCriteria(ProjectScript.class);        
+    public List<ProjectScript> findAll() {
+        List<ProjectScript> scripts;
+        
         try {
-            return criteria.list();
-        } catch (HibernateException e) {
-            throw convertHibernateAccessException(e);
+            Query query = getSession().getNamedQuery("ProjectScriptsAllQuery");
+            scripts = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
         }
+        return scripts;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<ProjectScript> findByProject(Integer projectId) {
+        List<ProjectScript> scripts;
+        
+        try {
+            Query query = getSession().getNamedQuery(
+                    "ProjectScriptsByProjectQuery");
+            query.setInteger("projectId", projectId);
+            scripts = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return scripts;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<ProjectScript> findByProjectField(Integer projectId, 
+            Integer fieldId) {
+        List<ProjectScript> scripts;
+        
+        try {
+            Query query = getSession().getNamedQuery(
+                    "ProjectScriptsByProjectAndFieldQuery");
+            query.setInteger("projectId", projectId);
+            query.setInteger("fieldId", fieldId);
+            scripts = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return scripts;
     }
 
 }
