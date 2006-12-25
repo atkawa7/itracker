@@ -14,6 +14,7 @@
 <%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.services.IssueService" %>
 <%@ page import="org.itracker.core.resources.*" %>
+<%@ page import="org.itracker.web.util.RequestHelper" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -30,8 +31,8 @@
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 <%
-    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
-        session.getAttribute("permissions");
+final Map<Integer, Set<PermissionType>> permissions = 
+    RequestHelper.getUserPermissions(session);
         
   IssueService ih = (IssueService)request.getAttribute("ih");
   UserService uh = (UserService)request.getAttribute("uh");
@@ -65,35 +66,39 @@ if (null!=userPrefs) {
   String order = userPrefs.getSortColumnOnIssueList();
  
   if("id".equals(order)) {
-      Collections.sort(createdIssues, new Issue.CompareById());
-      Collections.sort(ownedIssues, new Issue.CompareById());
-      Collections.sort(unassignedIssues, new Issue.CompareById());
-      Collections.sort(watchedIssues, new Issue.CompareById());
+      Collections.sort(createdIssues, Issue.ID_COMPARATOR);
+      Collections.sort(ownedIssues, Issue.ID_COMPARATOR);
+      Collections.sort(unassignedIssues, Issue.ID_COMPARATOR);
+      Collections.sort(watchedIssues, Issue.ID_COMPARATOR);
   } else if("sev".equals(order)) {
-      Collections.sort(createdIssues, new Issue.CompareBySeverity());
-      Collections.sort(ownedIssues, new Issue.CompareBySeverity());
-      Collections.sort(unassignedIssues, new Issue.CompareBySeverity());
-      Collections.sort(watchedIssues, new Issue.CompareBySeverity());
+      Collections.sort(createdIssues, Issue.SEVERITY_COMPARATOR);
+      Collections.sort(ownedIssues, Issue.SEVERITY_COMPARATOR);
+      Collections.sort(unassignedIssues, Issue.SEVERITY_COMPARATOR);
+      Collections.sort(watchedIssues, Issue.SEVERITY_COMPARATOR);
   } else if("stat".equals(order)) {
-      Collections.sort(createdIssues, new Issue.CompareByStatus());
-      Collections.sort(ownedIssues, new Issue.CompareBySeverity());
-      Collections.sort(unassignedIssues, new Issue.CompareBySeverity());
-      Collections.sort(watchedIssues, new Issue.CompareByStatus());
+      Collections.sort(createdIssues, Issue.STATUS_COMPARATOR);
+      Collections.sort(ownedIssues, Issue.SEVERITY_COMPARATOR);
+      Collections.sort(unassignedIssues, Issue.SEVERITY_COMPARATOR);
+      Collections.sort(watchedIssues, Issue.STATUS_COMPARATOR);
   } else if("lm".equals(order)) {
-      Collections.sort(createdIssues, new Issue.LastModifiedDateComparator(false));
-      Collections.sort(ownedIssues, new Issue.LastModifiedDateComparator(false));
-      Collections.sort(unassignedIssues, new Issue.LastModifiedDateComparator(false));
-      Collections.sort(watchedIssues, new Issue.LastModifiedDateComparator(false));
+      Collections.sort(createdIssues, Collections.reverseOrder(
+              Issue.LAST_MODIFIED_DATE_COMPARATOR));
+      Collections.sort(ownedIssues, Collections.reverseOrder(
+              Issue.LAST_MODIFIED_DATE_COMPARATOR));
+      Collections.sort(unassignedIssues, Collections.reverseOrder(
+              Issue.LAST_MODIFIED_DATE_COMPARATOR));
+      Collections.sort(watchedIssues, Collections.reverseOrder(
+              Issue.LAST_MODIFIED_DATE_COMPARATOR));
   } else if("own".equals(order)) {
-      Collections.sort(createdIssues, new Issue.CompareByOwnerAndStatus());
-      Collections.sort(ownedIssues, new Issue.CompareBySeverity());
-      Collections.sort(unassignedIssues, new Issue.CompareByOwnerAndStatus());
-      Collections.sort(watchedIssues, new Issue.CompareByOwnerAndStatus());
+      Collections.sort(createdIssues, Issue.OWNER_AND_STATUS_COMPARATOR);
+      Collections.sort(ownedIssues, Issue.SEVERITY_COMPARATOR);
+      Collections.sort(unassignedIssues, Issue.OWNER_AND_STATUS_COMPARATOR);
+      Collections.sort(watchedIssues, Issue.OWNER_AND_STATUS_COMPARATOR);
   } else {
-      Collections.sort(createdIssues, new Issue.CompareBySeverity());
-      Collections.sort(ownedIssues, new Issue.CompareBySeverity());
-      Collections.sort(unassignedIssues, new Issue.CompareBySeverity());
-      Collections.sort(watchedIssues, new Issue.CompareBySeverity());
+      Collections.sort(createdIssues, Issue.SEVERITY_COMPARATOR);
+      Collections.sort(ownedIssues, Issue.SEVERITY_COMPARATOR);
+      Collections.sort(unassignedIssues, Issue.SEVERITY_COMPARATOR);
+      Collections.sort(watchedIssues, Issue.SEVERITY_COMPARATOR);
   }
 }
   int j = 0;
@@ -247,7 +252,7 @@ if (null!=userPrefs) {
                        List<User> possibleOwners = possibleOwnersMap.get(unassignedIssues.get(i).getProject().getId());
                        if(possibleOwners == null) {
                             possibleOwners = uh.getPossibleOwners(null, unassignedIssues.get(i).getProject().getId(), null);
-                            Collections.sort(possibleOwners, new User.CompareByName());
+                            Collections.sort(possibleOwners, User.NAME_COMPARATOR);
                           possibleOwnersMap.put(unassignedIssues.get(i).getProject().getId(), possibleOwners);
                        }
                          List<User> editOwnUsers = usersWithEditOwnMap.get(unassignedIssues.get(i).getProject().getId());
@@ -271,7 +276,7 @@ if (null!=userPrefs) {
                                         tempOwners.add(m,possibleOwners.get(m));
                                     }
                                     tempOwners.add(tempOwners.size() - 1,editOwnUsers.get(k));
-                                    Collections.sort(tempOwners, new User.CompareByName());
+                                    Collections.sort(tempOwners, User.NAME_COMPARATOR);
                                     creatorPresent = false;
                                 }
                              }

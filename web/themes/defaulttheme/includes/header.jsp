@@ -3,8 +3,9 @@
 <%@ page import="java.util.Map"
     import="java.util.Set"
     import="org.itracker.model.PermissionType"
-    import="org.itracker.services.util.*" %>
-    
+    import="org.itracker.services.util.*" 
+    import="org.itracker.web.util.RequestHelper" %>
+
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
@@ -16,8 +17,8 @@
 <%-- <nitrox:var name="pageTitleKey" type="java.lang.String"/> --%>
 <%-- <nitrox:var name="pageTitleArg" type="java.lang.String"/> --%>
 <%
-    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
-        session.getAttribute("permissions");
+final Map<Integer, Set<PermissionType>> permissions = 
+    RequestHelper.getUserPermissions(session);
 %>
 <html>
   <head>
