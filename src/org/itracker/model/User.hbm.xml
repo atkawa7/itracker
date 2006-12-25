@@ -1,39 +1,124 @@
 <?xml version="1.0"?>
+
 <!DOCTYPE hibernate-mapping PUBLIC 
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping auto-import="true">
-
-
-	<class name="org.itracker.model.User" table="userbean">
-		<id name="id" column="id" type="int" unsaved-value="null">
-			<generator class="native"/>
-		</id>
-		<property name="createDate" column="create_date" not-null="true" unique="false"/>
-		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>		
-		<property name="login" not-null="true" unique="false"/>		
-		<property name="password" column="user_password" not-null="true" unique="false"/>				
-		<property name="firstName" column="first_name" not-null="true" unique="false"/>						
-		<property name="lastName" column="last_name" not-null="true" unique="false"/>										
-		<property name="email" not-null="true" unique="false"/>		
-		<property name="status" not-null="true" unique="false"/>		
-		<property name="superUser" column="super_user" not-null="true" unique="false" 
-                    type="org.itracker.persistence.dao.IntBooleanType"/>				
-		<property name="registrationType" column="registration_type" not-null="true" unique="false"/>						
-		<many-to-one name="preferences" column="preferences_id" class="org.itracker.model.UserPreferences"/>		
-		<bag name="permissions" table="Permission" cascade="all" lazy="true">
-			<key>
-				<column name="user_id"/>
-			</key>
-			<one-to-many class="org.itracker.model.Permission"/>
-		</bag>
-
-		<bag name="projects" table="project_owner_rel" lazy="true">
-			<key>
-				<column name="user_id"/>
-			</key>
-			<many-to-many class="org.itracker.model.Project" column="project_id" outer-join="auto"/>
-		</bag>
-
-	</class>
+    
+<hibernate-mapping auto-import="true" package="org.itracker.model">
+    
+    <class name="User" table="userbean">
+        
+        <id name="id" unsaved-value="null">
+            <column name="id" not-null="true"/>
+            <generator class="native"/>
+        </id>
+        	
+        <property name="login">
+            <column name="login" not-null="true" unique-key="user_ak"/>
+        </property>
+        
+        <property name="password">
+            <column name="user_password" not-null="true"/>
+        </property>
+        
+        <property name="firstName">
+            <column name="first_name" not-null="true"/>
+        </property>
+        
+        <property name="lastName">
+            <column name="last_name" not-null="true"/>
+        </property>
+        
+        <property name="email">
+            <column name="email" not-null="true"/>
+        </property>
+        
+        <property name="status">
+            <column name="status" not-null="true"/>
+        </property>
+        
+        <property name="superUser"
+                type="org.itracker.persistence.dao.IntBooleanType">
+            <column name="super_user" not-null="true"/>
+        </property>
+    
+        <property name="registrationType">
+            <column name="registration_type" not-null="true"/>
+        </property>
+        
+        <many-to-one name="preferences" class="UserPreferences">
+            <column name="preferences_id"/>
+        </many-to-one>
+        
+        <bag name="permissions" table="Permission" cascade="all" lazy="true">
+            <key>
+                <column name="user_id"/>
+            </key>
+            <one-to-many class="Permission"/>
+        </bag>
+        
+        <bag name="projects" table="project_owner_rel" lazy="true">
+            <key>
+                <column name="user_id"/>
+            </key>
+            <many-to-many class="Project" column="project_id" outer-join="auto"/>
+        </bag>
+        
+        <property name="createDate">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="lastModifiedDate">
+            <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+    </class>
+    
+    <!-- Named queries (loaded, validated and cached at application startup). -->
+    
+    <query name="UserByLoginQuery"><![CDATA[
+    select user 
+    from User as user 
+    where user.login = :login ]]>
+    </query>	
+    
+    <query name="UsersAllQuery"><![CDATA[
+    select user 
+    from User as user ]]>
+    </query>
+    
+    <query name="UsersActiveQuery"><![CDATA[
+    select user 
+    from User as user 
+    where user.status > 0 ]]>
+    </query>
+    
+    <query name="UsersSuperQuery"><![CDATA[
+    select user 
+    from User as user 
+    where user.superUser = 1 ]]>
+    <!-- "where user.superUser = true" causes error : 
+         ERROR: operator does not exist: integer = boolean  -->
+    </query>
+    
+    <query name="UsersByStatusQuery"><![CDATA[
+    select user 
+    from User as user 
+    where user.status = :userStatus ]]>
+    </query>
+    
+    <query name="UsersByRegistrationTypeQuery"><![CDATA[
+    select user 
+    from User as user 
+    where user.registrationType = :registrationType ]]>
+    </query>
+    
+    <!--query name="UsersByPermissionsQuery"><![CDATA[
+    select user 
+    from User as user 
+    inner join user.permissions as permission
+    where permission.project.id = :projectId
+    and permission.permissionType in (:permissionTypes) ]]>
+    </query-->
+    
 </hibernate-mapping>
