@@ -83,6 +83,14 @@ public interface IssueDAO extends BaseDAO<Issue> {
      */
     List<Issue> findByProject(Integer projectId);
     
+     /**
+     * Counts the number of issues of the given project. 
+     * 
+     * @param projectId ID of the project of which to count issues
+     * @return number of issues
+     */
+    int countByProject(Integer projectId);
+    
     /**
      * Finds all issues of the given project with a status lower than 
      * the given one. 
