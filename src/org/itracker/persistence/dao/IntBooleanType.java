@@ -19,11 +19,13 @@ import org.hibernate.usertype.UserType;
  *
  * @author johnny
  */
-public class IntBooleanType implements UserType {
+public final class IntBooleanType implements UserType {
     
     private static final int[] SQL_TYPES = { Types.INTEGER };
     
-    /** Creates a new instance of IntBooleanType */
+    /** 
+     * Default constructor, required by Hibernate. 
+     */
     public IntBooleanType() {
     }
     
@@ -44,6 +46,9 @@ public class IntBooleanType implements UserType {
     }
     
     public int hashCode(Object x) throws HibernateException {
+        /* Apparently, there's no need to check for nulls here. */
+        assert (x != null);
+        
         return x.hashCode();
     }
     
@@ -71,11 +76,16 @@ public class IntBooleanType implements UserType {
         return false;
     }
     
+    /**
+     * Implements persistence equality. 
+     */
     public boolean equals(Object x, Object y) throws HibernateException {
         if (x == y) {
             return true;
-        } else if (x == null || y == null) {
-            return false;
+        }
+        
+        if (x == null || y == null) {
+            return false; // test (x == y) has been done before and was false. 
         }
         return x.equals(y);
     }
