@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -67,7 +68,7 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
             
-            HashMap<String,List<String>> languages_map = configurationService.getAvailableLanguages();
+            Map<String,List<String>> languages_map = configurationService.getAvailableLanguages();
             String[] languages = new String[languages_map.size()];
             int idx = 0;
             // TODO: there is some bugs around here still, needs debugging. See jsp error output. 
@@ -100,7 +101,7 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
                 customFieldForm.setFieldType(new Integer(customField.getFieldType()));
                 customFieldForm.setRequired(Boolean.toString(customField.isRequired()));
                 customFieldForm.setDateFormat(customField.getDateFormat());
-                customFieldForm.setSortOptionsByName(Boolean.toString(customField.getSortOptionsByName()));
+                customFieldForm.setSortOptionsByName(Boolean.toString(customField.isSortOptionsByName()));
 
                 HashMap<String,String> translations = new HashMap<String,String>();
                 List<Language> languageItems = configurationService.getLanguageItemsByKey(CustomFieldUtilities.getCustomFieldLabelKey(customField.getId()));
