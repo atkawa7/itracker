@@ -392,7 +392,6 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         <property name="sessionFactory">
             <ref bean="sessionFactory" />
         </property>
-        <constructor-arg ref="issueDAO" />
     </bean>
 
     <!-- The notification DAO -->
@@ -415,7 +414,6 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         <property name="sessionFactory">
             <ref bean="sessionFactory" />
         </property>
-        <constructor-arg ref="issueDAO" />
     </bean>
 
     <!-- The issue relation DAO -->
