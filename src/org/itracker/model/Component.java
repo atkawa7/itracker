@@ -19,6 +19,7 @@
 package org.itracker.model;
 
 import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Models a project component. 
@@ -34,8 +35,12 @@ import java.util.Comparator;
  * @author Jason
  * @author Johnny
  */
-public class Component extends AbstractBean implements Comparable<Component> {
+public class Component extends AbstractEntity 
+        implements Comparable<Component> {
 
+    public static final Comparator<Component> NAME_COMPARATOR = 
+            new NameComparator();
+    
     /**
      * Project to which this component belongs. 
      * Invariant: never <tt>null</tt>. 
@@ -54,7 +59,6 @@ public class Component extends AbstractBean implements Comparable<Component> {
     /** Component status. */
     private int status;
     
-//    private Collection<Issue> issues = new ArrayList<Issue>();
     
     /**
      * Default constructor (required by Hibernate). 
@@ -73,19 +77,14 @@ public class Component extends AbstractBean implements Comparable<Component> {
      * @param name unique component name within the project
      */
     public Component(Project project, String name) {
+        super(new Date());
         setProject(project);
         setName(name);
         
         // A new component is active by default. 
         this.status = 1; // = ProjectUtilities.STATUS_ACTIVE
     }
-/*    public Collection<Issue> getIssues() {
-        return issues;
-    }
-    public void setIssues(Collection<Issue> issues) {
-        this.issues = issues;
-    }  
-*/
+
     /**
      * Returns the project owning this component. 
      * 
@@ -102,6 +101,7 @@ public class Component extends AbstractBean implements Comparable<Component> {
      * a component's natural key and is used in the equals method! </p>
      * 
      * @param project parent project
+     * @throws IllegalArgumentException null project
      */
     public void setProject(Project project) {
         if (project == null) {
@@ -126,6 +126,7 @@ public class Component extends AbstractBean implements Comparable<Component> {
      * a component's natural key and is used in the equals method! </p>
      * 
      * @param name unique name within the parent project
+     * @throws IllegalArgumentException null name
      */
     public void setName(String name) {
         if (name == null) {
@@ -198,16 +199,19 @@ public class Component extends AbstractBean implements Comparable<Component> {
     }
 
     /**
-     * @return <tt>Component [id=id, project=project, name=name]</tt>
+     * Returns contatanation of system ID and object natural key. 
+     * 
+     * @return <tt>Component [id=this.id, project=this.project, name=this.name]</tt>
      */
     @Override
     public String toString() {
-        return "Component [id=" + this.id + ", project=" + this.project 
+        return "Component [id=" + this.id 
+                + ", project=" + this.project 
                 + ", name=" + this.name + "]";
     }
 
     /**
-     * Compares 2 Components by project and name. 
+     * Compares 2 Components by project and name (natural key). 
      */
     public int compareTo(Component other) {
         final int projectComparison = this.project.compareTo(other.project);
@@ -221,8 +225,11 @@ public class Component extends AbstractBean implements Comparable<Component> {
     
     /**
      * Compares 2 Components by name. 
+     * 
+     * <p>It should only be used to compare components of the same project, 
+     * because it doesn't take the project into account. </p>
      */
-    public static class NameComparator implements Comparator<Component> {
+    private static class NameComparator implements Comparator<Component> {
         
         public int compare(Component a, Component b) {
             return a.name.compareTo(b.name);
