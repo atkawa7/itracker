@@ -19,77 +19,129 @@
 package org.itracker.model;
 
 import java.util.Comparator;
+import java.util.Date;
 
 /**
- * This is a POJO Business Domain Object modelling an attachment to an Issue. 
- * 
- * <p>Hibernate Bean. </p>
- * 
+ * A file attachment to an Issue.
+ *
  * @author ready
  */
-public class IssueAttachment extends AbstractBean {
-
+public class IssueAttachment extends AbstractEntity
+        implements Comparable<IssueAttachment> {
+    
+    /** Compares 2 attachments by file size. */
+    public static final Comparator<IssueAttachment> SIZE_COMPARATOR =
+            new SizeComparator();
+    
+    /** The issue to which the file is attached. */
+    private Issue issue;
+    
+    /** The file name used to upload the attachment. */
     private String originalFileName;
-    private String type;
+    
+    /**
+     * Globally unique file name constructed from the concatenation
+     * of the issue id and original file name.
+     *
+     * PENDING: remove this computed field.
+     */
     private String fileName;
     
-    /** 
-     * PENDING: this should probably not be saved in the DB nor be loaded 
-     * in memory for good resource management. 
+    /** MIME type. */
+    private String type;
+    
+    /** Byte size. */
+    private long size;
+    
+    /** Attachment description or comment. */
+    private String description;
+    
+    /**
+     * PENDING: this should probably not be saved in the DB nor be loaded
+     * in memory for good resource management.
      */
     private byte[] fileData;
-    private String description;
-    private long size;
-    private Issue issue;
+    
+    /** The use who created the attachment. */
     private User user;
-
+    
+    
     /**
-     * Default constructor required by Hibernate. 
+     * Default constructor (required by Hibernate).
+     *
+     * <p>PENDING: should be <code>private</code> so that it can only be used
+     * by Hibernate, to ensure that the fields which form an instance's
+     * identity are always initialized/never <tt>null</tt>. </p>
      */
     public IssueAttachment() {
     }
-
-    public IssueAttachment(String origFileName, String type, String description, long size) {
-        this.setOriginalFileName(origFileName);
+    
+    public IssueAttachment(Issue issue, String originalFileName) {
+        super(new Date());
+        setIssue(issue);
+        setOriginalFileName(originalFileName);
+    }
+    
+    /**
+     * Convenience constructor.
+     */
+    public IssueAttachment(Issue issue, String origFileName, String type, String description, long size) {
+        this(issue, origFileName);
         this.setType(type);
         this.setDescription(description);
         this.setSize(size);
     }
-
-    public IssueAttachment(String origFileName, String type, String description, 
-            long size, Issue issue, User user) {
-        this(origFileName, type, description, size);
-        this.setIssue(issue);
+    
+    /**
+     * Convenience constructor.
+     */
+    public IssueAttachment(Issue issue, String origFileName, String type, String description,
+            long size, User user) {
+        this(issue, origFileName, type, description, size);
         this.setUser(user);
+    }
+    
+    public  Issue getIssue() {
+        return(issue);
+    }
+    
+    public  void setIssue(Issue issue) {
+        if (issue == null) {
+            throw new IllegalArgumentException("null issue");
+        }
+        this.issue = issue;
     }
     
     public  String getOriginalFileName() {
         return originalFileName;
     }
-    public  void setOriginalFileName(String value) {
-        originalFileName = value;
+    public  void setOriginalFileName(String fileName) {
+        if (fileName == null) {
+            throw new IllegalArgumentException("null fileName");
+        }
+        this.originalFileName = fileName;
     }
-
+    
     public  String getType() {
         return type;
     }
     public  void setType(String value) {
         type = value;
     }
-
+    
     public  String getFileName() {
         return(fileName);
     }
     public  void setFileName(String value) {
         fileName = value;
     }
-
+    
     public String getFileExtension() {
-        int lastIndex = getOriginalFileName().lastIndexOf('.');
-        if(lastIndex > 0) {
-           return getOriginalFileName().substring(lastIndex);
+        final int lastIndex = this.originalFileName.lastIndexOf('.');
+        
+        if (lastIndex > 0) {
+            return this.originalFileName.substring(lastIndex);
         }
-
         return "";
     }
     
@@ -99,143 +151,77 @@ public class IssueAttachment extends AbstractBean {
     public  void setFileData(byte[] value) {
         fileData = value;
     }
-
+    
     public  String getDescription() {
         return description;
     }
+    
     public  void setDescription(String value) {
         description = value;
     }
-
+    
     public  long getSize() {
-        return(size);
+        return size;
     }
     
-    public  void setSize(long value) {
-        size = value;
-    }
-
-    public  Issue getIssue() {
-        return(issue);
+    public  void setSize(long size) {
+        this.size = size;
     }
     
-    public  void setIssue(Issue value) {
-        issue = value;
-    }
-
     public  User getUser() {
-        return(user);
+        return user;
     }
-    public  void setUser(User value) {
-        user = value;
+    
+    public  void setUser(User user) {
+        this.user = user;
     }
-
-    public static abstract class IssueAttachmentComparator implements Comparator<IssueAttachment> {
-        protected boolean isAscending = true;
-
-        public IssueAttachmentComparator() {
+    
+    public int compareTo(IssueAttachment other) {
+        final int issueComparison = this.issue.compareTo(other.issue);
+        
+        if (issueComparison == 0) {
+            return this.originalFileName.compareTo(other.originalFileName);
         }
-
-        public IssueAttachmentComparator(boolean isAscending) {
-            setAscending(isAscending);
+        return issueComparison;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
-
-        public void setAscending(boolean value) {
-            this.isAscending = value;
-        }
-
-        protected abstract int doComparison(IssueAttachment ma, IssueAttachment mb);
-
-        public final int compare(IssueAttachment ma, IssueAttachment mb) {
-            int result = doComparison(ma, mb);
+        
+        if (obj instanceof IssueAttachment) {
+            final IssueAttachment other = (IssueAttachment)obj;
             
-            if (! isAscending) {
-                result = result * -1;
-            }
-            return result;
+            return this.issue.equals(other.issue)
+            && this.originalFileName.equals(other.originalFileName);
         }
+        return false;
     }
-
-    public static class CompareByDate extends IssueAttachmentComparator {
-        public CompareByDate(){
-          super();
-        }
-
-        public CompareByDate(boolean isAscending) {
-          super(isAscending);
-        }
-
-        protected int doComparison(IssueAttachment ma, IssueAttachment mb) {
-            if(ma.getCreateDate() == null && mb.getCreateDate() == null) {
-                return 0;
-            } else if(ma.getCreateDate() == null) {
-                return 1;
-            } else if(mb.getCreateDate() == null) {
-                return -1;
-            }
-
-            if(ma.getCreateDate().equals(mb.getCreateDate())) {
-                return 0;
-            } else if(ma.getCreateDate().before(mb.getCreateDate())) {
-                return -1;
-            } else {
-                return 1;
-            }
-        }
+    
+    @Override
+    public int hashCode() {
+        return this.issue.hashCode() + this.originalFileName.hashCode();
     }
-
-    public static class CompareByIssueId extends IssueAttachmentComparator {
-        public CompareByIssueId(){
-          super();
-        }
-
-        public CompareByIssueId(boolean isAscending) {
-          super(isAscending);
-        }
-
-        protected int doComparison(IssueAttachment ma, IssueAttachment mb) {
-            if(ma.getIssue() == null && mb.getIssue() == null) {
-                return 0;
-            } else if(ma.getIssue() == null) {
-                return 1;
-            } else if(mb.getIssue() == null) {
-                return -1;
-            }
-
-            if(ma.getIssue().equals(mb.getIssue())) {
-                return ma.getId().compareTo(mb.getId());
-            } else {
-                return ma.getIssue().compareTo(mb.getIssue());
-            }
-        }
+    
+    @Override
+    public String toString() {
+        return "IssueAttachment [id=" + this.id
+                + ", issue=" + this.issue
+                + ", originalfileName=" + this.originalFileName;
     }
-
-    public static class CompareBySize extends IssueAttachmentComparator {
-        public CompareBySize(){
-          super();
+    
+    
+    /**
+     * Compares 2 attachments by file size.
+     */
+    public static class SizeComparator implements Comparator<IssueAttachment> {
+        
+        public int compare(IssueAttachment a, IssueAttachment b) {
+            return (int)(a.size - b.size);
         }
-
-        public CompareBySize(boolean isAscending) {
-          super(isAscending);
-        }
-
-        protected int doComparison(IssueAttachment ma, IssueAttachment mb) {
-            if(ma.getIssue() == null && mb.getIssue() == null) {
-                return 0;
-            } else if(ma.getIssue() == null) {
-                return 1;
-            } else if(mb.getIssue() == null) {
-                return -1;
-            }
-
-            if(ma.getSize() == mb.getSize()) {
-                return ma.getIssue().compareTo(mb.getIssue());
-            } else if(ma.getSize() > mb.getSize()) {
-                return 1;
-            } else {
-                return -1;
-            }
-        }
+        
     }
     
 }
