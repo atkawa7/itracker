@@ -1,19 +1,56 @@
 <?xml version="1.0"?>
+
 <!DOCTYPE hibernate-mapping PUBLIC 
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping auto-import="true">
+    
+<hibernate-mapping auto-import="true" package="org.itracker.model">
+    
+    <class name="IssueRelation" table="issuerelationbean">
+        
+        <id name="id" column="id" unsaved-value="null">
+            <generator class="native"/>
+        </id>
+        
+        <natural-id mutable="true">
+            
+            <many-to-one name="issue" class="Issue">
+                <column name="issue_id" not-null="true" 
+                    unique-key="issue_relation_ak"/>
+            </many-to-one>
 
-	<class name="org.itracker.model.IssueRelation" table="issuerelationbean">
-		<id name="id" column="id" type="int" unsaved-value="null">
-			<generator class="native"/>
-		</id>
-		<property name="createDate" column="create_date" not-null="true" unique="false"/>
-		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>				
-		<property name="matchingRelationId" column="matching_relation_id" not-null="true" unique="false"/>
-		<property name="relationType" column="relation_type" not-null="true" unique="false"/>		
-		<many-to-one name="issue" column="issue_id" class="org.itracker.model.Issue"/>		
-		<many-to-one name="relatedIssue" column="rel_issue_id" class="org.itracker.model.Issue"/>		
-	</class>
+            <many-to-one name="relatedIssue" class="Issue">
+                <column name="rel_issue_id" not-null="true" 
+                    unique-key="issue_relation_ak"/>
+            </many-to-one>
 
+            <property name="relationType">
+                <column name="relation_type" not-null="true" 
+                    unique-key="issue_relation_ak"/>
+            </property>
+        
+        </natural-id>
+            
+        <property name="matchingRelationId">
+            <column name="matching_relation_id" not-null="true"/>
+        </property>
+        
+        <property name="createDate">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="lastModifiedDate">
+            <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+    </class>
+    
+    <!-- Named queries (loaded, validated and cached at application startup). -->
+    
+    <query name="IssueRelationsByIssueQuery"><![CDATA[
+    select relation 
+    from IssueRelation as relation
+    where relation.issue.id = :issueId ]]>
+    </query>
+    
 </hibernate-mapping>
