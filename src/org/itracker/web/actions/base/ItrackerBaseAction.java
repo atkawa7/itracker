@@ -19,7 +19,6 @@
 package org.itracker.web.actions.base;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +45,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.user.LoginAction;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
 import org.itracker.web.util.SessionManager;
 
@@ -104,7 +104,7 @@ public abstract class ItrackerBaseAction extends Action {
         User currUser = (User)request.getSession().getAttribute("currUser");
         
         // TODO: think about this: are permissions put into the request? or into the session? Markys knowledge: permissions are being set, when login happens... do we really need the following line then? 
-        Map<Integer, Set<PermissionType>> permissions = (HashMap<Integer, Set<PermissionType>>) request.getSession().getAttribute(Constants.PERMISSIONS_KEY);
+        Map<Integer, Set<PermissionType>> permissions = getUserPermissions(request.getSession());
         currLocale = LoginUtilities.getCurrentLocale(request);
         String currLogin = (currUser == null ? null : currUser.getLogin());
         // now these are put into the request scope... (new).
@@ -117,9 +117,8 @@ public abstract class ItrackerBaseAction extends Action {
         
     }
     
-    @SuppressWarnings("unchecked")
     protected Map<Integer, Set<PermissionType>> getUserPermissions(HttpSession session) {
-        return (Map<Integer, Set<PermissionType>>)session.getAttribute(Constants.PERMISSIONS_KEY);
+        return RequestHelper.getUserPermissions(session);
     }
     
     protected boolean hasPermission(int[] permissionsNeeded, HttpServletRequest request, HttpServletResponse response)
