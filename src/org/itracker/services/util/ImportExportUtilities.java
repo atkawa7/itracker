@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.AbstractBean;
+import org.itracker.model.AbstractEntity;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueAttachment;
@@ -69,8 +69,8 @@ public class ImportExportUtilities implements ImportExportTags {
       * @param xml an xml string to import
       * @exception ImportExportException thrown if the xml can not be parsed into the appropriate objects
       */
-    public static AbstractBean[] importIssues(String xml) throws ImportExportException {
-        AbstractBean[] abstractBeans = new AbstractBean[0];
+    public static AbstractEntity[] importIssues(String xml) throws ImportExportException {
+        AbstractEntity[] abstractBeans = new AbstractEntity[0];
 
         try {
             logger.debug("Starting XML data import.");
@@ -139,7 +139,7 @@ public class ImportExportUtilities implements ImportExportTags {
                 }
             }
 
-            buf.append(exportModel((AbstractBean) issues.get(i)));
+            buf.append(exportModel((AbstractEntity) issues.get(i)));
         }
         buf.append("</" + TAG_ISSUES + ">\n");
         buf.append("</" + TAG_ROOT + ">\n");
@@ -151,13 +151,13 @@ public class ImportExportUtilities implements ImportExportTags {
             for(int i = 0; i < project.getOwners().size(); i++) {
                 users.put(project.getOwners().get(i).getId().toString(), project.getOwners().get(i));
             }
-            buf.insert(0, exportModel((AbstractBean) project));
+            buf.insert(0, exportModel((AbstractEntity) project));
         }
         buf.insert(0, "<" + TAG_PROJECTS + ">\n");
 
         buf.insert(0, "</" + TAG_USERS + ">\n");
         for(Iterator iter = users.keySet().iterator(); iter.hasNext(); ) {
-            buf.insert(0, exportModel((AbstractBean) users.get((String) iter.next())));
+            buf.insert(0, exportModel((AbstractEntity) users.get((String) iter.next())));
         }
         buf.insert(0, "<" + TAG_USERS + ">\n");
 
@@ -177,7 +177,7 @@ public class ImportExportUtilities implements ImportExportTags {
       * @param model a modle that extends AbstractBean
       * @exception ImportExportException thrown if the given model can not be exported
       */
-    public static String exportModel(AbstractBean abstractBean) throws ImportExportException {
+    public static String exportModel(AbstractEntity abstractBean) throws ImportExportException {
         if(abstractBean == null) {
             throw new ImportExportException("The bean to export was null.");
         } else if(abstractBean instanceof Issue) {
@@ -396,7 +396,7 @@ public class ImportExportUtilities implements ImportExportTags {
             buf.append("      <" + TAG_CUSTOM_FIELD_TYPE + "><![CDATA[" + config.getCustomFields().get(i).getFieldType() + "]]></" + TAG_CUSTOM_FIELD_TYPE + ">\n");
             buf.append("      <" + TAG_CUSTOM_FIELD_REQUIRED + "><![CDATA[" + config.getCustomFields().get(i).isRequired() + "]]></" + TAG_CUSTOM_FIELD_REQUIRED + ">\n");
             buf.append("      <" + TAG_CUSTOM_FIELD_DATEFORMAT + "><![CDATA[" + ITrackerResources.escapeUnicodeString(config.getCustomFields().get(i).getDateFormat(), false) + "]]></" + TAG_CUSTOM_FIELD_DATEFORMAT + ">\n");
-            buf.append("      <" + TAG_CUSTOM_FIELD_SORTOPTIONS + "><![CDATA[" + config.getCustomFields().get(i).getSortOptionsByName() + "]]></" + TAG_CUSTOM_FIELD_SORTOPTIONS + ">\n");
+            buf.append("      <" + TAG_CUSTOM_FIELD_SORTOPTIONS + "><![CDATA[" + config.getCustomFields().get(i).isSortOptionsByName() + "]]></" + TAG_CUSTOM_FIELD_SORTOPTIONS + ">\n");
             if(config.getCustomFields().get(i).getFieldType() == CustomFieldUtilities.TYPE_LIST) {
                 List<CustomFieldValue> options = config.getCustomFields().get(i).getOptions();
                 for(int j = 0; j < options.size(); j++) {
