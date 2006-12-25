@@ -830,9 +830,8 @@ public class IssueServiceImpl implements IssueService {
 		if (currOwner == null || !currOwner.getId().equals(user.getId())) {
 			if (currOwner != null && !hasIssueNotification(issueId, currOwner.getId(), NotificationUtilities.ROLE_CONTRIBUTER)) {
 				// Notification notification = new Notification();
-				Notification notification = new Notification(NotificationUtilities.ROLE_CONTRIBUTER);
-				notification.setIssue(issue);
-				notification.setUser(currOwner);
+				Notification notification = new Notification(
+                                        currOwner, issue, NotificationUtilities.ROLE_CONTRIBUTER);
 			}
 
 			IssueActivity activity = new IssueActivity();
@@ -858,16 +857,14 @@ public class IssueServiceImpl implements IssueService {
 		if (issue.getOwner() != null) {
 			if (!hasIssueNotification(issueId, issue.getOwner().getId(), NotificationUtilities.ROLE_CONTRIBUTER)) {
 				//Notification notification = new Notification();
-				Notification notification = new Notification(NotificationUtilities.ROLE_CONTRIBUTER);
-				notification.setIssue(issue);
-				notification.setUser(issue.getOwner());
+				Notification notification = 
+                                        new Notification(issue.getOwner(), 
+                                        issue, NotificationUtilities.ROLE_CONTRIBUTER);
 			}
-			IssueActivity activity = new IssueActivity();
-			activity.setType(IssueUtilities.ACTIVITY_OWNER_CHANGE);
+			IssueActivity activity = new IssueActivity(issue, 
+                                assignedByUser, IssueUtilities.ACTIVITY_OWNER_CHANGE);
 			activity.setDescription((issue.getOwner() == null ? "[" + ITrackerResources.getString("itracker.web.generic.unassigned") + "]" : issue.getOwner().getLogin()) + " " + ITrackerResources.getString("itracker.web.generic.to") + " ["
 					+ ITrackerResources.getString("itracker.web.generic.unassigned") + "]");
-			activity.setUser(assignedByUser);
-			activity.setIssue(issue);
 
 			issue.setOwner(null);
 
