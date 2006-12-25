@@ -1,73 +1,115 @@
 <?xml version="1.0"?>
+
 <!DOCTYPE hibernate-mapping PUBLIC 
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping auto-import="true">
 
-	<class name="org.itracker.model.Issue" table="issuebean">
-		<id name="id" column="id" type="int" unsaved-value="null">
-			<generator class="native"/>
-		</id>
-		<property name="createDate" column="create_date" not-null="true" unique="false"/>
-		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>		
-		<property name="description" not-null="true" unique="false"/>		
-		<property name="severity" not-null="true" unique="false"/>				
-		<property name="status" not-null="true" unique="false"/>		
-		<property name="resolution" unique="false"/>				
-		<many-to-one name="project" column="project_id" class="org.itracker.model.Project"/>		
-		<many-to-one name="creator" column="creator_id" class="org.itracker.model.User"/>		
-		<many-to-one name="owner" column="owner_id" class="org.itracker.model.User"/>						
-		<many-to-one name="targetVersion" column="target_version_id" class="org.itracker.model.Version"/>								
-
-		<bag name="components" table="issue_component_rel" lazy="true">
-			<key>
-				<column name="issue_id"/>
-			</key>
-			<many-to-many class="org.itracker.model.Component" column="component_id" outer-join="auto"/>
-		</bag>
-		<bag name="versions" table="issue_version_rel" lazy="true">
-			<key>
-				<column name="issue_id"/>
-			</key>
-			<many-to-many class="org.itracker.model.Version" column="version_id" outer-join="auto"/>
-		</bag>		
-		<bag name="notifications" table="Notification" cascade="all" lazy="true">
-			<key>
-				<column name="issue_id"/>
-			</key>
-			<one-to-many class="org.itracker.model.Notification"/>
-		</bag>
-		<bag name="attachments" table="IssueAttachment" cascade="all" lazy="true">
-			<key>
-				<column name="issue_id"/>
-			</key>
-			<one-to-many class="org.itracker.model.IssueAttachment"/>
-		</bag>
-		<bag name="fields" table="IssueField" cascade="all" lazy="true">
-			<key>
-				<column name="issue_id"/>
-			</key>
-			<one-to-many class="org.itracker.model.IssueField"/>
-		</bag>			
-		<bag name="history" table="IssueHistory" cascade="all" lazy="true">
-			<key>
-				<column name="issue_id"/>
-			</key>
-			<one-to-many class="org.itracker.model.IssueHistory"/>
-		</bag>		
-		<bag name="relations" table="IssueRelation" cascade="all" lazy="true">
-			<key>
-				<column name="issue_id"/>
-			</key>
-			<one-to-many class="org.itracker.model.IssueRelation"/>
-		</bag>				
-		<bag name="activities" table="IssueActivity" cascade="all" lazy="true">
-			<key>
-				<column name="issue_id"/>
-			</key>
-			<one-to-many class="org.itracker.model.IssueActivity"/>
-		</bag>	
-	</class>
+<hibernate-mapping auto-import="true" package="org.itracker.model">
+    
+    <class name="Issue" table="issuebean">
+        
+        <id name="id" unsaved-value="null">
+            <column name="id" not-null="true"/>
+            <generator class="native"/>
+        </id>
+        		
+        <property name="description">
+            <column name="description" not-null="true" />
+        </property>
+        
+        <property name="severity">
+            <column name="severity" not-null="true" />
+        </property>
+        
+        <property name="status">
+            <column name="status" not-null="true" />
+        </property>
+        
+        <property name="resolution">
+            <column name="resolution" />
+        </property>    
+                
+        <many-to-one name="project" class="Project">
+            <column name="project_id" not-null="true"/>
+        </many-to-one>
+        
+        <many-to-one name="creator" class="User">
+            <column name="creator_id" not-null="true"/>
+        </many-to-one>
+        
+        <many-to-one name="owner" class="User">
+            <column name="owner_id"/>
+        </many-to-one>
+        
+        <many-to-one name="targetVersion" class="Version">
+            <column name="target_version_id"/>
+        </many-to-one>
+        
+        <property name="createDate">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="lastModifiedDate">
+            <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <bag name="components" table="issue_component_rel" lazy="true">
+            <key>
+                <column name="issue_id"/>
+            </key>
+            <many-to-many class="Component" column="component_id" outer-join="auto"/>
+        </bag>
+        
+        <bag name="versions" table="issue_version_rel" lazy="true">
+            <key>
+                <column name="issue_id"/>
+            </key>
+            <many-to-many class="Version" column="version_id" outer-join="auto"/>
+        </bag>
+        
+        <bag name="notifications" table="Notification" cascade="all" lazy="true">
+            <key>
+                <column name="issue_id"/>
+            </key>
+            <one-to-many class="Notification"/>
+        </bag>
+        
+        <bag name="attachments" table="IssueAttachment" cascade="all" lazy="true">
+            <key>
+                <column name="issue_id"/>
+            </key>
+            <one-to-many class="IssueAttachment"/>
+        </bag>
+        
+        <bag name="fields" table="IssueField" cascade="all" lazy="true">
+            <key>
+                <column name="issue_id"/>
+            </key>
+            <one-to-many class="IssueField"/>
+        </bag>
+        
+        <bag name="history" table="IssueHistory" cascade="all" lazy="true">
+            <key>
+                <column name="issue_id"/>
+            </key>
+            <one-to-many class="IssueHistory"/>
+        </bag>
+        
+        <bag name="relations" table="IssueRelation" cascade="all" lazy="true">
+            <key>
+                <column name="issue_id"/>
+            </key>
+            <one-to-many class="IssueRelation"/>
+        </bag>
+        
+        <bag name="activities" table="IssueActivity" cascade="all" lazy="true">
+            <key>
+                <column name="issue_id"/>
+            </key>
+            <one-to-many class="IssueActivity"/>
+        </bag>
+        
+    </class>
     
     <!-- Named queries (loaded, validated and cached at application startup). -->
     
@@ -113,6 +155,12 @@
     from Issue as issue 
     where issue.project.id = :projectId ]]>
     </query>
+    
+    <query name="IssueCountByProjectQuery"><![CDATA[
+    select count(issue) 
+    from Issue as issue
+    where issue.project.id = :projectId ]]>
+    </query> 
     
     <query name="IssuesByProjectAndLowerStatusQuery"><![CDATA[
     select issue 
@@ -181,15 +229,6 @@
     and issue.status < :maxExclusiveStatus ]]>
     </query>
     
-    <!--query name="IssuesByOwnerInAvailableProjectsQuery"><![CDATA[
-    select issue 
-    from Issue as issue 
-    inner join issue.project as project 
-    where project.status = 1 
-    and issue.owner.id = :ownerId
-    and issue.status not in :excludedIssueStatuses ]]>
-    </query-->
-    
     <query name="IssuesByNotificationQuery"><![CDATA[
     select distinct issue 
     from Issue as issue 
@@ -214,28 +253,28 @@
     inner join issue.components as component 
     where component.id = :componentId ]]>
     </query>
-
+    
     <query name="IssueCountByComponentQuery"><![CDATA[
     select count(issue) 
     from Issue as issue 
     inner join issue.components as component 
     where component.id = :componentId ]]>
     </query>
-
+    
     <query name="IssuesByVersionQuery"><![CDATA[
     select issue 
     from Issue as issue 
     inner join issue.versions as version 
     where version.id = :versionId ]]>
     </query>
-
+    
     <query name="IssueCountByVersionQuery"><![CDATA[
     select count(issue) 
     from Issue as issue 
     inner join issue.versions as version 
     where version.id = :versionId ]]>
     </query>
-
+    
     <query name="MaxIssueModificationDateQuery"><![CDATA[
     select max(issue.lastModifiedDate) 
     from Issue as issue 
