@@ -116,7 +116,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                 }
 
                 if(errors.isEmpty()) {
-                    HashMap<Integer,List<NameValuePair>> listOptions = new HashMap<Integer,List<NameValuePair>>();
+                    Map<Integer, List<NameValuePair>> listOptions = new HashMap<Integer,List<NameValuePair>>();
                     boolean hasFullEdit = UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
 
                     List<NameValuePair> ownersList = new ArrayList<NameValuePair>();
@@ -127,7 +127,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                             ownersList.add(new NameValuePair(ITrackerResources.getString("itracker.web.generic.unassign", currLocale), "-1"));
                         }
                         List<User> possibleOwners = userService.getPossibleOwners(issue, project.getId(), currUser.getId());
-                        Collections.sort(possibleOwners, new User.CompareByFirstName());
+                        Collections.sort(possibleOwners, User.NAME_COMPARATOR);
                         List<NameValuePair> ownerNames = Convert.usersToNameValuePairs(possibleOwners);
                         for(int i = 0; i < ownerNames.size(); i++) {
                             ownersList.add(ownerNames.get(i));
@@ -285,8 +285,8 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                     }
 
                     List<ProjectScript> scripts = project.getScripts();
-                    WorkflowUtilities.ProcessFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors, issueForm);
-                    WorkflowUtilities.ProcessFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, null, errors, issueForm);
+                    WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors, issueForm);
+                    WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, null, errors, issueForm);
 
                     if(errors == null || errors.isEmpty()) {
                         logger.debug("Forwarding to edit issue form for issue " + issue.getId());
