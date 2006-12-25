@@ -12,11 +12,15 @@
             <column name="id" not-null="true"/>
             <generator class="native"/>
         </id>
-        	
-        <property name="login">
-            <column name="login" not-null="true" unique-key="user_ak"/>
-        </property>
         
+        <natural-id mutable="true">
+        
+            <property name="login">
+                <column name="login" not-null="true" unique-key="user_ak"/>
+            </property>
+        
+        </natural-id>
+            
         <property name="password">
             <column name="user_password" not-null="true"/>
         </property>
