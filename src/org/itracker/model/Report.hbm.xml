@@ -1,21 +1,61 @@
 <?xml version="1.0"?>
+
 <!DOCTYPE hibernate-mapping PUBLIC 
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping auto-import="true">
-	<class name="org.itracker.model.Report" table="reportbean">
-		<id name="id" column="id" type="int" unsaved-value="null">
-			<generator class="native"/>
-		</id>
-		<property name="name" column="name" not-null="true" unique="false"/>
-		<property name="nameKey" column="name_key" not-null="true" unique="false"/>		
-		<property name="description" column="description" not-null="true" unique="false"/>		
-		<property name="dataType" column="data_type" not-null="true" unique="false"/>				
-		<property name="reportType" column="report_type" not-null="true" unique="false"/>						
-		<property name="fileData" column="file_data" not-null="false" unique="false" length="1014"/>										
-		<property name="className" column="class_name" not-null="false" unique="false"/>		
-		<property name="createDate" column="create_date" not-null="true" unique="false"/>		
-		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>				
 
-	</class>
+<hibernate-mapping auto-import="true" package="org.itracker.model">
+    
+    <class name="Report" table="reportbean">
+        
+        <id name="id" unsaved-value="null">
+            <column name="id" not-null="true"/>
+            <generator class="native"/>
+        </id>
+        
+        <property name="name">
+            <column name="name" not-null="true"/>
+        </property>
+        
+        <property name="nameKey">
+            <column name="name_key" not-null="true"/>
+        </property>
+        
+        <property name="description">
+            <column name="description" not-null="true" />
+        </property>
+        
+        <property name="dataType">
+            <column name="data_type" not-null="true"/>
+        </property>
+        
+        <property name="reportType">
+            <column name="report_type" not-null="true"/>
+        </property>
+        
+        <property name="fileData">
+            <column name="file_data" not-null="false" length="1014"/>
+        </property>
+        
+        <property name="className">
+            <column name="class_name" not-null="false"/>
+        </property>
+        
+        <property name="createDate">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="lastModifiedDate">
+            <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+    </class>
+    
+    <!-- Named queries (loaded, validated and cached at application startup). -->
+    
+    <query name="ReportsAllQuery"><![CDATA[
+    select report 
+    from Report as report ]]>
+    </query>
+    
 </hibernate-mapping>
