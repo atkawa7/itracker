@@ -126,7 +126,7 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
             query.setAvailableProjects(null);
 
             List<Project> projects = projectService.getAllAvailableProjects();
-            Collections.sort(projects, new Project.CompareByName());
+            Collections.sort(projects);
 
             List<Project> availableProjectsList = new ArrayList<Project>();
             List<Integer> selectedProjectsList = new ArrayList<Integer>();
