@@ -18,7 +18,7 @@
 
 package org.itracker.web.forms;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,45 +33,58 @@ import org.apache.struts.validator.ValidatorForm;
  */
 public class CustomFieldValueForm extends ValidatorForm  {
     
-    Integer id;
-    String value;
+    private String action;
     
-//  let's try to put String,String here:
-    HashMap<String,String> translations;
+    private Integer id;
     
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-//  let's try to put String,String here:
-	public HashMap<String,String> getTranslations() {
-		return translations;
-	}
-//  let's try to put String,String here:
-	public void setTranslations(HashMap<String,String> translations) {
-		this.translations = translations;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-     
+    private String value;
+    
+    
+    //  let's try to put String,String here:
+    private Map<String, String> translations;
+    
+    public String getAction() {
+        return action;
     }
-
+    
+    public void setAction(String action) {
+        this.action = action;
+    }
+    
+    public Integer getId() {
+        return id;
+    }
+    
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
+    //  let's try to put String,String here:
+    public Map<String, String> getTranslations() {
+        return translations;
+    }
+    
+    //  let's try to put String,String here:
+    public void setTranslations(Map<String, String> translations) {
+        this.translations = translations;
+    }
+    
+    public String getValue() {
+        return value;
+    }
+    
+    public void setValue(String value) {
+        this.value = value;
+    }
+    
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        
+    }
+    
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = super.validate(mapping, request);
-      
+        
         return errors;
     }
-
-
+    
 }
