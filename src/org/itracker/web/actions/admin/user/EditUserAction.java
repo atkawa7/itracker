@@ -148,7 +148,7 @@ public class EditUserAction extends ItrackerBaseAction {
                     Integer projectIntValue =  new Integer(paramName.substring(paramName.lastIndexOf('j') + 1));
                     Project project = projectService.getProject(projectIntValue);
                     Integer permissionIntValue = Integer.parseInt(paramName.substring(4,paramName.lastIndexOf('P')));
-                    Permission newPermission = new Permission(project,permissionIntValue,editUser); 
+                    Permission newPermission = new Permission(permissionIntValue, editUser, project); 
                     newPermission.setCreateDate(new Date());
                     newPermissions.add(newPermission); 
                 
