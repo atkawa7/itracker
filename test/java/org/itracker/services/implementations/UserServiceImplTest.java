@@ -1,9 +1,10 @@
-package org.itracker.services;
+package org.itracker.services.implementations;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.itracker.AbstractDependencyInjectionTest;
+import org.itracker.services.UserService;
 import org.itracker.model.Issue;
 import org.itracker.model.Permission;
 import org.itracker.model.Project;
