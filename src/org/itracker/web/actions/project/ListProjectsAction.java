@@ -25,7 +25,7 @@ public class ListProjectsAction extends ItrackerBaseAction {
         IssueService issueService = this.getITrackerServices().getIssueService();
         ProjectService projectService = this.getITrackerServices().getProjectService();
         List<Project> projects = projectService.getAllAvailableProjects();
-        Collections.sort(projects, new Project.CompareByName());
+        Collections.sort(projects);
         request.setAttribute("projects", projects);
         request.setAttribute("ih",issueService);
         request.setAttribute("ph",projectService);
