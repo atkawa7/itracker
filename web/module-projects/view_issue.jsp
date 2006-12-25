@@ -6,6 +6,7 @@
 <%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.services.IssueService" %>
 <%@ page import="org.itracker.core.resources.*" %>
+<%@ page import="org.itracker.web.util.RequestHelper" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -16,10 +17,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <% // TODO : move redirect logic to the Action class. 
-    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
-        session.getAttribute("permissions");
+final Map<Integer, Set<PermissionType>> permissions = 
+    RequestHelper.getUserPermissions(session);
+User um = RequestHelper.getCurrentUser(session);
+
   IssueService ih = (IssueService)request.getAttribute("ih");
-  User um = (User)request.getSession().getAttribute("currUser");
+  
   Integer issueId = null;
   Issue issue = null; 
 
@@ -128,7 +131,7 @@
                              <it:formatImageAction forward="relateissue" paramName="id" paramValue="<%= issue.getId() %>" caller="viewissue" src="/images/link.gif" altKey="itracker.web.image.link.issue.alt" textActionKey="itracker.web.image.link.texttag"/>
                              --%>
                         <% } %>
-                        <% if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission((java.util.HashMap)request.getSession().getAttribute("permissions"), project.getId(), UserUtilities.PERMISSION_CREATE)) { %>
+                        <% if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_CREATE)) { %>
                             <it:formatImageAction forward="createissue"
                                                   module="/module-projects"
                                                   paramName="projectId"
@@ -180,7 +183,7 @@
                       <td valign="top" class="editColumnText">
                         <% List<Component> components = issue.getComponents();
 
-                            Collections.sort(components, new Component.NameComparator());
+                            Collections.sort(components);
 
                             for(int i = 0; i < components.size(); i++) {
                         %>
@@ -214,7 +217,7 @@
               <%
                  List<CustomField> projectFields = project.getCustomFields();
                  if(projectFields != null && projectFields.size() > 0) {
-                     Collections.sort(projectFields, new CustomField.CompareById());
+                     Collections.sort(projectFields, CustomField.ID_COMPARATOR);
                      List<IssueField> issueFields = issue.getFields();
                      HashMap<Integer,String> fieldValues = new HashMap<Integer,String>();
                      for(int i = 0; i < issueFields.size(); i++) {
@@ -334,7 +337,7 @@
                   <%
                     List<IssueAttachment> attachments = issue.getAttachments();
 
-                    Collections.sort(attachments, new IssueAttachment.CompareByDate());
+                    Collections.sort(attachments, IssueAttachment.CREATE_DATE_COMPARATOR);
 
                     for(int i = 0; i < attachments.size(); i++) {
                   %>
@@ -376,7 +379,7 @@
               <%
                 List<IssueHistory> history = issue.getHistory();
 
-                Collections.sort(history, new IssueHistory.CompareByDate());
+                Collections.sort(history, IssueHistory.CREATE_DATE_COMPARATOR);
 
                 int count = 0;
                 for(int i = 0; i < history.size(); i++) {
@@ -432,7 +435,7 @@
               <%
                 List<Notification> notifications = ih.getIssueNotifications(issueId);
 
-                Collections.sort(notifications, new Notification.CompareByName());
+                Collections.sort(notifications, Notification.USER_COMPARATOR);
 
                 for(int i = 0; i < notifications.size(); i++) {
               %>

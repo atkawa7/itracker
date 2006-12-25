@@ -5,6 +5,7 @@
 <%@ page import="org.itracker.model.*" %>
 <%@ page import="org.itracker.services.util.UserUtilities" %>
 <%@ page import="org.itracker.services.util.ProjectUtilities" %>
+<%@ page import="org.itracker.web.util.RequestHelper" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -15,8 +16,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%
-    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
-        session.getAttribute("permissions");
+final Map<Integer, Set<PermissionType>> permissions = 
+    RequestHelper.getUserPermissions(session);
         
     //UserPreferencesModel userPrefs = (UserPreferencesModel) session.getAttribute("preferences");
     Project project = (Project)request.getAttribute("project");

@@ -10,6 +10,7 @@
 <%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.services.IssueService" %>
 <%@ page import="org.itracker.core.resources.*" %>
+<%@ page import="org.itracker.web.util.RequestHelper" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -24,8 +25,10 @@
 	User um = (User)request.getSession().getAttribute("currUser");
 	
     Issue issue = (Issue) session.getAttribute(Constants.ISSUE_KEY);
-    HashMap<Integer,List<NameValuePair>> listOptions = (HashMap<Integer,List<NameValuePair>>) session.getAttribute(Constants.LIST_OPTIONS_KEY);
-    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>) request.getSession().getAttribute("permissions");
+    Map<Integer, List<NameValuePair>> listOptions = 
+            RequestHelper.getListOptions(session);
+    final Map<Integer, Set<PermissionType>> permissions = 
+            RequestHelper.getUserPermissions(session);
     
     Project project = (issue != null ? issue.getProject() : null);
     if(issue == null || project == null) {
@@ -227,7 +230,7 @@
                     <% } else { %>
                           <%
                               List<Component> issueComponents = issue.getComponents();
-                              Collections.sort(issueComponents, new Component.NameComparator());
+                              Collections.sort(issueComponents);
                               for(int i = 0; i < issueComponents.size(); i++) {
                           %>
                               <%= issueComponents.get(i).getName() %><br/>
@@ -268,7 +271,7 @@
              List<CustomField> projectFields = project.getCustomFields();
 
              if(projectFields != null && projectFields.size() > 0) {
-                 Collections.sort(projectFields, new CustomField.CompareById());
+                 Collections.sort(projectFields, CustomField.ID_COMPARATOR);
                  List<IssueField> issueFields = issue.getFields();
                  HashMap<Integer,String> fieldValues = new HashMap<Integer,String>();
                  for(int i = 0; i < issueFields.size(); i++) {
@@ -365,7 +368,7 @@
                   </tr>
                   <%
                      List<IssueAttachment> attachments = issue.getAttachments();
-                     Collections.sort(attachments, new IssueAttachment.CompareByDate());
+                     Collections.sort(attachments, IssueAttachment.CREATE_DATE_COMPARATOR);
                      if(attachments.size() > 0) {
                   %>
                         <tr align="left" class="listHeading">
@@ -430,7 +433,7 @@
               <%
                 List<IssueHistory> history = ih.getIssueHistory(issueId);
  
-                Collections.sort(history, new IssueHistory.CompareByDate());
+                Collections.sort(history, IssueHistory.CREATE_DATE_COMPARATOR);
 
                 int i = 0;
                 for(i = 0; i < history.size(); i++) {
@@ -500,7 +503,7 @@
               <%
                 List<Notification> notifications = ih.getIssueNotifications(issueId);
  			 
-                Collections.sort(notifications, new Notification.CompareByType());
+                Collections.sort(notifications, Notification.TYPE_COMPARATOR);
 %>
 <%
                 for(i = 0; i < notifications.size(); i++) {

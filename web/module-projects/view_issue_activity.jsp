@@ -7,7 +7,7 @@
 <%@ page import="org.itracker.services.util.IssueUtilities" %>
 <%@ page import="org.itracker.services.util.UserUtilities" %>
 <%@ page import="org.itracker.services.IssueService" %>
-<%@ page import="org.itracker.model.*" %>
+<%@ page import="org.itracker.web.util.RequestHelper" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -18,10 +18,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <% // TODO : move redirect logic to the Action class. 
-    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
-        session.getAttribute("permissions");
+    final Map<Integer, Set<PermissionType>> permissions = 
+        RequestHelper.getUserPermissions(session);
+    User um = RequestHelper.getCurrentUser(session);
+        
     IssueService ih = (IssueService)request.getAttribute("ih");
-    User um = (User)session.getAttribute("currUser");
+    
     Integer issueId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
     Integer currUserId = um.getId();
 

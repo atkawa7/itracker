@@ -12,6 +12,7 @@
 <%@ page import="org.itracker.services.util.ProjectUtilities" %>
 <%@ page import="org.itracker.services.util.IssueUtilities" %>
 <%@ page import="org.itracker.core.resources.*" %>
+<%@ page import="org.itracker.web.util.RequestHelper" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -22,8 +23,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <% // TODO : move redirect logic to the Action. 
-    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
-        session.getAttribute("permissions");
+final Map<Integer, Set<PermissionType>> permissions = 
+    RequestHelper.getUserPermissions(session);
         
     User um = (User)session.getAttribute("currUser");
     Integer currUserId = um.getId();

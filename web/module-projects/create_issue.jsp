@@ -4,6 +4,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="org.itracker.model.*" %>
 <%@ page import="org.itracker.services.util.*" %> 
+<%@ page import="org.itracker.web.util.RequestHelper" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -15,7 +16,9 @@
 
 <% // TODO : move redirect logic to Action class. 
     Project project = (Project) session.getAttribute(Constants.PROJECT_KEY);
-    HashMap<Integer,List<NameValuePair>> listOptions = (HashMap<Integer,List<NameValuePair>>) session.getAttribute(Constants.LIST_OPTIONS_KEY);
+    Map<Integer, List<NameValuePair>> listOptions = 
+            RequestHelper.getListOptions(session);
+            
     if(project == null) {
 %>
       <logic:forward name="unauthorized"/>
@@ -136,7 +139,7 @@
           <%
              List<CustomField> projectFields = project.getCustomFields();
              if(projectFields != null && projectFields.size() > 0) {
-                Collections.sort(projectFields, new CustomField.CompareById());
+                Collections.sort(projectFields, CustomField.ID_COMPARATOR);
                 
           %>
           <!-- TODO: never used? int numRows = (projectFields.size() / 2);-->

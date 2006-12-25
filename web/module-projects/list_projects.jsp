@@ -8,6 +8,7 @@
 <%@ page import="org.itracker.model.*" %>
 <%@ page import="org.itracker.services.util.*" %>
 <%@ page import="org.itracker.services.*" %>
+<%@ page import="org.itracker.web.util.RequestHelper" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -18,8 +19,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%
-    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
-        session.getAttribute("permissions");
+final Map<Integer, Set<PermissionType>> permissions = 
+    RequestHelper.getUserPermissions(session);
 %>
 
 <bean:define id="pageTitleKey" value="itracker.web.listprojects.title"/>
@@ -56,7 +57,7 @@
 <%
   ProjectService ph = (ProjectService)request.getAttribute("ph");
   List<Project> projects = (List<Project>)request.getAttribute("projects");
-
+    
   boolean hasProjects = false;
   int numDisplayed = 0;
   int totalOpenIssues = 0;
@@ -66,7 +67,7 @@
       Project project = projects.get(i);
     
     // TODO: move this to the Action class. 
-    if(! UserUtilities.hasPermission((Map)request.getSession().getAttribute("permissions"), project.getId(), new int[] { UserUtilities.PERMISSION_VIEW_ALL, UserUtilities.PERMISSION_VIEW_USERS })) {
+    if(! UserUtilities.hasPermission(permissions, project.getId(), new int[] { UserUtilities.PERMISSION_VIEW_ALL, UserUtilities.PERMISSION_VIEW_USERS })) {
          continue;
     }
     hasProjects = true;
