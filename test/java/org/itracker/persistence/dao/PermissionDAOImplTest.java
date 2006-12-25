@@ -14,7 +14,7 @@ public class PermissionDAOImplTest extends AbstractDependencyInjectionTest {
     public void testCreatePermission() {
     	Project project = projectDAO.findByPrimaryKey(2);
     	User user = userDAO.findByPrimaryKey(2);
-        Permission permission = new Permission(project,3,user);
+        Permission permission = new Permission(3, user, project);
         
         permissionDAO.saveOrUpdate( permission );
         Permission foundPermission = permissionDAO.findByUserId(2).get(1);
