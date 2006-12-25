@@ -11,6 +11,7 @@
 <%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.core.resources.*" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
  
 <bean:define id="pageTitleKey" value="itracker.web.admin.createlanguagekey.title"/>
 <bean:define id="pageTitleArg" value=""/>
@@ -23,7 +24,7 @@
   <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
   <%
     ConfigurationService sc = (ConfigurationService)request.getAttribute("sc");
-    java.util.HashMap<String,List<String>> languages = sc.getAvailableLanguages();
+    Map<String,List<String>> languages = sc.getAvailableLanguages();
   %>
     <tr>
       <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
