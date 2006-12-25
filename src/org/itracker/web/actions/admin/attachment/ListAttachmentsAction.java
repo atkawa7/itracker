@@ -43,7 +43,7 @@ public class ListAttachmentsAction extends ItrackerBaseAction {
 				hasAttachments = false;
 			} else {
 				hasAttachments = true;
-				Collections.sort(attachments, new IssueAttachment.CompareByIssueId());
+				Collections.sort(attachments);
 				for (IssueAttachment issueAttachment: attachments){ 
 					sizeOfAllAttachments += issueAttachment.getSize();
 					}
