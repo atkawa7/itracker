@@ -1,18 +1,50 @@
 <?xml version="1.0"?>
+
 <!DOCTYPE hibernate-mapping PUBLIC 
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping auto-import="true">
+    
+<hibernate-mapping auto-import="true" package="org.itracker.model">
+    
+    <class name="Notification" table="notificationbean">
+        
+        <id name="id" unsaved-value="null">
+            <column name="id" not-null="true"/>
+            <generator class="native"/>
+        </id>
+        
+        <natural-id mutable="true">
+            
+            <many-to-one name="issue" class="Issue">
+                <column name="issue_id" not-null="true"/>
+            </many-to-one>
 
-	<class name="org.itracker.model.Notification" table="notificationbean">
-		<id name="id" column="id" type="int" unsaved-value="null">
-			<generator class="native"/>
-		</id>
-		<property name="createDate" column="create_date" not-null="true" unique="false"/>
-		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>		
-		<property name="notificationRole" column="user_role" not-null="true" unique="false"/>		
-		<many-to-one name="user" column="user_id" class="org.itracker.model.User"/>		
-		<many-to-one name="issue" column="issue_id" class="org.itracker.model.Issue"/>		
-	</class>
+            <many-to-one name="user" class="User">
+                <column name="user_id" not-null="true"/>
+            </many-to-one>
 
+            <property name="notificationRole">
+                <column name="user_role" not-null="true"/>
+            </property>
+        
+        </natural-id>
+            
+        <property name="createDate">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="lastModifiedDate">
+            <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+    </class>
+    
+    <!-- Named queries (loaded, validated and cached at application startup). -->
+    
+    <query name="NotificationsByIssueQuery"><![CDATA[
+    select notification 
+    from Notification as notification
+    where notification.issue.id = :issueId ]]>
+    </query>
+    
 </hibernate-mapping>
