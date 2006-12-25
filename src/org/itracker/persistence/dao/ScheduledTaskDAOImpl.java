@@ -1,9 +1,8 @@
 package org.itracker.persistence.dao;
 
 import java.util.List;
-
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.itracker.model.ScheduledTask;
 
 /**
@@ -19,26 +18,27 @@ public class ScheduledTaskDAOImpl extends BaseHibernateDAOImpl<ScheduledTask>
      * @return a <code>ScheduledTask</code>
      */
     public ScheduledTask findByPrimaryKey(Integer id) {
-        try {
-            return (ScheduledTask)getSession().get(ScheduledTask.class, id);
-        } catch (HibernateException ex) {
-            throw convertHibernateAccessException( ex );
-        }
-    }
-
-    /**
-     * Finds all <code>ScheduledTask</code>
-     *
-     * @returns a <code>Collection</code> of <code>ScheduledTask</code>s
-     */
-    @SuppressWarnings("unchecked")
-    public List<ScheduledTask> findAll() {
-        Criteria criteria = getSession().createCriteria(ScheduledTask.class);
+        ScheduledTask task;
         
         try {
-            return criteria.list();
-        } catch (HibernateException e) {
-            throw convertHibernateAccessException(e);
+            task = (ScheduledTask)getSession().get(ScheduledTask.class, id);
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
         }
+        return task;
     }
+
+    @SuppressWarnings("unchecked")
+    public List<ScheduledTask> findAll() {
+        List<ScheduledTask> tasks;
+        
+        try {
+            Query query = getSession().getNamedQuery("ScheduledTasksAllQuery");
+            tasks = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return tasks;
+    }
+    
 }
