@@ -19,6 +19,7 @@
 package org.itracker.web.forms;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,7 +38,7 @@ public class LanguageForm extends ValidatorForm  {
     private String key = null;
     private String locale = null;
     private String localeTitle = null;
-    private HashMap<String,String> items = new HashMap<String,String>();
+    private Map<String,String> items = new HashMap<String,String>();
     
 /*    public void reset(ActionMapping mapping, HttpServletRequest request) {
         action = null;
@@ -60,11 +61,11 @@ public class LanguageForm extends ValidatorForm  {
         this.action = action;
     }
     
-    public HashMap<String,String> getItems() {
+    public Map<String,String> getItems() {
         return items;
     }
     
-    public void setItems(HashMap<String,String> items) {
+    public void setItems(Map<String,String> items) {
         this.items = items;
     }
     
