@@ -5,6 +5,7 @@
 <%@ page import="org.itracker.core.resources.*" %>
 <%@ page import="org.itracker.web.util.*" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -21,11 +22,11 @@
       <logic:forward name="unauthorized"/>
 <%  } else { %>
 
-<bean:define id="pageTitleKey" value="itracker.web.admin.editcustomfieldvalue.title.create"/>
-<bean:define id="pageTitleArg" value=""/>
-
 <%-- <nitrox:var name="action" type="java.lang.String"/> --%>
 <bean:define id="action" name="action" type="java.lang.String" scope="request"/>
+
+<bean:define id="pageTitleKey" value="itracker.web.admin.editcustomfieldvalue.title.create"/>
+<bean:define id="pageTitleArg" value=""/>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
@@ -46,9 +47,8 @@
         <html:hidden property="id"/>
         <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
         <%
-         ConfigurationService sc = (ConfigurationService)request.getAttribute("sc");
-
-          java.util.HashMap<String,List<String>> languages = sc.getAvailableLanguages();
+         Map<String, List<String>> languages = 
+                 (Map<String, List<String>>) request.getAttribute("languages");
         %>
           <tr>
             <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
@@ -77,7 +77,7 @@
               for(java.util.Iterator<String> iter = languages.keySet().iterator(); iter.hasNext(); ) {
                   String language = iter.next();
                   String languageKey = "translations(" + language + ")";
-                  java.util.List<String> locales = (java.util.List<String>) languages.get(language);
+                  List<String> locales = languages.get(language);
           %>
                   <tr class="listRowUnshaded">
                     <td></td>
