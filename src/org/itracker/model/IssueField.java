@@ -28,45 +28,39 @@ import org.itracker.services.exceptions.IssueException;
 import org.itracker.services.util.CustomFieldUtilities;
 
 /**
- * This is a POJO Business Domain Object. Hibernate Bean.
+ * A custom field with its value. 
+ * 
  * @author ready
- *
  */
-public class IssueField extends AbstractBean {
+public class IssueField extends AbstractEntity {
     
-    private String stringValue;
-    private int intValue;
-    private Date dateValue;
+    /* PENDING : there are no create_date or last_modified fields in DB
+     * => should add them to DB or not inherit AbstractEntity. 
+     */
+    
     private Issue issue;
+    
     private CustomField customField;
     
+    private String stringValue;
+    
+    private int intValue;
+    
+    private Date dateValue;
+    
+    /**
+     * Default constructor (required by Hibernate). 
+     * 
+     * <p>PENDING: should be <code>private</code> so that it can only be used
+     * by Hibernate, to ensure that the fields which form an instance's 
+     * identity are always initialized/never <tt>null</tt>. </p>
+     */
     public IssueField() {
     }
     
-    public IssueField(CustomField field) {
-        this.customField = field;
-        this.customField = field;
-    }
-    
-    public IssueField(CustomField field, Issue issue) {
-        this(field);
-        this.issue = issue;
-    }
-    
-    public CustomField getCustomField() {
-        return customField;
-    }
-    
-    public void setCustomField(CustomField customField) {
-        this.customField = customField;
-    }
-    
-    public Date getDateValue() {
-        return dateValue;
-    }
-    
-    public void setDateValue(Date dateValue) {
-        this.dateValue = dateValue;
+    public IssueField(Issue issue, CustomField field) {
+        setIssue(issue);
+        setCustomField(field);
     }
     
     public Integer getId() {
@@ -77,20 +71,26 @@ public class IssueField extends AbstractBean {
         this.id = id;
     }
     
-    public int getIntValue() {
-        return intValue;
-    }
-    
-    public void setIntValue(int intValue) {
-        this.intValue = intValue;
-    }
-    
     public Issue getIssue() {
         return issue;
     }
     
     public void setIssue(Issue issue) {
+        if (issue == null) {
+            throw new IllegalArgumentException("null issue");
+        }
         this.issue = issue;
+    }
+    
+    public CustomField getCustomField() {
+        return customField;
+    }
+    
+    public void setCustomField(CustomField customField) {
+        if (customField == null) {
+            throw new IllegalArgumentException("null customField");
+        }
+        this.customField = customField;
     }
     
     public String getStringValue() {
@@ -99,6 +99,22 @@ public class IssueField extends AbstractBean {
     
     public void setStringValue(String stringValue) {
         this.stringValue = stringValue;
+    }
+    
+    public int getIntValue() {
+        return intValue;
+    }
+    
+    public void setIntValue(int intValue) {
+        this.intValue = intValue;
+    }   
+    
+    public Date getDateValue() {
+        return dateValue;
+    }
+    
+    public void setDateValue(Date dateValue) {
+        this.dateValue = dateValue;
     }
     
     /**
@@ -117,67 +133,109 @@ public class IssueField extends AbstractBean {
      * @return the current value of this field
      */
     public String getValue(ResourceBundle bundle, Locale locale) {
-        if(customField == null) {
-            return "";
+        switch (customField.getFieldType()) {
+            
+            case CustomFieldUtilities.TYPE_INTEGER:
+                return Integer.toString(this.intValue);
+                
+            case CustomFieldUtilities.TYPE_DATE:
+                if (!customField.isRequired() && this.dateValue == null) {
+                    return null;
+                }
+                
+                // Fall back to a default date format or make date format mandatory!
+                String dateFormat = (customField.getDateFormat() 
+                    == CustomFieldUtilities.DATE_FORMAT_UNKNOWN)
+                        ? CustomFieldUtilities.DATE_FORMAT_DATEONLY
+                        : customField.getDateFormat();
+                            
+                SimpleDateFormat sdf = new SimpleDateFormat(
+                        bundle.getString("itracker.dateformat." 
+                        + customField.getDateFormat()), locale);
+                
+                return sdf.format(this.dateValue);
+                
+            default:
+                return (this.stringValue == null ? "" : this.stringValue);
         }
-        
-        if(customField.getFieldType() == CustomFieldUtilities.TYPE_INTEGER) {
-            return Integer.toString(getIntValue());
-        } else if(customField.getFieldType() == CustomFieldUtilities.TYPE_DATE) {
-            if(customField.getDateFormat() != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
-                SimpleDateFormat sdf = new SimpleDateFormat(bundle.getString("itracker.dateformat." + customField.getDateFormat()), locale);
-                return sdf.format(getDateValue());
-            }
-        } else {
-            return (getStringValue() == null ? "" : getStringValue());
-        }
-        return "";
+            
     }
     
     /**
-     * Sets the custom field value.  Takes a string and then converts the value to the
-     * appropriate type based on the defined field type.
-     * @param value the value to set this field to as a string
-     * @param locale the locale used for any string formatting
-     * @throws IssueException represents an error formatting or parsing the value
-     */
-    public void setValue(String value, Locale locale) throws IssueException {
-        setValue(value, locale, ITrackerResources.getBundle(locale));
-    }
-    
-    /**
-     * Sets the custom field value.  Takes a string and then converts the value to the
-     * appropriate type based on the defined field type.
+     * Sets the custom field value.  
+     * 
+     * <p>Takes a string and then converts the value to the
+     * appropriate type based on the defined field type. </p>
+     * 
+     * TODO : throw IllegalArgumentException instead of IssueException ?
+     * 
      * @param value the value to set this field to as a string
      * @param locale the locale used for any string formatting
      * @param bundle the ResourceBundle used for any string formatting
      * @throws IssueException represents an error formatting or parsing the value
      */
-    public void setValue(String value, Locale locale, ResourceBundle bundle) throws IssueException {
-        if(value != null) {
-            if(customField.getFieldType() == CustomFieldUtilities.TYPE_INTEGER) {
-                try {
-                    setIntValue(Integer.parseInt(value));
-                } catch(NumberFormatException nfe) {
-                    throw new IssueException("Invalid integer.", IssueException.TYPE_CF_PARSE_NUM);
-                }
-            } else if(customField.getFieldType() == CustomFieldUtilities.TYPE_DATE) {
-                try {
-                    if(customField.getDateFormat() != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
-                        SimpleDateFormat sdf = new SimpleDateFormat(bundle.getString("itracker.dateformat." + customField.getDateFormat()), locale);
-                        Date dateValue = sdf.parse(value);
-                        if(dateValue != null) {
-                            setDateValue(dateValue);
-                        } else {
-                            throw new IssueException("Invalid date.", IssueException.TYPE_CF_PARSE_DATE);
-                        }
+    public void setValue(String value, Locale locale, ResourceBundle bundle) 
+    throws IssueException {
+        if (value != null) {
+            switch (customField.getFieldType()) {
+                
+                case CustomFieldUtilities.TYPE_INTEGER:
+                    try {
+                        setIntValue(Integer.parseInt(value));
+                    } catch(NumberFormatException nfe) {
+                        throw new IssueException("Invalid integer.", IssueException.TYPE_CF_PARSE_NUM);
                     }
-                } catch(Exception ex) {
-                    throw new IssueException("Invalid date format.", IssueException.TYPE_CF_PARSE_DATE);
-                }
-            } else {
-                setStringValue(value);
+                    break;
+                    
+                case CustomFieldUtilities.TYPE_DATE:
+                    try {
+                    if(customField.getDateFormat() != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
+                            SimpleDateFormat sdf = new SimpleDateFormat(bundle.getString("itracker.dateformat." + customField.getDateFormat()), locale);
+                            Date dateValue = sdf.parse(value);
+                            if(dateValue != null) {
+                                setDateValue(dateValue);
+                            } else {
+                                throw new IssueException("Invalid date.", IssueException.TYPE_CF_PARSE_DATE);
+                            }
+                        }
+                    } catch(Exception ex) {
+                        throw new IssueException("Invalid date format.", IssueException.TYPE_CF_PARSE_DATE);
+                    }
+                    break;
+                    
+                default:
+                    setStringValue(value);
             }
+            
         }
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        
+        if (obj instanceof IssueField) {
+            final IssueField other = (IssueField)obj;
+            
+            return this.issue.equals(issue)
+                && this.customField.equals(customField);
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return this.issue.hashCode() 
+            + this.customField.hashCode();
+    }
+    
+    @Override
+    public String toString() {
+        return "[issue=" + this.issue 
+                + ",customField=" 
+                + this.customField + "]";
+    }
+    
 }
