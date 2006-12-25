@@ -6,10 +6,23 @@ import org.itracker.model.ScheduledTask;
 
 /**
  * 
+ * 
  */
 public interface ScheduledTaskDAO extends BaseDAO<ScheduledTask> {
     
-    public ScheduledTask findByPrimaryKey(Integer id);
+    /**
+     * Finds a scheduled task by id. 
+     * 
+     * @param taskId
+     * @return scheduled task instance or <tt>null</tt>
+     */
+    ScheduledTask findByPrimaryKey(Integer taskId);
 
-    public List<ScheduledTask> findAll();
+    /**
+     * Finds all scheduled tasks. 
+     * 
+     * @return list of scheduled tasks in unspecified order
+     */
+    List<ScheduledTask> findAll();
+    
 }
