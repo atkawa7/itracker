@@ -1,40 +1,37 @@
 package org.itracker.persistence.dao;
 
 import java.util.List;
-
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.criterion.Expression;
-import org.itracker.model.Issue;
+import org.hibernate.Query;
 import org.itracker.model.IssueHistory;
 
 public class IssueHistoryDAOImpl extends BaseHibernateDAOImpl<IssueHistory> 
         implements IssueHistoryDAO {
 
-    private final IssueDAO issueDAO;
-
-    public IssueHistoryDAOImpl(IssueDAO issueDAO) {
-        this.issueDAO = issueDAO;
+    public IssueHistoryDAOImpl() {
     }
     
     public IssueHistory findByPrimaryKey(Integer entryId) { 
         try {
-            return (IssueHistory)getSession().load(IssueHistory.class,entryId);
-        } catch (HibernateException e) {
-            throw convertHibernateAccessException(e);
+            return (IssueHistory)getSession().get(IssueHistory.class, entryId);
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
         }    
     }
 
     @SuppressWarnings("unchecked")
     public List<IssueHistory> findByIssueId(Integer issueId) {
-        Issue issue = issueDAO.findByPrimaryKey(issueId);
-        Criteria criteria = getSession().createCriteria(IssueHistory.class);
-        criteria.add(Expression.eq("issue", issue));
+        List<IssueHistory> history;
+        
         try {
-            return criteria.list();
-        } catch (HibernateException e) {
-            throw convertHibernateAccessException(e);
+            Query query = getSession().getNamedQuery(
+                    "IssueHistoryByIssueQuery");
+            query.setInteger("issueId", issueId);
+            history = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
         }
+        return history;
     }
 
 }
