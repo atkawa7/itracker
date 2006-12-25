@@ -6,20 +6,26 @@
 
 <hibernate-mapping auto-import="true" package="org.itracker.model">
     
-    <class name="org.itracker.model.Component" table="componentbean">
+    <class name="Component" table="componentbean">
         
         <id name="id" unsaved-value="null">
             <column name="id" not-null="true"/>
             <generator class="native"/>
         </id>
         
-        <many-to-one name="project" class="Project">
-            <column name="project_id" not-null="true" unique-key="component_ak"/>
-        </many-to-one>
-        
-        <property name="name">
-            <column name="name" length="30" not-null="true" unique-key="component_ak"/>
-        </property>
+        <natural-id mutable="true">
+            
+            <many-to-one name="project" class="Project">
+                <column name="project_id" not-null="true" 
+                    unique-key="component_ak"/>
+            </many-to-one>
+
+            <property name="name">
+                <column name="name" length="30" not-null="true" 
+                    unique-key="component_ak"/>
+            </property>
+            
+        </natural-id>
         
         <property name="description">
             <column name="description" length="255" not-null="true"/>
@@ -41,8 +47,9 @@
             <key>
                 <column name="component_id"/>
             </key>
-            <many-to-many class="org.itracker.model.Issue" column="issue_id"/>
+            <many-to-many class="Issue" column="issue_id"/>
         </bag -->
+        
     </class>
     
 </hibernate-mapping>
