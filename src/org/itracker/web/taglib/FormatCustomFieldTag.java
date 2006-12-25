@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
@@ -47,7 +48,7 @@ public final class FormatCustomFieldTag extends TagSupport {
     private String currentValue;
     private String displayType;
     private String formName;
-    private HashMap<Integer,List<NameValuePair>> listOptions;
+    private Map<Integer,List<NameValuePair>> listOptions;
     
     public CustomField getField() {
         return field;
@@ -81,11 +82,11 @@ public final class FormatCustomFieldTag extends TagSupport {
         formName = value;
     }
     
-    public HashMap<Integer,List<NameValuePair>> getListOptions() {
-        return (listOptions == null ? new HashMap<Integer,List<NameValuePair>>() : listOptions);
+    public Map<Integer, List<NameValuePair>> getListOptions() {
+        return (listOptions == null ? new HashMap<Integer, List<NameValuePair>>() : listOptions);
     }
     
-    public void setListOptions(HashMap<Integer,List<NameValuePair>> value) {
+    public void setListOptions(Map<Integer, List<NameValuePair>> value) {
         listOptions = value;
     }
     
