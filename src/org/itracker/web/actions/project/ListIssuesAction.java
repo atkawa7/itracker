@@ -73,17 +73,18 @@ public class ListIssuesAction extends ItrackerBaseAction {
         }
         
         if("id".equals(order)) {
-            Collections.sort(listIssues, new Issue.CompareById());
+            Collections.sort(listIssues, Issue.ID_COMPARATOR);
         } else if("sev".equals(order)) {
-            Collections.sort(listIssues, new Issue.CompareBySeverity());
+            Collections.sort(listIssues, Issue.SEVERITY_COMPARATOR);
         } else if("stat".equals(order)) {
-            Collections.sort(listIssues, new Issue.CompareByStatus());
+            Collections.sort(listIssues, Issue.STATUS_COMPARATOR);
         } else if("lm".equals(order)) {
-            Collections.sort(listIssues, new Issue.LastModifiedDateComparator(false));
+            Collections.sort(listIssues, Collections.reverseOrder(
+                    Issue.LAST_MODIFIED_DATE_COMPARATOR));
         } else if("own".equals(order)) {
-            Collections.sort(listIssues, new Issue.CompareByOwnerAndStatus());
+            Collections.sort(listIssues, Issue.OWNER_AND_STATUS_COMPARATOR);
         } else {
-            Collections.sort(listIssues, new Issue.CompareByStatus());
+            Collections.sort(listIssues, Issue.STATUS_COMPARATOR);
         }
         
         int start = 0;
