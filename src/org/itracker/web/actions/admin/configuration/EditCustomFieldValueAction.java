@@ -19,9 +19,9 @@
 package org.itracker.web.actions.admin.configuration;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -44,6 +44,7 @@ import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.forms.CustomFieldValueForm;
 import org.itracker.web.util.Constants;
 
 public class EditCustomFieldValueAction extends ItrackerBaseAction {
@@ -69,23 +70,27 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             return mapping.findForward("listconfiguration");
         }
 
+        CustomFieldValueForm customFieldValueForm = (CustomFieldValueForm) form;
+        
         try {
 
-            String action = (String) PropertyUtils.getSimpleProperty(form, "action");
-            if(action == null) {
+            String action = customFieldValueForm.getAction();
+            
+            if (action == null) {
                 return mapping.findForward("listconfiguration");
             }
         
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
             CustomFieldValue customFieldValue = null;
-            if("create".equals(action)) {
+            
+            if ("create".equals(action)) {
                 // TODO: the following line can be removed, we guess - that's why we comment it now. 
             	// Integer id = (Integer) PropertyUtils.getSimpleProperty(form, "id");
                 List<CustomFieldValue> currOptions = customField.getOptions();
                 int highestSortOrder = (currOptions.size() == 0 ? 1 : currOptions.get(currOptions.size() - 1).getSortOrder());
                 customFieldValue = new CustomFieldValue();
                 customFieldValue.setCustomField(customField);
-                customFieldValue.setValue((String) PropertyUtils.getSimpleProperty(form, "value"));
+                customFieldValue.setValue(customFieldValueForm.getValue());
                 customFieldValue.setSortOrder(highestSortOrder + 1);
                 customFieldValue = configurationService.createCustomFieldValue(customFieldValue);
             } else if("update".equals(action)) {
@@ -94,7 +99,7 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
                 if(customField == null) {
                     throw new SystemConfigurationException("Invalid custom field value id " + id);
                 }
-                customFieldValue.setValue((String) PropertyUtils.getSimpleProperty(form, "value"));
+                customFieldValue.setValue(customFieldValueForm.getValue());
                 customFieldValue = configurationService.updateCustomFieldValue(customFieldValue);
             } else {
                 throw new SystemConfigurationException("Invalid action " + action + " while editing custom field value.");
@@ -103,12 +108,12 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             if(customFieldValue == null) {
                 throw new SystemConfigurationException("Unable to create new custom field value model.");
             }
-
-            HashMap translations = (HashMap) PropertyUtils.getSimpleProperty(form, "translations");
+            
+            Map<String, String> translations = customFieldValueForm.getTranslations();
             String key = CustomFieldUtilities.getCustomFieldOptionLabelKey(customField.getId(), customFieldValue.getId());
             logger.debug("Processing label translations for custom field value " + customFieldValue.getId() + " with key " + key);
             if(translations != null && key != null && ! key.equals("")) {
-                for(Iterator iter = translations.keySet().iterator(); iter.hasNext(); ) {
+                for(Iterator<String> iter = translations.keySet().iterator(); iter.hasNext(); ) {
                     String locale = (String) iter.next();
                     if(locale != null) {
                         String translation = (String) translations.get(locale);
@@ -132,6 +137,8 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             if (action == "update") {
             	 pageTitleKey = "itracker.web.admin.editcustomfield.title.update";
             }
+            
+            request.setAttribute("languages", configurationService.getAvailableLanguages());
             request.setAttribute("pageTitleKey",pageTitleKey); 
             request.setAttribute("pageTitleArg",pageTitleArg);     
          
