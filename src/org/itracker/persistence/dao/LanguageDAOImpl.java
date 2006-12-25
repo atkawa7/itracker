@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.criterion.Expression;
 import org.itracker.model.Language;
 
@@ -13,44 +14,63 @@ import org.itracker.model.Language;
 public class LanguageDAOImpl extends BaseHibernateDAOImpl<Language> 
         implements LanguageDAO {
 
-    public Language findByKeyAndLocale(String key, String base_locale) {
-        Criteria criteria = getSession().createCriteria(Language.class);
-        criteria.add(Expression.eq("resourceKey", key));
-        criteria.add(Expression.eq("locale", base_locale));
+    public Language findById(Integer id) {
+        Language language;
+        
         try {
-            Language language = (Language) criteria.uniqueResult();
-            
-            if (language == null) {
-                throw new NoSuchEntityException("No language item for " + key + " " + base_locale);
-            }
-            return (language);
-        } catch (HibernateException e) {
-            throw convertHibernateAccessException(e);
+            language = (Language)getSession().get(Language.class, id);
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
         }
+        return language;
+    }
+    
+    public Language findByKeyAndLocale(String key, String locale) {
+        Language language;
+        
+        try {
+            Query query = getSession().getNamedQuery(
+                    "LanguagesByKeyAndLocaleQuery");
+            query.setString("key", key);
+            query.setString("locale", locale);
+            language = (Language)query.uniqueResult();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        
+        if (language == null) {
+            throw new NoSuchEntityException("No language item for " 
+                    + key + " " + locale);
+        }
+        return language;
     }
     
     @SuppressWarnings("unchecked") 
     public List<Language> findByKey(String key) {
-        Criteria criteria = getSession().createCriteria(Language.class);
-        criteria.add(Expression.eq("resourceKey", key));
+        List<Language> languages;
         
         try {
-            return (criteria.list());
-        } catch (HibernateException e) {
-            throw convertHibernateAccessException(e);
+            Query query = getSession().getNamedQuery("LanguagesByKeyQuery");
+            query.setString("key", key);
+            languages = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
         }
+        return languages;
     }
     
     @SuppressWarnings("unchecked") 
-    public List<Language> findByLocale(String base_locale) {
-        Criteria criteria = getSession().createCriteria(Language.class);
-        criteria.add(Expression.eq("locale", base_locale));
+    public List<Language> findByLocale(String locale) {
+        List<Language> languages;
         
         try {
-            return (criteria.list());
-        } catch (HibernateException e) {
-            throw convertHibernateAccessException(e);
+            Query query = getSession().getNamedQuery("LanguagesByLocaleQuery");
+            query.setString("locale", locale);
+            languages = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
         }
+        return languages;
     }
-
+    
 }
