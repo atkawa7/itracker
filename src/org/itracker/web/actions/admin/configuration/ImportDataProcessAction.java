@@ -35,7 +35,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.AbstractBean;
+import org.itracker.model.AbstractEntity;
 import org.itracker.model.Component;
 import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
@@ -119,7 +119,7 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
 
-            AbstractBean[] importData = model.getData();
+            AbstractEntity[] importData = model.getData();
             for(int i = 0; i < importData.length; i++) {
                 if(importData[i] instanceof Configuration && ! model.getExistingModel(i)) {
                     Configuration configItem = (Configuration) importData[i];
@@ -161,7 +161,7 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
         try {
             UserService userService = getITrackerServices().getUserService();
 
-            AbstractBean[] importData = model.getData();
+            AbstractEntity[] importData = model.getData();
             for(int i = 0; i < importData.length; i++) {
                 if(importData[i] instanceof User && ! model.getExistingModel(i)) {
                     User user = (User) importData[i];
@@ -185,7 +185,7 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
         try {
             ProjectService projectService = getITrackerServices().getProjectService();
 
-            AbstractBean[] importData = model.getData();
+            AbstractEntity[] importData = model.getData();
             for(int i = 0; i < importData.length; i++) {
                 if(importData[i] instanceof Project && ! model.getExistingModel(i)) {
                     Project project = (Project) importData[i];
@@ -228,7 +228,7 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
         try {
             IssueService issueService = getITrackerServices().getIssueService();
 
-            AbstractBean[] importData = model.getData();
+            AbstractEntity[] importData = model.getData();
             for(int i = 0; i < importData.length; i++) {
                 if(importData[i] instanceof Issue && ! model.getExistingModel(i)) {
                     Issue issue = (Issue) importData[i];
