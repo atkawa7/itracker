@@ -6,6 +6,7 @@
 <%@ page import="org.itracker.model.PermissionType" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Set" %>
+<%@ page import="org.itracker.web.util.RequestHelper" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -16,8 +17,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <% // TODO: move this redirect logic to the Action. 
-final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
-    session.getAttribute("permissions");
+final Map<Integer, Set<PermissionType>> permissions = 
+    RequestHelper.getUserPermissions(session);
 
  if(! UserUtilities.hasPermission(permissions, UserUtilities.PERMISSION_USER_ADMIN)) { %>
       <logic:forward name="listprojectsadmin"/>
