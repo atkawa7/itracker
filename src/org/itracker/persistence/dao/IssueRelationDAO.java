@@ -1,5 +1,6 @@
 package org.itracker.persistence.dao;
 
+import java.util.List;
 import org.itracker.model.IssueRelation;
 
 /**
@@ -7,5 +8,8 @@ import org.itracker.model.IssueRelation;
  */
 public interface IssueRelationDAO {
     
-    public IssueRelation findByPrimaryKey(Integer relationId);
+    IssueRelation findByPrimaryKey(Integer relationId);
+    
+    List<IssueRelation> findByIssue(Integer issueId);
+    
 }
