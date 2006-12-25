@@ -22,6 +22,7 @@
         </form-bean>
         <form-bean name="configurationForm" type="org.itracker.web.forms.ConfigurationForm"/>
         <form-bean name="customFieldForm" type="org.itracker.web.forms.CustomFieldForm"/>
+        <form-bean name="customFieldValueForm" type="org.itracker.web.forms.CustomFieldValueForm"/>
         <form-bean name="importForm" type="org.itracker.web.forms.ImportForm"/>
         <form-bean name="projectForm" type="org.itracker.web.forms.ProjectForm"/>
         <form-bean name="projectScriptForm" type="org.itracker.web.forms.ProjectScriptForm"/>
@@ -39,6 +40,8 @@
     <global-forwards>
         <forward name="edittask" module="/module-admin" path="/edittaskform.do"/>
         <forward name="editproject" module="/module-admin" path="/editprojectform.do"/>
+        <forward name="editcustomfield" module="/module-admin" path="/editcustomfield.do"/>
+        <forward name="editcustomfieldvalue" module="/module-admin" path="/editcustomfieldvalue.do"/>
         <forward name="listattachments" module="/module-admin" path="/listattachments.do"/>
         <forward name="listworkflow" module="/module-admin" path="/listworkflowscripts.do"/>
         <forward name="listprojectsadmin" path="/listprojectsadmin.do"/>
@@ -156,11 +159,11 @@
                 input="/admin_configuration/edit_customfield.jsp" validate="false"></action>
         <action path="/editcustomfieldvalue"
                 type="org.itracker.web.actions.admin.configuration.EditCustomFieldValueAction"
-                name="customFieldForm" scope="request"
+                name="customFieldValueForm" scope="request"
                 input="/admin_configuration/edit_customfieldvalue.jsp"></action>
         <action path="/editcustomfieldvalueform"
                 type="org.itracker.web.actions.admin.configuration.EditCustomFieldValueFormAction"
-                name="customFieldForm" scope="request"
+                name="customFieldValueForm" scope="request"
                 input="/admin_configuration/edit_customfieldvalue.jsp" validate="false"></action>
         <action path="/editlanguage"
                 type="org.itracker.web.actions.admin.language.EditLanguageAction"
