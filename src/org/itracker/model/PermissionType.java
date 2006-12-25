@@ -99,15 +99,15 @@ public enum PermissionType {
     private static final PermissionType[] PERMISSION_TYPES = values();
     
     /** The integer value of this enum member. */
-    private final int value;
+    private final int code;
     
     /**
      * Creates a new instance of this enum. 
      * 
      * @param value unique value representing this instance
      */
-    private PermissionType(int value) {
-        this.value = value;
+    private PermissionType(int code) {
+        this.code = code;
     }
     
     /**
@@ -115,8 +115,8 @@ public enum PermissionType {
      * 
      * @return unique value representing this instance
      */
-    public int toInt() {
-        return value;
+    public int getCode() {
+        return code;
     }
     
     /**
@@ -126,14 +126,14 @@ public enum PermissionType {
      * @return enum instance matching the int value
      * @throws IllegalArgumentExeption invalid enum value
      */
-    public static PermissionType fromInt(int value) {
-        if (value == 0 || value < -1 || value > 13) {
-            throw new IllegalArgumentException("Unknown PermissionType value");
+    public static PermissionType fromCode(int code) {
+        if (code == 0 || code < -1 || code > 13) {
+            throw new IllegalArgumentException("Unknown PermissionType code " + code);
         }
-        if (value == -1) {
+        if (code == -1) {
             return PERMISSION_TYPES[0];
         }
-        return PERMISSION_TYPES[value];
+        return PERMISSION_TYPES[code];
     }
     
 }
