@@ -103,17 +103,18 @@ public class SearchIssuesAction extends ItrackerBaseAction {
                 
                 String order = isqm.getOrderBy();
                 if("id".equals(order)) {
-                    Collections.sort(results, new Issue.CompareById());
+                    Collections.sort(results, Issue.ID_COMPARATOR);
                 } else if("sev".equals(order)) {
-                    Collections.sort(results, new Issue.CompareBySeverity());
+                    Collections.sort(results, Issue.SEVERITY_COMPARATOR);
                 } else if("proj".equals(order)) {
-                    Collections.sort(results, new Issue.CompareByProjectAndStatus());
+                    Collections.sort(results, Issue.PROJECT_AND_STATUS_COMPARATOR);
                 } else if("owner".equals(order)) {
-                    Collections.sort(results, new Issue.CompareByOwnerAndStatus());
+                    Collections.sort(results, Issue.OWNER_AND_STATUS_COMPARATOR);
                 } else if("lm".equals(order)) {
-                    Collections.sort(results, new Issue.LastModifiedDateComparator(false));
+                    Collections.sort(results, Collections.reverseOrder(
+                    Issue.LAST_MODIFIED_DATE_COMPARATOR));
                 } else {
-                    Collections.sort(results, new Issue.CompareByStatus());
+                    Collections.sort(results, Issue.STATUS_COMPARATOR);
                 }
                 
                 isqm.setResults(results);
