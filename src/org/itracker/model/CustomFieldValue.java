@@ -19,24 +19,85 @@
 package org.itracker.model;
 
 import java.util.Comparator;
+import java.util.Date;
 
 /**
- * This is a POJO Business Domain Object. Hibernate Bean.
+ * An option for the value of a custom field of type <code>LIST</code>. 
+ * 
  * @author ready
- *
+ * @author johnny
  */
-public class CustomFieldValue extends AbstractBean {
+public class CustomFieldValue extends AbstractEntity 
+        implements Comparable<CustomFieldValue> {
     
+    public static final Comparator<CustomFieldValue> NAME_COMPARATOR = 
+            new NameComparator();
+    
+    /** The custom field to which this option belongs. */
     private CustomField customField;
+    
+    /** 
+     * This option's localized label. 
+     * 
+     * <p>This property is obtained from a <code>ResourceBundle</code>, 
+     * not from the database! </p>
+     */
+    private String name;
+    
+    /** This option's value. */
     private String value;
+    
+    /** 
+     * This option's order among all available options for 
+     * the <code>customField</code>. 
+     */
     private int sortOrder;
     
+    
+    /**
+     * Default constructor (required by Hibernate). 
+     * 
+     * <p>PENDING: should be <code>private</code> so that it can only be used
+     * by Hibernate, to ensure that the fields which form an instance's 
+     * identity are always initialized/never <tt>null</tt>. </p>
+     */
     public CustomFieldValue() {
     }
 
     public CustomFieldValue(CustomField customField, String value) {
+        super(new Date());
         setCustomField(customField);
         setValue(value);
+    }
+    
+    public CustomField getCustomField() {
+        return(customField);
+    }
+    
+    public void setCustomField(CustomField customField) {
+        if (customField == null) {
+            throw new IllegalArgumentException("null customField");
+        }
+        this.customField = customField;
+    }
+    
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public String getValue() {
+        return value;
+    }
+    
+    public void setValue(String value) {
+        if (value == null) {
+            throw new IllegalArgumentException("null value");
+        }
+        this.value = value;
     }
     
     public int getSortOrder() {
@@ -46,102 +107,118 @@ public class CustomFieldValue extends AbstractBean {
     public void setSortOrder(int sortOrder) {
         this.sortOrder = sortOrder;
     }
-    
-    public String getValue() {
-        return value;
-    }
-    
-    public void setValue(String value) {
-        this.value = value;
-    }
-    
-    public CustomField getCustomField() {
-        return(customField);
-    }
-    
-    public void setCustomField(CustomField values) {
-        this.customField = values;
-    }
-    
 
-    public static abstract class CustomFieldValueModelComparator implements Comparator<CustomFieldValue> {
-        protected boolean isAscending = true;
-
-        public CustomFieldValueModelComparator() {
-        }
-
-        public CustomFieldValueModelComparator(boolean isAscending) {
-            setAscending(isAscending);
-        }
-
-        public void setAscending(boolean value) {
-            this.isAscending = value;
-        }
-
-        protected abstract int doComparison(CustomFieldValue ma, CustomFieldValue mb);
-
-
-        public final int compare(CustomFieldValue a, CustomFieldValue b) {
-            if(! (a instanceof CustomFieldValue) || ! (b instanceof CustomFieldValue)) {
-                throw new ClassCastException();
-            }
-
-            CustomFieldValue ma = (CustomFieldValue) a;
-            CustomFieldValue mb = (CustomFieldValue) b;
-
-            int result = doComparison(ma, mb);
-            if(! isAscending) {
-                result = result * -1;
-            }
-            return result;
-        }
-    }
-
-    public static class CompareBySortOrder extends CustomFieldValueModelComparator {
-        public CompareBySortOrder(){
-          super();
-        }
-
-        public CompareBySortOrder(boolean isAscending) {
-          super(isAscending);
-        }
-
-        protected int doComparison(CustomFieldValue ma, CustomFieldValue mb) {
-            if(ma.getSortOrder() == mb.getSortOrder()) {
-                return 0;
-            } else if(ma.getSortOrder() > mb.getSortOrder()) {
-                return 1;
-            } else if(mb.getSortOrder() < mb.getSortOrder()) {
-                return -1;
-            }
-
-            return 0;
-        }
-    }
-
-    public static class CompareByName extends CustomFieldValueModelComparator {
+    /**
+     * Uses the <code>sortOrder</code> ascending order as natural ordering. 
+     *
+     * <p>Natural ordering != natural key ascending order, but this
+     * implementation is still consistent with <code>equals</code>. </p>
+     */
+    public int compareTo(CustomFieldValue other) {
+        final int fieldComparison = 
+                this.customField.compareTo(other.customField);
         
-        public CompareByName(){
+        if (fieldComparison == 0) {
+            //return this.value.compareTo(other.value);
+            return this.sortOrder - other.sortOrder;
+        }
+        return fieldComparison;
+    }
+    
+    /**
+     * Natural key = customField + value
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        
+        if (obj instanceof CustomFieldValue) {
+            final CustomFieldValue other = (CustomFieldValue)obj;
+            
+            return this.customField.equals(other.customField)
+                && this.value.equals(other.value);
+        }
+        return false;
+    }
+    
+    /**
+     * Overridden to remain consistent with method <code>equals</code>. 
+     */
+    @Override
+    public int hashCode() {
+        return this.customField.hashCode() + this.value.hashCode();
+    }
+    
+    /**
+     * Returns a string with this instance's id and natural key. 
+     */
+    @Override
+    public String toString() {
+        return "CustomFieldValue [id" + this.id 
+            + ", customField=" + this.customField 
+            + ", value=" + this.value + "]";
+    }
+    
+    
+    /**
+     * Compares 2 CustomFieldValues by custom field and sort order. 
+     * 
+     * <p>Note that it doesn't match the class' natural ordering because 
+     * it doesn't take into account the custom field. <br>
+     * It should therefore only be used to compare options that belong 
+     * to a single custom field. </p>
+     */
+    private static class SortOrderComparator 
+            implements Comparator<CustomFieldValue> {
+        
+        private SortOrderComparator(){
           super();
         }
 
-        public CompareByName(boolean isAscending) {
-          super(isAscending);
+        public int compare(CustomFieldValue a, CustomFieldValue b) {
+            //final int fieldComparison = 
+            //    a.customField.compareTo(b.customField);
+        
+            //if (fieldComparison == 0) {
+                return a.sortOrder - b.sortOrder;
+            //}
+            //return fieldComparison;
+        }
+        
+    }
+
+    /**
+     * Compares 2 CustomFieldValues by name. 
+     * 
+     * <p>If 2 instances have the same name, they are ordered by sortOrder. </p>
+     *
+     * <p>It doesn't take into account the custom field. <br>
+     * It should therefore only be used to compare options that belong 
+     * to a single custom field. </p>
+     */
+    private static class NameComparator 
+            implements Comparator<CustomFieldValue> {
+        
+        private NameComparator(){
         }
 
-        protected int doComparison(CustomFieldValue ma, CustomFieldValue mb) {
-            if(ma.getCustomField().equals(mb.getCustomField())) {
-                if(ma.getSortOrder() > mb.getSortOrder()) {
-                    return 1;
-                } else if(mb.getSortOrder() < mb.getSortOrder()) {
-                    return -1;
-                } else {
-                    return 0;
+        public int compare(CustomFieldValue a, CustomFieldValue b) {
+            //final int fieldComparison = 
+            //    a.customField.compareTo(b.customField);
+        
+            //if (fieldComparison == 0) {
+                final int nameComparison = a.name.compareTo(b.name);
+                
+                if (nameComparison == 0) {
+                    return a.sortOrder - b.sortOrder;
                 }
-            } else {
-                return ma.getCustomField().compareTo(mb.getCustomField());
-            }
+                return nameComparison;
+            //}
+            //return fieldComparison;
         }
+        
     }
     
 }

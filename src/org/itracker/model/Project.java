@@ -19,28 +19,59 @@
 package org.itracker.model;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
- * This is a POJO Business Domain Object, Hibernate Bean.
+ * This is a POJO Business Domain Object modelling a project.
+ * 
+ * <p>Hibernate Bean. </p>
+ * 
  * @author ready
- *
  */
-public class Project extends AbstractBean implements Comparable<Project> {
+public class Project extends AbstractEntity implements Comparable<Project> {
 
     private String name;
+    
     private String description;
+    
     private int status;
+    
     private int options;
-    private List<CustomField> customFields = new ArrayList<CustomField>();
+    
     private List<Component> components = new ArrayList<Component>();
     private List<Version> versions = new ArrayList<Version>();
-    private List<Issue> issues = new ArrayList<Issue>();
     private List<Permission> permissions = new ArrayList<Permission>();
     private List<User> owners = new ArrayList<User>();
+    private List<CustomField> customFields = new ArrayList<CustomField>();
     private List<ProjectScript> scripts = new ArrayList<ProjectScript>();
 
+    /**
+     * Default constructor (required by Hibernate). 
+     * 
+     * <p>PENDING: should be <code>private</code> so that it can only be used
+     * by Hibernate, to ensure that the fields which form an instance's 
+     * identity are always initialized/never <tt>null</tt>. </p>
+     */
+    public Project() {
+    }
+    
+    public Project(String name) {
+        super(new Date());
+        setName(name);
+    }
+    
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("null name");
+        }
+        this.name = name;
+    }
+    
     public String getDescription() {
         return description;
     }
@@ -49,6 +80,22 @@ public class Project extends AbstractBean implements Comparable<Project> {
         this.description = description;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+    
+    public int getOptions() {
+        return options;
+    }
+
+    public void setOptions(int options) {
+        this.options = options;
+    }
+    
     public List<Component> getComponents() {
         return components;
     }
@@ -57,20 +104,20 @@ public class Project extends AbstractBean implements Comparable<Project> {
         this.components = getComponents;
     }
 
+    public List<Version> getVersions() {
+        return versions;
+    }
+
+    public void setVersions(List<Version> getVersions) {
+        this.versions = getVersions;
+    }
+    
     public List<CustomField> getCustomFields() {
         return customFields;
     }
 
     public void setCustomFields(List<CustomField> getCustomFields) {
         this.customFields = getCustomFields;
-    }
-
-    public List<Issue> getIssues() {
-        return issues;
-    }
-
-    public void setIssues(List<Issue> getIssues) {
-        this.issues = getIssues;
     }
 
     public List<User> getOwners() {
@@ -95,42 +142,6 @@ public class Project extends AbstractBean implements Comparable<Project> {
 
     public void setScripts(List<ProjectScript> getScripts) {
         this.scripts = getScripts;
-    }
-
-    public List<Version> getVersions() {
-        return versions;
-    }
-
-    public void setVersions(List<Version> getVersions) {
-        this.versions = getVersions;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getOptions() {
-        return options;
-    }
-
-    public void setOptions(int options) {
-        this.options = options;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public int getTotalNumberIssues() {
-        return getIssues().size();
     }
 
     /**
@@ -171,38 +182,6 @@ public class Project extends AbstractBean implements Comparable<Project> {
      */
     public int compareTo(Project other) {
         return this.name.compareTo(other.name);
-    }
-
-    public static class CompareByName implements Comparator<Project> {
-        
-        protected boolean isAscending = true;
-
-        public CompareByName() {
-        }
-
-        public CompareByName(boolean isAscending) {
-            setAscending(isAscending);
-        }
-
-        public void setAscending(boolean value) {
-            this.isAscending = value;
-        }
-
-        public int compare(Project ma, Project mb) {
-            int result = 0;
-
-            if(ma.getName() == null && mb.getName() == null) {
-                result = 0;
-            } else if(ma.getName() == null) {
-                result = 1;
-            } else if(mb.getName() == null) {
-                result = -1;
-            } else {
-                result = ma.getName().compareTo(mb.getName());
-            }
-
-            return (isAscending ? result : result * -1);
-        }
     }
     
 }

@@ -18,41 +18,71 @@
 
 package org.itracker.model;
 
-import java.util.Comparator;
-
+import java.util.Date;
 
 /**
- * This is a POJO bean, and yes, a Hibernate bean.
+ * A configuration item. 
+ * 
  * @author ready
- *  
  */
- 
-public class Configuration extends AbstractBean implements Comparable<Configuration> {
+public class Configuration extends AbstractEntity 
+        implements Comparable<Configuration> {
 
+    /** 
+     * PENDING: this field doesn't exist in the database!? 
+     * 
+     * <p>TODO : every configuration item should have a name, similar 
+     * to a Java property in a properties file. 
+     * A description would be nice to have too. 
+     * name + version should be the natural key. 
+     * (note: we shouldn't allow 2 configuration items with the same name 
+     * and version, but with different types). </p>
+     * 
+     * <p>But since <code>name</code> is nullable, 
+     * only the type and value can be used as natural key at the moment.  
+     * This should be a temporary situation, because the value is allowed 
+     * to change. </p>
+     */
     private String name;
-    private int type;
-    private int order;
-    private String value;
-    private String version;
-
-    private static final Comparator<Configuration> comparator = new ConfigurationComparator();
     
+    /** ITracker version in which this configuration item was added. */
+    private String version;
+    
+    /** The real type of the value stored as a string. */
+    private int type;
+    
+    /** The configuration value as a string. */
+    private String value;
+     
+    /** 
+     * Display order.
+     * 
+     * <p>Several instances may have the same display order. </p>
+     */
+    private int order;
+    
+    
+    /**
+     * Default constructor (required by Hibernate). 
+     * 
+     * <p>PENDING: should be <code>private</code> so that it can only be used
+     * by Hibernate, to ensure that the fields which form an instance's 
+     * identity are always initialized/never <tt>null</tt>. </p>
+     */
     public Configuration() {
     }
 
-    public Configuration(int type, NameValuePair nvp) {
-        setType(type);
-        if(nvp != null) {
-            setValue(nvp.getValue());
-            setName(nvp.getName());
-        }
-    }
-
     public Configuration(int type, String value) {
+        super(new Date());
         setType(type);
         setValue(value);
     }
 
+    public Configuration(int type, NameValuePair pair) {
+        this(type, pair.getValue());
+        setName(pair.getName());
+    }
+    
     public Configuration(int type, String value, String version) {
         this(type, value);
         setVersion(version);
@@ -97,6 +127,9 @@ public class Configuration extends AbstractBean implements Comparable<Configurat
     }
 
     public void setValue(String value) {
+        if (value == null) {
+            throw new IllegalArgumentException("null value");
+        }
         this.value = value;
     }
 
@@ -105,38 +138,111 @@ public class Configuration extends AbstractBean implements Comparable<Configurat
     }
 
     public void setVersion(String version) {
+        if (version == null) {
+            throw new IllegalArgumentException("null version");
+        }
         this.version = version;
     }
 
+//    /**
+//     * Compares by natural key (type and value). 
+//     */
+//    public int compareTo(Configuration other) {
+//        final int typeComparison = this.type - other.type;
+//        
+//        if (typeComparison == 0) {
+//            return this.value.compareTo(other.value);
+//        }
+//        return typeComparison;
+//    }
+    
+    /**
+     * Compares configuration items by order, value. 
+     */
     public int compareTo(Configuration other) {
-        return comparator.compare(this, other);
-    }
-
-    public String toString() {
-        return "Configuration [" + this.getId() + "] Name: " + this.getName() 
-            + " Value: " + this.getValue() + " Type: " + this.getType() 
-            + " Version: " + this.getVersion();
+        final int orderComparison = this.order - other.order;
+        
+        if (orderComparison == 0) {
+            return this.value.compareTo(other.value);
+        }
+        return orderComparison;
     }
     
-    public static class ConfigurationComparator implements Comparator<Configuration> {
-        
-        public int compare(Configuration ma, Configuration mb) {
-            if(ma.getOrder() == mb.getOrder()) {
-                if(! "".equals(ma.getName()) && ! "".equals(mb.getName()) 
-                && ! ma.getName().equals(mb.getName())) {
-                    return ma.getValue().compareTo(mb.getValue());
-                } else {
-                    return ma.getValue().compareTo(mb.getValue());
-                }
-            } else if(ma.getOrder() > mb.getOrder()) {
-                return 1;
-            } else if(mb.getOrder() < mb.getOrder()) {
-                return -1;
-            }
-
-            return 0;
+    /**
+     * Compares by natural key (type and value). 
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
         
+        if (obj instanceof Configuration) {
+            final Configuration other = (Configuration)obj;
+            
+            return (this.type == other.type)
+                && this.value.equals(other.value);
+        }
+        return false;
+    }
+    
+    /**
+     * Natural key (type and value) hash code. 
+     */
+    @Override
+    public int hashCode() {
+        return this.type + this.value.hashCode();
+    }
+    
+//    /**
+//     * Compares by natural key (name and version). 
+//     */
+//    public int compareTo(Configuration other) {
+//        final int nameComparison = this.name.compareTo(other.name);
+//        
+//        if (nameComparison == 0) {
+//            return this.version.compareTo(other.version);
+//        }
+//        return nameComparison;
+//    }
+//    
+//    /**
+//     * Compares by natural key (name and version). 
+//     */
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (this == obj) {
+//            return true;
+//        }
+//        
+//        if (obj instanceof Configuration) {
+//            final Configuration other = (Configuration)obj;
+//            
+//            return this.name.equals(other.name)
+//                && this.version.equals(other.version);
+//        }
+//        return false;
+//    }
+//    
+//    /**
+//     * Natural key (name and version) hash code. 
+//     */
+//    @Override
+//    public int hashCode() {
+//        return this.name.hashCode() + this.version.hashCode();
+//    }
+
+    /**
+     * String composed of system ID and natural key (name and version). 
+     */
+    @Override
+    public String toString() {
+        return "Configuration [id=" + this.getId() 
+            //+ ", name=" + this.name
+            //+ ", version=" + this.version
+            + ", type=" + this.type
+            + ", value=" + this.value  
+            + "]";
     }
     
 }

@@ -23,19 +23,27 @@ package org.itracker.model;
  * This is a POJO Business Domain Object. Hibernate Bean.
  * 
  * @author ready
- *
  */
-public class UserPreferences extends AbstractBean {
+public class UserPreferences extends AbstractEntity {
 
     private boolean saveLogin;
+    
     private String userLocale;
+    
     private int numItemsOnIndex;
+    
     private int numItemsOnIssueList;
+    
     private boolean showClosedOnIssueList;
+    
     private String sortColumnOnIssueList;
+    
     private int hiddenIndexSections;
+    
     private boolean rememberLastSearch;
+    
     private boolean useTextActions;
+    
     private User user;
 
     public int getHiddenIndexSections() {

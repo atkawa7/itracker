@@ -26,11 +26,13 @@ import java.util.StringTokenizer;
 import org.itracker.services.util.Convert;
 
 /**
- * This is a POJO Business Domain Object. Hibernate Bean.
+ * This is a POJO Business Domain Object. 
+ * 
+ * <p>Hibernate Bean. </p>
+ * 
  * @author ready
- *
  */
-public class ScheduledTask extends AbstractBean {
+public class ScheduledTask extends AbstractEntity {
 
     private String hours;
     @SuppressWarnings("unused")
@@ -50,6 +52,16 @@ public class ScheduledTask extends AbstractBean {
     private String[] args = new String[0];
     
     private Date lastRun = null;
+    
+    /**
+     * Default constructor (required by Hibernate). 
+     * 
+     * <p>PENDING: should be <code>private</code> so that it can only be used
+     * by Hibernate, to ensure that the fields which form an instance's 
+     * identity are always initialized/never <tt>null</tt>. </p>
+     */
+    public ScheduledTask() {
+    }
     
     public String getArgsAsString() {
         if(args == null || args.length == 0) {

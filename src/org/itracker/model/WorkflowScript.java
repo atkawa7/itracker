@@ -20,14 +20,17 @@ package org.itracker.model;
 
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.
+ * 
  * @author ready
- *
  */
-public class WorkflowScript extends AbstractBean {
+public class WorkflowScript extends AbstractEntity {
     
     private String name;
+    
     private String script;
+    
     private int event;
+    
     // TODO: what's the expected type here? 
 //    private Collection projectFields;
     private int numUses;

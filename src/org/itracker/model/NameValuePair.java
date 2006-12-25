@@ -26,16 +26,18 @@ import java.util.Comparator;
   * a key of some type, like a status number, and the value is a localized name
   * for that key.
   */
-public class NameValuePair implements Comparator<NameValuePair>, Serializable {
+public class NameValuePair implements Serializable, Comparable<NameValuePair> {
+    
     private String name = "";
+    
     private String value = "";
 
     public NameValuePair() {
     }
 
     public NameValuePair(String name, String value) {
-        this.name = (name == null ? "" : name);
-        this.value = (value == null ? "" : value);
+        setName(name);
+        setValue(value);
     }
 
     /**
@@ -48,8 +50,11 @@ public class NameValuePair implements Comparator<NameValuePair>, Serializable {
     /**
       * Sets the name of the name/value pair.
       */
-    public void setName(String value) {
-        name = value;
+    public void setName(String name) {
+        if (name == null) {
+            name = "";
+        }
+        this.name = name;
     }
 
     /**
@@ -66,45 +71,32 @@ public class NameValuePair implements Comparator<NameValuePair>, Serializable {
         this.value = value;
     }
 
-    public int compare(NameValuePair a, NameValuePair b) {
-        return new NameValuePair.CompareByName().compare(a, b);
+    public int compareTo(NameValuePair other) {
+        return this.name.compareTo(other.name);
     }
 
-    // let's try to put the generic Object here (or is this stupid?): 
-    public static class CompareByName implements Comparator<Object> {
-        protected boolean isAscending = true;
-
-        public CompareByName() {
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
-
-        public CompareByName(boolean isAscending) {
-            setAscending(isAscending);
+        
+        if (obj instanceof NameValuePair) {
+            final NameValuePair other = (NameValuePair)obj;
+            
+            return this.name.equals(other.name);
         }
-
-        public void setAscending(boolean value) {
-            this.isAscending = value;
-        }
-
-        public int compare(Object a, Object b) {
-            int result = 0;
-            if(! (a instanceof NameValuePair) || ! (b instanceof NameValuePair)) {
-                throw new ClassCastException();
-            }
-
-            NameValuePair ma = (NameValuePair) a;
-            NameValuePair mb = (NameValuePair) b;
-
-            if(ma.getName() == null && mb.getName() == null) {
-                result = 0;
-            } else if(ma.getName() == null) {
-                result = 1;
-            } else if(mb.getName() == null) {
-                result = -1;
-            } else {
-                result = ma.getName().compareTo(mb.getName());
-            }
-
-            return (isAscending ? result : result * -1);
-        }
+        return false;
     }
+    
+    @Override
+    public int hashCode() {
+        return this.name.hashCode();
+    }
+    
+    @Override
+    public String toString() {
+        return "NameValuePair [name=" + this.name + "]";
+    }
+    
 }

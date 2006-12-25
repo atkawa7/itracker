@@ -21,17 +21,49 @@ package org.itracker.model;
 import java.util.Comparator;
 
 /**
- * This is a POJO Business Domain Object. Hibernate Bean.
+ * This is a POJO Business Domain Object modelling a Beanshell script applied 
+ * to a specific Project field. 
+ * 
+ * <p>Hibernate Bean. </p>
+ * 
  * @author ready
- *
  */
-public class ProjectScript extends AbstractBean {
+public class ProjectScript extends AbstractEntity {
 
     private Project project;
+    
     private Integer fieldId;
+    
     private WorkflowScript script;
+    
     private int priority;
 
+    /**
+     * Default constructor (required by Hibernate). 
+     * 
+     * <p>PENDING: should be <code>private</code> so that it can only be used
+     * by Hibernate, to ensure that the fields which form an instance's 
+     * identity are always initialized/never <tt>null</tt>. </p>
+     */
+    public ProjectScript() {
+    }
+    
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public WorkflowScript getScript() {
+        return script;
+    }
+
+    public void setScript(WorkflowScript script) {
+        this.script = script;
+    }
+    
     public Integer getFieldId() {
         return fieldId;
     }
@@ -48,52 +80,18 @@ public class ProjectScript extends AbstractBean {
         this.priority = priority;
     }
 
-    public Project getProject() {
-        return project;
-    }
+    public static class CompareByFieldAndPriority 
+            implements Comparator<ProjectScript> {
 
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    public WorkflowScript getScript() {
-        return script;
-    }
-
-    public void setScript(WorkflowScript script) {
-        this.script = script;
-    }
-
-    public static class CompareByFieldAndPriority implements Comparator<ProjectScript> {
-        
-        private boolean isAscending = true;
-
-        public CompareByFieldAndPriority() {
-        }
-
-        public CompareByFieldAndPriority(boolean isAscending) {
-            setAscending(isAscending);
-        }
-
-        public void setAscending(boolean value) {
-            this.isAscending = value;
-        }
-
-        public int compare(ProjectScript ma, ProjectScript mb) {
-            int result = 0;
+        public int compare(ProjectScript a, ProjectScript b) {
+            final int fieldIdComparator = a.fieldId - b.fieldId;
             
-            if(ma.getFieldId().equals(mb.getFieldId())) {
-                if(ma.getPriority() > mb.getPriority()) {
-                    result = 1;
-                } else {
-                    result = -1;
-                }
-            } else {
-                result = ma.getFieldId().compareTo(mb.getFieldId());
+            if (fieldIdComparator == 0) {
+                return a.priority - b.priority;
             }
-
-            return (isAscending ? result * -1 : result);
+            return fieldIdComparator;
         }
+        
     }
     
 }

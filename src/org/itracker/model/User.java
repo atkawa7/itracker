@@ -19,46 +19,67 @@
 package org.itracker.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.itracker.services.util.UserUtilities;
 
 /**
- * This is a POJO Business Domain Object. Hibernate Bean.
+ * A user. 
+ * 
  * @author ready
- *
  */
-public class User extends AbstractBean implements Comparable<User> {
+public class User extends AbstractEntity implements Comparable<User> {
 
+    public static final Comparator<User> NAME_COMPARATOR = 
+            new NameComparator();
+    
     private String login;
+    
     private String password;
+    
     private String firstName;
+    
     private String lastName;
+    
     private String email;
+    
     private int status;
+    
     private boolean superUser;
+    
     private int registrationType;
+    
     private UserPreferences preferences;
+    
     private List<Permission> permissions = new ArrayList<Permission>();
-    private Collection<Notification> notifications = new ArrayList<Notification>();
-    private Collection<IssueActivity> activities = new ArrayList<IssueActivity>();
-    private Collection<IssueHistory> history = new ArrayList<IssueHistory>();
-    private Collection<Project> projects = new ArrayList<Project>();
-    private Collection<IssueAttachment> attachments = new ArrayList<IssueAttachment>();
     
-    private static final Comparator<User> comparator = new CompareByName();
+    private List<Project> projects = new ArrayList<Project>();
     
+    //private Collection<Notification> notifications = new ArrayList<Notification>();
+    
+    /**
+     * Default constructor (required by Hibernate). 
+     * 
+     * <p>PENDING: should be <code>private</code> so that it can only be used
+     * by Hibernate, to ensure that the fields which form an instance's 
+     * identity are always initialized/never <tt>null</tt>. </p>
+     */
     public User() {
     }
 
+    public User(String login) {
+        super(new Date());
+        setLogin(login);
+    }
+    
     public User(String login, String password, String firstName, String lastName, String email, boolean superUser) {
         this(login, password, firstName, lastName, email, UserUtilities.REGISTRATION_TYPE_ADMIN, superUser);
     }
 
     public User(String login, String password, String firstName, String lastName, String email, int registrationType, boolean superUser) {
-        this.login = login;
+        this(login);
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -66,45 +87,48 @@ public class User extends AbstractBean implements Comparable<User> {
         this.registrationType = registrationType;
         setSuperUser(superUser);
     }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        if (login == null) {
+            throw new IllegalArgumentException("null login");
+        }
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String value) {
+        this.password = value;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String value) {
+        firstName = value;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String value) {
+        this.lastName = value;
+    }
     
-    public Collection<IssueActivity> getActivities() {
-        return activities;
-    }
-
-    public void setActivities(Collection<IssueActivity> getActivities) {
-        this.activities = getActivities;
-    }
-
-    public Collection<IssueAttachment> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(Collection<IssueAttachment> getAttachments) {
-        this.attachments = getAttachments;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Collection<IssueHistory> getHistory() {
-        return history;
-    }
-
-    public void setHistory(Collection<IssueHistory> getHistory) {
-        this.history = getHistory;
-    }
-
-    public Collection<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(Collection<Notification> getNotifications) {
-        this.notifications = getNotifications;
     }
 
     public List<Permission> getPermissions() {
@@ -121,14 +145,6 @@ public class User extends AbstractBean implements Comparable<User> {
 
     public void setPreferences(UserPreferences getPreferences) {
         this.preferences = getPreferences;
-    }
-
-    public Collection<Project> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(Collection<Project> getProjects) {
-        this.projects = getProjects;
     }
 
     public int getRegistrationType() {
@@ -155,38 +171,6 @@ public class User extends AbstractBean implements Comparable<User> {
         this.superUser = superUser;
     }
     
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String value) {
-        this.login = value;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String value) {
-        this.password = value;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String value) {
-        firstName = value;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String value) {
-        this.lastName = value;
-    }
-
     public String getFirstInitial() {
         return (getFirstName().length() > 0 ? getFirstName().substring(0,1).toUpperCase() + "." : "");
     }
@@ -208,127 +192,65 @@ public class User extends AbstractBean implements Comparable<User> {
         return true;
     }
     
-    public int compareTo(User other) {
-        return comparator.compare(this, other);
+    public List<Project> getProjects() {
+        return projects;
     }
     
-    public static abstract class UserModelComparator implements Comparator<User> {
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         
-        protected boolean isAscending = true;
-
-        public UserModelComparator() {
+        if (obj instanceof User) {
+            final User other = (User)obj;
+            
+            return this.login.equals(other.login);
         }
-
-        public UserModelComparator(boolean isAscending) {
-            setAscending(isAscending);
-        }
-
-        public void setAscending(boolean value) {
-            this.isAscending = value;
-        }
-
-        protected abstract int doComparison(User ma, User mb);
-
-        public final int compare(User a, User b) {
-            if(! (a instanceof User) || ! (b instanceof User)) {
-                throw new ClassCastException();
-            }
-
-            User ma = (User) a;
-            User mb = (User) b;
-
-            int result = doComparison(ma, mb);
-            if(! isAscending) {
-                result = result * -1;
-            }
-            return result;
-        }
-    }
-
-    public static class CompareByLogin extends UserModelComparator {
-        public CompareByLogin(){
-          super();
-        }
-
-        public CompareByLogin(boolean isAscending) {
-          super(isAscending);
-        }
-
-        protected int doComparison(User ma, User mb) {
-            if(ma.getLogin() == null && mb.getLogin() == null) {
-                return 0;
-            } else if(ma.getLogin() == null) {
-                return 1;
-            } else if(mb.getLogin() == null) {
-                return -1;
-            }
-
-            return ma.getLogin().compareTo(mb.getLogin());
-        }
-    }
-
-    public static class CompareByName extends UserModelComparator {
-        public CompareByName(){
-          super();
-        }
-
-        public CompareByName(boolean isAscending) {
-          super(isAscending);
-        }
-
-        protected int doComparison(User ma, User mb) {
-            if(ma.getLastName() == null && mb.getLastName() == null) {
-                return 0;
-            } else if(ma.getLastName() == null) {
-                return 1;
-            } else if(mb.getLastName() == null) {
-                return -1;
-            }
-
-            if(ma.getLastName().equals(mb.getLastName())) {
-                if(ma.getFirstName() == null && mb.getFirstName() == null) {
-                    return 0;
-                } else if(ma.getFirstName() == null) {
-                    return 1;
-                } else if(mb.getFirstName() == null) {
-                    return -1;
-                }
-                return ma.getFirstName().compareTo(mb.getFirstName());
-            }
-            return ma.getLastName().compareTo(mb.getLastName());
-        }
+        return false;
     }
     
-    public static class CompareByFirstName extends UserModelComparator {
-        public CompareByFirstName(){
-          super();
-        }
+    @Override
+    public int hashCode() {
+        return this.login.hashCode();
+    }
+    
+    @Override
+    public String toString() {
+        return "User [id=" + this.id 
+            + ", login=" + this.login + "]";
+    }
+    
+    public int compareTo(User other) {
+        return this.login.compareTo(other.login);
+    }
 
-        public CompareByFirstName(boolean isAscending) {
-          super(isAscending);
-        }
-
-        protected int doComparison(User ma, User mb) {
-            if(ma.getFirstName() == null && mb.getFirstName() == null) {
+    /**
+     * Compares 2 users by last and first name. 
+     */
+    private static class NameComparator implements Comparator<User> {
+        
+        public int compare(User a, User b) {
+            if (a.lastName == null && b.lastName == null) {
                 return 0;
-            } else if(ma.getFirstName() == null) {
+            } else if (a.lastName == null) {
                 return 1;
-            } else if(mb.getFirstName() == null) {
+            } else if (b.lastName == null) {
                 return -1;
             }
 
-            if(ma.getFirstName().equals(mb.getFirstName())) {
-                if(ma.getLastName() == null && mb.getLastName() == null) {
-                    return 0;
-                } else if(ma.getLastName() == null) {
-                    return 1;
-                } else if(mb.getLastName() == null) {
-                    return -1;
-                }
-                return ma.getLastName().compareTo(mb.getLastName());
-            }
-            return ma.getFirstName().compareTo(mb.getFirstName());
+            final int lastNameComparison = 
+                    a.lastName.compareTo(b.lastName);
+            
+            return (lastNameComparison == 0) 
+                ? a.firstName.compareTo(b.firstName)
+                : lastNameComparison;
         }
+        
     }
     
 }

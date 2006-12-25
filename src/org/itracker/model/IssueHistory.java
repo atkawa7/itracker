@@ -18,37 +18,77 @@
 
 package org.itracker.model;
 
-import java.util.Comparator;
-
+import java.util.Date;
 import org.itracker.services.util.IssueUtilities;
 
 /**
- * This is a POJO Business Domain Object. Hibernate Bean.
+ * An issue history entry. 
+ * 
  * @author ready
- *
  */
-public class IssueHistory extends AbstractBean {
+public class IssueHistory extends AbstractEntity {
 
-    public String description;
-    public int status;
-    public Issue issue;
-    public User user;
+    private Issue issue;
+    
+    private String description;
+    
+    private int status;
+    
+    private User creator;
 
+    /**
+     * Default constructor (required by Hibernate). 
+     * 
+     * <p>PENDING: should be <code>private</code> so that it can only be used
+     * by Hibernate, to ensure that the fields which form an instance's 
+     * identity are always initialized/never <tt>null</tt>. </p>
+     */
     public IssueHistory() {
     }
 
-    public IssueHistory(String description) {
-        this();
-        this.setDescription(description);
-        this.setStatus(IssueUtilities.HISTORY_STATUS_AVAILABLE);
+    public IssueHistory(Issue issue, User creator) {
+        super(new Date());
+        setIssue(issue);
+        setUser(creator);
+        setStatus(IssueUtilities.HISTORY_STATUS_AVAILABLE);
     }
 
-    public IssueHistory(String description, int status, Issue issue, User user) {
-        this();
-        this.setDescription(description);
-        this.setIssue(issue);
-        this.setUser(user);
-        this.setStatus(status);
+    public IssueHistory(Issue issue, User creator, String description, int status) {
+        super(new Date());
+        setIssue(issue);
+        setUser(creator);
+        setDescription(description);
+        setStatus(status);
+    }
+
+    public Issue getIssue() {
+        return issue;
+    }
+
+    public void setIssue(Issue issue) {
+        if (issue == null) {
+            throw new IllegalArgumentException("null issue");
+        }
+        this.issue = issue;
+    }
+
+    public User getUser() {
+        return creator;
+    }
+
+    public void setUser(User creator) {
+        if (creator == null) {
+            throw new IllegalArgumentException("null creator");
+        }
+        this.creator = creator;
+    }
+    
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
     
     public String getDescription() {
@@ -58,66 +98,36 @@ public class IssueHistory extends AbstractBean {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public Issue getIssue() {
-        return issue;
-    }
-
-    public void setIssue(Issue issue) {
-        this.issue = issue;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public static class CompareByDate implements Comparator<IssueHistory> {
-        protected boolean isAscending = true;
-
-        public CompareByDate() {
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
-
-        public CompareByDate(boolean isAscending) {
-            setAscending(isAscending);
+        
+        if (obj instanceof IssueHistory) {
+            final IssueHistory other = (IssueHistory)obj;
+            
+            return this.issue.equals(other.issue)
+                && this.creator.equals(other.creator)
+                && this.createDate.equals(other.createDate);
         }
-
-        public void setAscending(boolean value) {
-            this.isAscending = value;
-        }
-
-        public int compare(IssueHistory ma, IssueHistory mb) {
-            int result = 0;
-
-            if(ma.getCreateDate() == null && mb.getCreateDate() == null) {
-                result = 0;
-            } else if(ma.getCreateDate() == null) {
-                result = 1;
-            } else if(mb.getCreateDate() == null) {
-                result = -1;
-            } else {
-                if(ma.getCreateDate().equals(mb.getCreateDate())) {
-                    result = 0;
-                } else if(ma.getCreateDate().before(mb.getCreateDate())) {
-                    result = -1;
-                } else {
-                    result = 1;
-                }
-            }
-
-            return (isAscending ? result : result * -1);
-        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return this.issue.hashCode() 
+            + this.creator.hashCode() 
+            + this.createDate.hashCode();
+    }
+    
+    @Override
+    public String toString() {
+        return "IssueHistory [id=" + this.getId() 
+            + ", issue=" + this.issue 
+            + ", creator=" + this.creator 
+            + ", createDate=" + this.createDate + "]";
     }
     
 }

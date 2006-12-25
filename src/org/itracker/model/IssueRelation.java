@@ -18,27 +18,70 @@
 
 package org.itracker.model;
 
+import java.util.Date;
 
 /**
- * This is a POJO Business Domain Object. Hibernate Bean.
+ * A relation between issues. 
+ * 
  * @author ready
- *
  */
-public class IssueRelation extends AbstractBean {
-
-    private Integer matchingRelationId;
-    private int relationType;
+public class IssueRelation extends AbstractEntity {
+    
     private Issue issue;
+    
     private Issue relatedIssue;
-
+    
+    private int relationType;
+    
+    private Integer matchingRelationId;
+    
+    /**
+     * Default constructor (required by Hibernate). 
+     * 
+     * <p>PENDING: should be <code>private</code> so that it can only be used
+     * by Hibernate, to ensure that the fields which form an instance's 
+     * identity are always initialized/never <tt>null</tt>. </p>
+     */
+    public IssueRelation() {
+    }
+    
+    public IssueRelation(Issue issue, Issue relatedIssue, int relationType) {
+        super(new Date());
+        setIssue(issue);
+        setRelatedIssue(relatedIssue);
+        setRelationType(relationType);
+    }
+    
     public Issue getIssue() {
         return issue;
     }
 
     public void setIssue(Issue issue) {
+        if (issue == null) {
+            throw new IllegalArgumentException("null issue");
+        }
         this.issue = issue;
     }
 
+    public Issue getRelatedIssue() {
+        return relatedIssue;
+    }
+
+    public void setRelatedIssue(Issue relatedIssue) {
+        if (relatedIssue == null) {
+            throw new IllegalArgumentException("null relatedIssue");
+        }
+        this.relatedIssue = relatedIssue;
+    }
+    
+    public int getRelationType() {
+        return relationType;
+    }
+
+    public void setRelationType(int relationType) {
+        this.relationType = relationType;
+    }
+    
     public Integer getMatchingRelationId() {
         return matchingRelationId;
     }
@@ -47,20 +90,34 @@ public class IssueRelation extends AbstractBean {
         this.matchingRelationId = matchingRelationId;
     }
 
-    public Issue getRelatedIssue() {
-        return relatedIssue;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        
+        if (obj instanceof IssueRelation) {
+            final IssueRelation other = (IssueRelation)obj;
+            
+            return this.issue.equals(other.issue)
+                && this.relatedIssue.equals(other.relatedIssue)
+                && this.relationType == other.relationType;
+        }
+        return false;
     }
-
-    public void setRelatedIssue(Issue relatedIssue) {
-        this.relatedIssue = relatedIssue;
+    
+    @Override
+    public int hashCode() {
+        return this.issue.hashCode() 
+            + this.relatedIssue.hashCode() 
+            + this.relationType;
     }
-
-    public int getRelationType() {
-        return relationType;
+    
+    @Override
+    public String toString() {
+        return "[issue=" + this.issue 
+            + ",relatedIssue=" + this.relatedIssue 
+            + ",type=" + this.relationType + "]";
     }
-
-    public void setRelationType(int relationType) {
-        this.relationType = relationType;
-    }
-
+    
 }

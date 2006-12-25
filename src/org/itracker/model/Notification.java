@@ -19,44 +19,55 @@
 package org.itracker.model;
 
 import java.util.Comparator;
+import java.util.Date;
 
 /**
- * This is a POJO Business Domain Object. Hibernate Bean.
+ * This is a POJO Business Domain Object modelling a user notification. 
+ * 
+ * <p>Hibernate Bean. </p>
+ * 
  * @author ready
- *
  */
-public class Notification extends AbstractBean {
+public class Notification extends AbstractEntity 
+        implements Comparable<Notification> {
 
-    private int notificationRole;
-    private User user;
+    public static final Comparator<Notification> TYPE_COMPARATOR = 
+            new RoleComparator();
+    
+    public static final Comparator<Notification> USER_COMPARATOR = 
+            new UserComparator();
+    
     private Issue issue;
     
+    private User user;
+    
+    private int role;
+    
+    /**
+     * Default constructor (required by Hibernate). 
+     * 
+     * <p>PENDING: should be <code>private</code> so that it can only be used
+     * by Hibernate, to ensure that the fields which form an instance's 
+     * identity are always initialized/never <tt>null</tt>. </p>
+     */
     public Notification() {
     }
-    
-    public Notification(int type) {
-        this.setNotificationRole(type);
-    }
 
-    public Notification(User user, Issue issue, int type) {
+    public Notification(User user, Issue issue, int role) {
+        super(new Date());
         this.setUser(user);
         this.setIssue(issue);
-        this.setNotificationRole(type);
+        this.setNotificationRole(role);
     }
     
-    public int getNotificationRole() {
-        return notificationRole;
-    }
-
-    public void setNotificationRole(int notificationRole) {
-        this.notificationRole = notificationRole;
-    }
-
     public Issue getIssue() {
         return issue;
     }
 
     public void setIssue(Issue issue) {
+        if (issue == null) {
+            throw new IllegalArgumentException("null issue");
+        }
         this.issue = issue;
     }
 
@@ -65,78 +76,77 @@ public class Notification extends AbstractBean {
     }
 
     public void setUser(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("null user");
+        }
         this.user = user;
     }
 
-    public static abstract class NotificationModelComparator implements Comparator<Notification> {
+    public int getNotificationRole() {
+        return role;
+    }
+
+    public void setNotificationRole(int role) {
+        this.role = role;
+    }
+    
+    public int compareTo(Notification other) {
+        final int issueComparison = this.issue.compareTo(other.issue);
         
-        protected boolean isAscending = true;
-
-        public NotificationModelComparator() {
-        }
-
-        public NotificationModelComparator(boolean isAscending) {
-            setAscending(isAscending);
-        }
-
-        public void setAscending(boolean value) {
-            this.isAscending = value;
-        }
-
-        protected abstract int doComparison(Notification ma, Notification mb);
-
-        public final int compare(Notification ma, Notification mb) {
-            int result = doComparison(ma, mb);
-            if(! isAscending) {
-                result = result * -1;
+        if (issueComparison == 0) {
+            final int userComparison = this.user.compareTo(other.user);
+            
+            if (userComparison == 0) {
+                return this.role - other.role;
             }
-            return result;
+            return userComparison;
         }
+        return issueComparison;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        
+        if (obj instanceof Notification) {
+            final Notification other = (Notification)obj;
+            
+            return this.issue.equals(other.issue)
+                && this.user.equals(other.user)
+                && this.role == other.role;
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return this.issue.hashCode() + this.user.hashCode() + this.role;
+    }
+    
+    @Override
+    public String toString() {
+        return "[issue=" + this.issue 
+            + ",user=" + this.user 
+            + ",role=" + this.role + "]";
     }
 
 
-    public static class CompareByName extends NotificationModelComparator {
-        public CompareByName(){
-          super();
+    private static class UserComparator implements Comparator<Notification> {
+        
+        public int compare(Notification a, Notification b) {
+            return User.NAME_COMPARATOR.compare(a.user, b.user);
         }
-
-        public CompareByName(boolean isAscending) {
-          super(isAscending);
-        }
-
-        protected int doComparison(Notification ma, Notification mb) {
-            if(ma.getUser().getLastName() == null && mb.getUser().getLastName() == null) {
-                return 0;
-            } else if(ma.getUser().getLastName() == null) {
-                return 1;
-            } else if(mb.getUser().getLastName() == null) {
-                return -1;
-            }
-
-            return (ma.getUser().getLastName().compareTo(mb.getUser().getLastName()) == 0 ?
-                    ma.getUser().getFirstName().compareTo(mb.getUser().getFirstName()) :
-                    ma.getUser().getLastName().compareTo(mb.getUser().getLastName()));
-        }
+        
     }
 
-    public static class CompareByType extends NotificationModelComparator {
-        public CompareByType(){
-          super();
+    private static class RoleComparator implements Comparator<Notification> {
+        
+        public int compare(Notification a, Notification b) {
+            return a.role - b.role;
         }
-
-        public CompareByType(boolean isAscending) {
-          super(isAscending);
-        }
-
-        protected int doComparison(Notification ma, Notification mb) {
-            if(ma.getNotificationRole() == mb.getNotificationRole()) {
-                return 0;
-            } else if(ma.getNotificationRole() < mb.getNotificationRole()) {
-                return -1;
-            } else {
-                return 1;
-            }
-        }
+        
     }
     
 }

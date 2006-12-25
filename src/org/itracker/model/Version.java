@@ -17,13 +17,14 @@
 package org.itracker.model;
 
 import java.util.Comparator;
+import java.util.Date;
 
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.
  * 
  * @author ready
  */
-public class Version extends AbstractBean implements Comparable<Version> {
+public class Version extends AbstractEntity implements Comparable<Version> {
 
     /**
      * Invariant: never <tt>null</tt>. 
@@ -69,6 +70,7 @@ public class Version extends AbstractBean implements Comparable<Version> {
      * @param number unique within the project
      */
     public Version(Project project, String number) {
+        super(new Date());
         setProject(project);
         setVersionInfo(number);
         

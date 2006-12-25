@@ -18,9 +18,9 @@
 
 package org.itracker.model;
 
-public class ImportDataModel extends AbstractBean {
+public class ImportDataModel extends AbstractEntity {
     
-    private AbstractBean[] dataModels;
+    private AbstractEntity[] dataModels;
     private boolean[] existingModel;
 
     private boolean reuseConfig = true;
@@ -34,8 +34,8 @@ public class ImportDataModel extends AbstractBean {
     public ImportDataModel() {
     }
 
-    public AbstractBean[] getData() {
-        return (dataModels == null ? new AbstractBean[0] : dataModels);
+    public AbstractEntity[] getData() {
+        return (dataModels == null ? new AbstractEntity[0] : dataModels);
     }
 
     public boolean[] getExistingModel() {
@@ -52,7 +52,7 @@ public class ImportDataModel extends AbstractBean {
         }
     }
 
-    public void setData(AbstractBean[] dataModels, boolean[] existingModel) {
+    public void setData(AbstractEntity[] dataModels, boolean[] existingModel) {
         if(dataModels != null && existingModel != null && dataModels.length == existingModel.length) {
             this.dataModels = dataModels;
             this.existingModel = existingModel;
