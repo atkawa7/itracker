@@ -145,7 +145,7 @@ public class EditProjectAction extends ItrackerBaseAction {
                         int superUserPermission = Integer.parseInt(superUserPermissions.get(j).getValue());
                         if ( superUserPermission == UserUtilities.PERMISSION_PRODUCT_ADMIN )
                             fndprojectAdmins = true;
-                        userPermissionModels.add(new Permission(project, superUserPermission, usermodel));
+                        userPermissionModels.add(new Permission(superUserPermission, usermodel, project));
                     }
                     userService.addUserPermissions(ownerIds[i],userPermissionModels);
                 }
@@ -159,7 +159,7 @@ public class EditProjectAction extends ItrackerBaseAction {
                         User usermodel = (User) iterator.next();
                         userPermissionModels = userService.getUserPermissionsLocal(usermodel);
                         for(int i = 0; i < permissions.length; i++) {
-                            userPermissionModels.add(new Permission(project, permissions[i], usermodel));
+                            userPermissionModels.add(new Permission(permissions[i], usermodel, project));
                         }
                         userService.setUserPermissions(usermodel.getId(), userPermissionModels );
                         userService.UpdateAuthenticator(usermodel.getId(), userPermissionModels);
