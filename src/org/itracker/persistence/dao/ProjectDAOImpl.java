@@ -1,10 +1,8 @@
 package org.itracker.persistence.dao;
 
 import java.util.List;
-
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.criterion.Expression;
+import org.hibernate.Query;
 import org.itracker.model.Project;
 
 /**
@@ -15,35 +13,54 @@ import org.itracker.model.Project;
 public class ProjectDAOImpl extends BaseHibernateDAOImpl<Project> 
         implements ProjectDAO {
 
-    public Project findByPrimaryKey(Integer projectId) {        
+    public Project findByPrimaryKey(Integer projectId) {
+        Project project;
         try {
-            return (Project)getSession().get(Project.class, projectId);
-        } catch (HibernateException e) {
-            throw convertHibernateAccessException(e);
+            project = (Project)getSession().get(Project.class, projectId);
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
         }
+        return project;
     }
     
     @SuppressWarnings("unchecked") 
     public List<Project> findAll() {
-        Criteria criteria = getSession().createCriteria(Project.class);
+        List<Project> projects;
         
         try {
-            return criteria.list();
-        } catch (HibernateException e) {
-            throw convertHibernateAccessException(e);
+            Query query = getSession().getNamedQuery("ProjectsAllQuery");
+            projects = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
         }
+        return projects;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Project> findByStatus(int status) {
+        List<Project> projects;
+        
+        try {
+            Query query = getSession().getNamedQuery("ProjectsByStatusQuery");
+            query.setInteger("projectStatus", status);
+            projects = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return projects;
     }
     
     @SuppressWarnings("unchecked") 
     public List<Project> findAllAvailable() {
-    	  Criteria criteria = getSession().createCriteria(Project.class);
-    	  criteria.add( Expression.eq ("status" , 1));
-          
-          try {
-              return criteria.list();
-          } catch (HibernateException e) {
-              throw convertHibernateAccessException(e);
-          }
+    	List<Project> projects;
+        
+        try {
+            Query query = getSession().getNamedQuery("ProjectsAvailableQuery");
+            projects = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return projects;
     }
 
 }
