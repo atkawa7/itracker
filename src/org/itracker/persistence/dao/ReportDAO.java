@@ -9,7 +9,19 @@ import org.itracker.model.Report;
  */
 public interface ReportDAO extends BaseDAO<Report> {
     
-    public Report findByPrimaryKey(Integer id);
+    /**
+     * Finds a report by id. 
+     *
+     * @param reportId system ID
+     * @return report instance or <tt>null</tt> if none exists with the given id
+     */
+    Report findByPrimaryKey(Integer reportId);
 
-    public List<Report> findAll();
+    /**
+     * Finds all existing reports. 
+     * 
+     * @return list of reports in unspecified order
+     */
+    List<Report> findAll();
+    
 }
