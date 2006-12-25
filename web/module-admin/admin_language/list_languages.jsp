@@ -3,6 +3,7 @@
 <%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.core.resources.*" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -21,7 +22,7 @@
 <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
 <%
   ConfigurationService sc = (ConfigurationService)request.getAttribute("sc");
-  java.util.HashMap<String,List<String>> languages = sc.getAvailableLanguages();
+  Map<String,List<String>> languages = sc.getAvailableLanguages();
   String baseLocaleName = ITrackerResources.getString("itracker.web.attr.baselocale");
 %>
   <tr>
