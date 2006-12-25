@@ -597,11 +597,11 @@ public class IssueUtilities  {
             return false;
         }
 
-        if (UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_VIEW_ALL.toInt())) {
+        if (UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_VIEW_ALL.getCode())) {
             return true;
         }
         
-        if (! UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_VIEW_USERS.toInt())) {
+        if (! UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_VIEW_USERS.getCode())) {
             return false;
         }
 
@@ -626,10 +626,10 @@ public class IssueUtilities  {
             return false;
         }
 
-        if (UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_EDIT_ALL.toInt())) {
+        if (UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_EDIT_ALL.getCode())) {
             return true;
         }
-        if (! UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_EDIT_USERS.toInt())) {
+        if (! UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_EDIT_USERS.getCode())) {
             return false;
         }
 
@@ -654,13 +654,13 @@ public class IssueUtilities  {
             return false;
         }
 
-        if(UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_EDIT_ALL.toInt())) {
+        if(UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_EDIT_ALL.getCode())) {
             return true;
         }
-        if(UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_EDIT_USERS.toInt())) {
+        if(UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_EDIT_USERS.getCode())) {
             if(issue.getCreator().getId().equals(userId)) {
                 return true;
-            } else if(UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_ASSIGNABLE.toInt())) {
+            } else if(UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_ASSIGNABLE.getCode())) {
                 return true;
             } else if(issue.getOwner().getId() != null && issue.getOwner().getId().equals(userId)) {
                 return true;
@@ -681,11 +681,11 @@ public class IssueUtilities  {
             return false;
         }
 
-        if(UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_ASSIGN_OTHERS.toInt())) {
+        if(UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_ASSIGN_OTHERS.getCode())) {
             return true;
         }
         if(issue.getOwner() != null && userId.equals(issue.getOwner().getId()) &&
-           UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_UNASSIGN_SELF.toInt())) {
+           UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_UNASSIGN_SELF.getCode())) {
             return true;
         }
 
