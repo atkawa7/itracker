@@ -21,16 +21,14 @@ package org.itracker.model;
 import java.util.Date;
 
 /**
- * This is a POJO Business Domain Object modelling an issue activity. 
- * 
- * <p>Hibernate Bean. </p>
+ * An issue activity. 
  * 
  * <p>The natural key of an IssueActivity is issue + user + type + createDate. 
  * </p>
  * 
  * @author ready
  */
-public class IssueActivity extends AbstractBean {
+public class IssueActivity extends AbstractEntity {
     
     /** Issue to which this activity is related. */
     private Issue issue;
@@ -70,18 +68,11 @@ public class IssueActivity extends AbstractBean {
      * @param type 
      * @param description 
      */
-    public IssueActivity(Issue issue, User user, int type, String description) {
-        this(issue, user, type, description, false);
-    }
-    
-    public IssueActivity(Issue issue, User user, int type, String description, 
-            boolean notificationSent) {
+    public IssueActivity(Issue issue, User user, int type) {
+        super(new Date());
         setIssue(issue);
         setUser(user);
         setType(type);
-        setDescription(description);
-        setNotificationSent(notificationSent);
-        setCreateDate(new Date());
     }
     
     public Issue getIssue() {
@@ -154,7 +145,8 @@ public class IssueActivity extends AbstractBean {
     }
     
     public String toString() {
-        return "[issue=" + this.issue 
+        return "IssueActivity [id=" + this.id
+                + ",issue=" + this.issue 
                 + ",user=" + this.user 
                 + ",type=" + this.type 
                 + ",createDate=" + this.createDate + "]";
