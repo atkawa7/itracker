@@ -15,8 +15,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <% // TODO : move redirect logic to the Action class. 
-    final Map<Integer, Set<PermissionType>> permissions = (Map<Integer, Set<PermissionType>>)
-        session.getAttribute("permissions");
+    final Map<Integer, Set<PermissionType>> permissions = 
+            RequestHelper.getUserPermissions(session);
     ProjectService ph = (ProjectService) request.getAttribute("ph");
     UserService uh =  (UserService) request.getAttribute("uh");
    
@@ -74,7 +74,7 @@
             <td class="editColumnText"><it:formatDate date="<%= project.getCreateDate() %>"/></td>
           </tr>
           <%  List<User> owners = uh.getUsersWithProjectPermission(project.getId(), UserUtilities.PERMISSION_VIEW_ALL);
-              Collections.sort(owners, new User.CompareByName());
+              Collections.sort(owners, User.NAME_COMPARATOR);
           %>
           <tr>
             <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.owners"/>:</td>
@@ -95,7 +95,7 @@
                 <td valign="top" class="editColumnText" nowrap>
                   <html:select property="users" size="5" multiple="true" styleClass="editColumnText">
                     <% List<User> users = uh.getAllUsers();
-                       Collections.sort(users, new User.CompareByName());
+                       Collections.sort(users, User.NAME_COMPARATOR);
                        for(int i = 0; i < users.size(); i++) {
                            if ( owners.contains(users.get(i)) ) {
                                 continue;
@@ -323,7 +323,7 @@
 
               <%
                   List<Component> components = project.getComponents();
-                  Collections.sort(components, new Component.NameComparator());
+                  Collections.sort(components);
 
                   for(int i = 0; i < components.size(); i++) {
                     if(i % 2 == 1) {
