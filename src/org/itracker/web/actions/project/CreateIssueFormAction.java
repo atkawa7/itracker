@@ -105,7 +105,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                 Map<Integer,List<NameValuePair>> listOptions = new HashMap<Integer,List<NameValuePair>>();
                 if(UserUtilities.hasPermission(Permissions, project.getId(), UserUtilities.PERMISSION_ASSIGN_OTHERS)) {
                     List<User> possibleOwners = userService.getPossibleOwners(null, project.getId(), currUser.getId());
-                    Collections.sort(possibleOwners, new User.CompareByFirstName());
+                    Collections.sort(possibleOwners, User.NAME_COMPARATOR);
                     listOptions.put(new Integer(IssueUtilities.FIELD_OWNER), Convert.usersToNameValuePairs(possibleOwners));
                 } else if(UserUtilities.hasPermission(Permissions, project.getId(), UserUtilities.PERMISSION_ASSIGN_SELF)) {
                 	NameValuePair myNameValuePair = new NameValuePair(currUser.getFirstName() + " " + currUser.getLastName(), currUser.getId().toString());
@@ -116,7 +116,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
 
                 if(UserUtilities.hasPermission(Permissions, project.getId(), UserUtilities.PERMISSION_CREATE_OTHERS)) {
                     List<User> possibleCreators = userService.getUsersWithAnyProjectPermission(project.getId(), new int[] {UserUtilities.PERMISSION_VIEW_ALL, UserUtilities.PERMISSION_VIEW_USERS});
-                    Collections.sort(possibleCreators, new User.CompareByFirstName());
+                    Collections.sort(possibleCreators, User.NAME_COMPARATOR);
                     listOptions.put(new Integer(IssueUtilities.FIELD_CREATOR), Convert.usersToNameValuePairs(possibleCreators));
                 }
 
@@ -125,7 +125,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
 
                 List<Component> components = new ArrayList<Component>();
                 components = project.getComponents();
-                Collections.sort(components, new Component.NameComparator());
+                Collections.sort(components, Component.NAME_COMPARATOR);
                 listOptions.put(new Integer(IssueUtilities.FIELD_COMPONENTS), Convert.componentsToNameValuePairs(components));
                 List<Version> versions = project.getVersions();
                 Collections.sort(versions, new Version.VersionComparator());
@@ -164,8 +164,8 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
       		    request.setAttribute("pageTitleArg",pageTitleArg); 
 
                 List<ProjectScript> scripts = project.getScripts();
-                WorkflowUtilities.ProcessFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors, issueForm);
-                WorkflowUtilities.ProcessFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, null, errors, issueForm);
+                WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors, issueForm);
+                WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, null, errors, issueForm);
 
                 if(errors == null || errors.isEmpty()) {
                     logger.debug("Forwarding to create issue form for project " + project.getId());
