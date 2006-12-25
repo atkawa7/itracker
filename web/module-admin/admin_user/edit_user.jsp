@@ -163,7 +163,7 @@
           </tr>
           <%
               List<Project> projects = ph.getAllAvailableProjects();
-              Collections.sort(projects, new Project.CompareByName());
+              Collections.sort(projects);
               List<NameValuePair> permissionNames = UserUtilities.getPermissionNames((java.util.Locale)pageContext.getAttribute("currLocale"));
 
               for(int i = 0; i < projects.size(); i++) {

@@ -61,7 +61,7 @@
 <%
     List<User> users = uh.getActiveUsers();
 
-    Collections.sort(users, new User.CompareByName());
+    Collections.sort(users, User.NAME_COMPARATOR);
 
     for(int i = 0; i < users.size(); i++) {
         String style = "";
