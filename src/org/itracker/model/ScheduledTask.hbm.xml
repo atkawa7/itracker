@@ -1,22 +1,46 @@
 <?xml version="1.0"?>
+
 <!DOCTYPE hibernate-mapping PUBLIC 
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping auto-import="true">
-
-	<class name="org.itracker.model.ScheduledTask" table="scheduledtaskbean">
-		<id name="id" column="id" type="int" unsaved-value="null">
-			<generator class="native"/>
-		</id>
-		<property name="hours" not-null="true" unique="false"/>
-		<property name="minutes" not-null="true" unique="false"/>
-		<property name="daysOfMonth" column="days_of_month" not-null="true" unique="false"/>		
-		<property name="months" not-null="true" unique="false"/>	
-		<property name="weekdays" not-null="true" unique="false"/>			
-		<property name="className" column="class_name" not-null="true" unique="false"/>					
-		<property name="args" not-null="true" unique="false"/>							
-		<property name="createDate" column="create_date" not-null="true" unique="false"/>	
-		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>			
-	</class>	
-	
+    
+<hibernate-mapping auto-import="true" package="org.itracker.model">
+    
+    <class name="ScheduledTask" table="scheduledtaskbean">
+        <id name="id" unsaved-value="null">
+            <column name="id" not-null="true"/>
+            <generator class="native"/>
+        </id>
+        
+        <property name="hours" not-null="true"/>
+        
+        <property name="minutes" not-null="true"/>
+        
+        <property name="daysOfMonth" column="days_of_month" not-null="true"/>
+        
+        <property name="months" not-null="true"/>
+        
+        <property name="weekdays" not-null="true"/>
+        
+        <property name="className" column="class_name" not-null="true"/>
+        
+        <property name="args" not-null="true"/>
+        
+        <property name="createDate">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="lastModifiedDate">
+            <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+    </class>
+    
+    <!-- Named queries (loaded, validated and cached at application startup). -->
+    
+    <query name="ScheduledTasksAllQuery"><![CDATA[
+    select task 
+    from ScheduledTask as task ]]>
+    </query>	
+    
 </hibernate-mapping>
