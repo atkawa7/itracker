@@ -138,6 +138,20 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         return issues;
     }
     
+    public int countByProject(Integer projectId) {
+        final Integer count;
+        
+        try {
+            final Query query = getSession().getNamedQuery(
+                    "IssueCountByProjectQuery");
+            query.setInteger("projectId", projectId);
+            count = (Integer)query.uniqueResult();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return count;
+    }
+    
     @SuppressWarnings("unchecked")
     public List<Issue> findByProjectAndLowerStatus(Integer projectId, 
             int maxExclusiveStatus) {
