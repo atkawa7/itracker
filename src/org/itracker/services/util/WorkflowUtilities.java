@@ -79,12 +79,12 @@ public class WorkflowUtilities  {
         return eventNames;
     }
     
-    public static List<NameValuePair> getListOptions(HashMap<Integer,List<NameValuePair>> listOptions, int fieldId) {
+    public static List<NameValuePair> getListOptions(Map<Integer, List<NameValuePair>> listOptions, int fieldId) {
         return getListOptions(listOptions, new Integer(fieldId));
     }
     
     @SuppressWarnings("unchecked")
-    public static List<NameValuePair> getListOptions(HashMap listOptions, Integer fieldId) {
+    public static List<NameValuePair> getListOptions(Map listOptions, Integer fieldId) {
         List<NameValuePair> options = new ArrayList<NameValuePair>();
         
         if(listOptions != null && listOptions.size() != 0 && fieldId != null) {
@@ -97,7 +97,7 @@ public class WorkflowUtilities  {
         return options;
     }
     
-    public static void ProcessFieldScripts(List<ProjectScript> projectScriptModels, int event, Map<Integer,List<NameValuePair>> currentValues, ActionErrors currentErrors, ValidatorForm form) throws WorkflowException {
+    public static void processFieldScripts(List<ProjectScript> projectScriptModels, int event, Map<Integer, List<NameValuePair>> currentValues, ActionErrors currentErrors, ValidatorForm form) throws WorkflowException {
         if(projectScriptModels == null || projectScriptModels.size() == 0) {
             return;
         }
@@ -117,27 +117,28 @@ public class WorkflowUtilities  {
         }
         logger.debug(scriptsToRun.size() + " eligible scripts found for event " + event);
         
-        if(currentValues == null) {
-            currentValues = new HashMap<Integer,List<NameValuePair>>();
+        if (currentValues == null) {
+            currentValues = new HashMap<Integer, List<NameValuePair>>();
         }
-        for(int i = 0; i < scriptsToRun.size(); i++) {
+        
+        for (int i = 0; i < scriptsToRun.size(); i++) {
             ProjectScript currentScript = (ProjectScript) scriptsToRun.get(i);
             try {
                 logger.debug("Running script " + currentScript.getScript().getId() + " with priority " + currentScript.getPriority());
-                NameValuePair currentValue = (NameValuePair) currentValues.get(currentScript.getFieldId());
+                List<NameValuePair> currentValue = currentValues.get(currentScript.getFieldId());
                 
                 logger.debug("Before script current value for field " + IssueUtilities.getFieldName(currentScript.getFieldId()) + " (" + currentScript.getFieldId() + ") is " + (currentValue == null ? "NULL" : "'" + currentValue.toString() + "' (" + currentValue.getClass().getName() + "'"));
-                currentValue = ProcessFieldScript(currentScript, event, currentScript.getFieldId(), currentValue, currentErrors, form);
+                currentValue = processFieldScript(currentScript, event, currentScript.getFieldId(), currentValue, currentErrors, form);
                 logger.debug("After script current value for field " + IssueUtilities.getFieldName(currentScript.getFieldId()) + " (" + currentScript.getFieldId() + ") is " + (currentValue == null ? "NULL" : "'" + currentValue.toString() + "' (" + currentValue.getClass().getName() + "'"));
                 
-                currentValues.put(currentScript.getFieldId(), (List<NameValuePair>) currentValue);
+                currentValues.put(currentScript.getFieldId(), currentValue);
             } catch(WorkflowException we) {
                 logger.error("Error processing script " + currentScript.getScript().getId() + ": " + we.getMessage());
             }
         }
     }
     
-    public static Object ProcessFieldScripts(List<ProjectScript> projectScripts, int event, Integer fieldId, NameValuePair currentValue, ActionErrors currentErrors, ValidatorForm form) throws WorkflowException {
+    public static List<NameValuePair> processFieldScripts(List<ProjectScript> projectScripts, int event, Integer fieldId, List<NameValuePair> currentValue, ActionErrors currentErrors, ValidatorForm form) throws WorkflowException {
         if(projectScripts == null || projectScripts.size() == 0 || fieldId == null) {
             return null;
         }
@@ -161,7 +162,7 @@ public class WorkflowUtilities  {
             ProjectScript currentScript = (ProjectScript) scriptsToRun.get(i);
             try {
                 logger.debug("Running script " + currentScript.getScript().getId() + " with priority " + currentScript.getPriority());
-                currentValue = ProcessFieldScript(currentScript, event, fieldId, currentValue, currentErrors, form);
+                currentValue = processFieldScript(currentScript, event, fieldId, currentValue, currentErrors, form);
             } catch(WorkflowException we) {
                 logger.error("Error processing script " + currentScript.getScript().getId() + ": " + we.getMessage());
             }
@@ -170,7 +171,8 @@ public class WorkflowUtilities  {
         return currentValue;
     }
     
-    public static NameValuePair ProcessFieldScript(ProjectScript projectScript, int event, Integer fieldId, NameValuePair currentValue, ActionErrors currentErrors, ValidatorForm form) throws WorkflowException {
+    @SuppressWarnings("unchecked")
+    public static List<NameValuePair> processFieldScript(ProjectScript projectScript, int event, Integer fieldId, List<NameValuePair> currentValue, ActionErrors currentErrors, ValidatorForm form) throws WorkflowException {
         if(projectScript == null) {
             throw new WorkflowException("ProjectScript was null.", WorkflowException.INVALID_ARGS);
         }
@@ -187,7 +189,7 @@ public class WorkflowUtilities  {
             bshInterpreter.set("currentErrors", currentErrors);
             bshInterpreter.set("currentForm", form);
             bshInterpreter.eval(projectScript.getScript().getScript());
-            currentValue = (NameValuePair)bshInterpreter.get("currentValue");
+            currentValue = (List<NameValuePair>)bshInterpreter.get("currentValue");
             logger.debug("Script returned current value of '" + currentValue + "' (" + (currentValue != null ? currentValue.getClass().getName() : "NULL") + ")");
             if(event == EVENT_FIELD_ONSETDEFAULT && form != null && currentValue != null) {
                 logger.debug("Setting current form field value for field " + IssueUtilities.getFieldName(projectScript.getFieldId()) + " to '" + currentValue + "'");
@@ -255,6 +257,4 @@ public class WorkflowUtilities  {
         }
     }
     
-    
 }
-
