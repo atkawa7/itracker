@@ -20,7 +20,8 @@ package org.itracker.web.forms;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -30,9 +31,9 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.apache.struts.upload.FormFile;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
-import org.itracker.model.IssueField;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.services.IssueService;
@@ -64,18 +65,18 @@ public class IssueForm extends ITrackerForm  {
     private Integer[] components;
     private Integer[] versions;
     private String attachmentDescription;
-    private org.apache.struts.upload.FormFile attachment;
+    private FormFile attachment;
     private String history;
     // lets try to put Integer,String here:
-    private HashMap<Integer,String> customFields;
+    private Map<Integer,String> customFields;
     private Integer relationType;
     private Integer relatedIssueId;
     
-    public org.apache.struts.upload.FormFile getAttachment() {
+    public FormFile getAttachment() {
         return attachment;
     }
     
-    public void setAttachment(org.apache.struts.upload.FormFile attachment) {
+    public void setAttachment(FormFile attachment) {
         this.attachment = attachment;
     }
     
@@ -111,11 +112,11 @@ public class IssueForm extends ITrackerForm  {
         this.creatorId = creatorId;
     }
     // let's try to put Integer,String here:
-    public HashMap<Integer,String> getCustomFields() {
+    public Map<Integer,String> getCustomFields() {
         return customFields;
     }
 //  let's try to put Integer,String here:
-    public void setCustomFields(HashMap<Integer,String> customFields) {
+    public void setCustomFields(Map<Integer,String> customFields) {
         this.customFields = customFields;
     }
     
@@ -260,12 +261,20 @@ public class IssueForm extends ITrackerForm  {
                         currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
                     }
                     
+                    ResourceBundle bundle = ITrackerResources.getBundle(currLocale);
+                    
                     for(int i = 0; i < projectFields.size(); i++) {
-                        String fieldValue = request.getParameter("customFields(" + projectFields.get(i).getId() +")");
+                        CustomField customField = projectFields.get(i);
+                        
+                        String fieldValue = request.getParameter("customFields(" + customField.getId() +")");
                         if(fieldValue != null && ! fieldValue.equals("")) {
-                            IssueField issueField = new IssueField(projectFields.get(i));
+                            
+                            // Don't create an IssueField only so that we can call 
+                            // setValue to validate the value! 
+                            //IssueField issueField = new IssueField(projectFields.get(i));
                             try {
-                                issueField.setValue(fieldValue, currLocale);
+                            //    issueField.setValue(fieldValue, currLocale);
+                                customField.checkAssignable(fieldValue, currLocale, bundle);
                             } catch(IssueException ie) {
                                 String label = CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId(), currLocale);
                                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(ie.getType(), label));
@@ -278,7 +287,7 @@ public class IssueForm extends ITrackerForm  {
                 }
                 
                 List<ProjectScript> scripts = project.getScripts();
-                WorkflowUtilities.ProcessFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONVALIDATE, null, errors, this);
+                WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONVALIDATE, null, errors, this);
             }
         } catch(Exception e) {
             e.printStackTrace();
