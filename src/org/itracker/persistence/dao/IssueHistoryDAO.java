@@ -6,10 +6,24 @@ import org.itracker.model.IssueHistory;
 
 /**
  * 
+ * 
  */
 public interface IssueHistoryDAO extends BaseDAO<IssueHistory> {
     
-    public IssueHistory findByPrimaryKey(Integer entryId);
+    /**
+     * Returns the issue history entry with the given primary key. 
+     * 
+     * @param entryId system ID
+     * @return issue history entry or <tt>null</tt>
+     */
+    IssueHistory findByPrimaryKey(Integer entryId);
 
-    public List<IssueHistory> findByIssueId(Integer issueId);
+    /**
+     * Finds all history entries for an Issue. 
+     * 
+     * @param issueId system ID
+     * @return list of history entries in unspecified order
+     */
+    List<IssueHistory> findByIssueId(Integer issueId);
+    
 }
