@@ -1,35 +1,40 @@
 package org.itracker.persistence.dao;
 
 import java.util.List;
-
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.criterion.Expression;
-import org.itracker.model.Issue;
+import org.hibernate.Query;
 import org.itracker.model.Notification;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * 
  */
-public class NotificationDAOImpl extends HibernateDaoSupport implements NotificationDAO {
+public class NotificationDAOImpl extends HibernateDaoSupport 
+        implements NotificationDAO {
 
-    private final IssueDAO issueDAO;
-
-    public NotificationDAOImpl(IssueDAO issueDAO) {
-        this.issueDAO = issueDAO;
+    public NotificationDAOImpl() {
+    }
+    
+    public Notification findById(Integer id) {
+        Notification notification;
+        
+        try {
+            notification = (Notification)getSession().get(Notification.class, id);
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return notification;
     }
     
     @SuppressWarnings("unchecked")
     public List<Notification> findByIssueId(Integer issueId) {
         List<Notification> notifications;
         
-        Issue issue = issueDAO.findByPrimaryKey(issueId);
-        Criteria criteria = getSession().createCriteria(Notification.class);
-        criteria.add(Expression.eq("issue", issue));
-        
         try {
-            notifications = criteria.list();
+            Query query = getSession().getNamedQuery(
+                    "NotificationsByIssueQuery");
+            query.setInteger("issueId", issueId);
+            notifications = query.list();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
