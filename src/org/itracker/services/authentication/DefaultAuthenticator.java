@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.itracker.model.Permission;
 import org.itracker.model.User;
@@ -140,7 +141,7 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
             List<Permission> augmentedPermissions = new ArrayList<Permission>();
             
             // Super user has access to all projects (represented by the "null" project). 
-            Permission permission = new Permission(null, -1, user);
+            Permission permission = new Permission(-1, user, null);
             augmentedPermissions.add(permission);
             augmentedPermissions.addAll(permissionList);
             return augmentedPermissions;
@@ -151,25 +152,28 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
 
     }
 
-    public List<User> getUsersWithProjectPermission(List<Permission> permissions, boolean requireAll, boolean activeOnly, int reqSource) throws AuthenticatorException {
+    public List<User> getUsersWithProjectPermission(Integer projectId, 
+            int[] permissionTypes, boolean requireAll, boolean activeOnly, 
+            int reqSource) throws AuthenticatorException {
         List<User> users = new ArrayList<User>();
 
         try {
-            HashMap<Integer,User> userMap = new HashMap<Integer,User>();
+            Map<Integer, User> userMap = new HashMap<Integer, User>();
 
-            for(int i = 0; i < permissions.size(); i++) {
-                List<User> explicitUsers = getUserService().getUsersWithPermissionLocal(permissions.get(i));
-                if(! requireAll || permissions.size() == 1) {
+            for (int i = 0; i < permissionTypes.length; i++) {
+                List<User> explicitUsers = getUserService().getUsersWithPermissionLocal(projectId, permissionTypes[i]);
+                
+                if (!requireAll || permissionTypes.length == 1) {
                     for(int j = 0; j < explicitUsers.size(); j++) {
                         userMap.put(explicitUsers.get(j).getId(), explicitUsers.get(j));
                     }
                 } else {
-                    if(i == 0) {
-                        for(int j = 0; j < explicitUsers.size(); j++) {
+                    if (i == 0) {
+                        for (int j = 0; j < explicitUsers.size(); j++) {
                             userMap.put(explicitUsers.get(j).getId(), explicitUsers.get(j));
                         }
                     } else {
-                        for(Iterator iter = userMap.keySet().iterator(); iter.hasNext(); ) {
+                        for (Iterator iter = userMap.keySet().iterator(); iter.hasNext(); ) {
                             boolean found = false;
                             Integer userId = (Integer) iter.next();
                             for(int j = 0; j < explicitUsers.size(); j++) {
@@ -178,7 +182,7 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
                                     break;
                                 }
                             }
-                            if(! found) {
+                            if (!found) {
                                 iter.remove();
                             }
                         }
@@ -187,18 +191,18 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
             }
 
             List<User> superUsers = getUserService().getSuperUsers();
-            for(int i = 0; i < superUsers.size(); i++) {
-                if(! activeOnly || superUsers.get(i).getStatus() == UserUtilities.STATUS_ACTIVE) {
+            for (int i = 0; i < superUsers.size(); i++) {
+                if (!activeOnly || superUsers.get(i).getStatus() == UserUtilities.STATUS_ACTIVE) {
                     userMap.put(superUsers.get(i).getId(), superUsers.get(i));
                 }
             }
 
             int i = 0;
             users = new ArrayList<User>();
-            for(Iterator iter = userMap.values().iterator(); iter.hasNext(); i++) {
+            for (Iterator iter = userMap.values().iterator(); iter.hasNext(); i++) {
             	users.add((User) iter.next());
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error("Error retreiving users with permissions.", e);
             throw new AuthenticatorException();
         }
