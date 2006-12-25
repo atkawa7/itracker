@@ -1,25 +1,64 @@
 <?xml version="1.0"?>
+
 <!DOCTYPE hibernate-mapping PUBLIC 
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping auto-import="true">
 
-	<class name="org.itracker.model.IssueAttachment" table="issueattachmentbean">
-		<id name="id" column="id" type="int" unsaved-value="null">
-			<generator class="native"/>
-		</id>
-		<property name="createDate" column="create_date" not-null="true" unique="false"/>
-		<property name="lastModifiedDate" column="last_modified" not-null="true" unique="false"/>		
-		<property name="description" not-null="true" unique="false"/>		
-		<property name="originalFileName" column="orig_file_name" not-null="true" unique="false"/>				
-		<property name="type" column="attachment_type" not-null="true" unique="false"/>	
-                <property name="fileData" column="file_data" not-null="true" length="1000000" unique="false" type="binary"/>
-		<property name="fileName" column="file_name" not-null="true" unique="false"/>		
-		<property name="size" column="file_size" not-null="true" unique="false"/>						
-		<many-to-one name="issue" column="issue_id" class="org.itracker.model.Issue"/>		
-		<many-to-one name="user" column="user_id" class="org.itracker.model.User"/>		
-	</class>
+<hibernate-mapping auto-import="true" package="org.itracker.model">
+    
+    <class name="IssueAttachment" table="issueattachmentbean">
+        
+        <id name="id" unsaved-value="null">
+            <column name="id" not-null="true"/>
+            <generator class="native"/>
+        </id>
+        
+        <natural-id mutable="true">
+            
+            <many-to-one name="issue" class="Issue">
+                <column name="issue_id" not-null="true" unique-key="issue_attachment_ak"/>
+            </many-to-one>
 
+            <property name="originalFileName">
+                <column name="orig_file_name" not-null="true" unique-key="issue_attachment_ak"/>
+            </property>
+            
+        </natural-id>
+        
+        <property name="fileName">
+            <column name="file_name" not-null="true" unique-key="issue_attachment_ak1"/>
+        </property>
+        
+        <many-to-one name="user" class="User">
+            <column name="user_id" not-null="true"/>
+        </many-to-one>
+        
+        <property name="type">
+            <column name="attachment_type" not-null="true"/>
+        </property>
+        
+        <property name="description">
+            <column name="description" not-null="true"/>
+        </property>
+        
+        <property name="size">
+            <column name="file_size" not-null="true"/>
+        </property>
+        
+        <property name="fileData" type="binary">
+            <column name="file_data" not-null="true" length="1000000" />
+        </property>
+        
+        <property name="createDate">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="lastModifiedDate">
+            <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+    </class>
+    
     <!-- Named queries (loaded, validated and cached at application startup). -->
     
     <query name="AttachmentByFileNameQuery"><![CDATA[
