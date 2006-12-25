@@ -6,20 +6,20 @@
  * ITracker forums: http://www.cowsultants.com/phpBB/index.php
  *
  * This program is free software; you can redistribute it and/or modify
- * it only under the terms of the GNU General Public License as published by
+ * it only under the terms of the GNU General License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU General License for more details.
  */
 
 package org.itracker.services.authentication;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.itracker.model.Permission;
 import org.itracker.model.User;
@@ -46,7 +46,7 @@ public interface PluggableAuthenticator {
       * @return a User if the login is successful
       * @throws AuthenticatorException an exception if the login is unsuccessful, or an error occurs
       */
-    public User checkLogin(String login, Object authentication, int authType, int reqSource) throws AuthenticatorException;
+    User checkLogin(String login, Object authentication, int authType, int reqSource) throws AuthenticatorException;
 
     /**
       * This method should return all the permissions a user has in the authentication system.  This
@@ -56,21 +56,25 @@ public interface PluggableAuthenticator {
       * @return an array of PermissionModels
       * @throws AuthenticatorException an error occurs
       */
-    public List<Permission> getUserPermissions(User user, int reqSource) throws AuthenticatorException;
+    List<Permission> getUserPermissions(User user, int reqSource) throws AuthenticatorException;
 
     /**
-      * This method should return an array of users that have certian permissions in the
-      * authentication system.  This list must always include all super users, even if they
-      * do not explicitly have the required permission.
-      * @param permissions an array of PermissionModels that define which permissions in which
-               projects are required.
-      * @param requireAll true is the user must possess any of the permissions, false if only one is required
-      * @param activeOnly true if only users listed as active should be returned
-      * @param reqSource the source of the request (eg web, api)
-      * @return an array of UserModels
-      * @throws AuthenticatorException an error occurs
-      */
-    public List<User> getUsersWithProjectPermission(List<Permission> permissions, boolean requireAll, boolean activeOnly, int reqSource) throws AuthenticatorException;
+     * This method should return an array of users that have certian permissions in the
+     * authentication system.  This list must always include all super users, even if they
+     * do not explicitly have the required permission.
+     *
+     * @param projectId id of the project on which the users return have permissions
+     * @param permissionTypes types of permissions required
+     * @param requireAll true is the user must possess any of the permissions, false if only one is required
+     * @param activeOnly true if only users listed as active should be returned
+     * @param reqSource the source of the request (eg web, api)
+     * @return an array of UserModels
+     * @throws AuthenticatorException an error occurs
+     */
+    List<User> getUsersWithProjectPermission(Integer projectId, 
+            int[] permissionTypes, boolean requireAll, 
+            boolean activeOnly, int reqSource) 
+            throws AuthenticatorException;
 
     /**
       * This method should be implemented to determine if a user is authorized to self register.
@@ -81,7 +85,7 @@ public interface PluggableAuthenticator {
       * @return a boolean whether the user should be allowed to register
       * @throws AuthenticatorException an exception if an error occurs
       */
-    public boolean allowRegistration(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
+    boolean allowRegistration(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
 
     /**
       * This method should be implemented to determine if a new user profile should be allowed
@@ -98,7 +102,7 @@ public interface PluggableAuthenticator {
       * @return a boolean whether new profile creation is allowed
       * @throws AuthenticatorException an exception if an error occurs
       */
-    public boolean allowProfileCreation(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
+    boolean allowProfileCreation(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
 
     /**
       * This method should be implemented to determine if the particular user is allowed to perform
@@ -115,7 +119,7 @@ public interface PluggableAuthenticator {
       * @see PluggableAuthenticator#allowPermissionUpdates
       * @see PluggableAuthenticator#allowPreferenceUpdates
       */
-    public boolean allowProfileUpdates(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
+    boolean allowProfileUpdates(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
 
     /**
       * This method should be implemented to determine if the particular user is allowed to perform
@@ -132,7 +136,7 @@ public interface PluggableAuthenticator {
       * @see PluggableAuthenticator#allowPermissionUpdates
       * @see PluggableAuthenticator#allowPreferenceUpdates
       */
-    public boolean allowPasswordUpdates(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
+    boolean allowPasswordUpdates(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
 
     /**
       * This method should be implemented to determine if the particular user is allowed to perform
@@ -151,7 +155,7 @@ public interface PluggableAuthenticator {
       * @see PluggableAuthenticator#allowPasswordUpdates
       * @see PluggableAuthenticator#allowPreferenceUpdates
       */
-    public boolean allowPermissionUpdates(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
+    boolean allowPermissionUpdates(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
 
     /**
       * This method should be implemented to determine if the particular user is allowed to perform
@@ -168,7 +172,7 @@ public interface PluggableAuthenticator {
       * @see PluggableAuthenticator#allowPasswordUpdates
       * @see PluggableAuthenticator#allowPermissionUpdates
       */
-    public boolean allowPreferenceUpdates(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
+    boolean allowPreferenceUpdates(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
 
     /**
       * This method should be implemented to perform any updates that are necessary in the authentication
@@ -184,7 +188,7 @@ public interface PluggableAuthenticator {
       * @throws AuthenticatorException an error occurs
       * @see PluggableAuthenticator#updateProfile
       */
-    public boolean createProfile(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
+    boolean createProfile(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
 
     /**
       * This method should be implemented to perform any updates that are necessary in the authentication
@@ -199,7 +203,7 @@ public interface PluggableAuthenticator {
       * @return true if changes were made
       * @throws AuthenticatorException an exception if the login is unsuccessful, or an error occurs
       */
-    public boolean updateProfile(User user, int updateType, Object authentication, int authType, int reqSource) throws AuthenticatorException;
+    boolean updateProfile(User user, int updateType, Object authentication, int authType, int reqSource) throws AuthenticatorException;
 
     /**
       * This method should be implemented to setup any needed components.  It is called
@@ -209,5 +213,6 @@ public interface PluggableAuthenticator {
       *               pass a UserService bean as userService, and an ConfigurationService
       *               bean as configurationService
       */
-    public void initialize(HashMap value);
+    void initialize(Map value);
+    
 }
