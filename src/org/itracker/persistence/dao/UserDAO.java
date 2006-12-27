@@ -3,8 +3,6 @@ package org.itracker.persistence.dao;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.itracker.model.Permission;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 
