@@ -86,7 +86,8 @@ public class UserServiceImpl implements UserService {
     @SuppressWarnings("unused")
     private NotificationDAO notificationDAO = null;
     private PermissionDAO permissionDAO = null;
-    private ProjectDAO projectDAO = null;
+    @SuppressWarnings("unused")
+	private ProjectDAO projectDAO = null;
     @SuppressWarnings("unused")
     private ReportDAO reportDAO = null;
     private UserDAO userDAO = null;
@@ -558,7 +559,8 @@ public class UserServiceImpl implements UserService {
         }
         
         try {
-            User user = userDAO.findByPrimaryKey(userId);
+            // TODO: I commented the next line, because it is not used.
+        	// User user = userDAO.findByPrimaryKey(userId);
             for (Iterator<Permission> delIterator = newPermissions.iterator(); delIterator.hasNext(); ) {
                 Permission permission = (Permission) delIterator.next();
                 permissionDAO.delete(permission);
