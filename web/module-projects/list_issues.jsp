@@ -1,13 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="java.util.Collections" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Set" %>
-
 <%@ page import="org.itracker.model.*" %>
 <%@ page import="org.itracker.model.PermissionType" %>
-<%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.services.util.UserUtilities" %>
 <%@ page import="org.itracker.services.util.ProjectUtilities" %>
 <%@ page import="org.itracker.services.util.IssueUtilities" %>
