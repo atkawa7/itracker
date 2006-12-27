@@ -37,13 +37,13 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.Language;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.LanguageForm;
 import org.itracker.web.util.Constants;
-import org.itracker.model.Language;
 
 
 

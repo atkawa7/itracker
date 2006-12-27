@@ -19,6 +19,7 @@
 package org.itracker.model;
 
 import java.util.Date;
+
 import org.itracker.services.util.IssueUtilities;
 
 /**

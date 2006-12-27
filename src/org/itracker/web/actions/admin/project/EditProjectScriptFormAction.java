@@ -19,7 +19,6 @@
 package org.itracker.web.actions.admin.project;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,9 +39,8 @@ import org.apache.struts.action.ActionMessages;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.WorkflowScript;
-import org.itracker.services.ProjectService;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.exceptions.SystemConfigurationException;
+import org.itracker.services.ProjectService;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectScriptForm;
