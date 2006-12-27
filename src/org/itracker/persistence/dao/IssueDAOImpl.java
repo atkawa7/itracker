@@ -1,17 +1,10 @@
 package org.itracker.persistence.dao;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.criterion.Expression;
 import org.itracker.model.Issue;
-import org.itracker.model.Project;
-import org.itracker.services.util.IssueUtilities;
-
 
 /**
  * Default implementation of <code>IssueDAO</code> using Hibernate. 
