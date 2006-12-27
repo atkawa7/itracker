@@ -19,7 +19,6 @@
 package org.itracker.model;
 
 import java.io.Serializable;
-import java.util.Comparator;
 
 /**
   * Class provides basic storage for name values pairs.  The name is usually
