@@ -40,9 +40,9 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
         User user = userDAO.findByPrimaryKey( userId );
 
         List<Permission> assertedPermissions = new ArrayList<Permission>();
-        assertedPermissions.add( new Permission( project, 1, user ) );
-        assertedPermissions.add( new Permission( project, 2, user ) );
-        assertedPermissions.add( new Permission( project, 3, user ) );
+        assertedPermissions.add( new Permission( 1, user, project ) );
+        assertedPermissions.add( new Permission(  2, user,project ) );
+        assertedPermissions.add( new Permission( 3, user, project ) );
 
         currentPermissions = userService.getPermissionsByUserId( userId );
         assertEquals( assertedPermissions.get( 0 ).getProject().getName(),
@@ -83,7 +83,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 
         Project project = projectDAO.findByPrimaryKey( projectId );
 
-        newPermissions.add( new Permission( project, 4, user ) );
+        newPermissions.add( new Permission( 4, user, project ) );
 
         userService.setUserPermissions( userId, newPermissions );
 
@@ -102,7 +102,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 
         Project project = projectDAO.findByPrimaryKey( projectId );
 
-        newPermissions.add( new Permission( project, 4, user ) );
+        newPermissions.add( new Permission( 4, user, project ) );
         userService.setUserPermissions( userId, newPermissions );
 
         assertEquals( newPermissions.get( 0 ).getPermissionType(),
@@ -113,7 +113,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
         userService.setUserPermissions( userId, newPermissions );
 
 
-        newPermissions.add( new Permission( project, 7, user ) );
+        newPermissions.add( new Permission( 7, user, project ) );
         userService.setUserPermissions( userId, newPermissions );
         assertEquals( 7, userService.getPermissionsByUserId( userId ).get(
                 0 ).getPermissionType() );
