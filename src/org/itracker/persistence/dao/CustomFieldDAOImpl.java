@@ -14,7 +14,7 @@ public class CustomFieldDAOImpl extends BaseHibernateDAOImpl<CustomField>
 
     public CustomField findByPrimaryKey(Integer customFieldId) {
         try {
-            return (CustomField)getSession().load(CustomField.class, customFieldId);
+            return (CustomField)getSession().get(CustomField.class, customFieldId);
         } catch (HibernateException e) {
             throw convertHibernateAccessException(e);
         }

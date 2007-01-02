@@ -32,17 +32,17 @@ import org.apache.struts.validator.ValidatorForm;
  *
  */
 public class CustomFieldForm extends ValidatorForm  {
-	  String action;
-      Integer id;
-      Integer fieldType;
-      String required;
-      String dateFormat;
-      String sortOptionsByName;
-      String value;
+      String action = null;
+      Integer id = null;
+      Integer fieldType = null;
+      String required = null;
+      String dateFormat = null;
+      String sortOptionsByName = null;
+      String value = null;
 //    let's try to put String,String here:
-      HashMap<String,String> translations;
+      HashMap<String,String> translations = new HashMap<String,String>();
  
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
+/*	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		action = null;    
 		id = null;
 		fieldType = null;
@@ -53,7 +53,7 @@ public class CustomFieldForm extends ValidatorForm  {
 		translations = null;
      
     }
-
+*/
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = super.validate(mapping, request);
       

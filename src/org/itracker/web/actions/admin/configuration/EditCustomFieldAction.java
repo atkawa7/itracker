@@ -105,13 +105,11 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
                     if(locale != null) {
                         String translation = (String) translations.get(locale);
                         if(translation != null && ! translation.equals("")) {
-                            logger.debug("Adding new translation for locale " + locale + " for " + customField);
+                            logger.debug("Adding new translation for locale " + locale + " for " + String.valueOf(customField.getId()));
                             configurationService.updateLanguageItem(new Language(locale, key, translation));
                         }
                     }
                 }
-                String baseValue = (String) translations.get(ITrackerResources.BASE_LOCALE);
-                configurationService.updateLanguageItem(new Language(ITrackerResources.BASE_LOCALE, key, baseValue));
                 ITrackerResources.clearKeyFromBundles(key, true);
             }
 

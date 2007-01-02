@@ -102,12 +102,20 @@ public class CustomField extends AbstractEntity
      * identity are always initialized/never <tt>null</tt>. </p>
      */
     public CustomField() {
+        if ( getLastModifiedDate() == null )
+            setLastModifiedDate(new Date());
+        if ( getCreateDate() == null )
+            setCreateDate(new Date());
     }
     
     public CustomField(String name, int type) {
         super(new Date());
         setName(name);
         setFieldType(type);
+        if ( getLastModifiedDate() == null )
+            setLastModifiedDate(new Date());
+        if ( getCreateDate() == null )
+            setCreateDate(new Date());
     }
     
 //    public CustomField(Integer id, int fieldType, boolean required) {
