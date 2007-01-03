@@ -180,7 +180,7 @@ public class EditProjectAction extends ItrackerBaseAction {
                 }
                 List<User> users = project.getOwners();
                 
-                List<Permission> userPermissionModels = project.getPermissions();
+                //List<Permission> userPermissionModels = project.getPermissions();
                 for(Iterator iterator = users.iterator(); iterator.hasNext(); ) {
                     user = (User) iterator.next();
                     boolean fndUser = false;
