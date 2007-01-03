@@ -40,8 +40,8 @@
     <global-forwards>
         <forward name="edittask" module="/module-admin" path="/edittaskform.do"/>
         <forward name="editproject" module="/module-admin" path="/editprojectform.do"/>
-        <forward name="editcustomfield" module="/module-admin" path="/editcustomfield.do"/>
-        <forward name="editcustomfieldvalue" module="/module-admin" path="/editcustomfieldvalue.do"/>
+        <forward name="editcustomfield" module="/module-admin" path="/editcustomfieldform.do"/>
+        <forward name="editcustomfieldvalue" module="/module-admin" path="/editcustomfieldvalueform.do"/>
         <forward name="listattachments" module="/module-admin" path="/listattachments.do"/>
         <forward name="listworkflow" module="/module-admin" path="/listworkflowscripts.do"/>
         <forward name="listprojectsadmin" path="/listprojectsadmin.do"/>
@@ -256,11 +256,11 @@
                 name="adminActionForm" scope="request" input="/admin_user/list_users.jsp"></action>
         <action path="/orderconfiguration"
                 type="org.itracker.web.actions.admin.configuration.OrderConfigurationItemAction"
-                name="adminActionForm" scope="request"
+                name="configurationForm" scope="request"
                 input="/admin_configuration/list_configuration.jsp"></action>
         <action path="/ordercustomfieldvalue"
                 type="org.itracker.web.actions.admin.configuration.OrderCustomFieldValueAction"
-                name="adminActionForm" scope="request"
+                name="customFieldForm" scope="request"
                 input="/admin_configuration/edit_customfield.jsp"></action>
         <action path="/removeattachment"
                 type="org.itracker.web.actions.project.RemoveIssueAttachmentAction"

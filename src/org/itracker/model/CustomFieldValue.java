@@ -62,13 +62,21 @@ public class CustomFieldValue extends AbstractEntity
      * identity are always initialized/never <tt>null</tt>. </p>
      */
     public CustomFieldValue() {
+        if ( getCreateDate() == null )
+            setCreateDate(new Date());
+        if ( getLastModifiedDate() == null )
+            setLastModifiedDate(new Date());
     }
 
     public CustomFieldValue(CustomField customField, String value) {
         super(new Date());
         setCustomField(customField);
         setValue(value);
-    }
+        if ( getCreateDate() == null )
+            setCreateDate(new Date());
+        if ( getLastModifiedDate() == null )
+            setLastModifiedDate(new Date());
+   }
     
     public CustomField getCustomField() {
         return(customField);

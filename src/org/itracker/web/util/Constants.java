@@ -34,6 +34,7 @@ public class Constants {
 
     public static final String COMPONENT_KEY = "component";
     public static final String CUSTOMFIELD_KEY = "customfield";
+    public static final String CUSTOMFIELDVALUE_KEY = "customfieldvalue";
     public static final String EDIT_USER_KEY = "edituser";
     public static final String EDIT_USER_PREFS_KEY = "edituserprefs";
     public static final String EDIT_USER_PERMS_KEY = "edituserperms";

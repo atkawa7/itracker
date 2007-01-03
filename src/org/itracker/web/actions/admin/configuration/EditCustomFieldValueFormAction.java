@@ -21,11 +21,13 @@ package org.itracker.web.actions.admin.configuration;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -41,6 +43,7 @@ import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.CustomFieldValueForm;
+import org.itracker.web.util.Constants;
 
 
 public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
@@ -64,8 +67,8 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
 
             // TODO: it looks like to following 3 lines can be removed, we comment them and add a task.
-            // HttpSession session = request.getSession(true);
-            // Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+            HttpSession session = request.getSession(true);
+            Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
             Map<String, List<String>> languages = configurationService.getAvailableLanguages();
             
             CustomFieldValueForm customFieldValueForm = (CustomFieldValueForm) form;
@@ -87,7 +90,7 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
                 customFieldValueForm.setId(id);
                 customFieldValueForm.setValue(customFieldValue.getValue());
 
-                Map<String, String> translations = new HashMap<String, String>();
+                HashMap<String, String> translations = new HashMap<String, String>();
                 List<Language> languageItems = configurationService.getLanguageItemsByKey(CustomFieldUtilities.getCustomFieldOptionLabelKey(customFieldValue.getCustomField().getId(), customFieldValue.getId()));
                 
                 for (int i = 0; i < languageItems.size(); i++) {
@@ -99,6 +102,7 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
             request.setAttribute("languages", languages);
             request.setAttribute("customFieldValueForm", customFieldValueForm);
             request.setAttribute("action",action);
+            session.setAttribute(Constants.CUSTOMFIELDVALUE_KEY, customFieldValue);
             saveToken(request);
             return mapping.getInputForward();
         } catch(SystemConfigurationException sce) {

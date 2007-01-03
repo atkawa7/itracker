@@ -92,6 +92,31 @@ public class OrderCustomFieldValueAction extends ItrackerBaseAction {
                     }
                     break;
                 }
+/*                if(values.get(i) != null && valueId.equals(values.get(i).getId())) {
+                    if("up".equalsIgnoreCase(action) && i > 0) {
+                        CustomFieldValue moveUpRecord = values.get(i);
+                        int moveDwnInt = moveUpRecord.getId();
+                        CustomFieldValue moveDwnRecord = values.get(i-1);
+                        int moveUpInt = moveDwnRecord.getId();
+                        moveDwnRecord.setId(moveDwnInt);
+                        moveUpRecord.setId(moveUpInt);
+                        values.set(i, moveDwnRecord);
+                        values.set(i-1,moveUpRecord);
+                        values = configurationService.updateCustomFieldValues(customField.getId(), values);
+                    } else if("down".equalsIgnoreCase(action) && i < (values.size() - 1)) {
+                        CustomFieldValue moveUpRecord = values.get(i+1);
+                        int moveDwnInt = moveUpRecord.getId();
+                        CustomFieldValue moveDwnRecord = values.get(i);
+                        int moveUpInt = moveDwnRecord.getId();
+                        moveDwnRecord.setId(moveDwnInt);
+                        moveUpRecord.setId(moveUpInt);
+                        values.set(i, moveDwnRecord);
+                        values.set(i-1,moveUpRecord);
+                        values = configurationService.updateCustomFieldValues(customField.getId(), values);
+                    }
+                    break;
+                }
+ */
             }
 
             configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);

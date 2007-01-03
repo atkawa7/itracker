@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -109,7 +110,7 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
                 throw new SystemConfigurationException("Unable to create new custom field value model.");
             }
             
-            Map<String, String> translations = customFieldValueForm.getTranslations();
+            HashMap<String, String> translations = customFieldValueForm.getTranslations();
             String key = CustomFieldUtilities.getCustomFieldOptionLabelKey(customField.getId(), customFieldValue.getId());
             logger.debug("Processing label translations for custom field value " + customFieldValue.getId() + " with key " + key);
             if(translations != null && key != null && ! key.equals("")) {
@@ -118,7 +119,7 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
                     if(locale != null) {
                         String translation = (String) translations.get(locale);
                         if(translation != null && ! translation.equals("")) {
-                            logger.debug("Adding new translation for locale " + locale + " for " + customFieldValue);
+                            logger.debug("Adding new translation for locale " + locale + " for " + String.valueOf(customFieldValue.getId()));
                             configurationService.updateLanguageItem(new Language(locale, key, translation));
                         }
                     }
@@ -142,7 +143,8 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             request.setAttribute("pageTitleKey",pageTitleKey); 
             request.setAttribute("pageTitleArg",pageTitleArg);     
          
-            saveToken(request);
+            session.removeAttribute(Constants.CUSTOMFIELDVALUE_KEY);
+//            saveToken(request);
             return new ActionForward(mapping.findForward("editcustomfield").getPath() + "?id=" + customField.getId() + "&action=update");
         } catch(SystemConfigurationException sce) {
             logger.error("Exception processing form data: " + sce.getMessage(), sce);
