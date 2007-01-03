@@ -248,7 +248,7 @@
               </tr>
 
               <%
-                  List<CustomField> customFields = IssueUtilities.getCustomFields();
+                  List<CustomField> customFields2 = IssueUtilities.getCustomFields();
                   List<ProjectScript> scripts = project.getScripts();
 
                   Collections.sort(scripts, new ProjectScript.CompareByFieldAndPriority());
@@ -264,7 +264,7 @@
                       <it:formatImageAction action="removeprojectscript" paramName="delId" paramValue="<%= scripts.get(i).getId() %>" src="/themes/defaulttheme/images/delete.gif" altKey="itracker.web.image.delete.projectscript.alt" textActionKey="itracker.web.image.delete.texttag"/>
                     </td>
                     <td></td>
-                    <td><%= IssueUtilities.getFieldName(scripts.get(i).getFieldId(), customFields, (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>
+                    <td><%= IssueUtilities.getFieldName(scripts.get(i).getFieldId(), customFields2, (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>
                     <td><%= scripts.get(i).getScript().getName() %></td>
                     <td><%= WorkflowUtilities.getEventName(scripts.get(i).getScript().getEvent(), (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>
                     <td align="left"><%= scripts.get(i).getPriority() %></td>
