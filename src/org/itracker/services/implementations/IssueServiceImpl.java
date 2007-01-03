@@ -326,8 +326,14 @@ public class IssueServiceImpl implements IssueService {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_ISSUE_CREATED);
+			activity.setDescription(ITrackerResources.getString("itracker.activity.system.createdfor") + " " + creator.getFirstName() + " " + creator.getLastName());
 			activity.setUser(creator);
 			activity.setIssue(issue);
+			activity.setCreateDate(new Date());
+			activity.setLastModifiedDate(new Date());
+			List<IssueActivity> activities = new ArrayList<IssueActivity>();
+			activities.add(activity);
+			issue.setActivities(activities);
 
 		} else {
 
@@ -337,7 +343,11 @@ public class IssueServiceImpl implements IssueService {
 			activity.setDescription(ITrackerResources.getString("itracker.activity.system.createdfor") + " " + creator.getFirstName() + " " + creator.getLastName());
 			activity.setUser(createdBy);
 			activity.setIssue(issue);
-
+			activity.setCreateDate(new Date());
+			activity.setLastModifiedDate(new Date());
+			List<IssueActivity> activities = new ArrayList<IssueActivity>();
+			activities.add(activity);
+			issue.setActivities(activities);
 			Notification watchModel = new Notification();
 
 			watchModel.setUser(creator);
@@ -350,12 +360,11 @@ public class IssueServiceImpl implements IssueService {
 
 		}
 
-//                issue.setModel(issue);
 		
-                issue.setProject(project);
+        issue.setProject(project);
                 
 		issue.setCreator(creator);
-
+		 
 		// save
 		issue.setCreateDate(new Timestamp(new Date().getTime()));
                 issue.setLastModifiedDate(issue.getCreateDate());
