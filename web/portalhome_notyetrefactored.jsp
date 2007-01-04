@@ -309,9 +309,9 @@
           <td></td>
           <td><it:formatDescription>${createdIssues.issue.description}</it:formatDescription></td>
           <td></td>
-          <td><%--<it:formatIssueOwner issue="${createdIssues}" format="short"/>--%></td>
+          <td>${createdIssues.issue.owner.firstName} ${createdIssues.issue.owner.lastName}</td>
           <td></td>
-          <td align="right" style="white-space: nowrap">${createdIssues.issue.lastModifiedDate}"/></td>
+          <td align="right" style="white-space: nowrap"><it:formatDate date="${createdIssues.issue.lastModifiedDate}"/></td>
     </tr>
 </c:forEach>
       <tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
@@ -386,11 +386,11 @@
           <td></td>
           <td><%-- ${watchedIssues.statusLocalizedString}--%></td>
           <td></td>
-          <td><%-- ${watchedIssues.serverityLocalizedString}--%></td>
+          <td><%-- ${watchedIssues.issue.severityLocalizedString}--%></td>
           <td></td>
           <td><it:formatDescription>${watchedIssues.issue.description}</it:formatDescription></td>
           <td></td>
-          <td><%--<it:formatIssueOwner issue="${watchedIssues}" format="short"/>--%></td>
+          <td>${watchedIssues.issue.owner.firstName} ${watchedIssues.issue.owner.lastName}</td>
           <td></td>
           <td align="right" style="white-space: nowrap"><it:formatDate date="${watchedIssues.issue.lastModifiedDate}"/></td>
       
