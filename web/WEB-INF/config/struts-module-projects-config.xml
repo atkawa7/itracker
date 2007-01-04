@@ -62,7 +62,7 @@
             <forward name="index" module="/" path="/index.jsp" redirect="true"/>
             <forward name="editissue" module="/module-projects" path="/editissueform.do"
                      redirect="true"/>
-            <forward name="viewissue" module="/module-projects" path="/view_issue.jsp"
+            <forward name="move_view_issue" module="/module-projects" path="/view_issue.do"
                      redirect="true"/>
         </action>
 

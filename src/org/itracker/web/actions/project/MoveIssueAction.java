@@ -109,7 +109,7 @@ public class MoveIssueAction extends ItrackerBaseAction {
                     return new ActionForward(mapping.findForward("editissue").getPath() + "?id=" + issue.getId());
                 } else if("viewissue".equals((String) PropertyUtils.getSimpleProperty(form, "caller"))) {
                     logger.info("go to forward viewissue");
-                    return new ActionForward(mapping.findForward("viewissue").getPath() + "?id=" + issue.getId());
+                    return new ActionForward(mapping.findForward("move_view_issue").getPath() + "?id=" + issue.getId());
                 } else {
                     return mapping.findForward("index");
                 }
