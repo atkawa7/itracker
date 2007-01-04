@@ -136,6 +136,7 @@
               </td>
               <td align="right">
                 <it:link action="editcustomfieldform" targetAction="update" paramName="id" paramValue="<%= customfields.get(i).getId() %>" titleKey="itracker.web.admin.listconfiguration.customfield.update.alt"><it:message key="itracker.web.admin.listconfiguration.customfield.update"/></it:link>
+                <it:link action="removecustomfield" targetAction="delete" paramName="id" paramValue="<%= customfields.get(i).getId() %>" titleKey="itracker.web.admin.listconfiguration.customfield.delete.alt"><it:message key="itracker.web.admin.listconfiguration.customfield.delete"/></it:link>
               </td>
             </tr>
         <% } %>

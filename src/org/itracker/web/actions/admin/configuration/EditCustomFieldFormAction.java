@@ -97,6 +97,7 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
                 if(customField == null) {
                     throw new SystemConfigurationException("Invalid custom field id " + id);
                 }
+                customField.setOptions(customField.getOptions());
                 customFieldForm.setId(id);
                 customFieldForm.setFieldType(new Integer(customField.getFieldType()));
                 customFieldForm.setRequired(Boolean.toString(customField.isRequired()));

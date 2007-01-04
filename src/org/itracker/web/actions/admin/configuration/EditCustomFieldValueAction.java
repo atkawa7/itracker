@@ -125,9 +125,9 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
                 }
                 String baseValue = (String) translations.get(ITrackerResources.BASE_LOCALE);
                 configurationService.updateLanguageItem(new Language(ITrackerResources.BASE_LOCALE, key, baseValue));
-                ITrackerResources.clearKeyFromBundles(key, true);
             }
-
+            if ( key != null )
+                ITrackerResources.clearKeyFromBundles(key, true);
             // Now reset the cached versions in IssueUtilities
             configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
             request.setAttribute("action",action);
@@ -142,8 +142,8 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             request.setAttribute("pageTitleKey",pageTitleKey); 
             request.setAttribute("pageTitleArg",pageTitleArg);     
          
-            session.removeAttribute(Constants.CUSTOMFIELDVALUE_KEY);
-//            saveToken(request);
+//            session.removeAttribute(Constants.CUSTOMFIELDVALUE_KEY);
+            saveToken(request);
             return new ActionForward(mapping.findForward("editcustomfield").getPath() + "?id=" + customField.getId() + "&action=update");
         } catch(SystemConfigurationException sce) {
             logger.error("Exception processing form data: " + sce.getMessage(), sce);

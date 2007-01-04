@@ -230,7 +230,7 @@ public interface ConfigurationService {
       * Removes a single custom field from the database.
       * @param customFieldValueId the id of the custom field to remove
       */
-    void removeCustomField(Integer customFieldId);
+    boolean removeCustomField(Integer customFieldId);
     
     /**
       * This method will return the requested custom field value.
@@ -271,13 +271,13 @@ public interface ConfigurationService {
       * Removes a single custom field value from the database.
       * @param customFieldValueId the id of the custom field value to remove
       */
-    void removeCustomFieldValue(Integer customFieldValueId);
+    boolean removeCustomFieldValue(Integer customFieldValueId);
     
     /**
       * Removes all custom field values from the database for a single custom field.
       * @param customFieldId the id of the custom field to remove the values for
       */
-    void removeCustomFieldValues(Integer customFieldId);
+    boolean removeCustomFieldValues(Integer customFieldId);
     
     /**
       * This method will return the translation for a particular key in a locale.
@@ -306,7 +306,7 @@ public interface ConfigurationService {
       * of locale.
       * @param key the key to remove
       */
-    void removeLanguageKey(String key);
+    boolean removeLanguageKey(String key);
     
     void removeLanguageItem(Language language);
 

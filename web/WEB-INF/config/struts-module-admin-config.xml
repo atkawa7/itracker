@@ -268,15 +268,15 @@
                 input="/admin_attachment/list_attachments.jsp" validate="true"></action>
         <action path="/removeconfiguration"
                 type="org.itracker.web.actions.admin.configuration.RemoveConfigurationItemAction"
-                name="adminActionForm" scope="request"
+                name="configurationForm" scope="request"
                 input="/admin_configuration/list_configuration.jsp" validate="true"></action>
         <action path="/removecustomfield"
                 type="org.itracker.web.actions.admin.configuration.RemoveCustomFieldAction"
-                name="adminActionForm" scope="request"
+                name="customFieldForm" scope="request"
                 input="/admin_configuration/list_configuration.jsp"></action>
         <action path="/removecustomfieldvalue"
                 type="org.itracker.web.actions.admin.configuration.RemoveCustomFieldValueAction"
-                name="adminActionForm" scope="request"
+                name="customFieldValueForm" scope="request"
                 input="/admin_configuration/edit_customfield.jsp"></action>
         <action path="/removereport" type="org.itracker.web.actions.admin.report.RemoveReportAction"
                 name="adminActionForm" scope="request" input="/admin_report/list_reports.jsp"

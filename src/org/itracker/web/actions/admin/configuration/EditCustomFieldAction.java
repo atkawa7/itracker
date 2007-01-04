@@ -21,6 +21,7 @@ package org.itracker.web.actions.admin.configuration;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +37,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
+import org.itracker.model.CustomFieldValue;
 import org.itracker.model.Language;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.SystemConfigurationException;
@@ -81,6 +83,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             } else if("update".equals(action)) {
                 Integer id = (Integer) PropertyUtils.getSimpleProperty(form, "id");
                 customField = configurationService.getCustomField(id);
+                List<CustomFieldValue> customFieldValues = customField.getOptions();
                 if(customField == null) {
                     throw new SystemConfigurationException("Invalid custom field id " + id);
                 }
@@ -89,7 +92,8 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
                 customField.setSortOptionsByName(("true".equals((String) PropertyUtils.getSimpleProperty(form, "sortOptionsByName")) ? true : false));
                 customField.setDateFormat((String) PropertyUtils.getSimpleProperty(form, "dateFormat"));
                 // Set options to null so they don't get updated.
-                customField.setOptions(null);
+//                customField.setOptions(null);
+                customField.setOptions(customFieldValues);
                 customField = configurationService.updateCustomField(customField);
             } else {
                 throw new SystemConfigurationException("Invalid action " + action + " while editing custom field.");
@@ -113,9 +117,9 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
                         }
                     }
                 }
-                ITrackerResources.clearKeyFromBundles(key, true);
             }
-
+            if ( key != null )
+                ITrackerResources.clearKeyFromBundles(key, true);
             // Now reset the cached versions in IssueUtilities
             configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
             String pageTitleKey = "";
@@ -126,8 +130,12 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             }
             request.setAttribute("pageTitleKey",pageTitleKey); 
             request.setAttribute("pageTitleArg",pageTitleArg);      
-            session.removeAttribute(Constants.CUSTOMFIELD_KEY);
-//            saveToken(request);
+//            session.removeAttribute(Constants.CUSTOMFIELD_KEY);
+            saveToken(request);
+            String forwardAction = "listconfiguration";
+            if(customField.getFieldType() == CustomFieldUtilities.TYPE_LIST && "create".equals(action) ) { 
+                return new ActionForward(mapping.findForward("editcustomfield").getPath() + "?id=" + customField.getId() + "&action=update");
+            }
             return mapping.findForward("listconfiguration");
         } catch(SystemConfigurationException sce) {
             logger.error("Exception processing form data: " + sce.getMessage(), sce);

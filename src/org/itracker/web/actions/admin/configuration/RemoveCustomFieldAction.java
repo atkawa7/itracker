@@ -45,54 +45,44 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 
 public class RemoveCustomFieldAction extends ItrackerBaseAction {
-
+    
     public RemoveCustomFieldAction() {
     }
-
+    
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         super.executeAlways(mapping,form,request,response);
         if(! isLoggedIn(request, response)) {
             return mapping.findForward("login");
         }
-
+        
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
-
+        
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
-
+            
             Integer valueId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
             if(valueId == null || valueId.intValue() <= 0) {
                 throw new SystemConfigurationException("Invalid custom field id.");
             }
-
+            
             CustomField customField = configurationService.getCustomField(valueId);
             if(customField == null) {
                 throw new SystemConfigurationException("Invalid custom field id.");
             }
-
-            if(customField.getFieldType() == CustomFieldUtilities.TYPE_LIST) {
-                List<CustomFieldValue> options = customField.getOptions();
-                for(int i = 0; i < options.size(); i++) {
-                    String key = CustomFieldUtilities.getCustomFieldOptionLabelKey(customField.getId(), options.get(i).getId());
-                    configurationService.removeCustomFieldValue(options.get(i).getId());
-                    if(key != null) {
-                        configurationService.removeLanguageKey(key);
-                        ITrackerResources.clearKeyFromBundles(key, false);
-                    }
-                }
-            }
             String key = CustomFieldUtilities.getCustomFieldLabelKey(customField.getId());
-            configurationService.removeCustomField(customField.getId());
-            if(key != null) {
-                configurationService.removeLanguageKey(key);
-                ITrackerResources.clearKeyFromBundles(key, false);
+            boolean status = configurationService.removeCustomField(customField.getId());
+            if ( status ) {
+                if ( key != null )
+                    ITrackerResources.clearKeyFromBundles(key, false);
+            } else {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
             }
-
+            
             configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
-
+            
             return mapping.findForward("listconfiguration");
         } catch(SystemConfigurationException sce) {
             logger.debug(sce.getMessage(), sce);
@@ -109,6 +99,5 @@ public class RemoveCustomFieldAction extends ItrackerBaseAction {
         }
         return mapping.findForward("error");
     }
-
+    
 }
-  
