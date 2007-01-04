@@ -1358,17 +1358,25 @@ public class IssueServiceImpl implements IssueService {
 
 	}
 
-	public boolean addIssueNotification(Notification model) {
-		User user = model.getUser();
+	public boolean addIssueNotification(Notification thisnotification) {
+		User user = thisnotification.getUser();
 
-		Issue issue = model.getIssue();
-
+		Issue issue = thisnotification.getIssue();
+		if (thisnotification.getCreateDate()==null) {
+			thisnotification.setCreateDate(new Date());
+		}
+		if (thisnotification.getLastModifiedDate()==null) {
+			thisnotification.setLastModifiedDate(new Date());
+		}
+		List<Notification> notifications = new ArrayList<Notification>();
+		notifications.add(thisnotification);
+		issue.setNotifications(notifications);
+		//TODO: check these 3 lines - do we need them?:
 		Notification notification = new Notification();
-
 		notification.setIssue(issue);
-
 		notification.setUser(user);
-
+		
+		issueDAO.saveOrUpdate(issue);
 		return true;
 	}
 
