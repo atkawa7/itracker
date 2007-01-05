@@ -96,7 +96,6 @@ User um = RequestHelper.getCurrentUser(session);
 
                         <% if(! ih.hasIssueNotification(issue.getId(), currUserId)) { %>
                              <it:formatImageAction forward="watchissue"
-                                                   module=""
                                                    paramName="id"
                                                    paramValue="<%= issue.getId() %>"
                                                    caller="viewissue"
