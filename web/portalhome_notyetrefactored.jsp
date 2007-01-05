@@ -397,7 +397,14 @@
           <td></td>
           <td><it:formatDescription>${watchedIssues.issue.description}</it:formatDescription></td>
           <td></td>
-          <td>${watchedIssues.issue.owner.firstName} ${watchedIssues.issue.owner.lastName}</td>
+          <td>   <c:choose>
+                  		<c:when test="${watchedIssues.unassigned}">
+                  	unassigned
+                  		</c:when>
+                  		<c:otherwise>
+                 ${watchedIssues.issue.owner.firstName} ${watchedIssues.issue.owner.lastName}
+                  		</c:otherwise>
+                  	</c:choose></td>
           <td></td>
           <td align="right" style="white-space: nowrap"><it:formatDate date="${watchedIssues.issue.lastModifiedDate}"/></td>
       

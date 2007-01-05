@@ -215,7 +215,9 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     issuePTO.setStatusLocalizedString(statusLocalizedString);
                     issuePTO.setSeverityLocalizedString(severityLocalizedString);
                     issuePTO.setUserCanEdit(canEditIssue);
-                    
+                    if (issuePTO.getIssue().getOwner()==null){
+                    	issuePTO.setUnassigned(true);
+                    }
                     watchedIssuePTOs.add(issuePTO);
                 }
                 // POSSIBLE OWNERS CODE...
