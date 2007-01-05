@@ -25,6 +25,10 @@ import org.itracker.services.util.IssueUtilities;
 /**
  * An issue history entry. 
  * 
+ * <p>An IssueHistory can only belong to 1 Issue (composition). </p>
+ * 
+ * <p>PENDING : what's the difference with an IssueActivity ?</p>
+ * 
  * @author ready
  */
 public class IssueHistory extends AbstractEntity {
@@ -35,8 +39,10 @@ public class IssueHistory extends AbstractEntity {
     
     private int status;
     
+    /** The User who generated this history entry. */
     private User creator;
 
+    
     /**
      * Default constructor (required by Hibernate). 
      * 
@@ -129,6 +135,20 @@ public class IssueHistory extends AbstractEntity {
             + ", issue=" + this.issue 
             + ", creator=" + this.creator 
             + ", createDate=" + this.createDate + "]";
+    }
+    
+    public static enum Status {
+        
+        STATUS_REMOVED(-1), 
+        
+        STATUS_AVAILABLE(1);
+        
+        private final int code;
+        
+        private Status(int code) {
+            this.code = code;
+        }
+        
     }
     
 }
