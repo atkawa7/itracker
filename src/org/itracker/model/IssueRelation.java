@@ -31,7 +31,8 @@ public class IssueRelation extends AbstractEntity {
     
     private Issue relatedIssue;
     
-    private int relationType;
+    /** Indicates the kind of relation that exists between the 2 issues. */
+    private int type;
     
     private Integer matchingRelationId;
     
@@ -75,11 +76,11 @@ public class IssueRelation extends AbstractEntity {
     }
     
     public int getRelationType() {
-        return relationType;
+        return type;
     }
 
-    public void setRelationType(int relationType) {
-        this.relationType = relationType;
+    public void setRelationType(int type) {
+        this.type = type;
     }
     
     public Integer getMatchingRelationId() {
@@ -101,7 +102,7 @@ public class IssueRelation extends AbstractEntity {
             
             return this.issue.equals(other.issue)
                 && this.relatedIssue.equals(other.relatedIssue)
-                && this.relationType == other.relationType;
+                && this.type == other.type;
         }
         return false;
     }
@@ -110,14 +111,54 @@ public class IssueRelation extends AbstractEntity {
     public int hashCode() {
         return this.issue.hashCode() 
             + this.relatedIssue.hashCode() 
-            + this.relationType;
+            + this.type;
     }
     
     @Override
     public String toString() {
         return "[issue=" + this.issue 
             + ",relatedIssue=" + this.relatedIssue 
-            + ",type=" + this.relationType + "]";
+            + ",type=" + this.type + "]";
+    }
+    
+    public static enum Type {
+        
+        /** Defines a related issue.  Sample text: related to */
+        RELATED_P(1), 
+        
+        /** Defines a related issue.  Sample text: related to */
+        RELATED_C(2),
+        
+        /** Defines a duplicate issue.  Sample text: duplicates */
+        DUPLICATE_P(3),
+                
+        /** Defines a duplicate issue.  Sample text: duplicate of */
+        DUPLICATE_C(4), 
+        
+        /** Defines a cloned issue.  Sample text: cloned to */
+        CLONED_P(5), 
+        
+        /** Defines a cloned issue.  Sample text: cloned from */
+        CLONED_C(6), 
+        
+        /** Defines a split issue.  Sample text: split to */
+        SPLIT_P(7), 
+        
+        /** Defines a split issue.  Sample text: split from */
+        SPLIT_C(8), 
+        
+        /** Defines a dependent issue.  Sample text: dependents */
+        DEPENDENT_P(9), 
+        
+        /** Defines a dependent issue.  Sample text: depends on */
+        DEPENDENT_C(10);
+
+        private final int code;
+        
+        private Type(int code) {
+            this.code = code;
+        }
+        
     }
     
 }
