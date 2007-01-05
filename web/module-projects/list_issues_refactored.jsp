@@ -46,7 +46,7 @@ final Map<Integer, Set<PermissionType>> permissions =
       <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
         <tr>
           <td class="editColumnTitle" colspan="14"><it:message key="itracker.web.attr.issues"/>:</td>
-          <td align="right">
+          <td align="right" style="white-space: nowrap">
             <% if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT)) { %>
                   <it:formatImageAction forward="createissue"
                                         paramName="projectId"
@@ -85,7 +85,7 @@ final Map<Integer, Set<PermissionType>> permissions =
             		</c:otherwise>
             	</c:choose>
             
-            <td>
+            <td style="white-space: nowrap">
               <it:formatImageAction forward="viewissue" paramName="id" paramValue="${issuePTO.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${issuePTO.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
             	<c:if test="${issuePTO.userCanEdit}">
             		    <it:formatImageAction action="editissueform" paramName="id" paramValue="${issuePTO.issue.id}" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="${issuePTO.issue.id}" textActionKey="itracker.web.image.edit.texttag"/>
