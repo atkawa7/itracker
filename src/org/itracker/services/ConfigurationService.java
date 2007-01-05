@@ -32,7 +32,9 @@ import org.itracker.model.ProjectScript;
 import org.itracker.model.SystemConfiguration;
 import org.itracker.model.WorkflowScript;
 
-
+/**
+ * Manages the applications configuration properties.
+ */
 public interface ConfigurationService {
     
     Properties getProperties();
