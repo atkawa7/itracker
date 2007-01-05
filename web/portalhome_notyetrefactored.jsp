@@ -165,17 +165,16 @@
                   <html:hidden property="issueId" value="${unassignedIssues.issue.id}"/>
                   <html:hidden property="projectId" value="${unassignedIssues.issue.project.id}"/>
                   <%! String styleClass1 = "(i % 2 == 1 ? \"listRowShaded\" : \"listRowUnshaded\")"; %>
-                  <td>
+                  <td>userHasPermission_PERMISSION_ASSIGN_OTHERS_Form:
                   <html:select property="userId" styleClass="<%=styleClass1 %>" onchange="this.form.submit();">
                   	<c:choose>
-                  		<c:when test="unassignedIssues.owner.id == -1">
-                  		<option value="-1"><c:out value="${itracker_web_generic_unassigned}"/></option>
+                  		<c:when test="unassignedIssues.issue.owner.id == -1">
+                  		<option value="-1"><c:out value="${itracker_web_generic_unassigned}"/>generic</option>
                   		</c:when>
                   		<c:otherwise>
-                  		<option value="${unassignedIssues.issue.owner.id}">${unassignedIssues.issue.owner.firstName} ${unassignedIssues.issue.owner.lastName}</option> 
+                  		<option value="${unassignedIssues.issue.owner.id}">unassigned_here we are: <c:out value="${unassignedIssues.issue.owner.firstName}"/> <c:out value="${unassignedIssues.issue.owner.lastName}"/></option> 
                   		</c:otherwise>
                   	</c:choose>
- 
                   	<c:choose>
                   		<c:when test="${creatorPresent}">
                   			<c:forEach items="${possibleIssueOwners}" var="possibleIssueOwners" varStatus="k">
@@ -186,8 +185,8 @@
                     			      	</c:when>
                      			     	<c:otherwise> 
                      			     	</c:otherwise>
-                     			     </c:choose>>  
-                          			${possibleIssueOwners.firstInitial} ${possibleIssueOwners.lastName}</option>
+                     			     </c:choose>>creatorPresent: ${possibleIssueOwners.firstInitial} ${possibleIssueOwners.lastName}
+                          			                          			</option>
                  			</c:forEach>
                   		</c:when>
                   		<c:otherwise>
@@ -199,7 +198,7 @@
                                 		</c:when>
                                 	<c:otherwise>
                                 	</c:otherwise>
-                                	</c:choose>>${tempOwners.firstInitial} ${tempOwners.lastName}</option>
+                                	</c:choose>>tempOwners: ${tempOwners.firstInitial} ${tempOwners.lastName}</option>
                  			</c:forEach>
                   		</c:otherwise>
                   	</c:choose>
@@ -215,7 +214,7 @@
                   <html:hidden property="projectId" value="${unassignedIssues.issue.project.id}"/>
                  
                   <%! String styleClass2="(i % 2 == 1 ? \"listRowShaded\" : \"listRowUnshaded\")"; %>
-                  <td>
+                  <td>userHasPermission_PERMISSION_ASSIGN_SELF_Form:
                   <html:select property="userId" styleClass="<%=styleClass2 %>" onchange="this.form.submit();">
                     <c:choose>
                   		<c:when test="${unassignedIssues.unassigned}">
@@ -413,7 +412,7 @@
 
 	<c:if test="${userPrefs.hiddenIndexSections>0}">
       <tr align="left" class="listRowUnshaded">
-        <td colspan="15" align="left"><html:link page="/index.jsp?sections=all">
+        <td colspan="15" align="left"><html:link page="/portalhome.do?sections=all">
         <it:message key="itracker.web.index.viewhidden"/></html:link></td>
       </tr>
       <tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>

@@ -18,6 +18,7 @@ import org.apache.struts.action.ActionMapping;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Issue;
 import org.itracker.model.PermissionType;
+import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
 import org.itracker.services.IssueService;
@@ -230,16 +231,17 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     HashMap<Integer,List<User>> possibleOwnersMap = new HashMap<Integer,List<User>>();
                     HashMap<Integer,List<User>> usersWithEditOwnMap = new HashMap<Integer,List<User>>();
                     List<User> tempOwners = new ArrayList<User>();
-                    //   List<User> possibleIssueOwners = possibleOwnersMap.get(unassignedIssues.get(i).getProjectId());
-                    List<User> possibleIssueOwners = new ArrayList<User>();
+                    // List<User> possibleIssueOwners = possibleOwnersMap.get(unassignedIssues.get(i).getProject().getId());
+                    //List<User> possibleIssueOwners = new ArrayList<User>();
                     
                     final Issue issue = unassignedIssuePTOs.get(i).getIssue();
-                    
-                    if(possibleIssueOwners == null) {
-                        possibleIssueOwners = userService.getPossibleOwners(null, issue.getProject().getId(), null);
+                    final Project project = issueService.getIssueProject(issue.getId());
+                    //if(possibleIssueOwners == null) {
+                    List<User> possibleIssueOwners = userService.getPossibleOwners(issue, project.getId(), currUser.getId());
+                        possibleIssueOwners = userService.getPossibleOwners(issue, issue.getProject().getId(), currUser.getId());
                         Collections.sort(possibleIssueOwners, User.NAME_COMPARATOR);
                         possibleOwnersMap.put(issue.getProject().getId(), possibleIssueOwners);
-                    }
+                    //}
                     
                     List<User> editOwnUsers = new ArrayList<User>();
                     User userWithEditOwnMap = (User)usersWithEditOwnMap.get(issue.getProject().getId());
