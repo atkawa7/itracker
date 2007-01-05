@@ -34,7 +34,7 @@ final Map<Integer, Set<PermissionType>> permissions =
   <body>
     <form name="lookupForm" action="<html:rewrite module="/module-projects" forward="viewissue"/>">
  
-    <table border="0" cellspacing="1"  cellspacing="0"  width="100%">
+    <table border="0" cellspacing="1" cellspacing="0" width="100%">
       <tr>
         <td class="headerText">
          <%-- TODO: temp. removed logo code, fix again <% if(alternateLogo != null && ! alternateLogo.equals("")) { %>
@@ -49,7 +49,7 @@ final Map<Integer, Set<PermissionType>> permissions =
                                 currUser.getFirstName() + " " + currUser.getLastName()) %> --%>
         </td>
       <tr>
-      <tr><td colspan="2" bgcolor="#CCCCCC"><html:img page="/themes/defaulttheme/images/blank.gif" height="1"/></td></tr>
+      <tr><td colspan="2" bgcolor="#CCCCCC"><hr/></td></tr>
     </table>
     <table border="0" cellspacing="0" cellspacing="0" width="100%">
       <tr>
