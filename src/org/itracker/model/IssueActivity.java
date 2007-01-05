@@ -23,6 +23,8 @@ import java.util.Date;
 /**
  * An issue activity. 
  * 
+ * <p>An IssueActivity can only belong to 1 Issue (composition). </p>
+ * 
  * <p>The natural key of an IssueActivity is issue + user + type + createDate. 
  * </p>
  * 
@@ -33,7 +35,7 @@ public class IssueActivity extends AbstractEntity {
     /** Issue to which this activity is related. */
     private Issue issue;
     
-    /** User who generated this activity. */
+    /** The User who generated this activity. */
     private User user;
     
     /** Type of activity. */
@@ -150,6 +152,44 @@ public class IssueActivity extends AbstractEntity {
                 + ",user=" + this.user 
                 + ",type=" + this.type 
                 + ",createDate=" + this.createDate + "]";
+    }
+    
+    public static enum Type {
+        
+        ISSUE_CREATED(1),
+        
+        STATUS_CHANGE(2),
+        
+        OWNER_CHANGE(3), 
+        
+        SEVERITY_CHANGE(4),
+        
+        COMPONENTS_MODIFIED(5),
+        
+        VERSIONS_MODIFIED(6),
+        
+        REMOVE_HISTORY(7),
+        
+        ISSUE_MOVE(8),
+        
+        SYSTEM_UPDATE(9),
+        
+        TARGETVERSION_CHANGE(10),
+        
+        DESCRIPTION_CHANGE(11),
+        
+        RESOLUTION_CHANGE(12),
+        
+        RELATION_ADDED(13),
+        
+        RELATION_REMOVED(14);
+        
+        private final int code;
+        
+        private Type(int code) {
+            this.code = code;
+        }
+        
     }
     
 }
