@@ -18,7 +18,7 @@
 
 package org.itracker.web.forms;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,9 +40,9 @@ public class ConfigurationForm extends ValidatorForm  {
 	 String key;
 
 //	  let's try to put String,String here:
-     Map<String,String> translations;
+     HashMap<String,String> translations = new HashMap<String,String>();
      
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
+/*	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		action = null;    
 		id = null;
 		value = null;
@@ -50,7 +50,7 @@ public class ConfigurationForm extends ValidatorForm  {
 		key = null;
 		translations = null;
     }
-
+*/
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = super.validate(mapping, request);
       
@@ -90,12 +90,12 @@ public class ConfigurationForm extends ValidatorForm  {
 	}
 
 //  let's try to put String,String here:
-	public Map<String,String> getTranslations() {
+	public HashMap<String,String> getTranslations() {
 		return translations;
 	}
 
 //  let's try to put String,String here:
-	public void setTranslations(Map<String,String> translations) {
+	public void setTranslations(HashMap<String,String> translations) {
 		this.translations = translations;
 	}
 

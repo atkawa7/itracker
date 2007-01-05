@@ -86,7 +86,7 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
                     configurationForm.setValue(configItem.getValue());
                 }
 
-                Map<String,String> translations = new HashMap<String,String>();
+                HashMap<String,String> translations = new HashMap<String,String>();
                 List<Language> languageItems = configurationService.getLanguageItemsByKey(
                         SystemConfigurationUtilities.getLanguageKey(configItem));
                 

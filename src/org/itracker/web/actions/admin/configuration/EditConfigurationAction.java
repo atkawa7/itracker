@@ -136,8 +136,8 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                 }
             } else if("update".equals(action)) {
                 Integer id = (Integer) PropertyUtils.getSimpleProperty(form, "id");
-                formValue = String.valueOf(id);
                 configItem = configurationService.getConfigurationItem(id);
+                formValue = configItem.getValue();
                 if(configItem == null) {
                     throw new SystemConfigurationException("Invalid configuration item id " + id);
                 }

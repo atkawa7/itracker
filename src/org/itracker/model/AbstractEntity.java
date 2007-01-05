@@ -75,7 +75,7 @@ public abstract class AbstractEntity implements Entity {
     }
 
     public Date getCreateDate() {
-        return createDate;
+        return (createDate == null ? new Date() : createDate );
     }
     
     /**
@@ -93,7 +93,7 @@ public abstract class AbstractEntity implements Entity {
     }
 
     public Date getLastModifiedDate() {
-        return lastModifiedDate;
+        return (lastModifiedDate == null ? new Date() : createDate );
     }
     
     /**
@@ -104,6 +104,7 @@ public abstract class AbstractEntity implements Entity {
      * 
      * @param dateTime last modification time stamp
      */
+    
     public void setLastModifiedDate(Date dateTime) {
         this.lastModifiedDate = dateTime;       
     }

@@ -58,6 +58,7 @@
             String languageKey = "translations(" + language + ")";
             java.util.List<String> locales = (java.util.List<String>) languages.get(language);
     %>
+            <c:set var="languageKey" value="<%=languageKey%>"/>
             <tr class="listRowUnshaded">
               <td></td>
               <td colspan="2">
@@ -71,6 +72,7 @@
             for(int i = 0; i < locales.size(); i++) {
                 String localeKey = "translations(" + locales.get(i) + ")";
     %>
+                <c:set var="localeKey" value="<%=localeKey%>"/>
                 <tr class="listRowUnshaded">
                   <td></td>
                   <td></td>
@@ -87,7 +89,7 @@
     <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
   	<%-- <nitrox:var name="isUpdate" type="java.lang.Boolean"/> --%>
   	<c:choose>
-  		<c:when test="${isUpdate}">
+                <c:when test="${action == 'update'}">
   		  <tr><td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.update.alt" titleKey="itracker.web.button.update.alt"><it:message key="itracker.web.button.update"/></html:submit></td></tr>
   		</c:when>
   		<c:otherwise>
