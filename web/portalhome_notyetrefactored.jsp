@@ -26,7 +26,6 @@
 </logic:messagesPresent>
 
 <font color="red">This portalhome might still contain bugs, but it's progressing.. 
-	<br/>
  </font><br/><br/>
 	 <!-- assigned issues -->
          
@@ -309,7 +308,16 @@
           <td></td>
           <td><it:formatDescription>${createdIssues.issue.description}</it:formatDescription></td>
           <td></td>
-          <td>${createdIssues.issue.owner.firstName} ${createdIssues.issue.owner.lastName}</td>
+          <td style="white-space: nowrap">
+               <c:choose>
+                  		<c:when test="${createdIssues.unassigned}">
+                  	unassigned
+                  		</c:when>
+                  		<c:otherwise>
+                 ${createdIssues.issue.owner.firstName} ${createdIssues.issue.owner.lastName}
+                  		</c:otherwise>
+                  	</c:choose>
+          </td>
           <td></td>
           <td align="right" style="white-space: nowrap"><it:formatDate date="${createdIssues.issue.lastModifiedDate}"/></td>
     </tr>
@@ -332,7 +340,7 @@
 	<c:if test="${! UserUtilities_PREF_HIDE_WATCHED}"> 
 
       <tr>
-        <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.watched"/>: If you don't see anything following, there might be no watched issues (notificatios):</td>
+        <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.watched"/>: </td>
       </tr>
       <tr align="left" class="listHeading">
         <td></td>
@@ -384,9 +392,9 @@
           <td></td>
           <td style="white-space: nowrap">${watchedIssues.issue.project.name}</td>
           <td></td>
-          <td><%-- ${watchedIssues.statusLocalizedString}--%></td>
+          <td>${watchedIssues.statusLocalizedString}</td>
           <td></td>
-          <td><%-- ${watchedIssues.issue.severityLocalizedString}--%></td>
+          <td>${watchedIssues.severityLocalizedString}</td>
           <td></td>
           <td><it:formatDescription>${watchedIssues.issue.description}</it:formatDescription></td>
           <td></td>
