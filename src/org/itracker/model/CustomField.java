@@ -39,15 +39,23 @@ import org.itracker.services.util.CustomFieldUtilities;
  * of the Issue class. </p>
  * 
  * <p>A CustomField must be configured to be used in a Project in order to 
- * extend the attributes/properties of all Issues created for that project. </p>
+ * extend the attributes/properties of all Issues created for that project. 
+ * A CustomField may be used in more than 1 project. (Project - CustomField 
+ * is a M-N relathionship). </p>
  * 
  * <p>A CustomField has a type, which indicates the data type of its value. <br>
  * The special type <code>LIST</code>, allows to associate a list of string options 
- * to a CustomField, which are the enumeration of possible values for that field. 
- * </p>
+ * to a CustomField, which are the enumeration of possible values for that field. <br>
+ * Each option value is represented by a CustomFieldValue instance. 
+ * There's a 1-N relationship between CustomField - CustomFieldValue. 
+ * A CustomFieldValue can only belong to 1 CustomField (composition). </p>
+ * 
+ * <p>A value of a CustomField for a given Issue is represented by 
+ * an IssueField instance. (CustomField - IssueField is a 1-N relationship). </p>
  * 
  * @author ready
  * @see CustomFieldValue 
+ * @see IssueField
  */
 public class CustomField extends AbstractEntity 
         implements Comparable<CustomField> {
@@ -84,7 +92,16 @@ public class CustomField extends AbstractEntity
      */
     private boolean required;
     
-    /** List of options for a field of type <code>LIST</code>. */
+    /** 
+     * List of options for a field of type <code>LIST</code>. 
+     * 
+     * <p>This is the enumeration of possible values for the field. </p>
+     * 
+     * Note: this field used to be named <code>values</code> is iTracker 2.
+     * 
+     * <p>PENDING: There's no way to use this as a list of proposed values, 
+     * allowing the user to enter a value that's not in this list. </p>
+     */
     private List<CustomFieldValue> options = new ArrayList<CustomFieldValue>();
     
     /** 
@@ -93,6 +110,10 @@ public class CustomField extends AbstractEntity
      */
     private boolean sortOptionsByName;
     
+    /* This class used to have a <code>fields</code> attribute, which was 
+     * a Collection<IssueField>. This has been removed because the association 
+     * CustomField - IssueField doesn't need to be navigatable in this direction. 
+     */
     
     /**
      * Default constructor (required by Hibernate). 
@@ -102,6 +123,11 @@ public class CustomField extends AbstractEntity
      * identity are always initialized/never <tt>null</tt>. </p>
      */
     public CustomField() {
+        /* All fields should be initialized from the database by Hibernate!
+         * But the problem is this constructor is used in our source code 
+         * => remove this unnecessary initialization as soon as we can 
+         * make this constructor private! 
+         */
         if ( getCreateDate() == null )
             setCreateDate(new Date());
         if ( getLastModifiedDate() == null )
@@ -112,10 +138,6 @@ public class CustomField extends AbstractEntity
         super(new Date());
         setName(name);
         setFieldType(type);
-        if ( getCreateDate() == null )
-            setCreateDate(new Date());
-        if ( getLastModifiedDate() == null )
-            setLastModifiedDate(new Date());
     }
     
 //    public CustomField(Integer id, int fieldType, boolean required) {
