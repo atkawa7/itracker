@@ -22,9 +22,9 @@ import java.util.Comparator;
 import java.util.Date;
 
 /**
- * This is a POJO Business Domain Object modelling a user notification. 
+ * A notification to a user about an Issue. 
  * 
- * <p>Hibernate Bean. </p>
+ * <p>An Notification can only belong to 1 Issue (composition). </p>
  * 
  * @author ready
  */
@@ -145,6 +145,58 @@ public class Notification extends AbstractEntity
         
         public int compare(Notification a, Notification b) {
             return a.role - b.role;
+        }
+        
+    }
+    
+    public static enum Role {
+        
+        ANY(-1), 
+        
+        CREATOR(1), 
+        
+        OWNER(2), 
+        
+        CONTRIBUTER(3), 
+        
+        QA(4), 
+        
+        PM(5), 
+        
+        PO(6), 
+        
+        CO(7), 
+        
+        VO(8), 
+        
+        IP(9);
+        
+        private final int code;
+        
+        private Role(int code) {
+            this.code = code;
+        }
+        
+    }
+    
+    public static enum Type {
+        
+        CREATED(1), 
+        
+        UPDATED(2), 
+        
+        ASSIGNED(3), 
+        
+        CLOSED(4), 
+        
+        SELF_REGISTER(5), 
+        
+        ISSUE_REMINDER(6);
+        
+        private final int code;
+        
+        private Type(int code) {
+            this.code = code;
         }
         
     }
