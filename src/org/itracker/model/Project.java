@@ -39,13 +39,55 @@ public class Project extends AbstractEntity implements Comparable<Project> {
     
     private int options;
     
+    /** 
+     * The list of Components that belong to this project. 
+     * 
+     * <p>Project - Component is a 1-N relationship. </p>
+     */
     private List<Component> components = new ArrayList<Component>();
+    
+    /**
+     * The list of Versions of this Project. 
+     * 
+     * <p>Project - Version is a 1-N relationship. </p>
+     */
     private List<Version> versions = new ArrayList<Version>();
+    
+    /** 
+     * The Permissions of all Users on this Project. 
+     * 
+     * <p>Project - Permission is a 1-N relationship. </p>
+     * 
+     * PENDING: Does this relationship need to be navigatable ?
+     */
     private List<Permission> permissions = new ArrayList<Permission>();
+    
+    /**
+     * The Users who are responsible for this Project. 
+     * 
+     * Project - User (owners) is a M-N relationship. 
+     */
     private List<User> owners = new ArrayList<User>();
+    
+    /** 
+     * The custom fields associated to this Project. 
+     * 
+     * <p>Project - CustomField is a M-N relationship. </p>
+     * 
+     * <p>All Issues of this Project will have these custom fields. </p>
+     */
     private List<CustomField> customFields = new ArrayList<CustomField>();
+    
+    /**
+     * Project - ProjectScript is a 1-N relationship. 
+     */
     private List<ProjectScript> scripts = new ArrayList<ProjectScript>();
 
+    /* This class used to have a <code>issues</code> attribute, which was 
+     * a Collection<Issue>. This has been removed because the association 
+     * Project - Issue doesn't need to be navigatable in this direction. 
+     */
+    
     /**
      * Default constructor (required by Hibernate). 
      * 
@@ -182,6 +224,24 @@ public class Project extends AbstractEntity implements Comparable<Project> {
      */
     public int compareTo(Project other) {
         return this.name.compareTo(other.name);
+    }
+    
+    public static enum Status {
+        
+        DELETED(-1), 
+        
+        ACTIVE(1), 
+        
+        VIEWABLE(2), 
+        
+        LOCKED(3);
+        
+        private final int code;
+        
+        private Status(int code) {
+            this.code = code;
+        }
+        
     }
     
 }
