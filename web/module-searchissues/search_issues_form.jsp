@@ -268,7 +268,7 @@ User um = RequestHelper.getCurrentUser(session);
 
           <% for(int i = 0; i < issues.size(); i++) { %>
               <tr align="right" class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ) %>">
-                <td>
+                <td style="white-space: nowrap">
 
                   <it:formatImageAction action="viewissue"
                                         module="/module-searchissues"
