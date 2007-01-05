@@ -139,7 +139,7 @@
         		</c:otherwise>
         </c:choose>
 
-          <td>
+          <td style="white-space: nowrap">
             	<it:formatImageAction forward="viewissue" paramName="id" paramValue="${unassignedIssues.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${unassignedIssues.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
               	<c:if test="${unassignedIssues.userCanEdit}">
                  <it:formatImageAction action="/module-projects/editissueform" paramName="id" paramValue="${unassignedIssues.issue.id}" caller="index" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="${unassignedIssues.issue.id}" textActionKey="itracker.web.image.edit.texttag"/>
@@ -291,7 +291,7 @@
         	
          
         	  <tr align="right" class="listRowUnshaded">	
-          <td>
+          <td style="white-space: nowrap">
             <it:formatImageAction forward="viewissue" paramName="id" paramValue="${createdIssues.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${createdIssues.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
           	<c:if test="${createdIssues.userCanEdit}">
           	  <it:formatImageAction action="/module-projects/editissueform" paramName="id" paramValue="${createdIssues.issue.id}" caller="index" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="${createdIssues.issue.id}" textActionKey="itracker.web.image.edit.texttag"/>
@@ -378,7 +378,7 @@
         	    <tr align="right" class="listRowUnshaded">	
         		</c:otherwise>
         	</c:choose>
-          <td>
+          <td style="white-space: nowrap">
             <it:formatImageAction forward="viewissue" paramName="id" paramValue="${watchedIssues.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${watchedIssues.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
     
           <%-- %>	<c:if test="${watchedIssues.canEditIssue}">
@@ -392,7 +392,7 @@
           <td></td>
           <td style="white-space: nowrap">${watchedIssues.issue.project.name}</td>
           <td></td>
-          <td>${watchedIssues.statusLocalizedString}</td>
+          <td style="white-space: nowrap">${watchedIssues.statusLocalizedString}</td>
           <td></td>
           <td>${watchedIssues.severityLocalizedString}</td>
           <td></td>
