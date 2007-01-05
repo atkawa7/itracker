@@ -26,7 +26,8 @@ import java.util.Date;
  * 
  * <p>A Component is a project subdivision, like a sub-project 
  * or functional area, ... <br>
- * It is identified by a unique name within the project. <br>
+ * It is identified by a unique name within the project to which it belongs
+ * (composition). <br>
  * e.g.: core, web-ui, swing-ui, help, ...</p>
  * 
  * <p>A component cannot have sub-components, unlike categories 
@@ -59,6 +60,10 @@ public class Component extends AbstractEntity
     /** Component status. */
     private int status;
     
+    /* This class used to have a <code>issues</code> attribute, which was 
+     * a Collection<Issue>. This has been removed because the association 
+     * Component - Issue doesn't need to be navigatable in this direction. 
+     */
     
     /**
      * Default constructor (required by Hibernate). 

@@ -21,19 +21,28 @@ package org.itracker.model;
 import java.util.Comparator;
 
 /**
- * This is a POJO Business Domain Object modelling a Beanshell script applied 
- * to a specific Project field. 
- * 
- * <p>Hibernate Bean. </p>
+ * A Beanshell script configured to be executed for a specific Project field. 
  * 
  * @author ready
  */
 public class ProjectScript extends AbstractEntity {
 
+    /** 
+     * The Project for which the script must be executed. 
+     */
     private Project project;
     
+    /** 
+     * The ID of the built-in or custom field for which the script must 
+     * be executed. 
+     * 
+     * <p>If the ID represents a CustomField, then the CustomField should 
+     * be configured for the Project or the script will never be executed. 
+     * </p>
+     */
     private Integer fieldId;
     
+    /** The Beanshell script to execute. */
     private WorkflowScript script;
     
     private int priority;

@@ -25,6 +25,8 @@ import java.util.List;
 /**
  * A project issue. 
  * 
+ * <p>This class contains the core of the information we're managing. </p>
+ * 
  * @author ready
  */
 public class Issue extends AbstractEntity implements Comparable<Issue> {
@@ -52,31 +54,92 @@ public class Issue extends AbstractEntity implements Comparable<Issue> {
     
     private Project project;
     
+    /** 
+     * The User who created this Issue. 
+     * 
+     * <p>Issue - User (creator) is a N-1 relationship. </p>
+     */
     private User creator;
     
+    /** 
+     * The User who owns this Issue. 
+     * 
+     * <p>This is the user who is responsible for the resolution of 
+     * this Issue. </p>
+     * 
+     * <p>Issue - User (owner) is a N-1 relationship. </p>
+     */
     private User owner;
     
-    /** Project version for which this issue must be fixed. */
+    /** 
+     * Project version for which this issue must be fixed. 
+     * 
+     * <p>Issue - Version (targetVersion) is a N-1 relationship. </p>
+     */
     private Version targetVersion;
     
-    /** List of project components affected by this Issue. */
+    /** 
+     * List of project components affected by this Issue. 
+     * 
+     * <p>An Issue can be associated with 1 or more Components (Issue - Component 
+     * is a M-N relationship). </p>
+     */
     private List<Component> components = new ArrayList<Component>();
     
-    /** List of project versions affected by this Issue. */
+    /** 
+     * List of project versions affected by this Issue. 
+     * 
+     * <p>Issue - Version (version) is a M-N relationship. </p>
+     */
     private List<Version> versions = new ArrayList<Version>();
     
-    /** List of custom fields and values. */
+    /** 
+     * List of custom fields and values. 
+     * 
+     * <p>Issue - IssueField is a 1-N relationship. </p>
+     */
     private List<IssueField> fields = new ArrayList<IssueField>();
     
+    /** 
+     * List of files attached to this Issue. 
+     * 
+     * <p>Issue - IssueAttachment is a 1-N relationship. </p>
+     */
     private List<IssueAttachment> attachments = new ArrayList<IssueAttachment>();
     
+    /**
+     * List of relations with other Issues. 
+     * 
+     * <p>Issue - IssueRelation is a 1-N relationship. </p>
+     */
     private List<IssueRelation> relations = new ArrayList<IssueRelation>();
     
     /* PENDING: do we really need to navigate these relationships from an Issue ? 
      * Moving these as DAO methods would make an Issue more light-weight. 
      */
+    
+    /** 
+     * Issue - Notification is 1-N relationship. 
+     * 
+     * <p>Does this association need to be navigatable in this direction 
+     * as it was in iTracker 2 ? </p>
+     */
     private List<Notification> notifications = new ArrayList<Notification>();
+    
+    /** 
+     * Issue - IssueActivity is 1-N relationship. 
+     * 
+     * <p>Does this association need to be navigatable in this direction 
+     * as it was in iTracker 2 ? </p>
+     */
     private List<IssueActivity> activities = new ArrayList<IssueActivity>();
+    
+    /** 
+     * Issue - IssueHistory is 1-N relationship. 
+     * 
+     * <p>Does this association need to be navigatable in this direction 
+     * as it was in iTracker 2 ? </p>
+     */
     private List<IssueHistory> history = new ArrayList<IssueHistory>();
     
     

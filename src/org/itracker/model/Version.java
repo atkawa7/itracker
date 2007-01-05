@@ -20,7 +20,9 @@ import java.util.Comparator;
 import java.util.Date;
 
 /**
- * This is a POJO Business Domain Object. Hibernate Bean.
+ * A Project version. 
+ * 
+ * <p>A Version can only belong to 1 Project (composition). </p>
  * 
  * @author ready
  */
@@ -48,7 +50,10 @@ public class Version extends AbstractEntity implements Comparable<Version> {
     
     private int status;
 
-//    private  Collection issues = new ArrayList();
+    /* This class used to have a <code>issues</code> attribute, which was 
+     * a Collection<Issue>. This has been removed because the association 
+     * Version - Issue doesn't need to be navigatable in this direction. 
+     */
 
     private static final Comparator<Version> VERSION_COMPARATOR = 
             new VersionComparator();
@@ -78,14 +83,6 @@ public class Version extends AbstractEntity implements Comparable<Version> {
         this.status = 1; // = ProjectUtilities.STATUS_ACTIVE
     }
     
-/*    public Collection getIssues() {
-        return issues;
-    }
-
-    public void setIssues(Collection getIssues) {
-        this.issues = getIssues;
-    }
-*/
     public int getMajor() {
         return major;
     }

@@ -24,6 +24,9 @@ import java.util.List;
 
 import org.itracker.services.util.SystemConfigurationUtilities;
 
+/**
+ * 
+ */
 public class SystemConfiguration extends AbstractEntity {
     
     private String version;

@@ -28,9 +28,12 @@ import org.itracker.services.exceptions.IssueException;
 import org.itracker.services.util.CustomFieldUtilities;
 
 /**
- * A custom field with its value. 
+ * A CustomField with its value for an Issue. 
+ * 
+ * <p>An IssueField can only belong to 1 Issue (composition). </p>
  * 
  * @author ready
+ * @see CustomField
  */
 public class IssueField extends AbstractEntity {
     

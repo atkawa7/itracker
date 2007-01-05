@@ -19,9 +19,17 @@
 package org.itracker.model;
 
 /**
- * This is a POJO Business Domain Object. Hibernate Bean.
+ * A Beanshell script to execute on a particular event. 
+ * 
+ * <p>This allows to dynamically customize the system by executing 
+ * custom actions at given extension points where an event is generated. </p>
+ * 
+ * <p>A WorkflowScript needs to be configured to be executed for a particular 
+ * field of a Project. This configuration is represented as a ProjectScript. <br>
+ * WorkflowScript - ProjectScript is a 1-N relationship. </p>
  * 
  * @author ready
+ * @see ProjectScript
  */
 public class WorkflowScript extends AbstractEntity {
     
@@ -34,6 +42,11 @@ public class WorkflowScript extends AbstractEntity {
     // TODO: what's the expected type here? 
 //    private Collection projectFields;
     private int numUses;
+    
+    /* This class used to have a <code>projectFields</code> attribute, which was 
+     * a Collection<ProjectScript>. This has been removed because the association 
+     * WorkflowScript - ProjectScript doesn't need to be navigatable in this direction. 
+     */
     
     public int getEvent() {
         return event;

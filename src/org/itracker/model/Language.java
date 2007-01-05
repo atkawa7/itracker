@@ -21,7 +21,7 @@ package org.itracker.model;
 import java.util.Date;
 
 /**
- * This is a POJO Business Domain Object modelling a language entry. 
+ * Models a language entry. 
  *
  * @author ready
  */

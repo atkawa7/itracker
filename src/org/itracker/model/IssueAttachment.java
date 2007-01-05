@@ -23,7 +23,9 @@ import java.util.Date;
 
 /**
  * A file attachment to an Issue.
- *
+ * 
+ * <p>An IssueAttachment can only belong to 1 Issue (composition). </p>
+ * 
  * @author ready
  */
 public class IssueAttachment extends AbstractEntity
@@ -62,7 +64,7 @@ public class IssueAttachment extends AbstractEntity
      */
     private byte[] fileData;
     
-    /** The use who created the attachment. */
+    /** The User who created this attachment. */
     private User user;
     
     

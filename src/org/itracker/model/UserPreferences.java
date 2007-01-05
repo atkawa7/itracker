@@ -20,12 +20,17 @@ package org.itracker.model;
 
 
 /**
- * This is a POJO Business Domain Object. Hibernate Bean.
+ * The system configuration of a User. 
+ * 
+ * <p>User - UserPreferences is a 1-1 relationship. </p>
  * 
  * @author ready
  */
 public class UserPreferences extends AbstractEntity {
 
+    /** The User to whom these preferences belong. */
+    private User user;
+    
     private boolean saveLogin;
     
     private String userLocale;
@@ -44,7 +49,7 @@ public class UserPreferences extends AbstractEntity {
     
     private boolean useTextActions;
     
-    private User user;
+    
 
     public int getHiddenIndexSections() {
         return hiddenIndexSections;

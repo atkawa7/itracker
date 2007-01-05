@@ -51,13 +51,35 @@ public class User extends AbstractEntity implements Comparable<User> {
     
     private int registrationType;
     
+    /** The system configuration for this User. */
     private UserPreferences preferences;
     
+    /** The Permissions of this User on all Projects.  */
     private List<Permission> permissions = new ArrayList<Permission>();
     
+    /** The Projects owned by this User. */
     private List<Project> projects = new ArrayList<Project>();
     
-    //private Collection<Notification> notifications = new ArrayList<Notification>();
+    /* This class used to have an <code>activities</code> attribute, which was 
+     * a Collection<IssueActivity>. This has been removed because the association 
+     * User - IssueActivity doesn't need to be navigatable in this direction. 
+     */
+    
+    /* This class used to have a <code>notifications</code> attribute, which was 
+     * a Collection<Notification>. This has been removed because the association 
+     * User - Notification doesn't need to be navigatable in this direction. 
+     */
+    
+    /* This class used to have an <code>attachments</code> attribute, which was 
+     * a Collection<IssueAttachment>. This has been removed because the association 
+     * User - IssueAttachment doesn't need to be navigatable in this direction. 
+     */
+    
+    /* This class used to have a <code>history</code> attribute, which was 
+     * a Collection<IssueHistory>. This has been removed because the association 
+     * User - IssueHistory doesn't need to be navigatable in this direction. 
+     */
+    
     
     /**
      * Default constructor (required by Hibernate). 

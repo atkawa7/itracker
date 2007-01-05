@@ -22,7 +22,7 @@ import java.util.Comparator;
 import java.util.Date;
 
 /**
- * An option for the value of a custom field of type <code>LIST</code>. 
+ * An option for the value of a CustomField of type <code>LIST</code>. 
  * 
  * @author ready
  * @author johnny
