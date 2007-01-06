@@ -26,7 +26,6 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.struts.action.ActionErrors;
@@ -44,9 +43,6 @@ import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
-import org.itracker.web.util.Constants;
-
-
 
 public class EditCustomFieldAction extends ItrackerBaseAction {
 
@@ -65,7 +61,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             return mapping.findForward("listconfiguration");
         }
         resetToken(request);
-        HttpSession session = request.getSession(true);
+        // HttpSession session = request.getSession(true);
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
             String action = (String) PropertyUtils.getSimpleProperty(form, "action");
@@ -132,7 +128,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             request.setAttribute("pageTitleArg",pageTitleArg);      
 //            session.removeAttribute(Constants.CUSTOMFIELD_KEY);
             saveToken(request);
-            String forwardAction = "listconfiguration";
+            //String forwardAction = "listconfiguration";
             if(customField.getFieldType() == CustomFieldUtilities.TYPE_LIST && "create".equals(action) ) { 
                 return new ActionForward(mapping.findForward("editcustomfield").getPath() + "?id=" + customField.getId() + "&action=update");
             }

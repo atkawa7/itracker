@@ -1,15 +1,11 @@
 package org.itracker.persistence.dao;
 
-import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Properties;
 
 import org.hibernate.HibernateException;
-import org.hibernate.usertype.EnhancedUserType;
-import org.hibernate.usertype.ParameterizedType;
 
 /**
  * Custom Hibernate UserType to persist a Java 5 enum constant as a VARCHAR
