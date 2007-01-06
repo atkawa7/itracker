@@ -5,12 +5,15 @@ package org.itracker.model;
  * to associate a unique and constant integer code to their enum constants. 
  * 
  * <p>The main use case is to allow to persist an enum constant to 
- * a integer rather than a string value, which is supported directly 
+ * an integer rather than a string value, which is supported directly 
  * by the java.lang.Enum class through the enum.name() and enum.valueOf(String)
  * methods. <br>
- * The enum.ordinal() isn't appropriate for this use cases because 
- * we don't have any constrol on it: it is zero-based and changes 
- * if the position of the enum constant changes.</p> 
+ * The enum.ordinal() position could be used, but isn't the best approach for 
+ * this use case because we don't have any constrol on it : 
+ * it is zero-based and changes if the position of the enum constant changes. 
+ * <br>
+ * Using the enum name isn't satisfactory either because we would have 
+ * to update the database if we ever need to rename an enum constant. </p> 
  * 
  * <p>This class allows to migrate to Java 5 enums retaining full backwards 
  * compatiblity with iTracker 2, in which all enumerations were simply defined 
