@@ -20,6 +20,7 @@ package org.itracker.web.actions.admin.configuration;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -42,54 +43,83 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 
 public class OrderConfigurationItemAction extends ItrackerBaseAction {
-
+    
     public OrderConfigurationItemAction() {
     }
-
+    
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         super.executeAlways(mapping,form,request,response);
         if(! isLoggedIn(request, response)) {
             return mapping.findForward("login");
         }
-
+        
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
-
+        
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
-
+            
             Integer configId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
             String action = (String) PropertyUtils.getSimpleProperty(form, "action");
             if(configId == null || configId.intValue() <= 0) {
                 throw new SystemConfigurationException("Invalid configuration id.");
             }
-
+            
             Configuration configItem = configurationService.getConfigurationItem(configId);
             if(configItem == null) {
                 throw new SystemConfigurationException("Invalid configuration id.");
             }
-
+            
             int configType = configItem.getType();
             List<Configuration> configItems = configurationService.getConfigurationItemsByType(configType);
+            List<Configuration> newConfigItems = new ArrayList<Configuration>();
+            
             for(int i = 0; i < configItems.size(); i++) {
-                if(configItems.get(i) != null && configId.equals(configItems.get(i).getId())) {
-                    if("up".equalsIgnoreCase(action) && i > 0) {
-                        int tempOrder = configItems.get(i).getOrder();
-                        configItems.get(i).setOrder(configItems.get(i-1).getOrder());
-                        configItems.get(i-1).setOrder(tempOrder);
-                        configItems = configurationService.updateConfigurationItems(configItems, configType);
-                    } else if("down".equalsIgnoreCase(action) && i < (configItems.size() - 1)) {
-                        int tempOrder = configItems.get(i).getOrder();
-                        configItems.get(i).setOrder(configItems.get(i+1).getOrder());
-                        configItems.get(i+1).setOrder(tempOrder);
-                        configItems = configurationService.updateConfigurationItems(configItems, configType);
+                newConfigItems.add(configItems.get(i));
+            }
+            for(int i = 0; i < configItems.size(); i++) {
+                if ( configItems.get(i) != null ) {
+                    Configuration firstConfiguration = new Configuration();
+                    Configuration secondConfiguration = new Configuration();
+                    Configuration curConfiguration = (Configuration) configItems.get(i);
+                    int todo_i = -1;
+                    if ( curConfiguration.getId() == configId ) {
+                        if ("up".equals(action) ){
+                            todo_i = i - 1;
+                        } else {
+                            todo_i = i + 1;
+                        }
+                        Configuration todoConfiguration = (Configuration) configItems.get(todo_i);
+
+                        firstConfiguration.setId(curConfiguration.getId());
+                        firstConfiguration.setCreateDate(todoConfiguration.getCreateDate());
+                        firstConfiguration.setLastModifiedDate(todoConfiguration.getLastModifiedDate());
+                        firstConfiguration.setName(todoConfiguration.getName());
+                        firstConfiguration.setOrder(todoConfiguration.getOrder());
+                        firstConfiguration.setType(todoConfiguration.getType());
+                        firstConfiguration.setValue(todoConfiguration.getValue());
+                        firstConfiguration.setVersion(todoConfiguration.getVersion());
+
+
+                        secondConfiguration.setId(todoConfiguration.getId());
+                        secondConfiguration.setCreateDate(curConfiguration.getCreateDate());
+                        secondConfiguration.setLastModifiedDate(curConfiguration.getLastModifiedDate());
+                        secondConfiguration.setName(curConfiguration.getName());
+                        secondConfiguration.setOrder(curConfiguration.getOrder());
+                        secondConfiguration.setType(curConfiguration.getType());
+                        secondConfiguration.setValue(curConfiguration.getValue());
+                        secondConfiguration.setVersion(curConfiguration.getVersion());
+
+                        newConfigItems.set(todo_i,firstConfiguration);
+                        newConfigItems.set(i,secondConfiguration);
                     }
-                    break;
                 }
             }
-
+            
+            newConfigItems = configurationService.updateConfigurationItems(newConfigItems,configType);
+            
             // Only resolutions and severities can be reordered at this point.  Statuses
             // and some basic workflow depend on the actual value of the status, so
             // the order must equal the value of the status for it to work correctly.
@@ -98,7 +128,7 @@ public class OrderConfigurationItemAction extends ItrackerBaseAction {
             } else if(configType == SystemConfigurationUtilities.TYPE_SEVERITY) {
                 configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_SEVERITY);
             }
-
+            
             return mapping.findForward("listconfiguration");
         } catch(SystemConfigurationException nfe) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidconfiguration"));
@@ -115,6 +145,5 @@ public class OrderConfigurationItemAction extends ItrackerBaseAction {
         }
         return mapping.findForward("error");
     }
-
+    
 }
-  

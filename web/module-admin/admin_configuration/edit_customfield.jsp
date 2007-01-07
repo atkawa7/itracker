@@ -184,12 +184,16 @@
                                     <td class="listRowUnshaded" style="white-space: nowrap;" nowrap>
                                         <it:link action="editcustomfieldvalueform" targetAction="update" paramName="id" paramValue="${i.id}" titleKey="itracker.web.admin.editcustomfield.option.edit.alt"><it:message key="itracker.web.admin.editcustomfield.option.edit"/></it:link>
                                         <it:link action="removecustomfieldvalue" targetAction="delete" paramName="id" paramValue="${i.id}" titleKey="itracker.web.admin.editcustomfield.option.delete.alt"><it:message key="itracker.web.admin.editcustomfield.option.delete"/></it:link>
-                                        <c:if test="${idx != 1}">
-                                            <it:link action="ordercustomfieldvalue" targetAction="up" paramName="id" paramValue="${i.id}" titleKey="itracker.web.admin.editcustomfield.option.orderup.alt"><it:message key="itracker.web.admin.editcustomfield.option.orderup"/></it:link>
-                                        </c:if>
-                                        <c:if test="${idx != opt_len}">
-                                            <it:link action="ordercustomfieldvalue" targetAction="down" paramName="id" paramValue="${i.id}" titleKey="itracker.web.admin.editcustomfield.option.orderdown.alt"><it:message key="itracker.web.admin.editcustomfield.option.orderdown"/></it:link>
-                                        </c:if>
+                                        <!-- c:if test="$ {idx != 1}" -->
+                                            <!-- it:link action="ordercustomfieldvalue" targetAction="up" paramName="id" paramValue="$ {i.id}" titleKey="itracker.web.admin.editcustomfield.option.orderup.alt" -->
+                                                <!-- it:message key="itracker.web.admin.editcustomfield.option.orderup"/ -->
+                                            <!-- /it:link -->
+                                        <!-- /c:if -->
+                                        <!-- c:if test="$ {idx != opt_len}" -->
+                                            <!-- it:link action="ordercustomfieldvalue" targetAction="down" paramName="id" paramValue="$ {i.id}" titleKey="itracker.web.admin.editcustomfield.option.orderdown.alt" -->
+                                                <!-- it:message key="itracker.web.admin.editcustomfield.option.orderdown"/ -->
+                                            <!-- /it:link -->
+                                        <!-- /c:if -->
                                         
                                         <html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="5" height="1"/>
                                         </td>

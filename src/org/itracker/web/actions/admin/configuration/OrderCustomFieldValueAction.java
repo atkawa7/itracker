@@ -20,6 +20,7 @@ package org.itracker.web.actions.admin.configuration;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -43,56 +44,101 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 
 public class OrderCustomFieldValueAction extends ItrackerBaseAction {
-
+    
     public OrderCustomFieldValueAction() {
     }
-
+    
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         super.executeAlways(mapping,form,request,response);
         if(! isLoggedIn(request, response)) {
             return mapping.findForward("login");
         }
-
+        
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
-
+        
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
-
-            Integer valueId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
+            
+            Integer customFieldValueId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
             String action = (String) PropertyUtils.getSimpleProperty(form, "action");
-            if(valueId == null || valueId.intValue() <= 0) {
+            if(customFieldValueId == null || customFieldValueId.intValue() <= 0) {
                 throw new SystemConfigurationException("Invalid custom field value id.");
             }
-
-            CustomFieldValue customFieldValue = configurationService.getCustomFieldValue(valueId);
+            
+            CustomFieldValue customFieldValue = configurationService.getCustomFieldValue(customFieldValueId);
             if(customFieldValue == null) {
                 throw new SystemConfigurationException("Invalid custom field value id.");
             }
-
+            
             CustomField customField = configurationService.getCustomField(customFieldValue.getCustomField().getId());
             if(customField == null) {
                 throw new SystemConfigurationException("Invalid custom field id.");
             }
-            List<CustomFieldValue> values = customField.getOptions();
-            for(int i = 0; i < values.size(); i++) {
+            List<CustomFieldValue> customFieldvalues = customField.getOptions();
+            List<CustomFieldValue> newCustomFieldValueItems = new ArrayList<CustomFieldValue>();
+            
+            for(int i = 0; i < customFieldvalues.size(); i++) {
+                newCustomFieldValueItems.add(customFieldvalues.get(i));
+            }
+            
+            for(int i = 0; i < customFieldvalues.size(); i++) {
+                if ( customFieldvalues.get(i) != null ) {
+                    CustomFieldValue firstCustomFieldValue = new CustomFieldValue();
+                    CustomFieldValue secondCustomFieldValue = new CustomFieldValue();
+                    CustomFieldValue curCustomFieldValue = (CustomFieldValue) customFieldvalues.get(i);
+                    int todo_i = -1;
+                    if ( curCustomFieldValue.getId() == customFieldValueId ) {
+                        if ("up".equals(action) ){
+                            todo_i = i - 1;
+                        } else {
+                            todo_i = i + 1;
+                        }
+                        CustomFieldValue todoCustomFieldValue = (CustomFieldValue) customFieldvalues.get(todo_i);
+
+                        firstCustomFieldValue.setId(curCustomFieldValue.getId());
+                        firstCustomFieldValue.setCreateDate(todoCustomFieldValue.getCreateDate());
+                        firstCustomFieldValue.setLastModifiedDate(todoCustomFieldValue.getLastModifiedDate());
+                        firstCustomFieldValue.setName(todoCustomFieldValue.getName());
+                        firstCustomFieldValue.setValue(todoCustomFieldValue.getValue());
+                        firstCustomFieldValue.setCustomField(todoCustomFieldValue.getCustomField());
+                        firstCustomFieldValue.setSortOrder(todoCustomFieldValue.getSortOrder());
+                        
+                        secondCustomFieldValue.setId(todoCustomFieldValue.getId());
+                        secondCustomFieldValue.setCreateDate(curCustomFieldValue.getCreateDate());
+                        secondCustomFieldValue.setLastModifiedDate(curCustomFieldValue.getLastModifiedDate());
+                        secondCustomFieldValue.setName(curCustomFieldValue.getName());
+                        secondCustomFieldValue.setValue(curCustomFieldValue.getValue());
+                        secondCustomFieldValue.setCustomField(curCustomFieldValue.getCustomField());
+                        secondCustomFieldValue.setSortOrder(curCustomFieldValue.getSortOrder());
+
+                        newCustomFieldValueItems.set(todo_i,firstCustomFieldValue);
+                        newCustomFieldValueItems.set(i,secondCustomFieldValue);
+                    }
+                }
+            }
+            
+            newCustomFieldValueItems = configurationService.updateCustomFieldValues(customField.getId(),newCustomFieldValueItems);
+            
+/*            for(int i = 0; i < values.size(); i++) {
                 if(values.get(i) != null && valueId.equals(values.get(i).getId())) {
                     if("up".equalsIgnoreCase(action) && i > 0) {
                         int tempOrder = values.get(i).getSortOrder();
                         values.get(i).setSortOrder(values.get(i-1).getSortOrder());
                         values.get(i-1).setSortOrder(tempOrder);
                         values = configurationService.updateCustomFieldValues(customField.getId(), values);
-                    } else if("down".equalsIgnoreCase(action) && i < (values.size() - 1)) {
-                        int tempOrder = values.get(i).getSortOrder();
-                        values.get(i).setSortOrder(values.get(i+1).getSortOrder());
-                        values.get(i+1).setSortOrder(tempOrder);
-                        values = configurationService.updateCustomFieldValues(customField.getId(), values);
+                        if("up".equalsIgnoreCase(action) && i > 0) {
+                        } else if("down".equalsIgnoreCase(action) && i < (values.size() - 1)) {
+                            tempOrder = values.get(i).getSortOrder();
+                            values.get(i).setSortOrder(values.get(i+1).getSortOrder());
+                            values.get(i+1).setSortOrder(tempOrder);
+                            values = configurationService.updateCustomFieldValues(customField.getId(), values);
+                        }
+                        break;
                     }
-                    break;
-                }
-/*                if(values.get(i) != null && valueId.equals(values.get(i).getId())) {
+               if(values.get(i) != null && valueId.equals(values.get(i).getId())) {
                     if("up".equalsIgnoreCase(action) && i > 0) {
                         CustomFieldValue moveUpRecord = values.get(i);
                         int moveDwnInt = moveUpRecord.getId();
@@ -116,9 +162,10 @@ public class OrderCustomFieldValueAction extends ItrackerBaseAction {
                     }
                     break;
                 }
- */
+ 
+                }
             }
-
+*/            
             configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
             request.setAttribute("action",action);
             return new ActionForward(mapping.findForward("editcustomfield").getPath() + "?id=" + customField.getId() + "&action=update");
@@ -137,6 +184,5 @@ public class OrderCustomFieldValueAction extends ItrackerBaseAction {
         }
         return mapping.findForward("error");
     }
-
+    
 }
-  
