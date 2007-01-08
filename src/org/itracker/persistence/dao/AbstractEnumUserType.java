@@ -50,7 +50,7 @@ public abstract class AbstractEnumUserType
     public void setParameterValues(Properties parameters) {
         String enumClassName = parameters.getProperty("enumClassName");
         try {
-            enumClass = (Class<? extends Enum>) Class.forName(enumClassName);
+            this.enumClass = (Class<? extends Enum>) Class.forName(enumClassName);
         } catch (ClassNotFoundException ex) {
             throw new HibernateException("Enum class not found", ex);
         }
@@ -87,7 +87,7 @@ public abstract class AbstractEnumUserType
     }
 
     public Class returnedClass() {
-        return enumClass;
+        return this.enumClass;
     }
     
 }
