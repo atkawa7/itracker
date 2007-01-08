@@ -27,7 +27,7 @@
             <column name="resource_value" not-null="true" length="512"/>
         </property>
         
-        <property name="createDate">
+        <property name="createDate" update="false">
             <column name="create_date" sql-type="timestamp" not-null="true"/>
         </property>
         

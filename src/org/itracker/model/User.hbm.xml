@@ -68,7 +68,7 @@
             <many-to-many class="Project" column="project_id" outer-join="auto"/>
         </bag>
         
-        <property name="createDate">
+        <property name="createDate" update="false">
             <column name="create_date" sql-type="timestamp" not-null="true"/>
         </property>
         

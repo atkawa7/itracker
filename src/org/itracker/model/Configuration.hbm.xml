@@ -41,7 +41,7 @@
             <column name="item_order" not-null="true"/>
         </property>
         
-        <property name="createDate">
+        <property name="createDate" update="false">
             <column name="create_date" sql-type="timestamp" not-null="true"/>
         </property>
         

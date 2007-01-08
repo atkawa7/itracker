@@ -45,7 +45,7 @@
             <column name="target_version_id"/>
         </many-to-one>
         
-        <property name="createDate">
+        <property name="createDate" update="false">
             <column name="create_date" sql-type="timestamp" not-null="true"/>
         </property>
         
