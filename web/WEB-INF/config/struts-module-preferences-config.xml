@@ -47,7 +47,7 @@
                 type="org.itracker.web.actions.preferences.EditPreferencesAction"
                 name="preferencesForm" scope="request" input="/editpreferencesform.do"
                 validate="true">
-            <forward name="index" module="/" path="/portalhome_refactored.jsp"/>
+            <!-- forward name="index" module="/" path="/portalhome_refactored.jsp"/ -->
         </action>
     </action-mappings>
 

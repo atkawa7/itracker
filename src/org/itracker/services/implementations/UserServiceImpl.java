@@ -296,11 +296,38 @@ public class UserServiceImpl implements UserService {
     }
     
     public UserPreferences updateUserPreferences(UserPreferences userPrefs) throws UserException {
-        UserPreferences NewUserPrefs;
+        UserPreferences NewUserPrefs = new UserPreferences();
         
         try {
             User user = userPrefs.getUser();
-            user.setPreferences(userPrefs);
+            
+            NewUserPrefs = userPreferencesDAO.findByUserId(user.getId());
+            
+            if ( NewUserPrefs == null ) {
+                NewUserPrefs = new UserPreferences();
+            }
+            NewUserPrefs.setSaveLogin(userPrefs.getSaveLogin());
+            NewUserPrefs.setUserLocale(userPrefs.getUserLocale());
+            NewUserPrefs.setNumItemsOnIndex(userPrefs.getNumItemsOnIndex());
+            NewUserPrefs.setNumItemsOnIssueList(userPrefs.getNumItemsOnIssueList());
+            NewUserPrefs.setShowClosedOnIssueList(userPrefs.getShowClosedOnIssueList());
+            NewUserPrefs.setSortColumnOnIssueList(userPrefs.getSortColumnOnIssueList());
+            NewUserPrefs.setHiddenIndexSections(userPrefs.getHiddenIndexSections());
+            
+            NewUserPrefs.setRememberLastSearch(userPrefs.getRememberLastSearch());
+            NewUserPrefs.setUseTextActions(userPrefs.getUseTextActions());
+            
+            NewUserPrefs.setUser(user);
+            NewUserPrefs.setLastModifiedDate(new Date());
+
+            if ( userPrefs.getId() == null ) {
+                NewUserPrefs.setCreateDate(new Date());
+                NewUserPrefs.setLastModifiedDate(userPrefs.getCreateDate());
+            }
+            this.userPreferencesDAO.saveOrUpdate( NewUserPrefs );
+            NewUserPrefs = userPreferencesDAO.findByUserId(user.getId());
+            
+            user.setPreferences(NewUserPrefs);
             
             try {
                 PluggableAuthenticator authenticator =
@@ -332,37 +359,15 @@ public class UserServiceImpl implements UserService {
                         AuthenticatorException.SYSTEM_ERROR, ex);
             }
             
-            NewUserPrefs = userPreferencesDAO.findByUserId(user.getId());
-            
-            if ( NewUserPrefs == null ) {
-                NewUserPrefs = new UserPreferences();
-            }
-            NewUserPrefs.setSaveLogin(userPrefs.getSaveLogin());
-            NewUserPrefs.setUserLocale(userPrefs.getUserLocale());
-            NewUserPrefs.setNumItemsOnIndex(userPrefs.getNumItemsOnIndex());
-            NewUserPrefs.setNumItemsOnIssueList(userPrefs.getNumItemsOnIssueList());
-            NewUserPrefs.setShowClosedOnIssueList(userPrefs.getShowClosedOnIssueList());
-            NewUserPrefs.setSortColumnOnIssueList(userPrefs.getSortColumnOnIssueList());
-            NewUserPrefs.setHiddenIndexSections(userPrefs.getHiddenIndexSections());
-            
-            NewUserPrefs.setRememberLastSearch(userPrefs.getRememberLastSearch());
-            NewUserPrefs.setUseTextActions(userPrefs.getUseTextActions());
-            
-            NewUserPrefs.setUser(user);
-            NewUserPrefs.setLastModifiedDate(new Date());
-            
-            if ( userPrefs.getId() == null ) {
-                userPrefs.setCreateDate(new Date());
-                userPrefs.setLastModifiedDate(userPrefs.getCreateDate());
-            }
-            this.userPreferencesDAO.saveOrUpdate( NewUserPrefs );
-            return NewUserPrefs;
+            if ( NewUserPrefs != null )
+                return NewUserPrefs;
             
         } catch (AuthenticatorException ex) {
             throw new UserException("Unable to create new preferences.", ex);
-        } finally {
-            return userPrefs;
         }
+//        } finally {
+            return userPrefs;
+//        }
     }
     
     public boolean deleteUser(User user) {

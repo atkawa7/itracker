@@ -1,8 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
+<%@ page import="org.itracker.services.ConfigurationService" %>
 <%@ page import="org.itracker.services.util.UserUtilities" %>
 <%@ page import="org.itracker.model.*" %>
 <%@ page import="org.itracker.core.resources.*" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -45,7 +48,10 @@
       <html:form action="/editpreferences" onsubmit="return validatePreferencesForm(this);">
         <html:hidden property="action" value="preferences"/>
         <html:hidden property="login" value="${edituser.login}"/>
-
+        <%
+        ConfigurationService sc = (ConfigurationService)request.getAttribute("sc");
+        Map<String,List<String>> languages = sc.getAvailableLanguages();
+        %>
         <table border="0" cellspacing="0" cellspacing="1" width="800px">
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.login"/>:</td>
@@ -198,26 +204,23 @@
           		   <td class="editColumnText">
                   <html:select property="userLocale" styleClass="editColumnText">
                     <html:option value="" styleClass="editColumnText"></html:option>
-                  	<c:choose>
-                  		<c:when test="${languagesMap!=null}">
-                  		      <c:forEach items="${languageCodes}" var="languageCode">
-                  		      	<c:choose>                  
-                  		      		<c:when test="${languagesList == null || languagesListSize == 0}">
-                  		      			<html:option value="${languageCode}" styleClass="editColumnText">${languageCode}</html:option>
-                  		      		</c:when>
-                  		      		<c:otherwise>
-                  		      			<c:forEach items="${languagesList}" var="languageListItem">
-                  		      				<html:option value="${languageListItem}" styleClass="editColumnText">${languageListItem}</html:option>
-                  		      			</c:forEach>
-                  		      		</c:otherwise>
-                  		      	</c:choose>
-                  			</c:forEach>
-                  		</c:when>
-                  		<c:otherwise>
-                  		<html:option value="en_US" styleClass="editColumnText"><%= ITrackerResources.getString("itracker.locale.name", "en_US") %></html:option>
-                  		</c:otherwise>
-                  	</c:choose> 
-                  </html:select><!-- ${languageCodeName} -->
+                    <%
+                    if  ( languages != null ) {
+                        for(java.util.Iterator<String> iter = languages.keySet().iterator(); iter.hasNext(); ) {
+                            String language = iter.next();
+                            List<String> locales = (List<String>) languages.get(language);
+                        %>
+                            <html:option value="<%=language%>" styleClass="editColumnText"><%= ITrackerResources.getString("itracker.locale.name", language) %></html:option>
+                        <%  for(int i = 0; i < locales.size(); i++) {
+                                String languageListItem = (String) locales.get(i);
+                        %>
+                                <html:option value="<%=languageListItem%>" styleClass="editColumnText"><%= ITrackerResources.getString("itracker.locale.name", languageListItem) %></html:option>
+                        <%  } 
+                        }
+                    } else { %>
+                  		<html:option key="<%= ITrackerResources.getString("itracker.locale.name", "en_US") %>" value="en_US" styleClass="editColumnText"><%= ITrackerResources.getString("itracker.locale.name", "en_US") %></html:option>
+                 <% } %>
+                  </html:select><!-- $ {languageCodeName} -->
                 </td>
           		</c:when>
           		<c:otherwise>
