@@ -52,6 +52,9 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         <property name="mappingResources">
             <ref local="hibernateMappingsList"/>
         </property>
+        <property name="entityInterceptor">
+            <ref local="timestampEntityInterceptor"/>
+        </property>
     </bean>
     
     <util:properties id="hibernateProperties" 
@@ -80,6 +83,9 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         <value>/org/itracker/model/IssueActivity.hbm.xml</value>
         <value>/org/itracker/model/Report.hbm.xml</value>
     </util:list>
+    
+    <bean id="timestampEntityInterceptor" 
+        class="org.itracker.persistence.dao.TimestampInterceptor"/>
     
     <!-- Hibernate interceptor to manage the session outside any transaction scope. -->
     <bean id="hibernateInterceptor"
