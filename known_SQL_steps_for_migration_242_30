@@ -1,3 +1,5 @@
+The following statements have been used by Marky Goldstein to migrate his existing MySQL database: 
+
 alter table languagebean change id id INT NOT NULL AUTO_INCREMENT; 
 alter table configurationbean change id id INT NOT NULL AUTO_INCREMENT; 
 alter table issuehistorybean change id id INT NOT NULL AUTO_INCREMENT;
