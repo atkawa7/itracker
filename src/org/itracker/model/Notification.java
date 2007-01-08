@@ -19,7 +19,6 @@
 package org.itracker.model;
 
 import java.util.Comparator;
-import java.util.Date;
 
 /**
  * A notification to a user about an Issue. 
@@ -54,7 +53,6 @@ public class Notification extends AbstractEntity
     }
 
     public Notification(User user, Issue issue, int role) {
-        super(new Date());
         this.setUser(user);
         this.setIssue(issue);
         this.setNotificationRole(role);

@@ -19,7 +19,6 @@
 package org.itracker.model;
 
 import java.util.Comparator;
-import java.util.Date;
 
 /**
  * Models a project component. 
@@ -82,7 +81,6 @@ public class Component extends AbstractEntity
      * @param name unique component name within the project
      */
     public Component(Project project, String name) {
-        super(new Date());
         setProject(project);
         setName(name);
         

@@ -19,7 +19,6 @@
 package org.itracker.model;
 
 import java.util.Comparator;
-import java.util.Date;
 
 /**
  * A file attachment to an Issue.
@@ -79,7 +78,6 @@ public class IssueAttachment extends AbstractEntity
     }
     
     public IssueAttachment(Issue issue, String originalFileName) {
-        super(new Date());
         setIssue(issue);
         setOriginalFileName(originalFileName);
     }

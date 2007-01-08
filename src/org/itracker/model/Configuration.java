@@ -18,8 +18,6 @@
 
 package org.itracker.model;
 
-import java.util.Date;
-
 /**
  * A configuration item. 
  * 
@@ -73,7 +71,6 @@ public class Configuration extends AbstractEntity
     }
 
     public Configuration(int type, String value) {
-        super(new Date());
         setType(type);
         setValue(value);
     }

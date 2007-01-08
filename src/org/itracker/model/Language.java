@@ -18,8 +18,6 @@
 
 package org.itracker.model;
 
-import java.util.Date;
-
 /**
  * Models a language entry. 
  *
@@ -44,7 +42,6 @@ public class Language extends AbstractEntity {
     }
 
     public Language(String locale, String key) {
-        super(new Date());
         setLocale(locale);
         setResourceKey(key);
     }

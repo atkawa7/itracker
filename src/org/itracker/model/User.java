@@ -20,7 +20,6 @@ package org.itracker.model;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import org.itracker.services.util.UserUtilities;
@@ -92,7 +91,6 @@ public class User extends AbstractEntity implements Comparable<User> {
     }
 
     public User(String login) {
-        super(new Date());
         setLogin(login);
     }
     

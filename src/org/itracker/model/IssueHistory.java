@@ -18,7 +18,6 @@
 
 package org.itracker.model;
 
-import java.util.Date;
 
 import org.itracker.services.util.IssueUtilities;
 
@@ -54,14 +53,12 @@ public class IssueHistory extends AbstractEntity {
     }
 
     public IssueHistory(Issue issue, User creator) {
-        super(new Date());
         setIssue(issue);
         setUser(creator);
         setStatus(IssueUtilities.HISTORY_STATUS_AVAILABLE);
     }
 
     public IssueHistory(Issue issue, User creator, String description, int status) {
-        super(new Date());
         setIssue(issue);
         setUser(creator);
         setDescription(description);
@@ -117,7 +114,8 @@ public class IssueHistory extends AbstractEntity {
             
             return this.issue.equals(other.issue)
                 && this.creator.equals(other.creator)
-                && this.createDate.equals(other.createDate);
+                && (this.createDate == null) ? (other.createDate == null) 
+                    : this.createDate.equals(other.createDate);
         }
         return false;
     }
@@ -126,7 +124,7 @@ public class IssueHistory extends AbstractEntity {
     public int hashCode() {
         return this.issue.hashCode() 
             + this.creator.hashCode() 
-            + this.createDate.hashCode();
+            + ((this.createDate == null) ? 0 : this.createDate.hashCode());
     }
     
     @Override

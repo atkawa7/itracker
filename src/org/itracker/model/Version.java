@@ -17,7 +17,6 @@
 package org.itracker.model;
 
 import java.util.Comparator;
-import java.util.Date;
 
 /**
  * A Project version. 
@@ -75,7 +74,6 @@ public class Version extends AbstractEntity implements Comparable<Version> {
      * @param number unique within the project
      */
     public Version(Project project, String number) {
-        super(new Date());
         setProject(project);
         setVersionInfo(number);
         

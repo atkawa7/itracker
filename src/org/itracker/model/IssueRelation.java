@@ -18,8 +18,6 @@
 
 package org.itracker.model;
 
-import java.util.Date;
-
 /**
  * A relation between issues. 
  * 
@@ -47,7 +45,6 @@ public class IssueRelation extends AbstractEntity {
     }
     
     public IssueRelation(Issue issue, Issue relatedIssue, int relationType) {
-        super(new Date());
         setIssue(issue);
         setRelatedIssue(relatedIssue);
         setRelationType(relationType);

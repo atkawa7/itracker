@@ -19,7 +19,6 @@
 package org.itracker.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -99,7 +98,6 @@ public class Project extends AbstractEntity implements Comparable<Project> {
     }
     
     public Project(String name) {
-        super(new Date());
         setName(name);
     }
     

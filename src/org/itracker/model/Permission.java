@@ -18,8 +18,6 @@
 
 package org.itracker.model;
 
-import java.util.Date;
-
 /**
  * A user permission on a project. 
  * 
@@ -74,7 +72,6 @@ public class Permission extends AbstractEntity {
      *        for all projects
      */
     public Permission(int type, User user, Project project) {
-        super(new Date());
         setPermissionType(type);
         setUser(user);
         setProject(project);

@@ -22,7 +22,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -121,19 +120,9 @@ public class CustomField extends AbstractEntity
      * identity are always initialized/never <tt>null</tt>. </p>
      */
     public CustomField() {
-        /* All fields should be initialized from the database by Hibernate!
-         * But the problem is this constructor is used in our source code 
-         * => remove this unnecessary initialization as soon as we can 
-         * make this constructor private! 
-         */
-        if ( getCreateDate() == null )
-            setCreateDate(new Date());
-        if ( getLastModifiedDate() == null )
-            setLastModifiedDate(new Date());
     }
     
     public CustomField(String name, Type type) {
-        super(new Date());
         setName(name);
         setFieldType(type);
     }

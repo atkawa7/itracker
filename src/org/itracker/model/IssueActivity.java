@@ -18,8 +18,6 @@
 
 package org.itracker.model;
 
-import java.util.Date;
-
 /**
  * An issue activity. 
  * 
@@ -71,7 +69,6 @@ public class IssueActivity extends AbstractEntity {
      * @param description 
      */
     public IssueActivity(Issue issue, User user, int type) {
-        super(new Date());
         setIssue(issue);
         setUser(user);
         setType(type);
@@ -134,7 +131,8 @@ public class IssueActivity extends AbstractEntity {
             return this.issue.equals(other.issue)
                 && this.user.equals(other.user)
                 && (this.type == other.type)
-                && this.createDate.equals(other.createDate);
+                && (this.createDate == null) ? (other.createDate == null) 
+                    : this.createDate.equals(other.createDate);
         }
         return false;
     }
@@ -143,7 +141,7 @@ public class IssueActivity extends AbstractEntity {
         return this.issue.hashCode()
             + this.user.hashCode()
             + this.type
-            + this.createDate.hashCode();
+            + ((this.createDate == null) ? 0 : this.createDate.hashCode());
     }
     
     public String toString() {
