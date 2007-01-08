@@ -16,14 +16,14 @@ import org.hibernate.HibernateException;
  * 
  * @author johnny
  */
-public class EnumUserType extends AbstractEnumUserType {
+public class EnumNameUserType extends AbstractEnumUserType {
     
     private static final int[] SQL_TYPES = { Types.VARCHAR };
 
     /** 
      * Default constructor, required by Hibernate. 
      */
-    public EnumUserType() {
+    public EnumNameUserType() {
     }
     
     @SuppressWarnings("unchecked")
