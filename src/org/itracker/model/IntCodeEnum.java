@@ -36,11 +36,20 @@ public interface IntCodeEnum<E extends Enum<E>> {
     /**
      * Returns a java.lang.Enum constant matching the given integer value.
      * 
+     * <p>This method should actually be static, so that we don't need 
+     * an enum constant instance to lookup another instance by code. 
+     * <br>
+     * However Java interfaces don't allow static methods and Java 5 enums 
+     * must inherit java.lang.Enum directly. So there's no way to create 
+     * a common base class with a static fromCode(int) method 
+     * for all enums in our application for EnumCodeUserType to use
+     * in a type-safe way! </p>
+     * 
      * @param code unique enum constant as defined in iTracker 2
      * @return java.lang.Enum constant instance for the given code
      * @throws IllegalArgumentException no matching enum constant for 
      *         the given <code>code</code>  
      */
-    E fromCode(int code);
+    /* static */ E fromCode(int code);
     
 }
