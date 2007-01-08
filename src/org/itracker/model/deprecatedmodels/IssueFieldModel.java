@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.CustomField;
 import org.itracker.services.exceptions.IssueException;
 import org.itracker.services.util.CustomFieldUtilities;
 
@@ -94,9 +95,9 @@ class IssueFieldModel extends GenericModel {
             return "";
         }
         
-        if(customField.getFieldType() == CustomFieldUtilities.TYPE_INTEGER) {
+        if(customField.getFieldType() == CustomField.Type.INTEGER.getCode()) {
             return Integer.toString(getIntValue());
-        } else if(customField.getFieldType() == CustomFieldUtilities.TYPE_DATE) {
+        } else if(customField.getFieldType() == CustomField.Type.DATE.getCode()) {
             if (customField.getDateFormat() != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
                 SimpleDateFormat sdf = new SimpleDateFormat(bundle.getString("itracker.dateformat." + customField.getDateFormat()), locale);
                 return sdf.format(getDateValue());
@@ -128,13 +129,13 @@ class IssueFieldModel extends GenericModel {
      */
     public void setValue(String value, Locale locale, ResourceBundle bundle) throws IssueException {
         if(value != null) {
-            if(customField.getFieldType() == CustomFieldUtilities.TYPE_INTEGER) {
+            if(customField.getFieldType() == CustomField.Type.INTEGER.getCode()) {
                 try {
                     setIntValue(Integer.parseInt(value));
                 } catch(NumberFormatException nfe) {
                     throw new IssueException("Invalid integer.", IssueException.TYPE_CF_PARSE_NUM);
                 }
-            } else if(customField.getFieldType() == CustomFieldUtilities.TYPE_DATE) {
+            } else if(customField.getFieldType() == CustomField.Type.DATE.getCode()) {
                 if(customField.getDateFormat() != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
                     SimpleDateFormat sdf = new SimpleDateFormat(bundle.getString("itracker.dateformat." + customField.getDateFormat()), locale);
                     try {

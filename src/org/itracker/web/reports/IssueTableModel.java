@@ -133,7 +133,7 @@ public class IssueTableModel extends ReportTableModel {
                 for(int i = 0; i < issue.getFields().size(); i++) {
                     if(issue.getFields().get(i).getCustomField().getId().equals(customField.getId())) {
                         String value = issue.getFields().get(i).getValue(reportLocale);
-                        if(customField.getFieldType() == CustomFieldUtilities.TYPE_LIST) {
+                        if(customField.getFieldType() == CustomField.Type.LIST) {
                             for(int j = 0; j < customField.getOptions().size(); j++) {
                                 if(customField.getOptions().get(j).getValue().equals(value)) {
                                     value = customField.getOptions().get(j).getCustomField().getName();

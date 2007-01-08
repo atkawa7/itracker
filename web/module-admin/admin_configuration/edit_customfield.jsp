@@ -1,12 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.core.resources.ITrackerResources" %>
+<%@ page import="org.itracker.model.CustomField" %>
+<%@ page import="org.itracker.services.*" %>
+<%@ page import="org.itracker.services.util.CustomFieldUtilities" %>
 <%@ page import="org.itracker.web.util.*" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
-
-<%@ page import="org.itracker.services.util.CustomFieldUtilities" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -72,10 +72,10 @@
                     <td class="editColumnTitle"><it:message key="itracker.web.attr.fieldtype"/>:</td>
                     <td>
                         <html:select property="fieldType" styleClass="editColumnText">
-                            <html:option value="<%= Integer.toString(CustomFieldUtilities.TYPE_STRING) %>" styleClass="editColumnText"><it:message key="itracker.web.generic.string"/></html:option>
-                            <html:option value="<%= Integer.toString(CustomFieldUtilities.TYPE_INTEGER) %>" styleClass="editColumnText"><it:message key="itracker.web.generic.integer"/></html:option>
-                            <html:option value="<%= Integer.toString(CustomFieldUtilities.TYPE_DATE) %>" styleClass="editColumnText"><it:message key="itracker.web.generic.date"/></html:option>
-                            <html:option value="<%= Integer.toString(CustomFieldUtilities.TYPE_LIST) %>" styleClass="editColumnText"><it:message key="itracker.web.generic.list"/></html:option>
+                            <html:option value="<%= Integer.toString(CustomField.Type.STRING.getCode()) %>" styleClass="editColumnText"><it:message key="itracker.web.generic.string"/></html:option>
+                            <html:option value="<%= Integer.toString(CustomField.Type.INTEGER.getCode()) %>" styleClass="editColumnText"><it:message key="itracker.web.generic.integer"/></html:option>
+                            <html:option value="<%= Integer.toString(CustomField.Type.DATE.getCode()) %>" styleClass="editColumnText"><it:message key="itracker.web.generic.date"/></html:option>
+                            <html:option value="<%= Integer.toString(CustomField.Type.LIST.getCode()) %>" styleClass="editColumnText"><it:message key="itracker.web.generic.list"/></html:option>
                         </html:select>
                     </td>
                     <td></td>
@@ -160,7 +160,7 @@
  	to the pageContext.setAttribute("String",Object) method because this method only takes Objects, but no Primitives. 
  	 -->
                 <%
-                pageContext.setAttribute("CustomFieldType_List",String.valueOf(CustomFieldUtilities.TYPE_LIST));
+                pageContext.setAttribute("CustomFieldType_List", Integer.toString(CustomField.Type.LIST.getCode()));
                 %>
                 <c:if test="${field.fieldType == CustomFieldType_List}">
                     <td colspan="2" valign="top">

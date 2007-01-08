@@ -74,10 +74,8 @@ public class CustomField extends AbstractEntity
     
     /** 
      * Field value data type. 
-     * 
-     * TODO: use type-safe enum CustomField.Type
      */
-    private int type;
+    private Type type;
     
     /** 
      * Display format to use if <code>fieldType</code> is a Date.
@@ -134,32 +132,11 @@ public class CustomField extends AbstractEntity
             setLastModifiedDate(new Date());
     }
     
-    public CustomField(String name, int type) {
+    public CustomField(String name, Type type) {
         super(new Date());
         setName(name);
         setFieldType(type);
     }
-    
-//    public CustomField(Integer id, int fieldType, boolean required) {
-//        super(new Date());
-//        setId(id);
-//        setFieldType(fieldType);
-//        setRequired(required);
-//    }
-//    
-//    public CustomField(Integer id, int fieldType, boolean required, 
-//            String dateFormat) {
-//        this(id, fieldType, required);
-//        this.dateFormat = (dateFormat == null 
-//                ? CustomFieldUtilities.DATE_FORMAT_DATEONLY : dateFormat);
-//    }
-//    
-//    public CustomField(Integer id, int fieldType, boolean required, 
-//            List<CustomFieldValue> values, boolean sortOptions) {
-//        this(id, fieldType, required);
-//        this.options = values;
-//        this.sortOptionsByName = sortOptions;
-//    }
     
     public String getName() {
         return name;
@@ -169,11 +146,11 @@ public class CustomField extends AbstractEntity
         this.name = name;
     }
     
-    public int getFieldType() {
+    public Type getFieldType() {
         return type;
     }
     
-    public void setFieldType(int type) {
+    public void setFieldType(Type type) {
         this.type = type;
     }
     
@@ -314,7 +291,7 @@ public class CustomField extends AbstractEntity
         
         switch (this.type) {
             
-            case CustomFieldUtilities.TYPE_INTEGER:
+            case INTEGER:
                 try {
                     Integer.parseInt(value);
                 } catch(NumberFormatException nfe) {
@@ -323,19 +300,18 @@ public class CustomField extends AbstractEntity
                 }
                 break;
 
-            case CustomFieldUtilities.TYPE_DATE:
-                
-                    if (this.dateFormat != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
-                        SimpleDateFormat format = new SimpleDateFormat(
-                                bundle.getString("itracker.dateformat." + this.dateFormat), locale);
-                        
-                        try {
-                            format.parse(value);
-                        } catch (ParseException ex) {
-                            throw new IssueException("Invalid date format.", 
-                                    IssueException.TYPE_CF_PARSE_DATE);
-                        }
+            case DATE:
+                if (this.dateFormat != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
+                    SimpleDateFormat format = new SimpleDateFormat(
+                            bundle.getString("itracker.dateformat." + this.dateFormat), locale);
+
+                    try {
+                        format.parse(value);
+                    } catch (ParseException ex) {
+                        throw new IssueException("Invalid date format.", 
+                                IssueException.TYPE_CF_PARSE_DATE);
                     }
+                }
                 break;
 
             default:
@@ -346,8 +322,12 @@ public class CustomField extends AbstractEntity
     /** 
      * Enumeration of possible data types. 
      */
-    public static enum Type implements IntCodeEnum<Type> { 
-        STRING(1), INTEGER(2), DATE(3), LIST(4);
+    public static enum Type implements IntCodeEnum<Type> {
+        
+        STRING(1), 
+        INTEGER(2), 
+        DATE(3), 
+        LIST(4);
         
         private final int code;
         
@@ -360,6 +340,10 @@ public class CustomField extends AbstractEntity
         }
         
         public Type fromCode(int code) {
+            return valueOf(code);
+        }
+        
+        public static Type valueOf(int code) {
             switch (code) {
                 case 1: return STRING;
                 case 2: return INTEGER;
@@ -367,7 +351,7 @@ public class CustomField extends AbstractEntity
                 case 4: return LIST;
                 default: 
                     throw new IllegalArgumentException(
-                        "Unknown code " + code + "'");
+                        "Unknown code : " + code);
             }
         }
         
@@ -378,8 +362,11 @@ public class CustomField extends AbstractEntity
      * 
      * PENDING: consider replacing the DATE Type with these 3 new data types. 
      */
-    public static enum DateFormat { 
-        DATE_TIME("full"), DATE("dateonly"), TIME("timeonly");
+    public static enum DateFormat {
+        
+        DATE_TIME("full"), 
+        DATE("dateonly"), 
+        TIME("timeonly");
         
         final String code;
         

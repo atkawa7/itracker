@@ -112,7 +112,7 @@ public final class FormatCustomFieldTag extends TagSupport {
             buf.append("<td align=\"left\" class=\"editColumnText\">");
             if(DISPLAY_TYPE_VIEW.equalsIgnoreCase(displayType)) {
                 if(currentValue != null) {
-                    buf.append((field.getFieldType() == CustomFieldUtilities.TYPE_LIST ? field.getOptionNameByValue(currentValue) : currentValue));
+                    buf.append((field.getFieldType() == CustomField.Type.LIST ? field.getOptionNameByValue(currentValue) : currentValue));
                 }
             } else {
                 // Object requestValue = RequestUtils.lookup(pageContext, org.apache.struts.taglib.html.Constants.BEAN_KEY, "customFields(" + field.getId() + ")", null);
@@ -121,7 +121,7 @@ public final class FormatCustomFieldTag extends TagSupport {
                     currentValue = requestValue.toString();
                 }
                 
-                if(field.getFieldType() == CustomFieldUtilities.TYPE_LIST) {
+                if(field.getFieldType() == CustomField.Type.LIST) {
                     List<NameValuePair> options = WorkflowUtilities.getListOptions(getListOptions(), field.getId());
 
                     buf.append("<select name=\"customFields(" + field.getId() + ")\" class=\"editColumnText\">\n");
@@ -133,7 +133,7 @@ public final class FormatCustomFieldTag extends TagSupport {
                         buf.append("</option>\n");
                     }
                     buf.append("</select>\n");
-                } else if(field.getFieldType() == CustomFieldUtilities.TYPE_DATE) {
+                } else if(field.getFieldType() == CustomField.Type.DATE) {
                     buf.append("<input type=\"text\" name=\"customFields(" + field.getId() +")\"");
                     buf.append((currentValue != null && ! currentValue.equals("") ?  " value=\"" + currentValue + "\"" : ""));
                     buf.append(" class=\"editColumnText\">&nbsp;");

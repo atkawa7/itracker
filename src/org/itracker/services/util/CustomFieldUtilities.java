@@ -21,14 +21,10 @@ package org.itracker.services.util;
 import java.util.Locale;
 
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.CustomField;
 
 
 public class CustomFieldUtilities {
-    public static final int TYPE_UNKNOWN = -1;
-    public static final int TYPE_STRING = 1;
-    public static final int TYPE_INTEGER = 2;
-    public static final int TYPE_DATE = 3;
-    public static final int TYPE_LIST = 4;
 
     public static final String DATE_FORMAT_UNKNOWN = "UNKNOWN";
     public static final String DATE_FORMAT_FULL = "full";
@@ -40,7 +36,7 @@ public class CustomFieldUtilities {
       * @param type the type to translate
       * @return a string representation of the field type translated to the specified locale
       */
-    public static String getTypeString(int type) {
+    public static String getTypeString(CustomField.Type type) {
         return getTypeString(type, ITrackerResources.getLocale());
     }
 
@@ -50,14 +46,14 @@ public class CustomFieldUtilities {
       * @param locale the locale to translate the type into
       * @return a string representation of the field type translated to the default locale
       */
-    public static String getTypeString(int type, Locale locale) {
-        if(type == TYPE_STRING) {
+    public static String getTypeString(CustomField.Type type, Locale locale) {
+        if(type == CustomField.Type.STRING) {
             return ITrackerResources.getString(ITrackerResources.KEY_BASE_CUSTOMFIELD_TYPE + "string", locale);
-        } else if(type == TYPE_INTEGER) {
+        } else if(type == CustomField.Type.INTEGER) {
             return ITrackerResources.getString(ITrackerResources.KEY_BASE_CUSTOMFIELD_TYPE + "integer", locale);
-        } else if(type == TYPE_DATE) {
+        } else if(type == CustomField.Type.DATE) {
             return ITrackerResources.getString(ITrackerResources.KEY_BASE_CUSTOMFIELD_TYPE + "date", locale);
-        } else if(type == TYPE_LIST) {
+        } else if(type == CustomField.Type.LIST) {
             return ITrackerResources.getString(ITrackerResources.KEY_BASE_CUSTOMFIELD_TYPE + "list", locale);
         }
 

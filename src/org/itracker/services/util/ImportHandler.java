@@ -282,7 +282,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if(TAG_CUSTOM_FIELD_SORTOPTIONS.equals(qName)) {
                 ((CustomField) childModel).setSortOptionsByName(("true".equalsIgnoreCase(getBuffer()) ? true : false));
             } else if(TAG_CUSTOM_FIELD_TYPE.equals(qName)) {
-                ((CustomField) childModel).setFieldType(getBufferAsInt());
+                ((CustomField) childModel).setFieldType(CustomField.Type.valueOf(getBufferAsInt()));
             } else if(TAG_EMAIL.equals(qName)) {
                 ((User) parentModel).setEmail(getBuffer());
             } else if(TAG_FIRST_NAME.equals(qName)) {

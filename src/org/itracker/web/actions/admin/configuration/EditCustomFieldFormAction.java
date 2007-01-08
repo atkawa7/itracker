@@ -99,7 +99,7 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
                 }
                 customField.setOptions(customField.getOptions());
                 customFieldForm.setId(id);
-                customFieldForm.setFieldType(new Integer(customField.getFieldType()));
+                customFieldForm.setFieldType(customField.getFieldType().getCode());
                 customFieldForm.setRequired(Boolean.toString(customField.isRequired()));
                 customFieldForm.setDateFormat(customField.getDateFormat());
                 customFieldForm.setSortOptionsByName(Boolean.toString(customField.isSortOptionsByName()));

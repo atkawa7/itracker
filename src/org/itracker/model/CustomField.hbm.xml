@@ -15,6 +15,11 @@
         
         <property name="fieldType">
             <column name="field_type" not-null="true"/>
+            <type name="org.itracker.persistence.dao.EnumCodeUserType">
+                <!-- java.lang.ClassNotFoundException: org.itracker.model.CustomField.Type
+                 (see Sun bug #4378381) -->
+                <param name="enumClassName">org.itracker.model.CustomField$Type</param>
+            </type>
         </property>
         
         <property name="dateFormat">

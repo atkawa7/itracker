@@ -138,10 +138,10 @@ public class IssueField extends AbstractEntity {
     public String getValue(ResourceBundle bundle, Locale locale) {
         switch (customField.getFieldType()) {
             
-            case CustomFieldUtilities.TYPE_INTEGER:
+            case INTEGER:
                 return Integer.toString(this.intValue);
                 
-            case CustomFieldUtilities.TYPE_DATE:
+            case DATE:
                 if (!customField.isRequired() && this.dateValue == null) {
                     return null;
                 }
@@ -182,7 +182,7 @@ public class IssueField extends AbstractEntity {
         if (value != null) {
             switch (customField.getFieldType()) {
                 
-                case CustomFieldUtilities.TYPE_INTEGER:
+                case INTEGER:
                     try {
                         setIntValue(Integer.parseInt(value));
                     } catch(NumberFormatException nfe) {
@@ -190,7 +190,7 @@ public class IssueField extends AbstractEntity {
                     }
                     break;
                     
-                case CustomFieldUtilities.TYPE_DATE:
+                case DATE:
                     try {
                     if(customField.getDateFormat() != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
                             SimpleDateFormat sdf = new SimpleDateFormat(bundle.getString("itracker.dateformat." + customField.getDateFormat()), locale);

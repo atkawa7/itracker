@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.AbstractEntity;
+import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueAttachment;
@@ -397,7 +398,7 @@ public class ImportExportUtilities implements ImportExportTags {
             buf.append("      <" + TAG_CUSTOM_FIELD_REQUIRED + "><![CDATA[" + config.getCustomFields().get(i).isRequired() + "]]></" + TAG_CUSTOM_FIELD_REQUIRED + ">\n");
             buf.append("      <" + TAG_CUSTOM_FIELD_DATEFORMAT + "><![CDATA[" + ITrackerResources.escapeUnicodeString(config.getCustomFields().get(i).getDateFormat(), false) + "]]></" + TAG_CUSTOM_FIELD_DATEFORMAT + ">\n");
             buf.append("      <" + TAG_CUSTOM_FIELD_SORTOPTIONS + "><![CDATA[" + config.getCustomFields().get(i).isSortOptionsByName() + "]]></" + TAG_CUSTOM_FIELD_SORTOPTIONS + ">\n");
-            if(config.getCustomFields().get(i).getFieldType() == CustomFieldUtilities.TYPE_LIST) {
+            if(config.getCustomFields().get(i).getFieldType() == CustomField.Type.LIST) {
                 List<CustomFieldValue> options = config.getCustomFields().get(i).getOptions();
                 for(int j = 0; j < options.size(); j++) {
                     buf.append("      <" + TAG_CUSTOM_FIELD_OPTION + " " + ATTR_VALUE + "=\"" + ITrackerResources.escapeUnicodeString(options.get(j).getValue(), false) + "\"><![CDATA[" + ITrackerResources.escapeUnicodeString(options.get(j).getCustomField().getName(), false) + "]]></" + TAG_CUSTOM_FIELD_OPTION + ">\n");

@@ -222,7 +222,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 
                     List<CustomField> projectFields = project.getCustomFields();
                     for(int i = 0; i < projectFields.size(); i++) {
-                        if(projectFields.get(i).getFieldType() == CustomFieldUtilities.TYPE_LIST) {
+                        if(projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
                             projectFields.get(i).setLabels(currLocale);
                             listOptions.put(projectFields.get(i).getId(), Convert.customFieldOptionsToNameValuePairs(projectFields.get(i).getOptions()));
                         }

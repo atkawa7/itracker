@@ -43,6 +43,7 @@ import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.forms.CustomFieldForm;
 
 public class EditCustomFieldAction extends ItrackerBaseAction {
 
@@ -68,10 +69,12 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             if(action == null) {
                 return mapping.findForward("listconfiguration");
             }
+            CustomFieldForm customFieldForm = (CustomFieldForm) form;
+            
             CustomField customField = null;
             if("create".equals(action)) {
                 customField = new CustomField();
-                customField.setFieldType(((Integer) PropertyUtils.getSimpleProperty(form, "fieldType")).intValue());
+                customField.setFieldType(CustomField.Type.valueOf(customFieldForm.getFieldType()));
                 customField.setRequired(("true".equals((String) PropertyUtils.getSimpleProperty(form, "required")) ? true : false));
                 customField.setSortOptionsByName(("true".equals((String) PropertyUtils.getSimpleProperty(form, "sortOptionsByName")) ? true : false));
                 customField.setDateFormat((String) PropertyUtils.getSimpleProperty(form, "dateFormat"));
@@ -83,7 +86,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
                 if(customField == null) {
                     throw new SystemConfigurationException("Invalid custom field id " + id);
                 }
-                customField.setFieldType(((Integer) PropertyUtils.getSimpleProperty(form, "fieldType")).intValue());
+                customField.setFieldType(CustomField.Type.valueOf(customFieldForm.getFieldType()));
                 customField.setRequired(("true".equals((String) PropertyUtils.getSimpleProperty(form, "required")) ? true : false));
                 customField.setSortOptionsByName(("true".equals((String) PropertyUtils.getSimpleProperty(form, "sortOptionsByName")) ? true : false));
                 customField.setDateFormat((String) PropertyUtils.getSimpleProperty(form, "dateFormat"));
@@ -129,7 +132,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
 //            session.removeAttribute(Constants.CUSTOMFIELD_KEY);
             saveToken(request);
             //String forwardAction = "listconfiguration";
-            if(customField.getFieldType() == CustomFieldUtilities.TYPE_LIST && "create".equals(action) ) { 
+            if(customField.getFieldType() == CustomField.Type.LIST && "create".equals(action) ) { 
                 return new ActionForward(mapping.findForward("editcustomfield").getPath() + "?id=" + customField.getId() + "&action=update");
             }
             return mapping.findForward("listconfiguration");
