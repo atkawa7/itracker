@@ -25,8 +25,6 @@
     <br>
 </logic:messagesPresent>
 
-<font color="red">This portalhome might still contain bugs, but it's progressing.. 
-</font><br/><br/>
 <!-- assigned issues -->
 
 <table border="0" cellspacing="0" cellpadding="1" width="100%">
