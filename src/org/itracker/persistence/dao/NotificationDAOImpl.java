@@ -5,7 +5,6 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.itracker.model.Notification;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * 

@@ -25,7 +25,6 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueHistory;
-import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.ProjectUtilities;
 

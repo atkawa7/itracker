@@ -49,7 +49,6 @@ import org.itracker.model.Version;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
 import org.itracker.services.util.Convert;
-import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;

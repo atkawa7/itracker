@@ -3,7 +3,6 @@ package org.itracker.web.actions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -33,9 +32,6 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.IssuePTO;
 import org.itracker.model.NameValuePair;
-import org.itracker.model.Project;
-import org.itracker.web.util.Constants;
-import org.itracker.services.util.Convert;
 
 public class PortalHomeAction extends ItrackerBaseAction {
     
