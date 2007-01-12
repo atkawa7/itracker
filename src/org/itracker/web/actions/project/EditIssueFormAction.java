@@ -117,39 +117,15 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 
                 if(errors.isEmpty()) {
                     Map<Integer, List<NameValuePair>> listOptions = new HashMap<Integer,List<NameValuePair>>();
-                    boolean hasFullEdit = UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
-
                     List<NameValuePair> ownersList = new ArrayList<NameValuePair>();
-                    if(UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_ASSIGN_OTHERS)) {
-                        if(issue.getOwner() == null) {
-                            ownersList.add(new NameValuePair(ITrackerResources.getString("itracker.web.generic.unassigned", currLocale), "-1"));
-                        } else {
-                            ownersList.add(new NameValuePair(ITrackerResources.getString("itracker.web.generic.unassign", currLocale), "-1"));
-                        }
-                        List<User> possibleOwners = userService.getPossibleOwners(issue, project.getId(), currUser.getId());
-                        Collections.sort(possibleOwners, User.NAME_COMPARATOR);
-                        List<NameValuePair> ownerNames = Convert.usersToNameValuePairs(possibleOwners);
-                        for(int i = 0; i < ownerNames.size(); i++) {
-                            ownersList.add(ownerNames.get(i));
-                        }
-                    } else if(UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_ASSIGN_SELF)) {
-                        if(issue.getOwner() != null) {
-                            if(IssueUtilities.canUnassignIssue(issue, currUser.getId(), userPermissions)) {
-                                ownersList.add(new NameValuePair(ITrackerResources.getString("itracker.web.generic.unassign", currLocale), "-1"));
-                            }
-                            if(! issue.getOwner().getId().equals(currUser.getId())) {
-                                ownersList.add(new NameValuePair(issue.getOwner().getFirstName() + " " + issue.getOwner().getLastName(), issue.getOwner().getId().toString()));
-                                ownersList.add(new NameValuePair(currUser.getFirstName() + " " + currUser.getLastName(), currUser.getId().toString()));
-                            } else {
-                                ownersList.add(new NameValuePair(currUser.getFirstName() + " " + currUser.getLastName(), currUser.getId().toString()));
-                            }
-                        }
-                    } else if(issue.getOwner() != null && IssueUtilities.canUnassignIssue(issue, currUser.getId(), userPermissions)) {
-                        ownersList.add(new NameValuePair(ITrackerResources.getString("itracker.web.generic.unassign", currLocale), "-1"));
-                        ownersList.add(new NameValuePair(issue.getOwner().getFirstName() + " " + issue.getOwner().getLastName(), issue.getOwner().getId().toString()));
-                    }
-                   
-                    listOptions.put(new Integer(IssueUtilities.FIELD_OWNER), ownersList);
+                    
+                    ownersList = GetIssuePossibleOwnersList(issue, project, currUser, currLocale, 
+                                                             issueService, userService, userPermissions);
+
+                    if ( ownersList != null && ownersList.size() > 0 )
+                        listOptions.put(new Integer(IssueUtilities.FIELD_OWNER), ownersList);
+                    
+                    boolean hasFullEdit = UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
 
                     List<NameValuePair> allStatuses = IssueUtilities.getStatuses(currLocale);
                     List<NameValuePair> statusList = new ArrayList<NameValuePair>();

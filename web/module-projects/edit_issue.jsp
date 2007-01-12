@@ -210,7 +210,7 @@
                           <% } %>
                         </html:select>
                   <% } else { %>
-                        <%= issue.getTargetVersion().getNumber() %>
+                        <%= (issue.getTargetVersion() == null ? "" : issue.getTargetVersion().getNumber() )%>
                   <% }  %>
                 </td>
             <% } %>

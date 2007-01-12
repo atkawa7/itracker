@@ -2,7 +2,9 @@ package org.itracker.web.actions;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -10,6 +12,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
@@ -18,6 +21,7 @@ import org.apache.struts.action.ActionMapping;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Issue;
 import org.itracker.model.PermissionType;
+import org.itracker.model.Permission;
 import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
@@ -28,6 +32,10 @@ import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.IssuePTO;
+import org.itracker.model.NameValuePair;
+import org.itracker.model.Project;
+import org.itracker.web.util.Constants;
+import org.itracker.services.util.Convert;
 
 public class PortalHomeAction extends ItrackerBaseAction {
     
@@ -59,7 +67,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 User currUser = (User)request.getSession().getAttribute("currUser");
                 Locale currLocale = super.getLocale(request);
                 Integer userId = currUser.getId();
-                Map<Integer, Set<PermissionType>> permissions = 
+                Map<Integer, Set<PermissionType>> permissions =
                         (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");
                 
                 // GETTING AND SETTING USER PREFS AND HIDDEN SECTIONS ACCORDINGLY
@@ -74,152 +82,82 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 List<IssuePTO> ownedIssuePTOs = new ArrayList<IssuePTO>();
                 List<IssuePTO> unassignedIssuePTOs = new ArrayList<IssuePTO>();
                 List<IssuePTO> watchedIssuePTOs = new ArrayList<IssuePTO>();
-       
+                
                 // POPULATING ISSUE MODELS
                 final List<Issue> createdIssues;
                 final List<Issue> ownedIssues;
                 final List<Issue> unassignedIssues;
                 final List<Issue> watchedIssues;
                 
+                // PUTTING PREFERENCES INTO THE REQUEST SCOPE
+// Marky:  since the setAttribute is done below,  changed code to place attribute where it is
+//         set.
                 if(UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_CREATED, hiddenSections)) {
                     createdIssues  = new ArrayList<Issue>();
+                    request.setAttribute("UserUtilities_PREF_HIDE_CREATED",new Boolean(true));
                 } else {
                     createdIssues = issueService.getIssuesCreatedByUser(currUser.getId());
+                    request.setAttribute("UserUtilities_PREF_HIDE_CREATED",new Boolean(false));
                 }
                 
                 if(UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_ASSIGNED, hiddenSections)) {
                     ownedIssues = new ArrayList<Issue>();
+                    request.setAttribute("UserUtilities_PREF_HIDE_ASSIGNED",new Boolean(true));
                 } else {
                     ownedIssues = issueService.getIssuesOwnedByUser(currUser.getId());
+                    request.setAttribute("UserUtilities_PREF_HIDE_ASSIGNED",new Boolean(false));
                 }
                 
                 if(UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_UNASSIGNED, hiddenSections)) {
                     unassignedIssues = new ArrayList<Issue>();
+                    request.setAttribute("UserUtilities_PREF_HIDE_UNASSIGNED",new Boolean(true));
                 } else {
                     unassignedIssues = issueService.getUnassignedIssues();
+                    request.setAttribute("UserUtilities_PREF_HIDE_UNASSIGNED",new Boolean(false));
                 }
-
+                
                 if(UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_WATCHED, hiddenSections)) {
                     watchedIssues = new ArrayList<Issue>();
+                    request.setAttribute("UserUtilities_PREF_HIDE_WATCHED",new Boolean(true));
                 } else {
                     watchedIssues = issueService.getIssuesWatchedByUser(currUser.getId());
+                    request.setAttribute("UserUtilities_PREF_HIDE_WATCHED",new Boolean(false));
                 }
                 
                 // SORTING ISSUES ACCORDING TO USER PREFS
                 if (null!=userPrefs) {
                     String order = userPrefs.getSortColumnOnIssueList();
-                    
+                    Comparator sort_id = Issue.STATUS_COMPARATOR;
+//  Marky:  since repetative code, set a common Comparator variable to contain the Comparator to use and
+//          execute the sort pre issue type only once.
                     if("id".equals(order)) {
-                        Collections.sort(createdIssues, Issue.ID_COMPARATOR);
-                        Collections.sort(ownedIssues, Issue.ID_COMPARATOR);
-                        Collections.sort(unassignedIssues, Issue.ID_COMPARATOR);
-                        Collections.sort(watchedIssues, Issue.ID_COMPARATOR);
+                        sort_id = Issue.ID_COMPARATOR;
                     } else if("sev".equals(order)) {
-                        Collections.sort(createdIssues, Issue.SEVERITY_COMPARATOR);
-                        Collections.sort(ownedIssues, Issue.SEVERITY_COMPARATOR);
-                        Collections.sort(unassignedIssues, Issue.SEVERITY_COMPARATOR);
-                        Collections.sort(watchedIssues, Issue.SEVERITY_COMPARATOR);
+                        sort_id = Issue.SEVERITY_COMPARATOR;
                     } else if("stat".equals(order)) {
-                        Collections.sort(createdIssues, Issue.STATUS_COMPARATOR);
-                        Collections.sort(ownedIssues, Issue.SEVERITY_COMPARATOR);
-                        Collections.sort(unassignedIssues, Issue.STATUS_COMPARATOR);
-                        Collections.sort(watchedIssues,Issue.STATUS_COMPARATOR);
+                        sort_id = Issue.STATUS_COMPARATOR;
                     } else if("lm".equals(order)) {
-                        Collections.sort(createdIssues, Issue.LAST_MODIFIED_DATE_COMPARATOR);
-                        Collections.sort(ownedIssues, Issue.LAST_MODIFIED_DATE_COMPARATOR);
-                        Collections.sort(unassignedIssues, Issue.LAST_MODIFIED_DATE_COMPARATOR);
-                        Collections.sort(watchedIssues, Issue.LAST_MODIFIED_DATE_COMPARATOR);
+                        sort_id = Issue.LAST_MODIFIED_DATE_COMPARATOR;
                     } else if("own".equals(order)) {
-                        Collections.sort(createdIssues, Issue.OWNER_AND_STATUS_COMPARATOR);
-                        Collections.sort(ownedIssues, Issue.SEVERITY_COMPARATOR);
-                        Collections.sort(unassignedIssues, Issue.OWNER_AND_STATUS_COMPARATOR);
-                        Collections.sort(watchedIssues, Issue.OWNER_AND_STATUS_COMPARATOR);
-                    } else {
-                        Collections.sort(createdIssues, Issue.STATUS_COMPARATOR);
-                        Collections.sort(ownedIssues, Issue.SEVERITY_COMPARATOR);
-                        Collections.sort(unassignedIssues, Issue.STATUS_COMPARATOR);
-                        Collections.sort(watchedIssues, Issue.STATUS_COMPARATOR);
+                        sort_id = Issue.OWNER_AND_STATUS_COMPARATOR;
                     }
+                    
+                    Collections.sort(createdIssues, sort_id);
+                    Collections.sort(ownedIssues, sort_id);
+                    Collections.sort(unassignedIssues, sort_id);
+                    Collections.sort(watchedIssues, sort_id);
                 }
                 
                 // COPYING MODELS INTO PTOS
                 
                 // SETTING USER PERMISSIONS ON THE ISSUES
+// Marky:  Made function that would built the PTOs
+                ownedIssuePTOs = buildIssueList( ownedIssues, request );
+                unassignedIssuePTOs = buildIssueList( unassignedIssues, request );
+                createdIssuePTOs = buildIssueList( createdIssues, request );
+                watchedIssuePTOs = buildIssueList( watchedIssues, request );
                 
-                for (int i=0;i<ownedIssues.size();i++) {
-                    Issue issue = ownedIssues.get(i);
-                    
-                    IssuePTO issuePTO = new IssuePTO(issue);
-                    boolean canEditIssue = IssueUtilities.canEditIssue(issue, currUser.getId(), permissions);
-                    String statusLocalizedString = IssueUtilities.getStatusName(issue.getStatus(), currLocale);
-                    String severityLocalizedString = IssueUtilities.getSeverityName(issue.getSeverity(), currLocale);
-
-                    issuePTO.setStatusLocalizedString(statusLocalizedString);
-                    issuePTO.setSeverityLocalizedString(severityLocalizedString);
-                    issuePTO.setUserCanEdit(canEditIssue);
-                    
-                    ownedIssuePTOs.add(issuePTO);
-                }
                 
-                for (int i=0;i<unassignedIssues.size();i++) {
-                    Issue issue = unassignedIssues.get(i);
-                    IssuePTO issuePTO = new IssuePTO(issue);
-                    
-                    boolean canEditIssue = IssueUtilities.canEditIssue(issue, currUser.getId(), permissions);
-                    String statusLocalizedString = IssueUtilities.getStatusName(unassignedIssues.get(i).getStatus(), currLocale);
-                    String severityLocalizedString = IssueUtilities.getSeverityName(unassignedIssues.get(i).getSeverity(), currLocale);
-                    boolean canViewIssue = IssueUtilities.canViewIssue(unassignedIssues.get(i), currUser.getId(), permissions);
-                    issuePTO.setUserCanViewIssue(canViewIssue);
-                    
-                    boolean userHasIssueNotification = IssueUtilities.hasIssueNotification(unassignedIssues.get(i), currUser.getId());
-                    issuePTO.setUserCanEdit(userHasIssueNotification);
-                    issuePTO.setStatusLocalizedString(statusLocalizedString);
-                    issuePTO.setSeverityLocalizedString(severityLocalizedString);
-                    issuePTO.setUserCanEdit(canEditIssue);
-                    issuePTO.setUnassigned(true);
-                    issuePTO.setUserHasPermission_PERMISSION_ASSIGN_SELF(UserUtilities.hasPermission(permissions, unassignedIssues.get(i).getProject().getId(), UserUtilities.PERMISSION_ASSIGN_SELF));
-                    issuePTO.setUserHasPermission_PERMISSION_ASSIGN_OTHERS(UserUtilities.hasPermission(permissions, unassignedIssues.get(i).getProject().getId(), UserUtilities.PERMISSION_ASSIGN_OTHERS));
-                    unassignedIssuePTOs.add(issuePTO);
-                }
-                
-                for (int i=0;i<createdIssues.size();i++) {
-                    Issue issue = createdIssues.get(i);
-                    IssuePTO issuePTO = new IssuePTO(issue);
-                    
-                    boolean canEditIssue = IssueUtilities.canEditIssue(issue, currUser.getId(), permissions);
-                    String statusLocalizedString = IssueUtilities.getStatusName(createdIssues.get(i).getStatus(), currLocale);
-                    String severityLocalizedString = IssueUtilities.getSeverityName(createdIssues.get(i).getSeverity(), currLocale);
-                    boolean canViewIssue = IssueUtilities.canViewIssue(createdIssues.get(i), currUser.getId(), permissions);
-                    issuePTO.setUserCanEdit(canViewIssue);
-                    boolean userHasIssueNotification = IssueUtilities.hasIssueNotification(createdIssues.get(i), currUser.getId());
-                    issuePTO.setUserCanEdit(userHasIssueNotification);
-                    issuePTO.setStatusLocalizedString(statusLocalizedString);
-                    issuePTO.setSeverityLocalizedString(severityLocalizedString);
-                    issuePTO.setUserCanEdit(canEditIssue);
-                    if (issuePTO.getIssue().getOwner()==null){
-                    	issuePTO.setUnassigned(true);
-                    }
-                    createdIssuePTOs.add(issuePTO);
-                }
-                for (int i=0;i<watchedIssues.size();i++) {
-                    Issue issue = watchedIssues.get(i);
-                    IssuePTO issuePTO = new IssuePTO(issue);
-                    
-                    boolean canEditIssue = IssueUtilities.canEditIssue(issue, currUser.getId(), permissions);
-                    String statusLocalizedString = IssueUtilities.getStatusName(watchedIssues.get(i).getStatus(), currLocale);
-                    String severityLocalizedString = IssueUtilities.getSeverityName(watchedIssues.get(i).getSeverity(), currLocale);
-                    boolean canViewIssue = IssueUtilities.canViewIssue(watchedIssues.get(i), currUser.getId(), permissions);
-                    issuePTO.setUserCanEdit(canViewIssue);
-                    boolean userHasIssueNotification = IssueUtilities.hasIssueNotification(watchedIssues.get(i), currUser.getId());
-                    issuePTO.setUserCanEdit(userHasIssueNotification);
-                    issuePTO.setStatusLocalizedString(statusLocalizedString);
-                    issuePTO.setSeverityLocalizedString(severityLocalizedString);
-                    issuePTO.setUserCanEdit(canEditIssue);
-                    if (issuePTO.getIssue().getOwner()==null){
-                    	issuePTO.setUnassigned(true);
-                    }
-                    watchedIssuePTOs.add(issuePTO);
-                }
                 // POSSIBLE OWNERS CODE...
                 
                 // Because of the potentially large number of issues, and a multitude of projects, the
@@ -228,69 +166,54 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 // creator isn't already in the project list, check to see if the creator has EDIT_USERS
                 // permissions, if so then add them to the list of owners and resort.
                 
+// Marky:  moved these out of for loop so they can be referenced after loop is over to set attributes.
+                
+//                List<Boolean> creatorsPresent = new ArrayList<Boolean>();
+                List[] possibleOwnersMap = new List[unassignedIssues.size()];
+//                HashMap<Integer,List<User>> usersWithEditOwnMap = new HashMap<Integer,List<User>>();
+                HttpSession session = request.getSession(true);
+                Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+                
                 for (int i = 0; i < unassignedIssues.size(); i++) {
-                    
-                    HashMap<Integer,List<User>> possibleOwnersMap = new HashMap<Integer,List<User>>();
-                    HashMap<Integer,List<User>> usersWithEditOwnMap = new HashMap<Integer,List<User>>();
-                    List<User> tempOwners = new ArrayList<User>();
-                    // List<User> possibleIssueOwners = possibleOwnersMap.get(unassignedIssues.get(i).getProject().getId());
-                    //List<User> possibleIssueOwners = new ArrayList<User>();
-                    
+                    List<User> possibleIssueOwners = new ArrayList<User>();
+                    boolean creatorPresent = false;
                     final Issue issue = unassignedIssuePTOs.get(i).getIssue();
                     final Project project = issueService.getIssueProject(issue.getId());
-                    //if(possibleIssueOwners == null) {
-                    List<User> possibleIssueOwners = userService.getPossibleOwners(issue, project.getId(), currUser.getId());
-                        possibleIssueOwners = userService.getPossibleOwners(issue, issue.getProject().getId(), currUser.getId());
-                        Collections.sort(possibleIssueOwners, User.NAME_COMPARATOR);
-                        possibleOwnersMap.put(issue.getProject().getId(), possibleIssueOwners);
-                    //}
                     
-                    List<User> editOwnUsers = new ArrayList<User>();
-                    User userWithEditOwnMap = (User)usersWithEditOwnMap.get(issue.getProject().getId());
-                    if (userWithEditOwnMap == null) {
-                        editOwnUsers = null;
-                    } else {
-                        editOwnUsers.add(userWithEditOwnMap);
-                    }
+                    List<User> tempOwners = new ArrayList<User>();
+                    List<NameValuePair> ownersList = new ArrayList<NameValuePair>();
                     
+                    ownersList = GetIssuePossibleOwnersList(issue, project, currUser, currLocale,
+                                                            issueService, userService, userPermissions);
                     
-                    if(editOwnUsers == null) {
-                        Integer projectId = issue.getProject().getId();
-                        editOwnUsers = userService.getUsersWithProjectPermission(projectId, UserUtilities.PERMISSION_EDIT_USERS, true);
-                        usersWithEditOwnMap.put(projectId, editOwnUsers);
-                    }
-                    
-                    boolean creatorPresent = false;
-                    
-                    for(int k = 0; k < possibleIssueOwners.size(); k++) {
-                        if(possibleIssueOwners.get(k).getId().equals(issue.getCreator().getId())) {
+                    for ( Iterator idIterator = ownersList.iterator(); idIterator.hasNext(); ) {
+                        NameValuePair owner = (NameValuePair) idIterator.next();
+                        possibleIssueOwners.add(userService.getUser(Integer.parseInt(owner.getValue())));
+                        if ( owner.getValue().equals(String.valueOf(issue.getCreator().getId()) )) {
                             creatorPresent = true;
-                            break;
                         }
-                        request.setAttribute("creatorPresent", new Boolean(creatorPresent));
                     }
                     
                     if(! creatorPresent) {
-                        creatorPresent = true;
-                        for(int k = 0; k < editOwnUsers.size(); k++) {
-                            Integer creatorId = issue.getCreator().getId();
-                            Integer ownUserId = editOwnUsers.get(k).getId();
-                            if(ownUserId.equals(creatorId)) {
-                                tempOwners = new ArrayList<User>();
-                                for(int m = 0; m < possibleIssueOwners.size(); m++) {
-                                    tempOwners.add(m,possibleIssueOwners.get(m));
-                                }
-                                tempOwners.add(tempOwners.size() == 0 ? 0 : tempOwners.size() - 1,(User)editOwnUsers.get(k));
-                                Collections.sort(tempOwners, User.NAME_COMPARATOR);
-                                creatorPresent = false;
+                        List<Permission> creatorpermissions = issue.getCreator().getPermissions();
+                        for ( Iterator premIterator = creatorpermissions.iterator(); premIterator.hasNext(); ) {
+                            Permission creatorPermission = (Permission) premIterator.next();
+                            if ( creatorPermission.getPermissionType() == UserUtilities.PERMISSION_EDIT_USERS ) {
+                                possibleIssueOwners.add(userService.getUser(issue.getCreator().getId()));
+                                break;
                             }
                         }
-                        request.setAttribute("creatorPresent", new Boolean(creatorPresent));
                     }
-                    LOGGER.info("possibleIssueOwners Size: "+possibleIssueOwners.size());
-                    request.setAttribute("possibleIssueOwners", possibleIssueOwners);
+//                    creatorsPresent.add(Boolean.valueOf(creatorPresent));
+                    possibleOwnersMap[i] = possibleIssueOwners;
+                    
                 }
+
+// Moved the creatorPresent and possibleIssueOwners attributes so they are set only once.
+//                request.setAttribute("creatorsPresent", creatorsPresent);
                 
+//                LOGGER.info("possibleIssueOwners Size: "+possibleIssueOwners.size());
+                request.setAttribute("possibleIssueOwnersMap", possibleOwnersMap);
                 
                 // SETTING THE STATUS ON THE ISSUES AS STRINGS IN THE RIGHT LOCALE
                 //IssueUtilities.getStatusName(createdIssues[i].getStatus(), (Locale)pageContext.getAttribute("currLocale"));
@@ -302,21 +225,6 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 //String unassignedString = ITrackerResources.getString("itracker.web.generic.unassigned", (Locale)pageContext.getAttribute("currLocale"));
                 
                 // PUTTING PERMISSIONS INTO THE REQUEST SCOPE
-                
-                
-                // PUTTING PREFERENCES INTO THE REQUEST SCOPE
-                if (UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_CREATED, hiddenSections)) {
-                    request.setAttribute("UserUtilities_PREF_HIDE_CREATED",new Boolean(true));
-                }
-                if (UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_ASSIGNED, hiddenSections)) {
-                    request.setAttribute("UserUtilities_PREF_HIDE_ASSIGNED",new Boolean(true));
-                }
-                if (UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_UNASSIGNED, hiddenSections)) {
-                    request.setAttribute("UserUtilities_PREF_HIDE_UNASSIGNED",new Boolean(true));
-                }
-                if (UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_WATCHED, hiddenSections)) {
-                    request.setAttribute("UserUtilities_PREF_HIDE_WATCHED",new Boolean(true));
-                }
                 
                 request.setAttribute("itracker_web_generic_unassigned", ITrackerResources.getString("itracker.web.generic.unassigned", currLocale));
                 
@@ -354,6 +262,36 @@ public class PortalHomeAction extends ItrackerBaseAction {
         }
         return forward;
     }
+    
+    // this function is used to load the issue type PTOs List with issue/owner/project data.  It will return this the the main
+    // function for further processing.
+    
+    public List<IssuePTO> buildIssueList( List<Issue> issues, HttpServletRequest request ) {
+        User currUser = (User)request.getSession().getAttribute("currUser");
+        Locale currLocale = super.getLocale(request);
+        Integer userId = currUser.getId();
+        Map<Integer, Set<PermissionType>> permissions =
+                (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");
+        
+        List<IssuePTO> issuePTOs = new ArrayList<IssuePTO>();
+        
+        for (int i=0;i<issues.size();i++) {
+            Issue issue = issues.get(i);
+            IssuePTO issuePTO = new IssuePTO(issue);
+            issuePTO.setSeverityLocalizedString(IssueUtilities.getSeverityName(issue.getSeverity(), currLocale));
+            issuePTO.setStatusLocalizedString(IssueUtilities.getStatusName(issue.getStatus(), currLocale));
+            issuePTO.setUnassigned((issuePTO.getIssue().getOwner() == null ? true : false));
+            issuePTO.setUserCanEdit(IssueUtilities.canEditIssue(issue, currUser.getId(), permissions));
+            issuePTO.setUserCanViewIssue(IssueUtilities.canViewIssue(issue, currUser.getId(), permissions));
+            issuePTO.setUserHasPermission_PERMISSION_ASSIGN_SELF(UserUtilities.hasPermission(permissions, issue.getProject().getId(), UserUtilities.PERMISSION_ASSIGN_SELF));
+            issuePTO.setUserHasPermission_PERMISSION_ASSIGN_OTHERS(UserUtilities.hasPermission(permissions, issue.getProject().getId(), UserUtilities.PERMISSION_ASSIGN_OTHERS));
+            issuePTO.setUserHasIssueNotification(IssueUtilities.hasIssueNotification(issue, currUser.getId()));
+            
+            issuePTOs.add(issuePTO);
+        }
+        return issuePTOs;
+    }
+    
     
     public PortalHomeAction() {
         super();

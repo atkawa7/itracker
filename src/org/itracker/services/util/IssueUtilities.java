@@ -609,8 +609,10 @@ public class IssueUtilities  {
             return true;
         }
 
-        if (issue.getOwner().getId().equals(userId)) {
-            return true;
+        if ( issue.getOwner() != null ) {
+            if (issue.getOwner().getId().equals(userId)) {
+                return true;
+            }
         }
         return false;
     }
@@ -636,9 +638,10 @@ public class IssueUtilities  {
         if (issue.getCreator().getId().equals(userId)) {
             return true;
         }
-
-        if (issue.getOwner().getId().equals(userId)) {
-            return true;
+        if ( issue.getOwner() != null ) {
+            if (issue.getOwner().getId().equals(userId)) {
+                return true;
+            }
         }
         return false;
     }
