@@ -17,6 +17,7 @@
         <form-bean name="issueRelationForm" type="org.itracker.web.forms.IssueRelationForm"/>
         <form-bean name="moveIssueForm" type="org.itracker.web.forms.MoveIssueForm"/>
         <form-bean name="issueForm" type="org.itracker.web.forms.IssueForm"/>
+        <form-bean name="watchIssueForm" type="org.itracker.web.forms.WatchIssueForm"/>
     </form-beans>
 
     <!-- ==================================== Global Exceptions -->
@@ -66,8 +67,12 @@
                      redirect="true"/>
         </action>
 
- <action path="/watchissue" type="org.itracker.web.actions.project.WatchIssueAction"
-                name="watchIssueForm" scope="request" input="/index.jsp" validate="false"/>
+        <action path="/watchissue" type="org.itracker.web.actions.project.WatchIssueAction"
+                name="watchIssueForm" scope="request" input="/index.jsp" validate="false">
+            <forward name="index" module="/" path="/index.jsp" redirect="true"/>
+            <forward name="editissue" path="/editissueform.do" redirect="true"/>
+            <forward name="viewissue" path="/view_issue.jsp" redirect="true"/>
+         </action>
                 
         <action path="/unauthorized" type="org.itracker.web.actions.UnauthorizedAction">
             <forward name="unauthorized" path="/unauthorized.jsp" module="/" redirect="true"/>

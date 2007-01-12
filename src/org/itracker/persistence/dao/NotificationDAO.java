@@ -7,7 +7,7 @@ import org.itracker.model.Notification;
 /**
  * 
  */
-public interface NotificationDAO {
+public interface NotificationDAO  extends BaseDAO<Notification>{
     
     Notification findById(Integer id);
     

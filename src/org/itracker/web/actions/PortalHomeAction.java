@@ -156,8 +156,16 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 unassignedIssuePTOs = buildIssueList( unassignedIssues, request );
                 createdIssuePTOs = buildIssueList( createdIssues, request );
                 watchedIssuePTOs = buildIssueList( watchedIssues, request );
-                
-                
+                if ( watchedIssuePTOs != null && watchedIssuePTOs.size() > 0 && unassignedIssuePTOs != null && unassignedIssuePTOs.size() > 0 ) {
+                    for ( Iterator<IssuePTO> witerator = watchedIssuePTOs.iterator(); witerator.hasNext(); ) {
+                        IssuePTO watchedIssue = (IssuePTO) witerator.next();
+                        for ( int i = 0; i < unassignedIssuePTOs.size(); i++ ) {
+                            if ( watchedIssue.getIssue().getId() == unassignedIssuePTOs.get(i).getIssue().getId() ) {
+                                unassignedIssuePTOs.get(i).setUserHasIssueNotification(false);
+                            }
+                        }
+                    }
+                }
                 // POSSIBLE OWNERS CODE...
                 
                 // Because of the potentially large number of issues, and a multitude of projects, the

@@ -374,6 +374,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
     </c:choose>
     <td style="white-space: nowrap">
         <it:formatImageAction forward="viewissue" paramName="id" paramValue="${watchedIssues.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${watchedIssues.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
+        <it:formatImageAction forward="watchissue" paramName="id" paramValue="${watchedIssues.issue.id}" caller="index" src="/themes/defaulttheme/images/unwatch.gif" altKey="itracker.web.image.unwatch.issue.alt" arg0="${watchedIssues.issue.id}" textActionKey="itracker.web.image.unwatch.texttag"/>
         
         <%-- %>	<c:if test="${watchedIssues.canEditIssue}">
           	<it:formatImageAction action="/module-projects/editissueform" paramName="id" paramValue="${watchedIssues.issue.id}" caller="index" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="${watchedIssues.issue.id}" textActionKey="itracker.web.image.edit.texttag"/>

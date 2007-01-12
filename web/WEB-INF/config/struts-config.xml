@@ -78,10 +78,13 @@
         <forward name="unauthorized" path="/unauthorized.do" module="/"/>
         <forward name="viewactivity" module="/module-projects" path="/view_issue_activity.do"/>
         <forward name="viewissue" module="/module-projects" path="/view_issue.do"/>
+        <forward name="watchissue" module="/module-projects" path="/watchissue.do"/>
      
     </global-forwards>
 
     <action-mappings>
+        <action path="/watchissue" type="org.itracker.web.actions.project.WatchIssueAction"
+                name="watchIssueForm" scope="request" input="/index.jsp" validate="false"/>
         <action path="/assignissue" type="org.itracker.web.actions.project.AssignIssueAction"
                 name="assignIssueForm" scope="request" input="/index.jsp"/>
         <action path="/portalhome" type="org.itracker.web.actions.PortalHomeAction">

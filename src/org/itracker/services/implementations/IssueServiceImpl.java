@@ -1358,6 +1358,13 @@ public class IssueServiceImpl implements IssueService {
 
 	}
 
+	public boolean removeIssueNotification(Integer notificationId) {
+
+		Notification notification = this.notificationDAO.findById(notificationId);
+		notificationDAO.delete(notification);
+		return true;
+	}
+
 	public boolean addIssueNotification(Notification thisnotification) {
 		User user = thisnotification.getUser();
 

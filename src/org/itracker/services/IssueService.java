@@ -233,6 +233,8 @@ public interface IssueService {
      * @returns an array of NotificationModels
      * @see IssueServiceImpl#getPrimaryIssueNotifications
      */
+    boolean removeIssueNotification(Integer notificationId);
+    
     List<Notification> getIssueNotifications(Integer issueId, boolean primaryOnly, boolean activeOnly);
     
     boolean hasIssueNotification(Integer issueId, Integer userId);

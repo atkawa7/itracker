@@ -10,7 +10,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 /**
  * 
  */
-public class NotificationDAOImpl extends HibernateDaoSupport 
+public class NotificationDAOImpl 
+        extends BaseHibernateDAOImpl<Notification> 
         implements NotificationDAO {
 
     public NotificationDAOImpl() {

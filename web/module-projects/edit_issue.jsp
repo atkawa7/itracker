@@ -180,7 +180,7 @@
                      if(possibleOwners.size() > 0) {
                   %>
                        <td><html:select property="ownerId" styleClass="editColumnText">
-                          <html:option value="-1" key="itracker.web.generic.unassigned"/>
+                          <!-- html:option value="-1" key="itracker.web.generic.unassigned"/ -->
                           <% for(int i = 0; i < possibleOwners.size(); i++) { %>
                                <html:option value="<%= possibleOwners.get(i).getValue() %>"><%= possibleOwners.get(i).getName() %></html:option>
                           <% } %>

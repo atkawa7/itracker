@@ -19,6 +19,8 @@
 package org.itracker.web.actions.project;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,6 +41,7 @@ import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.services.IssueService;
+import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NotificationUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
@@ -86,9 +89,25 @@ public class WatchIssueAction extends ItrackerBaseAction {
             notification.setUser(currUser);
             notification.setIssue(issue);
             notification.setNotificationRole(NotificationUtilities.ROLE_IP);
-
-            issueService.addIssueNotification(notification);
-
+            
+            boolean UserHasIssueNotification = false;
+            List<Notification> notifications = issue.getNotifications();
+            
+            for ( Iterator<Notification> nIterator = notifications.iterator(); nIterator.hasNext(); ) {
+                Notification issue_notification = nIterator.next();
+                if(issue_notification.getUser().getId().equals(currUser.getId())) {
+                    notification = issue_notification;
+                    UserHasIssueNotification = true;
+                    nIterator.remove();
+                    break;
+                }
+            }
+            if ( UserHasIssueNotification ) {
+                issue.setNotifications(notifications);
+                issueService.removeIssueNotification(notification.getId());
+            } else {
+                issueService.addIssueNotification(notification);
+            }
             String caller = request.getParameter("caller");
             if("editissue".equals(caller)) {
                 return new ActionForward(mapping.findForward("editissue").getPath() + "?id=" + issueId);
