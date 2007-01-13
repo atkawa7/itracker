@@ -319,6 +319,9 @@ public class EditIssueAction extends ItrackerBaseAction {
                     IssueUtilities.HISTORY_STATUS_AVAILABLE);
             issueHistory.setDescription(((IssueForm)form).getHistory());
             issueHistory.setCreateDate(new Date());
+            if (issueHistory.getLastModifiedDate()==null) {
+            	issueHistory.setLastModifiedDate(new Date());
+            }
             issueService.addIssueHistory(issueHistory);
         }
     }
