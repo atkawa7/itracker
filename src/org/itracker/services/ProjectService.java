@@ -18,9 +18,9 @@
 
 package org.itracker.services;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.itracker.model.Component;
 import org.itracker.model.CustomField;
@@ -78,7 +78,7 @@ public interface ProjectService {
     
     public List<User> getListOfProjectOwners(Integer projectId);
     
-    public boolean setProjectOwners(Project project, HashSet<Integer> newOwners);
+    public boolean setProjectOwners(Project project, Set<Integer> newOwners);
  
     public List<CustomField> getProjectFields(Integer projectId);
     
@@ -88,7 +88,7 @@ public interface ProjectService {
     
     public List<CustomField> getListOfProjectFields(Integer projectId, Locale locale);
     
-    public boolean setProjectFields(Project project, HashSet<Integer> newFields);
+    public boolean setProjectFields(Project project, Set<Integer> newFields);
 
     public ProjectScript getProjectScript(Integer scriptId);
     

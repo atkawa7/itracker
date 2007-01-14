@@ -22,10 +22,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.itracker.model.Component;
 import org.itracker.model.CustomField;
@@ -206,7 +206,7 @@ public class ProjectServiceImpl implements ProjectService {
         return users;
     }
     
-    public boolean setProjectOwners(Project project, HashSet<Integer> setOfNewOwnerIds) {
+    public boolean setProjectOwners(Project project, Set<Integer> setOfNewOwnerIds) {
         List<User> owners = project.getOwners();       
         owners.clear();
         if (setOfNewOwnerIds != null && !setOfNewOwnerIds.isEmpty()) {
@@ -232,7 +232,7 @@ public class ProjectServiceImpl implements ProjectService {
         return fields;
     }
     
-    public boolean setProjectFields(Project project, HashSet<Integer> setOfNewsFieldIds) {
+    public boolean setProjectFields(Project project, Set<Integer> setOfNewsFieldIds) {
         List<CustomField> fields = new ArrayList<CustomField>();
         fields = project.getCustomFields();
         fields.clear();
