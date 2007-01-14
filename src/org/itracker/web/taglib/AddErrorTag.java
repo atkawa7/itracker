@@ -27,6 +27,10 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
+/**
+ * @deprecated errors should be handled by Action classes, not JSPs!
+ */
+@Deprecated
 public final class AddErrorTag extends TagSupport {
     /**
 	 * 
