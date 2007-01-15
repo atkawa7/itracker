@@ -63,7 +63,8 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 User currUser = (User)request.getSession().getAttribute("currUser");
                 Locale currLocale = super.getLocale(request);
                 Integer userId = currUser.getId();
-                Map<Integer, Set<PermissionType>> permissions =
+                @SuppressWarnings("unused")
+				Map<Integer, Set<PermissionType>> permissions =
                         (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");
                 
                 // GETTING AND SETTING USER PREFS AND HIDDEN SECTIONS ACCORDINGLY
@@ -184,7 +185,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     final Issue issue = unassignedIssuePTOs.get(i).getIssue();
                     final Project project = issueService.getIssueProject(issue.getId());
                     
-                    List<User> tempOwners = new ArrayList<User>();
+                    //List<User> tempOwners = new ArrayList<User>();
                     List<NameValuePair> ownersList = new ArrayList<NameValuePair>();
                     
                     ownersList = GetIssuePossibleOwnersList(issue, project, currUser, currLocale,
@@ -270,10 +271,11 @@ public class PortalHomeAction extends ItrackerBaseAction {
     // this function is used to load the issue type PTOs List with issue/owner/project data.  It will return this the the main
     // function for further processing.
     
-    public List<IssuePTO> buildIssueList( List<Issue> issues, HttpServletRequest request ) {
+    @SuppressWarnings("unchecked")
+	public List<IssuePTO> buildIssueList( List<Issue> issues, HttpServletRequest request ) {
         User currUser = (User)request.getSession().getAttribute("currUser");
         Locale currLocale = super.getLocale(request);
-        Integer userId = currUser.getId();
+        //Integer userId = currUser.getId();
         Map<Integer, Set<PermissionType>> permissions =
                 (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");
         
