@@ -100,5 +100,19 @@
                 <arg key="itracker.web.attr.number" position="0"/>
             </field>
         </form>
+        
+        <form name="workflowScriptForm">
+            <field property="name" depends="required">
+                <arg0 key="itracker.web.attr.name"/>
+            </field>
+            <field property="event" depends="required">
+                <arg0 key="itracker.web.attr.event"/>
+            </field>
+            <field property="script" depends="required">
+                <arg0 key="itracker.web.attr.script"/>
+            </field>
+            
+        </form>
+
     </formset>
 </form-validation>
