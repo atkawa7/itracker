@@ -102,38 +102,35 @@ public class IssueAttachment extends AbstractEntity
     }
     
     public  Issue getIssue() {
-        return(issue);
+        return (issue == null ? new Issue() : issue );
     }
     
     public  void setIssue(Issue issue) {
-        if (issue == null) {
-            throw new IllegalArgumentException("null issue");
-        }
-        this.issue = issue;
+        this.issue = ( issue == null ? new Issue() : issue);
     }
     
     public  String getOriginalFileName() {
-        return originalFileName;
+        return ( originalFileName == null ? " " : originalFileName);
     }
+    
     public  void setOriginalFileName(String fileName) {
-        if (fileName == null) {
-            throw new IllegalArgumentException("null fileName");
-        }
-        this.originalFileName = fileName;
+        this.originalFileName = ( fileName == null ? " " : fileName ) ;
     }
     
     public  String getType() {
-        return type;
+        return ( type == null ? "" : type );
     }
+    
     public  void setType(String value) {
-        type = value;
+        type = ( value == null ? "" : value );
     }
     
     public  String getFileName() {
-        return(fileName);
+        return ( fileName == null ? "" : fileName );
     }
+    
     public  void setFileName(String value) {
-        fileName = value;
+        fileName = ( value == null ? "" : value );
     }
     
     public String getFileExtension() {
@@ -146,18 +143,18 @@ public class IssueAttachment extends AbstractEntity
     }
     
     public  byte[] getFileData() {
-        return(fileData);
+        return ( fileData == null ? new byte[0] : fileData );
     }
     public  void setFileData(byte[] value) {
-        fileData = value;
+        fileData = ( value == null ? new byte[0] : value );
     }
     
     public  String getDescription() {
-        return description;
+        return ( description == null ? "" : description );
     }
     
     public  void setDescription(String value) {
-        description = value;
+        description = ( value == null ? "" : value );
     }
     
     public  long getSize() {
@@ -169,11 +166,11 @@ public class IssueAttachment extends AbstractEntity
     }
     
     public  User getUser() {
-        return user;
+        return ( user == null ? new User() : user);
     }
     
     public  void setUser(User user) {
-        this.user = user;
+        this.user = ( user == null ? new User() : user);
     }
     
     public int compareTo(IssueAttachment other) {

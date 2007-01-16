@@ -16,37 +16,37 @@
         <natural-id mutable="true">
             
             <many-to-one name="issue" class="Issue">
-                <column name="issue_id" not-null="true" unique-key="issue_attachment_ak"/>
+                <column name="issue_id" unique-key="issue_attachment_ak"/>
             </many-to-one>
 
             <property name="originalFileName">
-                <column name="orig_file_name" not-null="true" unique-key="issue_attachment_ak"/>
+                <column name="orig_file_name" unique-key="issue_attachment_ak"/>
             </property>
             
         </natural-id>
         
         <property name="fileName">
-            <column name="file_name" not-null="true" unique-key="issue_attachment_ak1"/>
+            <column name="file_name" unique-key="issue_attachment_ak1"/>
         </property>
         
         <many-to-one name="user" class="User">
-            <column name="user_id" not-null="true"/>
+            <column name="user_id"/>
         </many-to-one>
         
         <property name="type">
-            <column name="attachment_type" not-null="true"/>
+            <column name="attachment_type"/>
         </property>
         
         <property name="description">
-            <column name="description" not-null="true"/>
+            <column name="description"/>
         </property>
         
         <property name="size">
-            <column name="file_size" not-null="true"/>
+            <column name="file_size"/>
         </property>
         
         <property name="fileData" type="binary">
-            <column name="file_data" not-null="true" length="1000000" />
+            <column name="file_data" length="1000000" />
         </property>
         
         <property name="createDate" update="false">

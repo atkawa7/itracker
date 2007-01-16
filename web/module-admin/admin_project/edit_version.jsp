@@ -19,6 +19,17 @@ final boolean isNew = version.isNew();
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
+      <logic:messagesPresent>
+        <center>
+          <span class="formError">
+           <html:messages id="error">
+              <bean:write name="error"/><br/>
+           </html:messages>
+          </span>
+        </center>
+        <br>
+      </logic:messagesPresent>
+
 <html:form action="/editversion">
     <html:hidden property="action"/>
     <html:hidden property="projectId"/>

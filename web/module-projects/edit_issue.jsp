@@ -366,8 +366,8 @@
                   </tr>
                   <%
                      List<IssueAttachment> attachments = issue.getAttachments();
-                     Collections.sort(attachments, IssueAttachment.CREATE_DATE_COMPARATOR);
-                     if(attachments.size() > 0) {
+                     if(attachments != null && attachments.size() > 0) {
+                         Collections.sort(attachments, IssueAttachment.CREATE_DATE_COMPARATOR);
                   %>
                         <tr align="left" class="listHeading">
                           <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
