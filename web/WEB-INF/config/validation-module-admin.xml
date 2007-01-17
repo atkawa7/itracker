@@ -91,13 +91,13 @@
 
         <form name="versionForm">
             <field property="description" depends="required">
-                <arg key="itracker.web.attr.description" position="0"/>
+                <arg0 key="itracker.web.attr.description"/>
             </field>
             <field property="id" depends="required">
-                <arg key="itracker.web.attr.id" position="0"/>
+                <arg0 key="itracker.web.attr.id"/>
             </field>
             <field property="number" depends="required">
-                <arg key="itracker.web.attr.number" position="0"/>
+                <arg0 key="itracker.web.attr.number"/>
             </field>
         </form>
         
@@ -111,8 +111,15 @@
             <field property="script" depends="required">
                 <arg0 key="itracker.web.attr.script"/>
             </field>
-            
         </form>
 
+        <form name="projectForm">
+            <field property="name" depends="required">
+                <arg0 key="itracker.web.attr.name"/>
+            </field>
+            <field property="description" depends="required">
+                <arg0 key="itracker.web.attr.description"/>
+            </field>
+        </form>
     </formset>
 </form-validation>

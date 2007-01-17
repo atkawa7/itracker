@@ -174,11 +174,13 @@
                 name="languageForm" scope="request"
                 input="/admin_language/edit_language.jsp" validate="false"></action>
         <action path="/editproject" type="org.itracker.web.actions.admin.project.EditProjectAction"
-                name="projectForm" scope="request" input="/admin_project/edit_project.jsp">
+                name="projectForm" scope="request" input="/admin_project/edit_project.jsp"
+                validate="false">
         </action>
         <action path="/editprojectform"
                 type="org.itracker.web.actions.admin.project.EditProjectFormAction"
-                name="projectForm" scope="request" input="/admin_project/edit_project.jsp">
+                name="projectForm" scope="request" input="/admin_project/edit_project.jsp"
+                validate="false">
         </action>
         <action path="/editprojectscript"
                 type="org.itracker.web.actions.admin.project.EditProjectScriptAction"

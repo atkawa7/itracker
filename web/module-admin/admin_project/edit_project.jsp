@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.itracker.model.*" %>
@@ -47,13 +47,13 @@
         </center>
         <br>
       </logic:messagesPresent>
-     <table>
-         <tr>
-         <td>
+      
+<table width="100%" align="left">
+    <tr><td>
       <html:form action="/editproject">
         <html:hidden property="action"/>
         <html:hidden property="id"/>
-
+        
         <table border="0" cellspacing="0"  cellspacing="1" width="800px" align="left">
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.name"/>:</td>
@@ -145,7 +145,7 @@
                         <td class="editColumnText"><html:multibox  property="options" value="<%= Integer.toString(ProjectUtilities.OPTION_ALLOW_SELF_REGISTERED_CREATE) %>"/></td>
                         <td class="editColumnText"><it:message key="itracker.web.admin.editproject.options.srcreate"/></td>
                       </tr>
-                 	</c:if>
+                </c:if>
               </table>
             </td>
             <td colspan="2" valign="top">
@@ -228,10 +228,8 @@
           <% } %>
         </table>
       </html:form>
-
-         </td></tr>
-         <tr><td>
-
+    </td></tr>
+    <tr><td>
       <% if(isUpdate) { %>
             <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
               <tr>
@@ -270,7 +268,7 @@
                     <td align="left"><%= scripts.get(i).getPriority() %></td>
                     </tr>
               <%  } %>
-              <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15"/></td></tr>
+              <tr><td  colspan="6"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15"/></td></tr>
 
               <tr>
                 <td class="editColumnTitle" colspan="5"><it:message key="itracker.web.attr.versions"/>:</td>
@@ -306,7 +304,7 @@
                       <td align="left"><%= ph.countIssuesByVersion(versions.get(i).getId()) %></td>
                     </tr>
               <%  } %>
-              <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15"/></td></tr>
+              <tr><td colspan="6"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15"/></td></tr>
 
               <tr>
                 <td class="editColumnTitle" colspan="5"><it:message key="itracker.web.attr.components"/>:</td>
@@ -344,9 +342,8 @@
               <%  } %>
             </table>
       <% } %>
-         </td>
-         </tr>
-     </table>
+    </td></tr>
+</table>
 <% } %>
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
 

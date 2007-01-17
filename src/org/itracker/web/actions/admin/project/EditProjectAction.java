@@ -117,6 +117,8 @@ public class EditProjectAction extends ItrackerBaseAction {
                 for(int i = 0; i < ownerIds.length; i++) {
                     owners.add(ownerIds[i]);
                 }
+            } else {
+                ownerIds = new Integer[0];
             }
             //TODO: commented this because it was causing authentication problems (rjst), why is it needed anyway ?
             //SessionManager.setAllSessionsNeedsReset();
@@ -131,7 +133,13 @@ public class EditProjectAction extends ItrackerBaseAction {
                 }
                 
                 Integer[] userIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "users");
+                if ( userIds == null ) {
+                    userIds = new Integer[0];
+                }
                 Integer[] permissions = (Integer[]) PropertyUtils.getSimpleProperty(form, "permissions");
+                if ( permissions == null ) {
+                    permissions = new Integer[0];
+                }
                 List<User> users = new ArrayList<User>();
                 
                 List<Permission> userPermissionModels = new ArrayList<Permission>();
