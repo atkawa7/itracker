@@ -534,7 +534,11 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     public CustomField updateCustomField(CustomField customField) {
         CustomField editcustomField = customFieldDAO.findByPrimaryKey(customField.getId());
         
-        editcustomField = customField;
+        editcustomField.setDateFormat(customField.getDateFormat());
+        editcustomField.setFieldType(customField.getFieldType());
+        editcustomField.setOptions(customField.getOptions());
+        editcustomField.setName(customField.getName());
+        editcustomField.setRequired(customField.isRequired());
         editcustomField.setLastModifiedDate(new Date());
         
         this.customFieldDAO.saveOrUpdate( editcustomField );
