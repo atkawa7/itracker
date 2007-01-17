@@ -59,6 +59,12 @@ public class ITrackerResources {
 
     public static final String KEY_BASE_PERMISSION = "itracker.user.permission.";
 
+    public static final String KEY_BASE_PRIORITY = "itracker.script.priority.";
+
+    public static final String KEY_BASE_PRIORITY_LABEL = ".label";
+
+    public static final String KEY_BASE_PRIORITY_SIZE = "size";
+
     public static final String KEY_BASE_RESOLUTION = "itracker.resolution.";
 
     public static final String KEY_BASE_ISSUE_RELATION = "itracker.issuerelation.";

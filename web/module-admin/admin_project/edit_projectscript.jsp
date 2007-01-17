@@ -3,7 +3,9 @@
 <%@ page import="org.itracker.model.*" %>
 <%@ page import="org.itracker.web.util.*" %>
 <%@ page import="org.itracker.web.forms.*" %>
+<%@ page import="org.itracker.services.util.*" %>
 
+<%@ page import="java.util.List" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -62,11 +64,13 @@
                     Integer[] wsfIds = new Integer[projectScriptForm.getScriptItems().size()];
 */
                     int j = -1; 
+                    List<CustomField> cfFields = projectScriptForm.getCustomFields();
                 %>
                     <logic:iterate indexId="idx" id="itemlangs" name="projectScriptForm" property="scriptDescs">
                         <bean:define name="itemlangs" property="key" id="key" type="java.lang.String"/>
                         <bean:define name="itemlangs" property="value" id="value" type="java.lang.String"/>
                         <% 
+                           
                             String descKey = "scriptDescs("+key+")" ;
                             String chkboxKey = "scriptItems("+key+")" ;
                             String fieldIdKey = "fieldId("+key+")" ;
@@ -75,7 +79,9 @@
                             String idxcnt = "idx"+String.valueOf(j);
                             j++; 
                             String styleClass = (j % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ); 
+                            int indx = 0;
                         %>
+                        <c:set var="fieldId" value="<%=projectScriptForm.getFieldId().get(key)%>"/>
                         <html:hidden indexed="false" property="<%=idKey%>"/>
                         <tr class="<%=styleClass%>">
                            <td valign="top" align="center">
@@ -83,10 +89,41 @@
                            </td> 
                            <td valign="top" align="left"><%=value%></td>
                            <td valign="top" align="left">
-                               <html:text indexed="false" name="projectScriptForm" property="<%=fieldIdKey%>" size="5" styleClass="<%= styleClass %>"/>
+                                <html:select property="<%=fieldIdKey%>" styleClass="editColumnText">
+                                    <c:forEach  step="1" items="${projectScriptForm.customFields}" var="customfield" varStatus="k">
+                                        <%  CustomField cfField = (CustomField) cfFields.get(indx);
+                                            String name = CustomFieldUtilities.getCustomFieldName(cfField.getId(), (java.util.Locale)pageContext.getAttribute("currLocale"));
+                                            name += " ";
+                                            name += CustomFieldUtilities.getTypeString(cfField.getFieldType(), (java.util.Locale)pageContext.getAttribute("currLocale"));
+                                            indx++;
+                                        %>
+                                        <option value="${customfield.id}" 
+                                                <c:choose>
+                                                    <c:when test="${customfield.id == fieldId}">
+                                                        selected
+                                                    </c:when>
+                                                    <c:otherwise> 
+                                                    </c:otherwise>
+                                                </c:choose>><%= name %>
+                                        </option>
+                                    </c:forEach>
+                                </html:select>
                            </td>
                            <td valign="top" align="left">
-                               <html:text indexed="false" name="projectScriptForm" property="<%=priorityKey%>" size="5" styleClass="<%= styleClass %>"/>
+                                <c:set var="priorityId" value="<%=projectScriptForm.getPriority().get(key)%>"/>
+                                <html:select property="<%=priorityKey%>" styleClass="editColumnText">
+                                    <c:forEach step="1" items="${projectScriptForm.priorityList}" var="priority" varStatus="k">
+                                        <option value="${priority.key}" 
+                                                <c:choose>
+                                                    <c:when test="${priority.key == priorityId}">
+                                                        selected
+                                                    </c:when>
+                                                    <c:otherwise> 
+                                                    </c:otherwise>
+                                                </c:choose>>${priority.value}
+                                        </option>
+                                    </c:forEach>
+                                </html:select>
                            </td>
                         </tr>
                        

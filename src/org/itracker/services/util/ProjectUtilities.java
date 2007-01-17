@@ -103,5 +103,11 @@ public class ProjectUtilities  {
         options.toArray(optionsArray);
         return optionsArray;
     }
+    public static String getScriptPriorityLabelKey(Integer fieldId) {
+        return ITrackerResources.getString(ITrackerResources.KEY_BASE_PRIORITY + fieldId + ITrackerResources.KEY_BASE_PRIORITY_LABEL);
+    }
 
+    public static String getScriptPrioritySize() {
+        return ITrackerResources.getString(ITrackerResources.KEY_BASE_PRIORITY + ITrackerResources.KEY_BASE_PRIORITY_SIZE);
+    }
 }

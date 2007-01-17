@@ -36,12 +36,14 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.itracker.model.CustomField;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.WorkflowScript;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.util.UserUtilities;
+import org.itracker.services.util.ProjectUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectScriptForm;
 import org.itracker.web.util.Constants;
@@ -88,7 +90,6 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
             
             Integer projectId = (Integer) PropertyUtils.getSimpleProperty(projectScriptForm, "projectId");
             projectScriptForm.setProjectId(projectId);
-            project = projectService.getProject(projectId);
             project = projectService.getProject(projectId);
             projectScripts = project.getScripts();
             
@@ -147,6 +148,15 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
             projectScriptForm.setFieldId(fieldIds);
             projectScriptForm.setPriority(priorities);
             
+            projectScriptForm.setCustomFields(configurationService.getCustomFields());
+            String prioritySizeStr = ProjectUtilities.getScriptPrioritySize();
+            int prioritySize = Integer.parseInt(prioritySizeStr);
+            
+            HashMap<String,String> priorityList = new HashMap<String,String>();
+            for ( int j = 1; j <= prioritySize; j++ ) {
+                priorityList.put(String.valueOf(j), ProjectUtilities.getScriptPriorityLabelKey(j));
+            }
+            projectScriptForm.setPriorityList(priorityList);
             
             if(errors.isEmpty()) {
                 HttpSession session = request.getSession(true);
