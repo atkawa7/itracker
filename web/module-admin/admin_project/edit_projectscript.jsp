@@ -90,7 +90,7 @@
                            <td valign="top" align="left"><%=value%></td>
                            <td valign="top" align="left">
                                 <html:select property="<%=fieldIdKey%>" styleClass="editColumnText">
-                                    <c:forEach  step="1" items="${projectScriptForm.customFields}" var="customfield" varStatus="k">
+                                    <c:forEach items="${projectScriptForm.customFields}" var="customfield" varStatus="k">
                                         <%  CustomField cfField = (CustomField) cfFields.get(indx);
                                             String name = CustomFieldUtilities.getCustomFieldName(cfField.getId(), (java.util.Locale)pageContext.getAttribute("currLocale"));
                                             name += " ";
@@ -112,7 +112,7 @@
                            <td valign="top" align="left">
                                 <c:set var="priorityId" value="<%=projectScriptForm.getPriority().get(key)%>"/>
                                 <html:select property="<%=priorityKey%>" styleClass="editColumnText">
-                                    <c:forEach step="1" items="${projectScriptForm.priorityList}" var="priority" varStatus="k">
+                                    <c:forEach items="${projectScriptForm.priorityList}" var="priority" varStatus="k">
                                         <option value="${priority.key}" 
                                                 <c:choose>
                                                     <c:when test="${priority.key == priorityId}">
