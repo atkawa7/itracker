@@ -74,6 +74,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             CustomField customField = null;
             if("create".equals(action)) {
                 customField = new CustomField();
+                customField.setName(" ");
                 customField.setFieldType(CustomField.Type.valueOf(customFieldForm.getFieldType()));
                 customField.setRequired(("true".equals((String) PropertyUtils.getSimpleProperty(form, "required")) ? true : false));
                 customField.setSortOptionsByName(("true".equals((String) PropertyUtils.getSimpleProperty(form, "sortOptionsByName")) ? true : false));
@@ -86,6 +87,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
                 if(customField == null) {
                     throw new SystemConfigurationException("Invalid custom field id " + id);
                 }
+                customField.setName(CustomFieldUtilities.getCustomFieldName(id));
                 customField.setFieldType(CustomField.Type.valueOf(customFieldForm.getFieldType()));
                 customField.setRequired(("true".equals((String) PropertyUtils.getSimpleProperty(form, "required")) ? true : false));
                 customField.setSortOptionsByName(("true".equals((String) PropertyUtils.getSimpleProperty(form, "sortOptionsByName")) ? true : false));
@@ -117,6 +119,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
                     }
                 }
             }
+            customField.setName(CustomFieldUtilities.getCustomFieldName(customField.getId()));
             if ( key != null )
                 ITrackerResources.clearKeyFromBundles(key, true);
             // Now reset the cached versions in IssueUtilities

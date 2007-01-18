@@ -128,11 +128,11 @@ public class CustomField extends AbstractEntity
     }
     
     public String getName() {
-        return ( name == null ? " " : name );
+        return name;
     }
     
     public void setName(String name) {
-        this.name = ( name == null ? " " : name );
+        this.name = name;
     }
     
     public Type getFieldType() {
