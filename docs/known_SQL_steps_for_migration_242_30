@@ -1,27 +1,16 @@
 The following statements have been used by Marky Goldstein to migrate his existing MySQL database: 
 
-alter table languagebean change id id INT NOT NULL AUTO_INCREMENT; 
-alter table configurationbean change id id INT NOT NULL AUTO_INCREMENT; 
-alter table issuehistorybean change id id INT NOT NULL AUTO_INCREMENT;
-alter table issuebean change id id INT NOT NULL AUTO_INCREMENT
-alter table versionbean change id id INT NOT NULL AUTO_INCREMENT;
-alter table userpreferencesbean change id id INT NOT NULL AUTO_INCREMENT;
-alter table userbean change id id INT NOT NULL AUTO_INCREMENT;
-alter table scheduledtaskbean change id id INT NOT NULL AUTO_INCREMENT;
-alter table projectbean change id id INT NOT NULL AUTO_INCREMENT;
-alter table permissionbean change id id INT NOT NULL AUTO_INCREMENT;
-alter table notificationbean change id id INT NOT NULL AUTO_INCREMENT;
-alter table issuefieldbean change id id INT NOT NULL AUTO_INCREMENT;
-alter table issueattachmentbean change id id INT NOT NULL AUTO_INCREMENT;
-alter table issueactivitybean change id id INT NOT NULL AUTO_INCREMENT;
-alter table customfieldvaluebean change id id INT NOT NULL AUTO_INCREMENT;
-alter table customfieldbean change id id INT NOT NULL AUTO_INCREMENT;
-alter table componentbean change id id INT NOT NULL AUTO_INCREMENT;
-UPDATE componentbean SET status = 1 WHERE status IS NULL;
-UPDATE versionbean SET status = 1 WHERE status IS NULL;
-alter table componentbean change status status INT NOT NULL;
-alter table versionbean change status status INT NOT NULL;
+It's a general guide how to setup a migration sql script: 
 
+Insert the value
+"org.itracker.web.reports.predefined.ITrackerJasperReport"
+in table "reportbean" to column  "class_name"
+
+Insert the value
+"org.itracker.web.reports.predefined.ITrackerJFreeReport"
+in table "reportbean" to column  "class_name"
+
+START SQL SCRIPT ----
 
 create table issuerelationbean (
   id                    INT      NOT NULL auto_increment,
@@ -33,8 +22,6 @@ create table issuerelationbean (
   last_modified         DATETIME,
   PRIMARY KEY(id)
 ) DEFAULT CHARACTER SET utf8;
-
-
 
 create table workflowscriptbean (
   id                    INT       NOT NULL auto_increment,
@@ -57,16 +44,32 @@ create table projectscriptbean (
   PRIMARY KEY(id)
 ) DEFAULT CHARACTER SET utf8;
 
+DELETE * FROM scheduledtaskbean
+DELETE FROM issueattachmentbean WHERE orig_file_name IS NULL;
+
+alter table languagebean change id id INT NOT NULL AUTO_INCREMENT; 
+alter table configurationbean change id id INT NOT NULL AUTO_INCREMENT; 
+alter table issuehistorybean change id id INT NOT NULL AUTO_INCREMENT;
+alter table issuebean change id id INT NOT NULL AUTO_INCREMENT
+alter table versionbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table userpreferencesbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table userbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table scheduledtaskbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table projectbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table permissionbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table notificationbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table issuefieldbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table issueattachmentbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table issueactivitybean change id id INT NOT NULL AUTO_INCREMENT;
+alter table customfieldvaluebean change id id INT NOT NULL AUTO_INCREMENT;
+alter table customfieldbean change id id INT NOT NULL AUTO_INCREMENT;
+alter table componentbean change id id INT NOT NULL AUTO_INCREMENT;
+
+alter table componentbean change status status INT NOT NULL;
+alter table versionbean change status status INT NOT NULL;
 
 ALTER TABLE `userpreferencesbean` ADD `use_text_actions` INT NOT NULL AFTER `remember_last_search` ;
 
+UPDATE componentbean SET status = 1 WHERE status IS NULL;
+UPDATE versionbean SET status = 1 WHERE status IS NULL;
 
-org.itracker.web.reports.predefined.ITrackerJasperReport
-in "reportbean" to column  "class_name"
-
-org.itracker.web.reports.predefined.ITrackerJFreeReport
-in "reportbean" to column  "class_name"
-
-delete * scheduledtaskbean
-
-DELETE FROM issueattachmentbean WHERE orig_file_name IS NULL;
