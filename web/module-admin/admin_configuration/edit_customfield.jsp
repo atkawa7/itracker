@@ -114,55 +114,55 @@
                 </tr>
                 <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
                 <tr>
-                <td colspan="2" valign="top">
-                    <table width="100% cellspacing="0" cellpadding="0" border="0" src="../../images/blank.gif">
-                           <tr><td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.translations"/>:</td></tr>
-                        <tr class="listHeading"><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
-                        <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="4"/></td></tr>
-                        <tr class="listRowUnshaded">
-                            <td colspan="2" valign="top"><it:message key="itracker.web.attr.baselocale"/></td>
-                            <% String localeKey = "translations(" + ITrackerResources.BASE_LOCALE + ")"; %>
-                            <td colspan="2" valign="top">
-                                <html:textarea rows="2" cols="60" property="<%=localeKey%>" styleClass="editColumnText"/>
-                            </td>
-                        </tr>
-                        <%
-                        for(java.util.Iterator<String> iter = languages.keySet().iterator(); iter.hasNext(); ) {
-                                String language = iter.next();
-                                List<String> locales = (List<String>) languages.get(language);
-                        %>
-                        <tr class="listRowUnshaded">
-                            <td colspan="2" valign="top">
-                                <%= ITrackerResources.getString("itracker.locale.name", language) %>
-                            </td>
-                            <% localeKey = "translations(" + language + ")"; %>
-                            <c:set var="localeKey" value="<%=localeKey%>"/>
-                            <td colspan="2" valign="top">
-                                <html:textarea rows="2" cols="60" property="<%=localeKey%>"  styleClass="editColumnText"/>
-                            </td>
-                        </tr>
-                        <%      for(int i = 0; i < locales.size(); i++) { %>
-                        <tr class="listRowUnshaded">
-                            <td colspan="2" valign="top"><%= ITrackerResources.getString("itracker.locale.name", (String) locales.get(i)) %></td>
-                            <% localeKey = "translations(" + (String) locales.get(i) + ")"; %>
-                            <c:set var="localeKey" value="<%=localeKey%>"/>
-                            <td colspan="2" valign="top">
-                                <html:textarea rows="2" cols="60" property="<%=localeKey%>" styleClass="editColumnText"/>
-                            </td>
-                        </tr>
-                        <%      }
-                        }
-                        %>
-                    </table>
-                </td>
-                <td></td>
-                <!-- To Kimba from Marky: I see problems when you try to assign a Primitve such as boolean or int
+                    <td colspan="2" valign="top">
+                        <table width="100% cellspacing="0" cellpadding="0" border="0" src="../../images/blank.gif">
+                               <tr><td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.translations"/>:</td></tr>
+                            <tr class="listHeading"><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
+                            <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="4"/></td></tr>
+                            <tr class="listRowUnshaded">
+                                <td colspan="2" valign="top"><it:message key="itracker.web.attr.baselocale"/></td>
+                                <% String localeKey = "translations(" + ITrackerResources.BASE_LOCALE + ")"; %>
+                                <td colspan="2" valign="top">
+                                    <html:textarea rows="2" cols="60" property="<%=localeKey%>" styleClass="editColumnText"/>
+                                </td>
+                            </tr>
+                            <%
+                            for(java.util.Iterator<String> iter = languages.keySet().iterator(); iter.hasNext(); ) {
+                            String language = iter.next();
+                            List<String> locales = (List<String>) languages.get(language);
+                            %>
+                            <tr class="listRowUnshaded">
+                                <td colspan="2" valign="top">
+                                    <%= ITrackerResources.getString("itracker.locale.name", language) %>
+                                </td>
+                                <% localeKey = "translations(" + language + ")"; %>
+                                <c:set var="localeKey" value="<%=localeKey%>"/>
+                                <td colspan="2" valign="top">
+                                    <html:textarea rows="2" cols="60" property="<%=localeKey%>"  styleClass="editColumnText"/>
+                                </td>
+                            </tr>
+                            <%      for(int i = 0; i < locales.size(); i++) { %>
+                            <tr class="listRowUnshaded">
+                                <td colspan="2" valign="top"><%= ITrackerResources.getString("itracker.locale.name", (String) locales.get(i)) %></td>
+                                <% localeKey = "translations(" + (String) locales.get(i) + ")"; %>
+                                <c:set var="localeKey" value="<%=localeKey%>"/>
+                                <td colspan="2" valign="top">
+                                    <html:textarea rows="2" cols="60" property="<%=localeKey%>" styleClass="editColumnText"/>
+                                </td>
+                            </tr>
+                            <%      }
+                            }
+                            %>
+                        </table>
+                    </td>
+                    <td></td>
+                    <!-- To Kimba from Marky: I see problems when you try to assign a Primitve such as boolean or int
  	to the pageContext.setAttribute("String",Object) method because this method only takes Objects, but no Primitives. 
  	 -->
-                <%
-                pageContext.setAttribute("CustomFieldType_List", Integer.toString(CustomField.Type.LIST.getCode()));
-                %>
-                <c:if test="${field.fieldType == CustomFieldType_List}">
+                    <%
+                    pageContext.setAttribute("CustomFieldType_List", Integer.toString(CustomField.Type.LIST.getCode()));
+                    %>
+                <c:if test="${field.fieldType.code == CustomFieldType_List}">
                     <td colspan="2" valign="top">
                         <table cellspacing="0" cellspacing="1" border="0">
                             <tr>

@@ -119,7 +119,6 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
                     }
                 }
             }
-            customField.setName(CustomFieldUtilities.getCustomFieldName(customField.getId()));
             if ( key != null )
                 ITrackerResources.clearKeyFromBundles(key, true);
             // Now reset the cached versions in IssueUtilities
@@ -135,6 +134,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
 //            session.removeAttribute(Constants.CUSTOMFIELD_KEY);
             saveToken(request);
             //String forwardAction = "listconfiguration";
+
             if(customField.getFieldType() == CustomField.Type.LIST && "create".equals(action) ) { 
                 return new ActionForward(mapping.findForward("editcustomfield").getPath() + "?id=" + customField.getId() + "&action=update");
             }
