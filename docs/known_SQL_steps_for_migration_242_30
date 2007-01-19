@@ -65,10 +65,13 @@ alter table customfieldvaluebean change id id INT NOT NULL AUTO_INCREMENT;
 alter table customfieldbean change id id INT NOT NULL AUTO_INCREMENT;
 alter table componentbean change id id INT NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE issueattachmentbean CHANGE issue_id issue_id INT NOT NULL;
+
 alter table componentbean change status status INT NOT NULL;
 alter table versionbean change status status INT NOT NULL;
 
 ALTER TABLE `userpreferencesbean` ADD `use_text_actions` INT NOT NULL AFTER `remember_last_search` ;
+
 
 UPDATE componentbean SET status = 1 WHERE status IS NULL;
 UPDATE versionbean SET status = 1 WHERE status IS NULL;
