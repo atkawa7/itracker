@@ -443,10 +443,10 @@ public class IssueServiceImpl implements IssueService {
 		} else {
 			Updateissue.setTargetVersion(null);
 		}
-
+                Updateissue.setFields(issue.getFields());
 		// save
 		issueDAO.saveOrUpdate(Updateissue);
-
+                
 		return Updateissue;
 	}
 
@@ -515,7 +515,7 @@ public class IssueServiceImpl implements IssueService {
 		Issue issue = issueDAO.findByPrimaryKey(issueId);
 		List<IssueField> issueFields = issue.getFields();
 
-		for (Iterator<IssueField> iter = issueFields.iterator(); iter.hasNext();) {
+//		for (Iterator<IssueField> iter = issueFields.iterator(); iter.hasNext();) {
 			// TODO: clean this code
 			// try {
 
@@ -533,7 +533,7 @@ public class IssueServiceImpl implements IssueService {
 
 			// }
 
-		}
+//		}
 
 		if (fields.size() > 0) {
 			for (int i = 0; i < fields.size(); i++) {

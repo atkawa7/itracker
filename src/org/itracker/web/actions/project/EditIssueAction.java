@@ -221,7 +221,11 @@ public class EditIssueAction extends ItrackerBaseAction {
                 issue.setStatus(IssueUtilities.STATUS_CLOSED);
             }
         }
-
+        issue.setFields(issue.getFields());
+        issue.setOwner(issue.getOwner());
+        issue.setHistory(issue.getHistory());
+        issue.setAttachments(issue.getAttachments());
+        
         issue = issueService.updateIssue(issue, user.getId());
         
         if (issue != null) {
@@ -286,30 +290,49 @@ public class EditIssueAction extends ItrackerBaseAction {
 
     @SuppressWarnings("unchecked")
 	private void setIssueFields(Issue issue, User user, Locale locale, ActionForm form, IssueService issueService) throws Exception {
-        List<IssueField> issueFields = new ArrayList<IssueField>();
-        // here you see some of the ugly side of Struts 1.3 - the forms... they can only contain Strings and some simple objects types... 
-        HashMap<Integer,String> customFields = (HashMap<Integer,String>) PropertyUtils.getSimpleProperty(form, "customFields");
-        if(customFields != null && customFields.size() > 0) {
-            List<IssueField> issueFieldsList = new ArrayList<IssueField>();
-            ResourceBundle bundle = ITrackerResources.getBundle(locale);
-            
-            for(Iterator iter = customFields.keySet().iterator(); iter.hasNext(); ) {
-                try {
-                    Integer fieldId = new Integer((String) iter.next());
-                    CustomField field = IssueUtilities.getCustomField(fieldId);
-                    String fieldValue = (String) PropertyUtils.getMappedProperty(form, "customFields(" + fieldId + ")");
-                    if(fieldValue != null && ! fieldValue.equals("")) {
-                        IssueField issueField = new IssueField(issue, field);
-                        issueField.setValue(fieldValue, locale, bundle);
-                        issueFieldsList.add(issueField);
+        
+        List<CustomField> projectFields = issue.getProject().getCustomFields();
+
+        if(projectFields != null && projectFields.size() > 0) {
+            List<IssueField> issueFields = new ArrayList<IssueField>();
+            // here you see some of the ugly side of Struts 1.3 - the forms... they can only contain Strings and some simple objects types...
+            HashMap<String,String> customFields = (HashMap<String,String>) PropertyUtils.getSimpleProperty(form, "customFields");
+            if(customFields != null && customFields.size() > 0) {
+//                List<IssueField> issueFieldsList = new ArrayList<IssueField>();
+                ResourceBundle bundle = ITrackerResources.getBundle(locale);
+                List<IssueField> issueFieldsList = issue.getFields();
+                for(int i = 0; i < projectFields.size(); i++) {
+//                for(Iterator iter = customFields.keySet().iterator(); iter.hasNext(); ) {
+                    try {
+//                        Integer fieldId = projectFields.get(i).getId();
+                        CustomField field = projectFields.get(i);
+                        String fieldValue = (String) customFields.get(String.valueOf(projectFields.get(i).getId()));                
+//                        String fieldValue = (String) PropertyUtils.getMappedProperty(form, "customFields(" + fieldId + ")");
+                        if(fieldValue != null && ! fieldValue.equals("")) {
+                            IssueField issueField = new IssueField(issue, field);
+                            int idx = -1;
+                            for ( int j = 0; j < issueFieldsList.size(); j++ ){
+                                if ( issueFieldsList.get(j).getIssue().getId() == issue.getId() && issueFieldsList.get(j).getCustomField().getId() == projectFields.get(i).getId() )  {
+                                    issueField = issueFieldsList.get(j);
+                                    idx = j;
+                                    break;
+                                }
+                            }
+                            issueField.setValue(fieldValue, locale, bundle);
+                            if ( idx > -1 ) {
+                                issueFieldsList.set(idx,issueField);
+                            } else {
+                                issueFieldsList.add(issueField);
+                            }
+                        }
+                    } catch(Exception e) {
                     }
-                } catch(Exception e) {
                 }
+//                issueFields = new ArrayList<IssueField>(issueFieldsList);
+                issue.setFields(issueFieldsList);
             }
-             issueFields = new ArrayList<IssueField>(issueFieldsList);
-             
+//            issueService.setIssueFields(issue.getId(), issueFields);
         }
-        issueService.setIssueFields(issue.getId(), issueFields);
     }
 
     private void addHistoryEntry(Issue issue, User user, ActionForm form, IssueService issueService) throws Exception {

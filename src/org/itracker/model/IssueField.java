@@ -145,17 +145,16 @@ public class IssueField extends AbstractEntity {
                 if (!customField.isRequired() && this.dateValue == null) {
                     return null;
                 }
-                
+                SimpleDateFormat sdf = new SimpleDateFormat();
                 // Fall back to a default date format or make date format mandatory!
                 String dateFormat = (customField.getDateFormat() 
                     == CustomFieldUtilities.DATE_FORMAT_UNKNOWN)
                         ? CustomFieldUtilities.DATE_FORMAT_DATEONLY
                         : customField.getDateFormat();
                             
-                SimpleDateFormat sdf = new SimpleDateFormat(
+                sdf = new SimpleDateFormat(
                         bundle.getString("itracker.dateformat." 
                         + customField.getDateFormat()), locale);
-                
                 return sdf.format(this.dateValue);
                 
             default:

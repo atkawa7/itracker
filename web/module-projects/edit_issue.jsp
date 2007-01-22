@@ -274,9 +274,12 @@
              if(projectFields != null && projectFields.size() > 0) {
                  Collections.sort(projectFields, CustomField.ID_COMPARATOR);
                  List<IssueField> issueFields = issue.getFields();
-                 HashMap<Integer,String> fieldValues = new HashMap<Integer,String>();
+                 HashMap<String,String> fieldValues = new HashMap<String,String>();
                  for(int j = 0; j < issueFields.size(); j++) {
-                    fieldValues.put(issueFields.get(j).getCustomField().getId(), issueFields.get(j).getValue((java.util.Locale)pageContext.getAttribute("currLocale")));
+                    if ( issueFields.get(j).getCustomField() != null && issueFields.get(j).getCustomField().getId() > 0 ) {
+                        Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+                        fieldValues.put(issueFields.get(j).getCustomField().getId().toString(), issueFields.get(j).getValue(currLocale));
+                    }
                  }
           %>
                 <tr><td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.customfields"/>:</td></tr>
@@ -290,7 +293,7 @@
                            </tr>
                            <tr>
                 <%     } 
-                        String fieldValue = (String) fieldValues.get(projectFields.get(i).getId());
+                        String fieldValue = ( fieldValues.get(String.valueOf(projectFields.get(i).getId())) == null ? "" : (String) fieldValues.get(String.valueOf(projectFields.get(i).getId())));
                 %>
                         <td class="editColumnTitle">
                             <%=CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId()) + ": "%>

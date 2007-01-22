@@ -231,9 +231,9 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                     issueForm.setOwnerId((issue.getOwner() == null ? -1 : issue.getOwner().getId()));
 
                     List<IssueField> fields = issue.getFields();
-                    HashMap<Integer,String> customFields = new HashMap<Integer,String>();
+                    HashMap<String,String> customFields = new HashMap<String,String>();
                     for(int i = 0; i < fields.size(); i++) {
-                        customFields.put(fields.get(i).getCustomField().getId(), fields.get(i).getValue(currLocale));
+                        customFields.put(fields.get(i).getCustomField().getId().toString(), fields.get(i).getValue(currLocale));
                     }
                     issueForm.setCustomFields(customFields);
 
