@@ -18,6 +18,7 @@
 
 package org.itracker.web.forms;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -51,26 +52,26 @@ import org.itracker.web.util.Constants;
  */
 public class IssueForm extends ITrackerForm  {
     
-    private Integer id;
-    private String caller;
-    private Integer projectId;
-    private Integer creatorId;
-    private Integer ownerId;
-    private String description;
-    private Integer severity;
-    private Integer status;
-    private Integer prevStatus;
-    private String resolution;
-    private Integer targetVersion;
-    private Integer[] components;
-    private Integer[] versions;
-    private String attachmentDescription;
-    private FormFile attachment;
-    private String history;
+    private Integer id = null;
+    private String caller = null;
+    private Integer projectId = null;
+    private Integer creatorId = null;
+    private Integer ownerId = null;
+    private String description = null;
+    private Integer severity = null;
+    private Integer status = null;
+    private Integer prevStatus = null;
+    private String resolution = null;
+    private Integer targetVersion = null;
+    private Integer[] components = new Integer[0];
+    private Integer[] versions = new Integer[0];
+    private String attachmentDescription = null;
+    private FormFile attachment = null;
+    private String history = null;
     // lets try to put Integer,String here:
-    private Map<Integer,String> customFields;
-    private Integer relationType;
-    private Integer relatedIssueId;
+    private HashMap<Integer,String> customFields = new HashMap<Integer,String>();
+    private Integer relationType = null;
+    private Integer relatedIssueId = null;
     
     public FormFile getAttachment() {
         return attachment;
@@ -112,11 +113,11 @@ public class IssueForm extends ITrackerForm  {
         this.creatorId = creatorId;
     }
     // let's try to put Integer,String here:
-    public Map<Integer,String> getCustomFields() {
+    public HashMap<Integer,String> getCustomFields() {
         return customFields;
     }
 //  let's try to put Integer,String here:
-    public void setCustomFields(Map<Integer,String> customFields) {
+    public void setCustomFields(HashMap<Integer,String> customFields) {
         this.customFields = customFields;
     }
     

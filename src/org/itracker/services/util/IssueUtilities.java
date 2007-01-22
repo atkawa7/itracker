@@ -557,8 +557,10 @@ public class IssueUtilities  {
         } catch(CloneNotSupportedException cnse) {
             logger.error("Error cloning CustomField: " + cnse.getMessage());
         }
-        if(retField != null) {
-            retField.setLabels(locale);
+        if(retField != null ) {
+            if ( retField.getFieldType() == CustomField.Type.LIST ) {
+                retField.setLabels(locale);
+            }
         } else {
             retField = new CustomField();
         }

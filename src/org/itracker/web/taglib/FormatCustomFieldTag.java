@@ -30,6 +30,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.model.CustomField;
+import org.itracker.model.CustomFieldValue;
 import org.itracker.model.NameValuePair;
 import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.util.Constants;
@@ -121,10 +122,12 @@ public final class FormatCustomFieldTag extends TagSupport {
                 }
                 
                 if(field.getFieldType() == CustomField.Type.LIST) {
-                    List<NameValuePair> options = WorkflowUtilities.getListOptions(getListOptions(), field.getId());
+                    List<CustomFieldValue> options = field.getOptions();
+//                            WorkflowUtilities.getListOptions(getListOptions(), field.getId());
 
                     buf.append("<select name=\"customFields(" + field.getId() + ")\" class=\"editColumnText\">\n");
                     for(int i = 0; i < options.size(); i++) {
+                        
                         buf.append("<option value=\"" + options.get(i).getValue() + "\"");
                         buf.append((currentValue != null && currentValue.equals(options.get(i).getValue()) ? " selected=\"selected\"" : ""));
                         buf.append(" class=\"editColumnText\">");

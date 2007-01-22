@@ -9,6 +9,8 @@
 <%@ page import="org.itracker.services.IssueService" %>
 <%@ page import="org.itracker.core.resources.*" %>
 <%@ page import="org.itracker.web.util.RequestHelper" %>
+<%@ page import="org.apache.struts.taglib.TagUtils" %>
+
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -41,6 +43,7 @@
       Integer issueId = issue.getId();
       Integer currUserId = um.getId();
       boolean hasFullEdit = UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
+      String formName="issueForm";
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -272,8 +275,8 @@
                  Collections.sort(projectFields, CustomField.ID_COMPARATOR);
                  List<IssueField> issueFields = issue.getFields();
                  HashMap<Integer,String> fieldValues = new HashMap<Integer,String>();
-                 for(int i = 0; i < issueFields.size(); i++) {
-                    fieldValues.put(issueFields.get(i).getCustomField().getId(), issueFields.get(i).getValue((java.util.Locale)pageContext.getAttribute("currLocale")));
+                 for(int j = 0; j < issueFields.size(); j++) {
+                    fieldValues.put(issueFields.get(j).getCustomField().getId(), issueFields.get(j).getValue((java.util.Locale)pageContext.getAttribute("currLocale")));
                  }
           %>
                 <tr><td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.customfields"/>:</td></tr>
@@ -286,11 +289,55 @@
                 %>
                            </tr>
                            <tr>
-                <%     }
-                       String fieldValue = (String) fieldValues.get(projectFields.get(i).getId());
+                <%     } 
+                        String fieldValue = (String) fieldValues.get(projectFields.get(i).getId());
                 %>
-                       <it:formatCustomField field="<%= projectFields.get(i) %>" currentValue="<%= fieldValue %>" formName="issueForm" listOptions="<%= listOptions %>"/>
-                <% } %>
+                        <td class="editColumnTitle">
+                            <%=CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId()) + ": "%>
+                        </td>
+                        <td align="left" class="editColumnText">
+                              <% if(hasFullEdit) { 
+                
+                                   String customFieldkey = "customFields(" + projectFields.get(i).getId() +")";
+                              %>
+                                   <c:set var="customFields" value="<%=customFieldkey%>"/>
+                              <%    if(projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
+                                        List<CustomFieldValue> options = projectFields.get(i).getOptions();
+                              %>          
+                                        <html:select property="<%=customFieldkey%>" styleClass="editColumnText">
+                              <%
+                                            for(int l = 0; l < options.size(); l++) {
+                              %>
+                                                <html:option value="<%=options.get(l).getValue()%>"><%=options.get(l).getName()%></html:option>
+                              <%            }
+                              %>
+                                        </html:select>
+                               <%   } else {
+                                        String img = "";
+                                        
+                                        if(projectFields.get(i).getFieldType() == CustomField.Type.DATE) {
+                                             img = "<img onmouseup=\"toggleDatePicker('cf" + projectFields.get(i).getId() + "','" + formName + ".customFields(" + projectFields.get(i).getId() + ")')\"";
+                                             img += " id=cf" + projectFields.get(i).getId() + "Pos name=cf" + projectFields.get(i).getId() + "Pos width=19 height=19 src=\" ";
+                                             try {
+                                                  img += TagUtils.getInstance().computeURL(pageContext, null, null, "/images/calendar.gif", null, null, null, null, false);
+                                             } catch(Exception murle) {
+                                                  img += " images/calendar.gif";
+                                             }
+                                             img += "\" align=\"top\" border=\"0\"";
+                                             img += "<div id=\"cf" + projectFields.get(i).getId() + "\" style=\"position:absolute;\"></div>";
+                                        }
+                                    
+                               %>
+                                        <html:text property="<%=customFieldkey%>"  styleClass="editColumnText"/>
+                                        <%= img %> 
+                               <%   }
+                                 } else {
+                                        if(fieldValue != null) { %>
+                                            <%=(projectFields.get(i).getFieldType() == CustomField.Type.LIST ? projectFields.get(i).getOptionNameByValue(fieldValue) : fieldValue)%>
+                              <%        } %>
+                             <% } %>
+                            </td>
+                     <% } %>
                 </tr>
                 <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td></tr>
           <% } %>
