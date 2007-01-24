@@ -51,6 +51,10 @@
         <action path="/viewissue" type="org.itracker.web.actions.project.ViewIssueAction">
             <forward name="viewissue" path="/view_issue.jsp" module="/module-projects"/>
         </action>
+        <action path="/view_issue_activity"
+                type="org.itracker.web.actions.project.ViewIssueActivityAction">
+            <forward name="viewissueactivity" path="/view_issue_activity.jsp" module="/module-projects"/>
+        </action>    
     </action-mappings>
 
     <message-resources factory="org.itracker.web.resources.ITrackerMessageResourcesFactory"
