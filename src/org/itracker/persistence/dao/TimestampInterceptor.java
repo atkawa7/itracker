@@ -57,10 +57,10 @@ public class TimestampInterceptor extends EmptyInterceptor {
                  || LAST_MODIFIED_DATE_PROPERTY.equals(propertyNames[i])) {
                     state[i] = timestamp;
                     
-                    if (this.logger.isDebugEnabled()) {
-                        this.logger.debug("Setting " + propertyNames[i] 
-                                + " property of " + entity);
-                    }
+//                    if (this.logger.isDebugEnabled()) {
+//                        this.logger.debug("Setting " + propertyNames[i] 
+//                                + " property of " + entity);
+//                    }
                     
                     if (++propertiesSet == 2) {
                         break;
@@ -93,17 +93,18 @@ public class TimestampInterceptor extends EmptyInterceptor {
             String[] propertyNames, Type[] types) {
         
         if (entity instanceof AbstractEntity) {
+            final Date timestamp = new Date();
             
             // Find lastModifiedDate property to set. 
             for (int i = 0; i < propertyNames.length; i++) {
                 
                 if (LAST_MODIFIED_DATE_PROPERTY.equals(propertyNames[i])) {
-                    currentState[i] = new Date();
+                    currentState[i] = timestamp;
                     
-                    if (this.logger.isDebugEnabled()) {
-                        this.logger.debug("Setting " + propertyNames[i] 
-                                + " property of " + entity);
-                    }
+//                    if (this.logger.isDebugEnabled()) {
+//                        this.logger.debug("Setting " + propertyNames[i] 
+//                                + " property of " + entity);
+//                    }
                     return true;
                 }
             }

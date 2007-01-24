@@ -602,7 +602,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         CustomFieldValue addcustomFieldValue = new CustomFieldValue();
         addcustomFieldValue.setCustomField(customFieldValue.getCustomField());
         addcustomFieldValue.setValue(customFieldValue.getValue());
-        
+        addcustomFieldValue.setName(customFieldValue.getName());
         this.customFieldValueDAO.save(addcustomFieldValue);
         
         return addcustomFieldValue;
@@ -621,6 +621,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editcustomFieldValue.setCustomField(customFieldValue.getCustomField());
         editcustomFieldValue.setValue(customFieldValue.getValue());
         editcustomFieldValue.setLastModifiedDate(new Date());
+        editcustomFieldValue.setName(customFieldValue.getName());
         this.customFieldValueDAO.saveOrUpdate( editcustomFieldValue );
         return editcustomFieldValue;
     }

@@ -23,7 +23,7 @@ if(field == null) {
 <%  } else { %>
 
 <%-- <nitrox:var name="action" type="java.lang.String"/> --%>
-<bean:define id="action" name="action" type="java.lang.String" scope="request"/>
+<!-- bean:define id="action" name="action" type="java.lang.String" scope="request"/ -->
 
 <bean:define id="pageTitleKey" value="itracker.web.admin.editcustomfieldvalue.title.create"/>
 <bean:define id="pageTitleArg" value=""/>
