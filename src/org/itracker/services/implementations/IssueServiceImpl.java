@@ -34,6 +34,8 @@
 
 package org.itracker.services.implementations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +46,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Queue;
+import javax.jms.QueueConnection;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.QueueSender;
+import javax.jms.QueueSession;
+import javax.jms.Session;
+import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
@@ -122,8 +134,20 @@ public class IssueServiceImpl implements IssueService {
 
 	private VersionDAO versionDAO;
 
-	public IssueServiceImpl() {
+	public IssueServiceImpl(UserDAO userDAO, ProjectDAO projectDAO, IssueDAO issueDAO, IssueHistoryDAO issueHistoryDAO,
+			NotificationDAO notificationDAO, IssueRelationDAO issueRelationDAO, IssueAttachmentDAO issueAttachmentDAO,
+			ComponentDAO componentDAO, IssueActivityDAO issueActivityDAO, VersionDAO versionDAO) {
 		this.logger = Logger.getLogger(getClass());
+		this.userDAO = userDAO;
+		this.projectDAO = projectDAO;
+		this.issueDAO = issueDAO;
+		this.issueHistoryDAO = issueHistoryDAO;
+		this.notificationDAO = notificationDAO;
+		this.issueRelationDAO = issueRelationDAO;
+		this.issueAttachmentDAO = issueAttachmentDAO;
+		this.componentDAO = componentDAO;
+		this.issueActivityDAO = issueActivityDAO;
+		this.versionDAO = versionDAO;
 	}
 
 	public Issue getIssue(Integer issueId) {
@@ -132,8 +156,7 @@ public class IssueServiceImpl implements IssueService {
 	}
 
 	public List<Issue> getAllIssues() {
-		List<Issue> issues = issueDAO.findAll();
-		return issues;
+		return issueDAO.findAll();
 	}
 
 	public int getNumberIssues() {
@@ -314,7 +337,8 @@ public class IssueServiceImpl implements IssueService {
 		return issueDAO.findByPrimaryKey(issueId).getHistory();
 	}
 
-	public Issue createIssue(Issue issue, Integer projectId, Integer userId, Integer createdById) throws ProjectException {
+	public Issue createIssue(Issue issue, Integer projectId, Integer userId, Integer createdById)
+			throws ProjectException {
 		Project project = projectDAO.findByPrimaryKey(projectId);
 		User creator = userDAO.findByPrimaryKey(userId);
 
@@ -326,7 +350,8 @@ public class IssueServiceImpl implements IssueService {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_ISSUE_CREATED);
-			activity.setDescription(ITrackerResources.getString("itracker.activity.system.createdfor") + " " + creator.getFirstName() + " " + creator.getLastName());
+			activity.setDescription(ITrackerResources.getString("itracker.activity.system.createdfor") + " "
+					+ creator.getFirstName() + " " + creator.getLastName());
 			activity.setUser(creator);
 			activity.setIssue(issue);
 			activity.setCreateDate(new Date());
@@ -340,7 +365,8 @@ public class IssueServiceImpl implements IssueService {
 			User createdBy = userDAO.findByPrimaryKey(createdById);
 
 			IssueActivity activity = new IssueActivity();
-			activity.setDescription(ITrackerResources.getString("itracker.activity.system.createdfor") + " " + creator.getFirstName() + " " + creator.getLastName());
+			activity.setDescription(ITrackerResources.getString("itracker.activity.system.createdfor") + " "
+					+ creator.getFirstName() + " " + creator.getLastName());
 			activity.setUser(createdBy);
 			activity.setIssue(issue);
 			activity.setCreateDate(new Date());
@@ -360,14 +386,15 @@ public class IssueServiceImpl implements IssueService {
 
 		}
 
-		
-        issue.setProject(project);
-                
+		issue.setProject(project);
+
 		issue.setCreator(creator);
-		 
+
 		// save
+		// TODO: The filter should automatically take care of the
+		// following two timestamps, removed them
 		issue.setCreateDate(new Timestamp(new Date().getTime()));
-                issue.setLastModifiedDate(issue.getCreateDate());
+		issue.setLastModifiedDate(issue.getCreateDate());
 		issueDAO.save(issue);
 
 		return issue;
@@ -380,21 +407,25 @@ public class IssueServiceImpl implements IssueService {
 		if (Updateissue.getProject().getStatus() != ProjectUtilities.STATUS_ACTIVE) {
 			throw new ProjectException("Project is not active.");
 		}
-		if (Updateissue.getDescription() != null && issue.getDescription() != null && !Updateissue.getDescription().equalsIgnoreCase(issue.getDescription())) {
+		if (Updateissue.getDescription() != null && issue.getDescription() != null
+				&& !Updateissue.getDescription().equalsIgnoreCase(issue.getDescription())) {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_DESCRIPTION_CHANGE);
-			activity.setDescription(ITrackerResources.getString("itracker.web.generic.from") + ": " + Updateissue.getDescription());
+			activity.setDescription(ITrackerResources.getString("itracker.web.generic.from") + ": "
+					+ Updateissue.getDescription());
 			activity.setUser(user);
 			activity.setIssue(Updateissue);
 
 		}
 
-		if (Updateissue.getResolution() != null && issue.getResolution() != null && !Updateissue.getResolution().equalsIgnoreCase(issue.getResolution())) {
+		if (Updateissue.getResolution() != null && issue.getResolution() != null
+				&& !Updateissue.getResolution().equalsIgnoreCase(issue.getResolution())) {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_RESOLUTION_CHANGE);
-			activity.setDescription(ITrackerResources.getString("itracker.web.generic.from") + ": " + Updateissue.getResolution());
+			activity.setDescription(ITrackerResources.getString("itracker.web.generic.from") + ": "
+					+ Updateissue.getResolution());
 			activity.setIssue(Updateissue);
 			activity.setUser(user);
 		}
@@ -403,7 +434,9 @@ public class IssueServiceImpl implements IssueService {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_STATUS_CHANGE);
-			activity.setDescription(IssueUtilities.getStatusName(Updateissue.getStatus()) + " " + ITrackerResources.getString("itracker.web.generic.to") + " " + IssueUtilities.getStatusName(issue.getStatus()));
+			activity.setDescription(IssueUtilities.getStatusName(Updateissue.getStatus()) + " "
+					+ ITrackerResources.getString("itracker.web.generic.to") + " "
+					+ IssueUtilities.getStatusName(issue.getStatus()));
 			activity.setIssue(Updateissue);
 			activity.setUser(user);
 		}
@@ -412,22 +445,25 @@ public class IssueServiceImpl implements IssueService {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_SEVERITY_CHANGE);
-			activity.setDescription(IssueUtilities.getSeverityName(Updateissue.getSeverity()) + " " + ITrackerResources.getString("itracker.web.generic.to") + " " + IssueUtilities.getSeverityName(issue.getSeverity()));
+			activity.setDescription(IssueUtilities.getSeverityName(Updateissue.getSeverity()) + " "
+					+ ITrackerResources.getString("itracker.web.generic.to") + " "
+					+ IssueUtilities.getSeverityName(issue.getSeverity()));
 			activity.setIssue(Updateissue);
 			activity.setUser(user);
 		}
 
-		if (Updateissue.getTargetVersion() != null && issue.getTargetVersion() != null && !Updateissue.getTargetVersion().getId().equals(issue.getTargetVersion().getId())) {
+		if (Updateissue.getTargetVersion() != null && issue.getTargetVersion() != null
+				&& !Updateissue.getTargetVersion().getId().equals(issue.getTargetVersion().getId())) {
 			existingTargetVersion = Updateissue.getTargetVersion().getNumber();
 
 		}
 
-                Updateissue.setDescription(issue.getDescription());
-                Updateissue.setSeverity(issue.getSeverity());
-                Updateissue.setStatus(issue.getStatus());
-                Updateissue.setResolution(issue.getResolution());
-                Updateissue.setLastModifiedDate(new Date());
-                
+		Updateissue.setDescription(issue.getDescription());
+		Updateissue.setSeverity(issue.getSeverity());
+		Updateissue.setStatus(issue.getStatus());
+		Updateissue.setResolution(issue.getResolution());
+		Updateissue.setLastModifiedDate(new Date());
+
 		if (issue.getTargetVersion() != null) {
 			Version version = this.versionDAO.findByPrimaryKey(issue.getTargetVersion().getId());
 
@@ -435,7 +471,8 @@ public class IssueServiceImpl implements IssueService {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_TARGETVERSION_CHANGE);
-			String description = existingTargetVersion + " " + ITrackerResources.getString("itracker.web.generic.to") + " ";
+			String description = existingTargetVersion + " " + ITrackerResources.getString("itracker.web.generic.to")
+					+ " ";
 			description += version.getNumber();
 			activity.setDescription(description);
 			activity.setUser(user);
@@ -478,7 +515,8 @@ public class IssueServiceImpl implements IssueService {
 
 		IssueActivity activity = new IssueActivity();
 		activity.setType(IssueUtilities.ACTIVITY_ISSUE_MOVE);
-		activity.setDescription(issue.getProject().getName() + " " + ITrackerResources.getString("itracker.web.generic.to") + " " + project.getName());
+		activity.setDescription(issue.getProject().getName() + " "
+				+ ITrackerResources.getString("itracker.web.generic.to") + " " + project.getName());
 		activity.setUser(user);
 		activity.setIssue(issue);
 		issue.setProject(project);
@@ -492,13 +530,6 @@ public class IssueServiceImpl implements IssueService {
 
 		return issue;
 
-	}
-
-	public boolean deleteIssue(Issue issue) {
-		issue = issueDAO.findByPrimaryKey(issue.getId());
-		issueDAO.delete(issue);
-
-		return true;
 	}
 
 	/**
@@ -560,8 +591,8 @@ public class IssueServiceImpl implements IssueService {
 		List<Component> components = new ArrayList<Component>();
 		components = issue.getComponents();
 
-		if (components!=null) {
-			
+		if (components != null) {
+
 			if (componentIds.isEmpty() && !components.isEmpty()) {
 
 				wasChanged = true;
@@ -613,10 +644,9 @@ public class IssueServiceImpl implements IssueService {
 				}
 
 			}
-		} else { 
+		} else {
 			logger.debug("components was null!");
 		}
-	
 
 		if (wasChanged) {
 
@@ -641,9 +671,9 @@ public class IssueServiceImpl implements IssueService {
 		Issue issue = issueDAO.findByPrimaryKey(issueId);
 
 		List<Version> versions = issue.getVersions();
-		
+
 		if (versions != null) {
-		
+
 			if (versionIds.isEmpty() && !versions.isEmpty()) {
 
 				wasChanged = true;
@@ -695,11 +725,10 @@ public class IssueServiceImpl implements IssueService {
 				}
 
 			}
-			
+
 		} else {
 			logger.debug("Versions were null!");
 		}
-
 
 		if (wasChanged) {
 
@@ -777,7 +806,8 @@ public class IssueServiceImpl implements IssueService {
 
 			activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_RELATION_ADDED);
-			activity.setDescription(ITrackerResources.getString("itracker.activity.relation.add", new Object[] { IssueUtilities.getRelationName(matchingRelationType) }));
+			activity.setDescription(ITrackerResources.getString("itracker.activity.relation.add",
+					new Object[] { IssueUtilities.getRelationName(matchingRelationType) }));
 			activity.setIssue(relatedIssue);
 			// net to save and set user here.. userId);
 			return true;
@@ -799,7 +829,8 @@ public class IssueServiceImpl implements IssueService {
 		if (matchingRelationId != null) {
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_RELATION_REMOVED);
-			activity.setDescription(ITrackerResources.getString("itracker.activity.relation.removed", issueId.toString()));
+			activity.setDescription(ITrackerResources.getString("itracker.activity.relation.removed", issueId
+					.toString()));
 			// need to fix the commented code and save
 			// activity.setIssue(relatedIssueId);
 			// activity.setUser(userId);
@@ -808,7 +839,8 @@ public class IssueServiceImpl implements IssueService {
 
 		IssueActivity activity = new IssueActivity();
 		activity.setType(IssueUtilities.ACTIVITY_RELATION_REMOVED);
-		activity.setDescription(ITrackerResources.getString("itracker.activity.relation.removed", relatedIssueId.toString()));
+		activity.setDescription(ITrackerResources.getString("itracker.activity.relation.removed", relatedIssueId
+				.toString()));
 		// activity.setIssue(issueId);
 		// activity.setUser(userId);
 		// irHome.remove(relationId);
@@ -837,25 +869,28 @@ public class IssueServiceImpl implements IssueService {
 		User currOwner = issue.getOwner();
 
 		if (currOwner == null || !currOwner.getId().equals(user.getId())) {
-			if (currOwner != null && !hasIssueNotification(issueId, currOwner.getId(), NotificationUtilities.ROLE_CONTRIBUTER)) {
+			if (currOwner != null
+					&& !hasIssueNotification(issueId, currOwner.getId(), NotificationUtilities.ROLE_CONTRIBUTER)) {
 				// Notification notification = new Notification();
-				Notification notification = new Notification(
-                                        currOwner, issue, NotificationUtilities.ROLE_CONTRIBUTER);
+				Notification notification = new Notification(currOwner, issue, NotificationUtilities.ROLE_CONTRIBUTER);
 			}
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_OWNER_CHANGE);
-			activity.setDescription((currOwner == null ? "[" + ITrackerResources.getString("itracker.web.generic.unassigned") + "]" : currOwner.getLogin()) + " " + ITrackerResources.getString("itracker.web.generic.to") + " "
-					+ user.getLogin());
+			activity.setDescription((currOwner == null ? "["
+					+ ITrackerResources.getString("itracker.web.generic.unassigned") + "]" : currOwner.getLogin())
+					+ " " + ITrackerResources.getString("itracker.web.generic.to") + " " + user.getLogin());
 			activity.setUser(assignedByUser);
 			activity.setIssue(issue);
 
 			issue.setOwner(user);
-			
+
 			if (issue.getStatus() < IssueUtilities.STATUS_ASSIGNED) {
 				issue.setStatus(IssueUtilities.STATUS_ASSIGNED);
 			}
 		}
+		// send assignment notification
+		sendNotification(issueId, NotificationUtilities.TYPE_ASSIGNED, "baseURL");
 		return true;
 
 	}
@@ -865,14 +900,17 @@ public class IssueServiceImpl implements IssueService {
 		Issue issue = issueDAO.findByPrimaryKey(issueId);
 		if (issue.getOwner() != null) {
 			if (!hasIssueNotification(issueId, issue.getOwner().getId(), NotificationUtilities.ROLE_CONTRIBUTER)) {
-				//Notification notification = new Notification();
-				Notification notification = 
-                                        new Notification(issue.getOwner(), 
-                                        issue, NotificationUtilities.ROLE_CONTRIBUTER);
+				// Notification notification = new Notification();
+				Notification notification = new Notification(issue.getOwner(), issue,
+						NotificationUtilities.ROLE_CONTRIBUTER);
 			}
-			IssueActivity activity = new IssueActivity(issue, 
-                                assignedByUser, IssueUtilities.ACTIVITY_OWNER_CHANGE);
-			activity.setDescription((issue.getOwner() == null ? "[" + ITrackerResources.getString("itracker.web.generic.unassigned") + "]" : issue.getOwner().getLogin()) + " " + ITrackerResources.getString("itracker.web.generic.to") + " ["
+			IssueActivity activity = new IssueActivity(issue, assignedByUser, IssueUtilities.ACTIVITY_OWNER_CHANGE);
+			activity.setDescription((issue.getOwner() == null ? "["
+					+ ITrackerResources.getString("itracker.web.generic.unassigned") + "]" : issue.getOwner()
+					.getLogin())
+					+ " "
+					+ ITrackerResources.getString("itracker.web.generic.to")
+					+ " ["
 					+ ITrackerResources.getString("itracker.web.generic.unassigned") + "]");
 
 			issue.setOwner(null);
@@ -961,7 +999,7 @@ public class IssueServiceImpl implements IssueService {
 		attachment.setIssue(issue);
 		attachment.setUser(user);
 		attachment.setCreateDate(new Date());
-                attachment.setLastModifiedDate(attachment.getCreateDate());
+		attachment.setLastModifiedDate(attachment.getCreateDate());
 
 		// save attachment
 		this.issueAttachmentDAO.saveOrUpdate(attachment);
@@ -1031,7 +1069,8 @@ public class IssueServiceImpl implements IssueService {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_REMOVE_HISTORY);
-			activity.setDescription(ITrackerResources.getString("itracker.web.generic.entry") + " " + entryId + " " + ITrackerResources.getString("itracker.web.generic.removed") + ".");
+			activity.setDescription(ITrackerResources.getString("itracker.web.generic.entry") + " " + entryId + " "
+					+ ITrackerResources.getString("itracker.web.generic.removed") + ".");
 
 			issueHistoryDAO.delete(history);
 
@@ -1327,21 +1366,20 @@ public class IssueServiceImpl implements IssueService {
 		if (issue != null) {
 			if (issue.getOwner() != null) {
 				User ownerModel = issue.getOwner();
-	
+
 				if (ownerModel != null && (!activeOnly || ownerModel.getStatus() == UserUtilities.STATUS_ACTIVE)) {
 					issueNotifications.add(new Notification(ownerModel, issue, NotificationUtilities.ROLE_OWNER));
 					hasOwner = true;
 				}
 			}
-	
+
 			if (!primaryOnly || !hasOwner) {
 				User creatorModel = issue.getCreator();
-	
+
 				if (creatorModel != null && (!activeOnly || creatorModel.getStatus() == UserUtilities.STATUS_ACTIVE)) {
 					issueNotifications.add(new Notification(creatorModel, issue, NotificationUtilities.ROLE_CREATOR));
 				}
 			}
-	
 
 			Project project = projectDAO.findByPrimaryKey(issue.getProject().getId());
 			Collection<User> projectOwners = project.getOwners();
@@ -1369,20 +1407,20 @@ public class IssueServiceImpl implements IssueService {
 		User user = thisnotification.getUser();
 
 		Issue issue = thisnotification.getIssue();
-		if (thisnotification.getCreateDate()==null) {
+		if (thisnotification.getCreateDate() == null) {
 			thisnotification.setCreateDate(new Date());
 		}
-		if (thisnotification.getLastModifiedDate()==null) {
+		if (thisnotification.getLastModifiedDate() == null) {
 			thisnotification.setLastModifiedDate(new Date());
 		}
 		List<Notification> notifications = new ArrayList<Notification>();
 		notifications.add(thisnotification);
 		issue.setNotifications(notifications);
-		//TODO: check these 3 lines - do we need them?:
+		// TODO: check these 3 lines - do we need them?:
 		Notification notification = new Notification();
 		notification.setIssue(issue);
 		notification.setUser(user);
-		
+
 		issueDAO.saveOrUpdate(issue);
 		return true;
 	}
@@ -1455,55 +1493,22 @@ public class IssueServiceImpl implements IssueService {
 
 	}
 
-	public void sendNotification(Integer issueId, int type, String baseURL, HashSet<String> addresses, Integer lastModifiedDays) {
-		// notifications are disabled for now
-
+	public void sendNotification(Integer issueId, int type, String baseURL, HashSet<String> addresses,
+			Integer lastModifiedDays) {
 		/*
 		 * try {
 		 * 
-		 * QueueConnectionFactory factory = (QueueConnectionFactory)
-		 * ic.lookup("java:comp/env/" + notificationFactoryName);
-		 * 
-		 * Queue notificationQueue = (Queue) ic.lookup("java:comp/env/" +
-		 * notificationQueueName); QueueConnection connect =
-		 * factory.createQueueConnection(); QueueSession session =
-		 * connect.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-		 * QueueSender sender = session.createSender(notificationQueue);
-		 * MapMessage message = session.createMapMessage();
 		 * message.setInt("issueId", issueId.intValue()); message.setInt("type",
 		 * type); message.setObject("lastModifiedDays", (lastModifiedDays ==
-		 * null ? new Integer(-1) : lastModifiedDays));
-		 * 
-		 * if (systemBaseURL != null && !systemBaseURL.equals("")) {
-		 * 
-		 * message.setString("baseURL", systemBaseURL); } else if (baseURL !=
-		 * null) {
-		 * 
+		 * null ? new Integer(-1) : lastModifiedDays)); if (systemBaseURL !=
+		 * null && !systemBaseURL.equals("")) { message.setString("baseURL",
+		 * systemBaseURL); } else if (baseURL != null) {
 		 * message.setString("baseURL", baseURL); }
 		 * 
-		 * if (addresses != null) {
-		 * 
-		 * try {
-		 * 
 		 * ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		 * 
 		 * ObjectOutputStream oos = new ObjectOutputStream(baos);
-		 * 
-		 * oos.writeObject(addresses);
-		 * 
-		 * message.setObject("addresses", baos.toByteArray()); } catch
-		 * (Exception e) {
-		 * 
-		 * logger.debug("Unable to write address list for notification: " +
-		 * e.getMessage()); } }
-		 * 
-		 * sender.send(message); } catch (NamingException ne) {
-		 * 
-		 * logger.error("Error looking up ConnectionFactory/Queue " +
-		 * notificationFactoryName + "/" + notificationQueueName + ".", ne); }
-		 * catch (JMSException jmse) {
-		 * 
-		 * logger.warn("Error sending notification message", jmse); }
+		 * oos.writeObject(addresses); message.setObject("addresses",
+		 * baos.toByteArray()); } sender.send(message);
 		 */
 
 	}
@@ -1512,7 +1517,8 @@ public class IssueServiceImpl implements IssueService {
 
 		Issue issue = getIssue(issueId);
 
-		Map<Integer, Set<PermissionType>> permissions = userDAO.getUsersMapOfProjectsAndPermissionTypes(user, AuthenticationConstants.REQ_SOURCE_WEB);
+		Map<Integer, Set<PermissionType>> permissions = userDAO.getUsersMapOfProjectsAndPermissionTypes(user,
+				AuthenticationConstants.REQ_SOURCE_WEB);
 
 		return IssueUtilities.canViewIssue(issue, user.getId(), permissions);
 
@@ -1520,7 +1526,8 @@ public class IssueServiceImpl implements IssueService {
 
 	public boolean canViewIssue(Issue issue, User user) {
 
-		Map<Integer, Set<PermissionType>> permissions = userDAO.getUsersMapOfProjectsAndPermissionTypes(user, AuthenticationConstants.REQ_SOURCE_WEB);
+		Map<Integer, Set<PermissionType>> permissions = userDAO.getUsersMapOfProjectsAndPermissionTypes(user,
+				AuthenticationConstants.REQ_SOURCE_WEB);
 
 		return IssueUtilities.canViewIssue(issue, user.getId(), permissions);
 
@@ -1530,88 +1537,44 @@ public class IssueServiceImpl implements IssueService {
 		return userDAO;
 	}
 
-	public void setUserDAO(UserDAO userDAO) {
-		this.userDAO = userDAO;
-	}
-
 	public IssueDAO getIssueDAO() {
 		return issueDAO;
-	}
-
-	public void setIssueDAO(IssueDAO issueDAO) {
-		this.issueDAO = issueDAO;
 	}
 
 	public NotificationDAO getNotificationDAO() {
 		return notificationDAO;
 	}
 
-	public void setNotificationDAO(NotificationDAO notificationDAO) {
-		this.notificationDAO = notificationDAO;
-	}
-
 	public ProjectDAO getProjectDAO() {
 		return projectDAO;
-	}
-
-	public void setProjectDAO(ProjectDAO projectDAO) {
-		this.projectDAO = projectDAO;
 	}
 
 	public IssueActivityDAO getIssueActivityDAO() {
 		return issueActivityDAO;
 	}
 
-	public void setIssueActivityDAO(IssueActivityDAO issueActivityDAO) {
-		this.issueActivityDAO = issueActivityDAO;
-	}
-
 	public VersionDAO getVersionDAO() {
 		return this.versionDAO;
-	}
-
-	public void setVersionDAO(VersionDAO versionDAO) {
-		this.versionDAO = versionDAO;
 	}
 
 	public ComponentDAO getComponentDAO() {
 		return this.componentDAO;
 	}
 
-	public void setComponentDAO(ComponentDAO componentDAO) {
-		this.componentDAO = componentDAO;
-	}
-
 	public CustomFieldDAO getCustomFieldDAO() {
 		return customFieldDAO;
-	}
-
-	public void setCustomFieldDAO(CustomFieldDAO customFieldDAO) {
-		this.customFieldDAO = customFieldDAO;
 	}
 
 	public IssueHistoryDAO getIssueHistoryDAO() {
 		return issueHistoryDAO;
 	}
 
-	public void setIssueHistoryDAO(IssueHistoryDAO issueHistoryDAO) {
-		this.issueHistoryDAO = issueHistoryDAO;
-	}
-
 	public IssueRelationDAO getIssueRelationDAO() {
 		return issueRelationDAO;
 	}
 
-	public void setIssueRelationDAO(IssueRelationDAO issueRelationDAO) {
-		this.issueRelationDAO = issueRelationDAO;
-	}
-
 	public IssueAttachmentDAO getIssueAttachmentDAO() {
 		return issueAttachmentDAO;
-	}
-
-	public void setIssueAttachmentDAO(IssueAttachmentDAO issueAttachmentDAO) {
-		this.issueAttachmentDAO = issueAttachmentDAO;
 	}
 
 	public static String getNotificationFactoryName() {
