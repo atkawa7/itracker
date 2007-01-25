@@ -13,27 +13,20 @@ public class ReportDAOImpl extends BaseHibernateDAOImpl<Report>
         implements ReportDAO {
 
     public Report findByPrimaryKey(Integer id) {
-        Report report;
-        
         try {
-            report = (Report)getSession().get(Report.class, id);
+        	return (Report)getSession().get(Report.class, id);
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
-        return report;
     }
 
     @SuppressWarnings("unchecked")
-    public List<Report> findAll() {
-        final List<Report> reports;
-        
+    public List<Report> findAll() {        
         try {
-            Query query = getSession().getNamedQuery("ReportsAllQuery");
-            reports = query.list();
+            return getSession().getNamedQuery("ReportsAllQuery").list();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
-        return reports;
     }
 
 }
