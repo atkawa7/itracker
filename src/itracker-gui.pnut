@@ -1,0 +1,13 @@
+import org.itracker.web.StartJetty
+import org.itracker.web.util.ServletContextUtils
+import org.itracker.services.implementations.ITrackerServicesImpl
+import org.itracker.hibernateutils.OpenSessionFilter
+
+function startwebinterface(sessionFactory, issueService, userService, projectService, configurationService, reportService, issueSearchService, emailService) {
+	itrackerServices = ITrackerServicesImpl(issueService, userService, projectService, configurationService,
+			reportService, issueSearchService, emailService)
+	ServletContextUtils.setITrackerServices(itrackerServices)
+	OpenSessionFilter.sessionFactory = sessionFactory	
+
+	StartJetty()
+} 

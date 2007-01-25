@@ -1,0 +1,182 @@
+/*
+    ITracker persistence layer context. 
+    
+    DBCP pooling DataSource with a Hibernate local session factory. 
+    
+    All DAOs are wrapped with a HibernateInterceptor, which automatically 
+    opens and closes the Hibernate Session if none is bound to the current 
+    thread. It is only meant to be useful in case DAO methods are called 
+    outside the scope of a Hibernate transaction, which is otherwise 
+    responsible for managing the session. 
+    
+    NB: To prevent calling DAOs outside a transaction context, 
+    use the getSession(allowCreate=false). 
+*/
+
+
+use("pnuts.lib")
+
+import java.util.*
+
+import org.springframework.orm.hibernate3.*
+import org.springframework.remoting.rmi.*
+import org.springframework.aop.framework.*
+
+import org.apache.commons.dbcp.*
+import com.mchange.v2.c3p0.*
+
+import org.itracker.persistence.dao.*
+
+function getDAOs(transactionManager, jdbcurl, driverClass, hibernatedialect, hibernatehbm2ddlauto, user, password) {
+	// Datasource configuration
+	//dataSource = BasicDataSource()
+	dataSource=ComboPooledDataSource()
+	// what is the equivalent of this - destroy-method="close"
+	dataSource.driverClass = driverClass
+	dataSource.jdbcUrl = jdbcurl
+	dataSource.initialPoolSize = 1
+	dataSource.user = user
+	dataSource.password = password
+	
+	timestampEntityInterceptor = TimestampInterceptor()
+	
+	
+	// Hibernate session factory
+	sessionFactoryBean=LocalSessionFactoryBean()
+	sessionFactoryBean.mappingResources = {		
+		"/org/itracker/model/Configuration.hbm.xml",
+        "/org/itracker/model/Language.hbm.xml",
+        "/org/itracker/model/CustomField.hbm.xml",
+        "/org/itracker/model/CustomFieldValue.hbm.xml",
+        "/org/itracker/model/User.hbm.xml",
+        "/org/itracker/model/UserPreferences.hbm.xml",
+        "/org/itracker/model/Permission.hbm.xml",
+        "/org/itracker/model/Project.hbm.xml",
+        "/org/itracker/model/Component.hbm.xml",
+        "/org/itracker/model/Issue.hbm.xml",
+        "/org/itracker/model/Version.hbm.xml",
+        "/org/itracker/model/ProjectScript.hbm.xml",
+        "/org/itracker/model/WorkflowScript.hbm.xml",
+        "/org/itracker/model/IssueAttachment.hbm.xml",
+        "/org/itracker/model/IssueHistory.hbm.xml",
+        "/org/itracker/model/IssueField.hbm.xml",
+        "/org/itracker/model/IssueRelation.hbm.xml",
+        "/org/itracker/model/Notification.hbm.xml",
+        "/org/itracker/model/IssueActivity.hbm.xml",
+        "/org/itracker/model/Report.hbm.xml"
+	}
+	sessionFactoryBean.hibernateProperties = map({
+		"hibernate.dialect" => hibernatedialect,
+		"hibernate.hbm2ddl.auto" => hibernatehbm2ddlauto,
+		"hibernate.show_sql" => "true"
+	},"P")
+	sessionFactoryBean.dataSource = dataSource
+	sessionFactoryBean.entityInterceptor = timestampEntityInterceptor
+	sessionFactoryBean.afterPropertiesSet()
+	// hack, should not be global
+	package().sessionFactory = sessionFactoryBean.object
+	
+	// create DAO
+	
+	configurationDAOTarget = ConfigurationDAOImpl()
+	configurationDAOTarget.sessionFactory = sessionFactory
+	
+	languageDAOTarget = LanguageDAOImpl()
+	languageDAOTarget.sessionFactory = sessionFactory
+	
+	customFieldDAOTarget = CustomFieldDAOImpl()
+	customFieldDAOTarget.sessionFactory = sessionFactory
+	
+	customFieldValueDAOTarget = CustomFieldValueDAOImpl()
+	customFieldValueDAOTarget.sessionFactory = sessionFactory
+	
+	reportDAOTarget = ReportDAOImpl()
+	reportDAOTarget.sessionFactory = sessionFactory	
+	
+	userDAOTarget = UserDAOImpl()
+	userDAOTarget.sessionFactory = sessionFactory
+	
+	projectDAOTarget = ProjectDAOImpl()
+	projectDAOTarget.sessionFactory = sessionFactory
+	
+	componentDAOTarget = ComponentDAOImpl()
+	componentDAOTarget.sessionFactory = sessionFactory
+	
+	versionDAOTarget = VersionDAOImpl()
+	versionDAOTarget.sessionFactory = sessionFactory
+	
+	userPreferencesDAOTarget = UserPreferencesDAOImpl(userDAOTarget)
+	userPreferencesDAOTarget.sessionFactory = sessionFactory
+	
+	permissionDAOTarget = PermissionDAOImpl()
+	permissionDAOTarget.sessionFactory = sessionFactory
+	
+	issueDAOTarget = IssueDAOImpl()
+	issueDAOTarget.sessionFactory = sessionFactory
+	
+	issueHistoryDAOTarget = IssueHistoryDAOImpl()
+	issueHistoryDAOTarget.sessionFactory = sessionFactory
+	
+	notificationDAOTarget = NotificationDAOImpl()
+	notificationDAOTarget.sessionFactory = sessionFactory
+	
+	issueRelationDAOTarget = IssueRelationDAOImpl()
+	issueRelationDAOTarget.sessionFactory = sessionFactory
+	
+	issueAttachmentDAOTarget = IssueAttachmentDAOImpl()
+	issueAttachmentDAOTarget.sessionFactory = sessionFactory
+	
+	issueActivityDAOTarget = IssueActivityDAOImpl()
+	issueActivityDAOTarget.sessionFactory = sessionFactory
+	
+	projectScriptDAOTarget = ProjectScriptDAOImpl()
+	projectScriptDAOTarget.sessionFactory = sessionFactory
+	
+	workflowScriptDAOTarget = WorkflowScriptDAOImpl()
+	workflowScriptDAOTarget.sessionFactory = sessionFactory
+		
+	transactionManager.sessionFactory = sessionFactory
+	
+	// Hibernate interceptor, opens and closes sessions	
+	hibernateInterceptor=HibernateInterceptor()
+	hibernateInterceptor.sessionFactory=sessionFactory
+	
+	// A proxy to the DAO, after the Hibernate interceptor is applied
+	// Application code uses this object
+	
+	configurationDAO = createHibernateInterceptorProxy(configurationDAOTarget, [ConfigurationDAO], hibernateInterceptor)
+	languageDAO = createHibernateInterceptorProxy(languageDAOTarget, [LanguageDAO], hibernateInterceptor)
+	customFieldValueDAO = createHibernateInterceptorProxy(customFieldValueDAOTarget, [CustomFieldValueDAO], hibernateInterceptor)
+	customFieldDAO = createHibernateInterceptorProxy(customFieldDAOTarget, [CustomFieldDAO], hibernateInterceptor)
+	reportDAO = reportDAO = createHibernateInterceptorProxy(reportDAOTarget, [ReportDAO], hibernateInterceptor)
+	userDAO = createHibernateInterceptorProxy(userDAOTarget, [UserDAO], hibernateInterceptor)
+	projectDAO = createHibernateInterceptorProxy(projectDAOTarget, [ProjectDAO], hibernateInterceptor)
+	componentDAO = createHibernateInterceptorProxy(componentDAOTarget, [ComponentDAO], hibernateInterceptor)
+	versionDAO = createHibernateInterceptorProxy(versionDAOTarget, [VersionDAO], hibernateInterceptor)
+	userPreferencesDAO = createHibernateInterceptorProxy(userPreferencesDAOTarget, [UserPreferencesDAO], hibernateInterceptor)
+	permissionDAO = createHibernateInterceptorProxy(permissionDAOTarget, [PermissionDAO], hibernateInterceptor)
+	issueDAO = createHibernateInterceptorProxy(issueDAOTarget, [IssueDAO], hibernateInterceptor)
+	issueHistoryDAO = createHibernateInterceptorProxy(issueHistoryDAOTarget, [IssueHistoryDAO], hibernateInterceptor)
+	notificationDAO = createHibernateInterceptorProxy(notificationDAOTarget, [NotificationDAO], hibernateInterceptor)
+	issueRelationDAO = createHibernateInterceptorProxy(issueRelationDAOTarget, [IssueRelationDAO], hibernateInterceptor)
+	issueAttachmentDAO = createHibernateInterceptorProxy(issueAttachmentDAOTarget, [IssueAttachmentDAO], hibernateInterceptor)
+	issueActivityDAO = createHibernateInterceptorProxy(issueActivityDAOTarget, [IssueActivityDAO], hibernateInterceptor)
+	projectScriptDAO = createHibernateInterceptorProxy(projectScriptDAOTarget, [ProjectScriptDAO], hibernateInterceptor)
+	workflowScriptDAO = createHibernateInterceptorProxy(workflowScriptDAOTarget, [WorkflowScriptDAO], hibernateInterceptor)
+	
+	[configurationDAO, languageDAO, customFieldValueDAO, customFieldDAO, reportDAO, 
+		userDAO, projectDAO, componentDAO, versionDAO, userPreferencesDAO, permissionDAO, issueDAO,
+		issueHistoryDAO, notificationDAO, issueRelationDAO, issueAttachmentDAO,
+		issueActivityDAO, projectScriptDAO, workflowScriptDAO] 
+}	
+
+// A proxy to the DAO, after the Hibernate interceptor is applied
+	// Application code uses this object	
+function createHibernateInterceptorProxy(target, interfaces, hibernateInterceptor) { 
+	factoryBean = ProxyFactoryBean()
+	factoryBean.target = target
+	factoryBean.interfaces= interfaces
+	factoryBean.interceptorNames = {}
+	factoryBean.addAdvice(hibernateInterceptor)
+	factoryBean.object
+}

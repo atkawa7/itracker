@@ -1,0 +1,40 @@
+/**
+ * Script to start ITracker server and embedded web gui
+ */
+
+use("pnuts.tools")
+
+require("itracker-server")
+require("itracker-gui")
+require("itracker-config") 
+
+import org.itracker.core.resources.*
+import org.itracker.core.ApplicationInitialization
+
+// initialize logging and auditing
+//initLog()
+
+transactionManager = getTransactionManager()
+daos = getDAOs(transactionManager, serverconfig.jdbcurl, serverconfig.driverClass, serverconfig.hibernatedialect, "update", serverconfig.dbuser, serverconfig.dbpassword)
+
+services = getServices(transactionManager, daos)
+
+issueSearchService, configurationService, issueService, projectService,	userService,reportService/*,schedulerService*/ = services
+
+// initialize resources
+ITrackerResources.setConfigurationService(configurationService)
+
+ApplicationInitialization(sessionFactory, userService, configurationService, reportService)
+
+// start web interface
+startwebinterface(sessionFactory, issueService, userService, projectService, configurationService, 
+	reportService, issueSearchService, emailService = null)
+
+// configure predefined reports
+
+
+
+console()
+
+//Logger.info()
+//startScheduler()
