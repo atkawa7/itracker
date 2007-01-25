@@ -77,13 +77,22 @@ public class ConfigurationServiceImpl implements ConfigurationService {
      * @param configurationProperties itracker configuration properties
      *        (see /WEB-INF/configuration.properties)
      */
-    public ConfigurationServiceImpl(Properties configurationProperties) {
+    public ConfigurationServiceImpl(Properties configurationProperties, 
+    		ConfigurationDAO configurationDAO, CustomFieldDAO customFieldDAO,
+    		CustomFieldValueDAO customFieldValueDAO, LanguageDAO languageDAO, 
+    		ProjectScriptDAO projectScriptDAO, WorkflowScriptDAO workflowScriptDAO) {
         if (configurationProperties == null) {
             throw new IllegalArgumentException("null configurationProperties");
         }
         this.logger = Logger.getLogger(getClass());
         this.props = configurationProperties;
         props.setProperty("start_time_millis", Long.toString(System.currentTimeMillis()));
+        this.configurationDAO = configurationDAO;
+        this.customFieldDAO = customFieldDAO;
+        this.customFieldValueDAO = customFieldValueDAO;
+        this.languageDAO = languageDAO;
+        this.projectScriptDAO = projectScriptDAO;
+        this.workflowScriptDAO = workflowScriptDAO;
     }
     
     public String getProperty(String name) {
@@ -1228,40 +1237,20 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         return languageDAO;
     }
     
-    public void setLanguageDAO(LanguageDAO languageDAO) {
-        this.languageDAO = languageDAO;
-    }
-    
     public ConfigurationDAO getConfigurationDAO() {
         return configurationDAO;
-    }
-    
-    public void setConfigurationDAO(ConfigurationDAO configurationDAO) {
-        this.configurationDAO = configurationDAO;
     }
     
     public CustomFieldDAO getCustomFieldDAO() {
         return customFieldDAO;
     }
     
-    public void setCustomFieldDAO(CustomFieldDAO customFieldDAO) {
-        this.customFieldDAO = customFieldDAO;
-    }
-    
     public CustomFieldValueDAO getCustomFieldValueDAO() {
         return customFieldValueDAO;
     }
     
-    public void setCustomFieldValueDAO(CustomFieldValueDAO customFieldValueDAO) {
-        this.customFieldValueDAO = customFieldValueDAO;
-    }
-    
     public WorkflowScriptDAO getWorkflowScriptDAO() {
         return workflowScriptDAO;
-    }
-    
-    public void setWorkflowScriptDAO(WorkflowScriptDAO workflowScriptDAO) {
-        this.workflowScriptDAO = workflowScriptDAO;
     }
     
 }
