@@ -57,7 +57,7 @@ public class IssueSearchServiceImpl implements IssueSearchService {
     private IssueService issueService;
     private IssueDAO issueDAO;
 
-    public IssueSearchServiceImpl(ConfigurationService configurationService) {
+    public IssueSearchServiceImpl(IssueDAO issueDAO, IssueService issueService, ConfigurationService configurationService) {
         this.logger = Logger.getLogger(getClass());
         componentbeanTableName = configurationService.getProperty("componentbean_table_name",
                 SystemConfigurationUtilities.DEFAULT_COMPONENTBEAN_TABLE_NAME);
@@ -228,19 +228,11 @@ public class IssueSearchServiceImpl implements IssueSearchService {
         return issueService;
     }
 
-    public void setIssueService(IssueService issueService) {
-        this.issueService = issueService;
-    }
-    
     public IssueDAO getIssueDAO() {
         return issueDAO;
     }
 
-    public void setIssueDAO(IssueDAO issueDAO) {
-        this.issueDAO = issueDAO;
-    }
-
-	public static String getComponentbeanRelTableName() {
+    public static String getComponentbeanRelTableName() {
 		return componentbeanRelTableName;
 	}
 
