@@ -54,7 +54,17 @@ public class ProjectServiceImpl implements ProjectService {
     private VersionDAO versionDAO;
     private IssueDAO issueDAO;
     
-    public ProjectServiceImpl() {
+    public ProjectServiceImpl(ComponentDAO componentDAO, CustomFieldDAO customFieldDAO, 
+    		ProjectDAO projectDAO, ProjectScriptDAO projectScriptDAO, UserDAO userDAO, 
+    		VersionDAO versionDAO, IssueDAO issueDAO) 
+    {
+    	this.componentDAO = componentDAO;
+    	this.customFieldDAO = customFieldDAO;
+    	this.projectDAO = projectDAO;
+    	this.projectScriptDAO = projectScriptDAO;
+    	this.userDAO = userDAO;
+    	this.versionDAO = versionDAO;
+    	this.issueDAO = issueDAO;
     }
     
     public Project getProject(Integer projectId) {
@@ -63,19 +73,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
     
     public List<Project> getAllProjects() {
-        List<Project> projects = projectDAO.findAll();
-        return projects;
-    }
-    
-    public List<Project> getListOfAllProjects() {
-        return getAllProjects();
-    }
-    
-    public int getNumberProjects() {
-        // TODO: use SELECT COUNT(*); another comment to the comment: why?
-        Collection<Project> projects = projectDAO.findAll();
-        return projects.size();
-        
+    	return projectDAO.findAll();
     }
     
     public List<Project> getAllAvailableProjects() {
@@ -85,29 +83,6 @@ public class ProjectServiceImpl implements ProjectService {
     
     public List<Project> getListOfAllAvailableProjects() {
         return getAllAvailableProjects();
-    }
-    
-    public Project createProject(Project project) {
-        project.setCreateDate(new Timestamp(new Date().getTime()));
-        project.setLastModifiedDate(project.getCreateDate());
-        this.projectDAO.save(project);
-        return project;
-        
-    }
-    
-    public Project updateProject(Project project) {
-        Project model = projectDAO.findByPrimaryKey(project.getId());
-        model.setName(project.getName());
-        model.setStatus(project.getStatus());
-        model.setOptions(project.getOptions());
-        model.setDescription(project.getDescription());
-        model.setLastModifiedDate(new Date());
-        projectDAO.saveOrUpdate(model);
-        return model;
-    }
-    
-    public boolean deleteProject(Project project) {
-        throw new UnsupportedOperationException();
     }
     
     public Component updateProjectComponent(Component component) {
@@ -153,11 +128,6 @@ public class ProjectServiceImpl implements ProjectService {
         
     }
     
-    public List<Component> getProjectComponents(Integer projectId) {
-        List<Component> components = componentDAO.findByProject(projectId);
-        return components;
-    }
-    
     public Version addProjectVersion(Integer projectId, Version version) {
         version.setCreateDate(new Date());
         
@@ -195,11 +165,6 @@ public class ProjectServiceImpl implements ProjectService {
         
     }
     
-    public List<Version> getProjectVersions(Integer projectId) {
-        List<Version> versions = versionDAO.findByProjectId(projectId);
-        return versions;
-    }
-    
     public List<User> getProjectOwners(Integer projectId) {
         Project project = projectDAO.findByPrimaryKey(projectId);
         List<User> users = project.getOwners();
@@ -228,8 +193,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
     
     public List<CustomField> getProjectFields(Integer projectId, Locale locale) {
-        List<CustomField> fields = getProjectFields(projectId, locale);
-        return fields;
+    	return getProjectFields(projectId, locale);
     }
     
     public boolean setProjectFields(Project project, Set<Integer> setOfNewsFieldIds) {
@@ -336,79 +300,35 @@ public class ProjectServiceImpl implements ProjectService {
         return issueDAO;
     }
     
-    public void setIssueDAO(IssueDAO issueDAO) {
-        this.issueDAO = issueDAO;
-    }
-    
     public ProjectDAO getProjectDAO() {
         return projectDAO;
-    }
-    
-    public void setProjectDAO(ProjectDAO projectDAO) {
-        this.projectDAO = projectDAO;
     }
     
     public ComponentDAO getComponentDAO() {
         return componentDAO;
     }
     
-    public void setComponentDAO(ComponentDAO componentDAO) {
-        this.componentDAO = componentDAO;
-    }
-    
     public CustomFieldDAO getCustomFieldDAO() {
         return this.customFieldDAO;
-    }
-    
-    public void setCustomFieldDAO(CustomFieldDAO customFieldDAO) {
-        this.customFieldDAO = customFieldDAO;
     }
     
     public ProjectScriptDAO getProjectScriptDAO() {
         return this.projectScriptDAO;
     }
     
-    public void setProjectScriptDAO(ProjectScriptDAO projectScriptDAO) {
-        this.projectScriptDAO = projectScriptDAO;
-    }
-    
     public VersionDAO getVersionDAO() {
         return this.versionDAO;
-    }
-    
-    public void setVersionDAO(VersionDAO versionDAO) {
-        this.versionDAO = versionDAO;
     }
     
     public UserDAO getUserDAO() {
         return this.userDAO;
     }
-    
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
-    
-    public List<Component> getListOfProjectComponents(Integer projectId) {
-        throw new UnsupportedOperationException();
-    }
-    
-    public List<CustomField> getListOfProjectFields(Integer projectId, Locale locale) {
-        throw new UnsupportedOperationException();
-    }
-    
+        
     public List<CustomField> getListOfProjectFields(Integer projectId) {
         throw new UnsupportedOperationException();
     }
     
     public List<User> getListOfProjectOwners(Integer projectId) {
-        throw new UnsupportedOperationException();
-    }
-    
-    public List<Object> getListOfProjectStats(Integer projectId) {
-        throw new UnsupportedOperationException();
-    }
-    
-    public List<Version> getListOfProjectVersions(Integer projectId) {
         throw new UnsupportedOperationException();
     }
     
