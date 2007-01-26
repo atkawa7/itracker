@@ -33,10 +33,6 @@
             <column name="report_type" not-null="true"/>
         </property>
         
-        <property name="fileData">
-            <column name="file_data" not-null="false" length="1014"/>
-        </property>
-        
         <property name="className">
             <column name="class_name" not-null="false"/>
         </property>
