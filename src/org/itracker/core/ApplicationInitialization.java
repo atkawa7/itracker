@@ -58,25 +58,18 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 public class ApplicationInitialization {
     
     private final Logger logger;
-    private UserService userService;
-    private SessionFactory sessionFactory;
+    private UserService userService;    
     private ConfigurationService configurationService;
-    private ReportService reportService;
     
-    public ApplicationInitialization(UserService userService, SessionFactory sessionFactory, ConfigurationService configurationService, ReportService reportService) {
+    public ApplicationInitialization(UserService userService, ConfigurationService configurationService, ReportService reportService) {
         this.userService = userService;
-        this.sessionFactory = sessionFactory;
         this.configurationService = configurationService;
-        this.reportService = reportService;
         this.logger = Logger.getLogger(getClass());
         init();
     }
     
     public void init() {
         try {
-            Session session = sessionFactory.openSession();
-            TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
-            
             ITrackerResources.setDefaultLocale(configurationService.getProperty("default_locale", ITrackerResources.DEFAULT_LOCALE));
             logger.info("Set system default locale to '" + ITrackerResources.getDefaultLocale() + "'");
             
@@ -88,10 +81,7 @@ public class ApplicationInitialization {
             
 //            logger.info("Checking for issue attachment files.");
 //            processAttachmentFiles(configurationService.getProperty("attachment_dir", IssueAttachmentUtilities.DEFAULT_ATTACHMENT_DIR));
-            
-            logger.info("Checking for predefined reports.");
-            processReports();
-            
+                       
             logger.info("Setting up cached configuration entries");
             configurationService.resetConfigurationCache();
             
@@ -109,20 +99,6 @@ public class ApplicationInitialization {
             logger.info("Unable to create admin user.  Error: " + pe.getMessage());
         } catch (UserException ue) {
             logger.warn("Exception while creating admin user.", ue);
-        } catch (HibernateException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            org.springframework.orm.hibernate3.SessionHolder holder = (org.springframework.orm.hibernate3.SessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);
-            Session session = holder.getSession();
-            
-            try {
-                session.flush();
-            } catch (HibernateException e) {
-                logger.error(e.getMessage(), e);
-            }
-            
-            TransactionSynchronizationManager.unbindResource(sessionFactory);
-            SessionFactoryUtils.releaseSession(session, sessionFactory);
         }
     }
     
@@ -190,101 +166,4 @@ public class ApplicationInitialization {
         }
     }
     
-    private void processReports() {
-        try {
-            
-            List<Report> reports = reportService.getAllReports();
-            logger.info("size is " + reports.size());
-            
-            String line;
-            InputStream is = getClass().getResourceAsStream("/org/itracker/web/reports/predefined/predefinedReports.properties");
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            LINE: while ((line = br.readLine()) != null) {
-                if (line.equals("") || line.startsWith("#")) {
-                    continue;
-                }
-                int splitChar = line.indexOf('=');
-                if (splitChar < 0) {
-                    continue;
-                }
-                
-                String key = line.substring(0, splitChar);
-                String value = line.substring(splitChar + 1);
-                
-                if ("report".equalsIgnoreCase(key)) {
-                    try {
-                        String repLine;
-                        Report report = new Report();
-                        // Report chkreport = new Report();
-                        
-                        InputStream reportStream = getClass().getResourceAsStream("/org/itracker/web/reports/predefined/" + value);
-                        if (reportStream == null) {
-                            throw new IOException("Could not access predefined report '" + value + "'");
-                        }
-                        BufferedReader rbr = new BufferedReader(new InputStreamReader(reportStream));
-                        while ((repLine = rbr.readLine()) != null) {
-                            if (repLine.equals("") || line.startsWith("#")) {
-                                continue;
-                            }
-                            int repSplitChar = repLine.indexOf('=');
-                            if (repSplitChar < 0) {
-                                continue;
-                            }
-                            String repKey = repLine.substring(0, repSplitChar);
-                            String repValue = (repLine.length() > repSplitChar ? repLine.substring(repSplitChar + 1)
-                            : "");
-                            if (repValue == null || "".equals(repValue)) {
-                                continue;
-                            } else if ("id".equals(repKey)) {
-                                report.setId(new Integer(repValue));
-                            } else if ("name".equals(repKey)) {
-                                report.setName(repValue);
-                            } else if ("namekey".equals(repKey)) {
-                                report.setNameKey(repValue);
-                            } else if ("dataType".equals(repKey)) {
-                                report.setDataType(Integer.parseInt(repValue));
-                            } else if ("reportType".equals(repKey)) {
-                                report.setReportType(Integer.parseInt(repValue));
-                            } else if ("className".equals(repKey)) {
-                                report.setClassName(repValue);
-                            } else if ("description".equals(repKey)) {
-                                report.setDescription((String) Base64.decodeToObject(repValue));
-                            } else if ("definition".equals(repKey)) {
-                                report.setFileData(Base64.decode(repValue));
-                            }
-                        }
-                        if ("".equals(report.getName()) || report.getDataType() == 0
-                                || (report.getClassName() == null && report.getFileData().length == 0)) {
-                            throw new Exception("Invalid report definition found.");
-                        }
-                        logger.debug("Loading " + report.toString());
-                        
-                        for (Iterator<Report> iter = reports.iterator(); iter.hasNext();) {
-                            Report existingReport = iter.next();
-                            if ( existingReport.getName() == null ) {
-                                break;
-                            }
-                            if ( existingReport.getClassName().equals(report.getClassName()) &&
-                                    existingReport.getDataType() == report.getDataType() &&
-                                    existingReport.getName().equals(report.getName()) &&
-                                    existingReport.getNameKey().equals(report.getNameKey()) &&
-                                    existingReport.getReportType()== report.getReportType() ) {
-                                logger.debug("Found existing report, updating.");
-                                report.setId(existingReport.getId());
-                                reportService.updateReport(report);
-                                continue LINE;
-                            }
-                        }
-                        logger.debug(report.getName() + " - Not found, creating new report.");
-                        reportService.createReport(report);
-                    } catch (Exception e) {
-                        logger.error("Unable to process report '" + value + "': " + e.getMessage());
-                        logger.debug("Stacktrace:", e);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            logger.error("Unable to process predefined reports.", e);
-        }
-    }
 }
