@@ -93,6 +93,11 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
             }
 
             UserPreferences userPrefs = user.getPreferences();
+            // TODO hack, this should be handled central, there are other intances 
+            // of this hack
+            if(userPrefs == null) {
+            	userPrefs = new UserPreferences();
+            }
 
             UserForm userForm = (UserForm) form;
             if(userForm == null) {

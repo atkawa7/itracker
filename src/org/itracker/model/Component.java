@@ -57,7 +57,7 @@ public class Component extends AbstractEntity
     private String description;
     
     /** Component status. */
-    private int status;
+    private Integer status;
     
     /* This class used to have a <code>issues</code> attribute, which was 
      * a Collection<Issue>. This has been removed because the association 
