@@ -24,7 +24,7 @@ issueSearchService, configurationService, issueService, projectService,	userServ
 // initialize resources
 ITrackerResources.setConfigurationService(configurationService)
 
-ApplicationInitialization(sessionFactory, userService, configurationService, reportService)
+ApplicationInitialization(userService, configurationService, reportService)
 
 // start web interface
 startwebinterface(sessionFactory, issueService, userService, projectService, configurationService, 

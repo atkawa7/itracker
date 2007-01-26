@@ -1,11 +1,9 @@
 package org.itracker.web.util;
 
-import javax.servlet.ServletContext;
-
 import org.itracker.services.ITrackerServices;
-import org.springframework.web.context.WebApplicationContext;
 
 /**
+ * 
  * This class gets access to ITracker services layer from a servlet context
  * Since actions already have it done in the top level ITrackerAction (ItrackerBaseAction), this is mostly 
  * to be used in JSPs. 
@@ -20,9 +18,13 @@ import org.springframework.web.context.WebApplicationContext;
  */
 public class ServletContextUtils {
   
-    public static ITrackerServices getItrackerServices(ServletContext servletContext) { 
-        WebApplicationContext wac = org.springframework.web.context.support.WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-        ITrackerServices itrackerServices = (ITrackerServices) wac.getBean("itrackerServices");
+	private static ITrackerServices itrackerServices;
+
+	public static void setITrackerServices(ITrackerServices services) {
+		itrackerServices = services;
+	}
+	
+    public static ITrackerServices getItrackerServices() { 
         return itrackerServices;
     }
 
