@@ -30,6 +30,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.itracker.model.User;
 import org.itracker.services.UserService;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
@@ -55,8 +56,8 @@ public class UnlockUserAction extends ItrackerBaseAction {
             UserService userService = getITrackerServices().getUserService();
 
             Integer userId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
-
-            userService.setUserStatus(userId, UserUtilities.STATUS_ACTIVE);
+            User user = userService.getUser(userId);
+            user.setStatus(UserUtilities.STATUS_ACTIVE);
         } catch(Exception e) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }

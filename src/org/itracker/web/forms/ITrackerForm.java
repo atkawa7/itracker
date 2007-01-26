@@ -11,9 +11,8 @@ import org.itracker.web.util.ServletContextUtils;
   */
 public abstract class ITrackerForm extends ValidatorForm {
 
-    protected ITrackerServices getITrackerServices() {
-    //private ITrackerServices getITrackerServices() {
-        return ServletContextUtils.getItrackerServices(getServlet().getServletContext());
+    protected ITrackerServices getITrackerServices() {    
+        return ServletContextUtils.getItrackerServices();
     }
         
 }

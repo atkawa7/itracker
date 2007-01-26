@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -55,9 +56,6 @@ import org.itracker.services.util.ImportExportUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.ReportUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
-import org.itracker.web.reports.DefaultITrackerJFreeReport;
-import org.itracker.web.reports.DefaultITrackerJasperReport;
-import org.itracker.web.reports.ITrackerReport;
 import org.itracker.web.util.Constants;
 
 
@@ -116,8 +114,7 @@ public class DisplayReportAction extends ItrackerBaseAction {
                     reportDataArray=reportDataList;
                     Collections.sort(reportDataArray, Issue.ID_COMPARATOR);
                 } else {
-                	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectrequired"));
-                    throw new ReportException();
+                    throw new ReportException("", "itracker.web.error.projectrequired");
                 }
             } else {
                 // This must be a regular search, look for a search query result.
@@ -152,57 +149,38 @@ public class DisplayReportAction extends ItrackerBaseAction {
                 logger.debug("Defined report (" + reportId + ") requested.");
 
                 ReportService reportService = getITrackerServices().getReportService();
+                Report reportModel = reportService.getReportDAO().findByPrimaryKey(reportId);
 
-                Report reportModel = reportService.getReport(reportId);
+                // probably useless. the dao throws when the report doesn't exists
                 if(reportModel == null) {
                     logger.debug("Invalid report id: " + reportId + " requested.");
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreport"));
                     throw new ReportException();
                 }
-
-                reportModel.setFileData(reportService.getReportFile(reportModel.getId()));
-                logger.debug("Report " + reportModel.toString() + " found.");
-
-                ITrackerReport report = null;
-                if(reportModel.getClassName() != null && ! reportModel.getClassName().equals("")) {
-                    logger.debug("Creating new class: " + reportModel.getClassName());
-                    Class reportClass = Class.forName(reportModel.getClassName());
-                    report = (ITrackerReport) reportClass.newInstance();
-                } else if(reportModel.getReportType() == ReportUtilities.REPORTTYPE_JFREE) {
-                    report = (ITrackerReport) new DefaultITrackerJFreeReport();
-                } else if(reportModel.getReportType() == ReportUtilities.REPORTTYPE_JASPER) {
-                    report = (ITrackerReport) new DefaultITrackerJasperReport();
-                }
-
-                if(report == null) {
-                    logger.error("Unable to create new instance of report: " + reportModel.getName() + " class: " + reportModel.getClassName() + " type: " + reportModel.getReportType());
-                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreport"));
-                    throw new ReportException();
-                }
-
-                logger.debug("Initializing report object.");
-                report.initializeReport(reportDataArray, reportModel, userLocale, reportOutput, session);
-                logger.debug("Augmenting report object.");
-                report.augmentReport();
-
+                
+                logger.debug("Report " + reportModel.toString() + " found.");                                                               
+                
                 if(ReportUtilities.REPORT_OUTPUT_PDF.equals(reportOutput)) {
                     logger.debug("Processing PDF report.");
-                    report.outputPDF(request, response, mapping);
+                    reportService.outputPDF(reportDataArray, reportModel, userLocale, reportOutput, session, request, response, mapping);
                     return null;
                 } else if(ReportUtilities.REPORT_OUTPUT_XLS.equals(reportOutput)) {
                     logger.debug("Processing XLS report.");
-                    report.outputXLS(request, response, mapping);
-                    return null;
+                    //report.outputXLS(request, response, mapping);
+                    throw new RuntimeException("not working");
+                    //return null;
                 } else if(ReportUtilities.REPORT_OUTPUT_CSV.equals(reportOutput)) {
                     logger.debug("Processing CSV report.");
-                    report.outputCSV(request, response, mapping);
-                    return null;
+                    //report.outputCSV(request, response, mapping);
+                    throw new RuntimeException("not working");
+                    //return null;
                 } else if(ReportUtilities.REPORT_OUTPUT_HTML.equals(reportOutput)) {
                     logger.debug("Processing HTML report.");
-                    report.outputHTML(request, response, mapping);
-                    return null;
+                    //report.outputHTML(request, response, mapping);
+                    throw new RuntimeException("not working");
+                    //turn null;
                 } else {
-                    logger.error("Inavlid report output format: " + reportOutput);
+                    logger.error("Invalid report output format: " + reportOutput);
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreportoutput"));
                     throw new ReportException();
                 }

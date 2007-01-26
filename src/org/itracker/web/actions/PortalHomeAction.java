@@ -68,7 +68,8 @@ public class PortalHomeAction extends ItrackerBaseAction {
                         (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");
                 
                 // GETTING AND SETTING USER PREFS AND HIDDEN SECTIONS ACCORDINGLY
-                UserPreferences userPrefs = this.getITrackerServices().getUserService().getUserPreferencesByUserId(userId);
+                UserPreferences userPrefs = currUser.getPreferences();
+                if(userPrefs == null) userPrefs = new UserPreferences();
                 
                 int hiddenSections = 0;
                 if(! "all".equalsIgnoreCase(request.getParameter("sections"))) {

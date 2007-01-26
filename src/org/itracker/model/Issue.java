@@ -45,9 +45,9 @@ public class Issue extends AbstractEntity implements Comparable<Issue> {
     
     private String description;
     
-    private int severity;
+    private Integer severity;
     
-    private int status;
+    private Integer status;
     
     /* PENDING: consider using an int enumeration like severity and status. */
     private String resolution;
@@ -249,11 +249,11 @@ public class Issue extends AbstractEntity implements Comparable<Issue> {
         this.resolution = resolution;
     }
     
-    public int getSeverity() {
+    public Integer getSeverity() {
         return severity;
     }
     
-    public void setSeverity(int severity) {
+    public void setSeverity(Integer severity) {
         this.severity = severity;
     }
     

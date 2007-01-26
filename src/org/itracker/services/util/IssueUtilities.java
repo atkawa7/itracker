@@ -330,7 +330,7 @@ public class IssueUtilities  {
         return value;
     }
 
-    public static String getStatusName(int value) {
+    public static String getStatusName(Integer value) {
         return getStatusName(value, ITrackerResources.getLocale());
     }
 
@@ -366,7 +366,7 @@ public class IssueUtilities  {
         return statuses.size();
     }
 
-    public static String getSeverityName(int value) {
+    public static String getSeverityName(Integer value) {
         return getSeverityName(value, ITrackerResources.getLocale());
     }
 

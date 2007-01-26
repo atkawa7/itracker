@@ -17,44 +17,35 @@ import org.springframework.web.bind.ServletRequestUtils;
 
 public class DownloadAttachmentAction extends ItrackerBaseAction {
 
-    public ActionForward execute( ActionMapping actionMapping,
-                                  ActionForm actionForm,
-                                  HttpServletRequest request,
-                                  HttpServletResponse response )
-            throws Exception {
+	public ActionForward execute(ActionMapping actionMapping, ActionForm actionForm, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 
-        Integer attachmentID =
-                ServletRequestUtils.getIntParameter( request, "id" );
+		Integer attachmentID = ServletRequestUtils.getIntParameter(request, "id");
 
-        IssueService issueService = getITrackerServices().getIssueService();
+		IssueService issueService = getITrackerServices().getIssueService();
 
-        IssueAttachment attachment = issueService.getIssueAttachment( attachmentID );
+		IssueAttachment attachment = issueService.getIssueAttachment(attachmentID);
 
-        if( attachment.getFileData() == null ) {
-            ActionErrors errors = new ActionErrors();
+		if (attachment.getFileData() == null) {
+			ActionErrors errors = new ActionErrors();
 
-            errors.add( ActionMessages.GLOBAL_MESSAGE,
-                        new ActionMessage(
-                                "itracker.web.error.missingattachmentdata" ) );
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingattachmentdata"));
 
-            saveMessages( request, errors );
+			saveMessages(request, errors);
 
-            return actionMapping.findForward( "error_page" );
-        }
+			return actionMapping.findForward("error_page");
+		}
 
-        response.setContentType( attachment.getType() );
-        response.setHeader( "Content-Disposition", "inline; filename=" +
-                attachment.getOriginalFileName() + "" );
-        ServletOutputStream outputStream = response.getOutputStream();
-        logger.debug( "Displaying attachment " + attachment.getId() +
-                " of type " + attachment.getType() +
-                " to client.  Attachment size: " +
-                attachment.getFileData().length );
+		response.setContentType(attachment.getType());
+		response.setHeader("Content-Disposition", "inline; filename=" + attachment.getOriginalFileName() + "");
+		ServletOutputStream outputStream = response.getOutputStream();
+		logger.debug("Displaying attachment " + attachment.getId() + " of type " + attachment.getType()
+				+ " to client.  Attachment size: " + attachment.getFileData().length);
 
-        outputStream.write( attachment.getFileData() );
+		outputStream.write(attachment.getFileData());
 
-        return null;
+		return null;
 
-    }
+	}
 
 }

@@ -90,8 +90,7 @@ public class AssignIssueAction extends ItrackerBaseAction {
             if(project.getStatus() != ProjectUtilities.STATUS_ACTIVE) {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
             } else {
-                issueService.assignIssue(issueId, userId, currUserId);
-                issueService.sendNotification(issueId, NotificationUtilities.TYPE_ASSIGNED, getBaseURL(request));
+                issueService.assignIssue(issueId, userId, currUserId);                
             }
         } catch(Exception e) {
         	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));

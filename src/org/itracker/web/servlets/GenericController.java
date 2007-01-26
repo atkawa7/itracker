@@ -159,7 +159,7 @@ public abstract class GenericController extends HttpServlet {
     
     
     protected ITrackerServices getITrackerServices(ServletContext context) {
-        return ServletContextUtils.getItrackerServices(context);
+        return ServletContextUtils.getItrackerServices();
     }
     
     

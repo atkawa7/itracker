@@ -60,11 +60,9 @@ public class RemoveReportAction extends ItrackerBaseAction {
             
             ReportService reportService = getITrackerServices().getReportService();
             
-            Integer reportId = new Integer((request.getParameter("id") == null ? "-1" : request.getParameter("id")));
-            if(reportId.intValue() > 0) {
-                reportService.removeReport(reportId);
-                return mapping.findForward("listreportsadmin");
-            }
+            Integer reportId = new Integer((request.getParameter("id") == null ? "-1" : request.getParameter("id")));            
+            reportService.getReportDAO().delete(reportService.getReportDAO().findByPrimaryKey(reportId));
+            return mapping.findForward("listreportsadmin");            
         } catch(NumberFormatException nfe) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreport"));
             logger.debug("Invalid report id " + request.getParameter("id") + " specified.");

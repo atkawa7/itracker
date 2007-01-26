@@ -77,7 +77,7 @@ public class EditReportFormAction extends ItrackerBaseAction {
                 reportForm.setId(report.getId()); 
             } else if ("update".equals(action)) {
                 Integer reportId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
-                report = reportService.getReport(reportId);
+                report = reportService.getReportDAO().findByPrimaryKey(reportId);
                 if(report == null) {
                 	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreport"));
                 } else {
@@ -89,7 +89,7 @@ public class EditReportFormAction extends ItrackerBaseAction {
                     reportForm.setReportType(new Integer(report.getReportType()));
                     reportForm.setDataType(new Integer(report.getDataType()));
                     reportForm.setClassName(report.getClassName());
-                    reportForm.setFileData(new String((byte[]) report.getFileData()));
+                    //reportForm.setFileData(new String((byte[]) report.getFileData()));
                 }
             } else {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidaction"));

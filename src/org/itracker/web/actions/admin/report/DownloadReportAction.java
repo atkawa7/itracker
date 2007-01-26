@@ -64,14 +64,14 @@ public class DownloadReportAction extends ItrackerBaseAction {
             } else {
                 ReportService reportService = getITrackerServices().getReportService();
 
-                Report report = reportService.getReport(reportId);
+                Report report = reportService.getReportDAO().findByPrimaryKey(reportId);
                 if(report != null) {
-                    report.setFileData(reportService.getReportFile(reportId));
+                    //report.setFileData(reportService.getReportFile(reportId));
                     response.setContentType("application/x-itracker-report-export");
                     response.setHeader("Content-Disposition", "attachment; filename=\"ITracker_report_" + report.getId() + ".def\"");
                     ServletOutputStream out = response.getOutputStream();
                     logger.debug("Attempting export for: " + report);
-                    out.println( new String((byte[]) report.getFileData()));
+                    //out.println( new String((byte[]) report.getFileData()));
                     out.flush();
                     out.close();
                     return null;

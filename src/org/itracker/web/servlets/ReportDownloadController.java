@@ -58,7 +58,7 @@ public class ReportDownloadController extends GenericController {
 
             try {
                 reportId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
-                report = reportService.getReport(reportId);
+                report = reportService.getReportDAO().findByPrimaryKey(reportId);
             } catch(NumberFormatException nfe) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Invalid reportId " + request.getParameter("id") + " specified.");
@@ -72,7 +72,7 @@ public class ReportDownloadController extends GenericController {
 
             response.setHeader("Content-Disposition", "attachment; filename=report" + report.getId() + "\"");
             ServletOutputStream out = response.getOutputStream();
-            out.write(reportService.getReportFile(reportId));
+            //out.write(reportService.getReportFile(reportId));
             out.close();
         } catch(IOException ioe) {
             logger.info("Unable to display report.", ioe);

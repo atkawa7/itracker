@@ -257,7 +257,11 @@ public class LoginAction extends ItrackerBaseAction {
         if (logger.isDebugEnabled()) {
             logger.debug("Setting preferences for user " + user.getLogin());
         }
-        UserPreferences userPrefs = userService.getUserPreferencesByUserId(user.getId());
+        UserPreferences userPrefs = user.getPreferences();
+        //TODO : this is a hack, remove when possible
+        if(userPrefs == null) {
+        	userPrefs = new UserPreferences();
+        }
         session.setAttribute(Constants.PREFERENCES_KEY, userPrefs);
 
         if (logger.isDebugEnabled()) {

@@ -100,10 +100,10 @@ public class EditReportAction extends ItrackerBaseAction {
                         errorFound = true;
                         errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingdatafile"));  
                     } else {
-                        editreport.setFileData(file.getFileData());
+                        //editreport.setFileData(file.getFileData());
                     }
                 } else {
-                    editreport.setFileData(fileData.getBytes());
+                    //editreport.setFileData(fileData.getBytes());
                 }
             } catch(Exception e) {
                 logger.error("Exception while verifying import data.", e);
@@ -117,9 +117,9 @@ public class EditReportAction extends ItrackerBaseAction {
                 if("create".equals(action)) {
                     editreport = reportService.createReport(editreport);
                 } else if ("update".equals(action)) {
-                    Report existingreport = reportService.getReport(editreport.getId());
+                    Report existingreport = reportService.getReportDAO().findByPrimaryKey(editreport.getId());
                     if ( existingreport != null ) {
-                        editreport = reportService.updateReport(editreport);
+                        reportService.getReportDAO().saveOrUpdate(editreport);
                     }
                 }
             }

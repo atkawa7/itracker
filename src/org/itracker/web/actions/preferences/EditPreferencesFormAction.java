@@ -92,7 +92,7 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
                 return mapping.findForward("login");
             }
 
-            UserPreferences userPrefs = userService.getUserPreferencesByUserId(user.getId());
+            UserPreferences userPrefs = user.getPreferences();
 
             UserForm userForm = (UserForm) form;
             if(userForm == null) {

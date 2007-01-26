@@ -178,11 +178,10 @@ public abstract class ItrackerBaseAction extends Action {
     }
     
     protected ITrackerServices getITrackerServices() {
-        ITrackerServices itrackerServices = ServletContextUtils.getItrackerServices(getServlet().getServletContext());
+        ITrackerServices itrackerServices = ServletContextUtils.getItrackerServices();
         return itrackerServices;
     }
-    
-    
+        
     public String getName() {
         return name;
     }

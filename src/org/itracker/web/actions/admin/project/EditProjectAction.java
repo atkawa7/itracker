@@ -127,10 +127,7 @@ public class EditProjectAction extends ItrackerBaseAction {
                 if(! user.isSuperUser()) {
                     return mapping.findForward("unauthorized");
                 }
-                project = projectService.createProject(project);
-                if(project == null) {
-                    throw new Exception("Error creating new project.");
-                }
+                projectService.getProjectDAO().save(project);
                 
                 Integer[] userIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "users");
                 if ( userIds == null ) {
@@ -180,7 +177,7 @@ public class EditProjectAction extends ItrackerBaseAction {
                 projectService.setProjectOwners(project, owners);
                 projectService.setProjectFields(project, fields);
                 
-                projectService.updateProject(project);
+                projectService.getProjectDAO().save(project);
                 
             } else if ("update".equals(action)) {
                 if(! UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
@@ -219,7 +216,7 @@ public class EditProjectAction extends ItrackerBaseAction {
                 
                 projectService.setProjectOwners(project, owners);
                 projectService.setProjectFields(project, fields);
-                projectService.updateProject(project);
+                projectService.getProjectDAO().save(project);
             }
             session.removeAttribute(Constants.PROJECT_KEY);
             return mapping.findForward("listprojectsadmin");

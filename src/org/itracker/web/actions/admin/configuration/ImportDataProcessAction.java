@@ -189,8 +189,7 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
             for(int i = 0; i < importData.length; i++) {
                 if(importData[i] instanceof Project && ! model.getExistingModel(i)) {
                     Project project = (Project) importData[i];
-                    Project newProject = projectService.createProject(project);
-                    project.setId(newProject.getId());
+                    projectService.getProjectDAO().save(project);
 
                     HashSet<Integer> setOfOwnerIDs = new HashSet<Integer>();
                     for(int j = 0; j < project.getOwners().size(); j++) {
