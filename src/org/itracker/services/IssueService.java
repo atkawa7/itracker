@@ -107,9 +107,7 @@ public interface IssueService {
      * @return an Issue of the issue after it has been moved
      */
     Issue moveIssue(Issue issue, Integer projectId, Integer userId);
-    
-    boolean deleteIssue(Issue issue);
-    
+        
     boolean assignIssue(Integer issueId, Integer userId);
     
     boolean assignIssue(Integer issueId, Integer userId, Integer assignedByUserId);
