@@ -18,7 +18,7 @@
 
 package org.itracker.services.exceptions;
 
-public class ReportException extends Exception {
+public class ReportException extends RuntimeException {
     private String errorKey = null;
 
     public ReportException() {
@@ -26,6 +26,10 @@ public class ReportException extends Exception {
 
     public ReportException(String message) {
         super(message);
+    }
+    
+    public ReportException(Throwable e) {
+        super(e);
     }
 
     public ReportException(String message, String errorKey) {
