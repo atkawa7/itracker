@@ -16,14 +16,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%
-final Map<Integer, Set<PermissionType>> permissions = 
-    RequestHelper.getUserPermissions(session);
-        
-    //UserPreferencesModel userPrefs = (UserPreferencesModel) session.getAttribute("preferences");
+	final Map<Integer, Set<PermissionType>> permissions = RequestHelper.getUserPermissions(session);           
     Project project = (Project)request.getAttribute("project");
-    //String orderParam = (String)request.getAttribute("orderParam");
-    //Integer numViewable = (Integer)request.getAttribute("numViewable");
-    //Integer k = (Integer)request.getAttribute("k");
+    Boolean hasIssues = (Boolean)request.getAttribute("hasIssues");
+    User user = (User)request.getSession().getAttribute("currUser");
+    UserPreferences prefs = user.getPreferences();
+    //TODO hack, probably getPreferences should not return null
+    if(prefs == null) prefs = new UserPreferences();
+    String orderParam = (String)request.getAttribute("orderParam");
+    Integer numViewable = (Integer)request.getAttribute("numViewable");
+    Integer k = (Integer)request.getAttribute("k");
     %>
  <%-- TODO : move redirect logic to the Action class. --%>
 <c:choose>
@@ -125,7 +127,7 @@ final Map<Integer, Set<PermissionType>> permissions =
     
 </c:forEach>
 
-  <%-- 
+  <%
   
   if(! hasIssues) {
 %>
@@ -141,21 +143,21 @@ final Map<Integer, Set<PermissionType>> permissions =
             </tr>
             <tr class="listRowUnshaded" align="left">
               <td colspan="15" align="left">
-<%               if(k > 0 && userPrefs.getNumItemsOnIssueList() > 0) { %>
-                      <it:formatPaginationLink page="/list_issues.jsp" projectId="<%= project.getId() %>" styleClass="headerLinks"
-                                               start="<%= (k - userPrefs.getNumItemsOnIssueList()) %>" order="<%= orderParam %>">
+<%               if(prefs.getNumItemsOnIssueList() > 0) { %>
+                      <it:formatPaginationLink page="/list_issues.jsp" projectId="<%= 1234 %>" styleClass="headerLinks"
+                                               start="<%= (100 - prefs.getNumItemsOnIssueList()) %>" order="<%= orderParam %>">
                         <it:message key="itracker.web.generic.prevpage"/>
                       </it:formatPaginationLink>
 <%                } %>
-<%                if((j + k) < numViewable && userPrefs.getNumItemsOnIssueList() > 0) { %>
+<%                if((k) < numViewable && prefs.getNumItemsOnIssueList() > 0) { %>
                       <it:formatPaginationLink page="/list_issues.jsp" projectId="<%= project.getId() %>" styleClass="headerLinks"
-                                               start="<%= (j + k) %>" order="<%= orderParam %>">
+                                               start="<%= (k) %>" order="<%= orderParam %>">
                         <it:message key="itracker.web.generic.nextpage"/>
                       </it:formatPaginationLink>
 <%                } %>
               </td>
             </tr>
-<%      } --%>
+<%      } %>
 
       </table>
 

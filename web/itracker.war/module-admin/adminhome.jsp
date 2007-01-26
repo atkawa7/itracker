@@ -4,6 +4,7 @@
 <%@ page import="org.itracker.services.util.ReportUtilities" %>
 <%@ page import="org.itracker.web.scheduler.*" %>
 <%@ page import="org.itracker.model.PermissionType" %>
+<%@ page import="org.itracker.services.*" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Set" %>
 <%@ page import="org.itracker.web.util.RequestHelper" %>
@@ -17,8 +18,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <% // TODO: move this redirect logic to the Action. 
-final Map<Integer, Set<PermissionType>> permissions = 
-    RequestHelper.getUserPermissions(session);
+	final Map<Integer, Set<PermissionType>> permissions = RequestHelper.getUserPermissions(session);
+	ProjectService projectService = (ProjectService)request.getAttribute("ph");
 
  if(! UserUtilities.hasPermission(permissions, UserUtilities.PERMISSION_USER_ADMIN)) { %>
       <logic:forward name="listprojectsadmin"/>
@@ -57,7 +58,7 @@ final Map<Integer, Set<PermissionType>> permissions =
         <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3" width="1"/></td></tr>
         <tr class="listRowUnshaded">
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totalprojects"/>: </td>
-          <td class="editColumnText"><fmt:formatNumber value="${ph.numberProjects}"/></td>
+          <td class="editColumnText"><fmt:formatNumber value="<%= projectService.getAllProjects().size() %>"/></td>
           <td></td>
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totalissues"/>: </td>
           <td class="editColumnText"><fmt:formatNumber value="${ih.numberIssues}"/></td>
@@ -178,7 +179,7 @@ final Map<Integer, Set<PermissionType>> permissions =
         <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3" width="1"/></td></tr>
         <tr class="listRowUnshaded">
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totaltasks"/>: </td>
-          <td class="editColumnText"><%= Scheduler.getNumTasks() %></td>
+          <td class="editColumnText"><%= -1/*Scheduler.getNumTasks()*/ %></td>
           <td></td>
           <td class="editColumnTitle"><it:message key="itracker.web.attr.lastrun"/>: </td>
           <td class="editColumnText"><c:out value="${lastRun}"/></td>
