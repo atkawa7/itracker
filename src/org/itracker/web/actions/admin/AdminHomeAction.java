@@ -17,7 +17,6 @@ import org.itracker.services.ReportService;
 import org.itracker.services.UserService;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
-import org.itracker.web.scheduler.Scheduler;
 import org.itracker.web.util.SessionManager;
 
 
@@ -53,7 +52,7 @@ public class AdminHomeAction extends ItrackerBaseAction {
 		  request.setAttribute("allIssueAttachmentsTotalSize",allIssueAttachmentsTotalSize);
 		  Locale currLocale = super.getLocale(request);
 		  SimpleDateFormat sdf = new SimpleDateFormat(ITrackerResources.getString("itracker.dateformat.full"), currLocale);
-		  String lastRun = (Scheduler.getLastRun() == null ? "-" : sdf.format(Scheduler.getLastRun()));
+		  String lastRun = null;//(Scheduler.getLastRun() == null ? "-" : sdf.format(Scheduler.getLastRun()));
 		  request.setAttribute("lastRun",lastRun);
 		  request.setAttribute("ih",issueService);
 		  request.setAttribute("ph",projectService);
