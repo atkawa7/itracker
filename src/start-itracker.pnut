@@ -26,10 +26,6 @@ ITrackerResources.setConfigurationService(configurationService)
 
 ApplicationInitialization(userService, configurationService, reportService)
 
-// start web interface
-startwebinterface(sessionFactory, issueService, userService, projectService, configurationService, 
-	reportService, issueSearchService, emailService = null)
-
 // configure predefined reports
 
 
