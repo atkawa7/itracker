@@ -9,21 +9,26 @@
 	<property file="user.build.properties" />
 	<!-- Default Project properties -->
 	<property file="build.properties" />
+	
+	<property name="libs.path" value="lib" />
+	
 	<!-- project paths -->
 	<property name="src.dir" value="${basedir}/src/" />
-	<property name="lib.dir" value="${basedir}/web/WEB-INF/lib/" />
-	<property name="lib.bsh.dir" value="${basedir}/web/WEB-INF/lib/" />	
-	<property name="lib.j2ee.dir" value="${basedir}/web/WEB-INF/lib/" />	
-	<property name="lib.commons.dir" value="${basedir}/web/WEB-INF/lib/" />
-	<property name="lib.hibernate.dir" value="${basedir}/web/WEB-INF/lib/" />
-	<property name="lib.jstl.dir" value="${basedir}/web/WEB-INF/lib/" />	
-	<property name="lib.log4j.dir" value="${basedir}/web/WEB-INF/lib/" />	
-	<property name="lib.oro.dir" value="${basedir}/web/WEB-INF/lib/" />	
-	<property name="lib.poi.dir" value="${basedir}/web/WEB-INF/lib/" />	
-	<property name="lib.spring.dir" value="${basedir}/web/WEB-INF/lib/" />
-	<property name="lib.struts.dir" value="${basedir}/web/WEB-INF/lib/" />
-	<property name="build.dir" value="${basedir}/build" />
+	<property name="lib.dir" value="${libs.path}" />
+	<property name="lib.bsh.dir" value="${libs.path}/" />	
+	<property name="lib.javamail.dir" value="${libs.path}/javamail/" />		
+	<property name="lib.commons.dir" value="${libs.path}/commons/" />
+	<property name="lib.hibernate.dir" value="${libs.path}/hibernate-3.1.3/" />
+	<property name="lib.jstl.dir" value="${libs.path}/jstl/" />	
+	<property name="lib.log4j.dir" value="${libs.path}/log4j/" />	
+	<property name="lib.oro.dir" value="${libs.path}/oro/" />	
+	<property name="lib.spring.dir" value="${libs.path}/spring/" />
+	<property name="lib.struts.dir" value="${libs.path}/struts/" />
+	<property name="lib.jetty.dir" value="${libs.path}/jetty-6.1.0" />
+	<property name="lib.jasperreports.dir" value="${libs.path}/jasperreports" />
+	<property name="build.dir" value="${basedir}/classes" />
 	<property name="dist.dir" value="${basedir}/dist" />
+	<property name="web.dir" value="${basedir}/web/itracker.war" />
 	<property name="war-src-files.dir" value="${basedir}/web"/>
 	<property name="war-dist-files.dir" value="${dist.dir}/war"/>
 	<property name="war.file" value="itracker.war" />
@@ -36,15 +41,15 @@
 
   ============================================================== -->
 
-	<!-- j2ee -->
-	<fileset id="j2ee.library" dir="${lib.j2ee.dir}">
-		<include name="servlet-api.jar" />	
-		<include name="jsp-api.jar" />	
-		<include name="jta.jar" />	
-		<include name="ejb.jar" />
-		<include name="mail.jar" />
-		<include name="jms.jar" />
+	<!-- javamail -->
+	<fileset id="javamail.library" dir="${lib.javamail.dir}">
+		<include name="mail.jar" />	
 	</fileset>	
+	
+	<!-- jms -->
+	<fileset id="jms.library" dir="${lib.dir}">
+		<include name="jms.jar" />	
+	</fileset>		
 	
 	<!-- jstl -->
 	<fileset id="jstl.library" dir="${lib.jstl.dir}">
@@ -95,17 +100,12 @@
 		
 	<!-- oro -->
 	<fileset id="oro.library" dir="${lib.oro.dir}">
-		<include name="oro-2.0.7.jar" />
+		<include name="jakarta-oro.jar" />
 	</fileset>
-	
-	<!-- poi -->
-	<fileset id="poi.library" dir="${lib.poi.dir}">
-		<include name="poi-2.0-final-20040126.jar" />
-	</fileset>		
 	
 	<!-- log4j -->
 	<fileset id="log4j.library" dir="${lib.log4j.dir}">
-		<include name="log4j-1.2.8.jar" />
+		<include name="log4j-all-1.3alpha-8.jar" />
 	</fileset>
 	
 	<!-- bsh -->
@@ -119,16 +119,16 @@
 	</fileset>	
 	
 	<!-- jfreereport -->
-	<fileset id="jfreereport.library" dir="${lib.dir}">
+	<fileset id="jfreereport.library" dir="${lib.dir}/jfreereport">
 		<include name="jfreereport-0.8.7.jar" />
 		<include name="jcommon-1.0.1.jar" />		
-		<include name="jcommon-xml-1.0.1.jar" />
-		<include name="itext-1.01.jar" />		
+		<include name="jcommon-xml-1.0.1.jar" />	
 	</fileset>		
 
 	<!-- jfreereport -->
-	<fileset id="jasperreports.library" dir="${lib.dir}">
+	<fileset id="jasperreports.library" dir="${lib.jasperreports.dir}">
 		<include name="jasperreports-0.6.4.jar" />
+		<include name="itext-1.01.jar" />		
 	</fileset>		
 	
 	<!-- jcifs -->
@@ -136,7 +136,27 @@
 		<include name="jcifs-1.1.9.jar" />
 	</fileset>	
 	
+	<!-- jetty -->
+	<fileset id="jetty.library" dir="${lib.jetty.dir}">
+		<include name="jetty-6.1.0.jar" />
+		<include name="jetty-util-6.1.0.jar" />		
+		<include name="servlet-api-2.5.jar" />
+		<include name="jsp-2.0/ant-1.6.5.jar" />
+		<include name="jsp-2.0/commons-el-1.0.jar" />
+		<include name="jsp-2.0/jasper-compiler-5.5.15.jar" />
+		<include name="jsp-2.0/jasper-compiler-jdt-5.5.15.jar" />
+		<include name="jsp-2.0/jasper-runtime-5.5.15.jar" />
+		<include name="jsp-2.0/jcl104-over-slf4j-1.0.1.jar" />
+		<include name="jsp-2.0/jsp-api-2.0.jar" />
+		<include name="jsp-2.0/slf4j-simple-1.0.1.jar" />
+		<include name="jsp-2.0/xercesImpl-2.6.2.jar" />
+		<include name="jsp-2.0/xmlParserAPIs-2.6.2.jar" />		
+	</fileset>		
 	
+	<!-- quartz -->
+	<fileset id="quartz.library" dir="${lib.dir}/quartz">
+		<include name="quartz-1.6.0.jar" />
+	</fileset>		
 	
 	<!-- ============================================================
 
@@ -156,8 +176,12 @@
 		<fileset refid="junit.library" />												
 		<fileset refid="jfreereport.library" />	
 		<fileset refid="jasperreports.library" />
+		<fileset refid="jetty.library" />
+		<fileset refid="javamail.library" />
+		<fileset refid="jms.library" />
+		<fileset refid="quartz.library" />
 		<!-- we currently need this for compiling; we don't need it in the .war because its important servlet.jar comes from the web container.  -->
-		<fileset refid="j2ee.library" />	
+		<!-- fileset refid="j2ee.library" / -->	
 	</path>
 
 	<!-- ============================================================
@@ -211,14 +235,13 @@
                     </fileset>
                 </copy>
 		
-                <war destfile="${dist.dir}/${war.file}" basedir="${war-dist-files.dir}" webxml="${war-dist-files.dir}/WEB-INF/web.xml">
+        <war destfile="${dist.dir}/${war.file}" basedir="${war-dist-files.dir}" webxml="${web.dir}/WEB-INF/web.xml">
 			<lib refid="spring.library" />	 
 			<lib refid="hibernate.library" />
 			<lib refid="commons.library" />
 			<lib refid="struts.library" />		
 			<lib refid="jstl.library" />		
-			<lib refid="oro.library" />		
-			<lib refid="poi.library" />						
+			<lib refid="oro.library" />							
 			<lib refid="bsh.library" />										
 			<lib refid="jfreereport.library" />	
 			<lib refid="jasperreports.library" />					
@@ -251,8 +274,8 @@
    <property name="jmeter.xslt.dir" value="${jmeter.dir}/xslt" />    
    
    <target name="javadoc">
-<javadoc access="public" author="true" classpath="lib/ehcache-1.1.jar;lib/junit.jar;lib/commons-digester.jar;lib/jcifs-1.1.9.jar;lib/odmg-3.0.jar;lib/commons-collections-2.1.1.jar;lib/aopalliance.jar;lib/struts.jar;lib/jstl.jar;lib/standard.jar;lib/jdbc2_0-stdext.jar;lib/commons-dbcp-1.2.1.jar;lib/jnp-client.jar;lib/asm.jar;lib/commons-lang-1.0.1.jar;lib/antlr-2.7.6rc1.jar;lib/jcommon-0.9.3.jar;lib/jta.jar;lib/log4j-1.2.8.jar;lib/c3p0-0.8.4.5.jar;lib/commons-validator.jar;lib/commons-logging-1.0.4.jar;lib/commons-beanutils.jar;lib/jfreereport-0.8.4_4-all.jar;lib/jboss-client.jar;lib/hibernate3.jar;lib/bsh-1.3.0.jar;lib/cglib-full-2.0.2.jar;lib/jdt-compiler.jar;lib/itext-1.01.jar;lib/cglib-2.1.3.jar;lib/jfreechart-0.9.18.jar;lib/jasperreports-0.6.4.jar;lib/hibernate2.jar;lib/ehcache-0.9.jar;lib/mysql-connector-java-3.1.12-bin.jar;lib/j2ee.jar;lib/commons-logging.jar;lib/asm-attrs.jar;lib/commons-collections.jar;lib/spring.jar;lib/c3p0-0.9.0.jar;lib/jbosssx-client.jar;lib/poi-2.0-final-20040126.jar;lib/jakarta-oro.jar;lib/oro-2.0.7.jar;lib/dom4j-1.6.1.jar;lib/dom4j-1.4.jar;lib/commons-fileupload.jar;lib/commons-pool-1.2.jar" destdir="docs/javadoc" doctitle="itracker Javadoc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="org.itracker.web.actions.admin.report,org.itracker.ejb.test,org.itracker.web.actions.project,org.itracker.services.authentication,org.itracker.web.actions.notyetsorted,org.itracker.web.forms,org.itracker.web.actions.issuesearch,org.itracker.ejb.client.util,org.itracker.web.actions.admin.user,org.itracker.services.exceptions,org.itracker.ejb.client.resources,org.itracker.web.util,org.itracker.services,org.itracker.core,org.itracker.web.actions.admin.configuration,org.itracker.web.actions.user,org.itracker.web.scheduler.tasks,org.itracker.model.deprecatedmodels,org.itracker.web.exceptions,org.itracker.web.filters,org.itracker.services,org.itracker.web.actions.report,org.itracker.web.actions.admin.project,org.itracker.services.util,org.itracker.web.scheduler,org.itracker.web.reports,org.itracker.web.actions.preferences,org.itracker.web.actions.admin.attachment,org.itracker.test.spring,org.itracker.model.message,org.itracker.web.actions.admin.workflow,org.itracker.services.authentication.adsson,org.itracker.web.actions.admin.language,org.itracker.web.resources,org.itracker.web.servlets,org.itracker.web.actions.admin.scheduler,org.itracker.ejb.beans.entity,org.itracker.web.taglib" source="1.4" sourcepath="src" splitindex="true" use="true" version="true"/>
-</target>
+	<javadoc access="public" author="true" classpath="lib/ehcache-1.1.jar;lib/junit.jar;lib/commons-digester.jar;lib/jcifs-1.1.9.jar;lib/odmg-3.0.jar;lib/commons-collections-2.1.1.jar;lib/aopalliance.jar;lib/struts.jar;lib/jstl.jar;lib/standard.jar;lib/jdbc2_0-stdext.jar;lib/commons-dbcp-1.2.1.jar;lib/jnp-client.jar;lib/asm.jar;lib/commons-lang-1.0.1.jar;lib/antlr-2.7.6rc1.jar;lib/jcommon-0.9.3.jar;lib/jta.jar;lib/log4j-1.2.8.jar;lib/c3p0-0.8.4.5.jar;lib/commons-validator.jar;lib/commons-logging-1.0.4.jar;lib/commons-beanutils.jar;lib/jfreereport-0.8.4_4-all.jar;lib/jboss-client.jar;lib/hibernate3.jar;lib/bsh-1.3.0.jar;lib/cglib-full-2.0.2.jar;lib/jdt-compiler.jar;lib/itext-1.01.jar;lib/cglib-2.1.3.jar;lib/jfreechart-0.9.18.jar;lib/jasperreports-0.6.4.jar;lib/hibernate2.jar;lib/ehcache-0.9.jar;lib/mysql-connector-java-3.1.12-bin.jar;lib/j2ee.jar;lib/commons-logging.jar;lib/asm-attrs.jar;lib/commons-collections.jar;lib/spring.jar;lib/c3p0-0.9.0.jar;lib/jbosssx-client.jar;lib/poi-2.0-final-20040126.jar;lib/jakarta-oro.jar;lib/oro-2.0.7.jar;lib/dom4j-1.6.1.jar;lib/dom4j-1.4.jar;lib/commons-fileupload.jar;lib/commons-pool-1.2.jar" destdir="docs/javadoc" doctitle="itracker Javadoc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="org.itracker.web.actions.admin.report,org.itracker.ejb.test,org.itracker.web.actions.project,org.itracker.services.authentication,org.itracker.web.actions.notyetsorted,org.itracker.web.forms,org.itracker.web.actions.issuesearch,org.itracker.ejb.client.util,org.itracker.web.actions.admin.user,org.itracker.services.exceptions,org.itracker.ejb.client.resources,org.itracker.web.util,org.itracker.services,org.itracker.core,org.itracker.web.actions.admin.configuration,org.itracker.web.actions.user,org.itracker.web.scheduler.tasks,org.itracker.model.deprecatedmodels,org.itracker.web.exceptions,org.itracker.web.filters,org.itracker.services,org.itracker.web.actions.report,org.itracker.web.actions.admin.project,org.itracker.services.util,org.itracker.web.scheduler,org.itracker.web.reports,org.itracker.web.actions.preferences,org.itracker.web.actions.admin.attachment,org.itracker.test.spring,org.itracker.model.message,org.itracker.web.actions.admin.workflow,org.itracker.services.authentication.adsson,org.itracker.web.actions.admin.language,org.itracker.web.resources,org.itracker.web.servlets,org.itracker.web.actions.admin.scheduler,org.itracker.ejb.beans.entity,org.itracker.web.taglib" source="1.4" sourcepath="src" splitindex="true" use="true" version="true"/>
+   </target>
 
    <taskdef name="jmeter" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask" 
             classpath="${jmeter.dir}/lib/ant-jmeter.jar" />
