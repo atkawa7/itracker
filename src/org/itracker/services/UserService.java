@@ -50,13 +50,13 @@ public interface UserService {
     
     public List<User> getSuperUsers();
     
-    public boolean isSuperUser(User user);
+    //public boolean isSuperUser(User user);
     
-    public UserPreferences getUserPreferencesByUserId(Integer userId);
+    //public UserPreferences getUserPreferencesByUserId(Integer userId);
     
     public List<User> getPossibleOwners(Issue issue, Integer projectId, Integer userId);
     
-    public List<User> getListOfPossibleOwners(Issue issue, Integer projectId, Integer userId);
+    //public List<User> getListOfPossibleOwners(Issue issue, Integer projectId, Integer userId);
     
     public User createUser(User user) throws UserException;
     
@@ -64,13 +64,11 @@ public interface UserService {
     
     public String generateUserPassword(User user) throws PasswordException;
     
-    public boolean deleteUser(User user);
+    //public boolean deleteUser(User user);
     
-    public UserPreferences updateUserPreferences(UserPreferences user) throws UserException;
+    public UserPreferences updateUserPreferences(UserPreferences user) throws UserException;       
     
-    public boolean setUserStatus(Integer userId, int status);
-    
-    public boolean clearOwnedProjects(Integer userId);
+    public void clearOwnedProjects(User user);
     
     /**
      * This method will call local EJBs to find users with a specific permission.

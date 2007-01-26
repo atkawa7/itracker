@@ -28,6 +28,7 @@ import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.User;
 import org.itracker.model.Version;
+import org.itracker.persistence.dao.ProjectDAO;
 
 
 public interface ProjectService {
@@ -36,26 +37,10 @@ public interface ProjectService {
  
     public List<Project> getAllProjects();
     
-    public List<Project> getListOfAllProjects();
-    
-    public int getNumberProjects();
- 
     public List<Project> getAllAvailableProjects();
     
-    public List<Project> getListOfAllAvailableProjects();
-    
-    public Project createProject(Project project);
-    
-    public Project updateProject(Project project);
-    
-    public boolean deleteProject(Project project);
-
     public Component getProjectComponent(Integer componentId);
-  
-    public List<Component> getProjectComponents(Integer projectId);
-    
-    public List<Component> getListOfProjectComponents(Integer projectId);
-    
+        
     public Component updateProjectComponent(Component component);
     
     public Component addProjectComponent(Integer projectId, Component component);
@@ -63,11 +48,7 @@ public interface ProjectService {
     public boolean removeProjectComponent(Integer projectId, Integer componentId);
 
     public Version getProjectVersion(Integer versionId);
- 
-    public List<Version> getProjectVersions(Integer projectId);
-    
-    public List<Version> getListOfProjectVersions(Integer projectId);
-    
+        
     public Version updateProjectVersion(Version version);
     
     public Version addProjectVersion(Integer projectId, Version version);
@@ -85,9 +66,7 @@ public interface ProjectService {
     public List<CustomField> getListOfProjectFields(Integer projectId);   
  
     public List<CustomField> getProjectFields(Integer projectId, Locale locale);
-    
-    public List<CustomField> getListOfProjectFields(Integer projectId, Locale locale);
-    
+       
     public boolean setProjectFields(Project project, Set<Integer> newFields);
 
     public ProjectScript getProjectScript(Integer scriptId);
@@ -128,6 +107,5 @@ public interface ProjectService {
      */
     public int[] getProjectStats(Integer projectId);
     
-    public List<Object> getListOfProjectStats(Integer projectId);
-    
+    public ProjectDAO getProjectDAO();
 }
