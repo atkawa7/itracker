@@ -1,0 +1,10 @@
+/**
+ * Script to start ITracker server and embedded web gui
+ */
+
+require("start-itracker")
+
+// start web interface
+startwebinterface(sessionFactory, issueService, userService, projectService, configurationService, 
+	reportService, issueSearchService, emailService = null)
+
