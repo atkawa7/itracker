@@ -18,6 +18,8 @@
 
 package org.itracker.model;
 
+import java.io.InputStream;
+
 /**
  * This is a POJO Business Domain Object. 
  * 
@@ -37,7 +39,7 @@ public class Report extends AbstractEntity {
     
     private int reportType;
     
-    private byte[] fileData;
+    //private byte[] fileData;
     
     private String className;
 
@@ -91,13 +93,13 @@ public class Report extends AbstractEntity {
         this.description = description;
     }
     
-    public byte[] getFileData() {
-        return fileData;
+    public InputStream getReportDefinition() {
+        return getClass().getResourceAsStream("/reports/" + getClassName());
     }
 
-    public void setFileData(byte[] fileData) {
+    /*public void setFileData(byte[] fileData) {
         this.fileData = (fileData != null && fileData.length > 0 ? fileData : new byte[0]);
-    }
+    }*/
 
     public int getReportType() {
         return reportType;
