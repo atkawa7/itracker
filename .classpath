@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="web/WEB-INF/classes" path="src"/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test/java"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="src" output="addons" path="addons"/>
@@ -76,8 +76,8 @@
 	<classpathentry kind="lib" path="lib/ireport/groovy-all-1.0-beta-10.jar"/>
 	<classpathentry kind="lib" path="lib/ireport/jdt-compiler-3.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/jfreechart/jfreechart-1.0.3.jar"/>
-	<classpathentry kind="output" path="classes"/>
- 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v5.5"/>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v5.5"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="output" path="classes"/>
 </classpath>
