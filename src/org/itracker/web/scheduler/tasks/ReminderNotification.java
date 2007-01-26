@@ -32,14 +32,13 @@ import org.itracker.services.IssueService;
 import org.itracker.services.implementations.IssueServiceImpl;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NotificationUtilities;
-import org.itracker.web.scheduler.SchedulableTask;
 
 /**
   * This class can be used to send reminder emails to owners/admins
   * that issues need their attention.
   * @see SchedulableTask
   */
-public class ReminderNotification implements SchedulableTask {
+public class ReminderNotification extends BaseJob {
     
     public static final String DEFAULT_BASE_URL = "http://localhost:8080/itracker";
     public static final int DEFAULT_ISSUE_AGE = 30;
@@ -106,7 +105,7 @@ public class ReminderNotification implements SchedulableTask {
         logger.debug("Reminder Notifications being sent for project " + projectId + " with issues over " + issueAge + " days old with severity " + severity + ".  Base URL = " + baseURL);
 
         try {
-            IssueService issueService = new IssueServiceImpl();
+            IssueService issueService = new IssueServiceImpl(null, null, null, null, null, null, null, null, null, null);
 
             GregorianCalendar cal = new GregorianCalendar();
             cal.add(Calendar.DAY_OF_MONTH, 0 - issueAge);

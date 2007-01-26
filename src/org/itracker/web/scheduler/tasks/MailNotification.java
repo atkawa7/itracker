@@ -12,13 +12,12 @@ import javax.mail.Store;
 import javax.mail.search.FlagTerm;
 
 import org.apache.log4j.Logger;
-import org.itracker.web.scheduler.SchedulableTask;
 
 /**
  * @author rui (rui.silva@emation.pt)
  *  
  */
-public class MailNotification implements SchedulableTask {
+public class MailNotification extends BaseJob {
 
     private final Logger logger;
     private String projectId;
