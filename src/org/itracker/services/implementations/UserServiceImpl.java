@@ -57,8 +57,6 @@ import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 
-//import org.itracker.services.message.NotificationMessageBean;
-// import org.itracker.services.util.NotificationUtilities;
 
 /**
  * Implements the UserService interface. See that interface for method
@@ -70,11 +68,7 @@ public class UserServiceImpl implements UserService {
     
     private static final String DEFAULT_AUTHENTICATOR =
             "org.itracker.services.authentication.DefaultAuthenticator";
-    
-    //  private static String notificationFactoryName = NotificationMessageBean.DEFAULT_CONNECTION_FACTORY;
-    
-//     private static String notificationQueueName = NotificationMessageBean.DEFAULT_QUEUE_NAME;
-    
+        
     private static String authenticatorClassName = null;
     private static Class authenticatorClass = null;
     private static String systemBaseURL = "";
@@ -110,17 +104,13 @@ public class UserServiceImpl implements UserService {
         this.reportDAO = reportDAO;
         this.userPreferencesDAO = userPreferencesDAO;
         this.permissionDAO = permissionDAO;
-        
+ 
         try {
-            initialContext = new InitialContext();
-            
             allowSelfRegister = configurationService.getBooleanProperty("allow_self_register", false);
             systemBaseURL = configurationService.getProperty("system_base_url", "");
             
             authenticatorClassName = configurationService.getProperty("authenticator_class", DEFAULT_AUTHENTICATOR);
             authenticatorClass = Class.forName(authenticatorClassName);
-        } catch (NamingException ex) {
-            throw new RuntimeException(ex);
         } catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         }
@@ -165,7 +155,7 @@ public class UserServiceImpl implements UserService {
         return superUsers;
     }
     
-    public boolean isSuperUser(User user) {
+    /*public boolean isSuperUser(User user) {
         if(user == null) {
             return false;
         }
@@ -178,16 +168,19 @@ public class UserServiceImpl implements UserService {
         } else {
             return false; }
         
-    }
+    }*/
     
-    public UserPreferences getUserPreferencesByUserId(Integer userId) {
+    /*
+     * accessible from User
+     * 
+     public UserPreferences  ferencesByUserId(Integer userId) {
         
         UserPreferences userPrefs = userPreferencesDAO.findByUserId(userId);
         if (userPrefs == null)
             return new UserPreferences();
         
         return userPrefs;
-    }
+    }*/
     
     public User createUser(User user) throws UserException {
         try {
@@ -370,22 +363,9 @@ public class UserServiceImpl implements UserService {
 //        }
     }
     
-    public boolean deleteUser(User user) {
-        userDAO.delete(user);
-        return true;
-    }
-    
-    public boolean setUserStatus(Integer userId, int status) {
-        User user = userDAO.findByPrimaryKey(userId);
-        user.setStatus(status);
-        return true;
-    }
-    
-    public boolean clearOwnedProjects(Integer userId) {
-        User user = userDAO.findByPrimaryKey(userId);
-        Collection<Project> projects = user.getProjects();
-        projects.clear();
-        return true;
+    public void clearOwnedProjects(User user) {
+        user.getProjects().clear();
+        userDAO.save(user);
     }
     
     public List<User> getUsersWithPermissionLocal(Integer projectId, int permissionType) {
@@ -746,48 +726,6 @@ public class UserServiceImpl implements UserService {
         return userList;
     }
     
-    public List<User> getListOfPossibleOwners(Issue issue, Integer projectId, Integer userId) {
-        HashSet<User> users = new HashSet<User>();
-        
-        List<User> editUsers = getUsersWithProjectPermission(projectId, UserUtilities.PERMISSION_EDIT, true);
-        for (int i = 0; i < editUsers.size(); i++) {
-            users.add(editUsers.get(i));
-        }
-        List<User> otherUsers = getUsersWithProjectPermission(projectId, new int[] {
-            UserUtilities.PERMISSION_EDIT_USERS, UserUtilities.PERMISSION_ASSIGNABLE }, true, true);
-        for (int i = 0; i < otherUsers.size(); i++) {
-            users.add(otherUsers.get(i));
-        }
-        
-        if (issue != null) {
-            // Now add in the creator if the have edit own issues, and always
-            // the owner
-            User creator = issue.getCreator();
-            if (UserUtilities.hasPermission(getUsersMapOfProjectIdsAndSetOfPermissionTypes(creator, 0), projectId,
-                    UserUtilities.PERMISSION_EDIT_USERS)) {
-                users.add(creator);
-            }
-            if (issue.getOwner() != null) {
-                User owner = issue.getOwner();
-                users.add(owner);
-            }
-        } else if (userId != null) {
-            // New issue, so add in the creator if needed
-            User creator = getUser(userId);
-            if (UserUtilities.hasPermission(getUsersMapOfProjectIdsAndSetOfPermissionTypes(creator, 0), projectId,
-                    UserUtilities.PERMISSION_EDIT_USERS)) {
-                users.add(creator);
-            }
-        }
-        
-        int i = 0;
-        List<User> userList = new ArrayList<User>();
-        for (Iterator<User> iter = users.iterator(); iter.hasNext(); i++) {
-            userList.add((User)iter.next());
-        }
-        return userList;
-    }
-    
     public User checkLogin(String login, Object authentication, int authType, int reqSource)
     throws AuthenticatorException {
         try {
@@ -998,37 +936,5 @@ public class UserServiceImpl implements UserService {
     
     public static void setSystemBaseURL(String systemBaseURL) {
         UserServiceImpl.systemBaseURL = systemBaseURL;
-    }
-    
-    /*
-    public void sendNotification(String login, String email, String baseURL) {
-        try {
-            QueueConnectionFactory factory = (QueueConnectionFactory) initialContext.lookup("java:comp/env/"
-                    + notificationFactoryName);
-            Queue notificationQueue = (Queue) initialContext.lookup("java:comp/env/" + notificationQueueName);
-            QueueConnection connect = factory.createQueueConnection();
-            QueueSession session = connect.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-     
-            QueueSender sender = session.createSender(notificationQueue);
-     
-            MapMessage message = session.createMapMessage();
-            message.setInt("type", NotificationUtilities.TYPE_SELF_REGISTER);
-            if (systemBaseURL != null && !systemBaseURL.equals("")) {
-                message.setString("baseURL", systemBaseURL);
-            } else if (baseURL != null) {
-                message.setString("baseURL", baseURL);
-            }
-            message.setString("toAddress", email);
-            message.setString("login", login);
-     
-            sender.send(message);
-        } catch (NamingException ne) {
-            logger.error("Error looking up ConnectionFactory/Queue " + notificationFactoryName + "/"
-                    + notificationQueueName + ".", ne);
-        } catch (JMSException jmse) {
-            logger.warn("Error sending notification message", jmse);
-        }
-    }
-     */
-    
+    }         
 }
