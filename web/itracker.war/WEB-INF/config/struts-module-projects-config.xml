@@ -43,7 +43,7 @@
     <!-- ==================================== Action Mappings    -->
     <action-mappings>
         <action path="/list_issues" type="org.itracker.web.actions.project.ListIssuesAction">
-            <forward name="list_issues" path="/list_issues_refactored.jsp"/>
+            <forward name="list_issues" path="/list_issues.jsp"/>
 
         </action>
 
