@@ -175,7 +175,7 @@ public abstract class WindowsSSONAuthenticator extends DefaultAuthenticator {
         // set permissions
         userService.setUserPermissions(userModel.getId(), userService.getPermissionsByUserId(templateUser.getId()));
         // set preferences
-        UserPreferences preferences = userService.getUserPreferencesByUserId(templateUser.getId());
+        UserPreferences preferences = templateUser.getPreferences();
         preferences.setUser(userModel);
         userService.updateUserPreferences(preferences);
     }
