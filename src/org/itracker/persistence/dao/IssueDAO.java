@@ -2,8 +2,13 @@ package org.itracker.persistence.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.itracker.model.Issue;
+import org.itracker.model.IssueSearchQuery;
+import org.itracker.model.PermissionType;
+import org.itracker.model.User;
 
 /**
  * Issue Data Access Object interface. 
@@ -253,5 +258,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      *         <tt>null</tt> if no issue exists in the project
      */
     Date latestModificationDate(Integer projectId);
+    
+    List query(ProjectDAO projectDAO, IssueSearchQuery queryModel, User user, Map<Integer, Set<PermissionType>> userPermissions);
 
 }

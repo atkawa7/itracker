@@ -20,7 +20,6 @@ package org.itracker.web.actions.issuesearch;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +41,6 @@ import org.itracker.model.Issue;
 import org.itracker.model.IssueSearchQuery;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
-import org.itracker.services.IssueSearchService;
 import org.itracker.services.ReportService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.IssueSearchException;
@@ -81,13 +79,7 @@ public class SearchIssuesAction extends ItrackerBaseAction {
             ReportService reportService = getITrackerServices().getReportService();
             UserService userService = getITrackerServices().getUserService();
             request.setAttribute("rh",reportService);
-            request.setAttribute("uh",userService);
-            
-            if (reportService == null) {
-                System.err.println("ERROR RH NULL");
-            }
-            
-            IssueSearchService is = getITrackerServices().getIssueSearchService();
+            request.setAttribute("uh",userService);                      
             
             IssueSearchQuery isqm = (IssueSearchQuery) session.getAttribute(Constants.SEARCH_QUERY_KEY);
             if(isqm == null) {
@@ -96,26 +88,10 @@ public class SearchIssuesAction extends ItrackerBaseAction {
             processQueryParameters(isqm, (ValidatorForm) form, errors);
             
             if(errors.isEmpty()) {
-                List<Issue> results = is.searchIssues(isqm, user, userPermissions);
+                List<Issue> results = getITrackerServices().getIssueService().searchIssues(isqm, user, userPermissions);
                 if(logger.isDebugEnabled()) {
                     logger.debug("SearchIssuesAction received " + results.size() + " results to query.");
-                }
-                
-                String order = isqm.getOrderBy();
-                if("id".equals(order)) {
-                    Collections.sort(results, Issue.ID_COMPARATOR);
-                } else if("sev".equals(order)) {
-                    Collections.sort(results, Issue.SEVERITY_COMPARATOR);
-                } else if("proj".equals(order)) {
-                    Collections.sort(results, Issue.PROJECT_AND_STATUS_COMPARATOR);
-                } else if("owner".equals(order)) {
-                    Collections.sort(results, Issue.OWNER_AND_STATUS_COMPARATOR);
-                } else if("lm".equals(order)) {
-                    Collections.sort(results, Collections.reverseOrder(
-                    Issue.LAST_MODIFIED_DATE_COMPARATOR));
-                } else {
-                    Collections.sort(results, Issue.STATUS_COMPARATOR);
-                }
+                }                               
                 
                 isqm.setResults(results);
                 logger.debug("Setting search results with " + isqm.getResults().size() + " results");

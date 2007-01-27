@@ -34,8 +34,6 @@
 
 package org.itracker.services.implementations;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,16 +45,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.jms.JMSException;
-import javax.jms.MapMessage;
-import javax.jms.Queue;
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueSender;
-import javax.jms.QueueSession;
-import javax.jms.Session;
-import javax.naming.NamingException;
-
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Component;
@@ -67,6 +55,7 @@ import org.itracker.model.IssueAttachment;
 import org.itracker.model.IssueField;
 import org.itracker.model.IssueHistory;
 import org.itracker.model.IssueRelation;
+import org.itracker.model.IssueSearchQuery;
 import org.itracker.model.Notification;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
@@ -84,6 +73,7 @@ import org.itracker.persistence.dao.ProjectDAO;
 import org.itracker.persistence.dao.UserDAO;
 import org.itracker.persistence.dao.VersionDAO;
 import org.itracker.services.IssueService;
+import org.itracker.services.exceptions.IssueSearchException;
 import org.itracker.services.exceptions.ProjectException;
 import org.itracker.services.message.NotificationMessageBean;
 import org.itracker.services.util.AuthenticationConstants;
@@ -1619,5 +1609,9 @@ public class IssueServiceImpl implements IssueService {
 		return size;
 
 	}
+	
+    public List<Issue> searchIssues(IssueSearchQuery queryModel, User user, Map<Integer, Set<PermissionType>> userPermissions) throws IssueSearchException {    	
+    	return getIssueDAO().query(projectDAO, queryModel, user, userPermissions);    
+    }
 
 }

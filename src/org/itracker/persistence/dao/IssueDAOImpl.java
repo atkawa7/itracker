@@ -1,11 +1,24 @@
 package org.itracker.persistence.dao;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 import org.itracker.model.Issue;
+import org.itracker.model.IssueSearchQuery;
+import org.itracker.model.PermissionType;
+import org.itracker.model.User;
+import org.itracker.services.util.IssueUtilities;
 
 /**
  * Default implementation of <code>IssueDAO</code> using Hibernate. 
@@ -46,16 +59,13 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
     @SuppressWarnings("unchecked")
     public List<Issue> findByStatus(int status) {
-        final List<Issue> issues; 
-        
         try {
             Query query = getSession().getNamedQuery("IssuesByStatusQuery");
             query.setInteger("issueStatus", status);
-            issues = query.list();
+            return query.list();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
-        return issues;
     }
     
     @SuppressWarnings("unchecked")
@@ -397,6 +407,92 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
             throw convertHibernateAccessException(ex);
         }
         return lastModifiedDate;
+    }
+    
+    /**
+     * It doens't really make sense for this method to receive projectDAO, it's just a quick
+     * fix for the fact that IssueSearchQuery handles ids and not objects 
+     */
+    public List<Issue> query(ProjectDAO projectDAO, IssueSearchQuery queryModel, final User user, final Map<Integer, Set<PermissionType>> userPermissions) {    	    	
+     	Criteria criteria = getSession().createCriteria(Issue.class);
+    	// projects
+    	Collection projects = queryModel.getProjectsObjects(projectDAO);
+		if(projects.size() > 0) {
+    		criteria.add(Restrictions.in("project", projects));
+    	}
+    	// severities
+    	if(queryModel.getSeverities().size() > 0) {
+    		criteria.add(Restrictions.in("severity", queryModel.getSeverities()));
+    	}	
+    	// status
+    	if(queryModel.getStatuses().size() > 0) {
+    		criteria.add(Restrictions.in("status", queryModel.getStatuses()));
+    	}	 
+    	// componentes
+    	if(queryModel.getComponents().size() > 0) {
+    		criteria.add(Restrictions.in("components", queryModel.getComponents()));
+    	}	
+    	// versions
+    	if(queryModel.getVersions().size() > 0) {
+    		criteria.add(Restrictions.in("version", queryModel.getVersions()));
+    	}
+    	// contributor
+    	if(queryModel.getContributor() != null) {
+    		criteria.add(Restrictions.eq("contributor", queryModel.getContributor()));
+    	}	
+    	// creator
+    	if(queryModel.getCreator() != null) {
+    		criteria.add(Restrictions.eq("creator", queryModel.getCreator()));
+    	}
+    	// owner
+    	if(queryModel.getOwner() != null) {
+    		criteria.add(Restrictions.eq("owner", queryModel.getOwner()));
+    	}
+    	// description and history
+    	if (queryModel.getText() != null && !queryModel.getText().equals("")) {
+    		criteria.createAlias("history", "history").    		
+    		add(Restrictions.or(
+    				Restrictions.ilike("description", "%" + queryModel.getText() + "%"), 
+    				Restrictions.ilike("history.description", "%" + queryModel.getText() + "%")
+    		));
+    	}
+    	// resolution
+    	if(queryModel.getResolution() != null) {
+    		criteria.add(Restrictions.eq("resolution", queryModel.getResolution()));
+    	}
+    	// resolution
+    	if(queryModel.getTargetVersion() != null) {
+    		criteria.add(Restrictions.eq("targetVersion", queryModel.getTargetVersion()));
+    	}
+    	
+    	Collection list = criteria.list();
+    	
+    	// filter for permission    	
+        list = CollectionUtils.select(list, new Predicate() {		
+			public boolean evaluate(Object arg0) {
+				return IssueUtilities.canViewIssue((Issue)arg0, user, userPermissions);
+			}		
+		});                
+        
+        List sortedList = new LinkedList(list);
+        
+        // sort
+        String order = queryModel.getOrderBy();
+        if("id".equals(order)) {        	
+            Collections.sort(sortedList, Issue.ID_COMPARATOR);
+        } else if("sev".equals(order)) {
+            Collections.sort(sortedList, Issue.SEVERITY_COMPARATOR);
+        } else if("proj".equals(order)) {
+            Collections.sort(sortedList, Issue.PROJECT_AND_STATUS_COMPARATOR);
+        } else if("owner".equals(order)) {
+            Collections.sort(sortedList, Issue.OWNER_AND_STATUS_COMPARATOR);
+        } else if("lm".equals(order)) {
+            Collections.sort(sortedList, Collections.reverseOrder(Issue.LAST_MODIFIED_DATE_COMPARATOR));
+        } else {
+            Collections.sort(sortedList, Issue.STATUS_COMPARATOR);
+        }
+    	    	
+		return sortedList;    	
     }
 
 }

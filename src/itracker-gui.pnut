@@ -3,9 +3,9 @@ import org.itracker.web.util.ServletContextUtils
 import org.itracker.services.implementations.ITrackerServicesImpl
 import org.itracker.hibernateutils.OpenSessionFilter
 
-function startwebinterface(sessionFactory, issueService, userService, projectService, configurationService, reportService, issueSearchService, emailService) {
+function startwebinterface(sessionFactory, issueService, userService, projectService, configurationService, reportService, emailService) {
 	itrackerServices = ITrackerServicesImpl(issueService, userService, projectService, configurationService,
-			reportService, issueSearchService, emailService)
+			reportService, emailService)
 	ServletContextUtils.setITrackerServices(itrackerServices)
 	OpenSessionFilter.sessionFactory = sessionFactory	
 

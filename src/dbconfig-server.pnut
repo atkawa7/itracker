@@ -69,6 +69,8 @@ function getDAOs(transactionManager, jdbcurl, driverClass, hibernatedialect, hib
 		"hibernate.dialect" => hibernatedialect,
 		"hibernate.hbm2ddl.auto" => hibernatehbm2ddlauto,
 		"hibernate.show_sql" => "true"
+		//"hibernate.cache.provider_class" => "org.hibernate.cache.EhCacheProvider",
+		//"hibernate.cache.use_query_cache" => "true"
 	},"P")
 	sessionFactoryBean.dataSource = dataSource
 	sessionFactoryBean.entityInterceptor = timestampEntityInterceptor

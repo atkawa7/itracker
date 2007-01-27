@@ -23,14 +23,13 @@ function getServices(transactionManager, daos) {
 	properties.load(Class.getResourceAsStream("/configuration.properties"))	
 	configurationService=ConfigurationServiceImpl(properties, configurationDAO, customFieldDAO, customFieldValueDAO, languageDAO, projectScriptDAO, workflowScriptDAO)
 	issueService=IssueServiceImpl(userDAO, projectDAO, issueDAO, issueHistoryDAO, notificationDAO, issueRelationDAO, issueAttachmentDAO, componentDAO, issueActivityDAO, versionDAO)
-	issueSearchService=IssueSearchServiceImpl(issueDAO, issueService, configurationService)
 	projectService=ProjectServiceImpl(componentDAO, customFieldDAO, projectDAO, projectScriptDAO, userDAO, versionDAO, issueDAO)
 	userService=UserServiceImpl(configurationService, projectService, userDAO, projectDAO, reportDAO, permissionDAO, userPreferencesDAO)
 	reportService=ReportServiceImpl(reportDAO)
 	//schedulerService=null
 	
 	// create transactional proxies
-	services = [issueSearchService,configurationService,issueService, projectService, userService,reportService/*,schedulerService*/]
+	services = [configurationService,issueService, projectService, userService,reportService/*,schedulerService*/]
 		
 	transactionalproxies = map(function(service) {		
 		interface = getInterfaceFromImplementation(service)

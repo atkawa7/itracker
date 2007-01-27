@@ -20,7 +20,12 @@ package org.itracker.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
+import org.itracker.persistence.dao.ProjectDAO;
 
 public class IssueSearchQuery implements Serializable {
     
@@ -206,6 +211,23 @@ public class IssueSearchQuery implements Serializable {
 
     public void setResults(List<Issue> value) {
         results = value;
+    }
+    
+    /*
+     * this class is coded to keep integer ids, instead of objects
+     * the following methods exist to temporarily work around this.
+     * 
+     * the proper fix would be to always keep objects
+     */
+    
+    // from the list of project ids this objects has, return a list of
+    // projects
+    public Collection getProjectsObjects(final ProjectDAO projectDAO) {
+    	return CollectionUtils.collect(getProjects(), new Transformer() {
+			public Object transform(Object arg0) {				
+				return projectDAO.findByPrimaryKey((Integer)arg0);
+			}    		
+    	});
     }
 }
   

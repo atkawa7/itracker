@@ -32,13 +32,6 @@ import org.itracker.services.ConfigurationService;
 public class SystemConfigurationUtilities {
     
     public static final String DEFAULT_DATASOURCE = "java:/ITrackerDS";
-    public static final String DEFAULT_COMPONENTBEAN_TABLE_NAME = "componentbean";
-    public static final String DEFAULT_COMPONENTBEAN_REL_TABLE_NAME = "issue_component_rel";
-    public static final String DEFAULT_ISSUEBEAN_TABLE_NAME = "issuebean";
-    public static final String DEFAULT_ISSUEHISTORYBEAN_TABLE_NAME = "issuehistorybean";
-    public static final String DEFAULT_PROJECTBEAN_TABLE_NAME = "projectbean";
-    public static final String DEFAULT_VERSIONBEAN_TABLE_NAME = "versionbean";
-    public static final String DEFAULT_VERSIONBEAN_REL_TABLE_NAME = "issue_version_rel";
 
     public static final int TYPE_INITIALIZED = -1;
     public static final int TYPE_LOCALE = 1;

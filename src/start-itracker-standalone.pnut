@@ -6,5 +6,5 @@ require("start-itracker")
 
 // start web interface
 startwebinterface(sessionFactory, issueService, userService, projectService, configurationService, 
-	reportService, issueSearchService, emailService = null)
+	reportService, emailService = null)
 

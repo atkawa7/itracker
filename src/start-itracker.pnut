@@ -19,7 +19,7 @@ daos = getDAOs(transactionManager, serverconfig.jdbcurl, serverconfig.driverClas
 
 services = getServices(transactionManager, daos)
 
-issueSearchService, configurationService, issueService, projectService,	userService,reportService/*,schedulerService*/ = services
+configurationService, issueService, projectService,	userService,reportService/*,schedulerService*/ = services
 
 // initialize resources
 ITrackerResources.setConfigurationService(configurationService)

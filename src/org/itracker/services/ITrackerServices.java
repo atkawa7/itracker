@@ -22,8 +22,6 @@ public interface ITrackerServices {
 
 	ReportService getReportService();
 
-	IssueSearchService getIssueSearchService();
-
 	EmailService getEmailService();
 
 }
