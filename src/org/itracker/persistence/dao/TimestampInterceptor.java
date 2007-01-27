@@ -2,6 +2,7 @@ package org.itracker.persistence.dao;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import org.apache.log4j.Logger;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
@@ -22,13 +23,14 @@ public class TimestampInterceptor extends EmptyInterceptor {
     /** The name of the AbstractEntity.lastModifiedDate property */
     private static final String LAST_MODIFIED_DATE_PROPERTY = "lastModifiedDate";
     
-    private final Logger logger;
+    @SuppressWarnings("unused")
+	private final Logger logger;
     
     /**
      * 
      */
     public TimestampInterceptor() {
-        this.logger = Logger.getLogger(TimestampInterceptor.class);
+       this.logger = Logger.getLogger(TimestampInterceptor.class);
     }
 
     /**
