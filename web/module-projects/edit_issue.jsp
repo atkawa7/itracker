@@ -432,7 +432,7 @@
 
                   <%    for(int i = 0; i < attachments.size(); i++) { %>
                           <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>" >
-                            <td class="listRowText" align="left"><it:formatImageAction forward="downloadattachment" paramName="id" paramValue="<%= attachments.get(i).getId() %>" target="_blank" src="/themes/defaulttheme/images/download.png" altKey="itracker.web.image.download.attachment.alt" textActionKey="itracker.web.image.download.texttag"/></td>
+                            <td class="listRowText" align="left"><it:formatImageAction forward="downloadAttachment.do" paramName="id" paramValue="<%= attachments.get(i).getId() %>" target="_blank" src="/themes/defaulttheme/images/download.png" altKey="itracker.web.image.download.attachment.alt" textActionKey="itracker.web.image.download.texttag"/></td>
                             <td></td>
                             <td class="listRowText" align="left"><%= attachments.get(i).getOriginalFileName() %></td>
                             <td class="listRowText" align="left"><it:formatDescription><%= attachments.get(i).getDescription() %></it:formatDescription></td>
