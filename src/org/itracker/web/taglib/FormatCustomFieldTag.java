@@ -32,7 +32,6 @@ import org.apache.struts.taglib.TagUtils;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.model.NameValuePair;
-import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.util.Constants;
 
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.itracker.AbstractDependencyInjectionTest;
-import org.itracker.services.UserService;
 import org.itracker.model.Issue;
 import org.itracker.model.Permission;
 import org.itracker.model.Project;
@@ -12,6 +11,7 @@ import org.itracker.model.User;
 import org.itracker.persistence.dao.PermissionDAO;
 import org.itracker.persistence.dao.ProjectDAO;
 import org.itracker.persistence.dao.UserDAO;
+import org.itracker.services.UserService;
 
 public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 

@@ -40,7 +40,6 @@ import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
-import org.itracker.services.util.NotificationUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;

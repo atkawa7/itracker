@@ -18,21 +18,12 @@
 
 package org.itracker.core;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Iterator;
-import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.Report;
 import org.itracker.model.User;
 import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.services.ConfigurationService;
@@ -41,12 +32,8 @@ import org.itracker.services.ReportService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.exceptions.UserException;
-import org.itracker.services.util.Base64;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
-import org.springframework.orm.hibernate3.SessionHolder;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 
 /**

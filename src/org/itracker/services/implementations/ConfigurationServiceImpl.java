@@ -51,9 +51,9 @@ import org.itracker.persistence.dao.ProjectScriptDAO;
 import org.itracker.persistence.dao.WorkflowScriptDAO;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.SystemConfigurationException;
+import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
-import org.itracker.services.util.CustomFieldUtilities;
 
 /**
  * Implementation of the ConfigurationService Interface.

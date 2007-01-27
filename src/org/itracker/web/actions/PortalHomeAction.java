@@ -19,8 +19,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Issue;
-import org.itracker.model.PermissionType;
+import org.itracker.model.NameValuePair;
 import org.itracker.model.Permission;
+import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
@@ -31,7 +32,6 @@ import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.IssuePTO;
-import org.itracker.model.NameValuePair;
 
 public class PortalHomeAction extends ItrackerBaseAction {
     
