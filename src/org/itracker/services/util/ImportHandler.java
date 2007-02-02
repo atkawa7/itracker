@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
@@ -35,6 +36,7 @@ import org.itracker.model.IssueAttachment;
 import org.itracker.model.IssueField;
 import org.itracker.model.IssueHistory;
 import org.itracker.model.Project;
+import org.itracker.model.Status;
 import org.itracker.model.SystemConfiguration;
 import org.itracker.model.User;
 import org.itracker.model.Version;
@@ -371,15 +373,17 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                 itemList.add((User) findModel(getBuffer()));
             } else if(TAG_PROJECT_STATUS.equals(qName)) {
                 // By default lock the project
-                ((Project) parentModel).setStatus(ProjectUtilities.STATUS_LOCKED);
+                ((Project) parentModel).setStatus(Status.LOCKED);
 
+                // PENDING: In the XML export, we don't use the status code, 
+                // but the localized name => non-portable export format!!! 
                 String currBuffer = getBuffer();
-                HashMap<String,String> projectStatuses = ProjectUtilities.getStatusNames(EXPORT_LOCALE);
-                for(Iterator<String> iter = projectStatuses.keySet().iterator(); iter.hasNext(); ) {
-                    String key = (String) iter.next();
+                Map<Status, String> projectStatuses = ProjectUtilities.getStatusNames(EXPORT_LOCALE);
+                for(Iterator<Status> iter = projectStatuses.keySet().iterator(); iter.hasNext(); ) {
+                    Status key = iter.next();
                     String keyValue = (String) projectStatuses.get(key);
                     if(keyValue != null && keyValue.equalsIgnoreCase(currBuffer)) {
-                        ((Project) parentModel).setStatus(Integer.parseInt(key));
+                        ((Project) parentModel).setStatus(key);
                         break;
                     }
                 }

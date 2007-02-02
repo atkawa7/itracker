@@ -33,7 +33,7 @@
 	    <it:addError key="itracker.web.error.invalidproject"/>
       <logic:forward name="error"/>
 	</c:when>
-	<c:when test="${project.status != ProjectUtilities_STATUS_ACTIVE && project.status != ProjectUtilities_STATUS_VIEWABLE}">
+	<c:when test="${project.status != Status.ACTIVE && project.status != Status.VIEWABLE}">
 	<it:addError key="itracker.web.error.projectlocked"/>
       <logic:forward name="error"/>
 	</c:when>
@@ -49,7 +49,7 @@
         <tr>
           <td class="editColumnTitle" colspan="14"><it:message key="itracker.web.attr.issues"/>:</td>
           <td align="right" style="white-space: nowrap">
-            <% if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT)) { %>
+            <% if(project.getStatus() == Status.ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT)) { %>
                   <it:formatImageAction forward="createissue"
                                         paramName="projectId"
                                         paramValue="<%= project.getId() %>"

@@ -100,7 +100,6 @@ public class EditVersionAction extends ItrackerBaseAction {
                     
                     if ("create".equals(action)) {
                         version = new Version(project, versionForm.getNumber());
-                        version.setStatus(1);
                         version.setDescription(versionForm.getDescription());
                         version = projectService.addProjectVersion(project.getId(), version);
                     } else if ("update".equals(action)) {
@@ -108,7 +107,6 @@ public class EditVersionAction extends ItrackerBaseAction {
                         version.setLastModifiedDate(new Date());
                         version.setNumber(versionForm.getNumber());
                         version.setProject(project);
-                        version.setStatus(1);
                         version.setDescription(versionForm.getDescription());
                         version = projectService.updateProjectVersion(version);
                     }

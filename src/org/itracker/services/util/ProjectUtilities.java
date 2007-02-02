@@ -19,11 +19,15 @@
 package org.itracker.services.util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.Status;
 
 
 public class ProjectUtilities  {
@@ -36,40 +40,82 @@ public class ProjectUtilities  {
     public static final int OPTION_NO_ATTACHMENTS = 32;
     public static final int OPTION_LITERAL_HISTORY_HTML = 64;
 
-    public static final int STATUS_DELETED = -1;
-    public static final int STATUS_ACTIVE = 1;
-    public static final int STATUS_VIEWABLE = 2;
-    public static final int STATUS_LOCKED = 3;
+    /** 
+     * Cache of status names by Locale, loaded lazily on first request 
+     * from itracker.properties. 
+     * 
+     * The Map implementation is synchronized because it can be accessed 
+     * by multiple threads that will alter it in case of cache miss. 
+     */
+    private static Map<Locale, Map<Status, String>> statusNames = 
+            new Hashtable<Locale, Map<Status, String>>();
 
-    private static HashMap<Locale,HashMap<String,String>> statusNames = new HashMap<Locale,HashMap<String,String>>();
-
-    public ProjectUtilities() {
+    /**
+     * Contains only static methods and isn't intended to be instantiated. 
+     */
+    private ProjectUtilities() {
     }
 
-    public static String getStatusName(int value) {
-        return getStatusName(value, ITrackerResources.getLocale());
+    /**
+     * Returns the localized name of the given status for the application 
+     * default locale. 
+     * 
+     * @param status enum constant of which we want the localized name
+     * @return name in the current locale
+     */
+    public static String getStatusName(Status status) {
+        return getStatusName(status, ITrackerResources.getLocale());
     }
 
-    public static String getStatusName(int value, Locale locale) {
-        return ITrackerResources.getString(ITrackerResources.KEY_BASE_PROJECT_STATUS + value, locale);
+    /**
+     * Returns the localized name of the given status for the given locale. 
+     * 
+     * @param status enum constant of which we want the localized name
+     * @param locale desired locale
+     * @return name in the given locale or "MISSING RESOURCE " + resource key 
+     *         if no resource could be found
+     */
+    public static String getStatusName(Status status, Locale locale) {
+        return ITrackerResources.getString(
+                ITrackerResources.KEY_BASE_PROJECT_STATUS + status.getCode(), 
+                locale);
     }
 
-    public static HashMap<String,String> getStatusNames() {
+    /**
+     * @return unmodifiable map of status names for the application default Locale
+     */
+    public static Map<Status, String> getStatusNames() {
         return getStatusNames(ITrackerResources.getLocale());
     }
 
-    public static HashMap<String,String> getStatusNames(Locale locale) {
-        HashMap<String,String> statuses = new HashMap<String,String>();
-        statuses = statusNames.get(locale);
-        if(statuses == null) {
-            statuses = new HashMap<String,String>();
-            statuses.put(Integer.toString(STATUS_DELETED), getStatusName(STATUS_DELETED, locale));
-            statuses.put(Integer.toString(STATUS_ACTIVE), getStatusName(STATUS_ACTIVE, locale));
-            statuses.put(Integer.toString(STATUS_VIEWABLE), getStatusName(STATUS_VIEWABLE, locale));
-            statuses.put(Integer.toString(STATUS_LOCKED), getStatusName(STATUS_LOCKED, locale));
+    /**
+     * This method loads the status names in the cache if they're not 
+     * found in it. 
+     * 
+     * <p>The returned map is cached for future requests. </p>
+     * 
+     * @param locale
+     * @return unmodifiable map of status names for the requested Locale
+     */
+    public static Map<Status, String> getStatusNames(Locale locale) {
+        Map<Status, String> statuses = statusNames.get(locale);
+
+
+        
+        if (statuses == null) {
+            // No labels found for the requested Locale => load in cache.
+            statuses = new EnumMap<Status, String>(Status.class);
+            
+            for (Status status : Status.values()) {
+                statuses.put(status, getStatusName(status, locale));
+
+
+            }
+            statusNames.put(locale, Collections.unmodifiableMap(statuses));
+
         }
-        statusNames.put(locale, statuses);
         return statuses;
+
     }
 
     public static boolean hasOption(int option, int currentOptions) {

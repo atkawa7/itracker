@@ -79,7 +79,7 @@ final Map<Integer, Set<PermissionType>> permissions =
     <tr align="right" class="<%= (numDisplayed % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ) %>">
       <td nowrap>
         <it:formatImageAction forward="listissues" paramName="projectId" paramValue="<%= project.getId() %>" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.project.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.view.texttag"/>
-        <% if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_CREATE)) { %>
+        <% if(project.getStatus() == Status.ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_CREATE)) { %>
         <it:formatImageAction forward="createissue" paramName="projectId" paramValue="<%= project.getId() %>" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.issue.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.create.texttag"/>
         <% } %>
         <it:formatImageAction forward="searchissues" paramName="projectId" paramValue="<%= project.getId() %>" src="/themes/defaulttheme/images/search.gif" altKey="itracker.web.image.search.issue.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.search.texttag"/>

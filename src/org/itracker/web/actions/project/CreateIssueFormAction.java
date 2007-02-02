@@ -44,13 +44,13 @@ import org.itracker.model.NameValuePair;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
+import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.Version;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
 import org.itracker.services.util.Convert;
 import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
@@ -96,7 +96,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
 
             if(project == null) {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-            } else if(project.getStatus() != ProjectUtilities.STATUS_ACTIVE) {
+            } else if(project.getStatus() != Status.ACTIVE) {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
             }
 

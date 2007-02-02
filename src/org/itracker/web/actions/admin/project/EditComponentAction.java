@@ -99,7 +99,6 @@ public class EditComponentAction extends ItrackerBaseAction {
                     if ("create".equals(action)) {
                         component = new Component(project, componentForm.getName());
                         component.setDescription(componentForm.getDescription());
-                        component.setStatus(1);
                         component.setCreateDate(new Date());
                         component = projectService.addProjectComponent(project.getId(), component);
                     } else if ("update".equals(action)) {
@@ -108,7 +107,6 @@ public class EditComponentAction extends ItrackerBaseAction {
                         component.setName(componentForm.getName());
                         component.setDescription(componentForm.getDescription());
                         component.setProject(project);
-                        component.setStatus(1);
                         component = projectService.updateProjectComponent(component);
                     }
                     session.removeAttribute(Constants.COMPONENT_KEY);

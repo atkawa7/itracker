@@ -39,6 +39,9 @@
         
         <property name="status">
             <column name="status" not-null="true"/>
+            <type name="org.itracker.persistence.dao.EnumCodeUserType">
+                <param name="enumClassName">org.itracker.model.Status</param>
+            </type>
         </property>
         
         <property name="createDate" update="false">

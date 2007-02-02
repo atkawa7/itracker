@@ -18,12 +18,12 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Issue;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
+import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.IssuePTO;
@@ -126,10 +126,10 @@ public class ListIssuesAction extends ItrackerBaseAction {
             	issuePTO.setUnassigned(true);
             }
             
-            if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && ! IssueUtilities.hasIssueNotification(listIssues.get(i), project, currUserId)) {
+            if(project.getStatus() == Status.ACTIVE && ! IssueUtilities.hasIssueNotification(listIssues.get(i), project, currUserId)) {
                 issuePTO.setUserHasIssueNotification(true);
             }
-            if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE) {
+            if(project.getStatus() == Status.ACTIVE) {
                 if(IssueUtilities.canEditIssue(listIssues.get(i), currUserId, userPermissions)) {
                     issuePTO.setUserCanEdit(true);
                 }
@@ -152,12 +152,6 @@ public class ListIssuesAction extends ItrackerBaseAction {
             
             issuePTOs.add(issuePTO);
         }
-        
-        
-        
-        request.setAttribute("ProjectUtilities_STATUS_ACTIVE",new Integer(ProjectUtilities.STATUS_ACTIVE));
-        
-        request.setAttribute("ProjectUtilities_STATUS_VIEWABLE",new Integer(ProjectUtilities.STATUS_VIEWABLE));
         
         // populate the request
         request.setAttribute("hasOrderParam", new Boolean(hasOrderParam));

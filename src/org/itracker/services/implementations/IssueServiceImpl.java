@@ -59,6 +59,7 @@ import org.itracker.model.IssueSearchQuery;
 import org.itracker.model.Notification;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
+import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.Version;
 import org.itracker.persistence.dao.ComponentDAO;
@@ -79,7 +80,6 @@ import org.itracker.services.message.NotificationMessageBean;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NotificationUtilities;
-import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 
 /**
@@ -332,7 +332,7 @@ public class IssueServiceImpl implements IssueService {
 		Project project = projectDAO.findByPrimaryKey(projectId);
 		User creator = userDAO.findByPrimaryKey(userId);
 
-		if (project.getStatus() != ProjectUtilities.STATUS_ACTIVE) {
+		if (project.getStatus() != Status.ACTIVE) {
 			throw new ProjectException("Project is not active.");
 		}
 
@@ -394,7 +394,7 @@ public class IssueServiceImpl implements IssueService {
 		String existingTargetVersion = null;
 		Issue Updateissue = issueDAO.findByPrimaryKey(issue.getId());
 		User user = userDAO.findByPrimaryKey(userId);
-		if (Updateissue.getProject().getStatus() != ProjectUtilities.STATUS_ACTIVE) {
+		if (Updateissue.getProject().getStatus() != Status.ACTIVE) {
 			throw new ProjectException("Project is not active.");
 		}
 		if (Updateissue.getDescription() != null && issue.getDescription() != null

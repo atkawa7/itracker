@@ -48,6 +48,7 @@ import org.itracker.model.NameValuePair;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
+import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.Version;
 import org.itracker.services.IssueService;
@@ -99,7 +100,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
             } else if(project == null) {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-            } else if(project.getStatus() != ProjectUtilities.STATUS_ACTIVE) {
+            } else if(project.getStatus() != Status.ACTIVE) {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
             } else {
                 HttpSession session = request.getSession(true);

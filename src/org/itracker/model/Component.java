@@ -56,8 +56,11 @@ public class Component extends AbstractEntity
     /** Component description. */
     private String description;
     
-    /** Component status. */
-    private Integer status;
+    /** 
+     * Component status. 
+     * <p>Invariant: never <tt>null</tt>. </p>
+     */
+    private Status status;
     
     /* This class used to have a <code>issues</code> attribute, which was 
      * a Collection<Issue>. This has been removed because the association 
@@ -85,7 +88,7 @@ public class Component extends AbstractEntity
         setName(name);
         
         // A new component is active by default. 
-        this.status = 1; // = ProjectUtilities.STATUS_ACTIVE
+        this.status = Status.ACTIVE;
     }
 
     /**
@@ -161,7 +164,7 @@ public class Component extends AbstractEntity
      * 
      * @return enum value
      */
-    public int getStatus() {
+    public Status getStatus() {
         return status;
     }
 
@@ -169,8 +172,12 @@ public class Component extends AbstractEntity
      * Sets this component's status. 
      * 
      * @param status enum value
+     * @throws IllegalArgumentException <code>status</code> is <tt>null</tt>
      */
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
+        if (status == null) {
+            throw new IllegalArgumentException("null status");
+        }
         this.status = status;
     }
     

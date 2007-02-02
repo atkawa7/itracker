@@ -52,6 +52,7 @@ import org.itracker.model.IssueHistory;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
+import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
@@ -113,7 +114,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
             if (errors.isEmpty() && project == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE,
                         new ActionMessage("itracker.web.error.invalidproject"));
-            } else if(errors.isEmpty() && project.getStatus() != ProjectUtilities.STATUS_ACTIVE) {
+            } else if(errors.isEmpty() && project.getStatus() != Status.ACTIVE) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE,
                         new ActionMessage("itracker.web.error.projectlocked"));
             } else if(! UserUtilities.hasPermission(userPermissionsMap,

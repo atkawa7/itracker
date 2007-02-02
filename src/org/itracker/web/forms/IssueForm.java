@@ -36,11 +36,11 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
+import org.itracker.model.Status;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.exceptions.IssueException;
 import org.itracker.services.util.CustomFieldUtilities;
-import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.util.Constants;
 
@@ -247,7 +247,7 @@ public class IssueForm extends ITrackerForm  {
             
             if(errors.isEmpty() && project == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-            } else if(errors.isEmpty() && project.getStatus() != ProjectUtilities.STATUS_ACTIVE) {
+            } else if(errors.isEmpty() && project.getStatus() != Status.ACTIVE) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
             } else if(errors.isEmpty()) {
                 Locale currLocale = ITrackerResources.getLocale();

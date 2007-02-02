@@ -42,7 +42,7 @@ User um = RequestHelper.getCurrentUser(session);
 <%
   } else {
       Project project = issue.getProject();
-      if(project.getStatus() != ProjectUtilities.STATUS_ACTIVE && project.getStatus() != ProjectUtilities.STATUS_VIEWABLE) {
+      if(project.getStatus() != Status.ACTIVE && project.getStatus() != Status.VIEWABLE) {
 %>
           <it:addError key="itracker.web.error.projectlocked"/>
           <logic:forward name="error"/>
@@ -130,7 +130,7 @@ User um = RequestHelper.getCurrentUser(session);
                              <it:formatImageAction forward="relateissue" paramName="id" paramValue="<%= issue.getId() %>" caller="viewissue" src="/images/link.gif" altKey="itracker.web.image.link.issue.alt" textActionKey="itracker.web.image.link.texttag"/>
                              --%>
                         <% } %>
-                        <% if(project.getStatus() == ProjectUtilities.STATUS_ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_CREATE)) { %>
+                        <% if(project.getStatus() == Status.ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_CREATE)) { %>
                             <it:formatImageAction forward="createissue"
                                                   module="/module-projects"
                                                   paramName="projectId"

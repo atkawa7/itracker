@@ -61,9 +61,9 @@
             <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.status"/>:</td>
             <td valign="top" class="editColumnText">
               <html:select property="status" styleClass="editColumnText">
-                <html:option value="<%= Integer.toString(ProjectUtilities.STATUS_ACTIVE) %>"><%= ProjectUtilities.getStatusName(ProjectUtilities.STATUS_ACTIVE, (java.util.Locale)pageContext.getAttribute("currLocale")) %></html:option>
-                <html:option value="<%= Integer.toString(ProjectUtilities.STATUS_VIEWABLE) %>"><%= ProjectUtilities.getStatusName(ProjectUtilities.STATUS_VIEWABLE, (java.util.Locale)pageContext.getAttribute("currLocale")) %></html:option>
-                <html:option value="<%= Integer.toString(ProjectUtilities.STATUS_LOCKED) %>"><%= ProjectUtilities.getStatusName(ProjectUtilities.STATUS_LOCKED, (java.util.Locale)pageContext.getAttribute("currLocale")) %></html:option>
+                <html:option value="<%= Integer.toString(Status.ACTIVE.getCode()) %>"><%= ProjectUtilities.getStatusName(Status.ACTIVE, (java.util.Locale)pageContext.getAttribute("currLocale")) %></html:option>
+                <html:option value="<%= Integer.toString(Status.VIEWABLE.getCode()) %>"><%= ProjectUtilities.getStatusName(Status.VIEWABLE, (java.util.Locale)pageContext.getAttribute("currLocale")) %></html:option>
+                <html:option value="<%= Integer.toString(Status.LOCKED.getCode()) %>"><%= ProjectUtilities.getStatusName(Status.LOCKED, (java.util.Locale)pageContext.getAttribute("currLocale")) %></html:option>
               </html:select>
             </td>
           </tr>

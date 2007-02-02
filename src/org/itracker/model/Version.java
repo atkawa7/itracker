@@ -47,7 +47,11 @@ public class Version extends AbstractEntity implements Comparable<Version> {
     
     private String description;
     
-    private int status;
+    /** 
+     * Version status. 
+     * <p>Invariant: never <tt>null</tt>. </p>
+     */
+    private Status status;
 
     /* This class used to have a <code>issues</code> attribute, which was 
      * a Collection<Issue>. This has been removed because the association 
@@ -78,7 +82,7 @@ public class Version extends AbstractEntity implements Comparable<Version> {
         setVersionInfo(number);
         
         // A new version is active by default. 
-        this.status = 1; // = ProjectUtilities.STATUS_ACTIVE
+        this.status = Status.ACTIVE;
     }
     
     public int getMajor() {
@@ -124,11 +128,25 @@ public class Version extends AbstractEntity implements Comparable<Version> {
         this.project = project;
     }
 
-    public int getStatus() {
+    /**
+     * Returns this version's status. 
+     * 
+     * @return enum constant
+     */
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    /**
+     * Sets this version's status. 
+     * 
+     * @param status enum constant
+     * @throws IllegalArgumentException <code>status</code> is <tt>null</tt>
+     */
+    public void setStatus(Status status) {
+        if (status == null) {
+            throw new IllegalArgumentException("null status");
+        }
         this.status = status;
     }
 

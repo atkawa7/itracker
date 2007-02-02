@@ -43,10 +43,10 @@ import org.itracker.model.NameValuePair;
 import org.itracker.model.Permission;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
+import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
@@ -89,9 +89,9 @@ public class EditProjectAction extends ItrackerBaseAction {
             project.setName((String) PropertyUtils.getSimpleProperty(form, "name"));
             Integer projectStatus = (Integer) PropertyUtils.getSimpleProperty(form, "status");
             if(projectStatus != null) {
-                project.setStatus(projectStatus.intValue());
+                project.setStatus(Status.valueOf(projectStatus));
             } else {
-                project.setStatus(ProjectUtilities.STATUS_ACTIVE);
+                project.setStatus(Status.ACTIVE);
             }
             
             Integer[] optionValues = (Integer[]) PropertyUtils.getSimpleProperty(form, "options");

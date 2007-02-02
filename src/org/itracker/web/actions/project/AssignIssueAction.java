@@ -37,10 +37,10 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
+import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
-import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
@@ -86,7 +86,7 @@ public class AssignIssueAction extends ItrackerBaseAction {
                 return mapping.findForward("unauthorized");
             }
 
-            if(project.getStatus() != ProjectUtilities.STATUS_ACTIVE) {
+            if(project.getStatus() != Status.ACTIVE) {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
             } else {
                 issueService.assignIssue(issueId, userId, currUserId);                

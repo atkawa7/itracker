@@ -124,7 +124,7 @@ public class EditProjectFormAction extends ItrackerBaseAction {
                         projectForm.setId(project.getId());
                         projectForm.setName(project.getName());
                         projectForm.setDescription(project.getDescription());
-                        projectForm.setStatus(new Integer(project.getStatus()));
+                        projectForm.setStatus(project.getStatus().getCode());
                         int currentOptions = project.getOptions();
                         projectForm.setOptions(ProjectUtilities.getOptions(currentOptions));
 

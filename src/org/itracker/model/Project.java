@@ -34,7 +34,12 @@ public class Project extends AbstractEntity implements Comparable<Project> {
     
     private String description;
     
-    private int status;
+    /**
+     * Project's current status. 
+     * 
+     * <p>Invariant : never <tt>null</tt>. </p>
+     */
+    private Status status;
     
     private int options;
     
@@ -99,6 +104,7 @@ public class Project extends AbstractEntity implements Comparable<Project> {
     
     public Project(String name) {
         setName(name);
+        this.status = Status.ACTIVE;
     }
     
     public String getName() {
@@ -120,11 +126,22 @@ public class Project extends AbstractEntity implements Comparable<Project> {
         this.description = description;
     }
 
-    public int getStatus() {
+    /**
+     * @return project's current status
+     */
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    /**
+     * 
+     * @param status 
+     * @throws IllegalArgumentException status is <tt>null</tt>
+     */
+    public void setStatus(Status status) {
+        if (status == null) {
+            throw new IllegalArgumentException("null status");
+        }
         this.status = status;
     }
     
@@ -222,24 +239,6 @@ public class Project extends AbstractEntity implements Comparable<Project> {
      */
     public int compareTo(Project other) {
         return this.name.compareTo(other.name);
-    }
-    
-    public static enum Status {
-        
-        DELETED(-1), 
-        
-        ACTIVE(1), 
-        
-        VIEWABLE(2), 
-        
-        LOCKED(3);
-        
-        private final int code;
-        
-        private Status(int code) {
-            this.code = code;
-        }
-        
     }
     
 }

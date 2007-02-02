@@ -52,6 +52,7 @@ import org.itracker.model.IssueHistory;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
+import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.Version;
 import org.itracker.services.IssueService;
@@ -122,7 +123,7 @@ public class EditIssueAction extends ItrackerBaseAction {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
             	logger.info("EditIssueAction: Forward: Error");
             	return mapping.findForward("error");
-            } else if(project.getStatus() != ProjectUtilities.STATUS_ACTIVE) {
+            } else if(project.getStatus() != Status.ACTIVE) {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
             	logger.info("EditIssueAction: Forward: Error");
             	return mapping.findForward("error");
