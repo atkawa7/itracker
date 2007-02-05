@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Project;
+import org.itracker.model.Status;
 
 public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
 
@@ -16,7 +17,7 @@ public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
         project.setLastModifiedDate( new Date() );
         project.setName("test_name");
         project.setDescription("test_description");
-        project.setStatus(1);
+        project.setStatus(Status.ACTIVE);
         project.setOptions(0);
         projectDAO.saveOrUpdate( project );
 
@@ -25,7 +26,7 @@ public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
         assertNotNull( foundProject );
         assertEquals( "test_name", foundProject.getName() );
         assertEquals( "test_description", foundProject.getDescription() );
-        assertEquals( 1, foundProject.getStatus() );
+        assertEquals( Status.ACTIVE, foundProject.getStatus() );
      
 
     }
