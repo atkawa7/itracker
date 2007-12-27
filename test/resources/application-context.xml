@@ -15,21 +15,22 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     <import resource="services-context.xml"/>
 
     <!-- please comment this: -->
-    <bean id="applicationInitialization"
-        class="org.itracker.core.ApplicationInitialization"
-        autowire="constructor">
+<!--
+    <bean id="applicationInitialization" class="org.itracker.core.ApplicationInitialization">
         <constructor-arg ref="userService" />
-        <constructor-arg ref="sessionFactory" />
         <constructor-arg ref="configurationService" />
         <constructor-arg ref="reportService" />
     </bean>
+-->
 
     <!-- please comment this: -->
+<!--
     <bean id="schedulerController"
         class="org.itracker.web.servlets.SchedulerController"
         autowire="autodetect">
         <constructor-arg ref="schedulerService" />
     </bean>
+-->
 
     <!-- Initialize ITracker Resources -->
     <bean id="resources-init"

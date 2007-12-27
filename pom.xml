@@ -201,7 +201,7 @@
 
     <build>
         <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>test</testSourceDirectory>
+        <testSourceDirectory>test/java</testSourceDirectory>
         <finalName>itracker</finalName>
 
         <resources>

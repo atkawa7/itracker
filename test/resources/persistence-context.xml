@@ -62,7 +62,6 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
       <property name="sourceList">
           <list>
             <value>/org/itracker/model/Configuration.hbm.xml</value>
-            <value>/org/itracker/model/ScheduledTask.hbm.xml</value>
             <value>/org/itracker/model/Language.hbm.xml</value>
             <value>/org/itracker/model/CustomField.hbm.xml</value>
             <value>/org/itracker/model/CustomFieldValue.hbm.xml</value>
@@ -116,6 +115,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     </bean>
 
     <!-- The scheduled task DAO -->
+<!--
     <bean id="scheduledTaskDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="scheduledTaskDAOTarget" />
@@ -128,13 +128,16 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
             </list>
         </property>
     </bean>
+-->
 
+<!--
     <bean id="scheduledTaskDAOTarget"
         class="org.itracker.persistence.dao.ScheduledTaskDAOImpl">
         <property name="sessionFactory">
             <ref bean="sessionFactory" />
         </property>
     </bean>
+-->
 
     <!-- The language factory -->
     <bean id="languageDAO"
