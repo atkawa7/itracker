@@ -141,6 +141,14 @@
             <version>1.1.2</version>
         </dependency>
 
+
+        <!-- pnut dependencies -->
+        <dependency>
+            <groupId>org.pnuts</groupId>
+            <artifactId>pnuts</artifactId>
+            <version>1.1</version>
+        </dependency>
+
         <!-- Unit Testing related dependencies -->
         <dependency>
             <groupId>junit</groupId>
@@ -384,6 +392,15 @@
                 </executions>
             </plugin>
 -->
+
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <version>6.1.4</version>
+                <configuration>
+                    <webAppSourceDirectory>web</webAppSourceDirectory>
+                </configuration>
+            </plugin>
 
         </plugins>
 
