@@ -10,19 +10,15 @@
         <id name="id" unsaved-value="null">
             <generator class="native"/>
         </id>
-        
-        <natural-id mutable="true">
-            
-            <property name="locale">
-                <column name="locale" not-null="true" unique-key="language_ak"/>
-            </property>
 
-            <property name="resourceKey">
-                <column name="resource_key" not-null="true" unique-key="language_ak"/>
-            </property>
-        
-        </natural-id>
-            
+        <property name="locale">
+            <column name="locale" not-null="true" unique-key="language_ak"/>
+        </property>
+
+        <property name="resourceKey">
+            <column name="resource_key" not-null="true" unique-key="language_ak"/>
+        </property>
+
         <property name="resourceValue">
             <column name="resource_value" not-null="true" length="512"/>
         </property>
@@ -38,12 +34,13 @@
     </class>
     
     <!-- Named queries (loaded, validated and cached at application startup). -->
-    
-    <query name="LanguagesByKeyAndLocaleQuery"><![CDATA[
-    select language 
-    from Language as language
-    where language.resourceKey = :key 
-    and language.locale = :locale ]]>
+
+    <query name="LanguagesByKeyAndLocaleQuery">
+        <![CDATA[
+        from Language as language
+        where language.resourceKey = :key
+          and language.locale = :locale
+        ]]>
     </query>
     
     <query name="LanguagesByLocaleQuery"><![CDATA[

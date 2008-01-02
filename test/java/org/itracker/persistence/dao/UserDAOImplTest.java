@@ -1,19 +1,22 @@
 package org.itracker.persistence.dao;
 
-import java.util.Date;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.User;
-import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
+import org.junit.Test;
+import org.springframework.dao.DataIntegrityViolationException;
+
+import java.util.Date;
 
 public class UserDAOImplTest extends AbstractDependencyInjectionTest {
 
     private UserDAO userDAO;
 
-    public void testCreateUser() {
+    @Test
+    public void createUser() {
 
         User user = new User( "admin_test2","admin_test2", "admin firstname2", "admin lastname2", "", true );
         user.setCreateDate( new Date() );
+        user.setLastModifiedDate(new Date());
         userDAO.saveOrUpdate( user );
 
         User foundUser = userDAO.findByLogin( "admin_test2" );
@@ -26,7 +29,8 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
 
     }
 
-    public void testCreateUserWithNotNullPK() {
+    @Test
+    public void createUserWithNotNullPK() {
 
         try {
             User user = new User( "admin_test3","admin_test3", "admin firstname3", "admin lastname3", "", true );
@@ -35,12 +39,13 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
             userDAO.saveOrUpdate( user );
         } catch( Exception e ) {
             // Expected behavior
-            assertTrue( e instanceof HibernateOptimisticLockingFailureException );
+            assertTrue( e instanceof DataIntegrityViolationException);
         }
 
     }
 
-    protected void onSetUp() throws Exception {
+    @Override
+    public void onSetUp() throws Exception {
         super.onSetUp();
 
         userDAO = (UserDAO)applicationContext.getBean( "userDAO" );

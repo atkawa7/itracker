@@ -12,19 +12,15 @@
             <column name="id" not-null="true"/>
             <generator class="native"/>
         </id>
-        
-        <natural-id mutable="true">
-            
-            <many-to-one name="issue" class="Issue">
-                <column name="issue_id" not-null="true" unique-key="issue_field_ak"/>
-            </many-to-one>
 
-            <many-to-one name="customField" class="CustomField">
-                <column name="field_id" not-null="true" unique-key="issue_field_ak"/>
-            </many-to-one>
-        
-        </natural-id>
-            
+        <many-to-one name="issue" class="Issue">
+            <column name="issue_id" not-null="true" unique-key="issue_field_ak"/>
+        </many-to-one>
+
+        <many-to-one name="customField" class="CustomField">
+            <column name="field_id" not-null="true" unique-key="issue_field_ak"/>
+        </many-to-one>
+
         <property name="stringValue">
             <column name="string_value"/>
         </property>

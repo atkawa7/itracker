@@ -12,19 +12,15 @@
             <column name="id" not-null="true"/>
             <generator class="native"/>
         </id>
-        
-        <natural-id mutable="true">
-            
-            <many-to-one name="issue" class="Issue">
-                <column name="issue_id" not-null="true" unique-key="issue_attachment_ak"/>
-            </many-to-one>
 
-            <property name="originalFileName">
-                <column name="orig_file_name" not-null="true" unique-key="issue_attachment_ak"/>
-            </property>
-            
-        </natural-id>
-        
+        <many-to-one name="issue" class="Issue">
+            <column name="issue_id" not-null="true" unique-key="issue_attachment_ak"/>
+        </many-to-one>
+
+        <property name="originalFileName">
+            <column name="orig_file_name" not-null="true" unique-key="issue_attachment_ak"/>
+        </property>
+
         <property name="fileName">
             <column name="file_name" not-null="true" unique-key="issue_attachment_ak1"/>
         </property>

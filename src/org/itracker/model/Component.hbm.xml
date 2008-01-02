@@ -12,21 +12,17 @@
             <column name="id" not-null="true"/>
             <generator class="native"/>
         </id>
-        
-        <natural-id mutable="true">
-            
-            <many-to-one name="project" class="Project">
-                <column name="project_id" not-null="true" 
-                    unique-key="component_ak"/>
-            </many-to-one>
 
-            <property name="name">
-                <column name="name" length="30" not-null="true" 
-                    unique-key="component_ak"/>
-            </property>
-            
-        </natural-id>
-        
+        <many-to-one name="project" class="Project">
+            <column name="project_id" not-null="true"
+                unique-key="component_ak"/>
+        </many-to-one>
+
+        <property name="name">
+            <column name="name" length="30" not-null="true"
+                unique-key="component_ak"/>
+        </property>
+
         <property name="description">
             <column name="description" length="255" not-null="true"/>
         </property>

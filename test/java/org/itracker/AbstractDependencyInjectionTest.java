@@ -1,19 +1,23 @@
 package org.itracker;
 
+import org.dbunit.database.DatabaseConnection;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.xml.XmlDataSet;
+import org.dbunit.operation.InsertOperation;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.internal.runners.JUnit4ClassRunner;
+import org.junit.runner.RunWith;
+import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
+import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.sql.DataSource;
-
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.xml.XmlDataSet;
-import org.dbunit.operation.InsertOperation;
-import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
-
+@RunWith(JUnit4ClassRunner.class)
 public abstract class AbstractDependencyInjectionTest extends AbstractDependencyInjectionSpringContextTests {
 
     private DataSource dataSource;
@@ -25,8 +29,8 @@ public abstract class AbstractDependencyInjectionTest extends AbstractDependency
         classLoader = getClass().getClassLoader();
     }
 
-    protected void onSetUp() throws Exception {
-        getSessionFactoryBean().createDatabaseSchema();
+    @Override
+    public void onSetUp() throws Exception {
 
         dataSets = getDataSet();
 
@@ -47,7 +51,8 @@ public abstract class AbstractDependencyInjectionTest extends AbstractDependency
 
     }
 
-    protected void onTearDown() throws Exception {
+    @Override
+    public void onTearDown() throws Exception {
 
         Connection connection = getDataSource().getConnection();
 
@@ -102,6 +107,16 @@ public abstract class AbstractDependencyInjectionTest extends AbstractDependency
 
     public void setDataSource( DataSource dataSource ) {
         this.dataSource = dataSource;
+    }
+
+    @Before
+    public final void callSetup() throws Exception {
+        super.setUp();
+    }
+
+    @After
+    public final void callTeardown() throws Exception {
+        super.tearDown();
     }
 
 }

@@ -1,8 +1,5 @@
 package org.itracker.services.implementations;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Issue;
 import org.itracker.model.Permission;
@@ -12,6 +9,11 @@ import org.itracker.persistence.dao.PermissionDAO;
 import org.itracker.persistence.dao.ProjectDAO;
 import org.itracker.persistence.dao.UserDAO;
 import org.itracker.services.UserService;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 
@@ -20,7 +22,8 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     private UserDAO userDAO;
     private PermissionDAO permissionDAO;
 
-    public void testGetSuperUsers() {
+    @Test
+    public void getSuperUsers() {
 
         List<User> users = userService.getSuperUsers();
 
@@ -30,7 +33,8 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 
     }
 
-    public void testGetPermissionsByUserId() {
+    @Test
+    public void getPermissionsByUserId() {
         Integer userId = 3;
         Integer projectId = 2;
         List<Permission> currentPermissions;
@@ -73,7 +77,8 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
                       currentPermissions.get( 2 ).getUser().getEmail() );
     }
 
-    public void testSetUserPermissions() {
+    @Test
+    public void setUserPermissions() {
         Integer userId = 3;
         Integer projectId = 2;
 
@@ -83,7 +88,11 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 
         Project project = projectDAO.findByPrimaryKey( projectId );
 
-        newPermissions.add( new Permission( 4, user, project ) );
+        Permission permission = new Permission(4, user, project);
+        permission.setCreateDate(new Date());
+        permission.setLastModifiedDate(new Date());
+
+        newPermissions.add(permission);
 
         userService.setUserPermissions( userId, newPermissions );
 
@@ -93,7 +102,8 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 
     }
 
-    public void testSetAndUnsetUserPermissions() {
+    @Test
+    public void setAndUnsetUserPermissions() {
         Integer userId = 3;
         Integer projectId = 2;
         List<Permission> newPermissions = new ArrayList<Permission>();
@@ -102,7 +112,11 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 
         Project project = projectDAO.findByPrimaryKey( projectId );
 
-        newPermissions.add( new Permission( 4, user, project ) );
+        Permission permission = new Permission(4, user, project);
+        permission.setCreateDate(new Date());
+        permission.setLastModifiedDate(new Date());
+
+        newPermissions.add(permission);
         userService.setUserPermissions( userId, newPermissions );
 
         assertEquals( newPermissions.get( 0 ).getPermissionType(),
@@ -112,8 +126,12 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
         newPermissions.clear();
         userService.setUserPermissions( userId, newPermissions );
 
+        permission = new Permission(7, user, project);
+        permission.setCreateDate(new Date());
+        permission.setLastModifiedDate(new Date());
 
-        newPermissions.add( new Permission( 7, user, project ) );
+        newPermissions.add(permission);
+
         userService.setUserPermissions( userId, newPermissions );
         assertEquals( 7, userService.getPermissionsByUserId( userId ).get(
                 0 ).getPermissionType() );
@@ -121,8 +139,8 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 
     }
 
-
-    public void testGetUsersWithProjectPermission() {
+    @Test
+    public void getUsersWithProjectPermission() {
         Integer projectId = 2;
         Integer permissionId = 1;
         List<User> users = userService.getUsersWithProjectPermission( projectId,
@@ -130,7 +148,8 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
         assertNotNull( users );
     }
 
-    public void testGetPossibleOwners() {
+    @Test
+    public void getPossibleOwners() {
         Issue issue = new Issue();
         Integer projectId = 2;
         Integer userId = 2;
@@ -149,7 +168,8 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
         }
     }
 
-    protected void onSetUp() throws Exception {
+    @Override
+    public void onSetUp() throws Exception {
         super.onSetUp();
         userService = (UserService)applicationContext.getBean( "userService" );
         projectDAO = (ProjectDAO)applicationContext.getBean( "projectDAO" );

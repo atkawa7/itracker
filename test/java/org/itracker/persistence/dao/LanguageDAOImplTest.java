@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Language;
+import org.junit.Test;
 
 public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
 
     private LanguageDAO languageDAO;
 
-    public void testFindByKeyAndLocale() {
+    @Test
+    public void findByKeyAndLocale() {
 
         Language language = languageDAO.findByKeyAndLocale(
                 "test_key", "test_locale" );
@@ -21,7 +23,8 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
 
     }
 
-    public void testFindByKey() {
+    @Test
+    public void findByKey() {
 
         List<Language> languages = languageDAO.findByKey( "test_key" );
 
@@ -36,7 +39,8 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
 
     }
 
-    public void testFindByLocale() {
+    @Test
+    public void findByLocale() {
 
         List<Language> languages = languageDAO.findByLocale( "test_locale" );
 
@@ -62,7 +66,8 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
 
     }
 
-    protected void onSetUp() throws Exception {
+    @Override
+    public void onSetUp() throws Exception {
         super.onSetUp();
 
         languageDAO = (LanguageDAO)applicationContext.getBean( "languageDAO" );

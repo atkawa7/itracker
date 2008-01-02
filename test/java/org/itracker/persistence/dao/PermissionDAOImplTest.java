@@ -4,6 +4,7 @@ import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Permission;
 import org.itracker.model.Project;
 import org.itracker.model.User;
+import org.junit.Test;
 
 public class PermissionDAOImplTest extends AbstractDependencyInjectionTest {
 
@@ -11,12 +12,9 @@ public class PermissionDAOImplTest extends AbstractDependencyInjectionTest {
     private ProjectDAO projectDAO;
     private PermissionDAO permissionDAO;
 
-    public void testCreatePermission() {
-    	Project project = projectDAO.findByPrimaryKey(2);
-    	User user = userDAO.findByPrimaryKey(2);
-        Permission permission = new Permission(3, user, project);
-        
-        permissionDAO.saveOrUpdate( permission );
+    @Test
+    public void createPermission() {
+
         Permission foundPermission = permissionDAO.findByUserId(2).get(1);
         User foundUser=foundPermission.getUser();
         Project foundProject=foundPermission.getProject();
@@ -30,8 +28,8 @@ public class PermissionDAOImplTest extends AbstractDependencyInjectionTest {
 
     }
  
-  
-    protected void onSetUp() throws Exception {
+    @Override
+    public void onSetUp() throws Exception {
         super.onSetUp();
         userDAO = (UserDAO)applicationContext.getBean( "userDAO" );
         projectDAO = (ProjectDAO)applicationContext.getBean( "projectDAO" );

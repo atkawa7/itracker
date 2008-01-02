@@ -1,27 +1,18 @@
 package org.itracker.persistence.dao;
 
-import java.util.Date;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Project;
 import org.itracker.model.Status;
+import org.junit.Test;
 
 public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
 
     private ProjectDAO projectDAO;
 
-    public void testCreateProject() {
+    @Test
+    public void createProject() {
 
-        Project project = new Project();
-        project.setCreateDate( new Date() );
-        project.setLastModifiedDate( new Date() );
-        project.setName("test_name");
-        project.setDescription("test_description");
-        project.setStatus(Status.ACTIVE);
-        project.setOptions(0);
-        projectDAO.saveOrUpdate( project );
-
-        Project foundProject = projectDAO.findByPrimaryKey(project.getId());
+        Project foundProject = projectDAO.findByPrimaryKey(2);
 
         assertNotNull( foundProject );
         assertEquals( "test_name", foundProject.getName() );
@@ -31,7 +22,8 @@ public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
 
     }
 
-    protected void onSetUp() throws Exception {
+    @Override
+    public void onSetUp() throws Exception {
         super.onSetUp();
 
         projectDAO = (ProjectDAO)applicationContext.getBean( "projectDAO" );

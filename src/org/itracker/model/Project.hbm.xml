@@ -11,15 +11,11 @@
             <column name="id" not-null="true"/>
             <generator class="native"/>
         </id>		
-        
-        <natural-id mutable="true">
-            
-            <property name="name">
-                <column name="name" not-null="true" unique-key="project_ak"/>
-            </property>
-        
-        </natural-id>
-            
+
+        <property name="name">
+            <column name="name" not-null="true" unique-key="project_ak"/>
+        </property>
+
         <property name="description">
             <column name="description" not-null="true"/>
         </property>

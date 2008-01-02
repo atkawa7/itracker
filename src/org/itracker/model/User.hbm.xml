@@ -9,18 +9,14 @@
     <class name="User" table="userbean">
         
         <id name="id" unsaved-value="null">
-            <column name="id" not-null="true"/>
+            <column name="id" not-null="true" unique="true"/>
             <generator class="native"/>
         </id>
-        
-        <natural-id mutable="true">
-        
-            <property name="login">
-                <column name="login" not-null="true" unique-key="user_ak"/>
-            </property>
-        
-        </natural-id>
-            
+
+        <property name="login">
+            <column name="login" not-null="true" unique-key="user_ak"/>
+        </property>
+
         <property name="password">
             <column name="user_password" not-null="true"/>
         </property>

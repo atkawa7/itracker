@@ -12,19 +12,15 @@
             <column name="id" not-null="true"/>
             <generator class="native"/>
         </id>
-        
-        <natural-id mutable="true">
-            
-            <many-to-one name="project" class="Project">
-                <column name="project_id" not-null="true" unique-key="version_ak"/>
-            </many-to-one>
 
-            <property name="number">
-                <column name="version_number" not-null="true" unique-key="version_ak"/>
-            </property>
-        
-        </natural-id>
-            
+        <many-to-one name="project" class="Project">
+            <column name="project_id" not-null="true" unique-key="version_ak"/>
+        </many-to-one>
+
+        <property name="number">
+            <column name="version_number" not-null="true" unique-key="version_ak"/>
+        </property>
+
         <property name="major">
             <column name="major" not-null="true"/>
         </property>

@@ -12,21 +12,17 @@
             <column name="id" not-null="true"/>
             <generator class="native"/>
         </id>
-        
-        <natural-id mutable="true">
-            
-            <many-to-one name="customField" class="CustomField">
-                <column name="custom_field_id" not-null="true" 
-                    unique-key="custom_field_value_ak"/>
-            </many-to-one>
 
-            <property name="value">
-                <column name="option_value" not-null="true" 
-                    unique-key="custom_field_value_ak"/>
-            </property>
-            
-        </natural-id>
-        
+        <many-to-one name="customField" class="CustomField">
+            <column name="custom_field_id" not-null="true"
+                unique-key="custom_field_value_ak"/>
+        </many-to-one>
+
+        <property name="value">
+            <column name="option_value" not-null="true"
+                unique-key="custom_field_value_ak"/>
+        </property>
+
         <property name="sortOrder">
             <column name="sort_order" not-null="true"/>
         </property>

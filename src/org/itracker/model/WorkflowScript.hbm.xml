@@ -12,16 +12,12 @@
             <column name="id" not-null="true"/>
             <generator class="native"/>
         </id>
-        
-        <natural-id mutable="true">
-        
-            <property name="name">
-                <column name="script_name" not-null="true" 
-                    unique-key="workflow_script_ak" />
-            </property>
-        
-        </natural-id>
-            
+
+        <property name="name">
+            <column name="script_name" not-null="true"
+                unique-key="workflow_script_ak" />
+        </property>
+
         <property name="script">
             <column name="script_data" not-null="true" />
         </property>
