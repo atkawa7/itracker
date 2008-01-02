@@ -9,6 +9,7 @@ import org.itracker.persistence.dao.PermissionDAO;
 import org.itracker.persistence.dao.ProjectDAO;
 import org.itracker.persistence.dao.UserDAO;
 import org.itracker.services.UserService;
+import org.itracker.services.exceptions.UserException;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -146,6 +147,18 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
         List<User> users = userService.getUsersWithProjectPermission( projectId,
                                                                       permissionId );
         assertNotNull( users );
+    }
+
+    @Test
+    public void updateUser() throws UserException {
+        User user = userService.getUser(2);
+
+        user.setEmail("updated_email@test.com");
+
+        User updatedUser = userService.updateUser(user);
+
+        assertNotNull(updatedUser);
+        assertEquals("updated_email@test.com", updatedUser.getEmail());
     }
 
     @Test

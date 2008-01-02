@@ -230,7 +230,7 @@ public class UserServiceImpl implements UserService {
         }
         
     }
-    
+
     public User updateUser(User user) throws UserException {
         try {
             PluggableAuthenticator authenticator = (PluggableAuthenticator) authenticatorClass.newInstance();
@@ -267,7 +267,6 @@ public class UserServiceImpl implements UserService {
         existinguser.setLastName(user.getLastName());
         existinguser.setEmail(user.getEmail());
         existinguser.setSuperUser(user.isSuperUser());
-        existinguser.getProjects().addAll(user.getProjects());
         existinguser.setLastModifiedDate(new Timestamp(new Date().getTime()));
         
         // Only set the password if it is a new value...
@@ -275,7 +274,7 @@ public class UserServiceImpl implements UserService {
         && !user.getPassword().equals(user.getPassword())) {
             existinguser.setPassword(user.getPassword());
         }
-        
+
         userDAO.saveOrUpdate(existinguser);
         return existinguser;
     }
