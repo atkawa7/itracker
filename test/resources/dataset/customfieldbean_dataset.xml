@@ -1,0 +1,25 @@
+<dataset>
+
+    <table name="customfieldbean">
+
+        <column>id</column>
+        <column>field_type</column>
+        <column>date_format</column>
+        <column>is_required</column>
+        <column>sort_options_by_name</column>
+        <column>create_date</column>
+        <column>last_modified</column>
+
+        <row>
+            <value>1</value>
+            <value>1</value>
+            <value>mm-dd-yyyy</value>
+            <value>1</value>
+            <value>1</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+        </row>
+
+    </table>
+
+</dataset>

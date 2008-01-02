@@ -15,7 +15,7 @@ public class ConfigurationDAOImpl extends BaseHibernateDAOImpl<Configuration>
  
     public Configuration findByPrimaryKey(Integer configId) {
         try {
-            return (Configuration)getSession().load(Configuration.class, configId);
+            return (Configuration)getSession().get(Configuration.class, configId);
         } catch (HibernateException e) {
             throw convertHibernateAccessException(e);
         }
