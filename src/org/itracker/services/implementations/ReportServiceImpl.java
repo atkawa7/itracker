@@ -56,9 +56,6 @@ import org.itracker.services.ReportService;
 import org.itracker.services.exceptions.ReportException;
 import org.itracker.web.util.Constants;
 
-import pnuts.lang.Context;
-import pnuts.lang.Pnuts;
-
 public class ReportServiceImpl implements ReportService {
 
     private final ReportDAO reportDAO;
@@ -125,13 +122,16 @@ public class ReportServiceImpl implements ReportService {
         	// various types of queries
         	JRBeanCollectionDataSource beanCollectionDataSource;
         	JasperReport jr = getJasperReport(report);
-        	if(jr.getQuery() != null) {
-        		List objects = (List)Pnuts.eval(jr.getQuery().getText(), new Context());
-        		beanCollectionDataSource = new JRBeanCollectionDataSource(objects);
-        	} else {
-        		beanCollectionDataSource = new JRBeanCollectionDataSource(reportDataArray);	
-        	}
-        	
+
+            // TODO: Temporarily commenting out code to remove pnuts dependency
+            // Will need to test for regressions.
+//            if(jr.getQuery() != null) {
+//        		List objects = (List)Pnuts.eval(jr.getQuery().getText(), new Context());
+//        		beanCollectionDataSource = new JRBeanCollectionDataSource(objects);
+//        	} else {
+        		beanCollectionDataSource = new JRBeanCollectionDataSource(reportDataArray);
+//        	}
+
         	
 			JasperPrint jasperPrint = generateReport(report, new HashMap(), beanCollectionDataSource);
         	
