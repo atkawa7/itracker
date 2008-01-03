@@ -5,12 +5,45 @@ import org.itracker.model.Permission;
 import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.junit.Test;
+import org.junit.Ignore;
+import org.springframework.dao.DataAccessException;
+
+import java.util.List;
+import java.sql.SQLException;
 
 public class PermissionDAOImplTest extends AbstractDependencyInjectionTest {
 
     private UserDAO userDAO;
     private ProjectDAO projectDAO;
     private PermissionDAO permissionDAO;
+
+    @Ignore
+    public void findByUserId() {
+
+        List<Permission> permissions = permissionDAO.findByUserId(2);
+
+        assertNotNull(permissions);
+        assertEquals(3, permissions.size());
+
+        permissions = permissionDAO.findByUserId(-1);
+
+        assertNull(permissions);
+
+    }
+
+    @Ignore
+    public void failedFindByUserId() {
+
+        try {
+            getDataSource().getConnection().close();
+            List<Permission> permissions = permissionDAO.findByUserId(-1);
+            fail("Should have thrown a DataAccessException. Size of list:" + permissions.size());
+        } catch( DataAccessException e ) {
+            // Expected behavior
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void createPermission() {
@@ -37,8 +70,10 @@ public class PermissionDAOImplTest extends AbstractDependencyInjectionTest {
     }
 
     protected String[] getDataSetFiles() {
-        return new String[] {
-        		"dataset/userbean_dataset.xml", "dataset/projectbean_dataset.xml", "dataset/permissionbean_dataset.xml"
+        return new String[]{
+                "dataset/userbean_dataset.xml",
+                "dataset/projectbean_dataset.xml", 
+                "dataset/permissionbean_dataset.xml"
         };
     }
 
