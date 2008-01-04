@@ -152,6 +152,19 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
 
     }
 
+    /**
+     * Returns the list of users for a given project. User permissions can be specified.
+     *
+     * @param projectId - The Project to search for users
+     * @param permissionTypes - User rights to filter
+     * @param requireAll - Require all permissions
+     * @param activeOnly - Filter users who are active (Possible user status: DELETED, ACTIVE, LOCKED)
+     * @param reqSource - not used. TODO: Tagged for removal
+     *
+     * @return List of users for the project with filters applied.
+     *
+     * @throws AuthenticatorException
+     */
     public List<User> getUsersWithProjectPermission(Integer projectId, 
             int[] permissionTypes, boolean requireAll, boolean activeOnly, 
             int reqSource) throws AuthenticatorException {

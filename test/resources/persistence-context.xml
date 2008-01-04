@@ -32,7 +32,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         <property name="initialPoolSize" value="1"/>
         <property name="minPoolSize" value="1"/>
         <property name="acquireIncrement" value="5"/>
-        <property name="maxPoolSize" value="50"/>
+        <property name="maxPoolSize" value="500"/>
         <property name="maxIdleTime" value="300"/>
         <property name="loginTimeout" value="500"/>
     </bean>
