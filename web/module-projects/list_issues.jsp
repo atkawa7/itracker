@@ -28,17 +28,7 @@
     Integer k = (Integer)request.getAttribute("k");
     %>
  <%-- TODO : move redirect logic to the Action class. --%>
-<c:choose>
-	<c:when test="${project == null}">
-	    <it:addError key="itracker.web.error.invalidproject"/>
-      <logic:forward name="error"/>
-	</c:when>
-	<c:when test="${project.status != Status.ACTIVE && project.status != Status.VIEWABLE}">
-	<it:addError key="itracker.web.error.projectlocked"/>
-      <logic:forward name="error"/>
-	</c:when>
-	<c:otherwise>
-            
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <bean:define id="pageTitleKey" value="itracker.web.listissues.title"/>
 <bean:define id="pageTitleArg" value="<%= project.getName() %>"/>
@@ -161,8 +151,4 @@
 
       </table>
 
-
-
- 	</c:otherwise>
-</c:choose>
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>

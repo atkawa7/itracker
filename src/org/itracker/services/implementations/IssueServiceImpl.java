@@ -991,9 +991,6 @@ public class IssueServiceImpl implements IssueService {
 		attachment.setCreateDate(new Date());
 		attachment.setLastModifiedDate(attachment.getCreateDate());
 
-		// save attachment
-		this.issueAttachmentDAO.saveOrUpdate(attachment);
-
 		// add attachement to issue
 		issue.getAttachments().add(attachment);
 		this.issueDAO.saveOrUpdate(issue);
