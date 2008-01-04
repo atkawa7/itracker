@@ -1,7 +1,8 @@
-The following statements have been used by Marky Goldstein to migrate his existing MySQL database: 
+/* The following statements have been used by Marky Goldstein to migrate his existing MySQL database: */
 
-It's a general guide how to setup a migration sql script: 
+/* It's a general guide how to setup a migration sql script: */
 
+/*
 Insert the value
 "org.itracker.web.reports.predefined.ITrackerJasperReport"
 in table "reportbean" to column  "class_name"
@@ -9,10 +10,11 @@ in table "reportbean" to column  "class_name"
 Insert the value
 "org.itracker.web.reports.predefined.ITrackerJFreeReport"
 in table "reportbean" to column  "class_name"
+*/
 
-START SQL SCRIPT ----
+/* START SQL SCRIPT */
 
-create table issuerelationbean (
+CREATE TABLE issuerelationbean (
   id                    INT      NOT NULL auto_increment,
   issue_id              INT,
   rel_issue_id          INT,
@@ -23,7 +25,7 @@ create table issuerelationbean (
   PRIMARY KEY(id)
 ) DEFAULT CHARACTER SET utf8;
 
-create table workflowscriptbean (
+CREATE TABLE workflowscriptbean (
   id                    INT       NOT NULL auto_increment,
   script_name           VARCHAR(255),
   event_type            INT,
@@ -33,7 +35,7 @@ create table workflowscriptbean (
   PRIMARY KEY(id)
 ) DEFAULT CHARACTER SET utf8;
 
-create table projectscriptbean (
+CREATE TABLE projectscriptbean (
   id                    INT       NOT NULL auto_increment,
   project_id            INT,
   field_id              INT,
@@ -45,7 +47,7 @@ create table projectscriptbean (
 ) DEFAULT CHARACTER SET utf8;
 
 DELETE * FROM scheduledtaskbean
-DELETE FROM issueattachmentbean WHERE orig_file_name IS NULL;
+DELETE * FROM issueattachmentbean WHERE orig_file_name IS NULL;
 
 alter table languagebean change id id INT NOT NULL AUTO_INCREMENT; 
 alter table configurationbean change id id INT NOT NULL AUTO_INCREMENT; 
@@ -65,13 +67,12 @@ alter table customfieldvaluebean change id id INT NOT NULL AUTO_INCREMENT;
 alter table customfieldbean change id id INT NOT NULL AUTO_INCREMENT;
 alter table componentbean change id id INT NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE issueattachmentbean CHANGE issue_id issue_id INT NOT NULL;
+alter table issueattachmentbean CHANGE issue_id issue_id INT NOT NULL;
 
 alter table componentbean change status status INT NOT NULL;
 alter table versionbean change status status INT NOT NULL;
 
 ALTER TABLE `userpreferencesbean` ADD `use_text_actions` INT NOT NULL AFTER `remember_last_search` ;
-
 
 UPDATE componentbean SET status = 1 WHERE status IS NULL;
 UPDATE versionbean SET status = 1 WHERE status IS NULL;
