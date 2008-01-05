@@ -523,4 +523,11 @@
 
     </reporting>
 
+    <distributionManagement>
+        <site>
+            <id>itracker.website</id>
+            <url>scp://ssh.sourceforge.net//home/groups/i/it/itracker/htdocs/newsite</url>
+        </site>
+    </distributionManagement>
+
 </project>
