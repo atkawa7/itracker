@@ -367,19 +367,21 @@ public class UserServiceImpl implements UserService {
     }
     
     public List<User> getUsersWithPermissionLocal(Integer projectId, int permissionType) {
+
         List<User> users = new ArrayList<User>();
         
         if (projectId != null) {
             List<Permission> permissions = permissionDAO.findByProjectIdAndPermission(
                     projectId, permissionType);
-            
-            int i = 0;
-            
-            for (Iterator<Permission> iterator = permissions.iterator(); iterator.hasNext(); i++) {
-                users.add(iterator.next().getUser());
+
+            for (Permission permission : permissions) {
+                users.add(permission.getUser());
             }
+
         }
+
         return users;
+
     }
     
     public List<Permission> getUserPermissionsLocal(User user) {

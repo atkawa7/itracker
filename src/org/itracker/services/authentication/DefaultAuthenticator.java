@@ -175,15 +175,19 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
                 List<User> explicitUsers = getUserService().getUsersWithPermissionLocal(projectId, permissionTypes[i]);
 
                 if (!requireAll || permissionTypes.length == 1) {
-                    for (int j = 0; j < explicitUsers.size(); j++) {
-                        userMap.put(explicitUsers.get(j).getId(), explicitUsers.get(j));
+
+                    for (User user : explicitUsers) {
+                        userMap.put(user.getId(), user);
                     }
+
                 } else {
 
                     if (i == 0) {
-                        for (int j = 0; j < explicitUsers.size(); j++) {
-                            userMap.put(explicitUsers.get(j).getId(), explicitUsers.get(j));
+
+                        for (User user : explicitUsers) {
+                            userMap.put(user.getId(), user);
                         }
+
                     } else {
                         for (Iterator iter = userMap.keySet().iterator(); iter.hasNext();) {
                             boolean found = false;
@@ -194,6 +198,7 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
                                     break;
                                 }
                             }
+
                             if (!found) {
                                 iter.remove();
                             }
@@ -203,16 +208,15 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
             }
 
             List<User> superUsers = getUserService().getSuperUsers();
-            for (int i = 0; i < superUsers.size(); i++) {
-                if (!activeOnly || superUsers.get(i).getStatus() == UserUtilities.STATUS_ACTIVE) {
-                    userMap.put(superUsers.get(i).getId(), superUsers.get(i));
+            for (User superUser : superUsers) {
+                if (!activeOnly || superUser.getStatus() == UserUtilities.STATUS_ACTIVE) {
+                    userMap.put(superUser.getId(), superUser);
                 }
             }
 
-            int i = 0;
             users = new ArrayList<User>();
-            for (Iterator iter = userMap.values().iterator(); iter.hasNext(); i++) {
-                users.add((User) iter.next());
+            for (User user : userMap.values()) {
+                users.add(user);
             }
 
         } catch (Exception e) {
