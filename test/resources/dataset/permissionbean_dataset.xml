@@ -57,6 +57,93 @@
             <value>3</value>
             <value>2</value>
         </row>
+
+        <!--
+        Permissions for user 4 (Refer to userbean_dataset.xml
+
+        Constants used. Refer to UserUtilities
+        PERMISSION_CREATE = 2;
+        PERMISSION_EDIT = 3;
+        PERMISSION_CLOSE = 4;
+        PERMISSION_ASSIGN_SELF = 5;
+        PERMISSION_ASSIGN_OTHERS = 6;
+        PERMISSION_VIEW_ALL = 7;
+        PERMISSION_VIEW_USERS = 8;
+        PERMISSION_CREATE_OTHERS = 12;
+         -->
+
+        <row>
+            <value>7</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+            <value>2</value>
+            <value>3</value>
+            <value>2</value>
+        </row>
+
+        <row>
+            <value>8</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+            <value>3</value>
+            <value>3</value>
+            <value>2</value>
+        </row>
+
+        <row>
+            <value>9</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+            <value>4</value>
+            <value>3</value>
+            <value>2</value>
+        </row>
+
+        <row>
+            <value>10</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+            <value>5</value>
+            <value>3</value>
+            <value>2</value>
+        </row>
+
+        <row>
+            <value>11</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+            <value>6</value>
+            <value>3</value>
+            <value>2</value>
+        </row>
+
+        <row>
+            <value>12</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+            <value>7</value>
+            <value>3</value>
+            <value>2</value>
+        </row>
+
+        <row>
+            <value>13</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+            <value>8</value>
+            <value>3</value>
+            <value>2</value>
+        </row>
+
+        <row>
+            <value>14</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+            <value>12</value>
+            <value>3</value>
+            <value>2</value>
+        </row>
+
     </table>
 
 </dataset>

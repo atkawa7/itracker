@@ -14,18 +14,16 @@
         </id>
 
         <property name="permissionType">
-            <column name="permission_type" not-null="true"
-                unique-key="permission_ak"/>
+            <column name="permission_type" not-null="true"/>
         </property>
 
         <many-to-one name="project" class="Project" lazy="false">
             <!-- May be null to indicate a permission on all projects. -->
-            <column name="project_id" unique-key="permission_ak"/>
+            <column name="project_id"/>
         </many-to-one>
 
         <many-to-one name="user" class="User" lazy="false">
-            <column name="user_id" not-null="true"
-                unique-key="permission_ak"/>
+            <column name="user_id" not-null="true"/>
         </many-to-one>
 
         <property name="createDate" update="false">

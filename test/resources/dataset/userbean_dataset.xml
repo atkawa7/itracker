@@ -41,6 +41,35 @@
             <value>0</value>
             <value>1</value>
         </row>
+
+        <row>
+            <value>4</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+            <value>project_admin1</value>
+            <value>project_admin1</value>
+            <value>project admin firstname</value>
+            <value>project admin lastname</value>
+            <value>email@email.email</value>
+            <value>1</value>
+            <value>0</value>
+            <value>1</value>
+        </row>
+
+        <row>
+            <value>5</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+            <value>inactive_user1</value>
+            <value>inactive_user1</value>
+            <value>inactive user firstname</value>
+            <value>inactive user lastname</value>
+            <value>email@email.email</value>
+            <value>0</value>
+            <value>0</value>
+            <value>1</value>
+        </row>
+
     </table>
 
 </dataset>

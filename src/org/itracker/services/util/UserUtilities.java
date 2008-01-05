@@ -47,7 +47,9 @@ public class UserUtilities implements AuthenticationConstants {
     public static final int STATUS_DELETED = -1;
     public static final int STATUS_ACTIVE = 1;
     public static final int STATUS_LOCKED = 2;
-    
+
+    // TODO: Could use an enumeration
+
     /** User Admin Permission.  Currently this is equivalent to super user, since the permission can't be granted, and is only available to an admin. */
     public static final int PERMISSION_USER_ADMIN = -1;
     /** Product Admin Permission */

@@ -112,6 +112,31 @@ public class AuthenticatorForProjectPermissionTest extends AbstractDependencyInj
 
     }
 
+    @Test
+    public void testRequireAll() {
+
+        int[] permissionTypes = new int[]{
+                UserUtilities.PERMISSION_CREATE,
+                UserUtilities.PERMISSION_EDIT,
+                UserUtilities.PERMISSION_CLOSE,
+                UserUtilities.PERMISSION_ASSIGN_SELF,
+                UserUtilities.PERMISSION_ASSIGN_OTHERS,
+                UserUtilities.PERMISSION_VIEW_ALL,
+                UserUtilities.PERMISSION_VIEW_USERS,
+                UserUtilities.PERMISSION_CREATE_OTHERS
+        };
+
+        List<User> users = authenticator.getUsersWithProjectPermission(2, permissionTypes, true, false, 1);
+
+        assertEquals(2, users.size());
+
+    }
+
+    @Test
+    public void testActiveOnly() {
+        
+    }
+
     @Override
     public void onSetUp() throws Exception {
 
