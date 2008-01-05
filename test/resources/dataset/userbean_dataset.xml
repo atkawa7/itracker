@@ -14,6 +14,7 @@
         <column>super_user</column>
         <column>registration_type</column>
 
+        <!-- Superuser -->
         <row>
             <value>2</value>
             <value>2006-01-01</value>
@@ -27,8 +28,8 @@
             <value>1</value>
             <value>1</value>
         </row>
-        
-          <row>
+
+        <row>
             <value>3</value>
             <value>2006-01-01</value>
             <value>2006-01-01</value>
@@ -42,6 +43,7 @@
             <value>1</value>
         </row>
 
+        <!-- Project admin (Refer to permissionbean_dataset.xml -->
         <row>
             <value>4</value>
             <value>2008-01-01</value>
@@ -56,6 +58,7 @@
             <value>1</value>
         </row>
 
+        <!-- Inactive user -->
         <row>
             <value>5</value>
             <value>2008-01-01</value>
@@ -66,6 +69,21 @@
             <value>inactive user lastname</value>
             <value>email@email.email</value>
             <value>0</value>
+            <value>0</value>
+            <value>1</value>
+        </row>
+
+        <!-- User that doesn't belong to any projects -->
+        <row>
+            <value>6</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+            <value>floating_user1</value>
+            <value>floating_user1</value>
+            <value>floating user firstname</value>
+            <value>floating user lastname</value>
+            <value>email@email.email</value>
+            <value>1</value>
             <value>0</value>
             <value>1</value>
         </row>
