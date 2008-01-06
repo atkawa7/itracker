@@ -2,6 +2,7 @@
 
     <table name="languagebean">
 
+        <column>id</column>
         <column>create_date</column>
         <column>last_modified</column>
         <column>locale</column>
@@ -9,6 +10,7 @@
         <column>resource_value</column>
 
         <row>
+            <value>1</value>
             <value>2006-01-01</value>
             <value>2006-01-01</value>
             <value>test_locale</value>

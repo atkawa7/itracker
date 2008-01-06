@@ -163,60 +163,56 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
      * @throws AuthenticatorException
      */
     public List<User> getUsersWithProjectPermission(Integer projectId,
-                                                    int[] permissionTypes, boolean requireAll, boolean activeOnly,
-                                                    int reqSource) throws AuthenticatorException {
+                                                    int[] permissionTypes,
+                                                    boolean requireAll,
+                                                    boolean activeOnly,
+                                                    int reqSource)
+            throws AuthenticatorException {
 
         List<User> users;
 
         try {
             Map<Integer, User> userMap = new HashMap<Integer, User>();
 
-            for (int i = 0; i < permissionTypes.length; i++) {
-                List<User> explicitUsers = getUserService().getUsersWithPermissionLocal(projectId, permissionTypes[i]);
+            if (requireAll) {
 
-                if (!requireAll || permissionTypes.length == 1) {
+                Integer[] types = new Integer[permissionTypes.length];
+                for (int i = 0; i < types.length; i++) {
+                    types[i] = permissionTypes[i];
+                }
+
+                List<User> explicitUsers = getUserService().findUsersForProjectByPermissionTypeList(projectId, types);
+
+                for (User user : explicitUsers) {
+                    userMap.put(user.getId(), user);
+                }
+            } else {
+
+                for (int i = 0; i < permissionTypes.length; i++) {
+                    List<User> explicitUsers = getUserService().getUsersWithPermissionLocal(projectId, permissionTypes[i]);
 
                     for (User user : explicitUsers) {
                         userMap.put(user.getId(), user);
                     }
 
-                } else {
-
-                    if (i == 0) {
-
-                        for (User user : explicitUsers) {
-                            userMap.put(user.getId(), user);
-                        }
-
-                    } else {
-                        for (Iterator iter = userMap.keySet().iterator(); iter.hasNext();) {
-                            boolean found = false;
-                            Integer userId = (Integer) iter.next();
-                            for (int j = 0; j < explicitUsers.size(); j++) {
-                                if (userId.equals(explicitUsers.get(j).getId())) {
-                                    found = true;
-                                    break;
-                                }
-                            }
-
-                            if (!found) {
-                                iter.remove();
-                            }
-                        }
-                    }
                 }
+
             }
 
             List<User> superUsers = getUserService().getSuperUsers();
             for (User superUser : superUsers) {
-                if (!activeOnly || superUser.getStatus() == UserUtilities.STATUS_ACTIVE) {
-                    userMap.put(superUser.getId(), superUser);
-                }
+                userMap.put(superUser.getId(), superUser);
             }
 
             users = new ArrayList<User>();
             for (User user : userMap.values()) {
-                users.add(user);
+                if (activeOnly) {
+                    if (user.getStatus() == UserUtilities.STATUS_ACTIVE) {
+                        users.add(user);
+                    }
+                } else {
+                    users.add(user);
+                }
             }
 
         } catch (Exception e) {

@@ -100,7 +100,6 @@ public class AuthenticatorForProjectPermissionTest extends AbstractDependencyInj
 
     }
 
-    @Ignore
     @Test
     public void testRequireAll() {
 
@@ -119,9 +118,12 @@ public class AuthenticatorForProjectPermissionTest extends AbstractDependencyInj
 
         assertEquals(3, users.size());
 
+        assertContainsUser(userService.getUser(2), users);
+        assertContainsUser(userService.getUser(4), users);
+        assertContainsUser(userService.getUser(5), users);
+
     }
 
-    @Ignore
     @Test
     public void testActiveOnly() {
 
@@ -138,7 +140,11 @@ public class AuthenticatorForProjectPermissionTest extends AbstractDependencyInj
 
         List<User> users = authenticator.getUsersWithProjectPermission(2, permissionTypes, false, true, 1);
 
-        assertEquals(4, users.size());
+        assertEquals(3, users.size());
+
+        assertContainsUser(userService.getUser(2), users);
+        assertContainsUser(userService.getUser(3), users);
+        assertContainsUser(userService.getUser(4), users);
 
     }
 

@@ -1,11 +1,13 @@
 package org.itracker.persistence.dao;
 
+import java.util.Date;
+import java.util.List;
+
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.User;
+import org.itracker.services.util.UserUtilities;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
-
-import java.util.Date;
 
 public class UserDAOImplTest extends AbstractDependencyInjectionTest {
 
@@ -44,6 +46,32 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
 
     }
 
+    @Test
+    public void testFindUsersForProjectByAllPermissionTypeList() {
+
+        Integer[] permissionTypes = new Integer[]{
+                UserUtilities.PERMISSION_PRODUCT_ADMIN,
+                UserUtilities.PERMISSION_CREATE,
+                UserUtilities.PERMISSION_EDIT
+        };
+
+        List<User> users = userDAO.findUsersForProjectByAllPermissionTypeList(2, permissionTypes);
+
+        assertEquals(2, users.size());
+
+        assertContainsUser(userDAO.findByPrimaryKey(2), users);
+        assertContainsUser(userDAO.findByPrimaryKey(3), users);
+
+    }
+
+    private void assertContainsUser(User user, List<User> users) {
+
+        if (!users.contains(user)) {
+            fail("User not found in the list.");
+        }
+
+    }
+
     @Override
     public void onSetUp() throws Exception {
         super.onSetUp();
@@ -53,7 +81,9 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
 
     protected String[] getDataSetFiles() {
         return new String[] {
-                "dataset/userbean_dataset.xml"
+                "dataset/userbean_dataset.xml",
+                "dataset/projectbean_dataset.xml",
+                "dataset/permissionbean_dataset.xml"
         };
     }
 

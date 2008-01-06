@@ -365,6 +365,10 @@ public class UserServiceImpl implements UserService {
         user.getProjects().clear();
         userDAO.save(user);
     }
+
+    public List<User> findUsersForProjectByPermissionTypeList(Integer projectID, Integer[] permissionTypes) {
+        return userDAO.findUsersForProjectByAllPermissionTypeList(projectID, permissionTypes);
+    }
     
     public List<User> getUsersWithPermissionLocal(Integer projectId, int permissionType) {
 

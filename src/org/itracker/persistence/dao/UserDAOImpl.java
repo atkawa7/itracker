@@ -1,5 +1,6 @@
 package org.itracker.persistence.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,8 +10,10 @@ import java.util.Set;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.itracker.model.Permission;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
@@ -161,5 +164,64 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
         }
         return permissionsByProjectId;
     }
-    
+
+    public List<User> findUsersForProjectByAllPermissionTypeList(Integer projectID, Integer[] permissionTypes) {
+
+        List<User> users = new ArrayList<User>();
+
+        try {
+
+            DetachedCriteria userCriteria = DetachedCriteria.forClass(User.class);
+            userCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            DetachedCriteria permissionCriteria = userCriteria.createCriteria("permissions");
+            permissionCriteria.add(Restrictions.in("permissionType", permissionTypes));
+            permissionCriteria.add(Restrictions.eq("project.id", projectID));
+
+            List<User> userList = userCriteria.getExecutableCriteria(getSession()).list();
+
+            for (User user : userList) {
+                if( isSamePermission( user.getPermissions(), permissionTypes)) {
+                    users.add(user);
+                }
+            }
+
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+
+        return users;
+
+    }
+
+    private boolean isSamePermission(List<Permission> permissions, Integer[] permissionTypes) {
+
+        boolean retVal = true;
+
+        if( permissions.size() != permissionTypes.length ) {
+            return false;
+        }
+
+        for( int i = 0; i < permissions.size(); i++ ) {
+
+            boolean found = false;
+            Permission permission = permissions.get(i);
+
+            for( int j = 0; j < permissionTypes.length; j++ ) {
+                if( permission.getPermissionType() == permissionTypes[i] ) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if( !found ) {
+                retVal = false;
+                break;
+            }
+
+        }
+
+        return retVal;
+
+    }
+
 }

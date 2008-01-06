@@ -8,7 +8,13 @@
         <column>permission_type</column>
         <column>user_id</column>
         <column>project_id</column>
-     
+
+        <!--
+       User 2
+       PERMISSION_PRODUCT_ADMIN
+       PERMISSION_CREATE
+       PERMISSION_EDIT
+        -->
         <row>
             <value>1</value>
             <value>2006-01-01</value>
@@ -35,6 +41,13 @@
             <value>2</value>
             <value>2</value>
         </row>
+
+        <!--
+        User 3
+        PERMISSION_PRODUCT_ADMIN
+        PERMISSION_CREATE
+        PERMISSION_EDIT
+        -->
           <row>
             <value>4</value>
             <value>2006-01-01</value>

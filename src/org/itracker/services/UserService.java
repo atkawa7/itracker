@@ -69,6 +69,8 @@ public interface UserService {
     public UserPreferences updateUserPreferences(UserPreferences user) throws UserException;       
     
     public void clearOwnedProjects(User user);
+
+    List<User> findUsersForProjectByPermissionTypeList(Integer projectID, Integer[] permissionTypes);
     
     /**
      * This method will call local EJBs to find users with a specific permission.
@@ -317,5 +319,5 @@ public interface UserService {
     public boolean allowPreferenceUpdates(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
     
     public void sendNotification(String login, String email, String baseURL);
-    
+
 }
