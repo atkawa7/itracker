@@ -126,7 +126,7 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
 
         request.setAttribute("pageTitleKey",pageTitleKey); 
         request.setAttribute("pageTitleArg",pageTitleArg); 
-        request.setAttribute("isUpdate",new Boolean(isUpdate)); 
+        request.setAttribute("isUpdate", isUpdate); 
         return mapping.findForward("error");
     }
 

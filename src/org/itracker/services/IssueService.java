@@ -39,8 +39,6 @@ import org.itracker.model.User;
 import org.itracker.model.Version;
 import org.itracker.services.exceptions.IssueSearchException;
 import org.itracker.services.exceptions.ProjectException;
-import org.itracker.services.implementations.IssueServiceImpl;
-
 
 public interface IssueService {
     
@@ -234,7 +232,7 @@ public interface IssueService {
      * @param pimaryOnly only include the primary notifications
      * @param activeOnly only include the notification if the user is currently active (not locked or deleted)
      * @returns an array of NotificationModels
-     * @see IssueServiceImpl#getPrimaryIssueNotifications
+     * @see org.itracker.services.implementations.IssueServiceImpl#getPrimaryIssueNotifications
      */
     boolean removeIssueNotification(Integer notificationId);
     

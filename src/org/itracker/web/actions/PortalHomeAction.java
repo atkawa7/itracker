@@ -92,34 +92,34 @@ public class PortalHomeAction extends ItrackerBaseAction {
 //         set.
                 if(UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_CREATED, hiddenSections)) {
                     createdIssues  = new ArrayList<Issue>();
-                    request.setAttribute("UserUtilities_PREF_HIDE_CREATED",new Boolean(true));
+                    request.setAttribute("UserUtilities_PREF_HIDE_CREATED", Boolean.TRUE);
                 } else {
                     createdIssues = issueService.getIssuesCreatedByUser(currUser.getId());
-                    request.setAttribute("UserUtilities_PREF_HIDE_CREATED",new Boolean(false));
+                    request.setAttribute("UserUtilities_PREF_HIDE_CREATED", Boolean.FALSE);
                 }
                 
                 if(UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_ASSIGNED, hiddenSections)) {
                     ownedIssues = new ArrayList<Issue>();
-                    request.setAttribute("UserUtilities_PREF_HIDE_ASSIGNED",new Boolean(true));
+                    request.setAttribute("UserUtilities_PREF_HIDE_ASSIGNED", Boolean.TRUE);
                 } else {
                     ownedIssues = issueService.getIssuesOwnedByUser(currUser.getId());
-                    request.setAttribute("UserUtilities_PREF_HIDE_ASSIGNED",new Boolean(false));
+                    request.setAttribute("UserUtilities_PREF_HIDE_ASSIGNED", Boolean.FALSE);
                 }
                 
                 if(UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_UNASSIGNED, hiddenSections)) {
                     unassignedIssues = new ArrayList<Issue>();
-                    request.setAttribute("UserUtilities_PREF_HIDE_UNASSIGNED",new Boolean(true));
+                    request.setAttribute("UserUtilities_PREF_HIDE_UNASSIGNED", Boolean.TRUE);
                 } else {
                     unassignedIssues = issueService.getUnassignedIssues();
-                    request.setAttribute("UserUtilities_PREF_HIDE_UNASSIGNED",new Boolean(false));
+                    request.setAttribute("UserUtilities_PREF_HIDE_UNASSIGNED", Boolean.FALSE);
                 }
                 
                 if(UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_WATCHED, hiddenSections)) {
                     watchedIssues = new ArrayList<Issue>();
-                    request.setAttribute("UserUtilities_PREF_HIDE_WATCHED",new Boolean(true));
+                    request.setAttribute("UserUtilities_PREF_HIDE_WATCHED", Boolean.TRUE);
                 } else {
                     watchedIssues = issueService.getIssuesWatchedByUser(currUser.getId());
-                    request.setAttribute("UserUtilities_PREF_HIDE_WATCHED",new Boolean(false));
+                    request.setAttribute("UserUtilities_PREF_HIDE_WATCHED", Boolean.FALSE);
                 }
                 
                 // SORTING ISSUES ACCORDING TO USER PREFS

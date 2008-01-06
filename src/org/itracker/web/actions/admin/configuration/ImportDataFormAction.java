@@ -57,11 +57,11 @@ public class ImportDataFormAction extends ItrackerBaseAction {
             if(importForm == null) {
                 importForm = new ImportForm();
             }
-            importForm.setOptionreuseusers(new Boolean(true));
-            importForm.setOptionreuseprojects(new Boolean(true));
-            importForm.setOptionreuseconfig(new Boolean(true));
-            importForm.setOptionreusefields(new Boolean(true));
-            importForm.setOptioncreatepasswords(new Boolean(true));
+            importForm.setOptionreuseusers(Boolean.TRUE);
+            importForm.setOptionreuseprojects(Boolean.TRUE);
+            importForm.setOptionreuseconfig(Boolean.TRUE);
+            importForm.setOptionreusefields(Boolean.TRUE);
+            importForm.setOptioncreatepasswords(Boolean.TRUE);
 
             request.setAttribute("importForm", importForm);
             saveToken(request);

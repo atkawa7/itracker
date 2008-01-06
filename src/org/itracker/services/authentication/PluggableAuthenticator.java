@@ -24,15 +24,13 @@ import java.util.Map;
 import org.itracker.model.Permission;
 import org.itracker.model.User;
 import org.itracker.services.exceptions.AuthenticatorException;
-import org.itracker.services.util.AuthenticationConstants;
-
 
 /**
   * This interface should be implemented to provide a new authentication module for
   * ITracker.  It provides service to check if a user can be authenticated
   * during a login, and also whether a user self registration is allowed.  A new
   * instance of this object is created for each check.
-  * @see AuthenticationConstants
+  * @see org.itracker.services.util.AuthenticationConstants
   */
 public interface PluggableAuthenticator {
 
