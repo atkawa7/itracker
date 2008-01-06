@@ -11,10 +11,38 @@
     <url>http://www.itracker.org/</url>
 
     <scm>
-      <connection>scm:svn:https://svn.sourceforge.net/svnroot/itracker/itracker/trunk/</connection>
-      <developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/itracker/itracker/trunk/</developerConnection>
-      <url>scm:svn:https://svn.sourceforge.net/svnroot/itracker/itracker/trunk/</url>
+      <connection>scm:svn:https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/trunk/</connection>
+      <developerConnection>scm:svn:https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/trunk/</developerConnection>
+      <url>https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/trunk/</url>
     </scm>
+
+    <issueManagement>
+        <system>SourceForge</system>
+        <url>http://sourceforge.net/tracker/?group_id=54141</url>
+    </issueManagement>
+
+    <mailingLists>
+        <mailingList>
+            <name>itracker Developer List</name>
+            <subscribe>https://lists.sourceforge.net/lists/listinfo/itracker-developer</subscribe>
+            <unsubscribe>https://lists.sourceforge.net/lists/listinfo/itracker-developer</unsubscribe>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=itracker-developer</archive>
+        </mailingList>
+        <mailingList>
+            <name>itracker SVN Commit List</name>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/itracker-commits</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/itracker-commits</unsubscribe>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=itracker-commits</archive>
+        </mailingList>
+    </mailingLists>
+
+    <developers>
+        <developer>
+            <id>clim1219</id>
+            <name>Chris Lim</name>
+            <timezone>GMT +8</timezone>
+        </developer>
+    </developers>
 
     <repositories>
 
@@ -80,7 +108,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate</artifactId>
-            <version>3.1.3</version>
+            <version>3.2.5.ga</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.transaction</groupId>
@@ -456,7 +484,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <configuration>
-                    <templateDirectory>site</templateDirectory>
                     <siteDirectory>site</siteDirectory>
                 </configuration>
             </plugin>
