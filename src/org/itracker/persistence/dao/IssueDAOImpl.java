@@ -172,21 +172,24 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         }
         return issues;
     }
-    
-    public int countByProjectAndLowerStatus(Integer projectId, 
-            int maxExclusiveStatus) {
+
+    public int countByProjectAndLowerStatus(Integer projectId,
+                                            int maxExclusiveStatus) {
+
         final Integer count;
-        
+
         try {
             final Query query = getSession().getNamedQuery(
                     "IssueCountByProjectAndLowerStatusQuery");
             query.setInteger("projectId", projectId);
             query.setInteger("maxExclusiveStatus", maxExclusiveStatus);
-            count = (Integer)query.uniqueResult();
+            count = ((Long) query.uniqueResult()).intValue();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
+
         return count;
+
     }
 
     @SuppressWarnings("unchecked")
