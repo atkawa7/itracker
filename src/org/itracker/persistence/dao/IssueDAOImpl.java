@@ -210,6 +210,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
     }
     
     public int countByProjectAndHigherStatus(Integer projectId, int minStatus) {
+
         final Integer count;
         
         try {
@@ -217,11 +218,13 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
                     "IssueCountByProjectAndHigherStatusQuery");
             query.setInteger("projectId", projectId);
             query.setInteger("minStatus", minStatus);
-            count = (Integer)query.uniqueResult();
+            count = ((Long)query.uniqueResult()).intValue();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
+
         return count;
+
     }
     
     @SuppressWarnings("unchecked")
