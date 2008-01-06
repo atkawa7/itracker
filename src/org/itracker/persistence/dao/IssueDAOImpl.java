@@ -143,17 +143,20 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
     }
     
     public int countByProject(Integer projectId) {
+
         final Integer count;
         
         try {
             final Query query = getSession().getNamedQuery(
                     "IssueCountByProjectQuery");
             query.setInteger("projectId", projectId);
-            count = (Integer)query.uniqueResult();
+            count = ((Long)query.uniqueResult()).intValue();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
+
         return count;
+
     }
     
     @SuppressWarnings("unchecked")

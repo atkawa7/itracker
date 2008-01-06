@@ -37,6 +37,14 @@ public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
         assertEquals(2, issueCount);
     }
 
+    @Test
+    public void testCountByProject() {
+
+        int projectCount = issueDAO.countByProject(2);
+
+        assertEquals(3, projectCount);
+    }
+
     private void assertContainsIssue(Issue issue, List<Issue> issues) {
 
         boolean found = false;
