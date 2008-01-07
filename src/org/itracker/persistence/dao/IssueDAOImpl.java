@@ -145,12 +145,12 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
     public int countByProject(Integer projectId) {
 
         final Integer count;
-        
+
         try {
             final Query query = getSession().getNamedQuery(
                     "IssueCountByProjectQuery");
             query.setInteger("projectId", projectId);
-            count = ((Long)query.uniqueResult()).intValue();
+            count = (Integer)query.uniqueResult();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -158,12 +158,12 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         return count;
 
     }
-    
+
     @SuppressWarnings("unchecked")
-    public List<Issue> findByProjectAndLowerStatus(Integer projectId, 
+    public List<Issue> findByProjectAndLowerStatus(Integer projectId,
             int maxExclusiveStatus) {
         final List<Issue> issues;
-        
+
         try {
             Query query = getSession().getNamedQuery(
                     "IssuesByProjectAndLowerStatusQuery");
@@ -186,7 +186,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
                     "IssueCountByProjectAndLowerStatusQuery");
             query.setInteger("projectId", projectId);
             query.setInteger("maxExclusiveStatus", maxExclusiveStatus);
-            count = ((Long) query.uniqueResult()).intValue();
+            count = (Integer)query.uniqueResult();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -196,10 +196,10 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
     }
 
     @SuppressWarnings("unchecked")
-    public List<Issue> findByProjectAndHigherStatus(Integer projectId, 
+    public List<Issue> findByProjectAndHigherStatus(Integer projectId,
             int status) {
         final List<Issue> issues;
-        
+
         try {
             Query query = getSession().getNamedQuery(
                     "IssuesByProjectAndHigherStatusQuery");
@@ -211,17 +211,17 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         }
         return issues;
     }
-    
+
     public int countByProjectAndHigherStatus(Integer projectId, int minStatus) {
 
         final Integer count;
-        
+
         try {
             final Query query = getSession().getNamedQuery(
                     "IssueCountByProjectAndHigherStatusQuery");
             query.setInteger("projectId", projectId);
             query.setInteger("minStatus", minStatus);
-            count = ((Long)query.uniqueResult()).intValue();
+            count = (Integer)query.uniqueResult();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
