@@ -149,10 +149,11 @@ public class IssueServiceImpl implements IssueService {
 		return issueDAO.findAll();
 	}
 
+	/**
+	 * Added implementation to make proper count of ALL issues, instead select them in a list and return its size
+	 */
 	public int getNumberIssues() {
-		// TODO: use select count(*)
-		Collection<Issue> issues = issueDAO.findAll();
-		return issues.size();
+		return issueDAO.countAllIssues().intValue();
 	}
 
 	public List<Issue> getIssuesCreatedByUser(Integer userId) {
@@ -186,6 +187,7 @@ public class IssueServiceImpl implements IssueService {
 		}
 		return issues;
 	}
+	
 
 	public List<Issue> getIssuesWatchedByUser(Integer userId) {
 		return getIssuesWatchedByUser(userId, true);
@@ -1480,8 +1482,18 @@ public class IssueServiceImpl implements IssueService {
 
 	}
 
+	// TODO implement notifications
 	public void sendNotification(Integer issueId, int type, String baseURL, HashSet<String> addresses,
 			Integer lastModifiedDays) {
+		
+		logger.warn("sendNotification: method not implemented yet!!");
+	
+		
+		Issue issue = issueDAO.findByPrimaryKey(issueId);
+		
+		
+		
+		
 		/*
 		 * try {
 		 * 
@@ -1611,4 +1623,28 @@ public class IssueServiceImpl implements IssueService {
     	return getIssueDAO().query(projectDAO, queryModel, user, userPermissions);    
     }
 
-}
+	public static void setSystemBaseURL(String systemBaseURL) {
+		IssueServiceImpl.systemBaseURL = systemBaseURL;
+	
+	}
+
+	public static String getNotificationFactoryName() {
+		return notificationFactoryName;
+	}
+
+	public static void setNotificationFactoryName(String notificationFactoryName) {
+		IssueServiceImpl.notificationFactoryName = notificationFactoryName;
+	}
+
+	public static String getNotificationQueueName() {
+		return notificationQueueName;
+	}
+
+	public static void setNotificationQueueName(String notificationQueueName) {
+		IssueServiceImpl.notificationQueueName = notificationQueueName;
+	}
+
+	public static String getSystemBaseURL() {
+		return systemBaseURL;
+	}
+}	
