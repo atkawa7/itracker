@@ -3,6 +3,7 @@ package org.itracker.persistence.dao;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,19 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
+    }
+    
+    public Integer countAllIssues() {
+        final Integer count;
+        
+        try {
+            final Query query = getSession().getNamedQuery(
+                    "IssueCountAll");
+            count = (Integer)query.uniqueResult();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return count;
     }
 
     @SuppressWarnings("unchecked")

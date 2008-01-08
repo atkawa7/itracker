@@ -226,6 +226,13 @@ public interface IssueDAO extends BaseDAO<Issue> {
     List<Issue> findByComponent(Integer componentId);
     
     /**
+     * Count all Issues in database
+     * 
+     * @return
+     */
+    Integer countAllIssues();
+    
+    /**
      * Counts the number of issues attached to a component. 
      * 
      * @param componentId ID of the component
