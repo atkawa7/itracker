@@ -155,6 +155,11 @@
     from Issue as issue 
     where issue.project.id = :projectId ]]>
     </query>
+
+    <query name="IssueCountAll"><![CDATA[
+    select count(issue) 
+    from Issue as issue ]]>
+    </query> 
     
     <query name="IssueCountByProjectQuery"><![CDATA[
     select count(issue) 
