@@ -10,7 +10,7 @@
         <param-name>webmaster</param-name>
         <param-value>itracker@itracker.org</param-value>
     </context-param>
-<!-- 
+<!--
     <context-param>
         <param-name>log4jConfigLocation</param-name>
         <param-value>/WEB-INF/log4j.xml</param-value>
@@ -69,7 +69,7 @@
     </filter-mapping>
 
     <!-- Initialize Log4J using log4j.xml in a custom location.
-      -- preferred to use fom classpath to add simplicity
+      - preferred to use fom classpath to add simplicity
     <listener>
         <listener-class>
             org.springframework.web.util.Log4jConfigListener

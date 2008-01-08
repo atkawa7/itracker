@@ -1576,23 +1576,6 @@ public class IssueServiceImpl implements IssueService {
 		return issueAttachmentDAO;
 	}
 
-
-	public static void setNotificationFactoryName(String notificationFactoryName) {
-		IssueServiceImpl.notificationFactoryName = notificationFactoryName;
-	}
-
-
-
-	public static void setNotificationQueueName(String notificationQueueName) {
-		IssueServiceImpl.notificationQueueName = notificationQueueName;
-	}
-
-
-
-	public static void setSystemBaseURL(String systemBaseURL) {
-		IssueServiceImpl.systemBaseURL = systemBaseURL;
-	}
-
 	public long getAllIssueAttachmentSize() {
 		long size;
 
