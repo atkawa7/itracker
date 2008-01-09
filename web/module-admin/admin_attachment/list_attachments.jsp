@@ -52,7 +52,7 @@
     </tr>
 	</c:forEach>
  
-	<c:if test="${!hasAttachements}">
+	<c:if test="${!hasAttachments}">
     <tr><td colspan="8" class="listRowText" align="left"><it:message key="itracker.web.error.noattachments"/></td></tr>
 	</c:if>
 
@@ -63,7 +63,7 @@
     <tr class="listRowUnshaded">
       <td colspan="4"></td>
       <td align="right"><it:message key="itracker.web.attr.total"/>:</td>
-      <td align="right"><fmt:formatNumber value="${sizeOfAllAttachements}"/></td>
+      <td align="right"><fmt:formatNumber value="${sizeOfAllAttachments}"/></td>
       <td align="left"><it:message key="itracker.web.generic.kilobyte"/></td>
       <td></td>
     </tr>

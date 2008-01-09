@@ -58,9 +58,9 @@ public class ListAttachmentsAction extends ItrackerBaseAction {
         request.setAttribute("pageTitleKey", pageTitleKey);
         request.setAttribute("pageTitleArg", pageTitleArg);
 
-        request.setAttribute("sizeOfAllAttachements", sizeOfAllAttachments);
+        request.setAttribute("sizeOfAllAttachments", sizeOfAllAttachments);
         request.setAttribute("ih", issueService);
-        request.setAttribute("hasAttachements", hasAttachments);
+        request.setAttribute("hasAttachments", hasAttachments);
         request.setAttribute("attachments", attachments);
 
         return mapping.findForward("listattachments");

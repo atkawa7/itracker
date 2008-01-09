@@ -3,7 +3,6 @@ package org.itracker.web.actions.admin.attachment;
 import org.apache.struts.action.ActionForward;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.IssueAttachment;
-import org.itracker.model.User;
 import org.itracker.persistence.dao.IssueAttachmentDAO;
 import org.itracker.web.struts.mock.MockActionMapping;
 import org.junit.Test;
@@ -40,11 +39,11 @@ public class ListAttachmentsActionTest extends AbstractDependencyInjectionTest {
         assertEquals("", request.getAttribute("pageTitleArg"));
 
         // TODO: Rename attribute key
-        Long sizeOfAllAttachments = (Long) request.getAttribute("sizeOfAllAttachements");
+        Long sizeOfAllAttachments = (Long) request.getAttribute("sizeOfAllAttachments");
         assertEquals(8L, sizeOfAllAttachments.longValue());
 
         // TODO: Rename attribute key
-        assertTrue((Boolean) request.getAttribute("hasAttachements"));
+        assertTrue((Boolean) request.getAttribute("hasAttachments"));
 
         List attachments = (List) request.getAttribute("attachments");
 
