@@ -14,6 +14,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     <import resource="persistence-context.xml"/>
     <import resource="services-context.xml"/>
 
+    <bean id="itrackerservices-servletcontextutils-init"
+          class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod">
+            <value>org.itracker.web.util.ServletContextUtils.setITrackerServices</value>
+        </property>
+        <property name="arguments" ref="itrackerServices"/>
+    </bean>
+
     <!-- please comment this: -->
 <!--
     <bean id="applicationInitialization" class="org.itracker.core.ApplicationInitialization">

@@ -4,12 +4,16 @@ import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.XmlDataSet;
 import org.dbunit.operation.InsertOperation;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.internal.runners.JUnit4ClassRunner;
 import org.junit.runner.RunWith;
 import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
+import org.springframework.orm.hibernate3.SessionHolder;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -24,6 +28,7 @@ public abstract class AbstractDependencyInjectionTest extends AbstractDependency
     private LocalSessionFactoryBean sessionFactoryBean;
     public ClassLoader classLoader;
     public List dataSets;
+    private SessionFactory sessionFactory;
 
     protected AbstractDependencyInjectionTest() {
         classLoader = getClass().getClassLoader();
@@ -31,6 +36,10 @@ public abstract class AbstractDependencyInjectionTest extends AbstractDependency
 
     @Override
     public void onSetUp() throws Exception {
+
+        sessionFactory = (SessionFactory) applicationContext.getBean("sessionFactory");
+        Session session = sessionFactory.openSession();
+        TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
 
         dataSets = getDataSet();
 
@@ -69,6 +78,7 @@ public abstract class AbstractDependencyInjectionTest extends AbstractDependency
             connection.commit();
         }
 
+        TransactionSynchronizationManager.unbindResource(sessionFactory);
         sessionFactoryBean.destroy();
 
     }
