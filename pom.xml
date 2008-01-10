@@ -8,7 +8,13 @@
     <artifactId>itracker</artifactId>
     <packaging>war</packaging>
     <version>3.0</version>
-    <url>http://www.itracker.org/</url>
+    <url>http://itracker.sourceforge.net/</url>
+    <inceptionYear>2002</inceptionYear>
+
+    <organization>
+        <name>itracker</name>
+        <url>http://itracker.sourceforge.net</url>
+    </organization>
 
     <scm>
       <connection>scm:svn:https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/trunk/</connection>
