@@ -31,8 +31,6 @@ import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.exceptions.UserException;
-import org.itracker.services.util.UserUtilities;
-
 
 public interface UserService {
     
@@ -114,7 +112,7 @@ public interface UserService {
      * @param userId the userId, not login, of the user to add the permissions to
      * @param newPermissions a HashMap containing keys and Permission values as described in the method description.
      * @return true if the operation was successful
-     * @see UserUtilities
+     * @see org.itracker.services.util.UserUtilities
      */
 
     public boolean addUserPermissions( Integer userId, List<Permission> newPermissions);
@@ -128,7 +126,7 @@ public interface UserService {
      * @param userId the userId, not login, of the user to add the permissions to
      * @param newPermissions a HashMap containing keys and Permission values as described in the method description.
      * @return true if the operation was successful
-     * @see UserUtilities
+     * @see org.itracker.services.util.UserUtilities
      */
     
     public boolean setUserPermissions(Integer userId, List<Permission> newPermissions);
@@ -142,7 +140,7 @@ public interface UserService {
      * @param userId the userId, not login, of the user to add the permissions to
      * @param newPermissions a HashMap containing keys and Permission values as described in the method description.
      * @return true if the operation was successful
-     * @see UserUtilities
+     * @see org.itracker.services.util.UserUtilities
      */
     
     public boolean removeUserPermissions(Integer userId, List<Permission> newPermissions);
@@ -173,7 +171,7 @@ public interface UserService {
      * @param model a User representing the user that the permissions should be obtained for
      * @param reqSource the source of the request
      * @return a Map of permission types by project ID
-     * @see UserUtilities#hasPermission
+     * @see org.itracker.services.util.UserUtilities#hasPermission
      */
     public Map<Integer, Set<PermissionType>> getUsersMapOfProjectIdsAndSetOfPermissionTypes(User user, int reqSource);
     

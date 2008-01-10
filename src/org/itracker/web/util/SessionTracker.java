@@ -23,49 +23,48 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 
 
-
 /**
  * What's this for? Please comment!
- * @author ready
  *
+ * @author ready
  */
 public class SessionTracker {
-    
+
     private final Logger logger;
     private Date now;
     private String login;
     private String sessionId;
-    
+
     public SessionTracker() {
         now = new Date();
         this.logger = Logger.getLogger(getClass());
     }
-    
+
     public SessionTracker(String login, String sessionId) {
         this();
         this.login = login;
         this.sessionId = sessionId;
     }
-    
+
     protected void finalize() throws Throwable {
-        if(logger.isDebugEnabled()) {
+        if (logger.isDebugEnabled()) {
             logger.debug("Invalidating SessionManager info for " + this.login);
         }
         SessionManager.invalidateSession(this.login);
     }
-    
+
     public String getSessionId() {
         return sessionId;
     }
-    
+
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
-    
+
     public Date getNow() {
         return now;
     }
-    
+
     public void setNow(Date now) {
         this.now = now;
     }

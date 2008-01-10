@@ -103,20 +103,25 @@ public interface PluggableAuthenticator {
     boolean allowProfileCreation(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
 
     /**
-      * This method should be implemented to determine if the particular user is allowed to perform
-      * profile updates on the system.  This method is used in conjunction with allowPasswordUpdates,
-      * allowPreferenceUpdates, and allowPermissionUpdates to determine what parts of the user's
-      * information is allowed to be updated through ITracker.
-      * @param user a User object that contains the data the user submitted
-      * @param authentication the user's authentication information, if known
-      * @param authType the type of authentication information being provided
-      * @param reqSource the source of the request (eg web, api)
-      * @return a boolean whether the user's core profile information can be updated
-      * @throws AuthenticatorException an exception if an error occurs
-      * @see PluggableAuthenticator#allowPasswordUpdates
-      * @see PluggableAuthenticator#allowPermissionUpdates
-      * @see PluggableAuthenticator#allowPreferenceUpdates
-      */
+     * This method should be implemented to determine if the particular user is
+     * allowed to perform profile updates on the system.  This method is used in
+     * conjunction with allowPasswordUpdates, allowPreferenceUpdates, and
+     * allowPermissionUpdates to determine what parts of the user's information
+     * is allowed to be updated through ITracker.
+     *
+     * @param user a User object that contains the data the user submitted
+     * @param authentication the user's authentication information, if known
+     * @param authType the type of authentication information being provided
+     * @param reqSource the source of the request (eg web, api)
+     *
+     * @return a boolean whether the user's core profile information can be updated
+     *
+     * @throws AuthenticatorException an exception if an error occurs
+     *
+     * @see PluggableAuthenticator#allowPasswordUpdates
+     * @see PluggableAuthenticator#allowPermissionUpdates
+     * @see PluggableAuthenticator#allowPreferenceUpdates
+     */
     boolean allowProfileUpdates(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
 
     /**
