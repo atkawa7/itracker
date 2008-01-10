@@ -1,0 +1,62 @@
+ ------
+ Development Environment Setup
+ ------
+ Chris Lim, christopher.a.lim@gmail.com
+ ------
+ 10 January 2008
+ ------
+
+Development Environment Setup
+
+ This guide explains how to use Maven in Eclipse, IDEA and NetBeans.
+
+ * {{{#Eclipse}Eclipse}}
+
+ * {{{#IDEA}IDEA}}
+
+ * {{{#NetBeans}NetBeans}}
+
+* {Eclipse}
+
+ To generate the Eclipse project files from your POM execute the
+ following command:
+
++----+
+mvn eclipse:eclipse -DdownloadJavadoc=true -DdownloadSources=true
++----+
+
+ This command will create the necessary files for Eclipse development. Including
+ jar dependencies as defined in the POM. For first time opening of the project
+ it has to be imported into the workspace. On the menu bar:
+ select File -> Import -> Existing Projects into Workspace.
+ On succeeding executions of this command no need to import the project, just
+ do a refresh.
+
+ <<Note:>> The workspace location should not the same as in the project location
+ as Eclipse won't function properly.
+
+ Eclipse doesn't automatically know the location of the project jar dependencies.
+ Several errors are displayed on the Problems tab - <<<Unbounded classpath variable>>>.
+ To resolve this the <<<M2_REPO>>> classpath variable has to be defined.
+
+ On the menu bar: select Window -> Preferences. Select Java -> Build Path ->
+ Classpath Variables page. Click on the New button. Specify <<<M2_REPO>>> in the
+ name field and specify the path to the maven repository in the path field. On
+ windows machine this is usually in C:/Documents and Settings/username/.m2.
+ On *nix machine this is on ~/.m2.
+
+ Existing Projects into Workspace). In the latter case the project (directory)
+ should not be located in your workspace, because Eclipse might come into
+ trouble, especially if you want to use Eclipse as the scm client.
+
+* {IDEA}
+
++----+
+mvn idea:idea -DdownloadJavadoc=true -DdownloadSources=true
++----+
+
+ Lorem ipsum...
+
+* {NetBeans}
+
+ Lorem ipsum...
