@@ -57,6 +57,7 @@
         <menu name="Getting Involved">
             <item name="Contribute"/>
             <item name="Development Procedure"/>
+            <item name="Development Environment Setup" href="development_environment_setup.html"/>
         </menu>
 
         <menu name="Support">
@@ -68,7 +69,8 @@
             <item name="Fisheye" target="_blank" href="http://fisheye3.cenqua.com/browse/itracker"/>
         </menu>
 
-        ${reports}
+        <menu ref="reports"/>
+
     </body>
 
 </project>
