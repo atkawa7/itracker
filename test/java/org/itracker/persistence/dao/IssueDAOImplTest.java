@@ -1,14 +1,25 @@
 package org.itracker.persistence.dao;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Issue;
+import org.itracker.model.IssueSearchQuery;
+import org.itracker.model.PermissionType;
+import org.itracker.model.User;
+import org.itracker.services.UserService;
+import org.itracker.services.util.AuthenticationConstants;
 import org.junit.Test;
 
 public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
 
     private IssueDAO issueDAO;
+    private ProjectDAO projectDAO;
+    private UserDAO userDAO;
+    private UserService userService;
 
     @Test
     public void testCountByProjectAndLowerStatus() {
@@ -45,6 +56,25 @@ public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
         assertEquals(3, projectCount);
     }
 
+    @Test
+    public void testQuery() {
+
+        IssueSearchQuery searchQuery = new IssueSearchQuery();
+
+        List<Integer> projectsIDs = new ArrayList<Integer>();
+        projectsIDs.add(2);
+
+        searchQuery.setProjects(projectsIDs);
+
+        User user = userDAO.findByPrimaryKey(2);
+        Map<Integer, Set<PermissionType>> permissions = userService.getUsersMapOfProjectIdsAndSetOfPermissionTypes(user, AuthenticationConstants.REQ_SOURCE_WEB);
+
+        List<Issue> issues = issueDAO.query(projectDAO, searchQuery, user, permissions);
+
+        assertEquals(3, issues.size());
+
+    }
+
     private void assertContainsIssue(Issue issue, List<Issue> issues) {
 
         boolean found = false;
@@ -67,6 +97,11 @@ public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
         super.onSetUp();
 
         issueDAO = (IssueDAO) applicationContext.getBean("issueDAO");
+        projectDAO = (ProjectDAO) applicationContext.getBean("projectDAO");
+        userDAO = (UserDAO) applicationContext.getBean("userDAO");
+
+        userService = (UserService) applicationContext.getBean("userService");
+
     }
 
     protected String[] getDataSetFiles() {
