@@ -371,6 +371,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         <property name="sessionFactory">
             <ref bean="sessionFactory" />
         </property>
+        <property name="projectDAO" ref="projectDAO"/>
     </bean>
 
     <!-- The issue history DAO -->

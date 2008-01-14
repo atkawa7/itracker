@@ -27,6 +27,8 @@ import org.itracker.services.util.IssueUtilities;
  */
 public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDAO {
 
+    private ProjectDAO projectDAO;
+
     public Issue findByPrimaryKey(Integer issueId) {
 
         try {
@@ -491,10 +493,10 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
      * It doens't really make sense for this method to receive projectDAO, it's just a quick
      * fix for the fact that IssueSearchQuery handles ids and not objects
      */
-    public List<Issue> query(ProjectDAO projectDAO,
-                             IssueSearchQuery queryModel,
-                             final User user,
-                             final Map<Integer, Set<PermissionType>> userPermissions) {
+    public List<Issue> query(
+            IssueSearchQuery queryModel,
+            final User user,
+            final Map<Integer, Set<PermissionType>> userPermissions) {
 
         Criteria criteria = getSession().createCriteria(Issue.class);
 
@@ -588,6 +590,14 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
         return sortedList;
 
+    }
+
+    public ProjectDAO getProjectDAO() {
+        return projectDAO;
+    }
+
+    public void setProjectDAO(ProjectDAO projectDAO) {
+        this.projectDAO = projectDAO;
     }
 
 }

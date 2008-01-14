@@ -1596,7 +1596,7 @@ public class IssueServiceImpl implements IssueService {
 	}
 	
     public List<Issue> searchIssues(IssueSearchQuery queryModel, User user, Map<Integer, Set<PermissionType>> userPermissions) throws IssueSearchException {    	
-    	return getIssueDAO().query(projectDAO, queryModel, user, userPermissions);    
+    	return getIssueDAO().query(queryModel, user, userPermissions);
     }
 
 	public static void setSystemBaseURL(String systemBaseURL) {

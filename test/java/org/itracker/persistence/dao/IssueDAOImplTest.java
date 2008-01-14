@@ -17,7 +17,6 @@ import org.junit.Test;
 public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
 
     private IssueDAO issueDAO;
-    private ProjectDAO projectDAO;
     private UserDAO userDAO;
     private UserService userService;
 
@@ -69,7 +68,7 @@ public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
         User user = userDAO.findByPrimaryKey(2);
         Map<Integer, Set<PermissionType>> permissions = userService.getUsersMapOfProjectIdsAndSetOfPermissionTypes(user, AuthenticationConstants.REQ_SOURCE_WEB);
 
-        List<Issue> issues = issueDAO.query(projectDAO, searchQuery, user, permissions);
+        List<Issue> issues = issueDAO.query(searchQuery, user, permissions);
 
         assertEquals(3, issues.size());
 
@@ -97,7 +96,6 @@ public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
         super.onSetUp();
 
         issueDAO = (IssueDAO) applicationContext.getBean("issueDAO");
-        projectDAO = (ProjectDAO) applicationContext.getBean("projectDAO");
         userDAO = (UserDAO) applicationContext.getBean("userDAO");
 
         userService = (UserService) applicationContext.getBean("userService");

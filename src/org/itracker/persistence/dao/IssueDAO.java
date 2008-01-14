@@ -265,7 +265,16 @@ public interface IssueDAO extends BaseDAO<Issue> {
      *         <tt>null</tt> if no issue exists in the project
      */
     Date latestModificationDate(Integer projectId);
-    
-    List query(ProjectDAO projectDAO, IssueSearchQuery queryModel, User user, Map<Integer, Set<PermissionType>> userPermissions);
+
+    /**
+     * Query the list of issues that satisfies the search criteria
+     * specified in <code>queryModel</code>.
+     *
+     * @param queryModel The search criteria.
+     * @param user The currently logged-in user.
+     * @param userPermissions Permissions currently inforced. TODO: We could look this up instead of passing this as parameter.
+     * @return
+     */
+    List<Issue> query(IssueSearchQuery queryModel, User user, Map<Integer, Set<PermissionType>> userPermissions);
 
 }
