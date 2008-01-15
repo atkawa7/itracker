@@ -75,11 +75,11 @@
     </query>
     
     <query name="AttachmentsCountAllQuery"><![CDATA[
-    select count(id) attachment 
-    from IssueAttachment as attachment]]>
+    select count(id) 
+    from IssueAttachment ]]>
     </query>
     <query name="TotalAttachmentsSizeQuery"><![CDATA[
-    select sum(size) attachment 
-    from IssueAttachment as attachment]]>
+    select sum(size)
+    from IssueAttachment ]]>
     </query>
 </hibernate-mapping>
