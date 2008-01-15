@@ -46,8 +46,8 @@ public class AdminHomeAction extends ItrackerBaseAction {
 		  int numberofActiveSesssionsString = SessionManager.getNumActiveSessions();
 		  Integer numberofActiveSesssions = new Integer(numberofActiveSesssionsString);
 		  request.setAttribute("numberofActiveSesssions",numberofActiveSesssions);
-		  Integer allIssueAttachmentsTotalNumber = issueService.getAllIssueAttachments().size();
-		  Long allIssueAttachmentsTotalSize = new Long(issueService.getAllIssueAttachmentSize());
+		  Integer allIssueAttachmentsTotalNumber = issueService.countSystemIssuesAttachments();
+		  Long allIssueAttachmentsTotalSize = new Long(issueService.totalSystemIssuesAttachmentSize());
 		  request.setAttribute("allIssueAttachmentsTotalNumber",allIssueAttachmentsTotalNumber);
 		  request.setAttribute("allIssueAttachmentsTotalSize",allIssueAttachmentsTotalSize);
 		  Locale currLocale = super.getLocale(request);

@@ -1623,4 +1623,12 @@ public class IssueServiceImpl implements IssueService {
 	public static String getSystemBaseURL() {
 		return systemBaseURL;
 	}
+
+	public Integer countSystemIssuesAttachments() {
+		return issueAttachmentDAO.countAll();
+	}
+
+	public Long totalSystemIssuesAttachmentSize() {
+		return issueAttachmentDAO.totalAttachmentsSize();
+	}
 }	

@@ -74,4 +74,12 @@
     where attachment.issue.id = :issueId ]]>
     </query>
     
+    <query name="AttachmentsCountAllQuery"><![CDATA[
+    select count(id) attachment 
+    from IssueAttachment as attachment]]>
+    </query>
+    <query name="TotalAttachmentsSizeQuery"><![CDATA[
+    select sum(size) attachment 
+    from IssueAttachment as attachment]]>
+    </query>
 </hibernate-mapping>

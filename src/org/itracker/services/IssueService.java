@@ -45,7 +45,9 @@ public interface IssueService {
     Issue getIssue(Integer issueId);
     
     List<Issue> getAllIssues();
-    
+
+    Long totalSystemIssuesAttachmentSize();
+    Integer countSystemIssuesAttachments();
     int getNumberIssues();
     
     /**

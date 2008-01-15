@@ -31,7 +31,19 @@ public interface IssueAttachmentDAO extends BaseDAO<IssueAttachment> {
      * @return list of all issue attachments, in unspecified order
      */
     List<IssueAttachment> findAll();
+    /**
+     * Counts all Issue attachments. 
+     * 
+     * @return count of all issue attachments in system
+     */ 
     
+    Integer countAll();
+    /**
+     * Calculates the total Size of attachments in the system. 
+     * 
+     * @return total size of issue attachments
+     */
+    Long totalAttachmentsSize();
     /**
      * Finds all attachments for an Issue. 
      * 
