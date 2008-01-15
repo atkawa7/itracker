@@ -279,7 +279,7 @@
 
         <resources>
             <resource>
-                <directory>src</directory>
+                <directory>resources</directory>
                 <includes>
                     <include>**/**.hbm.xml</include>
                     <include>**/**.properties</include>
@@ -529,6 +529,29 @@
                 </configuration>
             </plugin>
 
+			<plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-eclipse-plugin</artifactId>
+		        <configuration>
+		     	<additionalProjectFacets>
+		            <jst.web>2.4</jst.web>
+		        </additionalProjectFacets>
+		        <additionalProjectnatures>
+		            <projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
+		            <projectnature>org.eclipse.jst.j2ee.web.WebNature</projectnature>
+		            <projectnature>org.eclipse.wst.common.project.facet.core.nature</projectnature>
+		            <projectnature>org.eclipse.wst.common.modulecore.ModuleCoreNature</projectnature>
+		            <projectnature>org.hibernate.eclipse.nature</projectnature>
+				</additionalProjectnatures>
+				<additionalBuildcommands>
+				        <buildcommand>org.eclipse.wst.common.project.facet.core.builder</buildcommand>
+				        <buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
+				        <buildcommand>org.eclipse.wst.validation.validationbuilder</buildcommand>
+				</additionalBuildcommands>
+		          
+		        </configuration>
+		      </plugin>
+      
         </plugins>
 
     </build>
@@ -596,6 +619,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
+
+
 
         </plugins>
 
