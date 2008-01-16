@@ -370,11 +370,8 @@
                                 <hibernatetool destdir="target/generated-sources">
                                     <classpath refid="maven.compile.classpath"/>
 
-                                    <configuration propertyfile="src/main/webapp/WEB-INF/hibernate.properties">
-                                        <fileset dir="src/main/resources/org/itracker/model">
-                                            <include name="*.hbm.xml"/>
-                                        </fileset>
-                                    </configuration>
+                                    <configuration
+                                            configurationfile="src/main/resources/hibernate.cfg.xml"/>
 
                                     <hbm2cfgxml/>
 
