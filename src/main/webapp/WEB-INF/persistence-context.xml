@@ -36,54 +36,18 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
             <value>root</value>
         </property>
         <property name="password">
-            <value>password</value>
+            <value></value>
         </property>
     </bean>
-    
-    <!-- Hibernate session factory -->
+
     <bean id="sessionFactory"
-        class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
-        <property name="dataSource">
-            <ref bean="dataSource" />
-        </property>
-        <property name="hibernateProperties">
-            <ref local="hibernateProperties"/>
-        </property>
-        <property name="mappingResources">
-            <ref local="hibernateMappingsList"/>
-        </property>
-        <property name="entityInterceptor">
-            <ref local="timestampEntityInterceptor"/>
-        </property>
+          class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+        <property name="entityInterceptor" ref="timestampEntityInterceptor"/>
     </bean>
-    
-    <util:properties id="hibernateProperties" 
-            location="/WEB-INF/hibernate.properties"/>
-    
-    <util:list id="hibernateMappingsList">
-        <value>/org/itracker/model/Configuration.hbm.xml</value>        
-        <value>/org/itracker/model/Language.hbm.xml</value>
-        <value>/org/itracker/model/CustomField.hbm.xml</value>
-        <value>/org/itracker/model/CustomFieldValue.hbm.xml</value>
-        <value>/org/itracker/model/User.hbm.xml</value>
-        <value>/org/itracker/model/UserPreferences.hbm.xml</value>
-        <value>/org/itracker/model/Permission.hbm.xml</value>
-        <value>/org/itracker/model/Project.hbm.xml</value>
-        <value>/org/itracker/model/Component.hbm.xml</value>
-        <value>/org/itracker/model/Issue.hbm.xml</value>
-        <value>/org/itracker/model/Version.hbm.xml</value>
-        <value>/org/itracker/model/ProjectScript.hbm.xml</value>
-        <value>/org/itracker/model/WorkflowScript.hbm.xml</value>
-        <value>/org/itracker/model/IssueAttachment.hbm.xml</value>
-        <value>/org/itracker/model/IssueHistory.hbm.xml</value>
-        <value>/org/itracker/model/IssueField.hbm.xml</value>
-        <value>/org/itracker/model/IssueRelation.hbm.xml</value>
-        <value>/org/itracker/model/Notification.hbm.xml</value>
-        <value>/org/itracker/model/IssueActivity.hbm.xml</value>
-        <value>/org/itracker/model/Report.hbm.xml</value>
-    </util:list>
-    
-    <bean id="timestampEntityInterceptor" 
+
+    <bean id="timestampEntityInterceptor"
         class="org.itracker.persistence.dao.TimestampInterceptor"/>
     
     <!-- Hibernate interceptor to manage the session outside any transaction scope. -->
