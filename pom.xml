@@ -273,19 +273,7 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>test/java</testSourceDirectory>
         <finalName>itracker</finalName>
-
-        <resources>
-            <resource>
-                <directory>resources</directory>
-                <includes>
-                    <include>**/**.hbm.xml</include>
-                    <include>**/**.properties</include>
-                </includes>
-            </resource>
-        </resources>
 
         <testResources>
             <testResource>
