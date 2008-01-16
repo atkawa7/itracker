@@ -275,12 +275,6 @@
     <build>
         <finalName>itracker</finalName>
 
-        <testResources>
-            <testResource>
-                <directory>test/resources</directory>
-            </testResource>
-        </testResources>
-
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -321,20 +315,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.0.2-SNAPSHOT</version>
-                <configuration>
-                    <webResources>
-                        <resource>
-                            <directory>src</directory>
-                            <targetPath>WEB-INF/classes</targetPath>
-                            <includes>
-                                <include>*.properties</include>
-                                <include>*.xml</include>
-                                <include>**/*.hbm.xml</include>
-                            </includes>
-                        </resource>
-                    </webResources>
-                </configuration>
             </plugin>
 
             <!-- Used to autodeploy the war file into tomcat -->
@@ -375,8 +355,8 @@
                                 <hibernatetool destdir="target/generated-sources">
                                     <classpath refid="maven.compile.classpath"/>
 
-                                    <configuration propertyfile="web/WEB-INF/hibernate.properties">
-                                        <fileset dir="src/org/itracker/model">
+                                    <configuration propertyfile="src/main/webapp/WEB-INF/hibernate.properties">
+                                        <fileset dir="src/main/resources/org/itracker/model">
                                             <include name="*.hbm.xml"/>
                                         </fileset>
                                     </configuration>
@@ -460,9 +440,6 @@
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
                 <version>6.1.7</version>
-                <configuration>
-                    <webAppSourceDirectory>web</webAppSourceDirectory>
-                </configuration>
             </plugin>
 
             <plugin>
@@ -476,44 +453,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <configuration>
-                    <siteDirectory>site</siteDirectory>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.doxia</groupId>
-                <artifactId>doxia-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>pre-site</phase>
-                        <goals>
-                            <goal>render-books</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <books>
-                        <book>
-                            <directory>site/apt/itracker-roadmap</directory>
-                            <descriptor>site/apt/itracker-roadmap/itracker-roadmap.xml</descriptor>
-                            <formats>
-                                <format>
-                                    <id>latex</id>
-                                </format>
-                                <format>
-                                    <id>xdoc</id>
-                                </format>
-                                <format>
-                                    <id>pdf</id>
-                                </format>
-                                <format>
-                                    <id>rtf</id>
-                                </format>
-                            </formats>
-                        </book>
-                    </books>
-                </configuration>
             </plugin>
 
 			<plugin>
