@@ -23,7 +23,7 @@
             <value>text/xml</value>
             <value>Attachment Description 1</value>
             <value>2048</value>
-            <value>test/resources/attachments/attachment1.xml</value>
+            <value>src/test/resources/attachments/attachment1.xml</value>
             <value>2008-01-01</value>
             <value>2008-01-01</value>
         </row>
@@ -37,7 +37,7 @@
             <value>text/xml</value>
             <value>Attachment Description 2</value>
             <value>2048</value>
-            <value>test/resources/attachments/attachment2.xml</value>
+            <value>src/test/resources/attachments/attachment2.xml</value>
             <value>2008-01-01</value>
             <value>2008-01-01</value>
         </row>
@@ -51,7 +51,7 @@
             <value>text/xml</value>
             <value>Attachment Description 3</value>
             <value>2048</value>
-            <value>test/resources/attachments/attachment3.xml</value>
+            <value>src/test/resources/attachments/attachment3.xml</value>
             <value>2008-01-01</value>
             <value>2008-01-01</value>
         </row>
@@ -65,7 +65,7 @@
             <value>text/xml</value>
             <value>Attachment Description 4</value>
             <value>2048</value>
-            <value>test/resources/attachments/attachment4.xml</value>
+            <value>src/test/resources/attachments/attachment4.xml</value>
             <value>2008-01-01</value>
             <value>2008-01-01</value>
         </row>
