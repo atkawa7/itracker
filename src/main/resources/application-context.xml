@@ -51,7 +51,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     <bean id="applicationOverride"
         class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
         <property name="location">
-            <value>/WEB-INF/application.properties</value>
+            <value>classpath:application.properties</value>
         </property>
     </bean>
 
