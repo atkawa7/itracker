@@ -104,6 +104,12 @@
             <url>http://repository.codehaus.org/</url>
         </pluginRepository>
 
+        <pluginRepository>
+            <id>atlassian-m2-repository</id>
+            <name>Atlassian Maven 2.x Repository</name>
+            <url>http://repository.atlassian.com/maven2</url>
+        </pluginRepository>
+
     </pluginRepositories>
 
     <dependencies>
@@ -426,8 +432,9 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
+                <groupId>com.atlassian.maven.plugins</groupId>
                 <artifactId>maven-clover-plugin</artifactId>
+                <version>3.6</version>
                 <configuration>
                     <licenseLocation>src/test/resources/clover.license</licenseLocation>
                     <jdk>1.5</jdk>
@@ -505,8 +512,9 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
+                <groupId>com.atlassian.maven.plugins</groupId>
                 <artifactId>maven-clover-plugin</artifactId>
+                <version>3.6</version>
             </plugin>
 
             <plugin>
