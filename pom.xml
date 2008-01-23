@@ -57,6 +57,15 @@
             <name>Chris Lim</name>
             <timezone>GMT +8</timezone>
         </developer>
+        <developer>
+            <id>ranks</id>
+            <name>Marco Glur</name>
+            <organizationUrl>http://rosa.com/</organizationUrl>
+            <roles><role>Developer</role></roles>
+            <email>ranks@rosa.com</email>
+            <organization>R.Ø.S.A. Creation. Technology. Intelligence. AG, Zurich</organization>
+            <timezone>1</timezone>
+        </developer>
     </developers>
 
     <repositories>
@@ -469,26 +478,29 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <configuration>
-                    <additionalProjectFacets>
-                        <jst.web>2.4</jst.web>
-                    </additionalProjectFacets>
-                    <additionalProjectnatures>
-                        <projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
-                        <projectnature>org.eclipse.jst.j2ee.web.WebNature</projectnature>
-                        <projectnature>org.eclipse.wst.common.project.facet.core.nature</projectnature>
-                        <projectnature>org.eclipse.wst.common.modulecore.ModuleCoreNature</projectnature>
-                        <projectnature>org.hibernate.eclipse.nature</projectnature>
-                    </additionalProjectnatures>
-                    <additionalBuildcommands>
-                        <buildcommand>org.eclipse.wst.common.project.facet.core.builder</buildcommand>
-                        <buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-eclipse-plugin</artifactId>
+            	<configuration>
+            		<additionalProjectFacets>
+            			<jst.web>2.4</jst.web>
+            			<wstudio.hibernate>3.2</wstudio.hibernate>
+            			<jst.java>5.0</jst.java>
+            		</additionalProjectFacets>
+            		<additionalProjectnatures>
+            			<projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
+            			<projectnature>org.eclipse.wst.common.project.facet.core.nature</projectnature>
+            			<projectnature>org.eclipse.wst.common.modulecore.ModuleCoreNature</projectnature>
+            			<projectnature>org.maven.ide.eclipse.maven2Nature</projectnature>
+            			<projectnature>org.hibernate.eclipse.nature</projectnature>
+            		</additionalProjectnatures>
+            		<additionalBuildcommands>
+            			<buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
+            			<buildcommand>org.eclipse.wst.common.project.facet.core.builder</buildcommand>
                         <buildcommand>org.eclipse.wst.validation.validationbuilder</buildcommand>
-                    </additionalBuildcommands>
+            			<buildcommand>org.maven.ide.eclipse.maven2Builder</buildcommand>
+            		</additionalBuildcommands>
 
-                </configuration>
+            	</configuration>
             </plugin>
 
         </plugins>
