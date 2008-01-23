@@ -248,5 +248,19 @@
         </taglib-->
         
     </jsp-config>
-
+    
+	<!-- reference the itracker context from env-context (java:comp/env) if it's defined
+	     by the container -->
+    <resource-env-ref id="itracker">
+    	<description>reference to itracker-context in naming env from container</description>
+    	<resource-env-ref-name>itracker</resource-env-ref-name>
+    	<resource-env-ref-type>javax.naming.Context</resource-env-ref-type>
+    </resource-env-ref>
+    <!--  Default Value for env-entry, can be overridden by server -->
+	<!-- <env-entry>
+		<env-entry-name>itracker/notification_from_text</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>iTracker Service</env-entry-value>
+	</env-entry>
+	 -->
 </web-app>
