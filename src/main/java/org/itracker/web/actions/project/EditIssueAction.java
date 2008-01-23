@@ -69,9 +69,6 @@ import org.itracker.web.util.Constants;
 
 public class EditIssueAction extends ItrackerBaseAction {
 
-    public EditIssueAction() {
-    }
-
     @SuppressWarnings("unchecked")
     public ActionForward execute(ActionMapping mapping,
                                  ActionForm form,
