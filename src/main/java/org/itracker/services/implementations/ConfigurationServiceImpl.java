@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
+import javax.naming.Context;
+
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
@@ -54,6 +56,7 @@ import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
+import org.itracker.web.util.NamingUtilites;
 
 /**
  * Implementation of the ConfigurationService Interface.
@@ -62,7 +65,8 @@ import org.itracker.services.util.SystemConfigurationUtilities;
  */
 public class ConfigurationServiceImpl implements ConfigurationService {
     
-    private final Logger logger;
+    private static final Logger logger = Logger.getLogger(ConfigurationServiceImpl.class.getName());
+    // TODO make final static?
     private final Properties props;
     private ConfigurationDAO configurationDAO;
     private CustomFieldDAO customFieldDAO;
@@ -70,6 +74,10 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     private LanguageDAO languageDAO;
     private ProjectScriptDAO projectScriptDAO;
     private WorkflowScriptDAO workflowScriptDAO;
+    // TODO make final static?
+    private final Context jndiPropertiesOverride;
+    
+    private static final Long _START_TIME_MILLIS = System.currentTimeMillis();
     
     /**
      * Creates a new instance using the given configuration.
@@ -84,33 +92,75 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         if (configurationProperties == null) {
             throw new IllegalArgumentException("null configurationProperties");
         }
-        this.logger = Logger.getLogger(getClass());
+        Context ctx = null;
         this.props = configurationProperties;
-        props.setProperty("start_time_millis", Long.toString(System.currentTimeMillis()));
+        
+        // initialize naming context prefix for properties overrides
+        String jndiPropertiesOverridePrefix = props.getProperty(
+				"jndi_override_prefix", null);
+		try {
+			if (null != jndiPropertiesOverridePrefix
+					&& jndiPropertiesOverridePrefix.length() > 0) {
+				ctx = NamingUtilites.getDefaultInitialContext();
+				ctx = (Context)NamingUtilites.lookup(ctx, jndiPropertiesOverridePrefix);
+				logger.info("<init>: override properties with jndi override prefix " + jndiPropertiesOverridePrefix);
+				
+
+			}
+		} catch (RuntimeException e) {
+			ctx = null;
+			logger.warn("<init>: failed to configure jndi_override_prefix", e);
+		} finally {
+			if (logger.isDebugEnabled()) {
+				logger.debug("<init>: context for jndi override prefix " + ctx);
+			}
+			jndiPropertiesOverride = ctx;
+		}
+        props.setProperty("start_time_millis", String.valueOf(_START_TIME_MILLIS));
         this.configurationDAO = configurationDAO;
         this.customFieldDAO = customFieldDAO;
         this.customFieldValueDAO = customFieldValueDAO;
         this.languageDAO = languageDAO;
+        
         this.projectScriptDAO = projectScriptDAO;
         this.workflowScriptDAO = workflowScriptDAO;
     }
     
     public String getProperty(String name) {
-        return props.getProperty(name);
+    	String value = null;
+    	if (null != jndiPropertiesOverride) {
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("getProperty: looking up '" + name
+						+ "' from jndi "
+						+ jndiPropertiesOverride.toString());
+			}
+
+			value = NamingUtilites.getStringValue(this.jndiPropertiesOverride,
+					name, null);
+
+
+    	}
+    	
+    	if (null == value) {
+    		value = props.getProperty(name, null);
+    	}
+    	return value;
     }
     
     public String getProperty(String name, String defaultValue) {
-        return props.getProperty(name, defaultValue);
+        String val =  getProperty(name);
+    	return (val == null) ? defaultValue : val;
     }
     
     public boolean getBooleanProperty(String name, boolean defaultValue) {
-        String value = props.getProperty(name);
+        String value = getProperty(name);
         
         return (value == null ? defaultValue : Boolean.valueOf(value));
     }
     
     public int getIntegerProperty(String name, int defaultValue) {
-        String value = props.getProperty(name);
+        String value = getProperty(name);
         
         try {
             return (value == null) ? defaultValue : Integer.parseInt(value);
@@ -121,7 +171,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
     
     public long getLongProperty(String name, long defaultValue) {
-        String value = props.getProperty(name);
+        String value = getProperty(name);
         
         try {
             return (value == null) ? defaultValue : Long.parseLong(value);
@@ -130,9 +180,37 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         }
         
     }
-    
+    /**
+     * returns a proxy to the properties, supplying jndi awareness
+     */
     public Properties getProperties() {
-        return props;
+    	Properties p = new Properties(props) {
+    		
+    		/**
+			 * 
+			 */
+			private static final long serialVersionUID = -9126991683132905153L;
+
+			@Override
+    		public synchronized Object get(Object key) {
+    			if (null != jndiPropertiesOverride) {
+
+					logger.info("get: looking for override for " + key
+							+ " in jndi properties override: "
+							+ jndiPropertiesOverride);
+					Object val = NamingUtilites.lookup(jndiPropertiesOverride,
+							String.valueOf(key));
+					if (null != val) {
+						logger.debug("get: returning " + val);
+						return val;
+					}
+
+				}
+    			logger.debug("get: get value of " + key + " from super");
+    			return super.get(key);
+    		}
+    	};
+        return p;
     }
     
     public Configuration getConfigurationItem(Integer id) {
@@ -642,8 +720,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             try {
                 CustomField customField = customFieldDAO.findByPrimaryKey(customFieldId);
                 if(customFieldValues == null || customFieldValues.size() == 0) {
-                    Collection<CustomFieldValue> currValues = customField.getOptions();
-                    boolean status = currValues.removeAll(currValues);
+                    // Collection<CustomFieldValue> currValues = customField.getOptions();
+                    // boolean status = currValues.removeAll(currValues);
                 } else {
                     for (Iterator<CustomFieldValue> iterator = customFieldValues.iterator(); iterator.hasNext();) {
                         
