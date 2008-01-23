@@ -73,24 +73,31 @@ public class EditIssueAction extends ItrackerBaseAction {
     }
 
     @SuppressWarnings("unchecked")
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public ActionForward execute(ActionMapping mapping,
+                                 ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
+            throws ServletException, IOException {
+
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
-        
-        if(! isLoggedIn(request, response)) {
-        	logger.info("EditIssueAction: Forward: login");
+        super.executeAlways(mapping, form, request, response);
+
+        if (!isLoggedIn(request, response)) {
+            logger.info("EditIssueAction: Forward: login");
             return mapping.findForward("login");
         }
-        if(! isTokenValid(request)) {
+
+        if (!isTokenValid(request)) {
             logger.debug("Invalid request token while editing issue.");
             ProjectService projectService = getITrackerServices().getProjectService();
-            request.setAttribute("projects",projectService.getAllProjects());
-            request.setAttribute("ph",projectService);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.transaction" ) );
-            saveMessages( request, errors ); 	
+            request.setAttribute("projects", projectService.getAllProjects());
+            request.setAttribute("ph", projectService);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.transaction"));
+            saveMessages(request, errors);
             logger.info("EditIssueAction: Forward: listprojects");
             return mapping.findForward("listprojects");
         }
+        
         resetToken(request);
 
         try {
@@ -103,39 +110,40 @@ public class EditIssueAction extends ItrackerBaseAction {
             Integer currUserId = currUser.getId();
 
             Integer issueId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
-            if(issueId == null) {
-            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
-            	logger.info("EditIssueAction: Forward: Error");
+
+            if (issueId == null) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
+                logger.info("EditIssueAction: Forward: Error");
                 return mapping.findForward("error");
             }
 
             int previousStatus = -1;
             Issue issue = issueService.getIssue(issueId);
 
-            if(issue == null || issue.getId() == null || issue.getId() < 0) {
-            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
-            	logger.info("EditIssueAction: Forward: Error");
+            if (issue == null || issue.getId() == null || issue.getId() < 0) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
+                logger.info("EditIssueAction: Forward: Error");
                 return mapping.findForward("error");
             }
 
             Project project = issue.getProject();
-            if(project == null) {
-            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-            	logger.info("EditIssueAction: Forward: Error");
-            	return mapping.findForward("error");
-            } else if(project.getStatus() != Status.ACTIVE) {
-            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
-            	logger.info("EditIssueAction: Forward: Error");
-            	return mapping.findForward("error");
-            } else if(! IssueUtilities.canEditIssue(issue, currUserId, userPermissions)) {
-            	logger.info("EditIssueAction: Forward: unauthorized");
-            	return mapping.findForward("unauthorized");
+            if (project == null) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
+                logger.info("EditIssueAction: Forward: Error");
+                return mapping.findForward("error");
+            } else if (project.getStatus() != Status.ACTIVE) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
+                logger.info("EditIssueAction: Forward: Error");
+                return mapping.findForward("error");
+            } else if (!IssueUtilities.canEditIssue(issue, currUserId, userPermissions)) {
+                logger.info("EditIssueAction: Forward: unauthorized");
+                return mapping.findForward("unauthorized");
             }
 
             List<ProjectScript> scripts = project.getScripts();
             WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, null, errors, (ValidatorForm) form);
 
-            if(UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL)) {
+            if (UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL)) {
                 previousStatus = issue.getStatus();
                 processFullEdit(issue, project, currUser, userPermissions, currLocale, form, issueService);
             } else {
@@ -149,17 +157,17 @@ public class EditIssueAction extends ItrackerBaseAction {
             WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, null, errors, (ValidatorForm) form);
 
             ProjectService projectService = getITrackerServices().getProjectService();
-            request.setAttribute("projects",projectService.getAllProjects());
-            request.setAttribute("ph",projectService);
-            
+            request.setAttribute("projects", projectService.getAllProjects());
+            request.setAttribute("ph", projectService);
+
             return getReturnForward(issue, project, form, mapping);
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
-        if(! errors.isEmpty()) {
-      	    saveMessages(request, errors);
+        if (!errors.isEmpty()) {
+            saveMessages(request, errors);
             saveToken(request);
             return mapping.findForward("editissueform");
         }
@@ -167,7 +175,15 @@ public class EditIssueAction extends ItrackerBaseAction {
         return mapping.findForward("error");
     }
 
-    private void processFullEdit(Issue issue, Project project, User user, Map<Integer, Set<PermissionType>> userPermissions, Locale locale, ActionForm form, IssueService issueService) throws Exception {
+    private void processFullEdit(Issue issue,
+                                 Project project,
+                                 User user,
+                                 Map<Integer, Set<PermissionType>> userPermissions,
+                                 Locale locale,
+                                 ActionForm form,
+                                 IssueService issueService)
+            throws Exception {
+
         int previousStatus = issue.getStatus();
 
         issue.setDescription((String) PropertyUtils.getSimpleProperty(form, "description"));
@@ -175,59 +191,63 @@ public class EditIssueAction extends ItrackerBaseAction {
         issue.setSeverity(((Integer) PropertyUtils.getSimpleProperty(form, "severity")).intValue());
 
         Integer targetVersionId = (Integer) PropertyUtils.getSimpleProperty(form, "targetVersion");
-        if(targetVersionId != null && targetVersionId.intValue() != -1) {
+
+        if (targetVersionId != null && targetVersionId.intValue() != -1) {
             ProjectService projectService = getITrackerServices().getProjectService();
             Version targetVersion = projectService.getProjectVersion(targetVersionId);
-            
+
             if (targetVersion == null) {
                 throw new RuntimeException("No version with Id " + targetVersionId);
             }
+
             issue.setTargetVersion(targetVersion);
         }
 
         Integer formStatus = (Integer) PropertyUtils.getSimpleProperty(form, "status");
-        if(formStatus != null) {
+        if (formStatus != null) {
             issue.setStatus(formStatus.intValue());
         }
 
-        if(previousStatus != -1) {
+        if (previousStatus != -1) {
             // Reopened the issue.  Reset the resolution field.
-            if((issue.getStatus() >= IssueUtilities.STATUS_ASSIGNED && issue.getStatus() < IssueUtilities.STATUS_RESOLVED) &&
-               (previousStatus >= IssueUtilities.STATUS_RESOLVED && previousStatus < IssueUtilities.STATUS_END)) {
+            if ((issue.getStatus() >= IssueUtilities.STATUS_ASSIGNED && issue.getStatus() < IssueUtilities.STATUS_RESOLVED) &&
+                    (previousStatus >= IssueUtilities.STATUS_RESOLVED && previousStatus < IssueUtilities.STATUS_END)) {
                 issue.setResolution("");
             }
 
-            if(issue.getStatus() >= IssueUtilities.STATUS_CLOSED && ! UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
-                if(previousStatus < IssueUtilities.STATUS_CLOSED) {
+            if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED && !UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
+                if (previousStatus < IssueUtilities.STATUS_CLOSED) {
                     issue.setStatus(previousStatus);
                 } else {
                     issue.setStatus(IssueUtilities.STATUS_RESOLVED);
                 }
             }
 
-            if(issue.getStatus() < IssueUtilities.STATUS_NEW || issue.getStatus() >= IssueUtilities.STATUS_END) {
+            if (issue.getStatus() < IssueUtilities.STATUS_NEW || issue.getStatus() >= IssueUtilities.STATUS_END) {
                 issue.setStatus(previousStatus);
             }
-        } else if(issue.getStatus() >= IssueUtilities.STATUS_CLOSED && ! UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
+
+        } else if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED && !UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
             issue.setStatus(IssueUtilities.STATUS_RESOLVED);
         }
 
-        if(issue.getStatus() < IssueUtilities.STATUS_NEW) {
+        if (issue.getStatus() < IssueUtilities.STATUS_NEW) {
             issue.setStatus(IssueUtilities.STATUS_NEW);
-        } else if(issue.getStatus() >= IssueUtilities.STATUS_END) {
-            if(! UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
+        } else if (issue.getStatus() >= IssueUtilities.STATUS_END) {
+            if (!UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
                 issue.setStatus(IssueUtilities.STATUS_RESOLVED);
             } else {
                 issue.setStatus(IssueUtilities.STATUS_CLOSED);
             }
         }
+
         issue.setFields(issue.getFields());
         issue.setOwner(issue.getOwner());
         issue.setHistory(issue.getHistory());
         issue.setAttachments(issue.getAttachments());
-        
+
         issue = issueService.updateIssue(issue, user.getId());
-        
+
         if (issue != null) {
             setIssueFields(issue, user, locale, form, issueService);
             setOwner(issue, user, userPermissions, form, issueService);
@@ -235,16 +255,18 @@ public class EditIssueAction extends ItrackerBaseAction {
 
             HashSet<Integer> components = new HashSet<Integer>();
             Integer[] componentIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "components");
-            if(componentIds != null) {
-                for(int i = 0; i < componentIds.length; i++) {
+            if (componentIds != null) {
+                for (int i = 0; i < componentIds.length; i++) {
                     components.add(componentIds[i]);
                 }
+
                 issueService.setIssueComponents(issue.getId(), components, user.getId());
             }
+
             HashSet<Integer> versions = new HashSet<Integer>();
             Integer[] versionIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "versions");
-            if(versionIds != null) {
-                for(int i = 0; i < versionIds.length; i++) {
+            if (versionIds != null) {
+                for (int i = 0; i < versionIds.length; i++) {
                     versions.add(versionIds[i]);
                 }
                 issueService.setIssueVersions(issue.getId(), versions, user.getId());
@@ -252,16 +274,25 @@ public class EditIssueAction extends ItrackerBaseAction {
 
             addAttachment(issue, project, user, form, issueService);
         }
+
     }
 
-    private void processLimitedEdit(Issue issue, Project project, User user, Map<Integer, Set<PermissionType>> userPermissionsMap, Locale locale, ActionForm form, IssueService issueService) throws Exception {
+    private void processLimitedEdit(Issue issue,
+                                    Project project,
+                                    User user,
+                                    Map<Integer, Set<PermissionType>> userPermissionsMap,
+                                    Locale locale,
+                                    ActionForm form,
+                                    IssueService issueService)
+            throws Exception {
+
         issue.setDescription((String) PropertyUtils.getSimpleProperty(form, "description"));
 
         Integer formStatus = (Integer) PropertyUtils.getSimpleProperty(form, "status");
-        if(formStatus != null) {
+        if (formStatus != null) {
             int newStatus = formStatus.intValue();
-            if(issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && newStatus >= IssueUtilities.STATUS_CLOSED &&
-               UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_CLOSE)) {
+            if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && newStatus >= IssueUtilities.STATUS_CLOSED &&
+                    UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_CLOSE)) {
                 issue.setStatus(newStatus);
             }
         }
@@ -274,58 +305,72 @@ public class EditIssueAction extends ItrackerBaseAction {
         addAttachment(issue, project, user, form, issueService);
     }
 
-    private void setOwner(Issue issue, User user, Map<Integer, Set<PermissionType>> userPermissionsMap, ActionForm form, IssueService issueService) throws Exception {
+    private void setOwner(Issue issue,
+                          User user,
+                          Map<Integer, Set<PermissionType>> userPermissionsMap,
+                          ActionForm form,
+                          IssueService issueService)
+            throws Exception {
+
         Integer currentOwner = (issue.getOwner() == null) ? null : issue.getOwner().getId();
         Integer ownerId = (Integer) PropertyUtils.getSimpleProperty(form, "ownerId");
-        
-        if(ownerId != null && !ownerId.equals(currentOwner)) {
-            if(UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_ASSIGN_OTHERS) ||
-               (UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_ASSIGN_SELF) && user.getId().equals(ownerId)) ||
-               (UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_UNASSIGN_SELF) && user.getId().equals(currentOwner) && ownerId.intValue() == -1)
-              ) {
+
+        if (ownerId != null && !ownerId.equals(currentOwner)) {
+            if (UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_ASSIGN_OTHERS) ||
+                    (UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_ASSIGN_SELF) && user.getId().equals(ownerId)) ||
+                    (UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_UNASSIGN_SELF) && user.getId().equals(currentOwner) && ownerId.intValue() == -1)
+                    ) {
                 issueService.assignIssue(issue.getId(), ownerId, user.getId());
             }
         }
     }
 
     @SuppressWarnings("unchecked")
-	private void setIssueFields(Issue issue, User user, Locale locale, ActionForm form, IssueService issueService) throws Exception {
-        
+    private void setIssueFields(Issue issue,
+                                User user,
+                                Locale locale,
+                                ActionForm form,
+                                IssueService issueService)
+            throws Exception {
+
         List<CustomField> projectFields = issue.getProject().getCustomFields();
 
-        if(projectFields != null && projectFields.size() > 0) {
+        if (projectFields != null && projectFields.size() > 0) {
             List<IssueField> issueFields = new ArrayList<IssueField>();
             // here you see some of the ugly side of Struts 1.3 - the forms... they can only contain Strings and some simple objects types...
-            HashMap<String,String> customFields = (HashMap<String,String>) PropertyUtils.getSimpleProperty(form, "customFields");
-            if(customFields != null && customFields.size() > 0) {
+            HashMap<String, String> customFields = (HashMap<String, String>) PropertyUtils.getSimpleProperty(form, "customFields");
+            if (customFields != null && customFields.size() > 0) {
 //                List<IssueField> issueFieldsList = new ArrayList<IssueField>();
                 ResourceBundle bundle = ITrackerResources.getBundle(locale);
                 List<IssueField> issueFieldsList = issue.getFields();
-                for(int i = 0; i < projectFields.size(); i++) {
+                for (int i = 0; i < projectFields.size(); i++) {
 //                for(Iterator iter = customFields.keySet().iterator(); iter.hasNext(); ) {
+
                     try {
 //                        Integer fieldId = projectFields.get(i).getId();
                         CustomField field = projectFields.get(i);
-                        String fieldValue = (String) customFields.get(String.valueOf(projectFields.get(i).getId()));                
+                        String fieldValue = (String) customFields.get(String.valueOf(projectFields.get(i).getId()));
 //                        String fieldValue = (String) PropertyUtils.getMappedProperty(form, "customFields(" + fieldId + ")");
-                        if(fieldValue != null && ! fieldValue.equals("")) {
+
+                        if (fieldValue != null && !fieldValue.equals("")) {
                             IssueField issueField = new IssueField(issue, field);
                             int idx = -1;
-                            for ( int j = 0; j < issueFieldsList.size(); j++ ){
-                                if ( issueFieldsList.get(j).getIssue().getId() == issue.getId() && issueFieldsList.get(j).getCustomField().getId() == projectFields.get(i).getId() )  {
+                            for (int j = 0; j < issueFieldsList.size(); j++) {
+                                if (issueFieldsList.get(j).getIssue().getId() == issue.getId() && issueFieldsList.get(j).getCustomField().getId() == projectFields.get(i).getId()) {
                                     issueField = issueFieldsList.get(j);
                                     idx = j;
                                     break;
                                 }
                             }
+
                             issueField.setValue(fieldValue, locale, bundle);
-                            if ( idx > -1 ) {
-                                issueFieldsList.set(idx,issueField);
+                            if (idx > -1) {
+                                issueFieldsList.set(idx, issueField);
                             } else {
                                 issueFieldsList.add(issueField);
                             }
                         }
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                     }
                 }
 //                issueFields = new ArrayList<IssueField>(issueFieldsList);
@@ -335,66 +380,102 @@ public class EditIssueAction extends ItrackerBaseAction {
         }
     }
 
-    private void addHistoryEntry(Issue issue, User user, ActionForm form, IssueService issueService) throws Exception {
+    private void addHistoryEntry(Issue issue,
+                                 User user,
+                                 ActionForm form,
+                                 IssueService issueService)
+            throws Exception {
+
         String history = (String) PropertyUtils.getSimpleProperty(form, "history");
-        if(history != null && ! history.equals("")) {
-            IssueHistory issueHistory = new IssueHistory(issue, user, history, 
+
+        if (history != null && !history.equals("")) {
+            IssueHistory issueHistory = new IssueHistory(issue, user, history,
                     IssueUtilities.HISTORY_STATUS_AVAILABLE);
-            issueHistory.setDescription(((IssueForm)form).getHistory());
+            issueHistory.setDescription(((IssueForm) form).getHistory());
             issueHistory.setCreateDate(new Date());
-            if (issueHistory.getLastModifiedDate()==null) {
-            	issueHistory.setLastModifiedDate(new Date());
+            if (issueHistory.getLastModifiedDate() == null) {
+                issueHistory.setLastModifiedDate(new Date());
             }
+            
             issueService.addIssueHistory(issueHistory);
+
         }
+
     }
 
-    private void addAttachment(Issue issue, Project project, User user, ActionForm form, IssueService issueService) throws Exception {
-        if(! ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, project.getOptions())) {
+    private void addAttachment(Issue issue,
+                               Project project,
+                               User user,
+                               ActionForm form,
+                               IssueService issueService)
+            throws Exception {
+
+        if (!ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, project.getOptions())) {
+
             FormFile file = (FormFile) PropertyUtils.getSimpleProperty(form, "attachment");
-            if(file != null && ! "".equals(file.getFileName())) {
+
+            if (file != null && !"".equals(file.getFileName())) {
                 String origFileName = file.getFileName();
                 String contentType = file.getContentType();
                 int fileSize = file.getFileSize();
                 String attachmentDescription = (String) PropertyUtils.getSimpleProperty(form, "attachmentDescription");
 //                int numAttachments = issueService.getIssueAttachmentCount(issue.getId()) + 1;
 //                String filename = "proj" + project.getId() + "_issue" + issue.getId() + "_attachment" + numAttachments;
-                if(AttachmentUtilities.checkFile(file, this.getITrackerServices())) {
+
+                if (AttachmentUtilities.checkFile(file, this.getITrackerServices())) {
                     int lastSlash = Math.max(origFileName.lastIndexOf('/'), origFileName.lastIndexOf('\\'));
-                    if(lastSlash > -1) {
+                    if (lastSlash > -1) {
                         origFileName = origFileName.substring(lastSlash + 1);
                     }
+
                     IssueAttachment attachmentModel = new IssueAttachment(issue, origFileName,
-                                                                                    contentType,
-                                                                                    attachmentDescription,
-                                                                                    fileSize,
-                                                                                    user);
+                            contentType,
+                            attachmentDescription,
+                            fileSize,
+                            user);
+
                     issueService.addIssueAttachment(attachmentModel, file.getFileData());
+
                 }
+
             }
+
         }
+
     }
 
-    private void sendNotification(Issue issue, int previousStatus, String baseURL, IssueService issueService) {
+    private void sendNotification(Issue issue,
+                                  int previousStatus,
+                                  String baseURL,
+                                  IssueService issueService) {
+
         int notificationType = NotificationUtilities.TYPE_UPDATED;
-        if(previousStatus >= IssueUtilities.STATUS_CLOSED && issue.getStatus() >= IssueUtilities.STATUS_CLOSED) {
+
+        if (previousStatus >= IssueUtilities.STATUS_CLOSED && issue.getStatus() >= IssueUtilities.STATUS_CLOSED) {
             notificationType = NotificationUtilities.TYPE_CLOSED;
         }
+
         issueService.sendNotification(issue.getId(), notificationType, baseURL);
     }
 
-    private ActionForward getReturnForward(Issue issue, Project project, ActionForm form, ActionMapping mapping) throws Exception {
-        if("index".equals((String) PropertyUtils.getSimpleProperty(form, "caller"))) {
-        	logger.info("EditIssueAction: Forward: index");
+    private ActionForward getReturnForward(Issue issue,
+                                           Project project,
+                                           ActionForm form,
+                                           ActionMapping mapping)
+            throws Exception {
+
+        if ("index".equals((String) PropertyUtils.getSimpleProperty(form, "caller"))) {
+            logger.info("EditIssueAction: Forward: index");
             return mapping.findForward("index");
-        } else if("viewissue".equals((String) PropertyUtils.getSimpleProperty(form, "caller"))) {
-        	logger.info("EditIssueAction: Forward: viewissue");
-        	return new ActionForward(mapping.findForward("viewissue").getPath() + "?id=" + issue.getId());
+        } else if ("viewissue".equals((String) PropertyUtils.getSimpleProperty(form, "caller"))) {
+            logger.info("EditIssueAction: Forward: viewissue");
+            return new ActionForward(mapping.findForward("viewissue").getPath() + "?id=" + issue.getId());
         } else {
-        	logger.info("EditIssueAction: Forward: listissues");
+            logger.info("EditIssueAction: Forward: listissues");
             return new ActionForward(mapping.findForward("listissues").getPath() + "?projectId=" + project.getId());
         }
+
     }
 
+
 }
-  
