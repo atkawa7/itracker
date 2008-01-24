@@ -26,6 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -44,7 +45,8 @@ import org.itracker.web.forms.ConfigurationForm;
 
 
 public class EditConfigurationFormAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditConfigurationFormAction.class);
+	
     public EditConfigurationFormAction() {
     }
 
@@ -107,7 +109,7 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
         	errors.add(ActionMessages.GLOBAL_MESSAGE, 
                         new ActionMessage("itracker.web.error.invalidconfiguration"));
         } catch(Exception e) {
-            logger.error("Exception while creating edit configuration form.", e);
+            log.error("Exception while creating edit configuration form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, 
                     new ActionMessage("itracker.web.error.system"));
         }

@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -46,15 +47,15 @@ import org.itracker.services.IssueService;
 import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
+import org.itracker.web.actions.admin.attachment.DownloadAttachmentAction;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 
 
 public class EditConfigurationAction extends ItrackerBaseAction {
 
-    public EditConfigurationAction() {
-    	
-    }
+	private static final Logger log = Logger.getLogger(EditConfigurationAction.class);
+	
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
@@ -63,7 +64,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
             return mapping.findForward("login");
         }
         if(! isTokenValid(request)) {
-            logger.debug("Invalid request token while editing configuration.");
+            log.debug("Invalid request token while editing configuration.");
             return mapping.findForward("listconfiguration");
         }
         resetToken(request);
@@ -98,7 +99,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                         configItem = new Configuration(SystemConfigurationUtilities.TYPE_RESOLUTION, Integer.toString(++value), version, ++order);
                     }
                 } catch(NumberFormatException nfe) {
-                    logger.debug("Found invalid value or order for a resolution.", nfe);
+                    log.debug("Found invalid value or order for a resolution.", nfe);
                     throw new SystemConfigurationException("Found invalid value or order for a resolution.");
                 }
             } else if("createseverity".equals(action)) {
@@ -116,7 +117,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                         configItem = new Configuration(SystemConfigurationUtilities.TYPE_SEVERITY, Integer.toString(++value), version, ++order);
                     }
                 } catch(NumberFormatException nfe) {
-                    logger.debug("Found invalid value or order for a severity.", nfe);
+                    log.debug("Found invalid value or order for a severity.", nfe);
                     throw new SystemConfigurationException("Found invalid value or order for a severity.");
                 }
             } else if("createstatus".equals(action)) {
@@ -159,7 +160,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                             // set new value
                             configItem.setValue( formValue.trim() );
                             
-                            logger.debug("Changing issue status values from " + configItem.getValue() + " to " + formValue);
+                            log.debug("Changing issue status values from " + configItem.getValue() + " to " + formValue);
 
                             User currUser = (User) session.getAttribute(Constants.USER_KEY);
                             Integer currUserId = (currUser == null ? new Integer(-1) : currUser.getId());
@@ -203,14 +204,16 @@ public class EditConfigurationAction extends ItrackerBaseAction {
 
 
             String key = SystemConfigurationUtilities.getLanguageKey(configItem);
-            logger.debug("Processing translations for configuration item " + configItem.getId() + " with key " + key);
+            log.debug("Processing translations for configuration item " + configItem.getId() + " with key " + key);
             if(translations != null && key != null && ! key.equals("")) {
-                for(Iterator iter = translations.keySet().iterator(); iter.hasNext(); ) {
-                    String locale = (String) iter.next();
+            	String locale, translation;
+            	Iterator iter = translations.keySet().iterator();
+                while (iter.hasNext()) {
+                    locale = (String) iter.next();
                     if(locale != null) {
-                        String translation = (String) translations.get(locale);
+                        translation = (String) translations.get(locale);
                         if(translation != null && ! translation.equals("")) {
-                            logger.debug("Adding new translation for locale " + locale + " for " + configItem);
+                            log.debug("Adding new translation for locale " + locale + " for " + configItem);
                             configurationService.updateLanguageItem(new Language(locale, key, translation));
                         }
                     }
@@ -254,10 +257,10 @@ public class EditConfigurationAction extends ItrackerBaseAction {
             request.setAttribute("pageTitleArg",pageTitleArg); 
             return mapping.findForward("listconfiguration");
         } catch(SystemConfigurationException sce) {
-            logger.error("Exception processing form data: " + sce.getMessage(), sce);
+            log.error("Exception processing form data: " + sce.getMessage(), sce);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(sce.getKey()));
         } catch(Exception e) {
-            logger.error("Exception processing form data", e);
+            log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

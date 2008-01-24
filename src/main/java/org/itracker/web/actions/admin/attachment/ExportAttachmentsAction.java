@@ -28,6 +28,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -41,10 +42,8 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 
 public class ExportAttachmentsAction extends ItrackerBaseAction {
-
-    public ExportAttachmentsAction () {
-    }
-
+	private static final Logger log = Logger.getLogger(DownloadAttachmentAction.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         super.executeAlways(mapping,form,request,response);
@@ -66,7 +65,7 @@ public class ExportAttachmentsAction extends ItrackerBaseAction {
                 ZipOutputStream zipOut = new ZipOutputStream(out);
                 try {
                     for(int i = 0; i < attachments.size(); i++) {
-                        logger.debug("Attempting export for: " + attachments.get(i));
+                        log.debug("Attempting export for: " + attachments.get(i));
                         byte[] attachmentData = issueService.getIssueAttachmentData(attachments.get(i).getId());
                         if(attachmentData.length > 0) {
                             ZipEntry zipEntry = new ZipEntry(attachments.get(i).getFileName());
@@ -81,13 +80,13 @@ public class ExportAttachmentsAction extends ItrackerBaseAction {
                     out.flush();
                     out.close();
                 } catch(Exception e) {
-                    logger.error("Exception while exporting attachments.", e);
+                    log.error("Exception while exporting attachments.", e);
                 }
                 return null;
             }
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noattachments"));
         } catch(Exception e) {
-            logger.error("Exception while exporting attachments.", e);
+            log.error("Exception while exporting attachments.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

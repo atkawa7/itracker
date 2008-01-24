@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -42,11 +43,13 @@ import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
+import org.itracker.web.actions.admin.attachment.DownloadAttachmentAction;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.CustomFieldForm;
 
 public class EditCustomFieldAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditCustomFieldAction.class);
+	
     public EditCustomFieldAction() {
     }
 
@@ -58,7 +61,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             return mapping.findForward("login");
         }
         if(! isTokenValid(request)) {
-            logger.debug("Invalid request token while editing configuration.");
+            log.debug("Invalid request token while editing configuration.");
             return mapping.findForward("listconfiguration");
         }
         resetToken(request);
@@ -106,14 +109,14 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
 
             HashMap<String,String> translations = (HashMap<String,String>) PropertyUtils.getSimpleProperty(form, "translations");
             String key = CustomFieldUtilities.getCustomFieldLabelKey(customField.getId());
-            logger.debug("Processing label translations for custom field " + customField.getId() + " with key " + key);
+            log.debug("Processing label translations for custom field " + customField.getId() + " with key " + key);
             if(translations != null && key != null && ! key.equals("")) {
                 for(Iterator iter = translations.keySet().iterator(); iter.hasNext(); ) {
                     String locale = (String) iter.next();
                     if(locale != null) {
                         String translation = (String) translations.get(locale);
                         if(translation != null && ! translation.equals("")) {
-                            logger.debug("Adding new translation for locale " + locale + " for " + String.valueOf(customField.getId()));
+                            log.debug("Adding new translation for locale " + locale + " for " + String.valueOf(customField.getId()));
                             configurationService.updateLanguageItem(new Language(locale, key, translation));
                         }
                     }
@@ -140,10 +143,10 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             }
             return mapping.findForward("listconfiguration");
         } catch(SystemConfigurationException sce) {
-            logger.error("Exception processing form data: " + sce.getMessage(), sce);
+            log.error("Exception processing form data: " + sce.getMessage(), sce);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(sce.getKey()));
         } catch(Exception e) {
-            logger.error("Exception processing form data", e);
+            log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
