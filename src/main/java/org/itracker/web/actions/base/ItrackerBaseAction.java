@@ -21,7 +21,6 @@ package org.itracker.web.actions.base;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -73,7 +72,13 @@ import org.itracker.web.util.SessionManager;
  */
 public abstract class ItrackerBaseAction extends Action {
     
+	// TODO remove protected logger
+	/**
+	 * @deprecated use own logger for each class
+	 */
     protected final Logger logger;
+    
+    private static final Logger log = Logger.getLogger(ItrackerBaseAction.class);
     private boolean allowSaveLogin = true;
     private String name = Constants.USER_KEY;
     private String page = "/login.do";
@@ -81,7 +86,9 @@ public abstract class ItrackerBaseAction extends Action {
     private Locale currLocale;
     
     public ItrackerBaseAction() {
-        this.logger = Logger.getLogger(getClass().getName());
+    	super();
+    	// TODO clean up
+        this.logger = log; //Logger.getLogger(getClass().getName());
     }
     
     public void executeAlways(ActionMapping mapping,
@@ -90,11 +97,11 @@ public abstract class ItrackerBaseAction extends Action {
             HttpServletResponse response)
             throws ServletException, IOException {
         
-        if (logger.isDebugEnabled()) {
-            logger.debug("Executing Action : " + getClass().getName());
+        if (log.isDebugEnabled()) {
+            log.debug("Executing Action : " + getClass().getName());
         }
         
-        logger.info("pageInit: setting the common request attributes, (coming from the former header.jsp)");
+        log.info("pageInit: setting the common request attributes, (coming from the former header.jsp)");
         boolean allowForgotPassword = true;
         boolean allowSelfRegister = false;
         boolean allowSaveLogin = true;
@@ -120,7 +127,6 @@ public abstract class ItrackerBaseAction extends Action {
         currLocale = LoginUtilities.getCurrentLocale(request);
         String currLogin = (currUser == null ? null : currUser.getLogin());
         // now these are put into the request scope... (new).
-        logger.info("Putting currUser, Permissions, currLocal, currLogin into the Request scope.");
         request.setAttribute("baseURL",baseURL);
         request.getSession().setAttribute("currUser",currUser);
         request.setAttribute("permissions",permissions);
@@ -217,13 +223,13 @@ public abstract class ItrackerBaseAction extends Action {
         forward = thisactionforward;
         boolean hasGlobalPermission;
         
-        logger.info("Starting loginRouter (formerly Checklogin tag) proceedure...");
+        log.info("Starting loginRouter (formerly Checklogin tag) proceedure...");
         ConfigurationService configurationService = getITrackerServices().getConfigurationService();
         allowSaveLogin = configurationService.getBooleanProperty("allow_save_login", true);
         
         String requestPath = request.getRequestURI();
         String redirectURL = request.getRequestURI().substring(request.getContextPath().length()) + (request.getQueryString() != null ? "?" + request.getQueryString() : "");
-        logger.info("Setting redirectURL = "+redirectURL);
+        log.info("Setting redirectURL = "+redirectURL);
         
         HttpSession session = request.getSession();
         
@@ -231,7 +237,7 @@ public abstract class ItrackerBaseAction extends Action {
             
             // IF NO SESSION IS ACTIVE, THEN DO A REDIRECT (TO THE CURRENT PAGE?)...
             if(session == null) {
-                logger.info("No session found, preparing for redirect (not yet implemented");
+            	log.info("No session found, preparing for redirect (not yet implemented");
                 //pageContext.setAttribute("redirect", URLEncoder.encode(redirectURL));
                 request.setAttribute(Constants.AUTH_REDIRECT_KEY, redirectURL);
                 // pageContext.forward(getPage());
@@ -240,26 +246,26 @@ public abstract class ItrackerBaseAction extends Action {
             }
             
             // GET USER, LOGIN AND PERMISSIONS FROM SESSION
-            logger.info("Get user, login and permissions from session, if available there.");
+            log.info("Get user, login and permissions from session, if available there.");
             User user = (User) session.getAttribute(Constants.USER_KEY);
             if (user!=null) {
-                logger.info("Found User:" +user.getFirstName()+" "+user.getLastName()+" in Session.");
+            	log.info("Found User:" +user.getFirstName()+" "+user.getLastName()+" in Session.");
             }
             String login = (user == null ? null : user.getLogin());
             if (login!=null) {
-                logger.info("Found Login:" +login+" in Session.");
+            	log.info("Found Login:" +login+" in Session.");
             }
             Map<Integer, Set<PermissionType>> permissionsMap = getUserPermissions(session);
             if (permissionsMap != null) {
-                logger.info("Found Permissions:" + permissionsMap + " in Session.");
+            	log.info("Found Permissions:" + permissionsMap + " in Session.");
             }
             
             // IF THERE IS NO LOGIN, THEN WHAT? THEN TRY A AUTOLOGIN?
-            logger.info("Checkin if login in not null or empty");
+            log.info("Checkin if login in not null or empty");
             if(login == null || login.equals("")) {
-                logger.info("Login is null or empty");
+            	log.info("Login is null or empty");
                 if(LoginUtilities.checkAutoLogin(request, allowSaveLogin)) {
-                    logger.info("Trying autologin, because we found a cookie...");
+                	log.info("Trying autologin, because we found a cookie...");
                     forward=mapping.findForward("autologin");
                     return forward;
                     
@@ -278,10 +284,10 @@ public abstract class ItrackerBaseAction extends Action {
                 }
                 // IF THERE IS A LOGIN...
             } else {
-                logger.info("Login found...: "+login);
+            	log.info("Login found...: "+login);
                 if(SessionManager.getSessionNeedsReset(login)) {
                     // RESET THE SESSION STUFF
-                    logger.info("Resetting the Session stuff...");
+                	log.info("Resetting the Session stuff...");
                     session.removeAttribute(Constants.USER_KEY);
                     session.removeAttribute(Constants.PERMISSIONS_KEY);
                     user = null;
@@ -300,7 +306,7 @@ public abstract class ItrackerBaseAction extends Action {
                 }
                 
                 // IF THERE IS NO USER...
-                logger.info("Checkin again if user is null...");
+                log.info("Checkin again if user is null...");
                 if(user == null) {
                     request.setAttribute(Constants.AUTH_REDIRECT_KEY, redirectURL);
                     //    pageContext.forward(getPage());
@@ -309,9 +315,9 @@ public abstract class ItrackerBaseAction extends Action {
                     
                     // IF THERE IS A USER...
                 } else {
-                    logger.info("else...");
-                    logger.info("User, yes found...: "+ user.getLogin());
-                    logger.info("If there is a user...");
+                	log.info("else...");
+                	log.info("User, yes found...: "+ user.getLogin());
+                	log.info("If there is a user...");
                     permissionsMap = getUserPermissions(session);
                     SessionManager.updateSessionLastAccess(login);
                     
@@ -319,11 +325,11 @@ public abstract class ItrackerBaseAction extends Action {
                     hasGlobalPermission = true;
                     
                     // CHECK FOR PERMISSIONS
-                    logger.info("Start check if permissions for this user are found...");
+                    log.info("Start check if permissions for this user are found...");
                     if(getPermission() >= 0) {
-                        logger.info("Permissions found...");
+                    	log.info("Permissions found...");
                         if(! UserUtilities.hasPermission(permissionsMap, getPermission())) {
-                            logger.info("But this user is not allowed by his permissions");
+                        	log.info("But this user is not allowed by his permissions");
                             hasGlobalPermission = false;
                             // check this...
                             request.setAttribute("hasGlobalPermission",new Boolean(hasGlobalPermission));
@@ -369,8 +375,8 @@ public abstract class ItrackerBaseAction extends Action {
  */    
     public static List<NameValuePair> GetIssuePossibleOwnersList(Issue issue, Project project, User currUser, Locale currLocale, 
                                                             IssueService issueService, UserService userService, Map<Integer, Set<PermissionType>> userPermissions) {
-        Map<Integer, List<NameValuePair>> listOptions = new HashMap<Integer,List<NameValuePair>>();
-        boolean hasFullEdit = UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
+        //Map<Integer, List<NameValuePair>> listOptions = new HashMap<Integer,List<NameValuePair>>();
+        //boolean hasFullEdit = UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
         
         List<NameValuePair> ownersList = new ArrayList<NameValuePair>();
         if(UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_ASSIGN_OTHERS)) {
