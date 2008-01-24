@@ -40,7 +40,7 @@ public class Notification extends AbstractEntity
     
     private User user;
     
-    private int role;
+    private Role role;
     
     /**
      * Default constructor (required by Hibernate). 
@@ -52,7 +52,25 @@ public class Notification extends AbstractEntity
     public Notification() {
     }
 
+    /**
+     * @deprecated use Role instead int for role
+     * @param user
+     * @param issue
+     * @param role
+     */
     public Notification(User user, Issue issue, int role) {
+        this.setUser(user);
+        this.setIssue(issue);
+        
+        for (int i = 0; i < Role.values().length; i++) {
+			if (Role.values()[i].code == role) {
+				this.setNotificationRole(Role.values()[i]);
+				break;
+			}
+		}
+        
+    }
+    public Notification(User user, Issue issue, Role role) {
         this.setUser(user);
         this.setIssue(issue);
         this.setNotificationRole(role);
@@ -80,12 +98,19 @@ public class Notification extends AbstractEntity
         this.user = user;
     }
 
+    /**
+     * @deprecated use getRole instead
+     * @return
+     */
     public int getNotificationRole() {
-        return role;
+        return role.code;
     }
 
-    public void setNotificationRole(int role) {
+    public void setNotificationRole(Role role) {
         this.role = role;
+    }
+    public Role getRole() {
+    	return this.role;
     }
     
     public int compareTo(Notification other) {
@@ -95,7 +120,7 @@ public class Notification extends AbstractEntity
             final int userComparison = this.user.compareTo(other.user);
             
             if (userComparison == 0) {
-                return this.role - other.role;
+                return this.role.code - other.role.code;
             }
             return userComparison;
         }
@@ -120,7 +145,7 @@ public class Notification extends AbstractEntity
     
     @Override
     public int hashCode() {
-        return this.issue.hashCode() + this.user.hashCode() + this.role;
+        return this.issue.hashCode() + this.user.hashCode() + this.role.hashCode();
     }
     
     @Override
@@ -142,7 +167,7 @@ public class Notification extends AbstractEntity
     private static class RoleComparator implements Comparator<Notification> {
         
         public int compare(Notification a, Notification b) {
-            return a.role - b.role;
+            return a.role.code - b.role.code;
         }
         
     }
@@ -174,6 +199,9 @@ public class Notification extends AbstractEntity
         private Role(int code) {
             this.code = code;
         }
+        public Integer getCode() {
+        	return this.code;
+        }
         
     }
     
@@ -195,6 +223,9 @@ public class Notification extends AbstractEntity
         
         private Type(int code) {
             this.code = code;
+        }
+        public Integer getCode() {
+        	return code;
         }
         
     }

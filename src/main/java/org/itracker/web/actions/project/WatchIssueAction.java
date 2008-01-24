@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -40,8 +41,8 @@ import org.itracker.model.Notification;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
+import org.itracker.model.Notification.Role;
 import org.itracker.services.IssueService;
-import org.itracker.services.util.NotificationUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
@@ -50,8 +51,8 @@ import org.itracker.web.util.Constants;
 
 public class WatchIssueAction extends ItrackerBaseAction {
 
-    public WatchIssueAction() {
-    }
+
+	private static final Logger log = Logger.getLogger(WatchIssueAction.class);
 
     @SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -87,7 +88,7 @@ public class WatchIssueAction extends ItrackerBaseAction {
             Notification notification = new Notification();
             notification.setUser(currUser);
             notification.setIssue(issue);
-            notification.setNotificationRole(NotificationUtilities.ROLE_IP);
+            notification.setNotificationRole(Role.IP);
             
             boolean UserHasIssueNotification = false;
             List<Notification> notifications = issue.getNotifications();
@@ -120,7 +121,7 @@ public class WatchIssueAction extends ItrackerBaseAction {
             }
         } catch(Exception e) {
         	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.login.system"));
-            logger.error("System Error.", e);
+            log.error("System Error.", e);
         }
         if(! errors.isEmpty()) {
             saveMessages(request, errors);

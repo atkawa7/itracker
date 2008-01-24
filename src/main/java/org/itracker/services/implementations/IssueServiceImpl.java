@@ -62,6 +62,7 @@ import org.itracker.model.Project;
 import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.Version;
+import org.itracker.model.Notification.Role;
 import org.itracker.persistence.dao.ComponentDAO;
 import org.itracker.persistence.dao.CustomFieldDAO;
 import org.itracker.persistence.dao.IssueActivityDAO;
@@ -372,7 +373,7 @@ public class IssueServiceImpl implements IssueService {
 
 			watchModel.setIssue(issue);
 
-			watchModel.setNotificationRole(NotificationUtilities.ROLE_IP);
+			watchModel.setNotificationRole(Notification.Role.IP);
 
 			addIssueNotification(watchModel);
 
@@ -862,9 +863,9 @@ public class IssueServiceImpl implements IssueService {
 
 		if (currOwner == null || !currOwner.getId().equals(user.getId())) {
 			if (currOwner != null
-					&& !hasIssueNotification(issueId, currOwner.getId(), NotificationUtilities.ROLE_CONTRIBUTER)) {
+					&& !hasIssueNotification(issueId, currOwner.getId(), Role.CONTRIBUTER)) {
 				// Notification notification = new Notification();
-				Notification notification = new Notification(currOwner, issue, NotificationUtilities.ROLE_CONTRIBUTER);
+				Notification notification = new Notification(currOwner, issue, Role.CONTRIBUTER);
 			}
 
 			IssueActivity activity = new IssueActivity();
@@ -1357,7 +1358,7 @@ public class IssueServiceImpl implements IssueService {
 				User ownerModel = issue.getOwner();
 
 				if (ownerModel != null && (!activeOnly || ownerModel.getStatus() == UserUtilities.STATUS_ACTIVE)) {
-					issueNotifications.add(new Notification(ownerModel, issue, NotificationUtilities.ROLE_OWNER));
+					issueNotifications.add(new Notification(ownerModel, issue, Role.OWNER));
 					hasOwner = true;
 				}
 			}
@@ -1366,7 +1367,7 @@ public class IssueServiceImpl implements IssueService {
 				User creatorModel = issue.getCreator();
 
 				if (creatorModel != null && (!activeOnly || creatorModel.getStatus() == UserUtilities.STATUS_ACTIVE)) {
-					issueNotifications.add(new Notification(creatorModel, issue, NotificationUtilities.ROLE_CREATOR));
+					issueNotifications.add(new Notification(creatorModel, issue, Role.CREATOR));
 				}
 			}
 
@@ -1377,7 +1378,7 @@ public class IssueServiceImpl implements IssueService {
 				User projectOwner = (User) iterator.next();
 
 				if (projectOwner != null && (!activeOnly || projectOwner.getStatus() == UserUtilities.STATUS_ACTIVE)) {
-					issueNotifications.add(new Notification(projectOwner, issue, NotificationUtilities.ROLE_PO));
+					issueNotifications.add(new Notification(projectOwner, issue, Role.PO));
 				}
 			}
 		}
@@ -1414,12 +1415,22 @@ public class IssueServiceImpl implements IssueService {
 		return true;
 	}
 
+	/**
+	 * 
+	 */
 	public boolean hasIssueNotification(Integer issueId, Integer userId) {
 
-		return hasIssueNotification(issueId, userId, NotificationUtilities.ROLE_ANY);
+		return hasIssueNotification(issueId, userId, Role.ANY);
 
 	}
 
+	/**
+	 * @deprecated use method with Role enumeration instead
+	 * @param issueId
+	 * @param userId
+	 * @param role
+	 * @return
+	 */
 	public boolean hasIssueNotification(Integer issueId, Integer userId, int role) {
 
 		if (issueId != null && userId != null) {
@@ -1445,7 +1456,31 @@ public class IssueServiceImpl implements IssueService {
 		return false;
 
 	}
+	public boolean hasIssueNotification(Integer issueId, Integer userId, Role role) {
 
+		if (issueId != null && userId != null) {
+
+			List<Notification> notifications = getIssueNotifications(issueId, false, false);
+
+			for (int i = 0; i < notifications.size(); i++) {
+
+				if (role == Role.ANY || notifications.get(i).getRole() == role) {
+
+					if (notifications.get(i).getUser().getId().equals(userId)) {
+
+						return true;
+
+					}
+
+				}
+
+			}
+
+		}
+
+		return false;
+
+	}
 	public int getOpenIssueCountByProjectId(Integer projectId) {
 
 		Collection<Issue> issues = issueDAO.findByProjectAndLowerStatus(projectId, IssueUtilities.STATUS_RESOLVED);
