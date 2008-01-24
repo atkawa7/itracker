@@ -2,6 +2,7 @@ package org.itracker.persistence.dao;
 
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Notification;
+import org.itracker.model.Notification.Role;
 import org.junit.Test;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class NotificationDAOImplTest extends AbstractDependencyInjectionTest {
 
         assertEquals(1, notification.getIssue().getId().intValue());
         assertEquals(2, notification.getUser().getId().intValue());
-        assertEquals(1, notification.getNotificationRole());
+        assertEquals(Role.CREATOR, notification.getRole());
 
     }
 

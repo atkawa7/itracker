@@ -373,7 +373,7 @@ public class IssueServiceImpl implements IssueService {
 
 			watchModel.setIssue(issue);
 
-			watchModel.setNotificationRole(Notification.Role.IP);
+			watchModel.setRole(Notification.Role.IP);
 
 			addIssueNotification(watchModel);
 

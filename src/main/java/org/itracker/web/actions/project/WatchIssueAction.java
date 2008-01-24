@@ -88,7 +88,7 @@ public class WatchIssueAction extends ItrackerBaseAction {
             Notification notification = new Notification();
             notification.setUser(currUser);
             notification.setIssue(issue);
-            notification.setNotificationRole(Role.IP);
+            notification.setRole(Role.IP);
             
             boolean UserHasIssueNotification = false;
             List<Notification> notifications = issue.getNotifications();
