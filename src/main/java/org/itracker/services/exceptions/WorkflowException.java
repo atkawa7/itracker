@@ -19,7 +19,12 @@
 package org.itracker.services.exceptions;
 
 public class WorkflowException extends Exception {
-    public static final int INVALID_ARGS = -1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3826882855960029370L;
+
+	public static final int INVALID_ARGS = -1;
 
     private int type = 0;
 

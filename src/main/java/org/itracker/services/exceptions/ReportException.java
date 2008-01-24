@@ -19,7 +19,11 @@
 package org.itracker.services.exceptions;
 
 public class ReportException extends RuntimeException {
-    private String errorKey = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5788612890885772801L;
+	private String errorKey = null;
 
     public ReportException() {
     }

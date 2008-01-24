@@ -20,7 +20,12 @@ package org.itracker.services.exceptions;
 
 public class UserException extends Exception {
 
-    public UserException() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4832428332378351902L;
+
+	public UserException() {
     }
 
     public UserException(String message) {

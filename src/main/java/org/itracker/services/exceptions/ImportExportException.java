@@ -19,7 +19,11 @@
 package org.itracker.services.exceptions;
 
 public class ImportExportException extends Exception {
-    public static final int TYPE_UNKNOWN = -1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1220508143019910359L;
+	public static final int TYPE_UNKNOWN = -1;
     public static final int TYPE_INVALID_LOGINS = -2;
     public static final int TYPE_INVALID_STATUS = -3;
 

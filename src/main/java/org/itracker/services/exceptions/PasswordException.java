@@ -19,7 +19,11 @@
 package org.itracker.services.exceptions;
 
 public class PasswordException extends Exception {
-    public static final int INVALID_DATA = -1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7738934888428402714L;
+	public static final int INVALID_DATA = -1;
     public static final int UNKNOWN_USER = -2;
     public static final int INVALID_NAME = -3;
     public static final int INVALID_EMAIL = -4;

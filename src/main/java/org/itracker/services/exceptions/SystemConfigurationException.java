@@ -19,7 +19,11 @@
 package org.itracker.services.exceptions;
 
 public class SystemConfigurationException extends Exception {
-    private String key;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3619504720231179133L;
+	private String key;
 
     public SystemConfigurationException() {
     }

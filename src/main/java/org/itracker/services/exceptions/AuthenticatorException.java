@@ -35,7 +35,11 @@ package org.itracker.services.exceptions;
   * or a Struts forward action mapping..
   */
 public class AuthenticatorException extends RuntimeException {
-    public static final int INVALID_DATA = -1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7799413588815903874L;
+	public static final int INVALID_DATA = -1;
     public static final int UNKNOWN_USER = -2;
     public static final int INVALID_PASSWORD = -3;
     public static final int INACTIVE_ACCOUNT = -4;

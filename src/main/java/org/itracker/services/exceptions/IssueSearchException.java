@@ -19,7 +19,11 @@
 package org.itracker.services.exceptions;
 
 public class IssueSearchException extends Exception {
-    public static final int ERROR_UNKNOWN_TYPE = 0;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4184441026918406008L;
+	public static final int ERROR_UNKNOWN_TYPE = 0;
     public static final int ERROR_SQL_EXCEPTION = 1;
     public static final int ERROR_EJB_EXCEPTION = 2;
     public static final int ERROR_NULL_QUERY = 3;
