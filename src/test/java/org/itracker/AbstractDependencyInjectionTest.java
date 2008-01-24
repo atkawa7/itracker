@@ -27,7 +27,7 @@ public abstract class AbstractDependencyInjectionTest extends AbstractDependency
     private DataSource dataSource;
     private LocalSessionFactoryBean sessionFactoryBean;
     public ClassLoader classLoader;
-    public List dataSets;
+    public List<IDataSet> dataSets;
     private SessionFactory sessionFactory;
 
     protected AbstractDependencyInjectionTest() {
@@ -48,7 +48,7 @@ public abstract class AbstractDependencyInjectionTest extends AbstractDependency
         DatabaseConnection dbConnection = new DatabaseConnection( connection );
 
         if( dataSets != null ) {
-            for( Iterator iterator = dataSets.iterator(); iterator.hasNext(); ) {
+            for( Iterator<IDataSet> iterator = dataSets.iterator(); iterator.hasNext(); ) {
                 IDataSet dataSet = (IDataSet)iterator.next();
                 InsertOperation.INSERT.execute( dbConnection, dataSet );
             }
@@ -83,8 +83,7 @@ public abstract class AbstractDependencyInjectionTest extends AbstractDependency
 
     }
 
-    private List getDataSet() throws Exception {
-    	// TODO: Can't we add a Generic type here? For example IDataSet?
+    private List<IDataSet> getDataSet() throws Exception {
     	List<IDataSet> dataSets = new ArrayList<IDataSet>();
 
         String[] aDataSet = getDataSetFiles();
