@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -54,7 +55,8 @@ import org.itracker.web.util.Constants;
 
 
 public class SearchIssuesFormAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(SearchIssuesFormAction.class);
+	
     public SearchIssuesFormAction() {
     }
 
@@ -95,28 +97,28 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
             boolean newQuery = false;
             IssueSearchQuery query = (IssueSearchQuery) session.getAttribute(Constants.SEARCH_QUERY_KEY);
 
-            logger.debug("projectid = " + projectId);
-            logger.debug("query type = " + (query == null ? "NULL" : query.getType().toString()));
-            logger.debug("query projectid = " + (query == null ? "NULL" : query.getProjectId().toString()));
+            log.debug("projectid = " + projectId);
+            log.debug("query type = " + (query == null ? "NULL" : query.getType().toString()));
+            log.debug("query projectid = " + (query == null ? "NULL" : query.getProjectId().toString()));
 
             if(query == null || query.getType() == null || "reset".equalsIgnoreCase(action) || (userPrefs != null && ! userPrefs.getRememberLastSearch())) {
-                logger.debug("New search query.  No existing query, reset forced, or saved querys not allowed.");
+                log.debug("New search query.  No existing query, reset forced, or saved querys not allowed.");
                 query = new IssueSearchQuery();
                 query.setType(IssueSearchQuery.TYPE_FULL);
                 newQuery = true;
             } else if(query.getType().intValue() == IssueSearchQuery.TYPE_FULL.intValue() && projectId != null) {
-                logger.debug("New search query.  Previous query FULL, new query PROJECT.");
+                log.debug("New search query.  Previous query FULL, new query PROJECT.");
                 query = new IssueSearchQuery();
                 query.setType(IssueSearchQuery.TYPE_PROJECT);
                 newQuery = true;
             } else if(query.getType().intValue() == IssueSearchQuery.TYPE_PROJECT.intValue()) {
                 if(projectId == null || projectId.equals("")) {
-                    logger.debug("New search query.  Previous query PROJECT, new query FULL.");
+                    log.debug("New search query.  Previous query PROJECT, new query FULL.");
                     query = new IssueSearchQuery();
                     query.setType(IssueSearchQuery.TYPE_FULL);
                     newQuery = true;
                 } else if(! projectId.equals(query.getProjectId().toString())) {
-                    logger.debug("New search query.  Requested project (" + projectId + ") different from previous query (" + query.getProjectId().toString() + ")");
+                    log.debug("New search query.  Requested project (" + projectId + ") different from previous query (" + query.getProjectId().toString() + ")");
                     query = new IssueSearchQuery();
                     query.setType(IssueSearchQuery.TYPE_PROJECT);
                     newQuery = true;
@@ -135,7 +137,7 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
                    ! UserUtilities.hasPermission(userPermissions, projects.get(i).getId(), UserUtilities.PERMISSION_VIEW_USERS)) {
                        continue;
                 }
-                logger.debug("Adding project " + projects.get(i).getId() + " to list of available projects.");
+                log.debug("Adding project " + projects.get(i).getId() + " to list of available projects.");
                 availableProjectsList.add(projects.get(i));
 
                 if(projectId != null && projects.get(i).getId().toString().equals(projectId)) {
@@ -155,14 +157,14 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
             
 
             if(availableProjectsList.size() != 0) {
-            	logger.debug("Issue Search has " + availableProjectsList.size() + " available projects.");
+            	log.debug("Issue Search has " + availableProjectsList.size() + " available projects.");
                 query.setAvailableProjects(availableProjectsList);
                 if(query.getType().equals(IssueSearchQuery.TYPE_PROJECT)) {
                     searchForm.setProject(query.getProjectId());
                 }
 
                 if(newQuery) {
-                    logger.debug("New search query.  Clearing results and setting defaults.");
+                    log.debug("New search query.  Clearing results and setting defaults.");
                     query.setResults(null);
                     List<Integer> selectedStatusesIntegerList = new ArrayList<Integer>();
                     for(int i = 0; i < IssueUtilities.getStatuses().size(); i++) {
@@ -172,7 +174,7 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
                             	selectedStatusesIntegerList.add(new Integer(statusNumber));
                             }
                         } catch(Exception e) {
-                            logger.debug("Invalid status entry: " + IssueUtilities.getStatuses().get(i));
+                            log.debug("Invalid status entry: " + IssueUtilities.getStatuses().get(i));
                         }
                     }
                     Integer[] statusesArray = new Integer[selectedStatusesIntegerList.size()];
@@ -236,7 +238,7 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
                 return mapping.getInputForward();
             }
         } catch(Exception e) {
-            logger.error("Exception while creating search issues form.", e);
+            log.error("Exception while creating search issues form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

@@ -43,7 +43,6 @@ import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
-import org.itracker.web.actions.admin.attachment.DownloadAttachmentAction;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.CustomFieldForm;
 

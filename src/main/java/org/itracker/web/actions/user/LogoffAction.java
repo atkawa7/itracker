@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -35,6 +36,8 @@ import org.itracker.web.util.SessionManager;
 
 
 public class LogoffAction extends ItrackerBaseAction {
+	private static final Logger log = Logger.getLogger(LogoffAction.class);
+	
     public LogoffAction() {
     }
     
@@ -47,10 +50,10 @@ public class LogoffAction extends ItrackerBaseAction {
             String login = (user != null ? user.getLogin() : "UNKNOWN");
             
             if(clearSession(login, request, response)) {
-                logger.info("User " + login + " logged out successfully.");
+                log.info("User " + login + " logged out successfully.");
             }
         } catch(Exception e) {
-            logger.error("Error logging out user. " + e.getMessage());
+            log.error("Error logging out user. " + e.getMessage());
         }
         
         String pageTitleKey = "itracker.web.login.title";
@@ -70,7 +73,7 @@ public class LogoffAction extends ItrackerBaseAction {
                 SessionManager.invalidateSession(login);
             }
         } catch(Exception e) {
-            logger.error("Unable to clear session for user " + (login == null ? "UNKNOWN" : login));
+            log.error("Unable to clear session for user " + (login == null ? "UNKNOWN" : login));
             return false;
         }
         return true;

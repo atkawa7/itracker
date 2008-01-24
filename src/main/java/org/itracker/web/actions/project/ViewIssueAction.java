@@ -3,6 +3,7 @@ package org.itracker.web.actions.project;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -11,7 +12,8 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 
 public class ViewIssueAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(ViewIssueAction.class);
+	
 	 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -28,7 +30,7 @@ public class ViewIssueAction extends ItrackerBaseAction {
 			request.setAttribute("pageTitleKey",pageTitleKey); 
 			request.setAttribute("pageTitleArg",pageTitleArg); 
 			
-			logger.info("ViewIssueAction: Forward: viewissue");			
+			log.info("ViewIssueAction: Forward: viewissue");			
 			return mapping.findForward("viewissue");
 	 
 	}

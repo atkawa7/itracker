@@ -24,6 +24,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -38,7 +39,8 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 
 public class InitializeLanguagesAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(InitializeLanguagesAction.class);
+	
     public InitializeLanguagesAction () {
     }
 
@@ -60,7 +62,7 @@ public class InitializeLanguagesAction extends ItrackerBaseAction {
 
             return mapping.getInputForward();
         } catch(Exception e) {
-            logger.error("Exception while reinitializing languages.", e);
+            log.error("Exception while reinitializing languages.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

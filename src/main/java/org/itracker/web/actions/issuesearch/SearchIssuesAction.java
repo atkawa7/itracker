@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -48,7 +49,8 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 
 public class SearchIssuesAction extends ItrackerBaseAction {
-    
+	private static final Logger log = Logger.getLogger(SearchIssuesAction.class);
+	
     public SearchIssuesAction() {
     }
     
@@ -89,12 +91,12 @@ public class SearchIssuesAction extends ItrackerBaseAction {
             
             if(errors.isEmpty()) {
                 List<Issue> results = getITrackerServices().getIssueService().searchIssues(isqm, user, userPermissions);
-                if(logger.isDebugEnabled()) {
-                    logger.debug("SearchIssuesAction received " + results.size() + " results to query.");
+                if(log.isDebugEnabled()) {
+                    log.debug("SearchIssuesAction received " + results.size() + " results to query.");
                 }                               
                 
                 isqm.setResults(results);
-                logger.debug("Setting search results with " + isqm.getResults().size() + " results");
+                log.debug("Setting search results with " + isqm.getResults().size() + " results");
                 session.setAttribute(Constants.SEARCH_QUERY_KEY, isqm);
             }
         } catch(IssueSearchException ise) {
@@ -104,7 +106,7 @@ public class SearchIssuesAction extends ItrackerBaseAction {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
             }
         } catch(Exception e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
         
@@ -205,7 +207,7 @@ public class SearchIssuesAction extends ItrackerBaseAction {
                 isqm.setType(type);
             }
         } catch(Exception e) {
-            logger.debug("Unable to parse search query parameters: " + e.getMessage(), e);
+            log.debug("Unable to parse search query parameters: " + e.getMessage(), e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidsearchquery"));
         }
         

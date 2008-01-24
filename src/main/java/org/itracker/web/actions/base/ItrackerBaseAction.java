@@ -74,11 +74,11 @@ public abstract class ItrackerBaseAction extends Action {
     
 	// TODO remove protected logger
 	/**
-	 * @deprecated use own logger for each class
+	 *  deprecated use own logger for each class
 	 */
-    protected final Logger logger;
+    private final Logger log = Logger.getLogger(ItrackerBaseAction.class);
     
-    private static final Logger log = Logger.getLogger(ItrackerBaseAction.class);
+    //private static final Logger log = Logger.getLogger(ItrackerBaseAction.class);
     private boolean allowSaveLogin = true;
     private String name = Constants.USER_KEY;
     private String page = "/login.do";
@@ -88,7 +88,7 @@ public abstract class ItrackerBaseAction extends Action {
     public ItrackerBaseAction() {
     	super();
     	// TODO clean up
-        this.logger = log; //Logger.getLogger(getClass().getName());
+        //this.logger = log; //Logger.getLogger(getClass().getName());
     }
     
     public void executeAlways(ActionMapping mapping,

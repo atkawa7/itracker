@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -50,7 +51,8 @@ import org.itracker.web.util.Constants;
 
 
 public class EditPreferencesFormAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditPreferencesFormAction.class);
+	
     public EditPreferencesFormAction() {
     }
 
@@ -153,7 +155,7 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
             return mapping.findForward("editpreferencesform");
             
         } catch(Exception e) {
-            logger.error("Exception while creating edit issue form.", e);
+            log.error("Exception while creating edit issue form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

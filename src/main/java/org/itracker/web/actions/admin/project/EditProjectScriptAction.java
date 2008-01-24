@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -48,7 +49,8 @@ import bsh.ParseException;
 
 
 public class EditProjectScriptAction extends ItrackerBaseAction {
-    
+	private static final Logger log = Logger.getLogger(EditProjectScriptAction.class);
+	
     public EditProjectScriptAction() {
     }
     
@@ -64,7 +66,7 @@ public class EditProjectScriptAction extends ItrackerBaseAction {
         }
         
         if(! isTokenValid(request)) {
-            logger.debug("Invalid request token while editing workflow script.");
+            log.debug("Invalid request token while editing workflow script.");
             return mapping.findForward("listworkflow");
         }
         resetToken(request);
@@ -121,13 +123,13 @@ public class EditProjectScriptAction extends ItrackerBaseAction {
                     mapping.findForward("editproject").getPath()
                     + "?id=" + project.getId() +"&action=update");
         } catch(ParseException pe) {
-            logger.debug("Error parseing script.  Redisplaying form for correction.", pe);
+            log.debug("Error parseing script.  Redisplaying form for correction.", pe);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidscriptdata", pe.getMessage()));
             saveMessages(request, errors);
             saveToken(request);
             return mapping.getInputForward();
         } catch(Exception e) {
-            logger.error("Exception processing form data", e);
+            log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
         

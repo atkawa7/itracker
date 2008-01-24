@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -48,19 +49,20 @@ import org.itracker.web.forms.CustomFieldValueForm;
 import org.itracker.web.util.Constants;
 
 public class EditCustomFieldValueAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditCustomFieldValueAction.class);
+	
     public EditCustomFieldValueAction() {
     }
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         super.executeAlways(mapping,form,request,response);
-        logger.info("Kimba Went To Action");
+        log.info("Kimba Went To Action");
         if(! isLoggedIn(request, response)) {
             return mapping.findForward("login");
         }
         if(! isTokenValid(request)) {
-            logger.debug("Invalid request token while editing configuration.");
+            log.debug("Invalid request token while editing configuration.");
             return mapping.findForward("listconfiguration");
         }
         resetToken(request);
@@ -113,14 +115,14 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             
             HashMap<String, String> translations = customFieldValueForm.getTranslations();
             String key = CustomFieldUtilities.getCustomFieldOptionLabelKey(customField.getId(), customFieldValue.getId());
-            logger.debug("Processing label translations for custom field value " + customFieldValue.getId() + " with key " + key);
+            log.debug("Processing label translations for custom field value " + customFieldValue.getId() + " with key " + key);
             if(translations != null && key != null && ! key.equals("")) {
                 for(Iterator<String> iter = translations.keySet().iterator(); iter.hasNext(); ) {
                     String locale = (String) iter.next();
                     if(locale != null) {
                         String translation = (String) translations.get(locale);
                         if(translation != null && ! translation.equals("")) {
-                            logger.debug("Adding new translation for locale " + locale + " for " + String.valueOf(customFieldValue.getId()));
+                            log.debug("Adding new translation for locale " + locale + " for " + String.valueOf(customFieldValue.getId()));
                             configurationService.updateLanguageItem(new Language(locale, key, translation));
                         }
                     }
@@ -148,10 +150,10 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             saveToken(request);
             return new ActionForward(mapping.findForward("editcustomfield").getPath() + "?id=" + customField.getId() + "&action=update");
         } catch(SystemConfigurationException sce) {
-            logger.error("Exception processing form data: " + sce.getMessage(), sce);
+            log.error("Exception processing form data: " + sce.getMessage(), sce);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(sce.getKey()));
         } catch(Exception e) {
-            logger.error("Exception processing form data", e);
+            log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

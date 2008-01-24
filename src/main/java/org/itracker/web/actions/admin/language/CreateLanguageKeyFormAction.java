@@ -24,6 +24,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -42,7 +43,8 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
  *
  */
 public class CreateLanguageKeyFormAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(CreateLanguageKeyFormAction.class);
+	
     public CreateLanguageKeyFormAction() {
     }
 
@@ -65,7 +67,7 @@ public class CreateLanguageKeyFormAction extends ItrackerBaseAction {
             saveToken(request);
             return mapping.getInputForward();
         } catch(Exception e) {
-            logger.error("Exception while creating create language key form.", e);
+            log.error("Exception while creating create language key form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

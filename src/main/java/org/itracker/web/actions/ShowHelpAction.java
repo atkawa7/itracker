@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -16,7 +17,8 @@ import org.itracker.web.util.Constants;
 
 
 public class ShowHelpAction extends ItrackerBaseAction {
-    
+	private static final Logger log = Logger.getLogger(ShowHelpAction.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
@@ -26,7 +28,7 @@ public class ShowHelpAction extends ItrackerBaseAction {
         String helpParam = request.getParameter("page");
         HttpSession session = request.getSession(true);
         Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
-        logger.debug("Requesting Help Page: " + helpParam);
+        log.debug("Requesting Help Page: " + helpParam);
         if("ct".equals(helpParam)) {
             helpPage = ITrackerResources.getString("itracker.web.helppage.commontasks", currLocale);
         } else if("ab".equals(helpParam)) {
@@ -37,7 +39,7 @@ public class ShowHelpAction extends ItrackerBaseAction {
                 helpPage = "help_index.jsp";
             }
         }
-        logger.debug("Redirecting to Help Page: " + helpPage);
+        log.debug("Redirecting to Help Page: " + helpPage);
         request.setAttribute("helpPage",helpPage);
         
         String pageTitleKey = "itracker.web.showhelp.title";

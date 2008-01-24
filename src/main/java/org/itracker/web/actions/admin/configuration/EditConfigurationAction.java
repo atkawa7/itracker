@@ -47,7 +47,6 @@ import org.itracker.services.IssueService;
 import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
-import org.itracker.web.actions.admin.attachment.DownloadAttachmentAction;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 

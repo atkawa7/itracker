@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -36,6 +37,7 @@ import org.itracker.model.WorkflowScript;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.UserUtilities;
+import org.itracker.web.actions.admin.configuration.EditCustomFieldAction;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.WorkflowScriptForm;
 import org.itracker.web.util.Constants;
@@ -43,7 +45,8 @@ import org.itracker.web.util.Constants;
 
 
 public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditWorkflowScriptFormAction.class);
+	
     public EditWorkflowScriptFormAction() {
     }
 
@@ -116,7 +119,7 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
         } catch(SystemConfigurationException sce) {
         	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidworkflowscript"));
         } catch(Exception e) {
-            logger.error("Exception while creating edit workflowScript form.", e);
+            log.error("Exception while creating edit workflowScript form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

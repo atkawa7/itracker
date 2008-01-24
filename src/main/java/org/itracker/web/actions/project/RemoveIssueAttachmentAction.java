@@ -25,6 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -39,7 +40,8 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 
 public class RemoveIssueAttachmentAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(RemoveIssueAttachmentAction.class);
+	
     public RemoveIssueAttachmentAction() {
     }
 
@@ -72,8 +74,8 @@ public class RemoveIssueAttachmentAction extends ItrackerBaseAction {
                 }
             } catch(NumberFormatException nfe) {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.removeattachment"));
-                if(logger.isDebugEnabled()) {
-                    logger.debug("Invalid attachmentId " + request.getParameter("id") + " specified.");
+                if(log.isDebugEnabled()) {
+                    log.debug("Invalid attachmentId " + request.getParameter("id") + " specified.");
                 }
             }
         } catch(Exception e) {

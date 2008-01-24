@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -41,7 +42,8 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 
 public class CreateLanguageKeyAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(CreateLanguageKeyAction.class);
+	
     public CreateLanguageKeyAction() {
     }
 
@@ -52,7 +54,7 @@ public class CreateLanguageKeyAction extends ItrackerBaseAction {
             return mapping.findForward("login");
         }
         if(! isTokenValid(request)) {
-            logger.debug("Invalid request token while creating language key.");
+            log.debug("Invalid request token while creating language key.");
             return mapping.findForward("listlanguages");
         }
         resetToken(request);
@@ -65,15 +67,15 @@ public class CreateLanguageKeyAction extends ItrackerBaseAction {
 
             // Move to validation code
             if(items != null) {
-                logger.debug("Adding new language key: " + key);
+                log.debug("Adding new language key: " + key);
                 for(Iterator iter = items.keySet().iterator(); iter.hasNext(); ) {
                     String locale = (String) iter.next();
-                    logger.debug("Checking translation for locale " + locale);
+                    log.debug("Checking translation for locale " + locale);
                     if(locale != null) {
                         String value = (String) items.get(locale);
-                        logger.debug("Locale value: " + value);
+                        log.debug("Locale value: " + value);
                         if(value != null && ! value.equals("")) {
-                            logger.debug("Adding new translation for locale " + locale + " for key " + key);
+                            log.debug("Adding new translation for locale " + locale + " for key " + key);
                             configurationService.updateLanguageItem(new Language(locale, key, value));
                         }
                     }
@@ -87,7 +89,7 @@ public class CreateLanguageKeyAction extends ItrackerBaseAction {
 
             return mapping.findForward("listlanguages");
         } catch(Exception e) {
-            logger.error("Exception processing form data", e);
+            log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -51,12 +52,13 @@ import org.itracker.web.util.Constants;
   * by the current systems plugable authentication.
   */
 public class EditPreferencesAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditPreferencesAction.class);
+	
     public EditPreferencesAction() {
     }
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.debug("Starting pref mod");
+        log.debug("Starting pref mod");
         ActionErrors errors = new ActionErrors();
         super.executeAlways(mapping,form,request,response);
         
@@ -64,7 +66,7 @@ public class EditPreferencesAction extends ItrackerBaseAction {
             return mapping.findForward("login");
         }
         if(! isTokenValid(request)) {
-            logger.debug("Invalid request token while editing user preferences.");
+            log.debug("Invalid request token while editing user preferences.");
             return mapping.findForward("index");
         }
         resetToken(request);
@@ -81,7 +83,7 @@ public class EditPreferencesAction extends ItrackerBaseAction {
 
             User existingUser = userService.getUser(user.getId());
             if(existingUser == null || user.getId().intValue() != existingUser.getId().intValue()) {
-                logger.debug("Unauthorized edit preferences request from " + user.getLogin() + "(" + user.getId() + ") for " + existingUser.getLogin() + "(" + existingUser.getId() + ")");
+                log.debug("Unauthorized edit preferences request from " + user.getLogin() + "(" + user.getId() + ") for " + existingUser.getLogin() + "(" + existingUser.getId() + ")");
                 return mapping.findForward("unauthorized");
             }
             UserForm userForm = (UserForm) form;
@@ -115,7 +117,7 @@ public class EditPreferencesAction extends ItrackerBaseAction {
             }
 
             if(errors.isEmpty()) {
-                logger.debug("Passed required checks.  Updating user info for " + user.getLogin());
+                log.debug("Passed required checks.  Updating user info for " + user.getLogin());
                 user = userService.updateUser(existingUser);
 
                 UserPreferences userPrefs = user.getPreferences();

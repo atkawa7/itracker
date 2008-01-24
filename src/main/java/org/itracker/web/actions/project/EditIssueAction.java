@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -68,7 +69,8 @@ import org.itracker.web.util.AttachmentUtilities;
 import org.itracker.web.util.Constants;
 
 public class EditIssueAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditIssueAction.class);
+	
     @SuppressWarnings("unchecked")
     public ActionForward execute(ActionMapping mapping,
                                  ActionForm form,
@@ -80,18 +82,18 @@ public class EditIssueAction extends ItrackerBaseAction {
         super.executeAlways(mapping, form, request, response);
 
         if (!isLoggedIn(request, response)) {
-            logger.info("EditIssueAction: Forward: login");
+            log.info("EditIssueAction: Forward: login");
             return mapping.findForward("login");
         }
 
         if (!isTokenValid(request)) {
-            logger.debug("Invalid request token while editing issue.");
+            log.debug("Invalid request token while editing issue.");
             ProjectService projectService = getITrackerServices().getProjectService();
             request.setAttribute("projects", projectService.getAllProjects());
             request.setAttribute("ph", projectService);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.transaction"));
             saveMessages(request, errors);
-            logger.info("EditIssueAction: Forward: listprojects");
+            log.info("EditIssueAction: Forward: listprojects");
             return mapping.findForward("listprojects");
         }
         
@@ -110,7 +112,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 
             if (issueId == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
-                logger.info("EditIssueAction: Forward: Error");
+                log.info("EditIssueAction: Forward: Error");
                 return mapping.findForward("error");
             }
 
@@ -119,21 +121,21 @@ public class EditIssueAction extends ItrackerBaseAction {
 
             if (issue == null || issue.getId() == null || issue.getId() < 0) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
-                logger.info("EditIssueAction: Forward: Error");
+                log.info("EditIssueAction: Forward: Error");
                 return mapping.findForward("error");
             }
 
             Project project = issue.getProject();
             if (project == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-                logger.info("EditIssueAction: Forward: Error");
+                log.info("EditIssueAction: Forward: Error");
                 return mapping.findForward("error");
             } else if (project.getStatus() != Status.ACTIVE) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
-                logger.info("EditIssueAction: Forward: Error");
+                log.info("EditIssueAction: Forward: Error");
                 return mapping.findForward("error");
             } else if (!IssueUtilities.canEditIssue(issue, currUserId, userPermissions)) {
-                logger.info("EditIssueAction: Forward: unauthorized");
+                log.info("EditIssueAction: Forward: unauthorized");
                 return mapping.findForward("unauthorized");
             }
 
@@ -159,7 +161,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 
             return getReturnForward(issue, project, form, mapping);
         } catch (Exception e) {
-            logger.error("Exception processing form data", e);
+            log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
@@ -168,7 +170,7 @@ public class EditIssueAction extends ItrackerBaseAction {
             saveToken(request);
             return mapping.findForward("editissueform");
         }
-        logger.info("EditIssueAction: Forward: Error");
+        log.info("EditIssueAction: Forward: Error");
         return mapping.findForward("error");
     }
 
@@ -462,13 +464,13 @@ public class EditIssueAction extends ItrackerBaseAction {
             throws Exception {
 
         if ("index".equals((String) PropertyUtils.getSimpleProperty(form, "caller"))) {
-            logger.info("EditIssueAction: Forward: index");
+            log.info("EditIssueAction: Forward: index");
             return mapping.findForward("index");
         } else if ("viewissue".equals((String) PropertyUtils.getSimpleProperty(form, "caller"))) {
-            logger.info("EditIssueAction: Forward: viewissue");
+            log.info("EditIssueAction: Forward: viewissue");
             return new ActionForward(mapping.findForward("viewissue").getPath() + "?id=" + issue.getId());
         } else {
-            logger.info("EditIssueAction: Forward: listissues");
+            log.info("EditIssueAction: Forward: listissues");
             return new ActionForward(mapping.findForward("listissues").getPath() + "?projectId=" + project.getId());
         }
 

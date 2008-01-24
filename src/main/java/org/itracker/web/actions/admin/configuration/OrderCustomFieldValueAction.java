@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -44,7 +45,8 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 
 public class OrderCustomFieldValueAction extends ItrackerBaseAction {
-    
+	private static final Logger log = Logger.getLogger(OrderCustomFieldValueAction.class);
+	
     public OrderCustomFieldValueAction() {
     }
     
@@ -171,13 +173,13 @@ public class OrderCustomFieldValueAction extends ItrackerBaseAction {
             return new ActionForward(mapping.findForward("editcustomfield").getPath() + "?id=" + customField.getId() + "&action=update");
         } catch(SystemConfigurationException nfe) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidcustomfieldvalue"));
-            logger.debug("Invalid custom field value id " + request.getParameter("id") + " specified.");
+            log.debug("Invalid custom field value id " + request.getParameter("id") + " specified.");
         } catch(NumberFormatException nfe) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidcustomfieldvalue"));
-            logger.debug("Invalid custom field value id " + request.getParameter("id") + " specified.");
+            log.debug("Invalid custom field value id " + request.getParameter("id") + " specified.");
         } catch(Exception e) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-            logger.error("System Error.", e);
+            log.error("System Error.", e);
         }
         if(! errors.isEmpty()) {
             saveMessages(request, errors);

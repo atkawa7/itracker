@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -26,6 +27,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.model.PermissionType;
 import org.itracker.services.util.UserUtilities;
+import org.itracker.web.actions.admin.configuration.EditCustomFieldAction;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
 /**
@@ -39,7 +41,8 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
  * @author mbae@bcwin.ch
  */
 public class RemoveWorkflowScriptAction extends ItrackerBaseAction {
-    
+	private static final Logger log = Logger.getLogger(RemoveWorkflowScriptAction.class);
+	
     /**
      * executes the action which removes a workflow script 
      *
@@ -82,13 +85,13 @@ public class RemoveWorkflowScriptAction extends ItrackerBaseAction {
             fw = mapping.findForward( "listworkflow" );
             
         } catch (InvocationTargetException ex) {
-            logger.error( ex.getMessage(), ex );
+            log.error( ex.getMessage(), ex );
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidworkflowscript"));
         } catch (NoSuchMethodException ex) {
-            logger.error( ex.getMessage(), ex );
+            log.error( ex.getMessage(), ex );
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidworkflowscript"));
         } catch (IllegalAccessException ex) {
-            logger.error( ex.getMessage(), ex );
+            log.error( ex.getMessage(), ex );
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidworkflowscript"));
         }
         

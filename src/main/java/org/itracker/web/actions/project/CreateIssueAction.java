@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -67,7 +68,8 @@ import org.itracker.web.util.AttachmentUtilities;
 import org.itracker.web.util.Constants;
 
 public class CreateIssueAction extends ItrackerBaseAction {
-    
+	private static final Logger log = Logger.getLogger(CreateIssueAction.class);
+	
     public CreateIssueAction() {
     }
     
@@ -81,7 +83,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
         }
         
         if (! isTokenValid(request)) {
-            logger.info("Invalid request token while creating issue.");
+            log.info("Invalid request token while creating issue.");
             ProjectService projectService = getITrackerServices().getProjectService();
             request.setAttribute("projects",projectService.getAllProjects());
             request.setAttribute("ph",projectService);
@@ -236,24 +238,24 @@ public class CreateIssueAction extends ItrackerBaseAction {
                             Issue relatedIssue = issueService.getIssue(relatedIssueId);
                             
                             if(relatedIssue == null) {
-                                logger.debug("Unknown relation issue, relation not created.");
+                                log.debug("Unknown relation issue, relation not created.");
                             } else if(relatedIssue.getProject() == null
                                     || ! IssueUtilities.canEditIssue(relatedIssue, currUserId, userPermissionsMap)) {
-                                logger.info("User not authorized to add issue relation from issue "
+                                log.info("User not authorized to add issue relation from issue "
                                         + issue.getId() + " to issue " + relatedIssueId);
                             } else if(IssueUtilities.hasIssueRelation(issue, relatedIssueId)) {
-                                logger.debug("Issue " + issue.getId()
+                                log.debug("Issue " + issue.getId()
                                 + " is already related to issue " + relatedIssueId + ", relation ot created.");
                             } else {
                                 if(! issueService.addIssueRelation(issue.getId(),
                                         relatedIssueId, relationType.intValue(), currUser.getId())) {
-                                    logger.info("Error adding issue relation from issue "
+                                    log.info("Error adding issue relation from issue "
                                             + issue.getId() + " to issue " + relatedIssueId);
                                 }
                             }
                         }
                     } catch(Exception e) {
-                        logger.debug("Exception adding new issue relation.", e);
+                        log.debug("Exception adding new issue relation.", e);
                     }
                     
                     issueService.sendNotification(issue.getId(), NotificationUtilities.TYPE_CREATED, getBaseURL(request));
@@ -271,7 +273,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                 // return mapping.findForward("listissues");
             }
         } catch (Exception e) {
-            logger.error("Exception processing form data", e);
+            log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
         

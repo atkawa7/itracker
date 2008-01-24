@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -50,7 +51,8 @@ import org.itracker.web.util.Constants;
 
 
 public class EditProjectScriptFormAction extends ItrackerBaseAction {
-    
+	private static final Logger log = Logger.getLogger(EditProjectScriptFormAction.class);
+	
     public EditProjectScriptFormAction() {
     }
     
@@ -168,7 +170,7 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
                 return mapping.getInputForward();
             }
         } catch(Exception e) {
-            logger.error("Exception while the "+ action + " of ProjectScript form.", e);
+            log.error("Exception while the "+ action + " of ProjectScript form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
         

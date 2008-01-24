@@ -18,14 +18,16 @@
 
 package org.itracker.web.actions.admin.user;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -42,7 +44,8 @@ import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.Constants;
 
 public class EditUserFormAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditUserFormAction.class);
+	
     public ActionForward execute(ActionMapping mapping,
                                  ActionForm form,
                                  HttpServletRequest request,
@@ -144,7 +147,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
 
                         for (int i = 0; i < permissionList.size(); i++) {
 
-                            logger.debug("Processing permission type: " + permissionList.get(i).getPermissionType());
+                            log.debug("Processing permission type: " + permissionList.get(i).getPermissionType());
 
                             //if getPermissionType returned -1, this is a SuperUser. He will still be able to set project permissions.  
 
@@ -210,7 +213,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
             }
 
         } catch (Exception e) {
-            logger.error("Exception while creating edit user form.", e);
+            log.error("Exception while creating edit user form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

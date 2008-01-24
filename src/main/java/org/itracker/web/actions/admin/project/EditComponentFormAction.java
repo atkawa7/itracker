@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -45,7 +46,8 @@ import org.itracker.web.util.Constants;
 
 
 public class EditComponentFormAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditComponentFormAction.class);
+	
     public EditComponentFormAction() {
     }
 
@@ -153,7 +155,7 @@ public class EditComponentFormAction extends ItrackerBaseAction {
             request.setAttribute("pageTitleKey",pageTitleKey); 
             request.setAttribute("pageTitleArg",pageTitleArg); 
             
-            logger.error("Exception while creating edit component form.", e);
+            log.error("Exception while creating edit component form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

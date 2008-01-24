@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -51,7 +52,8 @@ import org.itracker.web.util.SessionManager;
 
 
 public class EditUserAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditUserAction.class);
+	
     public EditUserAction() {
     }
 
@@ -67,7 +69,7 @@ public class EditUserAction extends ItrackerBaseAction {
         }
 
         if(! isTokenValid(request)) {
-            logger.debug("Invalid request token while editing component.");
+            log.debug("Invalid request token while editing component.");
             return mapping.findForward("listusers");
         }
         resetToken(request);
@@ -104,7 +106,7 @@ public class EditUserAction extends ItrackerBaseAction {
                         return mapping.findForward("error");
                     }
 
-                    logger.debug("Creating new userid.");
+                    log.debug("Creating new userid.");
                     editUser.setRegistrationType(UserUtilities.REGISTRATION_TYPE_ADMIN);
                     if(userService.allowPasswordUpdates(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
                         editUser.setPassword(UserUtilities.encryptPassword(userForm.getPassword()));
@@ -166,10 +168,10 @@ public class EditUserAction extends ItrackerBaseAction {
                 
                 boolean successful = userService.setUserPermissions(editUser.getId(), newPermissions);
                 if (successful == true) { 
-                	logger.debug("User Permissions have been nicely set.");
+                	log.debug("User Permissions have been nicely set.");
                 
                 } else {
-                	logger.debug("No good. User Permissions have not been nicely set.");
+                	log.debug("No good. User Permissions have not been nicely set.");
                  
                 }
             }
@@ -186,12 +188,12 @@ public class EditUserAction extends ItrackerBaseAction {
                     }
                 }
 
-                logger.debug("Forwarding to list users.");
+                log.debug("Forwarding to list users.");
                 session.removeAttribute(Constants.EDIT_USER_KEY);
                 return mapping.findForward("listusers");
             }
         } catch(Exception e) {
-            logger.error("Exception processing form data", e);
+            log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

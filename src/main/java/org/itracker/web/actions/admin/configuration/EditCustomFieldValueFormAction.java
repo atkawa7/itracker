@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -46,7 +47,8 @@ import org.itracker.web.util.Constants;
 
 
 public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditCustomFieldValueFormAction.class);
+	
     public EditCustomFieldValueFormAction() {
     }
 
@@ -110,7 +112,7 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
         } catch(SystemConfigurationException sce) {
         	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidcustomfieldvalue"));
         } catch(Exception e) {
-            logger.error("Exception while creating edit custom field value form.", e);
+            log.error("Exception while creating edit custom field value form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
         if(! errors.isEmpty()) {

@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -68,7 +69,8 @@ import org.itracker.web.util.Constants;
   * This class populates an IssueForm object for display by the edit issue page.
   */
 public class EditIssueFormAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditIssueFormAction.class);
+	
     public EditIssueFormAction() {
     }
 
@@ -109,7 +111,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                 Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
 
                 if(! IssueUtilities.canEditIssue(issue, currUser.getId(), userPermissions)) {
-                        logger.debug("Unauthorized user requested access to edit issue for project " + project.getId());
+                        log.debug("Unauthorized user requested access to edit issue for project " + project.getId());
                         return mapping.findForward("unauthorized");
                 }
 
@@ -218,9 +220,9 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                         try {
                             issue.setResolution(IssueUtilities.checkResolutionName(issue.getResolution(), currLocale));
                         } catch(MissingResourceException mre) {
-                        	logger.error(mre.getMessage());
+                        	log.error(mre.getMessage());
                         } catch(NumberFormatException nfe) {
-                        	logger.error(nfe.getMessage());
+                        	log.error(nfe.getMessage());
                         }
                     }
                     issueForm.setResolution(HTMLUtilities.handleQuotes(issue.getResolution()));
@@ -263,26 +265,26 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                     WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, null, errors, issueForm);
 
                     if(errors == null || errors.isEmpty()) {
-                        logger.debug("Forwarding to edit issue form for issue " + issue.getId());
+                        log.debug("Forwarding to edit issue form for issue " + issue.getId());
 
                         request.setAttribute("issueForm", issueForm);
                         session.setAttribute(Constants.ISSUE_KEY, issue);
                         session.setAttribute(Constants.LIST_OPTIONS_KEY, listOptions);
                         saveToken(request);
-                        logger.info("EditIssueFormAction: Forward: InputForward");
+                        log.info("EditIssueFormAction: Forward: InputForward");
                         return mapping.getInputForward();
                     }
                 }
             }
         } catch(Exception e) {
-            logger.error("Exception while creating edit issue form.", e);
+            log.error("Exception while creating edit issue form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
         if(! errors.isEmpty()) {
             saveMessages(request, errors);
         }
-        logger.info("EditIssueFormAction: Forward: Error");
+        log.info("EditIssueFormAction: Forward: Error");
         return mapping.findForward("error");
     }
 

@@ -24,6 +24,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -41,14 +42,15 @@ import org.itracker.web.forms.UserForm;
 
 
 public class SelfRegisterAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(SelfRegisterAction.class);
+	
     public SelfRegisterAction() {
     }
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         super.executeAlways(mapping,form,request,response);
-        logger.debug("Checking transactional control token.");
+        log.debug("Checking transactional control token.");
         if(! isTokenValid(request)) {
             return mapping.findForward("login");
         }
@@ -87,7 +89,7 @@ public class SelfRegisterAction extends ItrackerBaseAction {
                 }
             }
         } catch(Exception e) {
-            logger.info("Error during self registration.  " + e.getMessage());
+            log.info("Error during self registration.  " + e.getMessage());
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.register.system"));
         }
 

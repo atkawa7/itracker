@@ -25,6 +25,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -38,7 +39,8 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 
 public class DownloadReportAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(DownloadReportAction.class);
+	
     public DownloadReportAction () {
     }
 
@@ -70,20 +72,20 @@ public class DownloadReportAction extends ItrackerBaseAction {
                     response.setContentType("application/x-itracker-report-export");
                     response.setHeader("Content-Disposition", "attachment; filename=\"ITracker_report_" + report.getId() + ".def\"");
                     ServletOutputStream out = response.getOutputStream();
-                    logger.debug("Attempting export for: " + report);
+                    log.debug("Attempting export for: " + report);
                     //out.println( new String((byte[]) report.getFileData()));
                     out.flush();
                     out.close();
                     return null;
                 }
-                logger.debug("Unknown report " + reportId + " specified for export");
+                log.debug("Unknown report " + reportId + " specified for export");
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreport"));
             }
         } catch(Exception e) {
         	pageTitleKey = "itracker.web.error.title";
         	request.setAttribute("pageTitleKey",pageTitleKey); 
             request.setAttribute("pageTitleArg",pageTitleArg); 
-            logger.error("Exception while exporting a report.", e);
+            log.error("Exception while exporting a report.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
         if(! errors.isEmpty()) {

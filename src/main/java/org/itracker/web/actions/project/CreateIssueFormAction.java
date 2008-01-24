@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -61,7 +62,8 @@ import org.itracker.web.util.LoginUtilities;
 
 
 public class CreateIssueFormAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(CreateIssueFormAction.class);
+	
     public CreateIssueFormAction() {
     }
 
@@ -87,12 +89,12 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
             Locale currLocale = LoginUtilities.getCurrentLocale(request);
 
             if(! UserUtilities.hasPermission(Permissions, projectId, UserUtilities.PERMISSION_CREATE)) {
-                logger.debug("Unauthorized user requested access to create issue for project " + projectId);
+                log.debug("Unauthorized user requested access to create issue for project " + projectId);
                 return mapping.findForward("unauthorized");
             }
 
             Project project = projectService.getProject(projectId);
-            logger.debug("Received request for project " + projectId + "(" + project.getName() + ")");
+            log.debug("Received request for project " + projectId + "(" + project.getName() + ")");
 
             if(project == null) {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
@@ -149,7 +151,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                         int midPoint = (severities.size() / 2);
                         issueForm.setSeverity(new Integer(severities.get(midPoint).getValue()));
                     } catch(NumberFormatException nfe) {
-                        logger.debug("Invalid status number found while preparing create issue form.");
+                        log.debug("Invalid status number found while preparing create issue form.");
                     }
                 }
 
@@ -167,7 +169,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                 WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, null, errors, issueForm);
 
                 if(errors == null || errors.isEmpty()) {
-                    logger.debug("Forwarding to create issue form for project " + project.getId());
+                    log.debug("Forwarding to create issue form for project " + project.getId());
                     request.setAttribute("issueForm", issueForm);
                     session.setAttribute(Constants.PROJECT_KEY, project);
                     session.setAttribute(Constants.LIST_OPTIONS_KEY,listOptions);
@@ -176,7 +178,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                 }
             }
         } catch(Exception e) {
-            logger.error("Exception while creating create issue form.", e);
+            log.error("Exception while creating create issue form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

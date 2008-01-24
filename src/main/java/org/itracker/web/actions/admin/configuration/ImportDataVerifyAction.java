@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -69,6 +70,8 @@ import org.itracker.web.util.Constants;
   * Custom Fields - the label name of the custom field as defined in the language root/base locale<br>
   */
 public class ImportDataVerifyAction extends ItrackerBaseAction {
+	private static final Logger log = Logger.getLogger(ImportDataVerifyAction.class);
+	
     private static final int UPDATE_STATUS = 1;
     private static final int UPDATE_SEVERITY = 2;
     private static final int UPDATE_RESOLUTION = 3;
@@ -103,29 +106,29 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
 
             InitialContext ic = new InitialContext();
             checkConfig(model, ic);
-            logger.debug(model.toString());
+            log.debug(model.toString());
             checkUsers(model, ic);
-            logger.debug(model.toString());
+            log.debug(model.toString());
             checkProjects(model, ic);
-            logger.debug(model.toString());
+            log.debug(model.toString());
             checkIssues(model, ic);
-            logger.debug(model.toString());
+            log.debug(model.toString());
 
             HttpSession session = request.getSession(true);
             session.setAttribute(Constants.IMPORT_DATA_KEY, model);
         } catch(ImportExportException iee) {
             if(iee.getType() == ImportExportException.TYPE_INVALID_LOGINS) {
-                logger.error("Invalid logins found while verifying import data.");
+                log.error("Invalid logins found while verifying import data.");
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.importexport.invalidlogins", iee.getMessage()));
             } else if(iee.getType() == ImportExportException.TYPE_INVALID_STATUS) {
-                logger.error("Invalid status found while verifying import data.");
+                log.error("Invalid status found while verifying import data.");
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.importexport.invalidstatus", iee.getMessage()));
             } else {
-                logger.error("Exception while verifying import data.", iee);
+                log.error("Exception while verifying import data.", iee);
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
             }
         } catch(Exception e) {
-            logger.error("Exception while verifying import data.", e);
+            log.error("Exception while verifying import data.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
@@ -246,7 +249,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
         } catch(ImportExportException iee) {
             throw iee;
         } catch(Exception e) {
-            logger.error("Error verifiying import data.", e);
+            log.error("Error verifiying import data.", e);
             throw new ImportExportException(e.getMessage());
         }
     }
@@ -268,9 +271,9 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                             user.setId(existingUser.getId());
                             model.setExistingModel(i, true);
                             model.addVerifyStatistic(ImportExportUtilities.IMPORT_STAT_USERS, ImportExportUtilities.IMPORT_STAT_REUSED);
-                            logger.debug("Reusing existing user " + user.getLogin() + "(" + user.getId() + ") during import.");
+                            log.debug("Reusing existing user " + user.getLogin() + "(" + user.getId() + ") during import.");
                         } else {
-                            logger.debug("Existing user " + existingUser.getLogin() + "(" + existingUser.getId() + ") during import.  Adding to invalid login list.");
+                            log.debug("Existing user " + existingUser.getLogin() + "(" + existingUser.getId() + ") during import.  Adding to invalid login list.");
                             invalidLogins = (invalidLogins == null ? existingUser.getLogin() : invalidLogins + ", " + existingUser.getLogin());
                         }
                     } else {
@@ -279,7 +282,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                 }
             }
         } catch(Exception e) {
-            logger.error("Error verifiying import data.", e);
+            log.error("Error verifiying import data.", e);
             throw new ImportExportException(e.getMessage());
         }
 
@@ -309,14 +312,14 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                     Project project = (Project) importData[i];
                     boolean found = false;
                     for(int j = 0; j < existingProjects.size(); j++) {
-                        logger.debug("Project Name: " + project.getName() + "  Existing Project: " + existingProjects.get(j).getName());
-                        logger.debug("Project Name: " + ITrackerResources.escapeUnicodeString(project.getName(), false) + "  Existing Project: " +  ITrackerResources.escapeUnicodeString(existingProjects.get(j).getName(), false));
+                        log.debug("Project Name: " + project.getName() + "  Existing Project: " + existingProjects.get(j).getName());
+                        log.debug("Project Name: " + ITrackerResources.escapeUnicodeString(project.getName(), false) + "  Existing Project: " +  ITrackerResources.escapeUnicodeString(existingProjects.get(j).getName(), false));
                         if(project.getName() != null && project.getName().equalsIgnoreCase(existingProjects.get(j).getName())) {
                             project.setId(existingProjects.get(j).getId());
                             model.setExistingModel(i, true);
                             model.addVerifyStatistic(ImportExportUtilities.IMPORT_STAT_PROJECTS, ImportExportUtilities.IMPORT_STAT_REUSED);
                             found = true;
-                            logger.debug("Reusing existing project " + project.getName() + "(" + project.getId() + ") during import.");
+                            log.debug("Reusing existing project " + project.getName() + "(" + project.getId() + ") during import.");
                             break;
                         }
                     }
@@ -326,7 +329,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                 }
             }
         } catch(Exception e) {
-            logger.error("Error verifiying import data.", e);
+            log.error("Error verifiying import data.", e);
             throw new ImportExportException(e.getMessage());
         }
     }
@@ -360,7 +363,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                 }
             }
         } catch(Exception e) {
-            logger.debug("Unable to update configuration data in issues.", e);
+            log.debug("Unable to update configuration data in issues.", e);
             throw new ImportExportException("Unable to update configuration data in issues: " + e.getMessage());
         }
     }

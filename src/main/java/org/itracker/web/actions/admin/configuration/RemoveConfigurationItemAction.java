@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -49,7 +50,8 @@ import org.itracker.web.util.Constants;
 
 
 public class RemoveConfigurationItemAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(RemoveConfigurationItemAction.class);
+	
     public RemoveConfigurationItemAction() {
     }
 
@@ -102,7 +104,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
 
                     int currSeverity = Integer.parseInt(currConfigValue);
                     int newSeverity = Integer.parseInt(newConfigValue);
-                    logger.debug("Promoting issues in severity " + IssueUtilities.getSeverityName(currSeverity) + " to " + IssueUtilities.getSeverityName(newSeverity));
+                    log.debug("Promoting issues in severity " + IssueUtilities.getSeverityName(currSeverity) + " to " + IssueUtilities.getSeverityName(newSeverity));
 
                     HttpSession session = request.getSession(true);
                     User currUser = (User) session.getAttribute(Constants.USER_KEY);
@@ -123,7 +125,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                         }
                     }
                 } catch(Exception e) {
-                    logger.debug("Exception while promoting issues with severity " + configItem.getValue(), e);
+                    log.debug("Exception while promoting issues with severity " + configItem.getValue(), e);
                 }
             } else if(configItem.getType() == SystemConfigurationUtilities.TYPE_STATUS) {
                 key = ITrackerResources.KEY_BASE_STATUS + configItem.getValue();
@@ -151,7 +153,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
 
                     int currStatus = Integer.parseInt(currConfigValue);
                     int newStatus = Integer.parseInt(newConfigValue);
-                    logger.debug("Promoting issues in status " + IssueUtilities.getStatusName(currStatus) + " to " + IssueUtilities.getStatusName(newStatus));
+                    log.debug("Promoting issues in status " + IssueUtilities.getStatusName(currStatus) + " to " + IssueUtilities.getStatusName(newStatus));
 
                     HttpSession session = request.getSession(true);
                     User currUser = (User) session.getAttribute(Constants.USER_KEY);
@@ -172,7 +174,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                         }
                     }
                 } catch(Exception e) {
-                    logger.debug("Exception while promoting issues with status " + configItem.getValue(), e);
+                    log.debug("Exception while promoting issues with status " + configItem.getValue(), e);
                 }
             } else if(configItem.getType() == SystemConfigurationUtilities.TYPE_RESOLUTION) {
                 key = ITrackerResources.KEY_BASE_RESOLUTION + configItem.getValue();
@@ -190,14 +192,14 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
 
             return mapping.findForward("listconfiguration");
         } catch(SystemConfigurationException sce) {
-            logger.debug(sce.getMessage(), sce);
+            log.debug(sce.getMessage(), sce);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidconfiguration"));
         } catch(NumberFormatException nfe) {
         	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidconfiguration"));
-            logger.debug("Invalid configuration item id " + request.getParameter("id") + " specified.");
+            log.debug("Invalid configuration item id " + request.getParameter("id") + " specified.");
         } catch(Exception e) {
         	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-            logger.error("System Error.", e);
+            log.error("System Error.", e);
         }
         if(! errors.isEmpty()) {
             saveMessages(request, errors);

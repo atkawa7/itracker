@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -45,7 +46,8 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.MoveIssueForm;
 
 public class MoveIssueFormAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(MoveIssueFormAction.class);
+	
     public MoveIssueFormAction() {
     }
 
@@ -80,7 +82,7 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
                 Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
 
                 if(! UserUtilities.hasPermission(userPermissions, issue.getProject().getId(), UserUtilities.PERMISSION_EDIT)) {
-                    logger.debug("Unauthorized user requested access to move issue for issue " + issueId);
+                    log.debug("Unauthorized user requested access to move issue for issue " + issueId);
                     return mapping.findForward("unauthorized");
                 }
 
@@ -117,13 +119,13 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
                     	// session.setAttribute(Constants.ISSUE_KEY, issue);
                     	request.setAttribute("issue", issue);
                     	saveToken(request);
-                    	logger.info("No errors while moving issue. Forwarding to move issue form.");
+                    	log.info("No errors while moving issue. Forwarding to move issue form.");
                     	return mapping.getInputForward();
                     }
                 }
             }
         } catch(Exception e) {
-            logger.error("Exception while creating move issue form.", e);
+            log.error("Exception while creating move issue form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

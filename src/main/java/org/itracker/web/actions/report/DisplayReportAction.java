@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -59,7 +60,8 @@ import org.itracker.web.util.Constants;
 
 
 public class DisplayReportAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(DisplayReportAction.class);
+	
     public DisplayReportAction() {
     }
 
@@ -120,7 +122,7 @@ public class DisplayReportAction extends ItrackerBaseAction {
                 reportDataArray = (isqm == null || isqm.getResults() == null ? new ArrayList<Issue>() : isqm.getResults());
             }
 
-            logger.debug("Report data contains " + reportDataArray.size() + " elements.");
+            log.debug("Report data contains " + reportDataArray.size() + " elements.");
 
             if(reportDataArray.size() == 0) {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noreportdata"));
@@ -130,11 +132,11 @@ public class DisplayReportAction extends ItrackerBaseAction {
             Integer reportId = (Integer) PropertyUtils.getSimpleProperty(form, "reportId");
             String reportOutput = (String) PropertyUtils.getSimpleProperty(form, "reportOutput");
             if(reportId == null || reportId.intValue() == 0) {
-                logger.debug("Invalid report id: " + reportId + " requested.");
+                log.debug("Invalid report id: " + reportId + " requested.");
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreport"));
                 throw new ReportException();
             } else if(reportId.intValue() == ReportUtilities.REPORT_EXPORT_XML) {
-                logger.debug("Issue export requested.");
+                log.debug("Issue export requested.");
 
                 ConfigurationService configurationService = getITrackerServices().getConfigurationService();
                 SystemConfiguration config = configurationService.getSystemConfiguration(ImportExportTags.EXPORT_LOCALE);
@@ -145,41 +147,41 @@ public class DisplayReportAction extends ItrackerBaseAction {
                 }
                 return null;
             } else if(reportId.intValue() > 0) {
-                logger.debug("Defined report (" + reportId + ") requested.");
+                log.debug("Defined report (" + reportId + ") requested.");
 
                 ReportService reportService = getITrackerServices().getReportService();
                 Report reportModel = reportService.getReportDAO().findByPrimaryKey(reportId);
 
                 // probably useless. the dao throws when the report doesn't exists
                 if(reportModel == null) {
-                    logger.debug("Invalid report id: " + reportId + " requested.");
+                    log.debug("Invalid report id: " + reportId + " requested.");
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreport"));
                     throw new ReportException();
                 }
                 
-                logger.debug("Report " + reportModel.toString() + " found.");                                                               
+                log.debug("Report " + reportModel.toString() + " found.");                                                               
                 
                 if(ReportUtilities.REPORT_OUTPUT_PDF.equals(reportOutput)) {
-                    logger.debug("Processing PDF report.");
+                    log.debug("Processing PDF report.");
                     reportService.outputPDF(reportDataArray, reportModel, userLocale, reportOutput, session, request, response, mapping);
                     return null;
                 } else if(ReportUtilities.REPORT_OUTPUT_XLS.equals(reportOutput)) {
-                    logger.debug("Processing XLS report.");
+                    log.debug("Processing XLS report.");
                     //report.outputXLS(request, response, mapping);
                     throw new RuntimeException("not working");
                     //return null;
                 } else if(ReportUtilities.REPORT_OUTPUT_CSV.equals(reportOutput)) {
-                    logger.debug("Processing CSV report.");
+                    log.debug("Processing CSV report.");
                     //report.outputCSV(request, response, mapping);
                     throw new RuntimeException("not working");
                     //return null;
                 } else if(ReportUtilities.REPORT_OUTPUT_HTML.equals(reportOutput)) {
-                    logger.debug("Processing HTML report.");
+                    log.debug("Processing HTML report.");
                     //report.outputHTML(request, response, mapping);
                     throw new RuntimeException("not working");
                     //turn null;
                 } else {
-                    logger.error("Invalid report output format: " + reportOutput);
+                    log.error("Invalid report output format: " + reportOutput);
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreportoutput"));
                     throw new ReportException();
                 }
@@ -189,7 +191,7 @@ public class DisplayReportAction extends ItrackerBaseAction {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(re.getErrorKey()));
             }
         } catch(Exception e) {
-            logger.debug("Error in report processing: " + e.getMessage(), e);
+            log.debug("Error in report processing: " + e.getMessage(), e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.details", e.getMessage()));
         }
@@ -212,7 +214,7 @@ public class DisplayReportAction extends ItrackerBaseAction {
             out.print(xml);
             out.flush();
         } catch(ImportExportException iee) {
-            logger.error("Error exporting issue data. Message: " + iee.getMessage(), iee);
+            log.error("Error exporting issue data. Message: " + iee.getMessage(), iee);
             return false;
         }
         out.flush();

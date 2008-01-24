@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -48,7 +49,8 @@ import org.itracker.web.util.Constants;
 
 
 public class EditLanguageFormAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditLanguageFormAction.class);
+	
     public EditLanguageFormAction() {
     }
 
@@ -101,12 +103,12 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                 Map<String,String> langItems = new HashMap<String,String>();
                 Map<String,String> locItems = new HashMap<String,String>();
                 Map<String,String> items = new HashMap<String,String>();
-                logger.debug("Loading language elements for edit.  Edit type is " + localeType);
+                log.debug("Loading language elements for edit.  Edit type is " + localeType);
                 
                 if (localeType >= SystemConfigurationUtilities.LOCALE_TYPE_BASE) {
                     baseItems = configurationService.getDefinedKeys(null);
                     items = baseItems;
-                    logger.debug("Base Locale has " + baseItems.size() + " keys defined.");
+                    log.debug("Base Locale has " + baseItems.size() + " keys defined.");
                 }
                 
                 if (localeType >= SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE) {
@@ -115,14 +117,14 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                         languageForm.setParentLocale(parentLocale );
                         langItems = configurationService.getDefinedKeys(parentLocale);
                         items = langItems;
-                        logger.debug("Language " + parentLocale + " has " + langItems.size() + " keys defined.");
+                        log.debug("Language " + parentLocale + " has " + langItems.size() + " keys defined.");
                     }
                 }
                 
                 if (localeType == SystemConfigurationUtilities.LOCALE_TYPE_LOCALE) {
                     locItems = configurationService.getDefinedKeys(locale);
                     items = locItems;
-                    logger.debug("Locale " + locale + " has " + locItems.size() + " keys defined.");
+                    log.debug("Locale " + locale + " has " + locItems.size() + " keys defined.");
                 }
                 
                 if (! "create".equals((String) PropertyUtils.getSimpleProperty(form, "action"))) {
@@ -170,12 +172,12 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                 session.setAttribute(Constants.EDIT_LANGUAGE_LOC_KEY, locItems);
                 session.setAttribute(Constants.EDIT_LANGUAGE_TYPE_KEY, new Integer(localeType));
                 request.setAttribute("languageForm", languageForm);
-                logger.debug("Locale = " + languageForm.getLocale());
+                log.debug("Locale = " + languageForm.getLocale());
                 saveToken(request);
                 return mapping.getInputForward();
             }
         } catch(Exception e) {
-            logger.error("Exception while creating edit language form.", e);
+            log.error("Exception while creating edit language form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

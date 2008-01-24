@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -26,7 +27,8 @@ import org.itracker.web.util.Constants;
 
 
 public class EditReportFormAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditReportFormAction.class);
+	
     public EditReportFormAction() {
     }
 
@@ -102,7 +104,7 @@ public class EditReportFormAction extends ItrackerBaseAction {
                 return mapping.getInputForward();
             }
         } catch(Exception e) {
-            logger.error("Exception while creating edit report form.", e);
+            log.error("Exception while creating edit report form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

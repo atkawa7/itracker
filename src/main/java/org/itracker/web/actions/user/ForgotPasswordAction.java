@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -40,7 +41,8 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
 public class ForgotPasswordAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(ForgotPasswordAction.class);
+	
     public ForgotPasswordAction() {
     }
 
@@ -75,8 +77,8 @@ public class ForgotPasswordAction extends ItrackerBaseAction {
                         throw new PasswordException(PasswordException.INACTIVE_ACCOUNT);
                     }
 
-                    if(logger.isDebugEnabled()) {
-                        logger.debug("ForgotPasswordHandler found matching user: " + user.getFirstName() + " " + user.getLastName() + "(" + user.getLogin() + ")");
+                    if(log.isDebugEnabled()) {
+                        log.debug("ForgotPasswordHandler found matching user: " + user.getFirstName() + " " + user.getLastName() + "(" + user.getLogin() + ")");
                     }
 
                     String subject = ITrackerResources.getString("itracker.email.forgotpass.subject");
@@ -87,8 +89,8 @@ public class ForgotPasswordAction extends ItrackerBaseAction {
                     getITrackerServices().getEmailService()
                         .sendEmail(user.getEmail(), subject, msgText.toString());
                 } catch(PasswordException pe) {
-                    if(logger.isDebugEnabled()) {
-                        logger.debug("Password Exception for user " + (login != null ? login : "UNKNOWN") + ". Type = " + pe.getType());
+                    if(log.isDebugEnabled()) {
+                        log.debug("Password Exception for user " + (login != null ? login : "UNKNOWN") + ". Type = " + pe.getType());
                     }
                     if(pe.getType() == PasswordException.INVALID_NAME) {
                         errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.forgotpass.lastname"));
@@ -103,10 +105,10 @@ public class ForgotPasswordAction extends ItrackerBaseAction {
             }
         } catch(PasswordException pe) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.notenabled"));
-            logger.error("Forgot Password function has been disabled.", pe);
+            log.error("Forgot Password function has been disabled.", pe);
         } catch(Exception e) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.forgotpass.system"));
-            logger.error("Error during password retrieval.", e);
+            log.error("Error during password retrieval.", e);
         }
 
         if(! errors.isEmpty()) {

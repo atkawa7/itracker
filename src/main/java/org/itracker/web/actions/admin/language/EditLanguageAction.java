@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -48,7 +49,8 @@ import org.itracker.web.util.Constants;
 
 
 public class EditLanguageAction extends ItrackerBaseAction {
-    
+	private static final Logger log = Logger.getLogger(EditLanguageAction.class);
+	
     public EditLanguageAction() {
     }
     
@@ -59,7 +61,7 @@ public class EditLanguageAction extends ItrackerBaseAction {
             return mapping.findForward("login");
         }
         if(! isTokenValid(request)) {
-            logger.debug("Invalid request token while editing language.");
+            log.debug("Invalid request token while editing language.");
             return mapping.findForward("listlanguages");
         }
         resetToken(request);
@@ -157,7 +159,7 @@ public class EditLanguageAction extends ItrackerBaseAction {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidaction"));
             }
         } catch(Exception e) {
-            logger.error("Exception processing form data", e);
+            log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
         

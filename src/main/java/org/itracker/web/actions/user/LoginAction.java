@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -51,7 +52,8 @@ import org.itracker.web.util.SessionTracker;
 
 
 public class LoginAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(LoginAction.class);
+	
     // TODO: this should live in ConfigurationService. [Whoever wrote this, could you please explain why?]
 	
     private int SESSION_TIMEOUT = 30;
@@ -92,7 +94,7 @@ public class LoginAction extends ItrackerBaseAction {
                     }
                     encPassword = UserUtilities.encryptPassword(authenticator);
 
-                    logger.debug("Attempting login with plaintext password for user " + login);
+                    log.debug("Attempting login with plaintext password for user " + login);
                     user = userService.checkLogin(login, authenticator, AuthenticationConstants.AUTH_TYPE_PASSWORD_PLAIN,
                             AuthenticationConstants.REQ_SOURCE_WEB);
                 } else if (authType == AuthenticationConstants.AUTH_TYPE_PASSWORD_ENC) {
@@ -106,15 +108,15 @@ public class LoginAction extends ItrackerBaseAction {
                     }
                     encPassword = authenticator;
 
-                    logger.debug("Attempting login with encrypted password for user " + login);
+                    log.debug("Attempting login with encrypted password for user " + login);
                     user = userService.checkLogin(login, authenticator, AuthenticationConstants.AUTH_TYPE_PASSWORD_ENC,
                             AuthenticationConstants.REQ_SOURCE_WEB);
                 } else if (authType == AuthenticationConstants.AUTH_TYPE_REQUEST) {
-                    logger.debug("Attempting login with request object");
+                    log.debug("Attempting login with request object");
                     user = userService.checkLogin(login, request, AuthenticationConstants.AUTH_TYPE_REQUEST,
                             AuthenticationConstants.REQ_SOURCE_WEB);
                 } else {
-                    logger.debug("Attempting login with with unknown auth type");
+                    log.debug("Attempting login with with unknown auth type");
                     user = userService.checkLogin(login, request, AuthenticationConstants.AUTH_TYPE_UNKNOWN,
                             AuthenticationConstants.REQ_SOURCE_WEB);
                 }
@@ -127,18 +129,18 @@ public class LoginAction extends ItrackerBaseAction {
                 setupSession(user, encPassword, request, response);
 
                 String redirect = request.getParameter(Constants.AUTH_REDIRECT_KEY);
-                logger.debug("Redirect URL from request param = " + redirect);
+                log.debug("Redirect URL from request param = " + redirect);
                 if (redirect == null || "".equals(redirect)) {
                     redirect = (String) request.getAttribute(Constants.AUTH_REDIRECT_KEY);
-                    logger.debug("Redirect URL from request attribute = " + redirect);
+                    log.debug("Redirect URL from request attribute = " + redirect);
                 }
                 int redirectIndex = (redirect == null ? -1 : redirect.indexOf("?" + Constants.AUTH_REDIRECT_KEY + "="));
                 if (redirectIndex > -1) {
                     int extraParamIndex = redirect.indexOf("&", redirectIndex);
                     int lastParamIndex = redirect.lastIndexOf("&", redirectIndex);
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Original redirect URL = " + redirect);
-                        logger.debug("Redirect Index: " + redirectIndex + "  ExtraParamIndex: " + extraParamIndex
+                    if (log.isDebugEnabled()) {
+                        log.debug("Original redirect URL = " + redirect);
+                        log.debug("Redirect Index: " + redirectIndex + "  ExtraParamIndex: " + extraParamIndex
                                 + "  LastParamIndex: " + lastParamIndex);
                     }
                     if (extraParamIndex > -1 && lastParamIndex > -1) {
@@ -151,24 +153,24 @@ public class LoginAction extends ItrackerBaseAction {
                     }
                 }
                 SessionManager.createSession(user.getLogin());
-                logger.info("User " + (user != null ? user.getLogin() : "UNKNOWN") + " logged in successfully.");
+                log.info("User " + (user != null ? user.getLogin() : "UNKNOWN") + " logged in successfully.");
                 if (redirect == null || "".equals(redirect)) {
-                	logger.info("Action is trying to forward to Forward index");
+                	log.info("Action is trying to forward to Forward index");
                     return mapping.findForward("index");
                 } else {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Redirecting to " + redirect);
+                    if (log.isDebugEnabled()) {
+                        log.debug("Redirecting to " + redirect);
                     }
                     return new ActionForward(redirect, true);
                 }
             } catch (IllegalStateException ise) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("IllegalStateException caught during login.", ise);
+                if (log.isDebugEnabled()) {
+                    log.debug("IllegalStateException caught during login.", ise);
                 }
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.login.system"));
             } catch (AuthenticatorException le) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Login Exception for user " + (login != null ? login : "UNKNOWN") + ". Type = "
+                if (log.isDebugEnabled()) {
+                    log.debug("Login Exception for user " + (login != null ? login : "UNKNOWN") + ". Type = "
                             + le.getType(), le);
                 }
                 if (le.getType() == AuthenticatorException.INVALID_PASSWORD) {
@@ -191,10 +193,10 @@ public class LoginAction extends ItrackerBaseAction {
                     errorMapping = new ActionForward(le.getErrorPageValue());
                 }
             }
-            logger.info("User " + (login != null ? login : "UNKNOWN") + " login unsucessful.");
+            log.info("User " + (login != null ? login : "UNKNOWN") + " login unsucessful.");
         } catch (Exception e) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.login.system"));
-            logger.error("System Error.", e);
+            log.error("System Error.", e);
         }
         if (!errors.isEmpty()) {
             LogoffAction logoff = new LogoffAction();
@@ -234,28 +236,28 @@ public class LoginAction extends ItrackerBaseAction {
 
         UserService userService = getITrackerServices().getUserService();
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Creating new session");
+        if (log.isDebugEnabled()) {
+            log.debug("Creating new session");
         }
         HttpSession session = request.getSession(true);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Setting session timeout to " + getConfiguredSessionTimeout() + " minutes");
+        if (log.isDebugEnabled()) {
+            log.debug("Setting session timeout to " + getConfiguredSessionTimeout() + " minutes");
         }
         session.setMaxInactiveInterval(getConfiguredSessionTimeout() * 60);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Setting session tracker");
+        if (log.isDebugEnabled()) {
+            log.debug("Setting session tracker");
         }
         session.setAttribute(Constants.SESSION_TRACKER_KEY, new SessionTracker(user.getLogin(), session.getId()));
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Setting user information");
+        if (log.isDebugEnabled()) {
+            log.debug("Setting user information");
         }
         session.setAttribute(Constants.USER_KEY, user);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Setting preferences for user " + user.getLogin());
+        if (log.isDebugEnabled()) {
+            log.debug("Setting preferences for user " + user.getLogin());
         }
         UserPreferences userPrefs = user.getPreferences();
         //TODO : this is a hack, remove when possible
@@ -264,36 +266,36 @@ public class LoginAction extends ItrackerBaseAction {
         }
         session.setAttribute(Constants.PREFERENCES_KEY, userPrefs);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Setting user locale to " + ITrackerResources.getLocale(userPrefs.getUserLocale()));
+        if (log.isDebugEnabled()) {
+            log.debug("Setting user locale to " + ITrackerResources.getLocale(userPrefs.getUserLocale()));
         }
         session.setAttribute(Constants.LOCALE_KEY, ITrackerResources.getLocale(userPrefs.getUserLocale()));
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Setting autologin cookie for user " + user.getLogin());
+        if (log.isDebugEnabled()) {
+            log.debug("Setting autologin cookie for user " + user.getLogin());
         }
         Cookie cookie = new Cookie(Constants.COOKIE_NAME, "");
         cookie.setPath(request.getContextPath());
         if (userPrefs.getSaveLogin()) {
             if (encPassword != null) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("User allows autologin");
+                if (log.isDebugEnabled()) {
+                    log.debug("User allows autologin");
                 }
                 cookie.setComment("ITracker autologin cookie");
                 cookie.setValue(user.getLogin() + "~" + encPassword);
                 cookie.setMaxAge(30 * 24 * 60 * 60);
             }
         } else {
-            if (logger.isDebugEnabled()) {
-                logger.debug("User does not allow autologin");
+            if (log.isDebugEnabled()) {
+                log.debug("User does not allow autologin");
             }
             cookie.setValue("");
             cookie.setMaxAge(0);
         }
         response.addCookie(cookie);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Setting permissions for user " + user.getLogin());
+        if (log.isDebugEnabled()) {
+            log.debug("Setting permissions for user " + user.getLogin());
         }
         Map<Integer, Set<PermissionType>> usersMapOfProjectIdsAndSetOfPermissionTypes = userService.getUsersMapOfProjectIdsAndSetOfPermissionTypes(user, AuthenticationConstants.REQ_SOURCE_WEB);
         session.setAttribute(Constants.PERMISSIONS_KEY, usersMapOfProjectIdsAndSetOfPermissionTypes);
@@ -302,8 +304,8 @@ public class LoginAction extends ItrackerBaseAction {
         session.setAttribute(Constants.SEARCH_QUERY_KEY, null);
 
         SessionManager.clearSessionNeedsReset(user.getLogin());
-        if (logger.isDebugEnabled()) {
-            logger.debug("User session data updated.");
+        if (log.isDebugEnabled()) {
+            log.debug("User session data updated.");
         }
         return user;
     }

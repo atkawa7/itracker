@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -45,7 +46,8 @@ import org.itracker.web.util.Constants;
 
 
 public class MoveIssueAction extends ItrackerBaseAction {
-    
+	private static final Logger log = Logger.getLogger(MoveIssueAction.class);
+	
     public MoveIssueAction() {
     }
     
@@ -65,7 +67,7 @@ public class MoveIssueAction extends ItrackerBaseAction {
             return mapping.findForward("login");
         }
         if(! isTokenValid(request)) {
-            logger.debug("Invalid request token while creating issue.");
+            log.debug("Invalid request token while creating issue.");
             return mapping.findForward("index");
         }
         resetToken(request);
@@ -91,11 +93,11 @@ public class MoveIssueAction extends ItrackerBaseAction {
                 Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
                 
                 if(! UserUtilities.hasPermission(userPermissions, issue.getProject().getId(), UserUtilities.PERMISSION_EDIT)) {
-                    logger.debug("User not authorized to move issue " + issueId);
+                    log.debug("User not authorized to move issue " + issueId);
                     return mapping.findForward("unauthorized");
                 }
                 if(! UserUtilities.hasPermission(userPermissions, projectId, new int[] {UserUtilities.PERMISSION_EDIT, UserUtilities.PERMISSION_CREATE})) {
-                    logger.debug("User attempted to move issue " + issueId + " to unauthorized project.");
+                    log.debug("User attempted to move issue " + issueId + " to unauthorized project.");
                     return mapping.findForward("unauthorized");
                 }
                 
@@ -105,17 +107,17 @@ public class MoveIssueAction extends ItrackerBaseAction {
                 session.removeAttribute(Constants.ISSUE_KEY);
                 
                 if("editissue".equals((String) PropertyUtils.getSimpleProperty(form, "caller"))) {
-                    logger.info("go to forward editissue");
+                    log.info("go to forward editissue");
                     return new ActionForward(mapping.findForward("editissue").getPath() + "?id=" + issue.getId());
                 } else if("viewissue".equals((String) PropertyUtils.getSimpleProperty(form, "caller"))) {
-                    logger.info("go to forward viewissue");
+                    log.info("go to forward viewissue");
                     return new ActionForward(mapping.findForward("move_view_issue").getPath() + "?id=" + issue.getId());
                 } else {
                     return mapping.findForward("index");
                 }
             }
         } catch(Exception e) {
-            logger.error("Exception processing form data", e);
+            log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
         

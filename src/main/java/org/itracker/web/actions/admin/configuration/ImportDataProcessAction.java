@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -62,7 +63,8 @@ import org.itracker.web.util.Constants;
 
 
 public class ImportDataProcessAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(ImportDataProcessAction.class);
+	
     public ImportDataProcessAction () {
     }
 
@@ -89,18 +91,18 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
             ImportDataModel model = (ImportDataModel) session.getAttribute(Constants.IMPORT_DATA_KEY);
             // TODO: it looks like the following line can be removed. Commented and Task added
             // AbstractBean[] importData = model.getData();
-            logger.debug("Importing configuration data.");
+            log.debug("Importing configuration data.");
             createConfig(model, importer, ic);
-            logger.debug("Importing user data.");
+            log.debug("Importing user data.");
             createUsers(model, importer, ic);
-            logger.debug("Importing project data.");
+            log.debug("Importing project data.");
             createProjects(model, importer, ic);
-            logger.debug("Importing issue data.");
+            log.debug("Importing issue data.");
             createIssues(model, importer, ic);
-            logger.debug("Import complete.");
+            log.debug("Import complete.");
 
         } catch(Exception e) {
-            logger.error("Exception while importing data.", e);
+            log.error("Exception while importing data.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

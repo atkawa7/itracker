@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -48,7 +49,8 @@ import org.itracker.web.util.Constants;
 
 
 public class EditReportAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditReportAction.class);
+	
     public EditReportAction() {
     }
 
@@ -60,7 +62,7 @@ public class EditReportAction extends ItrackerBaseAction {
             return mapping.findForward("login");
         }
         if(! isTokenValid(request)) {
-            logger.debug("Invalid request token while editing report.");
+            log.debug("Invalid request token while editing report.");
             return mapping.findForward("listreports");
         }
         resetToken(request);
@@ -106,7 +108,7 @@ public class EditReportAction extends ItrackerBaseAction {
                     //editreport.setFileData(fileData.getBytes());
                 }
             } catch(Exception e) {
-                logger.error("Exception while verifying import data.", e);
+                log.error("Exception while verifying import data.", e);
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingdatafile"));
             }
 
@@ -134,7 +136,7 @@ public class EditReportAction extends ItrackerBaseAction {
                 ITrackerResources.clearKeyFromBundles(editreport.getNameKey(), true);
             }
         } catch(Exception e) {
-            logger.error("Exception processing form data", e);
+            log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.save"));
         }
 

@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -36,6 +37,7 @@ import org.apache.struts.action.ActionMessages;
 import org.itracker.model.WorkflowScript;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.UserUtilities;
+import org.itracker.web.actions.admin.configuration.EditCustomFieldAction;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 
@@ -43,7 +45,8 @@ import bsh.ParseException;
 
 
 public class EditWorkflowScriptAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(EditWorkflowScriptAction.class);
+	
     public EditWorkflowScriptAction() {
     }
 
@@ -59,7 +62,7 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
         }
 
         if(! isTokenValid(request)) {
-            logger.debug("Invalid request token while editing workflow script.");
+            log.debug("Invalid request token while editing workflow script.");
             return mapping.findForward("listworkflow");
         }
         resetToken(request);
@@ -83,7 +86,7 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
 //                }
             }
 
-            logger.info("Kimba:  using this module action 1" );
+            log.info("Kimba:  using this module action 1" );
             workflowScript = new WorkflowScript();
             workflowScript.setId((Integer) PropertyUtils.getSimpleProperty(form, "id"));
             workflowScript.setName((String) PropertyUtils.getSimpleProperty(form, "name"));
@@ -91,7 +94,7 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
             workflowScript.setScript(scriptData);
 
             String action = (String) PropertyUtils.getSimpleProperty(form, "action");
-            logger.info("Kimba:  using this module action 2"+action );
+            log.info("Kimba:  using this module action 2"+action );
             if("create".equals(action)) {
                 workflowScript = configurationService.createWorkflowScript(workflowScript);
             } else if ("update".equals(action)) {
@@ -109,13 +112,13 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
 //            return mapping.findForward("listworkflow");
             return new ActionForward(mapping.findForward("listworkflow").getPath() + "?id=" + workflowScript.getId() +"&action=update");
         } catch(ParseException pe) {
-            logger.debug("Error parseing script.  Redisplaying form for correction.", pe);
+            log.debug("Error parseing script.  Redisplaying form for correction.", pe);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidscriptdata", pe.getMessage()));
             saveMessages(request, errors);
             saveToken(request);
             return mapping.getInputForward();
         } catch(Exception e) {
-            logger.error("Exception processing form data", e);
+            log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 

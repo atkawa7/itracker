@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -45,7 +46,8 @@ import org.itracker.web.util.Constants;
 
 
 public class EditVersionAction extends ItrackerBaseAction {
-    
+	private static final Logger log = Logger.getLogger(EditVersionAction.class);
+	
     public EditVersionAction() {
     }
     
@@ -63,7 +65,7 @@ public class EditVersionAction extends ItrackerBaseAction {
         }
         
         if (!isTokenValid(request)) {
-            logger.debug("Invalid request token while editing version.");
+            log.debug("Invalid request token while editing version.");
             return mapping.findForward("listprojectsadmin");
         }
         resetToken(request);
@@ -118,7 +120,7 @@ public class EditVersionAction extends ItrackerBaseAction {
                 }
             }
         } catch(Exception ex) {
-            logger.error("Exception processing form data", ex);
+            log.error("Exception processing form data", ex);
             errors.add(ActionMessages.GLOBAL_MESSAGE, 
                     new ActionMessage("itracker.web.error.system"));
         }
