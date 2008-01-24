@@ -10,7 +10,7 @@ public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
     private ProjectDAO projectDAO;
 
     @Test
-    public void createProject() {
+    public void testCreateProject() {
 
         Project foundProject = projectDAO.findByPrimaryKey(2);
 

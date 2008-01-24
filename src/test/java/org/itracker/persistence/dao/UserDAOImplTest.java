@@ -14,7 +14,7 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
     private UserDAO userDAO;
 
     @Test
-    public void createUser() {
+    public void testCreateUser() {
 
         User user = new User( "admin_test2","admin_test2", "admin firstname2", "admin lastname2", "", true );
         user.setCreateDate( new Date() );
@@ -32,7 +32,7 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void createUserWithNotNullPK() {
+    public void testCreateUserWithNotNullPK() {
 
         try {
             User user = new User( "admin_test3","admin_test3", "admin firstname3", "admin lastname3", "", true );

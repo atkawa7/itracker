@@ -12,7 +12,7 @@ public class ComponentDAOImplTest extends AbstractDependencyInjectionTest {
     private ComponentDAO componentDAO;
 
     @Test
-    public void findById() {
+    public void testFindById() {
         Component component = componentDAO.findById(1);
 
         assertNotNull(component);
@@ -24,7 +24,7 @@ public class ComponentDAOImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void findByProject() {
+    public void testFindByProject() {
         List<Component> components = componentDAO.findByProject(2);
 
         assertEquals(1, components.size());

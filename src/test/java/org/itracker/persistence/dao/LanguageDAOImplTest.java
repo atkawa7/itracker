@@ -11,7 +11,7 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
     private LanguageDAO languageDAO;
 
     @Test
-    public void findByID() {
+    public void testFindByID() {
 
         Language language = languageDAO.findById(1);
 
@@ -21,7 +21,7 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void findByKeyAndLocale() {
+    public void testFindByKeyAndLocale() {
 
         Language language = languageDAO.findByKeyAndLocale(
                 "test_key", "test_locale" );
@@ -34,7 +34,7 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void findByKey() {
+    public void testFindByKey() {
 
         List<Language> languages = languageDAO.findByKey( "test_key" );
 
@@ -50,7 +50,7 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void findByLocale() {
+    public void testFindByLocale() {
 
         List<Language> languages = languageDAO.findByLocale( "test_locale" );
 

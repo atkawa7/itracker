@@ -11,7 +11,7 @@ public class NotificationDAOImplTest extends AbstractDependencyInjectionTest {
     private NotificationDAO notificationDAO;
 
     @Test
-    public void findById() {
+    public void testFindById() {
 
         Notification notification = notificationDAO.findById(1);
 
@@ -24,7 +24,7 @@ public class NotificationDAOImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void findByIssueId() {
+    public void testFindByIssueId() {
 
         List<Notification> notifications = notificationDAO.findByIssueId(1);
 

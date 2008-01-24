@@ -35,7 +35,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void getPermissionsByUserId() {
+    public void testGetPermissionsByUserId() {
         Integer userId = 3;
         Integer projectId = 2;
         List<Permission> currentPermissions;
@@ -79,7 +79,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void setUserPermissions() {
+    public void testSetUserPermissions() {
         Integer userId = 3;
         Integer projectId = 2;
 
@@ -104,7 +104,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void setAndUnsetUserPermissions() {
+    public void testSetAndUnsetUserPermissions() {
         Integer userId = 3;
         Integer projectId = 2;
         List<Permission> newPermissions = new ArrayList<Permission>();
@@ -141,7 +141,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void getUsersWithProjectPermission() {
+    public void testGetUsersWithProjectPermission() {
         Integer projectId = 2;
         Integer permissionId = 1;
         List<User> users = userService.getUsersWithProjectPermission(projectId,
@@ -150,7 +150,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void updateUser() throws UserException {
+    public void testUpdateUser() throws UserException {
         User user = userService.getUser(2);
 
         user.setEmail("updated_email@test.com");
@@ -162,7 +162,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void getPossibleOwners() {
+    public void testGetPossibleOwners() {
         Issue issue = new Issue();
         Integer projectId = 2;
         Integer userId = 2;

@@ -11,7 +11,7 @@ public class ConfigurationDAOImplTest extends AbstractDependencyInjectionTest {
     private ConfigurationDAO configurationDAO;
 
     @Test
-    public void findByPrimaryKey() {
+    public void testFindByPrimaryKey() {
         Configuration configuration = configurationDAO.findByPrimaryKey(1);
 
         assertNotNull(configuration);
@@ -23,7 +23,7 @@ public class ConfigurationDAOImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void findByType() {
+    public void testFindByType() {
         List<Configuration> configurations = configurationDAO.findByType(1);
 
         assertEquals(1, configurations.size());
@@ -37,7 +37,7 @@ public class ConfigurationDAOImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void findByTypeAndValue() {
+    public void testFindByTypeAndValue() {
         List<Configuration> configurations = configurationDAO.findByTypeAndValue(1, "Test Value");
 
         assertEquals(1, configurations.size());

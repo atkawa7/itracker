@@ -11,7 +11,7 @@ public class CustomFieldDAOImplTest extends AbstractDependencyInjectionTest {
     private CustomFieldDAO customFieldDAO;
 
     @Test
-    public void findByPrimaryKey() {
+    public void testFindByPrimaryKey() {
         CustomField customField = customFieldDAO.findByPrimaryKey(1);
 
         assertNotNull(customField);
@@ -23,7 +23,7 @@ public class CustomFieldDAOImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void findAll() {
+    public void testFindAll() {
         List<CustomField> customFields = customFieldDAO.findAll();
 
         assertEquals(1, customFields.size());
