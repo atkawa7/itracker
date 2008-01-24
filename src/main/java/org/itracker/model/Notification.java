@@ -61,19 +61,14 @@ public class Notification extends AbstractEntity
     public Notification(User user, Issue issue, int role) {
         this.setUser(user);
         this.setIssue(issue);
-        
-        for (int i = 0; i < Role.values().length; i++) {
-			if (Role.values()[i].code == role) {
-				this.setNotificationRole(Role.values()[i]);
-				break;
-			}
-		}
+        this.setNotificationRole(role);
+
         
     }
     public Notification(User user, Issue issue, Role role) {
         this.setUser(user);
         this.setIssue(issue);
-        this.setNotificationRole(role);
+        this.setRole(role);
     }
     
     public Issue getIssue() {
@@ -106,11 +101,25 @@ public class Notification extends AbstractEntity
         return role.code;
     }
 
-    public void setNotificationRole(Role role) {
-        this.role = role;
+    public void setNotificationRole(int role) {
+
+        this.setRole(getRoleForCode(role));
     }
+    
+    private Role getRoleForCode(int code) {
+        for (int i = 0; i < Role.values().length; i++) {
+			if (Role.values()[i].code == code) {
+				return Role.values()[i];
+			}
+		}
+        return Role.ANY;
+    }
+    
     public Role getRole() {
     	return this.role;
+    }
+    public void setRole(Role role) {
+    	this.role = role;
     }
     
     public int compareTo(Notification other) {
