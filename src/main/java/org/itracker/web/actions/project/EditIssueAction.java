@@ -69,8 +69,9 @@ import org.itracker.web.util.AttachmentUtilities;
 import org.itracker.web.util.Constants;
 
 public class EditIssueAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(EditIssueAction.class);
-	
+
+    private static final Logger log = Logger.getLogger(EditIssueAction.class);
+
     @SuppressWarnings("unchecked")
     public ActionForward execute(ActionMapping mapping,
                                  ActionForm form,
@@ -96,7 +97,7 @@ public class EditIssueAction extends ItrackerBaseAction {
             log.info("EditIssueAction: Forward: listprojects");
             return mapping.findForward("listprojects");
         }
-        
+
         resetToken(request);
 
         try {
@@ -108,16 +109,16 @@ public class EditIssueAction extends ItrackerBaseAction {
             Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
             Integer currUserId = currUser.getId();
 
-            Integer issueId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
+            IssueForm issueForm = (IssueForm)form;
 
-            if (issueId == null) {
+            if(issueForm.getId() == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
                 log.info("EditIssueAction: Forward: Error");
                 return mapping.findForward("error");
             }
 
             int previousStatus = -1;
-            Issue issue = issueService.getIssue(issueId);
+            Issue issue = issueService.getIssue(issueForm.getId());
 
             if (issue == null || issue.getId() == null || issue.getId() < 0) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
@@ -142,12 +143,11 @@ public class EditIssueAction extends ItrackerBaseAction {
             List<ProjectScript> scripts = project.getScripts();
             WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, null, errors, (ValidatorForm) form);
 
+            previousStatus = issue.getStatus();
             if (UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL)) {
-                previousStatus = issue.getStatus();
-                processFullEdit(issue, project, currUser, userPermissions, currLocale, form, issueService);
+                processFullEdit(issue, project, currUser, userPermissions, currLocale, issueForm, issueService);
             } else {
-                previousStatus = issue.getStatus();
-                processLimitedEdit(issue, project, currUser, userPermissions, currLocale, form, issueService);
+                processLimitedEdit(issue, project, currUser, userPermissions, currLocale, issueForm, issueService);
             }
 
             sendNotification(issue, previousStatus, getBaseURL(request), issueService);
@@ -159,8 +159,10 @@ public class EditIssueAction extends ItrackerBaseAction {
             request.setAttribute("projects", projectService.getAllProjects());
             request.setAttribute("ph", projectService);
 
-            return getReturnForward(issue, project, form, mapping);
+            return getReturnForward(issue, project, issueForm, mapping);
+
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
@@ -170,8 +172,11 @@ public class EditIssueAction extends ItrackerBaseAction {
             saveToken(request);
             return mapping.findForward("editissueform");
         }
+
         log.info("EditIssueAction: Forward: Error");
+
         return mapping.findForward("error");
+
     }
 
     private void processFullEdit(Issue issue,
@@ -179,32 +184,33 @@ public class EditIssueAction extends ItrackerBaseAction {
                                  User user,
                                  Map<Integer, Set<PermissionType>> userPermissions,
                                  Locale locale,
-                                 ActionForm form,
+                                 IssueForm form,
                                  IssueService issueService)
             throws Exception {
 
         int previousStatus = issue.getStatus();
 
-        issue.setDescription((String) PropertyUtils.getSimpleProperty(form, "description"));
-        issue.setResolution((String) PropertyUtils.getSimpleProperty(form, "resolution"));
-        issue.setSeverity(((Integer) PropertyUtils.getSimpleProperty(form, "severity")).intValue());
+        issue.setDescription(form.getDescription());
+        issue.setResolution(form.getResolution());
+        issue.setSeverity(form.getSeverity());
 
-        Integer targetVersionId = (Integer) PropertyUtils.getSimpleProperty(form, "targetVersion");
+        Integer targetVersion = form.getTargetVersion();
 
-        if (targetVersionId != null && targetVersionId.intValue() != -1) {
+        if(targetVersion != null && targetVersion != -1) {
+
             ProjectService projectService = getITrackerServices().getProjectService();
-            Version targetVersion = projectService.getProjectVersion(targetVersionId);
+            Version version = projectService.getProjectVersion(targetVersion);
 
-            if (targetVersion == null) {
-                throw new RuntimeException("No version with Id " + targetVersionId);
+            if (version == null) {
+                throw new RuntimeException("No version with Id " + targetVersion);
             }
 
-            issue.setTargetVersion(targetVersion);
+            issue.setTargetVersion(version);
+
         }
 
-        Integer formStatus = (Integer) PropertyUtils.getSimpleProperty(form, "status");
-        if (formStatus != null) {
-            issue.setStatus(formStatus.intValue());
+        if(form.getStatus() != null) {
+            issue.setStatus(form.getStatus());
         }
 
         if (previousStatus != -1) {
@@ -253,7 +259,9 @@ public class EditIssueAction extends ItrackerBaseAction {
             addHistoryEntry(issue, user, form, issueService);
 
             HashSet<Integer> components = new HashSet<Integer>();
-            Integer[] componentIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "components");
+
+            Integer[] componentIds = form.getComponents();
+
             if (componentIds != null) {
                 for (int i = 0; i < componentIds.length; i++) {
                     components.add(componentIds[i]);
@@ -263,11 +271,14 @@ public class EditIssueAction extends ItrackerBaseAction {
             }
 
             HashSet<Integer> versions = new HashSet<Integer>();
-            Integer[] versionIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "versions");
+
+            Integer[] versionIds = form.getVersions();
+
             if (versionIds != null) {
                 for (int i = 0; i < versionIds.length; i++) {
                     versions.add(versionIds[i]);
                 }
+
                 issueService.setIssueVersions(issue.getId(), versions, user.getId());
             }
 
@@ -281,19 +292,23 @@ public class EditIssueAction extends ItrackerBaseAction {
                                     User user,
                                     Map<Integer, Set<PermissionType>> userPermissionsMap,
                                     Locale locale,
-                                    ActionForm form,
+                                    IssueForm form,
                                     IssueService issueService)
             throws Exception {
 
-        issue.setDescription((String) PropertyUtils.getSimpleProperty(form, "description"));
+        issue.setDescription(form.getDescription());
 
-        Integer formStatus = (Integer) PropertyUtils.getSimpleProperty(form, "status");
+        Integer formStatus = form.getStatus();
+
         if (formStatus != null) {
-            int newStatus = formStatus.intValue();
-            if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && newStatus >= IssueUtilities.STATUS_CLOSED &&
-                    UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_CLOSE)) {
-                issue.setStatus(newStatus);
+
+            if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED
+                && formStatus >= IssueUtilities.STATUS_CLOSED
+                && UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_CLOSE)) {
+
+                issue.setStatus(formStatus);
             }
+
         }
 
         issue = issueService.updateIssue(issue, user.getId());
@@ -302,142 +317,170 @@ public class EditIssueAction extends ItrackerBaseAction {
         setOwner(issue, user, userPermissionsMap, form, issueService);
         addHistoryEntry(issue, user, form, issueService);
         addAttachment(issue, project, user, form, issueService);
+
     }
 
     private void setOwner(Issue issue,
                           User user,
                           Map<Integer, Set<PermissionType>> userPermissionsMap,
-                          ActionForm form,
+                          IssueForm form,
                           IssueService issueService)
             throws Exception {
 
         Integer currentOwner = (issue.getOwner() == null) ? null : issue.getOwner().getId();
-        Integer ownerId = (Integer) PropertyUtils.getSimpleProperty(form, "ownerId");
 
-        if (ownerId != null && !ownerId.equals(currentOwner)) {
-            if (UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_ASSIGN_OTHERS) ||
-                    (UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_ASSIGN_SELF) && user.getId().equals(ownerId)) ||
-                    (UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_UNASSIGN_SELF) && user.getId().equals(currentOwner) && ownerId.intValue() == -1)
-                    ) {
-                issueService.assignIssue(issue.getId(), ownerId, user.getId());
-            }
+        Integer ownerId = form.getOwnerId();
+
+        if(ownerId == null || ownerId.equals(currentOwner)) {
+            return;
         }
+
+        if (UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_ASSIGN_OTHERS) ||
+                (UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_ASSIGN_SELF) && user.getId().equals(ownerId)) ||
+                (UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_UNASSIGN_SELF) && user.getId().equals(currentOwner) && ownerId.intValue() == -1)
+                ) {
+            issueService.assignIssue(issue.getId(), ownerId, user.getId());
+        }
+
     }
 
     @SuppressWarnings("unchecked")
     private void setIssueFields(Issue issue,
                                 User user,
                                 Locale locale,
-                                ActionForm form,
+                                IssueForm form,
                                 IssueService issueService)
             throws Exception {
 
         List<CustomField> projectFields = issue.getProject().getCustomFields();
 
-        if (projectFields != null && projectFields.size() > 0) {
-            List<IssueField> issueFields = new ArrayList<IssueField>();
-            // here you see some of the ugly side of Struts 1.3 - the forms... they can only contain Strings and some simple objects types...
-            HashMap<String, String> customFields = (HashMap<String, String>) PropertyUtils.getSimpleProperty(form, "customFields");
-            if (customFields != null && customFields.size() > 0) {
+        if(projectFields == null || projectFields.size() == 0) {
+            return;
+        }
+
+        List<IssueField> issueFields = new ArrayList<IssueField>();
+
+        // here you see some of the ugly side of Struts 1.3 - the forms... they can only contain Strings and some simple objects types...
+        HashMap<String, String> customFields = form.getCustomFields();
+
+        if(customFields == null || customFields.size() == 0) {
+            return;
+        }
+
 //                List<IssueField> issueFieldsList = new ArrayList<IssueField>();
-                ResourceBundle bundle = ITrackerResources.getBundle(locale);
-                List<IssueField> issueFieldsList = issue.getFields();
-                for (int i = 0; i < projectFields.size(); i++) {
+        ResourceBundle bundle = ITrackerResources.getBundle(locale);
+        List<IssueField> issueFieldsList = issue.getFields();
+
+        try {
+
+            for (int i = 0; i < projectFields.size(); i++) {
 //                for(Iterator iter = customFields.keySet().iterator(); iter.hasNext(); ) {
 
-                    try {
 //                        Integer fieldId = projectFields.get(i).getId();
-                        CustomField field = projectFields.get(i);
-                        String fieldValue = (String) customFields.get(String.valueOf(projectFields.get(i).getId()));
+                CustomField field = projectFields.get(i);
+                String fieldValue = (String) customFields.get(String.valueOf(projectFields.get(i).getId()));
+
 //                        String fieldValue = (String) PropertyUtils.getMappedProperty(form, "customFields(" + fieldId + ")");
 
-                        if (fieldValue != null && !fieldValue.equals("")) {
-                            IssueField issueField = new IssueField(issue, field);
-                            int idx = -1;
-                            for (int j = 0; j < issueFieldsList.size(); j++) {
-                                if (issueFieldsList.get(j).getIssue().getId() == issue.getId() && issueFieldsList.get(j).getCustomField().getId() == projectFields.get(i).getId()) {
-                                    issueField = issueFieldsList.get(j);
-                                    idx = j;
-                                    break;
-                                }
-                            }
+                if (fieldValue != null && !fieldValue.equals("")) {
 
-                            issueField.setValue(fieldValue, locale, bundle);
-                            if (idx > -1) {
-                                issueFieldsList.set(idx, issueField);
-                            } else {
-                                issueFieldsList.add(issueField);
-                            }
+                    IssueField issueField = new IssueField(issue, field);
+                    int idx = -1;
+
+                    for (int j = 0; j < issueFieldsList.size(); j++) {
+                        if (issueFieldsList.get(j).getIssue().getId() == issue.getId() && issueFieldsList.get(j).getCustomField().getId() == projectFields.get(i).getId()) {
+                            issueField = issueFieldsList.get(j);
+                            idx = j;
+                            break;
                         }
-                    } catch (Exception e) {
+                    }
+
+                    issueField.setValue(fieldValue, locale, bundle);
+
+                    if (idx > -1) {
+                        issueFieldsList.set(idx, issueField);
+                    } else {
+                        issueFieldsList.add(issueField);
                     }
                 }
-//                issueFields = new ArrayList<IssueField>(issueFieldsList);
-                issue.setFields(issueFieldsList);
             }
-//            issueService.setIssueFields(issue.getId(), issueFields);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+//                issueFields = new ArrayList<IssueField>(issueFieldsList);
+        issue.setFields(issueFieldsList);
+
+//            issueService.setIssueFields(issue.getId(), issueFields);
+
     }
 
     private void addHistoryEntry(Issue issue,
                                  User user,
-                                 ActionForm form,
+                                 IssueForm form,
                                  IssueService issueService)
             throws Exception {
 
-        String history = (String) PropertyUtils.getSimpleProperty(form, "history");
+        String history = form.getHistory();
 
-        if (history != null && !history.equals("")) {
-            IssueHistory issueHistory = new IssueHistory(issue, user, history,
-                    IssueUtilities.HISTORY_STATUS_AVAILABLE);
-            issueHistory.setDescription(((IssueForm) form).getHistory());
-            issueHistory.setCreateDate(new Date());
-            if (issueHistory.getLastModifiedDate() == null) {
-                issueHistory.setLastModifiedDate(new Date());
-            }
-            
-            issueService.addIssueHistory(issueHistory);
-
+        if(history == null || history.equals("")) {
+            return;
         }
+
+        IssueHistory issueHistory = new IssueHistory(issue, user, history,
+                IssueUtilities.HISTORY_STATUS_AVAILABLE);
+
+        issueHistory.setDescription(((IssueForm) form).getHistory());
+        issueHistory.setCreateDate(new Date());
+
+        if (issueHistory.getLastModifiedDate() == null) {
+            issueHistory.setLastModifiedDate(new Date());
+        }
+
+        issueService.addIssueHistory(issueHistory);
 
     }
 
     private void addAttachment(Issue issue,
                                Project project,
                                User user,
-                               ActionForm form,
+                               IssueForm form,
                                IssueService issueService)
             throws Exception {
 
-        if (!ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, project.getOptions())) {
+        if(ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, project.getOptions())) {
+            return;
+        }
 
-            FormFile file = (FormFile) PropertyUtils.getSimpleProperty(form, "attachment");
+        FormFile file = form.getAttachment();
 
-            if (file != null && !"".equals(file.getFileName())) {
-                String origFileName = file.getFileName();
-                String contentType = file.getContentType();
-                int fileSize = file.getFileSize();
-                String attachmentDescription = (String) PropertyUtils.getSimpleProperty(form, "attachmentDescription");
+        if(file == null || file.getFileName().equals("")) {
+            return;
+        }
+
+        String origFileName = file.getFileName();
+        String contentType = file.getContentType();
+        int fileSize = file.getFileSize();
+
+        String attachmentDescription = form.getAttachmentDescription();
+
 //                int numAttachments = issueService.getIssueAttachmentCount(issue.getId()) + 1;
 //                String filename = "proj" + project.getId() + "_issue" + issue.getId() + "_attachment" + numAttachments;
 
-                if (AttachmentUtilities.checkFile(file, this.getITrackerServices())) {
-                    int lastSlash = Math.max(origFileName.lastIndexOf('/'), origFileName.lastIndexOf('\\'));
-                    if (lastSlash > -1) {
-                        origFileName = origFileName.substring(lastSlash + 1);
-                    }
-
-                    IssueAttachment attachmentModel = new IssueAttachment(issue, origFileName,
-                            contentType,
-                            attachmentDescription,
-                            fileSize,
-                            user);
-
-                    issueService.addIssueAttachment(attachmentModel, file.getFileData());
-
-                }
-
+        if (AttachmentUtilities.checkFile(file, this.getITrackerServices())) {
+            int lastSlash = Math.max(origFileName.lastIndexOf('/'), origFileName.lastIndexOf('\\'));
+            if (lastSlash > -1) {
+                origFileName = origFileName.substring(lastSlash + 1);
             }
+
+            IssueAttachment attachmentModel = new IssueAttachment(issue, origFileName,
+                    contentType,
+                    attachmentDescription,
+                    fileSize,
+                    user);
+
+            issueService.addIssueAttachment(attachmentModel, file.getFileData());
 
         }
 
@@ -459,11 +502,11 @@ public class EditIssueAction extends ItrackerBaseAction {
 
     private ActionForward getReturnForward(Issue issue,
                                            Project project,
-                                           ActionForm form,
+                                           IssueForm form,
                                            ActionMapping mapping)
             throws Exception {
 
-        if ("index".equals((String) PropertyUtils.getSimpleProperty(form, "caller"))) {
+        if("index".equals(form.getCaller())) {
             log.info("EditIssueAction: Forward: index");
             return mapping.findForward("index");
         } else if ("viewissue".equals((String) PropertyUtils.getSimpleProperty(form, "caller"))) {
@@ -476,5 +519,5 @@ public class EditIssueAction extends ItrackerBaseAction {
 
     }
 
-
 }
+
