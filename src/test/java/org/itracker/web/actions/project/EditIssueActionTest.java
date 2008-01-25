@@ -1,8 +1,13 @@
 package org.itracker.web.actions.project;
 
 import org.apache.struts.action.ActionForward;
+import org.apache.struts.util.TokenProcessor;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.User;
+import org.itracker.model.PermissionType;
+import org.itracker.services.UserService;
+import org.itracker.services.util.AuthenticationConstants;
+import org.itracker.web.forms.IssueForm;
 import org.itracker.web.struts.mock.MockActionMapping;
 import org.itracker.web.util.Constants;
 import org.junit.Test;
@@ -10,20 +15,49 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 
+import javax.servlet.http.HttpSession;
+import java.util.Set;
+import java.util.Map;
+
 public class EditIssueActionTest extends AbstractDependencyInjectionTest {
 
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
     private MockActionMapping actionMapping;
+    private UserService userService;
 
     @Test
     public void testBasicCall() throws Exception {
 
         EditIssueAction editIssueAction = new EditIssueAction();
-        ActionForward actionForward = editIssueAction.execute(actionMapping, null, request, response);
+        createTemporaryToken(request);
+
+        User currentUser = new User();
+        currentUser.setId(2);
+        currentUser.setLogin("username");
+        request.getSession().setAttribute(Constants.USER_KEY, currentUser);
+
+        Map<Integer, Set<PermissionType>> permissions = userService.getUsersMapOfProjectIdsAndSetOfPermissionTypes(currentUser, AuthenticationConstants.REQ_SOURCE_WEB);
+        request.getSession().setAttribute(Constants.PERMISSIONS_KEY, permissions);
+
+        IssueForm issueForm = new IssueForm();
+        issueForm.setId(1);
+        issueForm.setDescription("description");
+
+        ActionForward actionForward = editIssueAction.execute(actionMapping, issueForm, request, response);
 
         assertNotNull(actionForward);
-        assertEquals("listprojects", actionForward.getPath());
+        assertEquals("listissues?projectId=2", actionForward.getPath());
+
+    }
+
+    private void createTemporaryToken(MockHttpServletRequest request) {
+
+        String token = TokenProcessor.getInstance().generateToken(request);
+
+        HttpSession session = request.getSession(false);
+        session.setAttribute("org.apache.struts.action.TOKEN", token);
+        request.setParameter("org.apache.struts.taglib.html.TOKEN", token);
 
     }
 
@@ -31,14 +65,11 @@ public class EditIssueActionTest extends AbstractDependencyInjectionTest {
     public void onSetUp() throws Exception {
         super.onSetUp();
 
+        userService = (UserService) applicationContext.getBean("userService");
+
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         actionMapping = new MockActionMapping();
-
-        User user = new User();
-        user.setLogin("asdf");
-        MockHttpSession session = (MockHttpSession) request.getSession();
-        session.setAttribute(Constants.USER_KEY, user);
 
     }
 
@@ -47,6 +78,7 @@ public class EditIssueActionTest extends AbstractDependencyInjectionTest {
                 "dataset/userbean_dataset.xml",
                 "dataset/projectbean_dataset.xml",
                 "dataset/versionbean_dataset.xml",
+                "dataset/permissionbean_dataset.xml",
                 "dataset/issuebean_dataset.xml",
                 "dataset/issueattachmentbean_dataset.xml"
         };
@@ -57,3 +89,4 @@ public class EditIssueActionTest extends AbstractDependencyInjectionTest {
     }
 
 }
+
