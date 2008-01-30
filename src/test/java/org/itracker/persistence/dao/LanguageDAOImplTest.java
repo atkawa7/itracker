@@ -13,7 +13,7 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
     @Test
     public void testFindByID() {
 
-        Language language = languageDAO.findById(1);
+        Language language = languageDAO.findById(999999);
 
         assertNotNull(language);
         assertLanguageEquals(language, "test_locale", "test_key", "test_value");
