@@ -53,8 +53,9 @@
                <arg0 key="itracker.web.attr.detaileddescription"/>
              </field>
            </form>
-        -->
-        <form name="issueForm">
+		
+		replaced by validation-module-project.xml issueForm.
+		<form name="issueForm">
             <field property="description" depends="required">
                 <arg0 key="itracker.web.attr.description"/>
             </field>
@@ -62,7 +63,7 @@
                 <arg0 key="itracker.web.attr.detaileddescription"/>
             </field>
         </form>
-
+-->
 
         <!--     seems to be the same as issueForm?
           <form name="editIssueForm">
