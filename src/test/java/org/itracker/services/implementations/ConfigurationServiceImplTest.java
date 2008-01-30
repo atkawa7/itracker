@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import javax.naming.NamingException;
 
+import org.apache.log4j.Logger;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Configuration;
 import org.itracker.services.ConfigurationService;
@@ -16,8 +17,9 @@ import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
 public class ConfigurationServiceImplTest extends
 		AbstractDependencyInjectionTest {
+	
+	private static final Logger log = Logger.getLogger(ConfigurationServiceImplTest.class);
 	static {
-		System.out.println("setting up JNDI override values");
 		setupJndiOverrideValues();
 	}
 
@@ -26,17 +28,19 @@ public class ConfigurationServiceImplTest extends
 	 */
 	private static final void setupJndiOverrideValues() {
 		// initialize naming context
-		SimpleNamingContextBuilder builder = new SimpleNamingContextBuilder();
-		builder.bind("java:comp/env/itracker/web_session_timeout", "300");
+		log.info("setupJndiOverrideValues: setting up JNDI override values");
+		SimpleNamingContextBuilder builder = null;
 		try {
-			builder.activate();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-			fail(e.getMessage());
+			builder = SimpleNamingContextBuilder.emptyActivatedContextBuilder();
 		} catch (NamingException e) {
-			e.printStackTrace();
+			// TODO Auto-generated catch block
+			log.error("setupJndiOverrideValues:", e);
 			fail(e.getMessage());
 		}
+		
+		assertNotNull("builder", builder);
+		builder.bind("java:comp/env/itracker/web_session_timeout", "300");
+
 	}
 
 	/**
@@ -59,7 +63,7 @@ public class ConfigurationServiceImplTest extends
 			assertEquals("modified date", format.parse("1-1-2008"), config
 					.getLastModifiedDate());
 		} catch (ParseException e) {
-			e.printStackTrace();
+			log.error("testLookupConfigurationItemById: failed to parse date for assertion", e);
 			fail("failed to parse date for assertion: " + e.getMessage());
 		}
 		assertEquals("value", "Test Value", config.getValue());
@@ -100,6 +104,7 @@ public class ConfigurationServiceImplTest extends
 
 	@Override
 	public void onSetUp() throws Exception {
+
 		super.onSetUp();
 		configurationService = (ConfigurationService) applicationContext
 				.getBean("configurationService");
