@@ -13,7 +13,9 @@ import java.sql.SQLException;
 
 public class PermissionDAOImplTest extends AbstractDependencyInjectionTest {
 
+    @SuppressWarnings("unused")
 	private UserDAO userDAO;
+    @SuppressWarnings("unused")
 	private ProjectDAO projectDAO;
 	private PermissionDAO permissionDAO;
 
