@@ -6,27 +6,47 @@
 
 <form-validation>
 
-    <formset>
+	<formset>
 
-        <form name="issueForm">
-            <field property="description" depends="required">
-                <arg0 key="itracker.web.attr.description"/>
-            </field>
-            <field property="history" depends="required">
-                <arg0 key="itracker.web.attr.detaileddescription"/>
-            </field>
-        </form>
+		<form name="issueForm">
+			<field property="description" depends="required">
+				<arg0 key="itracker.web.attr.description" />
+			</field>
+			<field property="history" depends="required">
+				<arg0 key="itracker.web.attr.description" />
+			</field>
+			<field property="attachmentDescription"
+				depends="validwhen">
+				<arg0 key="itracker.web.attr.attachmentdescription" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>
+						((attachment == null) or (*this* != null))
+					</var-value>
+				</var>
+			</field>
+			<field property="attachment"				
+					depends="validwhen">
+				<arg0 key="itracker.web.attr.attachment" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>
+						((attachmentDescription == null) or (*this* != null))
+					</var-value>
+				</var>
+				
+			</field>
+		</form>
 
-        <form name="issueRelationForm">
-            <field property="relationType">
-            </field>
-        </form>
+		<form name="issueRelationForm">
+			<field property="relationType"></field>
+		</form>
 
-        <form name="moveIssueForm">
-            <field property="projectId" depends="required">
-                <arg0 key="itracker.web.attr.project"/>
-            </field>
-        </form>
+		<form name="moveIssueForm">
+			<field property="projectId" depends="required">
+				<arg0 key="itracker.web.attr.project" />
+			</field>
+		</form>
 
-    </formset>
+	</formset>
 </form-validation>
