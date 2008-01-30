@@ -48,10 +48,10 @@ public class ConfigurationServiceImplTest extends
 	@Test
 	public void testLookupConfigurationItemById() {
 		// defined in configurationbean_dataset.xml
-		Configuration config = configurationService.getConfigurationItem(1);
+		Configuration config = configurationService.getConfigurationItem(2000);
 
-		assertNotNull("configuration (id:1)", config);
-		assertEquals("id", 1, config.getId().intValue());
+		assertNotNull("configuration (id:2000)", config);
+		assertEquals("id", 2000, config.getId().intValue());
 		DateFormat format = new SimpleDateFormat("M-d-y");
 		try {
 			assertEquals("create date", format.parse("1-1-2008"), config
