@@ -22,15 +22,24 @@
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
 http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
-    <import resource="datasource.xml"/>
+    <import resource="classpath:datasource.xml"/>
 
     <bean id="sessionFactory"
           class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
         <property name="entityInterceptor" ref="timestampEntityInterceptor"/>
+        <property name="hibernateProperties">
+            <ref local="hibernateProperties"/>
+        </property>
     </bean>
-
+    <bean id="hibernateProperties"
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location">
+            <value>classpath:hibernate.properties</value>
+        </property>
+    </bean>
+    
     <bean id="timestampEntityInterceptor"
         class="org.itracker.persistence.dao.TimestampInterceptor"/>
     
