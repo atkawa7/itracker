@@ -44,10 +44,13 @@ public interface IssueService {
     
     Issue getIssue(Integer issueId);
     
+    /**
+     * @deprecated Don't use due to EXPENSIVE memory use.
+     * @return
+     */
     List<Issue> getAllIssues();
 
-    Long totalSystemIssuesAttachmentSize();
-    Integer countSystemIssuesAttachments();
+    
     int getNumberIssues();
     
     /**
@@ -183,9 +186,27 @@ public interface IssueService {
     
     List<IssueAttachment> getAllIssueAttachments();
     
+    /**
+     * @deprecated use the methods getAllIssueAttachmentSize and getAllIssueAttachmentCount instead.
+     * @return
+     */
     long[] getAllIssueAttachmentsSizeAndCount();
     
-    long getAllIssueAttachmentSize();
+    Long getAllIssueAttachmentSize();
+
+    /**
+     * @deprecated use getAllIssueAttachmentSize instead.
+     * @return
+     */
+    Long totalSystemIssuesAttachmentSize();
+    /**
+     * @deprecated use getAllIssuesAttachmentCount instead
+     * @return
+     */
+    Integer countSystemIssuesAttachments();
+    
+    Long getAllIssueAttachmentCount();
+    
     
     IssueAttachment getIssueAttachment(Integer attachmentId);
     

@@ -146,6 +146,9 @@ public class IssueServiceImpl implements IssueService {
 		return issue;
 	}
 
+	/**
+	 * @deprecated don't use to expensive memory use!
+	 */
 	public List<Issue> getAllIssues() {
 		return issueDAO.findAll();
 	}
@@ -154,7 +157,7 @@ public class IssueServiceImpl implements IssueService {
 	 * Added implementation to make proper count of ALL issues, instead select them in a list and return its size
 	 */
 	public int getNumberIssues() {
-		return issueDAO.countAllIssues().intValue();
+		return issueDAO.countAllIssues();
 	}
 
 	public List<Issue> getIssuesCreatedByUser(Integer userId) {
@@ -976,10 +979,10 @@ public class IssueServiceImpl implements IssueService {
 	}
 
 	/**
-	 * Adds an attachement to an issue
+	 * Adds an attachment to an issue
 	 * 
 	 * @param model
-	 *            The atatachement data
+	 *            The attachment data
 	 * @param data
 	 *            The byte data
 	 */
@@ -989,13 +992,20 @@ public class IssueServiceImpl implements IssueService {
 
 		attachment.setFileName("attachment_issue_" + issue.getId() + "_" + attachment.getOriginalFileName());
 		attachment.setFileData((data == null ? new byte[0] : data));
+		
 		attachment.setIssue(issue);
 		attachment.setUser(user);
 		attachment.setCreateDate(new Date());
 		attachment.setLastModifiedDate(attachment.getCreateDate());
 
-		// add attachement to issue
+		if (logger.isDebugEnabled()) {
+			logger.debug("addIssueAttachment: adding attachment " + attachment);
+		}
+		// add attachment to issue
 		issue.getAttachments().add(attachment);
+		if (logger.isDebugEnabled()) {
+			logger.debug("addIssueAttachment: saving updated issue " + issue);
+		}
 		this.issueDAO.saveOrUpdate(issue);
 		return true;
 	}
@@ -1154,27 +1164,37 @@ public class IssueServiceImpl implements IssueService {
 
 	}
 
+	/**
+	 * @deprecated use getAllIssuesAttachmentCount() instead.
+	 */
+	public Integer countSystemIssuesAttachments() {
+		return issueAttachmentDAO.countAll().intValue();
+	}
+	public Long getAllIssueAttachmentCount() {
+		return issueAttachmentDAO.countAll().longValue();
+	}
+	/**
+	 * @deprecated do not use this due to expensive memory use! use explicit hsqldb queries instead.
+	 */
 	public List<IssueAttachment> getAllIssueAttachments() {
+		logger.warn("getAllIssueAttachments: this method should nomore be used!");
 		List<IssueAttachment> attachments = issueAttachmentDAO.findAll();
 
 		return attachments;
 	}
 
+	/**
+	 * Count total issues size and count from database
+	 * @deprecated use seperate issues size and count methods instead
+	 */
 	public long[] getAllIssueAttachmentsSizeAndCount() {
 
+		logger.warn("getAllIssueAttachmentsSizeAndCount: this method should nomore be used!");
 		long[] sizeAndCount = new long[2];
+		
+		sizeAndCount[0] = getAllIssueAttachmentSize();
+		sizeAndCount[1] = getAllIssueAttachmentCount();
 
-		int i = 0;
-
-		List<IssueAttachment> attachments = issueAttachmentDAO.findAll();
-
-		sizeAndCount[1] = attachments.size();
-
-		for (Iterator<IssueAttachment> iterator = attachments.iterator(); iterator.hasNext(); i++) {
-
-			sizeAndCount[0] += iterator.next().getSize();
-
-		}
 
 		return sizeAndCount;
 
@@ -1456,6 +1476,7 @@ public class IssueServiceImpl implements IssueService {
 		return false;
 
 	}
+	
 	public boolean hasIssueNotification(Integer issueId, Integer userId, Role role) {
 
 		if (issueId != null && userId != null) {
@@ -1611,22 +1632,12 @@ public class IssueServiceImpl implements IssueService {
 		return issueAttachmentDAO;
 	}
 
-	public long getAllIssueAttachmentSize() {
-		long size;
+	/**
+	 * get total size of all attachments in database
+	 */
+	public Long getAllIssueAttachmentSize() {
 
-		int i = 0;
-
-		Collection<IssueAttachment> attachments = issueAttachmentDAO.findAll();
-
-		size = attachments.size();
-
-		for (Iterator<IssueAttachment> iterator = attachments.iterator(); iterator.hasNext(); i++) {
-
-			size += ((IssueAttachment) iterator.next()).getSize();
-
-		}
-
-		return size;
+		return issueAttachmentDAO.countAll().longValue();
 
 	}
 	
@@ -1659,9 +1670,6 @@ public class IssueServiceImpl implements IssueService {
 		return systemBaseURL;
 	}
 
-	public Integer countSystemIssuesAttachments() {
-		return issueAttachmentDAO.countAll();
-	}
 
 	public Long totalSystemIssuesAttachmentSize() {
 		return issueAttachmentDAO.totalAttachmentsSize();
