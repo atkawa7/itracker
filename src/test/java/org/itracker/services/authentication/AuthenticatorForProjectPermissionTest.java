@@ -9,7 +9,6 @@ import org.itracker.model.User;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.UserService;
 import org.itracker.services.util.UserUtilities;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class AuthenticatorForProjectPermissionTest extends AbstractDependencyInjectionTest {
@@ -170,7 +169,7 @@ public class AuthenticatorForProjectPermissionTest extends AbstractDependencyInj
 
     private void initializeAuthenticator() {
 
-        Map servicesMap = new HashMap();
+        Map<String, Object> servicesMap = new HashMap<String, Object>();
 
         servicesMap.put("userService", userService);
         servicesMap.put("configurationService", configurationService);
