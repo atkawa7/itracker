@@ -45,7 +45,7 @@ public class ListAttachmentsActionTest extends AbstractDependencyInjectionTest {
         // TODO: Rename attribute key
         assertTrue((Boolean) request.getAttribute("hasAttachments"));
 
-        List attachments = (List) request.getAttribute("attachments");
+        List<IssueAttachment> attachments = (List<IssueAttachment>) request.getAttribute("attachments");
 
         assertEquals(4, attachments.size());
 
@@ -56,7 +56,7 @@ public class ListAttachmentsActionTest extends AbstractDependencyInjectionTest {
 
         ListAttachmentsAction listAttachmentsAction = new ListAttachmentsAction();
         listAttachmentsAction.execute(actionMapping, null, request, response);
-
+        Object attList = request.getAttribute("attachments");
         List<IssueAttachment> attachments = (List<IssueAttachment>) request.getAttribute("attachments");
 
         assertContainsAttachment(issueAttachmentDAO.findByPrimaryKey(1), attachments);
