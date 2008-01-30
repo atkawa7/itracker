@@ -21,6 +21,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     private UserService userService;
     private ProjectDAO projectDAO;
     private UserDAO userDAO;
+    @SuppressWarnings("unused")
     private PermissionDAO permissionDAO;
 
     @Test
