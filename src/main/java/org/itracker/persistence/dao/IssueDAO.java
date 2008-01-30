@@ -35,6 +35,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * </p>
      * 
      * @return list of exiting issues, in an unspecified order
+     * @deprecated don't use due to expensive memory use.
      */
     List<Issue> findAll();
 
