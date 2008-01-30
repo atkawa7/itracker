@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -79,22 +80,22 @@ public class EditIssueAction extends ItrackerBaseAction {
                                  HttpServletResponse response)
             throws ServletException, IOException {
 
+    	log.info("execute: called");
         ActionErrors errors = new ActionErrors();
         super.executeAlways(mapping, form, request, response);
-
         if (!isLoggedIn(request, response)) {
-            log.info("EditIssueAction: Forward: login");
+            log.info("execute: Forward: login");
             return mapping.findForward("login");
         }
 
         if (!isTokenValid(request)) {
-            log.debug("Invalid request token while editing issue.");
+            log.debug("execute: Invalid request token while editing issue.");
             ProjectService projectService = getITrackerServices().getProjectService();
             request.setAttribute("projects", projectService.getAllProjects());
             request.setAttribute("ph", projectService);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.transaction"));
             saveMessages(request, errors);
-            log.info("EditIssueAction: Forward: listprojects");
+            log.info("execute: EditIssueAction: Forward: listprojects");
             return mapping.findForward("listprojects");
         }
 
@@ -113,7 +114,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 
             if(issueForm.getId() == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
-                log.info("EditIssueAction: Forward: Error");
+                log.info("execute: Forward: Error");
                 return mapping.findForward("error");
             }
 
@@ -122,21 +123,21 @@ public class EditIssueAction extends ItrackerBaseAction {
 
             if (issue == null || issue.getId() == null || issue.getId() < 0) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
-                log.info("EditIssueAction: Forward: Error");
+                log.info("execute: Forward: Error");
                 return mapping.findForward("error");
             }
 
             Project project = issue.getProject();
             if (project == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-                log.info("EditIssueAction: Forward: Error");
+                log.info("execute: Forward: Error");
                 return mapping.findForward("error");
             } else if (project.getStatus() != Status.ACTIVE) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
-                log.info("EditIssueAction: Forward: Error");
+                log.info("execute: Forward: Error");
                 return mapping.findForward("error");
             } else if (!IssueUtilities.canEditIssue(issue, currUserId, userPermissions)) {
-                log.info("EditIssueAction: Forward: unauthorized");
+                log.info("execute: Forward: unauthorized");
                 return mapping.findForward("unauthorized");
             }
 
@@ -163,7 +164,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("Exception processing form data", e);
+            log.error("execute: Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
@@ -173,7 +174,7 @@ public class EditIssueAction extends ItrackerBaseAction {
             return mapping.findForward("editissueform");
         }
 
-        log.info("EditIssueAction: Forward: Error");
+        log.info("execute: Forward: Error");
 
         return mapping.findForward("error");
 
@@ -352,54 +353,54 @@ public class EditIssueAction extends ItrackerBaseAction {
                                 IssueService issueService)
             throws Exception {
 
-        List<CustomField> projectFields = issue.getProject().getCustomFields();
+        List<CustomField> projectCustomFields = issue.getProject().getCustomFields();
 
-        if(projectFields == null || projectFields.size() == 0) {
+        if(projectCustomFields == null || projectCustomFields.size() == 0) {
             return;
         }
 
-        List<IssueField> issueFields = new ArrayList<IssueField>();
+        //List<IssueField> issueFields = new ArrayList<IssueField>();
 
         // here you see some of the ugly side of Struts 1.3 - the forms... they can only contain Strings and some simple objects types...
-        HashMap<String, String> customFields = form.getCustomFields();
+        HashMap<String, String> formCustomFields = form.getCustomFields();
 
-        if(customFields == null || customFields.size() == 0) {
+        if(formCustomFields == null || formCustomFields.size() == 0) {
             return;
         }
 
 //                List<IssueField> issueFieldsList = new ArrayList<IssueField>();
         ResourceBundle bundle = ITrackerResources.getBundle(locale);
         List<IssueField> issueFieldsList = issue.getFields();
-
+    	Iterator<CustomField> customFieldsIt = projectCustomFields.iterator();
+    	// declare iteration fields
+    	CustomField field;
+    	String fieldValue;
+    	IssueField issueField;
+    	Iterator<IssueField> issueFieldsIt = null;
+    	boolean addIssueField;
         try {
 
-            for (int i = 0; i < projectFields.size(); i++) {
-//                for(Iterator iter = customFields.keySet().iterator(); iter.hasNext(); ) {
+            while (customFieldsIt.hasNext()) {
 
-//                        Integer fieldId = projectFields.get(i).getId();
-                CustomField field = projectFields.get(i);
-                String fieldValue = (String) customFields.get(String.valueOf(projectFields.get(i).getId()));
-
-//                        String fieldValue = (String) PropertyUtils.getMappedProperty(form, "customFields(" + fieldId + ")");
+                field = customFieldsIt.next();
+                fieldValue = (String) formCustomFields.get(String.valueOf(field.getId()));
 
                 if (fieldValue != null && !fieldValue.equals("")) {
 
-                    IssueField issueField = new IssueField(issue, field);
-                    int idx = -1;
-
-                    for (int j = 0; j < issueFieldsList.size(); j++) {
-                        if (issueFieldsList.get(j).getIssue().getId() == issue.getId() && issueFieldsList.get(j).getCustomField().getId() == projectFields.get(i).getId()) {
-                            issueField = issueFieldsList.get(j);
-                            idx = j;
+                    issueField = new IssueField(issue, field);
+                    addIssueField = true;
+                    issueFieldsIt = issueFieldsList.iterator();
+                    while (issueFieldsIt.hasNext()) {
+                    	issueField = issueFieldsIt.next();
+                        if (issueField.getIssue().getId() == issue.getId() && issueField.getCustomField().getId() == field.getId()) {
+                        	addIssueField = false;
                             break;
                         }
                     }
 
                     issueField.setValue(fieldValue, locale, bundle);
 
-                    if (idx > -1) {
-                        issueFieldsList.set(idx, issueField);
-                    } else {
+                    if (addIssueField) {
                         issueFieldsList.add(issueField);
                     }
                 }
@@ -456,6 +457,7 @@ public class EditIssueAction extends ItrackerBaseAction {
         FormFile file = form.getAttachment();
 
         if(file == null || file.getFileName().equals("")) {
+            log.info("addAttachment: skipping file " + file);
             return;
         }
 
@@ -464,7 +466,16 @@ public class EditIssueAction extends ItrackerBaseAction {
         int fileSize = file.getFileSize();
 
         String attachmentDescription = form.getAttachmentDescription();
-
+        
+        if (null == contentType || 0 >= contentType.length()) {
+        	log.info("addAttachment: got no mime-type, using default plain-text");
+        	contentType = "text/plain";
+        }
+        
+        if (log.isDebugEnabled()) {
+        	log.debug("addAttachment: adding file, name: " + origFileName + " of type " + file.getContentType() + ", description: " + form.getAttachmentDescription());
+        }
+        
 //                int numAttachments = issueService.getIssueAttachmentCount(issue.getId()) + 1;
 //                String filename = "proj" + project.getId() + "_issue" + issue.getId() + "_attachment" + numAttachments;
 
