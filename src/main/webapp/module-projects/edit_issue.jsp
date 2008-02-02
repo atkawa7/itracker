@@ -713,74 +713,83 @@
                 <td align="right"><it:message key="itracker.web.attr.updated"/></td>
             </tr>
 
-            <%
-                List<IssueHistory> history = ih.getIssueHistory(issueId);
+            <c:forEach items="${issueHistory}" var="historyEntry" varStatus="status">
 
-                Collections.sort(history, IssueHistory.CREATE_DATE_COMPARATOR);
+                <c:choose>
+                    <c:when test="${status.count % 2 == 0}">
+                        <c:set var="rowShading" value="listRowShaded"/>
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="rowShading" value="listRowUnshaded"/>
+                    </c:otherwise>
+                </c:choose>
 
-                int i;
-                for (i = 0; i < history.size(); i++) {
-            %>
+                <tr class="${rowShading}">
+                    <td align="right" valign="bottom" nowrap>
 
-            <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>">
-                <td align="right" valign="bottom" nowrap>
+                        <% if (um.isSuperUser()) { %>
 
-                    <% if (um.isSuperUser()) { %>
+                        <it:formatImageAction action="removehistory"
+                                              paramName="historyId"
+                                              paramValue="${historyEntry.id}"
+                                              caller="editissue"
+                                              src="/themes/defaulttheme/images/delete.gif"
+                                              altKey="itracker.web.image.delete.history.alt"
+                                              textActionKey="itracker.web.image.delete.texttag"/>
 
-                    <it:formatImageAction action="removehistory"
-                                          paramName="historyId"
-                                          paramValue="<%= history.get(i).getId() %>"
-                                          caller="editissue"
-                                          src="/themes/defaulttheme/images/delete.gif"
-                                          altKey="itracker.web.image.delete.history.alt"
-                                          textActionKey="itracker.web.image.delete.texttag"/>
+                        <% } %>
 
-                    <% } %>
+                        ${status.count})
 
-                    <%= i + 1 %>)
+                    </td>
+                    <td></td>
+                    <td class="historyName">
+                        ${historyEntry.user.firstName}&nbsp;${historyEntry.user.lastName}
+                        (<a href="mailto:${historyEntry.user.email}" class="mailto">${historyEntry.user.email}</a>)
+                    </td>
+                    <td align="right" class="historyName">
+                        <it:formatDate date="${historyEntry.createDate}"/>
+                    </td>
+                </tr>
+                <tr class="${rowShading}">
+                    <td colspan="5">
+                        <html:img module="/"
+                                  page="/themes/defaulttheme/images/blank.gif"
+                                  width="1"
+                                  height="3"/>
+                    </td>
+                </tr>
+                <tr class="${rowShading}">
+                    <td colspan="2"></td>
+                    <td colspan="3">
+                        <table border="0" cellspacing="0" cellspacing="1" width="100%">
+                            <tr class="${rowShading}">
+                                <td align="left">
+                                    <html:img module="/"
+                                              page="/themes/defaulttheme/images/blank.gif"
+                                              width="10"
+                                              height="1"/>
+                                </td>
+                                <td align="left" width="100%">
+                                    <it:formatHistoryEntry>${historyEntry.description}</it:formatHistoryEntry>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr class="listRowUnshaded">
+                    <td colspan="5">
+                        <html:img module="/"
+                                  page="/themes/defaulttheme/images/blank.gif"
+                                  width="1"
+                                  height="8"/>
+                    </td>
+                </tr>
 
-                </td>
-                <td></td>
-                <td class="historyName">
-                    <%= history.get(i).getUser().getFirstName() + " " + history.get(i).getUser().getLastName() %>
-                    (<a href="mailto:<%= history.get(i).getUser().getEmail() %>"
-                        class="mailto"><%= history.get(i).getUser().getEmail() %>
-                </a>)
-                </td>
-                <td align="right" class="historyName"><it:formatDate date="<%= history.get(i).getCreateDate() %>"/></td>
-            </tr>
-            <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>">
-                <td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1"
-                                          height="3"/></td>
-            </tr>
-            <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>">
-                <td colspan="2"></td>
-                <td colspan="3">
-                    <table border="0" cellspacing="0" cellspacing="1" width="100%">
-                        <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>">
-                            <td align="left"><html:img module="/" page="/themes/defaulttheme/images/blank.gif"
-                                                       width="10" height="1"/></td>
-                            <td align="left" width="100%">
-                                <it:formatHistoryEntry><%= history.get(i).getDescription() %>
-                                </it:formatHistoryEntry>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr class="listRowUnshaded">
-                <td colspan="5">
-                    <html:img module="/"
-                              page="/themes/defaulttheme/images/blank.gif"
-                              width="1"
-                              height="8"/>
-                </td>
-            </tr>
-
-            <% } %>
+            </c:forEach>
 
             <tr>
-                <td valign="top" align="right" class="historyName"><%= i + 1 %>)</td>
+                <td valign="top" align="right" class="historyName"></td>
                 <td></td>
                 <%
                     String wrap = "soft";
@@ -795,8 +804,7 @@
                               cols="110"
                               rows="6"
                               class="editColumnText">
-                        <bean:write name="issueForm"
-                                    property="history"/>
+                        <bean:write name="issueForm" property="history"/>
                     </textarea>
                 </td>
             </tr>
@@ -832,6 +840,7 @@
             %>
 
             <%
+                int i;
                 for (i = 0; i < notifications.size(); i++) {
             %>
 

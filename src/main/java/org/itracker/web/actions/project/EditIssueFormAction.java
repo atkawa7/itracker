@@ -32,6 +32,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Set;
+import java.util.Collections;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
@@ -51,6 +52,7 @@ import org.itracker.model.ProjectScript;
 import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.Version;
+import org.itracker.model.IssueHistory;
 import org.itracker.services.IssueService;
 import org.itracker.services.UserService;
 import org.itracker.services.util.Convert;
@@ -290,6 +292,11 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                         request.setAttribute("fieldSeverity", WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_SEVERITY));
                         request.setAttribute("possibleOwners", WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_OWNER));
                         request.setAttribute("hasNoViewAttachmentOption", ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, issue.getProject().getOptions()));
+
+                        List<IssueHistory> issueHistory = issueService.getIssueHistory(issue.getId());
+                        Collections.sort(issueHistory, IssueHistory.CREATE_DATE_COMPARATOR);
+
+                        request.setAttribute("issueHistory", issueHistory);
 
                         saveToken(request);
 
