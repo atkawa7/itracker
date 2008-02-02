@@ -18,6 +18,10 @@
 
 package org.itracker.web.actions.project;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,11 +32,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
@@ -66,31 +65,30 @@ import org.itracker.web.util.Constants;
 
 
 /**
-  * This class populates an IssueForm object for display by the edit issue page.
-  */
+ * This class populates an IssueForm object for display by the edit issue page.
+ */
 public class EditIssueFormAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(EditIssueFormAction.class);
-	
-    public EditIssueFormAction() {
-    }
+
+    private static final Logger log = Logger.getLogger(EditIssueFormAction.class);
 
     @SuppressWarnings("unchecked")
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
-        
-        String pageTitleKey = "itracker.web.editissue.title"; 
-		String pageTitleArg = request.getParameter("id");
-		request.setAttribute("pageTitleKey",pageTitleKey); 
-		request.setAttribute("pageTitleArg",pageTitleArg); 
-        
-        if(! isLoggedIn(request, response)) {
+        super.executeAlways(mapping, form, request, response);
+
+        String pageTitleKey = "itracker.web.editissue.title";
+        String pageTitleArg = request.getParameter("id");
+        request.setAttribute("pageTitleKey", pageTitleKey);
+        request.setAttribute("pageTitleArg", pageTitleArg);
+
+        if (!isLoggedIn(request, response)) {
             return mapping.findForward("login");
         }
 
         try {
             IssueService issueService = getITrackerServices().getIssueService();
-            request.setAttribute("ih",issueService);
+            request.setAttribute("ih", issueService);
             UserService userService = getITrackerServices().getUserService();
 
             Integer issueId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
@@ -98,163 +96,176 @@ public class EditIssueFormAction extends ItrackerBaseAction {
             Issue issue = issueService.getIssue(issueId);
             Project project = issueService.getIssueProject(issueId);
 
-            if(issue == null) {
-            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
-            } else if(project == null) {
-            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-            } else if(project.getStatus() != Status.ACTIVE) {
-            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
+            if (issue == null) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
+            } else if (project == null) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
+            } else if (project.getStatus() != Status.ACTIVE) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
             } else {
                 HttpSession session = request.getSession(true);
                 User currUser = (User) session.getAttribute(Constants.USER_KEY);
                 Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
                 Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
 
-                if(! IssueUtilities.canEditIssue(issue, currUser.getId(), userPermissions)) {
-                        log.debug("Unauthorized user requested access to edit issue for project " + project.getId());
-                        return mapping.findForward("unauthorized");
+                if (!IssueUtilities.canEditIssue(issue, currUser.getId(), userPermissions)) {
+                    log.debug("Unauthorized user requested access to edit issue for project " + project.getId());
+                    return mapping.findForward("unauthorized");
                 }
 
-                if(errors.isEmpty()) {
-                    Map<Integer, List<NameValuePair>> listOptions = new HashMap<Integer,List<NameValuePair>>();
-                    List<NameValuePair> ownersList = new ArrayList<NameValuePair>();
-                    
-                    ownersList = GetIssuePossibleOwnersList(issue, project, currUser, currLocale, 
-                                                             issueService, userService, userPermissions);
+                if (errors.isEmpty()) {
+                    Map<Integer, List<NameValuePair>> listOptions = new HashMap<Integer, List<NameValuePair>>();
+                    List<NameValuePair> ownersList;
 
-                    if ( ownersList != null && ownersList.size() > 0 )
-                        listOptions.put(new Integer(IssueUtilities.FIELD_OWNER), ownersList);
-                    
+                    ownersList = GetIssuePossibleOwnersList(issue, project, currUser, currLocale,
+                            issueService, userService, userPermissions);
+
+                    if (ownersList != null && ownersList.size() > 0) {
+                        listOptions.put(IssueUtilities.FIELD_OWNER, ownersList);
+                    }
+
                     boolean hasFullEdit = UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
 
                     List<NameValuePair> allStatuses = IssueUtilities.getStatuses(currLocale);
                     List<NameValuePair> statusList = new ArrayList<NameValuePair>();
-                    if(! hasFullEdit) {
-                        if(issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
-                            for(int i = 0; i < allStatuses.size(); i++) {
+
+                    if (!hasFullEdit) {
+
+                        if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
+                            for (int i = 0; i < allStatuses.size(); i++) {
                                 int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
-                                if(issue.getStatus() >= IssueUtilities.STATUS_CLOSED && statusNumber >= IssueUtilities.STATUS_CLOSED) {
+                                if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED && statusNumber >= IssueUtilities.STATUS_CLOSED) {
                                     statusList.add(allStatuses.get(i));
-                                } else if(issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && statusNumber >= IssueUtilities.STATUS_RESOLVED) {
-                                    statusList.add(allStatuses.get(i));
-                                }
-                            }
-                        } else {
-                              // Can't change
-                        }
-                    } else {
-                        if(currUser.isSuperUser()) {
-                            for(int i = 0; i < allStatuses.size(); i++) {
-                                statusList.add(allStatuses.get(i));
-                            }
-                        } else if(issue.getStatus() >= IssueUtilities.STATUS_ASSIGNED && issue.getStatus() < IssueUtilities.STATUS_RESOLVED) {
-                            for(int i = 0; i < allStatuses.size(); i++) {
-                                int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
-                                if(statusNumber >= IssueUtilities.STATUS_ASSIGNED && statusNumber < IssueUtilities.STATUS_CLOSED) {
-                                    statusList.add(allStatuses.get(i));
-                                } else if(statusNumber >= IssueUtilities.STATUS_CLOSED && ProjectUtilities.hasOption(ProjectUtilities.OPTION_ALLOW_ASSIGN_TO_CLOSE, project.getOptions()) && UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
-                                    statusList.add(allStatuses.get(i));
-                                }
-                            }
-                        } else if(issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && issue.getStatus() < IssueUtilities.STATUS_CLOSED) {
-                            for(int i = 0; i < allStatuses.size(); i++) {
-                                int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
-                                if(statusNumber >= IssueUtilities.STATUS_ASSIGNED && statusNumber < IssueUtilities.STATUS_CLOSED) {
-                                    statusList.add(allStatuses.get(i));
-                                } else if(statusNumber >= IssueUtilities.STATUS_CLOSED && UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
-                                    statusList.add(allStatuses.get(i));
-                                }
-                            }
-                        } else if(issue.getStatus() >= IssueUtilities.STATUS_CLOSED) {
-                            for(int i = 0; i < allStatuses.size(); i++) {
-                                int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
-                                if((statusNumber >= IssueUtilities.STATUS_ASSIGNED && statusNumber < IssueUtilities.STATUS_RESOLVED) || statusNumber >= IssueUtilities.STATUS_CLOSED) {
+                                } else
+                                if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && statusNumber >= IssueUtilities.STATUS_RESOLVED) {
                                     statusList.add(allStatuses.get(i));
                                 }
                             }
                         } else {
                             // Can't change
                         }
+
+                    } else {
+
+                        if (currUser.isSuperUser()) {
+                            for (int i = 0; i < allStatuses.size(); i++) {
+                                statusList.add(allStatuses.get(i));
+                            }
+                        } else if (issue.getStatus() >= IssueUtilities.STATUS_ASSIGNED && issue.getStatus() < IssueUtilities.STATUS_RESOLVED) {
+                            for (int i = 0; i < allStatuses.size(); i++) {
+                                int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
+                                if (statusNumber >= IssueUtilities.STATUS_ASSIGNED && statusNumber < IssueUtilities.STATUS_CLOSED) {
+                                    statusList.add(allStatuses.get(i));
+                                } else
+                                if (statusNumber >= IssueUtilities.STATUS_CLOSED && ProjectUtilities.hasOption(ProjectUtilities.OPTION_ALLOW_ASSIGN_TO_CLOSE, project.getOptions()) && UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
+                                    statusList.add(allStatuses.get(i));
+                                }
+                            }
+                        } else if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && issue.getStatus() < IssueUtilities.STATUS_CLOSED) {
+                            for (int i = 0; i < allStatuses.size(); i++) {
+                                int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
+                                if (statusNumber >= IssueUtilities.STATUS_ASSIGNED && statusNumber < IssueUtilities.STATUS_CLOSED) {
+                                    statusList.add(allStatuses.get(i));
+                                } else
+                                if (statusNumber >= IssueUtilities.STATUS_CLOSED && UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
+                                    statusList.add(allStatuses.get(i));
+                                }
+                            }
+                        } else if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED) {
+                            for (int i = 0; i < allStatuses.size(); i++) {
+                                int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
+                                if ((statusNumber >= IssueUtilities.STATUS_ASSIGNED && statusNumber < IssueUtilities.STATUS_RESOLVED) || statusNumber >= IssueUtilities.STATUS_CLOSED) {
+                                    statusList.add(allStatuses.get(i));
+                                }
+                            }
+                        } else {
+                            // Can't change
+                        }
+
                     }
-                    List<NameValuePair> statuses = new ArrayList<NameValuePair>();
+
+                    List<NameValuePair> statuses;
                     statuses = statusList;
-                    listOptions.put(new Integer(IssueUtilities.FIELD_STATUS), statuses);
+                    listOptions.put(IssueUtilities.FIELD_STATUS, statuses);
 
                     List<NameValuePair> severities = IssueUtilities.getSeverities(currLocale);
-                    listOptions.put(new Integer(IssueUtilities.FIELD_SEVERITY), severities);
+                    listOptions.put(IssueUtilities.FIELD_SEVERITY, severities);
 
                     List<NameValuePair> resolutions = IssueUtilities.getResolutions(currLocale);
-                    listOptions.put(new Integer(IssueUtilities.FIELD_RESOLUTION), resolutions);
+                    listOptions.put(IssueUtilities.FIELD_RESOLUTION, resolutions);
 
                     List<Component> components = project.getComponents();
 //                    Collections.sort(components, new Component());
-                    listOptions.put(new Integer(IssueUtilities.FIELD_COMPONENTS), Convert.componentsToNameValuePairs(components));
-                    
+                    listOptions.put(IssueUtilities.FIELD_COMPONENTS, Convert.componentsToNameValuePairs(components));
+
                     List<Version> versions = project.getVersions();
 //                    Collections.sort(versions, new Version());
-                    listOptions.put(new Integer(IssueUtilities.FIELD_VERSIONS), Convert.versionsToNameValuePairs(versions));
-                    listOptions.put(new Integer(IssueUtilities.FIELD_TARGET_VERSION), Convert.versionsToNameValuePairs(versions));
+                    listOptions.put(IssueUtilities.FIELD_VERSIONS, Convert.versionsToNameValuePairs(versions));
+                    listOptions.put(IssueUtilities.FIELD_TARGET_VERSION, Convert.versionsToNameValuePairs(versions));
 
 
                     List<CustomField> projectFields = project.getCustomFields();
-                    for(int i = 0; i < projectFields.size(); i++) {
-                        if(projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
+                    for (int i = 0; i < projectFields.size(); i++) {
+                        if (projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
                             projectFields.get(i).setLabels(currLocale);
                             listOptions.put(projectFields.get(i).getId(), Convert.customFieldOptionsToNameValuePairs(projectFields.get(i).getOptions()));
                         }
                     }
 
                     IssueForm issueForm = (IssueForm) form;
-                    if(issueForm == null) {
+                    if (issueForm == null) {
                         issueForm = new IssueForm();
                     }
+
                     issueForm.setId(issue.getId());
                     issueForm.setProjectId(issue.getProject().getId());
-                    issueForm.setPrevStatus(new Integer(issue.getStatus()));
+                    issueForm.setPrevStatus(issue.getStatus());
                     issueForm.setCaller(request.getParameter("caller"));
 
                     issueForm.setDescription(HTMLUtilities.handleQuotes(issue.getDescription()));
-                    issueForm.setStatus(new Integer(issue.getStatus()));
+                    issueForm.setStatus(issue.getStatus());
 
-                    if(! ProjectUtilities.hasOption(ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS, project.getOptions())) {
+                    if (!ProjectUtilities.hasOption(ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS, project.getOptions())) {
                         try {
                             issue.setResolution(IssueUtilities.checkResolutionName(issue.getResolution(), currLocale));
-                        } catch(MissingResourceException mre) {
-                        	log.error(mre.getMessage());
-                        } catch(NumberFormatException nfe) {
-                        	log.error(nfe.getMessage());
+                        } catch (MissingResourceException mre) {
+                            log.error(mre.getMessage());
+                        } catch (NumberFormatException nfe) {
+                            log.error(nfe.getMessage());
                         }
                     }
+
                     issueForm.setResolution(HTMLUtilities.handleQuotes(issue.getResolution()));
-                    issueForm.setSeverity(new Integer(issue.getSeverity()));
-                    
-                    issueForm.setTargetVersion(issue.getTargetVersion() == null 
+                    issueForm.setSeverity(issue.getSeverity());
+
+                    issueForm.setTargetVersion(issue.getTargetVersion() == null
                             ? -1 : issue.getTargetVersion().getId());
-                    
+
                     issueForm.setOwnerId((issue.getOwner() == null ? -1 : issue.getOwner().getId()));
 
                     List<IssueField> fields = issue.getFields();
-                    HashMap<String,String> customFields = new HashMap<String,String>();
-                    for(int i = 0; i < fields.size(); i++) {
+                    HashMap<String, String> customFields = new HashMap<String, String>();
+                    for (int i = 0; i < fields.size(); i++) {
                         customFields.put(fields.get(i).getCustomField().getId().toString(), fields.get(i).getValue(currLocale));
                     }
+
                     issueForm.setCustomFields(customFields);
 
                     HashSet selectedComponents = issueService.getIssueComponentIds(issueId);
-                    if(selectedComponents != null) {
+                    if (selectedComponents != null) {
                         Integer[] componentIds = new Integer[selectedComponents.size()];
                         int i = 0;
-                        for(Iterator iter = selectedComponents.iterator(); iter.hasNext(); i++) {
+                        for (Iterator iter = selectedComponents.iterator(); iter.hasNext(); i++) {
                             componentIds[i] = (Integer) iter.next();
                         }
                         issueForm.setComponents(componentIds);
                     }
 
                     HashSet selectedVersions = issueService.getIssueVersionIds(issueId);
-                    if(selectedVersions != null) {
+                    if (selectedVersions != null) {
                         Integer[] versionIds = new Integer[selectedVersions.size()];
                         int i = 0;
-                        for(Iterator iter = selectedVersions.iterator(); iter.hasNext(); i++) {
+                        for (Iterator iter = selectedVersions.iterator(); iter.hasNext(); i++) {
                             versionIds[i] = (Integer) iter.next();
                         }
                         issueForm.setVersions(versionIds);
@@ -264,29 +275,38 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                     WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors, issueForm);
                     WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, null, errors, issueForm);
 
-                    if(errors == null || errors.isEmpty()) {
+                    if (errors == null || errors.isEmpty()) {
+
                         log.debug("Forwarding to edit issue form for issue " + issue.getId());
 
                         request.setAttribute("issueForm", issueForm);
-                        session.setAttribute(Constants.ISSUE_KEY, issue);
+                        request.setAttribute(Constants.ISSUE_KEY, issue);
                         session.setAttribute(Constants.LIST_OPTIONS_KEY, listOptions);
+
+                        request.setAttribute("fieldSeverity", WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_SEVERITY));
+
                         saveToken(request);
+
                         log.info("EditIssueFormAction: Forward: InputForward");
+
                         return mapping.getInputForward();
                     }
+
                 }
+
             }
-        } catch(Exception e) {
+
+        } catch (Exception e) {
             log.error("Exception while creating edit issue form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
-        if(! errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             saveMessages(request, errors);
         }
+
         log.info("EditIssueFormAction: Forward: Error");
         return mapping.findForward("error");
     }
 
 }
-  

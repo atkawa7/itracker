@@ -73,10 +73,14 @@
 <tr>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.description"/>:</td>
     <td colspan="3" class="editColumnText">
+
         <table border="0" cellspacing="0" cellspacing="1" width="100%">
             <tr>
-                <td align="left" width="100%" class="editColumnText"><html:text size="80" property="description"
-                                                                                styleClass="editColumnText"/></td>
+                <td align="left" width="100%" class="editColumnText">
+                    <html:text size="80"
+                               property="description"
+                               styleClass="editColumnText"/>
+                </td>
                 <td align="right" class="editColumnTitle"><it:message key="itracker.web.attr.actions"/>:&nbsp;</td>
                 <td align="right" valign="bottom" class="editColumnText" style="white-space: nowrap;" nowrap>
                     <it:formatImageAction forward="listissues"
@@ -126,7 +130,9 @@
                                           altKey="itracker.web.image.create.issue.alt"
                                           arg0="${issue.project.name}"
                                           textActionKey="itracker.web.image.create.texttag"/>
+
                     <% } %>
+
                 </td>
             </tr>
         </table>
@@ -135,20 +141,30 @@
 <tr>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.status"/>:</td>
     <td class="editColumnText">
+
         <%
             List<NameValuePair> statuses = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_STATUS);
             if (statuses.size() > 0) {
         %>
+
         <html:select property="status" styleClass="editColumnText">
+
             <% for (int i = 0; i < statuses.size(); i++) { %>
+
             <html:option styleClass="editColumnText"
                          value="<%= statuses.get(i).getValue() %>"><%= statuses.get(i).getName() %>
             </html:option>
+
             <% } %>
+
         </html:select>
+
         <% } else { %>
+
         <%= IssueUtilities.getStatusName(currentIssue.getStatus(), (java.util.Locale) pageContext.getAttribute("currLocale")) %>
+
         <% } %>
+
     </td>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.creator"/>:</td>
     <td class="editColumnText">
@@ -159,27 +175,38 @@
 <tr>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.resolution"/>:</td>
     <td class="editColumnText">
-        <%
+        <% if (um.isSuperUser() || (hasFullEdit && (currentIssue.getStatus() >= IssueUtilities.STATUS_ASSIGNED && currentIssue.getStatus() < IssueUtilities.STATUS_CLOSED))) { %>
 
-            if (um.isSuperUser() || (hasFullEdit && (currentIssue.getStatus() >= IssueUtilities.STATUS_ASSIGNED && currentIssue.getStatus() < IssueUtilities.STATUS_CLOSED))) { %>
         <% if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS, project.getOptions())) { %>
+
         <html:select property="resolution" styleClass="editColumnText">
             <option value=""></option>
+
             <%
                 List<NameValuePair> possResolutions = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_RESOLUTION);
                 for (int i = 0; i < possResolutions.size(); i++) {
             %>
+
             <html:option styleClass="editColumnText"
                          value="<%= possResolutions.get(i).getValue() %>"><%= possResolutions.get(i).getName() %>
             </html:option>
+
             <% } %>
+
         </html:select>
+
         <% } else { %>
+
         <html:text size="20" property="resolution" styleClass="editColumnText"/>
+
         <% } %>
+
         <% } else { %>
+
         <%= currentIssue.getResolution() %>
+
         <% } %>
+
     </td>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.lastmodified"/>:</td>
     <td class="editColumnText">
@@ -189,24 +216,19 @@
 <tr>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.severity"/>:</td>
     <td class="editColumnText">
+
         <% if (hasFullEdit) { %>
 
         <html:select property="severity" styleClass="editColumnText">
-            <%
-                List<NameValuePair> severities = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_SEVERITY);
-                if (!severities.isEmpty()) {
-                    for (int i = 0; i < severities.size(); i++) {
-            %>
-            <html:option value="<%= severities.get(i).getValue() %>"
-                         styleClass="editColumnText"><%= severities.get(i).getName() %>
-            </html:option>
-            <% } %>   <% } else { %>
-            <html:option value="0"
-                         styleClass="editColumnText">is empty, something's wrong in the call to WorkflowUtilities.getListOptions(</html:option>
-            <% } %>
+            <c:forEach items="${fieldSeverity}" var="severity" varStatus="status">
+                <html:option value="${severity.value}"styleClass="editColumnText">${severity.name}</html:option>
+            </c:forEach>
         </html:select>
+
         <% } else { %>
+
         <%= IssueUtilities.getSeverityName(currentIssue.getSeverity(), (java.util.Locale) pageContext.getAttribute("currLocale")) %>
+
         <% } %>
 
     </td>
@@ -500,7 +522,9 @@
               %>
               <tr><td colspan="4"><html:img page="/themes/defaulttheme/images/blank.gif" height="18" width="1"/></td></tr>
           --%>
+
 <% if (!ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, project.getOptions())) { %>
+
 <tr>
     <td colspan="4">
         <table border="0" cellspacing="0" cellspacing="1" width="100%">
@@ -525,56 +549,82 @@
 
             <% for (int i = 0; i < attachments.size(); i++) { %>
             <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>">
-                <td class="listRowText" align="left"><it:formatImageAction forward="downloadAttachment.do"
-                                                                           paramName="id"
-                                                                           paramValue="<%= attachments.get(i).getId() %>"
-                                                                           target="_blank"
-                                                                           src="/themes/defaulttheme/images/download.png"
-                                                                           altKey="itracker.web.image.download.attachment.alt"
-                                                                           textActionKey="itracker.web.image.download.texttag"/></td>
+
+                <td class="listRowText" align="left">
+                    <it:formatImageAction forward="downloadAttachment.do"
+                                          paramName="id"
+                                          paramValue="<%= attachments.get(i).getId() %>"
+                                          target="_blank"
+                                          src="/themes/defaulttheme/images/download.png"
+                                          altKey="itracker.web.image.download.attachment.alt"
+                                          textActionKey="itracker.web.image.download.texttag"/>
+                </td>
+
                 <td></td>
-                <td class="listRowText" align="left"><%= attachments.get(i).getOriginalFileName() %>
+                <td class="listRowText" align="left">
+                    <%= attachments.get(i).getOriginalFileName() %>
                 </td>
-                <td class="listRowText" align="left"><it:formatDescription><%= attachments.get(i).getDescription() %>
-                </it:formatDescription></td>
-                <td class="listRowText" align="left"><%= attachments.get(i).getType() %>
+                <td class="listRowText" align="left">
+                    <it:formatDescription><%= attachments.get(i).getDescription() %></it:formatDescription>
                 </td>
-                <td class="listRowText" align="left"><%= attachments.get(i).getSize() / 1024 %>
+                <td class="listRowText" align="left">
+                    <%= attachments.get(i).getType() %>
+                </td>
+                <td class="listRowText" align="left">
+                    <%= attachments.get(i).getSize() / 1024 %>
                 </td>
                 <td class="listRowText"
-                    align="left"><%= attachments.get(i).getUser().getFirstName() + " " + attachments.get(i).getUser().getLastName() %>
+                    align="left">
+                    <%= attachments.get(i).getUser().getFirstName() + " " + attachments.get(i).getUser().getLastName() %>
                 </td>
-                <td class="listRowText" align="right"><it:formatDate
-                        date="<%= attachments.get(i).getLastModifiedDate() %>"/></td>
+                <td class="listRowText" align="right">
+                    <it:formatDate date="<%= attachments.get(i).getLastModifiedDate() %>"/>
+                </td>
             </tr>
+
             <%
                 }
             } else {
             %>
+
             <tr class="listHeading">
-                <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2"
-                                          width="1"/></td>
+                <td colspan="4">
+                    <html:img module="/"
+                              page="/themes/defaulttheme/images/blank.gif"
+                              height="2"
+                              width="1"/>
+                </td>
             </tr>
             <tr>
-                <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3"
-                                          width="1"/></td>
+                <td colspan="4">
+                    <html:img module="/"
+                              page="/themes/defaulttheme/images/blank.gif"
+                              height="3"
+                              width="1"/>
+                </td>
             </tr>
+
             <% } %>
+
         </table>
     </td>
 </tr>
 <tr class="listRowUnshaded">
     <td colspan="4">
-        <it:message key="itracker.web.attr.description"/> <html:text property="attachmentDescription" size="30"
-                                                                     maxlength="60" styleClass="editColumnText"/>
-        &nbsp;&nbsp;&nbsp; <it:message key="itracker.web.attr.filename"/> <html:file property="attachment"
-                                                                                     styleClass="editColumnText"/>
+        <it:message key="itracker.web.attr.description"/>
+        <html:text property="attachmentDescription" size="30"
+                   maxlength="60" styleClass="editColumnText"/>
+        &nbsp;&nbsp;&nbsp; <it:message key="itracker.web.attr.filename"/>
+        <html:file property="attachment"
+                   styleClass="editColumnText"/>
     </td>
 </tr>
 <tr>
     <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="18" width="1"/></td>
 </tr>
+
 <% } %>
+
 </table>
 
 <table border="0" cellspacing="0" cellspacing="1" width="100%">
@@ -582,23 +632,45 @@
     <td colspan="4">
         <table border="0" cellspacing="0" cellspacing="1" width="100%">
             <tr>
-                <td class="editColumnTitle" colspan="3"><it:message key="itracker.web.attr.history"/>:</td>
-                <td align="right"><it:formatImageAction forward="view_issue_activity.do" paramName="id"
-                                                        paramValue="<%= issueId %>"
-                                                        src="/themes/defaulttheme/images/view.gif"
-                                                        altKey="itracker.web.image.view.activity.alt"
-                                                        textActionKey="itracker.web.image.view.texttag"/></td>
+                <td class="editColumnTitle" colspan="3">
+                    <it:message key="itracker.web.attr.history"/>:</td>
+                <td align="right">
+                    <it:formatImageAction forward="view_issue_activity.do"
+                                          paramName="id"
+                                          paramValue="${issue.id}"
+                                          src="/themes/defaulttheme/images/view.gif"
+                                          altKey="itracker.web.image.view.activity.alt"
+                                          textActionKey="itracker.web.image.view.texttag"/>
+                </td>
             </tr>
             <tr align="left" class="listHeading">
+
                 <% if (um.isSuperUser()) { %>
-                <td width="30"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="30"
-                                         height="1"/></td>
+
+                <td width="30">
+                    <html:img module="/"
+                              page="/themes/defaulttheme/images/blank.gif"
+                              width="30"
+                              height="1"/>
+                </td>
+
                 <% } else { %>
-                <td width="15"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15"
-                                         height="1"/></td>
+
+                <td width="15">
+                    <html:img module="/"
+                              page="/themes/defaulttheme/images/blank.gif"
+                              width="15"
+                              height="1"/>
+                </td>
+
                 <% } %>
-                <td width="3"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="3"
-                                        height="1"/></td>
+
+                <td width="3">
+                    <html:img module="/"
+                              page="/themes/defaulttheme/images/blank.gif"
+                              width="3"
+                              height="1"/>
+                </td>
                 <td><it:message key="itracker.web.attr.updator"/></td>
                 <td align="right"><it:message key="itracker.web.attr.updated"/></td>
             </tr>
@@ -611,16 +683,24 @@
                 int i;
                 for (i = 0; i < history.size(); i++) {
             %>
+
             <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>">
                 <td align="right" valign="bottom" nowrap>
+
                     <% if (um.isSuperUser()) { %>
-                    <it:formatImageAction action="removehistory" paramName="historyId"
-                                          paramValue="<%= history.get(i).getId() %>" caller="editissue"
+
+                    <it:formatImageAction action="removehistory"
+                                          paramName="historyId"
+                                          paramValue="<%= history.get(i).getId() %>"
+                                          caller="editissue"
                                           src="/themes/defaulttheme/images/delete.gif"
                                           altKey="itracker.web.image.delete.history.alt"
                                           textActionKey="itracker.web.image.delete.texttag"/>
+
                     <% } %>
+
                     <%= i + 1 %>)
+
                 </td>
                 <td></td>
                 <td class="historyName">
@@ -651,10 +731,16 @@
                 </td>
             </tr>
             <tr class="listRowUnshaded">
-                <td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1"
-                                          height="8"/></td>
+                <td colspan="5">
+                    <html:img module="/"
+                              page="/themes/defaulttheme/images/blank.gif"
+                              width="1"
+                              height="8"/>
+                </td>
             </tr>
+
             <% } %>
+
             <tr>
                 <td valign="top" align="right" class="historyName"><%= i + 1 %>)</td>
                 <td></td>
@@ -665,9 +751,15 @@
                         wrap = "hard";
                     }
                 %>
-                <td colspan="3" class="editColumnText"><textarea name="history" wrap="<%= wrap %>" cols="110" rows="6"
-                                                                 class="editColumnText"><bean:write name="issueForm"
-                                                                                                    property="history"/></textarea>
+                <td colspan="3" class="editColumnText">
+                    <textarea name="history"
+                              wrap="<%= wrap %>"
+                              cols="110"
+                              rows="6"
+                              class="editColumnText">
+                        <bean:write name="issueForm"
+                                    property="history"/>
+                    </textarea>
                 </td>
             </tr>
         </table>
@@ -675,7 +767,12 @@
 </tr>
 
 <tr>
-    <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td>
+    <td colspan="4">
+        <html:img module="/"
+                  page="/themes/defaulttheme/images/blank.gif"
+                  width="1"
+                  height="18"/>
+    </td>
 </tr>
 
 <tr>
@@ -695,9 +792,11 @@
 
                 Collections.sort(notifications, Notification.TYPE_COMPARATOR);
             %>
+
             <%
                 for (i = 0; i < notifications.size(); i++) {
             %>
+
             <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>">
                 <td class="listRowSmall"><%= notifications.get(i).getUser().getFirstName() + " " + notifications.get(i).getUser().getLastName() %>
                 </td>
