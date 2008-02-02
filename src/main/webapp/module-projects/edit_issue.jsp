@@ -11,7 +11,6 @@
 <%@ page import="org.itracker.web.util.RequestHelper" %>
 <%@ page import="org.apache.struts.taglib.TagUtils" %>
 
-
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
@@ -20,27 +19,20 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<% // TODO : move redirect logic to Action class. 
+<%
     IssueService ih = (IssueService) request.getAttribute("ih");
     User um = (User) request.getSession().getAttribute("currUser");
 
-    Issue issue = (Issue) session.getAttribute(Constants.ISSUE_KEY);
+    Issue currentIssue = (Issue) request.getAttribute(Constants.ISSUE_KEY);
+
     Map<Integer, List<NameValuePair>> listOptions =
             RequestHelper.getListOptions(session);
     final Map<Integer, Set<PermissionType>> permissions =
             RequestHelper.getUserPermissions(session);
 
-    Project project = (issue != null ? issue.getProject() : null);
-    if (issue == null || project == null) {
-%>
-<logic:forward name="unauthorized"/>
-<%
-} else { %><%--
-      String caller = null;
-      String description = null;
-      String resolution = null; --%>
-<%
-    Integer issueId = issue.getId();
+    Project project = (currentIssue != null ? currentIssue.getProject() : null);
+
+    Integer issueId = currentIssue.getId();
     Integer currUserId = um.getId();
     boolean hasFullEdit = UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
     String formName = "issueForm";
@@ -48,10 +40,10 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <bean:define id="pageTitleKey" value="itracker.web.editissue.title"/>
-<bean:define id="pageTitleArg" value="<%= issue.getId().toString() %>"/>
+<bean:define id="pageTitleArg" value="${issue.id}"/>
 
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
-<%-- <html:javascript formName="editIssueForm"/> replaced by --%>
+
 <html:javascript formName="issueForm"/>
 
 <logic:messagesPresent>
@@ -65,8 +57,7 @@
     <br>
 </logic:messagesPresent>
 
-<html:form action="/editissue" method="post" enctype="multipart/form-data"
-           onsubmit="return validateEditIssueForm(this);">
+<html:form action="/editissue" method="post" enctype="multipart/form-data">
 <html:hidden property="id"/>
 <html:hidden property="projectId"/>
 <html:hidden property="prevStatus"/>
@@ -88,30 +79,52 @@
                                                                                 styleClass="editColumnText"/></td>
                 <td align="right" class="editColumnTitle"><it:message key="itracker.web.attr.actions"/>:&nbsp;</td>
                 <td align="right" valign="bottom" class="editColumnText" style="white-space: nowrap;" nowrap>
-                    <it:formatImageAction forward="listissues" paramName="projectId" paramValue="<%= project.getId() %>"
-                                          caller="editissue" src="/themes/defaulttheme/images/list.gif"
+                    <it:formatImageAction forward="listissues"
+                                          paramName="projectId"
+                                          paramValue="${issue.project.id}"
+                                          caller="editissue"
+                                          src="/themes/defaulttheme/images/list.gif"
                                           altKey="itracker.web.image.issuelist.issue.alt"
                                           textActionKey="itracker.web.image.issuelist.texttag"/>
-                    <% if (!ih.hasIssueNotification(issue.getId(), currUserId)) { %>
-                    <it:formatImageAction forward="watchissue" paramName="id" paramValue="<%= issue.getId() %>"
-                                          caller="editissue" src="/themes/defaulttheme/images/watch.gif"
-                                          altKey="itracker.web.image.watch.issue.alt" arg0="<%= issue.getId() %>"
+
+                    <% if (!ih.hasIssueNotification(currentIssue.getId(), currUserId)) { %>
+
+                    <it:formatImageAction forward="watchissue"
+                                          paramName="id"
+                                          paramValue="${issue.id}"
+                                          caller="editissue"
+                                          src="/themes/defaulttheme/images/watch.gif"
+                                          altKey="itracker.web.image.watch.issue.alt"
+                                          arg0="${issue.id}"
                                           textActionKey="itracker.web.image.watch.texttag"/>
+
                     <% } %>
+
                     <% if (UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT)) { %>
-                    <it:formatImageAction action="moveissueform" paramName="id" paramValue="<%= issue.getId() %>"
-                                          caller="editissue" src="/themes/defaulttheme/images/move.gif"
-                                          altKey="itracker.web.image.move.issue.alt" arg0="<%= issue.getId() %>"
+
+                    <it:formatImageAction action="moveissueform"
+                                          paramName="id"
+                                          paramValue="${issue.id}"
+                                          caller="editissue"
+                                          src="/themes/defaulttheme/images/move.gif"
+                                          altKey="itracker.web.image.move.issue.alt"
+                                          arg0="${issue.id}"
                                           textActionKey="itracker.web.image.move.texttag"/>
+
                         <%-- TODO re-include this once relate issue correctly works
                           <it:formatImageAction forward="relateissue" paramName="id" paramValue="<%= issue.getId() %>" caller="editissue" src="/themes/defaulttheme/images/link.gif" altKey="itracker.web.image.link.issue.alt" textActionKey="itracker.web.image.link.texttag"/>
                         --%>
+
                     <% } %>
+
                     <% if (project.getStatus() == Status.ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_CREATE)) { %>
-                    <it:formatImageAction forward="createissue" paramName="projectId"
-                                          paramValue="<%= project.getId() %>"
+
+                    <it:formatImageAction forward="createissue"
+                                          paramName="projectId"
+                                          paramValue="${issue.project.id}"
                                           src="/themes/defaulttheme/images/create.gif"
-                                          altKey="itracker.web.image.create.issue.alt" arg0="<%= project.getName() %>"
+                                          altKey="itracker.web.image.create.issue.alt"
+                                          arg0="${issue.project.name}"
                                           textActionKey="itracker.web.image.create.texttag"/>
                     <% } %>
                 </td>
@@ -134,13 +147,13 @@
             <% } %>
         </html:select>
         <% } else { %>
-        <%= IssueUtilities.getStatusName(issue.getStatus(), (java.util.Locale) pageContext.getAttribute("currLocale")) %>
+        <%= IssueUtilities.getStatusName(currentIssue.getStatus(), (java.util.Locale) pageContext.getAttribute("currLocale")) %>
         <% } %>
     </td>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.creator"/>:</td>
     <td class="editColumnText">
-        <it:formatDate date="<%= issue.getCreateDate() %>"/>
-        (<%= issue.getCreator().getFirstName() + " " + issue.getCreator().getLastName() %>)
+        <it:formatDate date="${issue.createDate}"/>
+        (${issue.creator.firstName}&nbsp;${issue.creator.lastName})
     </td>
 </tr>
 <tr>
@@ -148,7 +161,7 @@
     <td class="editColumnText">
         <%
 
-            if (um.isSuperUser() || (hasFullEdit && (issue.getStatus() >= IssueUtilities.STATUS_ASSIGNED && issue.getStatus() < IssueUtilities.STATUS_CLOSED))) { %>
+            if (um.isSuperUser() || (hasFullEdit && (currentIssue.getStatus() >= IssueUtilities.STATUS_ASSIGNED && currentIssue.getStatus() < IssueUtilities.STATUS_CLOSED))) { %>
         <% if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS, project.getOptions())) { %>
         <html:select property="resolution" styleClass="editColumnText">
             <option value=""></option>
@@ -165,11 +178,13 @@
         <html:text size="20" property="resolution" styleClass="editColumnText"/>
         <% } %>
         <% } else { %>
-        <%= issue.getResolution() %>
+        <%= currentIssue.getResolution() %>
         <% } %>
     </td>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.lastmodified"/>:</td>
-    <td class="editColumnText"><it:formatDate date="<%= issue.getLastModifiedDate() %>"/></td>
+    <td class="editColumnText">
+        <it:formatDate date="${issue.lastModifiedDate}"/>
+    </td>
 </tr>
 <tr>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.severity"/>:</td>
@@ -191,46 +206,66 @@
             <% } %>
         </html:select>
         <% } else { %>
-        <%= IssueUtilities.getSeverityName(issue.getSeverity(), (java.util.Locale) pageContext.getAttribute("currLocale")) %>
+        <%= IssueUtilities.getSeverityName(currentIssue.getSeverity(), (java.util.Locale) pageContext.getAttribute("currLocale")) %>
         <% } %>
 
     </td>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.owner"/>:</td>
-    <% if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED) { %>
-    <td class="editColumnText"><%= (issue.getOwner() == null ? ITrackerResources.getString("itracker.web.generic.unassigned", (java.util.Locale) pageContext.getAttribute("currLocale")) : issue.getOwner().getFirstName() + " " + issue.getOwner().getLastName()) %>
+
+    <% if (currentIssue.getStatus() >= IssueUtilities.STATUS_RESOLVED) { %>
+
+    <td class="editColumnText">
+        <%= (currentIssue.getOwner() == null ? ITrackerResources.getString("itracker.web.generic.unassigned", (java.util.Locale) pageContext.getAttribute("currLocale")) : currentIssue.getOwner().getFirstName() + " " + currentIssue.getOwner().getLastName()) %>
     </td>
+
     <% } else { %>
-    <input type="hidden" name="currentOwner"
-           value="<%= (issue.getOwner() == null ? new Integer(-1) : issue.getOwner().getId()) %>">
+
+    <input type="hidden"
+           name="currentOwner"
+           value="<%= (currentIssue.getOwner() == null ? new Integer(-1) : currentIssue.getOwner().getId()) %>">
+
     <%
         List<NameValuePair> possibleOwners = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_OWNER);
         if (possibleOwners.size() > 0) {
     %>
-    <td><html:select property="ownerId" styleClass="editColumnText">
+
+    <td>
+        <html:select property="ownerId" styleClass="editColumnText">
         <!-- html:option value="-1" key="itracker.web.generic.unassigned"/ -->
+
         <% for (int i = 0; i < possibleOwners.size(); i++) { %>
+
         <html:option value="<%= possibleOwners.get(i).getValue() %>"><%= possibleOwners.get(i).getName() %>
         </html:option>
+
         <% } %>
+
     </html:select></td>
+
     <% } else { %>
-    <td class="editColumnText"><%= (issue.getOwner() == null ? ITrackerResources.getString("itracker.web.generic.unassigned", (java.util.Locale) pageContext.getAttribute("currLocale")) : issue.getOwner().getFirstName() + " " + issue.getOwner().getLastName()) %>
+
+    <td class="editColumnText"><%= (currentIssue.getOwner() == null ? ITrackerResources.getString("itracker.web.generic.unassigned", (java.util.Locale) pageContext.getAttribute("currLocale")) : currentIssue.getOwner().getFirstName() + " " + currentIssue.getOwner().getLastName()) %>
+
     </td>
+
     <% } %>
+
     <% } %>
+
 </tr>
 <tr>
     <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td>
 </tr>
 <tr>
     <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.project"/>:</td>
-    <td valign="top" class="editColumnText"><%= issue.getProject().getName() %>
-    </td>
+    <td valign="top" class="editColumnText">${issue.project.name}</td>
+
     <%
         List<NameValuePair> components = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_COMPONENTS);
         List<NameValuePair> versions = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_VERSIONS);
         List<NameValuePair> targetVersion = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_TARGET_VERSION);
     %>
+
     <% if (targetVersion.size() > 0) { %>
     <td valign="top" class="editColumnTitle" style="white-space: nowrap;" nowrap><it:message
             key="itracker.web.attr.target"/>:&nbsp;</td>
@@ -244,9 +279,15 @@
             </html:option>
             <% } %>
         </html:select>
+
         <% } else { %>
-        <%= (issue.getTargetVersion() == null ? "" : issue.getTargetVersion().getNumber())%>
+
+        <c:if test="${not empty issue.targetVersion}">
+            ${issue.targetVersion.number}
+        </c:if>
+
         <% } %>
+
     </td>
     <% } %>
 </tr>
@@ -264,7 +305,7 @@
         </html:select>
         <% } else { %>
         <%
-            List<Component> issueComponents = issue.getComponents();
+            List<Component> issueComponents = currentIssue.getComponents();
             Collections.sort(issueComponents);
             for (int i = 0; i < issueComponents.size(); i++) {
         %>
@@ -289,7 +330,7 @@
         </html:select>
         <% } else { %>
         <%
-            List<Version> issueVersions = issue.getVersions();
+            List<Version> issueVersions = currentIssue.getVersions();
             Collections.sort(issueVersions, new Version.VersionComparator());
             for (int i = 0; i < issueVersions.size(); i++) {
         %>
@@ -311,7 +352,7 @@
 
     if (projectFields != null && projectFields.size() > 0) {
         Collections.sort(projectFields, CustomField.ID_COMPARATOR);
-        List<IssueField> issueFields = issue.getFields();
+        List<IssueField> issueFields = currentIssue.getFields();
         HashMap<String, String> fieldValues = new HashMap<String, String>();
         for (int j = 0; j < issueFields.size(); j++) {
             if (issueFields.get(j).getCustomField() != null && issueFields.get(j).getCustomField().getId() > 0) {
@@ -337,7 +378,7 @@
 </tr>
 <tr>
     <% }
-        String fieldValue = (fieldValues.get(String.valueOf(projectFields.get(i).getId())) == null ? "" : (String) fieldValues.get(String.valueOf(projectFields.get(i).getId())));
+        String fieldValue = (fieldValues.get(String.valueOf(projectFields.get(i).getId())) == null ? "" : fieldValues.get(String.valueOf(projectFields.get(i).getId())));
     %>
     <td class="editColumnTitle">
         <%=CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId()) + ": "%>
@@ -467,7 +508,7 @@
                 <td class="editColumnTitle" colspan="4"><it:message key="itracker.web.attr.attachments"/>:</td>
             </tr>
             <%
-                List<IssueAttachment> attachments = issue.getAttachments();
+                List<IssueAttachment> attachments = currentIssue.getAttachments();
                 if (attachments != null && attachments.size() > 0) {
                     Collections.sort(attachments, IssueAttachment.CREATE_DATE_COMPARATOR);
             %>
@@ -567,7 +608,7 @@
 
                 Collections.sort(history, IssueHistory.CREATE_DATE_COMPARATOR);
 
-                int i = 0;
+                int i;
                 for (i = 0; i < history.size(); i++) {
             %>
             <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>">
@@ -681,7 +722,5 @@
 </tr>
 </table>
 
-
 </html:form>
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
-<% } %>
