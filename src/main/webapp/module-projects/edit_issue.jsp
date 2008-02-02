@@ -833,27 +833,29 @@
                 <td><it:message key="itracker.web.attr.role"/></td>
             </tr>
 
-            <%
-                List<Notification> notifications = ih.getIssueNotifications(issueId);
+            <c:forEach items="${notifications}" var="notification" varStatus="status">
 
-                Collections.sort(notifications, Notification.TYPE_COMPARATOR);
-            %>
+                <c:choose>
+                    <c:when test="${status.count % 2 == 0}">
+                        <c:set var="rowShading" value="listRowShaded"/>
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="rowShading" value="listRowUnshaded"/>
+                    </c:otherwise>
+                </c:choose>
 
-            <%
-                int i;
-                for (i = 0; i < notifications.size(); i++) {
-            %>
+                <tr class="${rowShading}">
+                    <td class="listRowSmall">${notification.user.firstName}&nbsp;${notification.user.lastName}</td>
+                    <td class="listRowSmall">
+                        <a href="mailto:${notification.user.email}"
+                           class="mailto">${notification.user.email}</a>
+                    </td>
+                    <td class="listRowSmall">${notification.notificationRole}</td>
+                    <!--NotificationUtilities.getRoleName(notifications.get(i).getNotificationRole())-->
+                </tr>
 
-            <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>">
-                <td class="listRowSmall"><%= notifications.get(i).getUser().getFirstName() + " " + notifications.get(i).getUser().getLastName() %>
-                </td>
-                <td class="listRowSmall"><a href="mailto:<%= notifications.get(i).getUser().getEmail() %>"
-                                            class="mailto"><%= notifications.get(i).getUser().getEmail() %>
-                </a></td>
-                <td class="listRowSmall"><%= NotificationUtilities.getRoleName(notifications.get(i).getNotificationRole()) %>
-                </td>
-            </tr>
-            <% } %>
+            </c:forEach>
+
         </table>
     </td>
 </tr>
@@ -862,9 +864,13 @@
     <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td>
 </tr>
 <tr>
-    <td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.update.alt"
-                                              titleKey="itracker.web.button.update.alt"><it:message
-            key="itracker.web.button.update"/></html:submit></td>
+    <td colspan="4" align="left">
+        <html:submit styleClass="button"
+                     altKey="itracker.web.button.update.alt"
+                     titleKey="itracker.web.button.update.alt">
+            <it:message key="itracker.web.button.update"/>
+        </html:submit>
+    </td>
 </tr>
 </table>
 

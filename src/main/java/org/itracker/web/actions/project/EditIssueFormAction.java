@@ -53,6 +53,7 @@ import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.Version;
 import org.itracker.model.IssueHistory;
+import org.itracker.model.Notification;
 import org.itracker.services.IssueService;
 import org.itracker.services.UserService;
 import org.itracker.services.util.Convert;
@@ -297,6 +298,11 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                         Collections.sort(issueHistory, IssueHistory.CREATE_DATE_COMPARATOR);
 
                         request.setAttribute("issueHistory", issueHistory);
+
+                        List<Notification> notifications = issueService.getIssueNotifications(issue.getId());
+                        Collections.sort(notifications, Notification.TYPE_COMPARATOR);
+
+                        request.setAttribute("notifications", notifications);
 
                         saveToken(request);
 
