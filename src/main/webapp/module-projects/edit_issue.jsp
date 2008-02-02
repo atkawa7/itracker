@@ -247,22 +247,17 @@
            value="<%= (currentIssue.getOwner() == null ? new Integer(-1) : currentIssue.getOwner().getId()) %>">
 
     <%
-        List<NameValuePair> possibleOwners = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_OWNER);
+        List<NameValuePair> possibleOwners = (List<NameValuePair>) request.getAttribute("possibleOwners");
         if (possibleOwners.size() > 0) {
     %>
 
     <td>
         <html:select property="ownerId" styleClass="editColumnText">
-        <!-- html:option value="-1" key="itracker.web.generic.unassigned"/ -->
-
-        <% for (int i = 0; i < possibleOwners.size(); i++) { %>
-
-        <html:option value="<%= possibleOwners.get(i).getValue() %>"><%= possibleOwners.get(i).getName() %>
-        </html:option>
-
-        <% } %>
-
-    </html:select></td>
+            <c:forEach items="${possibleOwners}" var="possibleOwner" varStatus="status">
+                <html:option value="${possibleOwner.value}">${possibleOwner.name}</html:option>
+            </c:forEach>
+        </html:select>
+    </td>
 
     <% } else { %>
 

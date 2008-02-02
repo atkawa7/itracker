@@ -284,6 +284,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                         session.setAttribute(Constants.LIST_OPTIONS_KEY, listOptions);
 
                         request.setAttribute("fieldSeverity", WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_SEVERITY));
+                        request.setAttribute("possibleOwners", WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_OWNER));
 
                         saveToken(request);
 
