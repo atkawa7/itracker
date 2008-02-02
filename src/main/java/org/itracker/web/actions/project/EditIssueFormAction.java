@@ -280,11 +280,16 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                         log.debug("Forwarding to edit issue form for issue " + issue.getId());
 
                         request.setAttribute("issueForm", issueForm);
+
+                        // TODO: Sort attachments
+                        // Collections.sort(attachments, IssueAttachment.CREATE_DATE_COMPARATOR);
+
                         request.setAttribute(Constants.ISSUE_KEY, issue);
                         session.setAttribute(Constants.LIST_OPTIONS_KEY, listOptions);
 
                         request.setAttribute("fieldSeverity", WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_SEVERITY));
                         request.setAttribute("possibleOwners", WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_OWNER));
+                        request.setAttribute("hasNoViewAttachmentOption", ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, issue.getProject().getOptions()));
 
                         saveToken(request);
 

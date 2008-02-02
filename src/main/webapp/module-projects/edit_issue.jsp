@@ -271,7 +271,12 @@
 
 </tr>
 <tr>
-    <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td>
+    <td colspan="4">
+        <html:img module="/"
+                  page="/themes/defaulttheme/images/blank.gif" 
+                  width="1"
+                  height="12"/>
+    </td>
 </tr>
 <tr>
     <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.project"/>:</td>
@@ -284,17 +289,24 @@
     %>
 
     <% if (targetVersion.size() > 0) { %>
-    <td valign="top" class="editColumnTitle" style="white-space: nowrap;" nowrap><it:message
-            key="itracker.web.attr.target"/>:&nbsp;</td>
+
+    <td valign="top" class="editColumnTitle" style="white-space: nowrap;" nowrap>
+        <it:message key="itracker.web.attr.target"/>:&nbsp;</td>
     <td valign="top" class="editColumnText">
+
         <% if (hasFullEdit) { %>
+
         <html:select property="targetVersion" styleClass="editColumnText">
             <html:option value="-1">&nbsp;</html:option>
+
             <% for (int i = 0; i < targetVersion.size(); i++) { %>
+
             <html:option value="<%= targetVersion.get(i).getValue() %>"
                          styleClass="editColumnText"><%= targetVersion.get(i).getName() %>
             </html:option>
+
             <% } %>
+
         </html:select>
 
         <% } else { %>
@@ -306,7 +318,9 @@
         <% } %>
 
     </td>
+
     <% } %>
+
 </tr>
 <tr>
     <% if (components.size() > 0) { %>
@@ -518,7 +532,7 @@
               <tr><td colspan="4"><html:img page="/themes/defaulttheme/images/blank.gif" height="18" width="1"/></td></tr>
           --%>
 
-<% if (!ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, project.getOptions())) { %>
+<c:if test="${not hasNoViewAttachmentOption}">
 
 <tr>
     <td colspan="4">
@@ -526,80 +540,109 @@
             <tr>
                 <td class="editColumnTitle" colspan="4"><it:message key="itracker.web.attr.attachments"/>:</td>
             </tr>
-            <%
-                List<IssueAttachment> attachments = currentIssue.getAttachments();
-                if (attachments != null && attachments.size() > 0) {
-                    Collections.sort(attachments, IssueAttachment.CREATE_DATE_COMPARATOR);
-            %>
-            <tr align="left" class="listHeading">
-                <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
-                <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="8" height="1"/></td>
-                <td align="left"><it:message key="itracker.web.attr.filename"/></td>
-                <td align="left"><it:message key="itracker.web.attr.description"/></td>
-                <td align="left"><it:message key="itracker.web.attr.filetype"/></td>
-                <td align="left"><it:message key="itracker.web.attr.filesize"/></td>
-                <td align="left"><it:message key="itracker.web.attr.submittor"/></td>
-                <td align="right"><it:message key="itracker.web.attr.lastupdated"/></td>
-            </tr>
 
-            <% for (int i = 0; i < attachments.size(); i++) { %>
-            <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>">
+            <c:choose>
+                <c:when test="${not empty issue.attachments}">
 
-                <td class="listRowText" align="left">
-                    <it:formatImageAction forward="downloadAttachment.do"
-                                          paramName="id"
-                                          paramValue="<%= attachments.get(i).getId() %>"
-                                          target="_blank"
-                                          src="/themes/defaulttheme/images/download.png"
-                                          altKey="itracker.web.image.download.attachment.alt"
-                                          textActionKey="itracker.web.image.download.texttag"/>
-                </td>
+                    <tr align="left" class="listHeading">
+                        <td>
+                            <html:img module="/"
+                                      page="/themes/defaulttheme/images/blank.gif"
+                                      width="15"
+                                      height="1"/>
+                        </td>
+                        <td>
+                            <html:img module="/"
+                                      page="/themes/defaulttheme/images/blank.gif"
+                                      width="8"
+                                      height="1"/>
+                        </td>
+                        <td align="left">
+                            <it:message key="itracker.web.attr.filename"/>
+                        </td>
+                        <td align="left">
+                            <it:message key="itracker.web.attr.description"/>
+                        </td>
+                        <td align="left">
+                            <it:message key="itracker.web.attr.filetype"/>
+                        </td>
+                        <td align="left">
+                            <it:message key="itracker.web.attr.filesize"/>
+                        </td>
+                        <td align="left">
+                            <it:message key="itracker.web.attr.submittor"/>
+                        </td>
+                        <td align="right">
+                            <it:message key="itracker.web.attr.lastupdated"/>
+                        </td>
+                    </tr>
 
-                <td></td>
-                <td class="listRowText" align="left">
-                    <%= attachments.get(i).getOriginalFileName() %>
-                </td>
-                <td class="listRowText" align="left">
-                    <it:formatDescription><%= attachments.get(i).getDescription() %></it:formatDescription>
-                </td>
-                <td class="listRowText" align="left">
-                    <%= attachments.get(i).getType() %>
-                </td>
-                <td class="listRowText" align="left">
-                    <%= attachments.get(i).getSize() / 1024 %>
-                </td>
-                <td class="listRowText"
-                    align="left">
-                    <%= attachments.get(i).getUser().getFirstName() + " " + attachments.get(i).getUser().getLastName() %>
-                </td>
-                <td class="listRowText" align="right">
-                    <it:formatDate date="<%= attachments.get(i).getLastModifiedDate() %>"/>
-                </td>
-            </tr>
+                    <c:forEach items="${issue.attachments}" var="attachment" varStatus="status">
 
-            <%
-                }
-            } else {
-            %>
+                        <c:choose>
+                            <c:when test="${status.count % 2 == 0}">
+                                <c:set var="rowShading" value="listRowShaded"/>
+                            </c:when>
+                            <c:otherwise>
+                                <c:set var="rowShading" value="listRowUnshaded"/>
+                            </c:otherwise>
+                        </c:choose>
 
-            <tr class="listHeading">
-                <td colspan="4">
-                    <html:img module="/"
-                              page="/themes/defaulttheme/images/blank.gif"
-                              height="2"
-                              width="1"/>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4">
-                    <html:img module="/"
-                              page="/themes/defaulttheme/images/blank.gif"
-                              height="3"
-                              width="1"/>
-                </td>
-            </tr>
+                        <tr class="${rowShading}">
+                            <td class="listRowText" align="left">
+                                <it:formatImageAction forward="downloadAttachment.do"
+                                                      paramName="id"
+                                                      paramValue="${attachment.id}"
+                                                      target="_blank"
+                                                      src="/themes/defaulttheme/images/download.png"
+                                                      altKey="itracker.web.image.download.attachment.alt"
+                                                      textActionKey="itracker.web.image.download.texttag"/>
+                            </td>
 
-            <% } %>
+                            <td></td>
+                            <td class="listRowText" align="left">
+                                    ${attachment.originalFileName}
+                            </td>
+                            <td class="listRowText" align="left">
+                                <it:formatDescription>${attachment.description}</it:formatDescription>
+                            </td>
+                            <td class="listRowText" align="left">
+                                    ${attachment.type}
+                            </td>
+                            <td class="listRowText" align="left">
+                                    ${attachment.size / 1024}
+                            </td>
+                            <td class="listRowText" align="left">
+                                    ${attachment.user.firstName}&nbsp;${attachment.user.lastName}
+                            </td>
+                            <td class="listRowText" align="right">
+                                <it:formatDate date="${attachment.lastModifiedDate}"/>
+                            </td>
+                        </tr>
+
+                    </c:forEach>
+
+                </c:when>
+
+                <c:otherwise>
+                    <tr class="listHeading">
+                        <td colspan="4">
+                            <html:img module="/"
+                                      page="/themes/defaulttheme/images/blank.gif"
+                                      height="2"
+                                      width="1"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <html:img module="/"
+                                      page="/themes/defaulttheme/images/blank.gif"
+                                      height="3"
+                                      width="1"/>
+                        </td>
+                    </tr>
+                </c:otherwise>
+            </c:choose>
 
         </table>
     </td>
@@ -618,7 +661,7 @@
     <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="18" width="1"/></td>
 </tr>
 
-<% } %>
+</c:if>
 
 </table>
 
