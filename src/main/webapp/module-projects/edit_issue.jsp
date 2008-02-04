@@ -63,7 +63,7 @@
 <html:hidden property="prevStatus"/>
 <html:hidden property="caller"/>
 
-<table border="0" cellspacing="0" cellspacing="1" width="800px">
+<table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
 <tr>
     <td width="15%"></td>
     <td width="35%"></td>
@@ -71,18 +71,17 @@
     <td width="35%"></td>
 </tr>
 <tr>
-    <td class="editColumnTitle"><it:message key="itracker.web.attr.description"/>:</td>
-    <td colspan="3" class="editColumnText">
-
-        <table border="0" cellspacing="0" cellspacing="1" width="100%">
-            <tr>
-                <td align="left" width="100%" class="editColumnText">
+    <td  class="editColumnTitle"><it:message key="itracker.web.attr.description"/>:</td>
+    <td>
                     <html:text size="80"
                                property="description"
-                               styleClass="editColumnText"/>
-                </td>
-                <td align="right" class="editColumnTitle"><it:message key="itracker.web.attr.actions"/>:&nbsp;</td>
-                <td align="right" valign="bottom" class="editColumnText" style="white-space: nowrap;" nowrap>
+                               styleClass="editColumnText"/></td>
+   	<td class="editColumnTitle"><it:message key="itracker.web.attr.actions"/>: </td>
+    <td class="editColumnText">
+
+        <table style="border: none; padding: 1px; border-spacing: 0;">
+            <tr>
+                <td style="text-align: right; vertical-align: bottom; white-space: nowrap;" class="editColumnText" >
                     <it:formatImageAction forward="listissues"
                                           paramName="projectId"
                                           paramValue="${issue.project.id}"
@@ -536,7 +535,7 @@
 
 <tr>
     <td colspan="4">
-        <table border="0" cellspacing="0" cellspacing="1" width="100%">
+        <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
             <tr>
                 <td class="editColumnTitle" colspan="4"><it:message key="itracker.web.attr.attachments"/>:</td>
             </tr>
@@ -544,7 +543,7 @@
             <c:choose>
                 <c:when test="${not empty issue.attachments}">
 
-                    <tr align="left" class="listHeading">
+                    <tr style="text-align: left;" class="listHeading">
                         <td>
                             <html:img module="/"
                                       page="/themes/defaulttheme/images/blank.gif"
@@ -557,22 +556,22 @@
                                       width="8"
                                       height="1"/>
                         </td>
-                        <td align="left">
+                        <td >
                             <it:message key="itracker.web.attr.filename"/>
                         </td>
-                        <td align="left">
+                        <td >
                             <it:message key="itracker.web.attr.description"/>
                         </td>
-                        <td align="left">
+                        <td >
                             <it:message key="itracker.web.attr.filetype"/>
                         </td>
-                        <td align="left">
+                        <td >
                             <it:message key="itracker.web.attr.filesize"/>
                         </td>
-                        <td align="left">
+                        <td >
                             <it:message key="itracker.web.attr.submittor"/>
                         </td>
-                        <td align="right">
+                        <td >
                             <it:message key="itracker.web.attr.lastupdated"/>
                         </td>
                     </tr>
@@ -589,7 +588,7 @@
                         </c:choose>
 
                         <tr class="${rowShading}">
-                            <td class="listRowText" align="left">
+                            <td class="listRowText" style="text-align: left;" >
                                 <it:formatImageAction forward="downloadAttachment.do"
                                                       paramName="id"
                                                       paramValue="${attachment.id}"
@@ -600,22 +599,22 @@
                             </td>
 
                             <td></td>
-                            <td class="listRowText" align="left">
+                            <td class="listRowText" style="text-align: left;">
                                     ${attachment.originalFileName}
                             </td>
-                            <td class="listRowText" align="left">
+                            <td class="listRowText" style="text-align: left;">
                                 <it:formatDescription>${attachment.description}</it:formatDescription>
                             </td>
-                            <td class="listRowText" align="left">
+                            <td class="listRowText" style="text-align: left;">
                                     ${attachment.type}
                             </td>
-                            <td class="listRowText" align="left">
+                            <td class="listRowText" style="text-align: left;">
                                     ${attachment.size / 1024}
                             </td>
-                            <td class="listRowText" align="left">
+                            <td class="listRowText" style="text-align: left;">
                                     ${attachment.user.firstName}&nbsp;${attachment.user.lastName}
                             </td>
-                            <td class="listRowText" align="right">
+                            <td class="listRowText" style="text-align: left;">
                                 <it:formatDate date="${attachment.lastModifiedDate}"/>
                             </td>
                         </tr>
@@ -665,14 +664,14 @@
 
 </table>
 
-<table border="0" cellspacing="0" cellspacing="1" width="100%">
+<table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
 <tr>
     <td colspan="4">
-        <table border="0" cellspacing="0" cellspacing="1" width="100%">
+        <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
             <tr>
                 <td class="editColumnTitle" colspan="3">
                     <it:message key="itracker.web.attr.history"/>:</td>
-                <td align="right">
+                <td style="text-align: right">
                     <it:formatImageAction forward="view_issue_activity.do"
                                           paramName="id"
                                           paramValue="${issue.id}"
@@ -681,7 +680,7 @@
                                           textActionKey="itracker.web.image.view.texttag"/>
                 </td>
             </tr>
-            <tr align="left" class="listHeading">
+            <tr style="text-align: left" class="listHeading">
 
                 <% if (um.isSuperUser()) { %>
 
@@ -725,7 +724,7 @@
                 </c:choose>
 
                 <tr class="${rowShading}">
-                    <td align="right" valign="bottom" nowrap>
+                    <td align="right" valign="bottom">
 
                         <% if (um.isSuperUser()) { %>
 
@@ -762,7 +761,7 @@
                 <tr class="${rowShading}">
                     <td colspan="2"></td>
                     <td colspan="3">
-                        <table border="0" cellspacing="0" cellspacing="1" width="100%">
+                        <table style="border: none; padding: 1px; border-spacing: 0;">
                             <tr class="${rowShading}">
                                 <td align="left">
                                     <html:img module="/"
@@ -770,8 +769,10 @@
                                               width="10"
                                               height="1"/>
                                 </td>
-                                <td align="left" width="100%">
+                                <td style="text-align: left; white-space: normal;">
+                                <div style="white-space: normal; overflow: auto; width: 900px">
                                     <it:formatHistoryEntry>${historyEntry.description}</it:formatHistoryEntry>
+
                                 </td>
                             </tr>
                         </table>
@@ -823,7 +824,7 @@
 
 <tr>
     <td colspan="4">
-        <table border="0" cellspacing="0" cellspacing="1" width="100%">
+        <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
             <tr>
                 <td class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.notifications"/>:</td>
             </tr>

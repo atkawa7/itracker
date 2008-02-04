@@ -69,7 +69,7 @@ User um = RequestHelper.getCurrentUser(session);
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
-            <table border="0" cellspacing="0" cellspacing="1" width="800px">
+            <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
               <tr>
                 <td width="15%"></td>
                 <td width="35%"></td>
@@ -78,12 +78,13 @@ User um = RequestHelper.getCurrentUser(session);
               </tr>
               <tr>
                 <td class="editColumnTitle" valign="top"><it:message key="itracker.web.attr.description"/>: </td>
-                <td colspan="3" class="editColumnText" valign="top">
-                  <table border="0" cellspacing="0" cellspacing="1" width="100%" align="left">
+                <td class="editColumnText"><%= issue.getDescription() %></td>
+                <td class="editColumnTitle" valign="top"><it:message key="itracker.web.attr.actions"/>: </td>
+                
+                <td class="editColumnText" valign="top">
+                  <table style="border: none; padding: 1px; border-spacing: 0; text-align: left;">
                     <tr>
-                      <td align="left" width="100%" class="editColumnText" valign="top"><%= issue.getDescription() %></td>
-                      <td align="right" class="editColumnTitle" valign="top"><it:message key="itracker.web.attr.actions"/>:&nbsp;</td>
-                      <td align="right" valign="top" class="editColumnText" style="white-space: nowrap;" nowrap>
+                      <td style="text-align: right; vertical-align: top;"  class="editColumnText" style="white-space: nowrap;" nowrap>
 
                         <it:formatImageAction forward="listissues"
                                               module=""
@@ -242,7 +243,7 @@ User um = RequestHelper.getCurrentUser(session);
                      <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td></tr>
               <% } %>
             </table>
-            <br>
+            <br />
             <%-- TODO reinsert this once issue relation has been implemented correctly 
             <%
                IssueRelationModel[] relations = issue.getRelations();
@@ -254,7 +255,7 @@ User um = RequestHelper.getCurrentUser(session);
                  <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
                    <tr><td class="editColumnTitle" colspan="4"><it:message key="itracker.web.attr.relatedissues"/>:</td></tr>
                    <tr class="listHeading"><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
-                   <tr align="left">
+                   <tr style="text-align: left;">
                       <td colspan="2" width="50%"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td>
                       <td colspan="2" width="50%"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td>
                    </tr>
@@ -279,7 +280,7 @@ User um = RequestHelper.getCurrentUser(session);
                                   <td colspan="2" valign="top">
                                     <table width="100%" border="0" cellspacing="0"  cellspacing="1" >
                                       <tr>
-                                        <td class="listRowTextBold" align="left" colspan="5">
+                                        <td class="listRowTextBold" style="text-align: left;" colspan="5">
                                           <%= ITrackerResources.getString(ITrackerResources.KEY_BASE_ISSUE_RELATION + i, currLocale) %>:
                                         </td>
                                       </tr>
@@ -293,10 +294,10 @@ User um = RequestHelper.getCurrentUser(session);
                   <%          } %>
                               <tr>
                                 <td></td>
-                                <td class="listRowText" align="right"><it:link forward="viewissue" styleClass="listRowText" paramName="id" paramValue="<%= relations[j].getRelatedIssueId() %>"><%= relations[j].getRelatedIssueId() %></it:link></td>
+                                <td class="listRowText" style="text-align: right;"><it:link forward="viewissue" styleClass="listRowText" paramName="id" paramValue="<%= relations[j].getRelatedIssueId() %>"><%= relations[j].getRelatedIssueId() %></it:link></td>
                                 <td></td>
-                                <td class="listRowText" align="left"><it:formatDescription><%= relations[j].getRelatedIssueDescription() %></it:formatDescription></td>
-                                <td class="listRowText" align="left"><%= IssueUtilities.getStatusName(relations[j].getRelatedIssueStatus(), currLocale) %></td>
+                                <td class="listRowText" style="text-align: left;"><it:formatDescription><%= relations[j].getRelatedIssueDescription() %></it:formatDescription></td>
+                                <td class="listRowText" style="text-align: left;"><%= IssueUtilities.getStatusName(relations[j].getRelatedIssueStatus(), currLocale) %></td>
                               </tr>
                   <%
                           }
@@ -318,19 +319,19 @@ User um = RequestHelper.getCurrentUser(session);
    
         
             <% if(! ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, project.getOptions())) { %>
-                <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
+                <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
                   <tr>
                     <td class="editColumnTitle" colspan="4"><it:message key="itracker.web.attr.attachments"/>:</td>
                   </tr>
-                  <tr align="left" class="listHeading">
+                  <tr style="text-align: left;" class="listHeading">
                     <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
                     <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="8" height="1"/></td>
-                    <td align="left"><it:message key="itracker.web.attr.filename"/></td>
-                    <td align="left"><it:message key="itracker.web.attr.description"/></td>
-                    <td align="left"><it:message key="itracker.web.attr.filetype"/></td>
-                    <td align="left"><it:message key="itracker.web.attr.filesize"/></td>
-                    <td align="left"><it:message key="itracker.web.attr.submittor"/></td>
-                    <td align="right"><it:message key="itracker.web.attr.lastupdated"/></td>
+                    <td style="text-align: left;"><it:message key="itracker.web.attr.filename"/></td>
+                    <td style="text-align: left;"><it:message key="itracker.web.attr.description"/></td>
+                    <td style="text-align: left;"><it:message key="itracker.web.attr.filetype"/></td>
+                    <td style="text-align: left;"><it:message key="itracker.web.attr.filesize"/></td>
+                    <td style="text-align: left;"><it:message key="itracker.web.attr.submittor"/></td>
+                    <td style="text-align: right;"><it:message key="itracker.web.attr.lastupdated"/></td>
                   </tr>
 
                   <%
@@ -341,7 +342,7 @@ User um = RequestHelper.getCurrentUser(session);
                     for(int i = 0; i < attachments.size(); i++) {
                   %>
                       <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>" >
-                        <td class="listRowText" align="left">
+                        <td class="listRowText" style="text-align: left;">
                             <it:formatImageAction forward="downloadAttachment.do"
                                                   paramName="id"
                                                   paramValue="<%= attachments.get(i).getId() %>"
@@ -351,12 +352,12 @@ User um = RequestHelper.getCurrentUser(session);
                                                   textActionKey="itracker.web.image.download.texttag"/>
                         </td>
                         <td></td>
-                        <td class="listRowText" align="left"><%= attachments.get(i).getOriginalFileName() %></td>
-                        <td class="listRowText" align="left"><it:formatDescription><%= attachments.get(i).getDescription() %></it:formatDescription></td>
-                        <td class="listRowText" align="left"><%= attachments.get(i).getType() %></td>
-                        <td class="listRowText" align="left"><%= attachments.get(i).getSize() / 1024 %></td>
-                        <td class="listRowText" align="left"><%= attachments.get(i).getUser().getFirstName() + " " + attachments.get(i).getUser().getLastName() %></td>
-                        <td class="listRowText" align="right"><it:formatDate date="<%= attachments.get(i).getLastModifiedDate() %>"/></td>
+                        <td class="listRowText" style="text-align: left;"><%= attachments.get(i).getOriginalFileName() %></td>
+                        <td class="listRowText" style="text-align: left;"><it:formatDescription><%= attachments.get(i).getDescription() %></it:formatDescription></td>
+                        <td class="listRowText" style="text-align: left;"><%= attachments.get(i).getType() %></td>
+                        <td class="listRowText" style="text-align: left;"><%= attachments.get(i).getSize() / 1024 %></td>
+                        <td class="listRowText" style="text-align: left;"><%= attachments.get(i).getUser().getFirstName() + " " + attachments.get(i).getUser().getLastName() %></td>
+                        <td class="listRowText" style="text-align: right;"><it:formatDate date="<%= attachments.get(i).getLastModifiedDate() %>"/></td>
                       </tr>
                  <% } %>
                   <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td></tr>
@@ -364,16 +365,16 @@ User um = RequestHelper.getCurrentUser(session);
                 <br>
             <% } %>
 
-            <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
+            <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
               <tr>
                 <td class="editColumnTitle" colspan="3"><it:message key="itracker.web.attr.history"/>:</td>
-                <td align="right"><it:formatImageAction forward="view_issue_activity.do" paramName="id" paramValue="<%= issueId %>" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.activity.alt" textActionKey="itracker.web.image.view.texttag"/></td>
+                <td style="text-align: right;"><it:formatImageAction forward="view_issue_activity.do" paramName="id" paramValue="<%= issueId %>" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.activity.alt" textActionKey="itracker.web.image.view.texttag"/></td>
               </tr>
-              <tr align="left" class="listHeading">
+              <tr style="text-align: left;" class="listHeading">
                 <td width="15"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
                 <td width="8"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="8" height="1"/></td>
                 <td><it:message key="itracker.web.attr.updator"/></td>
-                <td align="right"><it:message key="itracker.web.attr.updated"/></td>
+                <td style="text-align: right;"><it:message key="itracker.web.attr.updated"/></td>
               </tr>
               <%
                 List<IssueHistory> history = issue.getHistory();
@@ -386,13 +387,13 @@ User um = RequestHelper.getCurrentUser(session);
                     count++;
               %>
                     <tr class="<%= (count % 2 == 0 ? "listRowShaded" : "listRowUnshaded") %>" >
-                      <td align="right" class="historyName"><%= i + 1 %>)</td>
+                      <td style="text-align: right;" class="historyName"><%= i + 1 %>)</td>
                       <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="8" height="1"/></td>
                       <td class="historyName">
                         <%= history.get(i).getUser().getFirstName() + " " + history.get(i).getUser().getLastName() %>
                         (<a href="mailto:<%= history.get(i).getUser().getEmail() %>" class="mailto"><%= history.get(i).getUser().getEmail() %></a>)
                       </td>
-                      <td align="right" class="historyName"><it:formatDate date="<%= history.get(i).getCreateDate() %>"/></td>
+                      <td style="text-align: right;" class="historyName"><it:formatDate date="<%= history.get(i).getCreateDate() %>"/></td>
                     </tr>
                     <tr class="<%= (count % 2 == 0 ? "listRowShaded" : "listRowUnshaded") %>" >
                       <td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="3"/></td>
@@ -400,11 +401,13 @@ User um = RequestHelper.getCurrentUser(session);
                     <tr class="<%= (count % 2 == 0 ? "listRowShaded" : "listRowUnshaded") %>" >
                       <td colspan="2"></td>
                       <td colspan="3">
-                        <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
+                        <table style="border: none; padding: 1px; border-spacing: 0;">
                           <tr class="<%= (count % 2 == 0 ? "listRowShaded" : "listRowUnshaded") %>" >
-                            <td align="left"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="10" height="1"/></td>
-                            <td align="left" width="100%">
-                              <it:formatHistoryEntry projectOptions="<%= project.getOptions() %>"><%= history.get(i).getDescription() %></it:formatHistoryEntry>
+                            <td style="text-align: left;"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="10" height="1"/></td>
+                            <td style="text-align: left;" >
+	                            <div style="white-space: normal; overflow: auto; width: 900px">
+	                              <it:formatHistoryEntry projectOptions="<%= project.getOptions() %>"><%= history.get(i).getDescription() %></it:formatHistoryEntry>
+	                            </div>
                             </td>
                           </tr>
                         </table>
@@ -421,11 +424,11 @@ User um = RequestHelper.getCurrentUser(session);
 
             <br/><br/>
 
-            <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
+            <table style="border: none; padding: 1px; border-spacing: 0; width: 100%;">
               <tr>
                 <td class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.notifications"/>:</td>
               </tr>
-              <tr align="left" class="listHeading">
+              <tr style="text-align: left;" class="listHeading">
                 <td><it:message key="itracker.web.attr.name"/></td>
                 <td><it:message key="itracker.web.attr.email"/></td>
                 <td><it:message key="itracker.web.attr.role"/></td>
