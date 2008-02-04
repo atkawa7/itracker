@@ -21,7 +21,9 @@ package org.itracker.services.util;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -46,6 +48,8 @@ import org.itracker.model.User;
   */
 public class IssueUtilities  {
     
+	
+	private static final Logger log = Logger.getLogger(IssueUtilities.class);
     public static final int FIELD_TYPE_SINGLE = 1;
     public static final int FIELD_TYPE_INDEXED = 2;
     public static final int FIELD_TYPE_MAP = 3;
@@ -627,23 +631,58 @@ public class IssueUtilities  {
       */
     public static boolean canEditIssue(Issue issue, Integer userId, Map<Integer, Set<PermissionType>> permissions) {
         if (issue == null || userId == null || permissions == null) {
+        	if (log.isInfoEnabled()) {
+        		log.info("canEditIssue: missing argument. issue: " + issue + ", userid: " + userId + ", permissions: " + permissions);
+        	}
             return false;
+        }
+        
+        if (log.isDebugEnabled()) {
+        	
+        	StringBuffer sb = new StringBuffer();
+        	Iterator<Integer> it = permissions.keySet().iterator();
+        	Integer key;
+        	Set<PermissionType> value;
+        	while (it.hasNext()) {
+        		key = it.next();
+        		value = permissions.get(key);
+        		sb.append(key).append(": ").append(value).append('\n');
+        	}
+        	
+        	log.debug("canEditIssue: detailed permissions: \n" + sb);
         }
 
         if (UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_EDIT_ALL.getCode())) {
+            
+            if (log.isDebugEnabled()) {
+            	log.debug("canEditIssue: has permission " + PermissionType.ISSUE_EDIT_ALL);
+            }
             return true;
         }
         if (! UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_EDIT_USERS.getCode())) {
+            if (log.isDebugEnabled()) {
+            	log.debug("canEditIssue: has not permission " + PermissionType.ISSUE_EDIT_USERS);
+            }
             return false;
         }
 
         if (issue.getCreator().getId().equals(userId)) {
+            if (log.isDebugEnabled()) {
+            	log.debug("canEditIssue: is creator");
+            }
             return true;
         }
-        if ( issue.getOwner() != null ) {
+        if (issue.getOwner() != null) {
             if (issue.getOwner().getId().equals(userId)) {
+                if (log.isDebugEnabled()) {
+                	log.debug("canEditIssue: is owner");
+                }            	
                 return true;
             }
+        }
+        
+        if (log.isDebugEnabled()) {
+        	log.debug("canEditIssue: could not match permission, denied");
         }
         return false;
     }
