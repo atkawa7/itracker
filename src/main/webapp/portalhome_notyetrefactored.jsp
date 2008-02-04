@@ -60,10 +60,10 @@
     
     <c:choose>
         <c:when test="${i.count % 2 == 1}">
-            <tr style="text-align:right;" class="listRowShaded">
+            <tr style="text-align:left;" class="listRowShaded">
         </c:when>
         <c:otherwise>
-            <tr style="text-align:right;" class="listRowUnshaded">	
+            <tr style="text-align:left;" class="listRowUnshaded">	
         </c:otherwise>
     </c:choose>
     
@@ -130,11 +130,11 @@
             
             <c:choose>
                 <c:when test="${i.count % 2 == 1}">
-                    <tr style="text-align:right;" class="listRowShaded">
+                    <tr style="text-align:left;" class="listRowShaded">
 
                 </c:when>
                 <c:otherwise>
-                    <tr style="text-align:right;" class="listRowUnshaded">	
+                    <tr style="text-align:left;" class="listRowUnshaded">	
 
                 </c:otherwise>
             </c:choose>
@@ -275,10 +275,10 @@ I change code to test for unassigned attribute instead of owner, since owner is 
         
         <c:choose>
 	        <c:when test="${z.count % 2 == 1}">
-	            <tr style="text-align:right;" class="listRowShaded">
+	            <tr style="text-align:left;" class="listRowShaded">
 	        </c:when>
 	        <c:otherwise>
-	            <tr style="text-align:right;" class="listRowUnshaded">	
+	            <tr style="text-align:left;" class="listRowUnshaded">	
 	        </c:otherwise>
         </c:choose>  
         
@@ -367,10 +367,10 @@ I change code to test for unassigned attribute instead of owner, since owner is 
     
     
     <c:choose><c:when test="${z.count % 2 == 1}">
-            <tr style="text-align:right;" class="listRowShaded">
+            <tr style="text-align:left;" class="listRowShaded">
         </c:when>
         <c:otherwise>
-            <tr style="text-align:right;" class="listRowUnshaded">	
+            <tr style="text-align:left;" class="listRowUnshaded">	
         </c:otherwise>
     </c:choose>
     <td style="white-space: nowrap">
