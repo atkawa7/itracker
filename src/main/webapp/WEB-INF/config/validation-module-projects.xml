@@ -23,26 +23,20 @@
 			<field property="severity" depends="required,long">
 				<arg0 key="itracker.web.attr.severity" />
 			</field>
-			<field property="description" depends="validwhen">
+			<field property="description" depends="required">
 				<arg0 key="itracker.web.attr.description" />
-				<var>
-					<var-name>test</var-name>
-					<!-- allow empty description on open -->
-					<var-value>
-						((projectId == null) or (*this* != null))
-					</var-value>
-				</var>
 			</field>
+			<!-- TODO temporary removed, does not work as expected
 			<field property="history" depends="required">
-				<arg0 key="itracker.web.attr.description" />
+				<arg0 key="itracker.web.attr.history" />
 				<var>
 					<var-name>test</var-name>
-					<!-- allow empty history on edit -->
+					<!- allow empty history on edit ->
 					<var-value>
 						((prevStatus == status) or (*this* != null))
 					</var-value>
 				</var>
-			</field>
+			</field>-->
 			 
 			<field property="attachmentDescription"
 				depends="validwhen">
