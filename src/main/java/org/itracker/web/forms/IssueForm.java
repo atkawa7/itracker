@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -34,6 +34,7 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
+import org.itracker.model.Issue;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.Status;
@@ -51,6 +52,13 @@ import org.itracker.web.util.Constants;
  */
 public class IssueForm extends ITrackerForm  {
     
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 0L;
+
+	private static final Logger log = Logger.getLogger(IssueForm.class);
+	
      Integer id = null;
      String caller = null;
      Integer projectId = null;
@@ -234,16 +242,35 @@ public class IssueForm extends ITrackerForm  {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = super.validate(mapping, request);
         
+        if (log.isDebugEnabled()) {
+        	log.debug("validate called: maping: " + mapping + ", request: " + request + ", errors: " + errors);
+        }
+        
         try {
             Project project = null;
-            Integer projectId = (Integer) PropertyUtils.getSimpleProperty(this, "projectId");
+            Integer projectId = getProjectId();
             if(projectId == null) {
-                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-            } else {
-                // check who should deliver ph to the form
-                ProjectService projectService = getITrackerServices().getProjectService();
-                project = projectService.getProject(projectId);
+            	if (log.isDebugEnabled()) {
+            		log.debug("validate: trying to get project from issue-id " + getId());
+            	}
+                Issue issue = getITrackerServices().getIssueService().getIssue(getId());
+                if (issue != null && issue.getProject() != null) {
+                	 
+                	projectId = issue.getProject().getId();
+                	if (log.isDebugEnabled()) {
+                		log.debug("validate: got projectId: " + projectId);
+                	}
+                }
+            
             }
+
+            if (null == projectId) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
+            }
+            // check who should deliver ph to the form
+            ProjectService projectService = getITrackerServices().getProjectService();
+            project = projectService.getProject(projectId);
+            
             
             if(errors.isEmpty() && project == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
@@ -295,6 +322,8 @@ public class IssueForm extends ITrackerForm  {
         }
         IssueService issueService = getITrackerServices().getIssueService();
         request.setAttribute("ih",issueService);
+        if (log.isDebugEnabled())
+        	log.debug("validate: returning errors: " + errors);
         return errors;
     }
     
