@@ -18,17 +18,17 @@
 
 package org.itracker.web.taglib;
 
-import java.util.Locale;
-
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
-import org.itracker.core.resources.ITrackerResources;
-import org.itracker.web.util.Constants;
 
 
+/**
+ * @deprecated
+ * @author ranks@rosa.com
+ *
+ */
 public class FormatDescriptionTag extends BodyTagSupport {
     /**
 	 * 
@@ -74,23 +74,24 @@ public class FormatDescriptionTag extends BodyTagSupport {
     public int doEndTag() throws JspException {
         StringBuffer results = new StringBuffer();
         if(text != null) {
-            Locale currLocale = null;
+           // Locale currLocale = null;
 
-            HttpSession session = pageContext.getSession();
-            if(session != null) {
-                currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
-            }
+//            HttpSession session = pageContext.getSession();
+//            if(session != null) {
+//                currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+//            }
 
-            if(text.length() > truncateLength) {
+            // fixing bug https://sourceforge.net/tracker/index.php?func=detail&aid=1872304&group_id=54141&atid=472807
+           /* if(text.length() > truncateLength) {
                 String truncateValue = ITrackerResources.getString(truncateKey, currLocale);
                 if(truncateValue == null) {
                     truncateValue = "";
                 }
                 results.append(text.substring(0, (truncateLength - truncateValue.length())));
                 results.append(truncateValue);
-            } else {
+            } else {*/
                 results.append(text);
-            }
+            //}
         }
         //ResponseUtils.write(pageContext, results.toString());
         TagUtils.getInstance().write(pageContext, results.toString());
