@@ -33,7 +33,7 @@
     <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.assigned"/>:</td>
 </tr>
 <tr align="left" class="listHeading">
-    <td width="50"></td>
+    <td style="width:50px;" ></td>
     <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
     <td><it:message key="itracker.web.attr.id"/></td>
     <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
@@ -43,27 +43,27 @@
     <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
     <td><it:message key="itracker.web.attr.severity"/></td>
     <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-    <td width="100%"><it:message key="itracker.web.attr.description"/></td>
+    <td ><it:message key="itracker.web.attr.description"/></td>
     <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
     <td><it:message key="itracker.web.attr.owner"/></td>
     <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-    <td align="right"><it:message key="itracker.web.attr.lastmodified"/></td>
+    <td style="text-align:right;" ><it:message key="itracker.web.attr.lastmodified"/></td>
 </tr>
 
 <c:forEach items="${ownedIssues}" var="ownedIssues" step="1" varStatus="i">
     
     <tr class="listRowUnshaded">
         <c:if test="${(userPrefs.numItemsOnIndex > 0) && (ownedIssues >=userPrefs.numItemsOnIndex) && ! showAll}">
-            <td align="left" colspan="15"><html:link module="/" action="/portalhome" paramId="showAll" ><it:message key="itracker.web.index.moreissues"/></html:link></td>
+            <td style="text-align:left;" colspan="15"><html:link module="/" action="/portalhome" paramId="showAll" ><it:message key="itracker.web.index.moreissues"/></html:link></td>
         </c:if>
     </tr>
     
     <c:choose>
         <c:when test="${i.count % 2 == 1}">
-            <tr align="right" class="listRowShaded">
+            <tr style="text-align:right;" class="listRowShaded">
         </c:when>
         <c:otherwise>
-            <tr align="right" class="listRowUnshaded">	
+            <tr style="text-align:right;" class="listRowUnshaded">	
         </c:otherwise>
     </c:choose>
     
@@ -117,7 +117,7 @@
         <td></td>
         <td><it:message key="itracker.web.attr.owner"/></td>
         <td></td>
-        <td align="right" style="white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
+        <td style="text-align:left; white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
     </tr>
     
     <c:forEach items="${unassignedIssues}" var="unassignedIssues" step="1" varStatus="i">    
@@ -130,12 +130,12 @@
             
             <c:choose>
                 <c:when test="${i.count % 2 == 1}">
-                    <tr align="right" class="listRowShaded">
-                    </tr>
+                    <tr style="text-align:right;" class="listRowShaded">
+
                 </c:when>
                 <c:otherwise>
-                    <tr align="right" class="listRowUnshaded">	
-                    </tr>
+                    <tr style="text-align:right;" class="listRowUnshaded">	
+
                 </c:otherwise>
             </c:choose>
             
@@ -149,7 +149,7 @@
                 </c:if>
             </td>
             <td></td>
-            <td align="left">${unassignedIssues.issue.id}</td>
+            <td style="text-align:left;" >${unassignedIssues.issue.id}</td>
             <td></td>
             <td style="white-space: nowrap">${unassignedIssues.issue.project.name}</td>
             <td></td>
@@ -228,8 +228,8 @@ I change code to test for unassigned attribute instead of owner, since owner is 
                 </c:otherwise>
             </c:choose>  
             <td></td>
-            <td align="right" style="white-space: nowrap"><it:formatDate date="${unassignedIssues.issue.lastModifiedDate}"/></td>
-            
+            <td style="text-align:right; white-space: nowrap"><it:formatDate date="${unassignedIssues.issue.lastModifiedDate}"/></td>
+            </tr>
         </c:if>   
     </c:forEach>
     <tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
@@ -243,7 +243,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
     <tr>
         <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.created"/>:</td>
     </tr>
-    <tr align="left" class="listHeading">
+    <tr style="text-align:left;"  class="listHeading">
         <td></td>
         <td></td>
         <td><it:message key="itracker.web.attr.id"/></td>
@@ -258,11 +258,11 @@ I change code to test for unassigned attribute instead of owner, since owner is 
         <td></td>
         <td><it:message key="itracker.web.attr.owner"/></td>
         <td></td>
-        <td align="right" style="white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
+        <td style="text-align:right; white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
     </tr>
     
     <c:forEach items="${createdIssues}" var="createdIssues" step="1" varStatus="i"> 
-        <tr class="listRowUnshaded"> 
+
         <%--	<c:if test="${(userPrefs.numItemsOnIndex > 0) && (createdIssues >= userPrefs.numItemsOnIndex) && ! showAll}">
 	   <tr class="listRowUnshaded"><td align="left" colspan="15"><html:link page="/index.jsp?showAll=true">
 	   <it:message key="itracker.web.index.moreissues"/></html:link></td></tr>
@@ -273,16 +273,16 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 	 
    
         
-        <c:choose><c:when test="${z.count % 2 == 1}">
-                <tr align="right" class="listRowShaded">
-            </tr></c:when>
-            <c:otherwise>
-                <tr align="right" class="listRowUnshaded">	
-            </tr></c:otherwise>
+        <c:choose>
+	        <c:when test="${z.count % 2 == 1}">
+	            <tr style="text-align:right;" class="listRowShaded">
+	        </c:when>
+	        <c:otherwise>
+	            <tr style="text-align:right;" class="listRowUnshaded">	
+	        </c:otherwise>
         </c:choose>  
         
         
-        <tr align="right" class="listRowUnshaded">	
             <td style="white-space: nowrap">
                 <it:formatImageAction forward="viewissue" paramName="id" paramValue="${createdIssues.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${createdIssues.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
                 <c:if test="${createdIssues.userCanEdit}">
@@ -290,7 +290,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
                 </c:if>
             </td>
             <td></td>
-            <td align="left">${createdIssues.issue.id}</td>
+            <td style="text-align:left;">${createdIssues.issue.id}</td>
             <td></td>
             <td style="white-space: nowrap">${createdIssues.issue.project.name}</td>
             <td></td>
@@ -311,7 +311,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
                 </c:choose>
             </td>
             <td></td>
-            <td align="right" style="white-space: nowrap"><it:formatDate date="${createdIssues.issue.lastModifiedDate}"/></td>
+            <td style="text-align: right; white-space: nowrap"><it:formatDate date="${createdIssues.issue.lastModifiedDate}"/></td>
         </tr>
     </c:forEach>
     <tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
@@ -334,7 +334,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 <tr>
     <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.watched"/>: </td>
 </tr>
-<tr align="left" class="listHeading">
+<tr style="text-align:left;"  class="listHeading">
     <td></td>
     <td></td>
     <td><it:message key="itracker.web.attr.id"/></td>
@@ -349,25 +349,28 @@ I change code to test for unassigned attribute instead of owner, since owner is 
     <td></td>
     <td><it:message key="itracker.web.attr.owner"/></td>
     <td></td>
-    <td align="right" style="white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
+    <td style="text-align:right; white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
 </tr>
 
 <c:forEach items="${watchedIssues}" var="watchedIssues" step="1" varStatus="z">
     
     <c:if test="${(userPrefs.numItemsOnIndex > 0) && (watchedIssues >=userPrefs.numItemsOnIndex) && ! showAll}">
-        <tr class="listRowUnshaded">		<td align="left" colspan="15">
-                <html:link page="/index.jsp?showAll=true">
-                    <it:message key="itracker.web.index.moreissues"/>
-                </html:link>
-        </td>		</tr>
-    </c:if> 
+		<tr class="listRowUnshaded">
+			<td align="left" colspan="15">
+			    <html:link
+				page="/index.jsp?showAll=true">
+					<it:message key="itracker.web.index.moreissues" />
+				</html:link>
+			</td>
+		</tr>
+	</c:if> 
     
     
     <c:choose><c:when test="${z.count % 2 == 1}">
-            <tr align="right" class="listRowShaded">
+            <tr style="text-align:right;" class="listRowShaded">
         </c:when>
         <c:otherwise>
-            <tr align="right" class="listRowUnshaded">	
+            <tr style="text-align:right;" class="listRowUnshaded">	
         </c:otherwise>
     </c:choose>
     <td style="white-space: nowrap">
@@ -381,7 +384,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
              
     </td>
     <td></td>
-    <td align="left">${watchedIssues.issue.id}</td>
+    <td style="text-align:left;" >${watchedIssues.issue.id}</td>
     <td></td>
     <td style="white-space: nowrap">${watchedIssues.issue.project.name}</td>
     <td></td>
@@ -400,7 +403,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
             </c:otherwise>
     </c:choose></td>
     <td></td>
-    <td align="right" style="white-space: nowrap"><it:formatDate date="${watchedIssues.issue.lastModifiedDate}"/></td>
+    <td style="text-align:right; white-space: nowrap"><it:formatDate date="${watchedIssues.issue.lastModifiedDate}"/></td>
     
     
     </tr>
@@ -412,8 +415,8 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 <!-- view hidden sections link -->
 
 <c:if test="${userPrefs.hiddenIndexSections>0}">
-    <tr align="left" class="listRowUnshaded">
-        <td colspan="15" align="left"><html:link page="/portalhome.do?sections=all">
+    <tr style="text-align:left;" class="listRowUnshaded">
+        <td colspan="15" style="text-align:left;" ><html:link page="/portalhome.do?sections=all">
         <it:message key="itracker.web.index.viewhidden"/></html:link></td>
     </tr>
     <tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
