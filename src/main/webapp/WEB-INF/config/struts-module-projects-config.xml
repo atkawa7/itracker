@@ -36,6 +36,7 @@
         <forward name="unauthorized" module="/" path="/unauthorized.do" redirect="true"/>
         <forward name="searchissues" module="/module-searchissues" path="/searchissuesform.do"/>
         <forward name="logoff" path="/logoff.do" module="/"/>
+        <forward name="login" path="/login.do" module="/"/>
         <forward name="index" path="/portalhome.do" module="/"/>
         <forward name="createissue" path="/createissueform.do"/>
         <forward name="watchissue" path="/watchissue.do"/>
