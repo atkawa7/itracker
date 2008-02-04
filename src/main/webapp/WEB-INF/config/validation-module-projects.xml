@@ -8,13 +8,42 @@
 
 	<formset>
 
+		<form name="editIssueForm">
+			<field property="id" depends="required,long">
+				<arg0 key="itracker.web.attr.issue" />
+			</field>
+		</form>
 		<form name="issueForm">
-			<field property="description" depends="required">
+			<field property="id" depends="required,long">
+				<arg0 key="itracker.web.attr.issue" />
+			</field>
+			<field property="status" depends="required,long">
+				<arg0 key="itracker.web.attr.status" />
+			</field>
+			<field property="severity" depends="required,long">
+				<arg0 key="itracker.web.attr.severity" />
+			</field>
+			<field property="description" depends="validwhen">
 				<arg0 key="itracker.web.attr.description" />
+				<var>
+					<var-name>test</var-name>
+					<!-- allow empty description on open -->
+					<var-value>
+						((projectId == null) or (*this* != null))
+					</var-value>
+				</var>
 			</field>
 			<field property="history" depends="required">
 				<arg0 key="itracker.web.attr.description" />
+				<var>
+					<var-name>test</var-name>
+					<!-- allow empty history on edit -->
+					<var-value>
+						((prevStatus == status) or (*this* != null))
+					</var-value>
+				</var>
 			</field>
+			 
 			<field property="attachmentDescription"
 				depends="validwhen">
 				<arg0 key="itracker.web.attr.attachmentdescription" />
@@ -25,25 +54,31 @@
 					</var-value>
 				</var>
 			</field>
-			<field property="attachment"				
-					depends="validwhen">
+			<field property="attachment" depends="validwhen">
 				<arg0 key="itracker.web.attr.attachment" />
 				<var>
 					<var-name>test</var-name>
 					<var-value>
-						((attachmentDescription == null) or (*this* != null))
+						((attachmentDescription == null) or (*this* !=
+						null))
 					</var-value>
 				</var>
-				
+
 			</field>
 		</form>
 
 		<form name="issueRelationForm">
+			<field property="id" depends="required,long">
+				<arg0 key="itracker.web.attr.issue" />
+			</field>
 			<field property="relationType"></field>
 		</form>
 
 		<form name="moveIssueForm">
-			<field property="projectId" depends="required">
+			<field property="id" depends="required,long">
+				<arg0 key="itracker.web.attr.issue" />
+			</field>
+			<field property="projectId" depends="required,long">
 				<arg0 key="itracker.web.attr.project" />
 			</field>
 		</form>
