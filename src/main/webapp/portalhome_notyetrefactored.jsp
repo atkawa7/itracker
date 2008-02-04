@@ -274,7 +274,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
    
         
         <c:choose>
-	        <c:when test="${z.count % 2 == 1}">
+	        <c:when test="${i.count % 2 == 1}">
 	            <tr style="text-align:left;" class="listRowShaded">
 	        </c:when>
 	        <c:otherwise>
