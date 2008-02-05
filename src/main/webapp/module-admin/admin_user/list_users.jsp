@@ -38,7 +38,7 @@
     UserService uh = (UserService)request.getAttribute("uh");
 %>
 
-<table border="0" cellspacing="0"  cellspacing="1"  width="100%">
+<table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
   <tr>
     <td class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.users"/>: (<it:message key="itracker.web.admin.listusers.numactive" arg0="<%= Integer.toString(SessionManager.getNumActiveSessions()) %>"/>)</td>
     <% if(uh.allowProfileCreation(null, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) { %>
@@ -62,41 +62,42 @@
     List<User> users = uh.getActiveUsers();
 
     Collections.sort(users, User.NAME_COMPARATOR);
-
-    for(int i = 0; i < users.size(); i++) {
-        String style = "";
-        style += (users.get(i).getStatus() == UserUtilities.STATUS_LOCKED ? "color: red;" : "");
-        style += (users.get(i).getRegistrationType() == UserUtilities.REGISTRATION_TYPE_SELF ? "font-style: italic;" : "");
-        Date lastAccess = SessionManager.getSessionLastAccess(users.get(i).getLogin());
-        if(i % 2 == 1) {
-%>
-<% 
-String stylestring = null; 
-if (! style.equals("")) { 
-stylestring = "style=\"" + style + "\""; 
-} else { 
-stylestring = ""; 
-} 
-pageContext.setAttribute("stylestring",stylestring);
-%>
-          <tr align="right" class="listRowShaded" ${stylestring}>
+	User currentUser = null;
+	Iterator<User> usersIt = users.iterator();
+	boolean shade = true;
+	String style;
+	while (usersIt.hasNext()) {
+		shade = !shade;
+		currentUser = usersIt.next();
+        style  = (currentUser.getStatus() == UserUtilities.STATUS_LOCKED ? "color: red;" : "");
+        style += (currentUser.getRegistrationType() == UserUtilities.REGISTRATION_TYPE_SELF ? "font-style: italic;" : "");
+        Date lastAccess = SessionManager.getSessionLastAccess(currentUser.getLogin());
+		if (null != style && !(style.length() == 0)) { 
+			style = "style=\"" + style + "\""; 
+		} else { 
+			style = ""; 
+		} 
+		pageContext.setAttribute("style",style);
+		
+        if(shade) { %>
+          <tr align="right" class="listRowShaded" ${style}>
 <%      } else { %>
-          <tr align="right" class="listRowUnshaded" ${stylestring}> 
+          <tr align="right" class="listRowUnshaded" ${style}> 
 <%      } %>
         <td>
-          <it:formatImageAction action="edituserform" paramName="id" paramValue="<%= users.get(i).getId() %>" targetAction="update" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.user.alt" arg0="<%= users.get(i).getLogin() %>" textActionKey="itracker.web.image.edit.texttag"/>
-          <% if(users.get(i).getStatus() == UserUtilities.STATUS_LOCKED) { %>
-                <it:formatImageAction action="unlockuser" paramName="id" paramValue="<%= users.get(i).getId() %>" src="/themes/defaulttheme/images/unlock.gif" altKey="itracker.web.image.unlock.user.alt" arg0="<%= users.get(i).getLogin() %>" textActionKey="itracker.web.image.unlock.texttag"/>
+          <it:formatImageAction action="edituserform" paramName="id" paramValue="<%= currentUser.getId() %>" targetAction="update" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.user.alt" arg0="<%= currentUser.getLogin() %>" textActionKey="itracker.web.image.edit.texttag"/>
+          <% if(currentUser.getStatus() == UserUtilities.STATUS_LOCKED) { %>
+                <it:formatImageAction action="unlockuser" paramName="id" paramValue="<%= currentUser.getId() %>" src="/themes/defaulttheme/images/unlock.gif" altKey="itracker.web.image.unlock.user.alt" arg0="<%= currentUser.getLogin() %>" textActionKey="itracker.web.image.unlock.texttag"/>
           <% } else { %>
-                <it:formatImageAction action="lockuser" paramName="id" paramValue="<%= users.get(i).getId() %>" src="/themes/defaulttheme/images/lock.gif" altKey="itracker.web.image.lock.user.alt" arg0="<%= users.get(i).getLogin() %>" textActionKey="itracker.web.image.lock.texttag"/>
+                <it:formatImageAction action="lockuser" paramName="id" paramValue="<%= currentUser.getId() %>" src="/themes/defaulttheme/images/lock.gif" altKey="itracker.web.image.lock.user.alt" arg0="<%= currentUser.getLogin() %>" textActionKey="itracker.web.image.lock.texttag"/>
           <% } %>
         </td>
         <td></td>
-        <td><%= users.get(i).getLogin() %></td>
-        <td><%= users.get(i).getFirstName() %> <%= users.get(i).getLastName() %></td>
-        <td><%= users.get(i).getEmail() %></td>
-        <td align="left"><%= (users.get(i).isSuperUser() ? ITrackerResources.getString("itracker.web.generic.yes", (java.util.Locale)pageContext.getAttribute("currLocale")) : ITrackerResources.getString("itracker.web.generic.no", (java.util.Locale)pageContext.getAttribute("currLocale"))) %></td>
-        <td><it:formatDate date="<%= users.get(i).getLastModifiedDate() %>" format="notime"/></td>
+        <td><%= currentUser.getLogin() %></td>
+        <td><%= currentUser.getFirstName() %> <%= currentUser.getLastName() %></td>
+        <td><%= currentUser.getEmail() %></td>
+        <td align="left"><%= (currentUser.isSuperUser() ? ITrackerResources.getString("itracker.web.generic.yes", (java.util.Locale)pageContext.getAttribute("currLocale")) : ITrackerResources.getString("itracker.web.generic.no", (java.util.Locale)pageContext.getAttribute("currLocale"))) %></td>
+        <td><it:formatDate date="<%= currentUser.getLastModifiedDate() %>" format="notime"/></td>
         <td><it:formatDate date="<%= lastAccess %>" format="short" emptyKey="itracker.web.generic.no"/></td>
       </tr>
 <%  } %>
