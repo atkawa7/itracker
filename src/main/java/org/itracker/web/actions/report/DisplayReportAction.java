@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -78,10 +79,13 @@ public class DisplayReportAction extends ItrackerBaseAction {
             Locale userLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
             IssueSearchQuery isqm = (IssueSearchQuery) session.getAttribute(Constants.SEARCH_QUERY_KEY);
 
-            List<Issue> reportDataArray = new ArrayList<Issue>();
-            String type = (String) PropertyUtils.getSimpleProperty(form, "type");
+            List<Issue> reportingIssues = new ArrayList<Issue>();
+            String reportType = (String) PropertyUtils.getSimpleProperty(form, "type");
+        	log.info("execute: report type was " + reportType);
+        	
             Integer[] projectIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "projectIds");
-            if("all".equalsIgnoreCase(type)) {
+            // TODO All Issues this is huge, remove if possible
+            if("all".equalsIgnoreCase(reportType)) {
                 // Export all of the issues in the system
                 User currUser = (User) session.getAttribute(Constants.USER_KEY);
                 if(! currUser.isSuperUser()) {
@@ -90,9 +94,9 @@ public class DisplayReportAction extends ItrackerBaseAction {
                 }
 
                 IssueService issueService = getITrackerServices().getIssueService();
-                reportDataArray = issueService.getAllIssues();
-                Collections.sort(reportDataArray, Issue.ID_COMPARATOR);
-            } else if("project".equalsIgnoreCase(type)) {
+                reportingIssues = issueService.getAllIssues();
+                Collections.sort(reportingIssues, Issue.ID_COMPARATOR);
+            } else if("project".equalsIgnoreCase(reportType)) {
                 if(projectIds != null && projectIds.length > 0) {
                     // This wasn't a regular search.  So instead, take all the selected projects and find all the
                     // issues for them, check which ones the user can see, and then create a new array of issues
@@ -102,29 +106,33 @@ public class DisplayReportAction extends ItrackerBaseAction {
                     
                     User currUser = (User) session.getAttribute(Constants.USER_KEY);
                     Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
-
+                    Iterator<Issue> issuesIt = null;
+                    Issue currentIssue = null;
+                    List<Issue> issues;
                     for(int i = 0; i < projectIds.length; i++) {
-                        List<Issue> issues = issueService.getIssuesByProjectId(projectIds[i]);
-                        for(int j = 0; j < issues.size(); j++) {
-                            if(IssueUtilities.canViewIssue(issues.get(j), currUser, userPermissions)) {
-                                reportDataList.add(issues.get(j));
+                        issues = issueService.getIssuesByProjectId(projectIds[i]);
+                        issuesIt = issues.iterator();
+                        while (issuesIt.hasNext()) {
+                        	currentIssue = issuesIt.next();
+                            if(IssueUtilities.canViewIssue(currentIssue, currUser, userPermissions)) {
+                                reportDataList.add(currentIssue);
                             }
                         }
                     }
-                    reportDataArray = new ArrayList<Issue>();
-                    reportDataArray=reportDataList;
-                    Collections.sort(reportDataArray, Issue.ID_COMPARATOR);
+                    reportingIssues = reportDataList;
+                    Collections.sort(reportingIssues, Issue.ID_COMPARATOR);
+                    
                 } else {
                     throw new ReportException("", "itracker.web.error.projectrequired");
                 }
             } else {
                 // This must be a regular search, look for a search query result.
-                reportDataArray = (isqm == null || isqm.getResults() == null ? new ArrayList<Issue>() : isqm.getResults());
+                reportingIssues = (isqm == null || isqm.getResults() == null ? new ArrayList<Issue>() : isqm.getResults());
             }
 
-            log.debug("Report data contains " + reportDataArray.size() + " elements.");
+            log.debug("Report data contains " + reportingIssues.size() + " elements.");
 
-            if(reportDataArray.size() == 0) {
+            if(reportingIssues.size() == 0) {
             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noreportdata"));
                 throw new ReportException();
             }
@@ -141,7 +149,7 @@ public class DisplayReportAction extends ItrackerBaseAction {
                 ConfigurationService configurationService = getITrackerServices().getConfigurationService();
                 SystemConfiguration config = configurationService.getSystemConfiguration(ImportExportTags.EXPORT_LOCALE);
 
-                if(! exportIssues(reportDataArray, config, request, response)) {
+                if(! exportIssues(reportingIssues, config, request, response)) {
                 	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
                     throw new ReportException();
                 }
@@ -163,7 +171,7 @@ public class DisplayReportAction extends ItrackerBaseAction {
                 
                 if(ReportUtilities.REPORT_OUTPUT_PDF.equals(reportOutput)) {
                     log.debug("Processing PDF report.");
-                    reportService.outputPDF(reportDataArray, reportModel, userLocale, reportOutput, session, request, response, mapping);
+                    reportService.outputPDF(reportingIssues, reportModel, userLocale, reportOutput, session, request, response, mapping);
                     return null;
                 } else if(ReportUtilities.REPORT_OUTPUT_XLS.equals(reportOutput)) {
                     log.debug("Processing XLS report.");
