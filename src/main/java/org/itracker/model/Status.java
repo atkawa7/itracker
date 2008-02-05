@@ -23,8 +23,10 @@ package org.itracker.model;
  * 
  * @author johnny
  */
-public enum Status implements IntCodeEnum {
+public enum Status implements IntCodeEnum<Status> {
     
+	
+	
     DELETED(-1), 
     
     ACTIVE(1), 
@@ -32,6 +34,7 @@ public enum Status implements IntCodeEnum {
     VIEWABLE(2), 
     
     LOCKED(3);
+    
     
     private final int code;
     
@@ -43,8 +46,8 @@ public enum Status implements IntCodeEnum {
         return code;
     }
     
-    public Enum fromCode(int code) {
-        return valueOf(code);
+    public Status fromCode(int code) {
+        return Status.valueOf(code);
     }
     
     public static Status valueOf(int code) {
