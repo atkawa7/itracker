@@ -35,7 +35,7 @@
 
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
-      <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
+      <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
         <tr>
           <td class="editColumnTitle" colspan="14"><it:message key="itracker.web.attr.issues"/>:</td>
           <td align="right" style="white-space: nowrap">
