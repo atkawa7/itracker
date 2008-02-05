@@ -851,7 +851,7 @@
                         <a href="mailto:${notification.user.email}"
                            class="mailto">${notification.user.email}</a>
                     </td>
-                    <td class="listRowSmall">${notification.notificationRole}</td>
+                    <td class="listRowSmall"><it:message key="itracker.notification.role.${notification.notificationRole}"></it:message></td>
                     <!--NotificationUtilities.getRoleName(notifications.get(i).getNotificationRole())-->
                 </tr>
 
