@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Set" %>
@@ -39,8 +38,6 @@
   <br>
 </logic:messagesPresent>
 
-<center>
-
 <html:form action="/displayreport" target="_blank" onsubmit="return validateDisplayReportForm(this);">
 <html:hidden property="type" value="project"/>
 
@@ -58,7 +55,7 @@
   </tr>
 
 <%
-final Map<Integer, Set<PermissionType>> permissions = 
+	final Map<Integer, Set<PermissionType>> permissions = 
     RequestHelper.getUserPermissions(session);
         
 	IssueService is = (IssueService)request.getAttribute("ih");
@@ -66,27 +63,31 @@ final Map<Integer, Set<PermissionType>> permissions =
     ReportService rs = (ReportService)request.getAttribute("rh");
 
     List<Project> projectsList = ps.getAllAvailableProjects();
-    Project[] projects = (Project[])projectsList.toArray(new Project[projectsList.size()]);
-    Arrays.sort(projects);
-
+    Collections.sort(projectsList);
+	Iterator<Project> projectsIt = projectsList.iterator();
+	Project currentProject;
     boolean hasProjects = false;
-    for(int i = 0; i < projects.length; i++) {
-        if(! UserUtilities.hasPermission(permissions, projects[i].getId(), new int[] {UserUtilities.PERMISSION_VIEW_ALL, UserUtilities.PERMISSION_VIEW_USERS})) {
+    boolean shade = true;
+    while (projectsIt.hasNext()) {
+    	currentProject = projectsIt.next();
+        if(! UserUtilities.hasPermission(permissions, currentProject.getId(), new int[] {UserUtilities.PERMISSION_VIEW_ALL, UserUtilities.PERMISSION_VIEW_USERS})) {
              continue;
         }
+        // update the alternating of row-background
+    	shade = !shade;
         hasProjects = true;
 
         int totalIssueCount = 0;
         Date newestIssueDate = null;
 
-        totalIssueCount = is.getTotalIssueCountByProjectId(projects[i].getId());
-        newestIssueDate = (totalIssueCount == 0 ? null : is.getLatestIssueDateByProjectId(projects[i].getId()));
+        totalIssueCount = is.getTotalIssueCountByProjectId(currentProject.getId());
+        newestIssueDate = (totalIssueCount == 0 ? null : is.getLatestIssueDateByProjectId(currentProject.getId()));
 %>
-        <tr align="right" class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ) %>">
-          <td><html:multibox property="projectIds" value="<%= projects[i].getId().toString() %>"/></td>
+        <tr class="<%= (shade ? "listRowShaded" : "listRowUnshaded" ) %>">
+          <td><html:multibox property="projectIds" value="<%= currentProject.getId().toString() %>"/></td>
           <td></td>
-          <td><%= projects[i].getName() %></td>
-          <td><%= projects[i].getDescription() %></td>
+          <td><%= currentProject.getName() %></td>
+          <td><%= currentProject.getDescription() %></td>
           <td align="left"><%= totalIssueCount %></td>
           <td><it:formatDate date="<%= newestIssueDate %>" emptyKey="itracker.web.generic.notapplicable"/></td>
         </tr>
@@ -103,22 +104,24 @@ final Map<Integer, Set<PermissionType>> permissions =
             <html:select property="reportId" styleClass="listRowUnshaded" style="vertical-align: top;">
               <%
 				    List<Report> reports = new ArrayList<Report>();
-    	try { 
-    	
-      		reports = rs.getAllReports();
-		} catch (Exception e) {
-			e.printStackTrace(); 
-		}
-		
-                 for(int i = 0; i < reports.size(); i++ ) {
-                    if(reports.get(i).getNameKey() != null) {
-              %>
-                       <html:option value="<%= reports.get(i).getId().toString() %>" key="<%= reports.get(i).getNameKey() %>"/>
-              <%    } else { %>
-                       <html:option value="<%= reports.get(i).getId().toString() %>"><%= reports.get(i).getName() %></html:option>
-              <%
-                    }
-                 }
+			    	try { 
+			    	
+			      		reports = rs.getAllReports();
+					} catch (Exception e) {
+						e.printStackTrace(); 
+					}
+					Iterator<Report> reportsIt = reports.iterator();
+					Report currentReport;
+	                while (reportsIt.hasNext()) {
+	                	currentReport = reportsIt.next();
+	                    if(currentReport.getNameKey() != null) {
+		              %>
+		                       <html:option value="<%= currentReport.getId().toString() %>" key="<%= currentReport.getNameKey() %>"/>
+		              <% } else { %>
+		                       <html:option value="<%= currentReport.getId().toString() %>"><%= currentReport.getName() %></html:option>
+		              <%
+		                 }
+	                 }
               %>
               <html:option value="<%= Integer.toString(ReportUtilities.REPORT_EXPORT_XML) %>" key="itracker.report.exportxml"/>
             </html:select>
@@ -135,6 +138,9 @@ final Map<Integer, Set<PermissionType>> permissions =
 
 </table>
 </html:form>
-</center>
 
-<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
+<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body><%@page import="java.util.Iterator"%>
+<%@page import="java.util.TreeSet"%>
+<%@page import="java.util.SortedSet"%>
+<%@page import="java.util.Collections"%>
+</html>
