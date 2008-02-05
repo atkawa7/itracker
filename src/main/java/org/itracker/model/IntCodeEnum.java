@@ -25,7 +25,9 @@ package org.itracker.model;
  * @author johnny
  */
 public interface IntCodeEnum<E extends Enum<E>> {
-    
+	
+	public static final int DEFAULT_CODE = 1;
+	
     /**
      * Returns the integer value representing this enum constant. 
      * 
