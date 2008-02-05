@@ -231,14 +231,21 @@ public class Project extends AbstractEntity implements Comparable<Project> {
      */
     @Override
     public String toString() {
-        return "Project [id=" + this.id + ", name=" + this.name + "]";
+        return new StringBuffer("Project [id=").append(this.id).append(", name=").append(this.name).append("]").toString();
     }
     
     /**
      * Compares 2 projects by name. 
      */
     public int compareTo(Project other) {
-        return this.name.compareTo(other.name);
+    	if (equals(other)) {
+    		return 0;
+    	}
+    	String name = this.name;
+    	if (name == null) {
+    		name = "";
+    	}
+        return name.compareTo((null==other.name)? "": other.name);
     }
     
 }
