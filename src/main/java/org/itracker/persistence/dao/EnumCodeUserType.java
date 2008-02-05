@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.itracker.model.IntCodeEnum;
 
@@ -21,7 +22,7 @@ import org.itracker.model.IntCodeEnum;
 public class EnumCodeUserType extends AbstractEnumUserType {
     
     private static final int[] SQL_TYPES = { Types.SMALLINT };
-    
+    private static final Logger log = Logger.getLogger(EnumCodeUserType.class);
     /** Enum members, in the order they where declared. */
     private IntCodeEnum[] enumValues;
     
@@ -45,7 +46,12 @@ public class EnumCodeUserType extends AbstractEnumUserType {
          * 
          * Note : fromCode cannot be static in IntEnumCode ! 
          */
-        return rs.wasNull() ? null : this.enumValues[0].fromCode(code);
+        try {
+        	return rs.wasNull() ? null : this.enumValues[0].fromCode(code);
+        } catch (Exception e) {
+        	log.info("nullSafeGet: failed to get default code enum, trying DEFAULT-code " + this.enumValues[0].DEFAULT_CODE, e);
+        	return this.enumValues[0].fromCode(this.enumValues[0].DEFAULT_CODE);
+        }
     }
 
     public void nullSafeSet(PreparedStatement stmt, Object value,
