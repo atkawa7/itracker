@@ -59,7 +59,12 @@ import org.itracker.services.util.CustomFieldUtilities;
 public class CustomField extends AbstractEntity 
         implements Comparable<CustomField> {
     
-    /** 
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/** 
      * Unique name identifying this custom field globally. 
      * 
      * <p>No matching field exists in the database for this property :
@@ -329,7 +334,7 @@ public class CustomField extends AbstractEntity
         }
         
         public Type fromCode(int code) {
-            return valueOf(code);
+            return Type.valueOf(code);
         }
         
         public static Type valueOf(int code) {
