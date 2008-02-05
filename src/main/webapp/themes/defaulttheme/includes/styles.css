@@ -1,6 +1,19 @@
 body {
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10px;
+	background: #fff;
+}
+
+hr {
+	border: none;
+	border-bottom: solid 1px black; 
+	height: 1px;
+	background: black;	
+}
+td.top_ruler{
+	background-color: #CCC;
+	/*background-color: #9999FF;/*
+	
 }
 
 a:hover {
@@ -126,7 +139,7 @@ a.headerLinks:visited {
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	color: black;
-  background-color: #555555;
+  	background-color: #555555;
 	text-decoration: none;
 }
 

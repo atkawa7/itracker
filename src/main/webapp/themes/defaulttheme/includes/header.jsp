@@ -49,7 +49,7 @@ final Map<Integer, Set<PermissionType>> permissions =
                                 currUser.getFirstName() + " " + currUser.getLastName()) %> --%>
         </td>
       </tr>
-      <tr><td colspan="2" bgcolor="#CCCCCC"><hr/></td></tr>
+      <tr><td colspan="2" class="top_ruler"><hr/></td></tr>
     </table>
     <table border="0" cellspacing="0" cellspacing="0" width="100%">
       <tr>

@@ -2,8 +2,8 @@
 
    <table border="0" width="100%" cellpadding="1" class="footer">
       <tr>
-      	<td align="left" width="" style="text-align: left;" nowrap colspan="2">
-      	   <hr noshade width="100%" height="1">
+      	<td class="footer_ruler" colspan="2">
+      	   <hr>
       	   </td>
       </tr>
       <tr>
