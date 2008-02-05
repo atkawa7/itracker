@@ -587,6 +587,9 @@ public class IssueUtilities  {
       */
     public static boolean canViewIssue(Issue issue, User user, Map<Integer, Set<PermissionType>> permissions) {
         if(user == null) {
+        	if (log.isInfoEnabled()) {
+        		log.info("canViewIssue: missing argument. user: " + user + " returning false");
+        	}
             return false;
         }
         return canViewIssue(issue, user.getId(), permissions);
@@ -600,26 +603,45 @@ public class IssueUtilities  {
       */
     public static boolean canViewIssue(Issue issue, Integer userId, Map<Integer, Set<PermissionType>> permissions) {
         if (issue == null || userId == null || permissions == null) {
+        	if (log.isInfoEnabled()) {
+        		log.info("canViewIssue: missing argument. issue: " + issue + ", userid: " + userId + ", permissions: " + permissions);
+        	}
             return false;
         }
 
         if (UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_VIEW_ALL.getCode())) {
+        	if (log.isInfoEnabled()) {
+        		log.info("canViewIssue: issue: " + issue + ", user: " + userId + ", permission: " + PermissionType.ISSUE_VIEW_ALL);
+        	}
             return true;
         }
         
         if (! UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_VIEW_USERS.getCode())) {
+        	if (log.isInfoEnabled()) {
+        		log.info("canViewIssue: issue: " + issue + ", user: " + userId + ", permission: " + PermissionType.ISSUE_VIEW_USERS);
+        	}
             return false;
         }
 
         if (issue.getCreator().getId().equals(userId)) {
+        	if (log.isInfoEnabled()) {
+        		log.info("canViewIssue: issue: " + issue + ", user: " + userId + ", permission: is creator");
+        	}
             return true;
         }
 
         if ( issue.getOwner() != null ) {
             if (issue.getOwner().getId().equals(userId)) {
+
+            	if (log.isInfoEnabled()) {
+            		log.info("canViewIssue: issue: " + issue + ", user: " + userId + ", permission: is owner");
+            	}
                 return true;
             }
         }
+    	if (log.isInfoEnabled()) {
+    		log.info("canViewIssue: issue: " + issue + ", user: " + userId + ", permission: none matched");
+    	}
         return false;
     }
 
@@ -637,52 +659,52 @@ public class IssueUtilities  {
             return false;
         }
         
-        if (log.isDebugEnabled()) {
-        	
-        	StringBuffer sb = new StringBuffer();
-        	Iterator<Integer> it = permissions.keySet().iterator();
-        	Integer key;
-        	Set<PermissionType> value;
-        	while (it.hasNext()) {
-        		key = it.next();
-        		value = permissions.get(key);
-        		sb.append(key).append(": ").append(value).append('\n');
-        	}
-        	
-        	log.debug("canEditIssue: detailed permissions: \n" + sb);
-        }
+//        if (log.isDebugEnabled()) {
+//        	
+//        	StringBuffer sb = new StringBuffer();
+//        	Iterator<Integer> it = permissions.keySet().iterator();
+//        	Integer key;
+//        	Set<PermissionType> value;
+//        	while (it.hasNext()) {
+//        		key = it.next();
+//        		value = permissions.get(key);
+//        		sb.append(key).append(": ").append(value).append('\n');
+//        	}
+//        	
+//        	log.debug("canEditIssue: detailed permissions: \n" + sb);
+//        }
 
         if (UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_EDIT_ALL.getCode())) {
             
             if (log.isDebugEnabled()) {
-            	log.debug("canEditIssue: has permission " + PermissionType.ISSUE_EDIT_ALL);
+            	log.debug("canEditIssue: user "+ userId + " has permission to edit issue " + issue.getId() + ":" + PermissionType.ISSUE_EDIT_ALL);
             }
             return true;
         }
         if (! UserUtilities.hasPermission(permissions, issue.getProject().getId(), PermissionType.ISSUE_EDIT_USERS.getCode())) {
             if (log.isDebugEnabled()) {
-            	log.debug("canEditIssue: has not permission " + PermissionType.ISSUE_EDIT_USERS);
+            	log.debug("canEditIssue: user "+ userId + " has not permission  to edit issue " + issue.getId() + ":" + PermissionType.ISSUE_EDIT_USERS);
             }
             return false;
         }
 
         if (issue.getCreator().getId().equals(userId)) {
             if (log.isDebugEnabled()) {
-            	log.debug("canEditIssue: is creator");
+            	log.debug("canEditIssue: user "+ userId + " is creator of issue " + issue.getId() + ":");
             }
             return true;
         }
         if (issue.getOwner() != null) {
             if (issue.getOwner().getId().equals(userId)) {
                 if (log.isDebugEnabled()) {
-                	log.debug("canEditIssue: is owner");
+                	log.debug("canEditIssue: user "+ userId + " is owner of issue " + issue.getId() + ":");
                 }            	
                 return true;
             }
         }
         
         if (log.isDebugEnabled()) {
-        	log.debug("canEditIssue: could not match permission, denied");
+        	log.debug("canEditIssue: user "+ userId + " could not match permission, denied");
         }
         return false;
     }
