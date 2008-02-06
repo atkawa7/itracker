@@ -101,13 +101,15 @@
         <action path="/unauthorized" type="org.itracker.web.actions.UnauthorizedAction">
             <forward name="unauthorized" path="/unauthorized.jsp" module="/"/>
         </action>
+        
+        
         <action path="/login" type="org.itracker.web.actions.user.LoginAction"
-                name="loginForm" scope="request" input="/login.jsp">
-            <forward name="index" module="/" path="/index.jsp" redirect="true"/>
+                name="loginForm" scope="request" input="login">
+            <forward name="index" module="/" path="index" redirect="true"/>
         </action>
 
         <action path="/forgotpassword" type="org.itracker.web.actions.user.ForgotPasswordAction"
-                name="forgotPasswordForm" scope="request" input="/forgot_password.jsp"
+                name="forgotPasswordForm" scope="request" input="forgot_password"
                 validate="true"/>
 
 

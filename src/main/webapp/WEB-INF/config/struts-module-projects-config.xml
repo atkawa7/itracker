@@ -17,6 +17,7 @@
         <form-bean name="issueRelationForm" type="org.itracker.web.forms.IssueRelationForm"/>
         <form-bean name="moveIssueForm" type="org.itracker.web.forms.MoveIssueForm"/>
         <form-bean name="issueForm" type="org.itracker.web.forms.IssueForm"/>
+        <form-bean name="createIssueForm" type="org.itracker.web.forms.IssueForm"/>
         <form-bean name="editIssueForm" type="org.itracker.web.forms.IssueForm"/>
         <form-bean name="watchIssueForm" type="org.itracker.web.forms.WatchIssueForm"/>
     </form-beans>
@@ -93,10 +94,10 @@
 
         <action path="/createissueform"
                 type="org.itracker.web.actions.project.CreateIssueFormAction"
-                name="issueForm" scope="request" input="/create_issue.jsp" validate="false"/>
+                name="createIssueForm" scope="request" input="/create_issue.jsp" validate="false"/>
 
         <action path="/createissue" type="org.itracker.web.actions.project.CreateIssueAction"
-                name="issueForm" scope="request" input="/create_issue.jsp" validate="true">
+                name="createIssueForm" scope="request" input="/create_issue.jsp" validate="true">
         </action>
 
         <action path="/editissue"

@@ -30,7 +30,7 @@
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 <%-- <html:javascript formName="createIssueForm"/> replaced by --%>
-      <html:javascript formName="issueForm"/>
+      <html:javascript formName="createIssueForm"/>
 
       <logic:messagesPresent>
         <center>
@@ -154,7 +154,7 @@
                            </tr>
                            <tr>
                 <%     } %>
-                       <it:formatCustomField field="<%= projectFields.get(i) %>" formName="issueForm" listOptions="<%= listOptions %>"/>
+                       <it:formatCustomField field="<%= projectFields.get(i) %>" formName="createIssueForm" listOptions="<%= listOptions %>"/>
                 <% } %>
                 </tr>
                 
@@ -198,12 +198,13 @@
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3" width="1"/></td></tr>
 
           <%
+          	// TODO whats wrap?
              String wrap = "soft";
              if(ProjectUtilities.hasOption(ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML, project.getOptions())) {
                 wrap = "hard";
              }
           %>
-          <tr><td colspan="4" class="editColumnText" style="text-align: center;"><textarea name="history" wrap="<%= wrap %>" cols="110" rows="6" class="editColumnText"><bean:write name="issueForm" property="history"/></textarea></td></tr>
+          <tr><td colspan="4" class="editColumnText" style="text-align: center;"><textarea name="history" wrap="<%= wrap %>" cols="110" rows="6" class="editColumnText"><bean:write name="createIssueForm" property="history"/></textarea></td></tr>
 
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="10"/></td></tr>
 

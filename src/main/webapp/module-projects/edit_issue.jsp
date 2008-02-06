@@ -20,6 +20,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%
+// TODO here we stuck, e.g. when validation had an error
     IssueService ih = (IssueService) request.getAttribute("ih");
     User um = (User) request.getSession().getAttribute("currUser");
 
@@ -159,7 +160,7 @@
         </html:select>
 
         <% } else { %>
-
+		<html:hidden property="status"/>
         <%= IssueUtilities.getStatusName(currentIssue.getStatus(), (java.util.Locale) pageContext.getAttribute("currLocale")) %>
 
         <% } %>
@@ -804,9 +805,7 @@
                               wrap="<%= wrap %>"
                               cols="110"
                               rows="6"
-                              class="editColumnText">
-                        <bean:write name="issueForm" property="history"/>
-                    </textarea>
+                              class="editColumnText"><bean:write name="issueForm" property="history"/></textarea>
                 </td>
             </tr>
         </table>
