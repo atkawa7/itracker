@@ -13,6 +13,40 @@
 				<arg0 key="itracker.web.attr.issue" />
 			</field>
 		</form>
+		<form name="createIssueForm">
+			<field property="severity" depends="required,long">
+				<arg0 key="itracker.web.attr.severity" />
+			</field>
+			<field property="description" depends="required">
+				<arg0 key="itracker.web.attr.description" />
+			</field>
+			<field property="history" depends="required">
+				<arg0 key="itracker.web.attr.detaileddescription" />
+				
+			</field>
+			 
+			<field property="attachmentDescription"
+				depends="validwhen">
+				<arg0 key="itracker.web.attr.attachmentdescription" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>
+						((attachment == null) or (*this* != null))
+					</var-value>
+				</var>
+			</field>
+			<field property="attachment" depends="validwhen">
+				<arg0 key="itracker.web.attr.attachment" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>
+						((attachmentDescription == null) or (*this* !=
+						null))
+					</var-value>
+				</var>
+
+			</field>
+		</form>
 		<form name="issueForm">
 			<field property="id" depends="required,long">
 				<arg0 key="itracker.web.attr.issue" />
@@ -26,17 +60,16 @@
 			<field property="description" depends="required">
 				<arg0 key="itracker.web.attr.description" />
 			</field>
-			<!-- TODO temporary removed, does not work as expected
-			<field property="history" depends="required">
+			<field property="history" depends="validwhen">
 				<arg0 key="itracker.web.attr.history" />
 				<var>
 					<var-name>test</var-name>
-					<!- allow empty history on edit ->
+					<!-- allow empty history on edit if status not changed -->
 					<var-value>
 						((prevStatus == status) or (*this* != null))
 					</var-value>
 				</var>
-			</field>-->
+			</field>
 			 
 			<field property="attachmentDescription"
 				depends="validwhen">
