@@ -1,9 +1,11 @@
 package org.itracker;
 
 import org.dbunit.database.DatabaseConnection;
+import org.dbunit.database.DatabaseConfig;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.XmlDataSet;
 import org.dbunit.operation.InsertOperation;
+import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.After;
@@ -46,6 +48,8 @@ public abstract class AbstractDependencyInjectionTest extends AbstractDependency
         Connection connection = getDataSource().getConnection();
 
         DatabaseConnection dbConnection = new DatabaseConnection( connection );
+        dbConnection.getConfig().setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY,
+                new HsqldbDataTypeFactory());
 
         if( dataSets != null ) {
             for( Iterator<IDataSet> iterator = dataSets.iterator(); iterator.hasNext(); ) {
