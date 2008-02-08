@@ -60,7 +60,7 @@ final Map<Integer, Set<PermissionType>> permissions =
     }
     String style = "";
     if(projects.get(i).getStatus() == Status.VIEWABLE) {
-        style = "style=\"color: #00BB00;\"";
+        style = "style=\"color: #CC8800;\"";
     } else if(projects.get(i).getStatus() != Status.ACTIVE) {
         style = "style=\"color: red;\"";
     }
