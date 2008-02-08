@@ -18,21 +18,21 @@
 
 package org.itracker.web.actions.project;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Set;
-import java.util.Collections;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
@@ -45,17 +45,19 @@ import org.itracker.model.Component;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueField;
+import org.itracker.model.IssueHistory;
 import org.itracker.model.NameValuePair;
+import org.itracker.model.Notification;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.Version;
-import org.itracker.model.IssueHistory;
-import org.itracker.model.Notification;
+import org.itracker.services.ITrackerServices;
 import org.itracker.services.IssueService;
 import org.itracker.services.UserService;
+import org.itracker.services.exceptions.WorkflowException;
 import org.itracker.services.util.Convert;
 import org.itracker.services.util.HTMLUtilities;
 import org.itracker.services.util.IssueUtilities;
@@ -65,6 +67,8 @@ import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 
 
 /**
@@ -74,33 +78,255 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 
     private static final Logger log = Logger.getLogger(EditIssueFormAction.class);
 
-    @SuppressWarnings("unchecked")
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    /**
+     * method needed to prepare request for edit_issue.jsp
+     * @throws WorkflowException 
+     */
+    public static final void setupJspEnv(ActionMapping mapping,
+			IssueForm issueForm, HttpServletRequest request, Issue issue,
+			IssueService issueService, UserService userService,
+			Map<Integer, Set<PermissionType>> userPermissions, Map<Integer, List<NameValuePair>> listOptions,
+			ActionErrors errors) throws ServletException, IOException,
+			WorkflowException {
 
-        ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping, form, request, response);
 
-        String pageTitleKey = "itracker.web.editissue.title";
+
+
+        
+
+    	String pageTitleKey = "itracker.web.editissue.title";
         String pageTitleArg = request.getParameter("id");
         request.setAttribute("pageTitleKey", pageTitleKey);
         request.setAttribute("pageTitleArg", pageTitleArg);
+        request.setAttribute("ih", issueService);
+        
+        request.getSession().setAttribute(Constants.LIST_OPTIONS_KEY, listOptions);
+
+        request.setAttribute("fieldSeverity", WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_SEVERITY));
+        request.setAttribute("possibleOwners", WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_OWNER));
+        request.setAttribute("hasNoViewAttachmentOption", ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, issue.getProject().getOptions()));
+
+
+
+        List<Notification> notifications = issueService.getIssueNotifications(issue.getId());
+        Collections.sort(notifications, Notification.TYPE_COMPARATOR);
+
+        request.setAttribute("notifications", notifications);
+        // setup issue to request, as it's needed by the jsp.
+        request.setAttribute(Constants.ISSUE_KEY, issue);
+        request.setAttribute("issueForm", issueForm);
+        request.setAttribute(Constants.PROJECT_KEY, issue.getProject());
+        List<IssueHistory> issueHistory = issueService.getIssueHistory(issue.getId());
+        Collections.sort(issueHistory, IssueHistory.CREATE_DATE_COMPARATOR);
+        request.setAttribute("issueHistory", issueHistory);
+        
+    }
+    
+    public static Map<Integer, List<NameValuePair>> getListOptions(
+			HttpServletRequest request, Issue issue,
+			List<NameValuePair> ownersList,
+			Map<Integer, Set<PermissionType>> userPermissions, Project project,
+			User currUser) {
+    	 Map<Integer, List<NameValuePair>> listOptions = new HashMap<Integer, List<NameValuePair>>();
+
+
+         Locale currLocale = (Locale) request.getSession().getAttribute(Constants.LOCALE_KEY);
+         
+
+         if (ownersList != null && ownersList.size() > 0) {
+             listOptions.put(IssueUtilities.FIELD_OWNER, ownersList);
+         }
+
+         boolean hasFullEdit = UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
+
+         List<NameValuePair> allStatuses = IssueUtilities.getStatuses(currLocale);
+         List<NameValuePair> statusList = new ArrayList<NameValuePair>();
+
+         if (!hasFullEdit) {
+
+             if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
+                 for (int i = 0; i < allStatuses.size(); i++) {
+                     int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
+                     if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED && statusNumber >= IssueUtilities.STATUS_CLOSED) {
+                         statusList.add(allStatuses.get(i));
+                     } else
+                     if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && statusNumber >= IssueUtilities.STATUS_RESOLVED) {
+                         statusList.add(allStatuses.get(i));
+                     }
+                 }
+             } else {
+                 // Can't change
+             }
+
+         } else {
+
+             if (currUser.isSuperUser()) {
+                 for (int i = 0; i < allStatuses.size(); i++) {
+                     statusList.add(allStatuses.get(i));
+                 }
+             } else if (issue.getStatus() >= IssueUtilities.STATUS_ASSIGNED && issue.getStatus() < IssueUtilities.STATUS_RESOLVED) {
+                 for (int i = 0; i < allStatuses.size(); i++) {
+                     int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
+                     if (statusNumber >= IssueUtilities.STATUS_ASSIGNED && statusNumber < IssueUtilities.STATUS_CLOSED) {
+                         statusList.add(allStatuses.get(i));
+                     } else
+                     if (statusNumber >= IssueUtilities.STATUS_CLOSED
+							&& ProjectUtilities
+									.hasOption(
+											ProjectUtilities.OPTION_ALLOW_ASSIGN_TO_CLOSE,
+											project.getOptions())
+							&& UserUtilities.hasPermission(userPermissions,
+									project.getId(),
+									UserUtilities.PERMISSION_CLOSE)) {
+						statusList.add(allStatuses.get(i));
+					}
+                 }
+             } else if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && issue.getStatus() < IssueUtilities.STATUS_CLOSED) {
+                 for (int i = 0; i < allStatuses.size(); i++) {
+                     int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
+                     if (statusNumber >= IssueUtilities.STATUS_ASSIGNED && statusNumber < IssueUtilities.STATUS_CLOSED) {
+                         statusList.add(allStatuses.get(i));
+                     } else
+                     if (statusNumber >= IssueUtilities.STATUS_CLOSED && UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
+                         statusList.add(allStatuses.get(i));
+                     }
+                 }
+             } else if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED) {
+                 for (int i = 0; i < allStatuses.size(); i++) {
+                     int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
+                     if ((statusNumber >= IssueUtilities.STATUS_ASSIGNED && statusNumber < IssueUtilities.STATUS_RESOLVED) || statusNumber >= IssueUtilities.STATUS_CLOSED) {
+                         statusList.add(allStatuses.get(i));
+                     }
+                 }
+             } else {
+                 // Can't change
+             }
+
+         }
+
+         List<NameValuePair> statuses;
+         statuses = statusList;
+         listOptions.put(IssueUtilities.FIELD_STATUS, statuses);
+
+         List<NameValuePair> severities = IssueUtilities.getSeverities(currLocale);
+         listOptions.put(IssueUtilities.FIELD_SEVERITY, severities);
+
+         List<NameValuePair> resolutions = IssueUtilities.getResolutions(currLocale);
+         listOptions.put(IssueUtilities.FIELD_RESOLUTION, resolutions);
+
+         List<Component> components = project.getComponents();
+//             Collections.sort(components, new Component());
+         listOptions.put(IssueUtilities.FIELD_COMPONENTS, Convert.componentsToNameValuePairs(components));
+
+         List<Version> versions = project.getVersions();
+//             Collections.sort(versions, new Version());
+         listOptions.put(IssueUtilities.FIELD_VERSIONS, Convert.versionsToNameValuePairs(versions));
+         listOptions.put(IssueUtilities.FIELD_TARGET_VERSION, Convert.versionsToNameValuePairs(versions));
+
+
+         List<CustomField> projectFields = project.getCustomFields();
+         for (int i = 0; i < projectFields.size(); i++) {
+             if (projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
+                 projectFields.get(i).setLabels(currLocale);
+                 listOptions.put(projectFields.get(i).getId(), Convert.customFieldOptionsToNameValuePairs(projectFields.get(i).getOptions()));
+             }
+         }
+         
+         return listOptions;
+	}
+    
+    public static final void setupIssueForm(IssueForm issueForm, Issue issue,
+			Map<Integer, List<NameValuePair>> listOptions,
+			HttpServletRequest request, ActionErrors errors)
+			throws WorkflowException {
+        HttpSession session = request.getSession(true);
+
+        IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
+        Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+        issueForm.setId(issue.getId());
+        issueForm.setProjectId(issue.getProject().getId());
+        issueForm.setPrevStatus(issue.getStatus());
+        issueForm.setCaller(request.getParameter("caller"));
+
+        issueForm.setDescription(HTMLUtilities.handleQuotes(issue.getDescription()));
+        issueForm.setStatus(issue.getStatus());
+
+        if (!ProjectUtilities.hasOption(ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS, issue.getProject().getOptions())) {
+            try {
+                issue.setResolution(IssueUtilities.checkResolutionName(issue.getResolution(), currLocale));
+            } catch (MissingResourceException mre) {
+                log.error(mre.getMessage());
+            } catch (NumberFormatException nfe) {
+                log.error(nfe.getMessage());
+            }
+        }
+
+        issueForm.setResolution(HTMLUtilities.handleQuotes(issue.getResolution()));
+        issueForm.setSeverity(issue.getSeverity());
+
+        issueForm.setTargetVersion(issue.getTargetVersion() == null
+                ? -1 : issue.getTargetVersion().getId());
+
+        issueForm.setOwnerId((issue.getOwner() == null ? -1 : issue.getOwner().getId()));
+
+        List<IssueField> fields = issue.getFields();
+        HashMap<String, String> customFields = new HashMap<String, String>();
+        for (int i = 0; i < fields.size(); i++) {
+            customFields.put(fields.get(i).getCustomField().getId().toString(), fields.get(i).getValue(currLocale));
+        }
+
+        issueForm.setCustomFields(customFields);
+
+        HashSet<Integer> selectedComponents = issueService.getIssueComponentIds(issue.getId());
+        if (selectedComponents != null) {
+            Integer[] componentIds = null;
+            ArrayList<Integer> components = new ArrayList<Integer>(selectedComponents);
+            componentIds = components.toArray(new Integer[]{});
+            issueForm.setComponents(componentIds);
+        }
+
+        HashSet<Integer> selectedVersions = issueService.getIssueVersionIds(issue.getId());
+        if (selectedVersions != null) {
+            Integer[] versionIds = null;
+            ArrayList<Integer> versions = new ArrayList<Integer>(selectedVersions);
+            versionIds = versions.toArray(new Integer[]{});
+            issueForm.setVersions(versionIds);
+        }
+        
+
+        List<ProjectScript> scripts = issue.getProject().getScripts();
+        WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors, issueForm);
+        WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, null, errors, issueForm);
+
+    }
+    
+    @SuppressWarnings("unchecked")
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    	if (log.isDebugEnabled()) {
+    		log.debug("execute: called with mapping: " + mapping + ", form: " + form + ", request: " + request + ", response: " + response);
+    	}
+        ActionErrors errors = new ActionErrors();
+        super.executeAlways(mapping, form, request, response);
 
         if (!isLoggedIn(request, response)) {
+        	// should be moved out of single actions. Filter, or better Formbased Login (see servlet specs)
             return mapping.findForward("login");
         }
 
         try {
             IssueService issueService = getITrackerServices().getIssueService();
-            request.setAttribute("ih", issueService);
+            
             UserService userService = getITrackerServices().getUserService();
 
             Integer issueId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
-
+            
             Issue issue = issueService.getIssue(issueId);
             Project project = issueService.getIssueProject(issueId);
 
             if (issue == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
+                // TODO: we must forward to another page since issue is not in request!
             } else if (project == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
             } else if (project.getStatus() != Status.ACTIVE) {
@@ -109,208 +335,48 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                 HttpSession session = request.getSession(true);
                 User currUser = (User) session.getAttribute(Constants.USER_KEY);
                 Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+
                 Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
 
+                
+            	List<NameValuePair> ownersList = GetIssuePossibleOwnersList(issue, issue.getProject(), currUser, currLocale,
+                        issueService, userService, userPermissions);
+                
                 if (!IssueUtilities.canEditIssue(issue, currUser.getId(), userPermissions)) {
                     log.debug("Unauthorized user requested access to edit issue for project " + project.getId());
                     return mapping.findForward("unauthorized");
                 }
 
+
+                IssueForm issueForm = (IssueForm) form;
+                if (issueForm == null) {
+                    issueForm = new IssueForm();
+                }
+                Map<Integer, List<NameValuePair>> listOptions = getListOptions(request, issue, ownersList, userPermissions, issue.getProject(), currUser);
+
+                setupIssueForm(issueForm, issue, listOptions, request, errors);
+            	
+
+                EditIssueFormAction.setupJspEnv(mapping, issueForm, request, issue, issueService, userService, userPermissions, listOptions, errors);
+                
+
+
+                
+
+                log.debug("Forwarding to edit issue form for issue " + issue.getId());
+
+
+                // TODO: Sort attachments
+                // Collections.sort(attachments, IssueAttachment.CREATE_DATE_COMPARATOR);
+
+
+
+                saveToken(request);
+
                 if (errors.isEmpty()) {
-                    Map<Integer, List<NameValuePair>> listOptions = new HashMap<Integer, List<NameValuePair>>();
-                    List<NameValuePair> ownersList;
-
-                    ownersList = GetIssuePossibleOwnersList(issue, project, currUser, currLocale,
-                            issueService, userService, userPermissions);
-
-                    if (ownersList != null && ownersList.size() > 0) {
-                        listOptions.put(IssueUtilities.FIELD_OWNER, ownersList);
-                    }
-
-                    boolean hasFullEdit = UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
-
-                    List<NameValuePair> allStatuses = IssueUtilities.getStatuses(currLocale);
-                    List<NameValuePair> statusList = new ArrayList<NameValuePair>();
-
-                    if (!hasFullEdit) {
-
-                        if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
-                            for (int i = 0; i < allStatuses.size(); i++) {
-                                int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
-                                if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED && statusNumber >= IssueUtilities.STATUS_CLOSED) {
-                                    statusList.add(allStatuses.get(i));
-                                } else
-                                if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && statusNumber >= IssueUtilities.STATUS_RESOLVED) {
-                                    statusList.add(allStatuses.get(i));
-                                }
-                            }
-                        } else {
-                            // Can't change
-                        }
-
-                    } else {
-
-                        if (currUser.isSuperUser()) {
-                            for (int i = 0; i < allStatuses.size(); i++) {
-                                statusList.add(allStatuses.get(i));
-                            }
-                        } else if (issue.getStatus() >= IssueUtilities.STATUS_ASSIGNED && issue.getStatus() < IssueUtilities.STATUS_RESOLVED) {
-                            for (int i = 0; i < allStatuses.size(); i++) {
-                                int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
-                                if (statusNumber >= IssueUtilities.STATUS_ASSIGNED && statusNumber < IssueUtilities.STATUS_CLOSED) {
-                                    statusList.add(allStatuses.get(i));
-                                } else
-                                if (statusNumber >= IssueUtilities.STATUS_CLOSED && ProjectUtilities.hasOption(ProjectUtilities.OPTION_ALLOW_ASSIGN_TO_CLOSE, project.getOptions()) && UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
-                                    statusList.add(allStatuses.get(i));
-                                }
-                            }
-                        } else if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED && issue.getStatus() < IssueUtilities.STATUS_CLOSED) {
-                            for (int i = 0; i < allStatuses.size(); i++) {
-                                int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
-                                if (statusNumber >= IssueUtilities.STATUS_ASSIGNED && statusNumber < IssueUtilities.STATUS_CLOSED) {
-                                    statusList.add(allStatuses.get(i));
-                                } else
-                                if (statusNumber >= IssueUtilities.STATUS_CLOSED && UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_CLOSE)) {
-                                    statusList.add(allStatuses.get(i));
-                                }
-                            }
-                        } else if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED) {
-                            for (int i = 0; i < allStatuses.size(); i++) {
-                                int statusNumber = Integer.parseInt(allStatuses.get(i).getValue());
-                                if ((statusNumber >= IssueUtilities.STATUS_ASSIGNED && statusNumber < IssueUtilities.STATUS_RESOLVED) || statusNumber >= IssueUtilities.STATUS_CLOSED) {
-                                    statusList.add(allStatuses.get(i));
-                                }
-                            }
-                        } else {
-                            // Can't change
-                        }
-
-                    }
-
-                    List<NameValuePair> statuses;
-                    statuses = statusList;
-                    listOptions.put(IssueUtilities.FIELD_STATUS, statuses);
-
-                    List<NameValuePair> severities = IssueUtilities.getSeverities(currLocale);
-                    listOptions.put(IssueUtilities.FIELD_SEVERITY, severities);
-
-                    List<NameValuePair> resolutions = IssueUtilities.getResolutions(currLocale);
-                    listOptions.put(IssueUtilities.FIELD_RESOLUTION, resolutions);
-
-                    List<Component> components = project.getComponents();
-//                    Collections.sort(components, new Component());
-                    listOptions.put(IssueUtilities.FIELD_COMPONENTS, Convert.componentsToNameValuePairs(components));
-
-                    List<Version> versions = project.getVersions();
-//                    Collections.sort(versions, new Version());
-                    listOptions.put(IssueUtilities.FIELD_VERSIONS, Convert.versionsToNameValuePairs(versions));
-                    listOptions.put(IssueUtilities.FIELD_TARGET_VERSION, Convert.versionsToNameValuePairs(versions));
-
-
-                    List<CustomField> projectFields = project.getCustomFields();
-                    for (int i = 0; i < projectFields.size(); i++) {
-                        if (projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
-                            projectFields.get(i).setLabels(currLocale);
-                            listOptions.put(projectFields.get(i).getId(), Convert.customFieldOptionsToNameValuePairs(projectFields.get(i).getOptions()));
-                        }
-                    }
-
-                    IssueForm issueForm = (IssueForm) form;
-                    if (issueForm == null) {
-                        issueForm = new IssueForm();
-                    }
-
-                    issueForm.setId(issue.getId());
-                    issueForm.setProjectId(issue.getProject().getId());
-                    issueForm.setPrevStatus(issue.getStatus());
-                    issueForm.setCaller(request.getParameter("caller"));
-
-                    issueForm.setDescription(HTMLUtilities.handleQuotes(issue.getDescription()));
-                    issueForm.setStatus(issue.getStatus());
-
-                    if (!ProjectUtilities.hasOption(ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS, project.getOptions())) {
-                        try {
-                            issue.setResolution(IssueUtilities.checkResolutionName(issue.getResolution(), currLocale));
-                        } catch (MissingResourceException mre) {
-                            log.error(mre.getMessage());
-                        } catch (NumberFormatException nfe) {
-                            log.error(nfe.getMessage());
-                        }
-                    }
-
-                    issueForm.setResolution(HTMLUtilities.handleQuotes(issue.getResolution()));
-                    issueForm.setSeverity(issue.getSeverity());
-
-                    issueForm.setTargetVersion(issue.getTargetVersion() == null
-                            ? -1 : issue.getTargetVersion().getId());
-
-                    issueForm.setOwnerId((issue.getOwner() == null ? -1 : issue.getOwner().getId()));
-
-                    List<IssueField> fields = issue.getFields();
-                    HashMap<String, String> customFields = new HashMap<String, String>();
-                    for (int i = 0; i < fields.size(); i++) {
-                        customFields.put(fields.get(i).getCustomField().getId().toString(), fields.get(i).getValue(currLocale));
-                    }
-
-                    issueForm.setCustomFields(customFields);
-
-                    HashSet selectedComponents = issueService.getIssueComponentIds(issueId);
-                    if (selectedComponents != null) {
-                        Integer[] componentIds = new Integer[selectedComponents.size()];
-                        int i = 0;
-                        for (Iterator iter = selectedComponents.iterator(); iter.hasNext(); i++) {
-                            componentIds[i] = (Integer) iter.next();
-                        }
-                        issueForm.setComponents(componentIds);
-                    }
-
-                    HashSet selectedVersions = issueService.getIssueVersionIds(issueId);
-                    if (selectedVersions != null) {
-                        Integer[] versionIds = new Integer[selectedVersions.size()];
-                        int i = 0;
-                        for (Iterator iter = selectedVersions.iterator(); iter.hasNext(); i++) {
-                            versionIds[i] = (Integer) iter.next();
-                        }
-                        issueForm.setVersions(versionIds);
-                    }
-
-                    List<ProjectScript> scripts = project.getScripts();
-                    WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors, issueForm);
-                    WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, null, errors, issueForm);
-
-                    if (errors == null || errors.isEmpty()) {
-
-                        log.debug("Forwarding to edit issue form for issue " + issue.getId());
-
-                        request.setAttribute("issueForm", issueForm);
-
-                        // TODO: Sort attachments
-                        // Collections.sort(attachments, IssueAttachment.CREATE_DATE_COMPARATOR);
-
-                        request.setAttribute(Constants.ISSUE_KEY, issue);
-                        session.setAttribute(Constants.LIST_OPTIONS_KEY, listOptions);
-
-                        request.setAttribute("fieldSeverity", WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_SEVERITY));
-                        request.setAttribute("possibleOwners", WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_OWNER));
-                        request.setAttribute("hasNoViewAttachmentOption", ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, issue.getProject().getOptions()));
-
-                        List<IssueHistory> issueHistory = issueService.getIssueHistory(issue.getId());
-                        Collections.sort(issueHistory, IssueHistory.CREATE_DATE_COMPARATOR);
-
-                        request.setAttribute("issueHistory", issueHistory);
-
-                        List<Notification> notifications = issueService.getIssueNotifications(issue.getId());
-                        Collections.sort(notifications, Notification.TYPE_COMPARATOR);
-
-                        request.setAttribute("notifications", notifications);
-
-                        saveToken(request);
-
-                        log.info("EditIssueFormAction: Forward: InputForward");
-
-                        return mapping.getInputForward();
-                    }
-
+                    log.info("EditIssueFormAction: Forward: InputForward");
+                    
+                    return mapping.getInputForward();
                 }
 
             }

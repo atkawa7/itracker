@@ -35,15 +35,20 @@ import org.apache.struts.upload.FormFile;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
+import org.itracker.model.NameValuePair;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.Status;
+import org.itracker.model.User;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.exceptions.IssueException;
+import org.itracker.services.exceptions.WorkflowException;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.WorkflowUtilities;
+import org.itracker.web.actions.project.EditIssueFormAction;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.RequestHelper;
 
 
 
@@ -243,88 +248,89 @@ public class IssueForm extends ITrackerForm  {
         ActionErrors errors = super.validate(mapping, request);
         
         if (log.isDebugEnabled()) {
-        	log.debug("validate called: maping: " + mapping + ", request: " + request + ", errors: " + errors);
+        	log.debug("validate called: mapping: " + mapping + ", request: " + request + ", errors: " + errors);
         }
         
-        try {
-            Project project = null;
-            Integer projectId = getProjectId();
-            if(projectId == null) {
-            	if (log.isDebugEnabled()) {
-            		log.debug("validate: trying to get project from issue-id " + getId());
-            	}
-                Issue issue = getITrackerServices().getIssueService().getIssue(getId());
-                if (issue != null && issue.getProject() != null) {
-                	 
-                	projectId = issue.getProject().getId();
-                	if (log.isDebugEnabled()) {
-                		log.debug("validate: got projectId: " + projectId);
-                	}
-                }
-            
-            }
 
-            if (null == projectId) {
-                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-            }
-            // check who should deliver ph to the form
-            ProjectService projectService = getITrackerServices().getProjectService();
-            project = projectService.getProject(projectId);
-            
-            
-            if(errors.isEmpty() && project == null) {
-                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-            } else if(errors.isEmpty() && project.getStatus() != Status.ACTIVE) {
-                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
-            } else if(errors.isEmpty()) {
-                Locale currLocale = ITrackerResources.getLocale();
-                
-                request.setAttribute(Constants.PROJECT_KEY, project);
-                
-                List<CustomField> projectFields = project.getCustomFields();
-                if(projectFields.size() > 0) {
-                    HttpSession session = request.getSession();
-                    if(session != null) {
-                        currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
-                    }
-                    
-                    ResourceBundle bundle = ITrackerResources.getBundle(currLocale);
-                    
-                    for(int i = 0; i < projectFields.size(); i++) {
-                        CustomField customField = projectFields.get(i);
-                        
-                        String fieldValue = request.getParameter("customFields(" + customField.getId() +")");
-                        if(fieldValue != null && ! fieldValue.equals("")) {
-                            
-                            // Don't create an IssueField only so that we can call 
-                            // setValue to validate the value! 
-                            //IssueField issueField = new IssueField(projectFields.get(i));
-                            try {
-                            //    issueField.setValue(fieldValue, currLocale);
-                                customField.checkAssignable(fieldValue, currLocale, bundle);
-                            } catch(IssueException ie) {
-                                String label = CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId(), currLocale);
-                                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(ie.getType(), label));
-                            }
-                        } else if(projectFields.get(i).isRequired()) {
-                            String label = CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId(), currLocale);
-                            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(IssueException.TYPE_CF_REQ_FIELD, label));
-                        }
-                    }
-                }
-                
-                List<ProjectScript> scripts = project.getScripts();
-                WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONVALIDATE, null, errors, this);
-            }
+        try {
+        	if (null != getId()) {
+	            Issue issue = getITrackerServices().getIssueService().getIssue(getId());
+	            
+	            Locale currLocale = (Locale) request.getSession().getAttribute(Constants.LOCALE_KEY);
+                User currUser = (User) request.getSession().getAttribute(Constants.USER_KEY);
+                List<NameValuePair> ownersList = EditIssueFormAction.GetIssuePossibleOwnersList(issue, issue.getProject(), currUser, currLocale, 
+						getITrackerServices().getIssueService(),
+						getITrackerServices().getUserService(), RequestHelper.getUserPermissions(request.getSession()));
+	            
+	            EditIssueFormAction.setupJspEnv(mapping, this, request, issue,
+						getITrackerServices().getIssueService(),
+						getITrackerServices().getUserService(), RequestHelper
+								.getUserPermissions(request.getSession()), 
+								EditIssueFormAction.getListOptions(request, issue, ownersList, RequestHelper.getUserPermissions(request.getSession()), issue.getProject(), currUser), errors);
+	            
+	            
+	            if(errors.isEmpty() && issue.getProject() == null) {
+	                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
+	            } else if(errors.isEmpty() && issue.getProject().getStatus() != Status.ACTIVE) {
+	                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
+	            } else if(errors.isEmpty()) {
+	                
+	                
+	            	validateProjectFields(issue, request, errors);
+	                validateProjectScripts(issue, errors);
+	            }
+        	}
         } catch(Exception e) {
             e.printStackTrace();
+            log.error("validate: unexpected exception", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
-        IssueService issueService = getITrackerServices().getIssueService();
-        request.setAttribute("ih",issueService);
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
         	log.debug("validate: returning errors: " + errors);
+        }
         return errors;
+    }
+    
+    private static void validateProjectFields(Issue issue, HttpServletRequest request, ActionErrors errors) {
+        List<CustomField> projectFields = issue.getProject().getCustomFields();
+        if(projectFields.size() > 0) {
+            HttpSession session = request.getSession();
+
+            Locale currLocale = ITrackerResources.getLocale();
+            if(session != null) {
+                currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+            }
+            
+            ResourceBundle bundle = ITrackerResources.getBundle(currLocale);
+            
+            for(int i = 0; i < projectFields.size(); i++) {
+                CustomField customField = projectFields.get(i);
+                
+                String fieldValue = request.getParameter("customFields(" + customField.getId() +")");
+                if(fieldValue != null && ! fieldValue.equals("")) {
+                    
+                    // Don't create an IssueField only so that we can call 
+                    // setValue to validate the value! 
+                    //IssueField issueField = new IssueField(projectFields.get(i));
+                    try {
+                    //    issueField.setValue(fieldValue, currLocale);
+                        customField.checkAssignable(fieldValue, currLocale, bundle);
+                    } catch(IssueException ie) {
+                        String label = CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId(), currLocale);
+                        errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(ie.getType(), label));
+                    }
+                } else if(projectFields.get(i).isRequired()) {
+                    String label = CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId(), currLocale);
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(IssueException.TYPE_CF_REQ_FIELD, label));
+                }
+            }
+        }
+    }
+    
+    private void validateProjectScripts(Issue issue, ActionErrors errors) throws WorkflowException {
+
+        List<ProjectScript> scripts = issue.getProject().getScripts();
+        WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONVALIDATE, null, errors, this);
     }
     
 }
