@@ -335,6 +335,10 @@ public class ITrackerResources {
     }
 
     public static String escapeUnicodeString(String str, boolean escapeAll) {
+    	if(str == null) {
+    		return "";
+    	}
+    	
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
