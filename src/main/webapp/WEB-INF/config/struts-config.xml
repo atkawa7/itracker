@@ -104,14 +104,13 @@
         
         
         <action path="/login" type="org.itracker.web.actions.user.LoginAction"
-                name="loginForm" scope="request" input="login">
-            <forward name="index" module="/" path="index" redirect="true"/>
+                name="loginForm" scope="request" input="/login.jsp">
+            <forward name="index" module="/" path="/index.jsp" redirect="true"/>
         </action>
 
         <action path="/forgotpassword" type="org.itracker.web.actions.user.ForgotPasswordAction"
-                name="forgotPasswordForm" scope="request" input="forgot_password"
+                name="forgotPasswordForm" scope="request" input="/forgot_password.jsp"
                 validate="true"/>
-
 
         <action path="/logoff" type="org.itracker.web.actions.user.LogoffAction"/>
 
