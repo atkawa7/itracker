@@ -87,6 +87,11 @@ public class IssueAttachmentDAOImpl extends BaseHibernateDAOImpl<IssueAttachment
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
+
+        if( count == null ) {
+            count = 0L;
+        }
+
         return count;
     }
 }
