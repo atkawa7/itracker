@@ -15,6 +15,7 @@ import org.itracker.persistence.dao.ProjectDAO;
 import org.itracker.persistence.dao.UserDAO;
 import org.itracker.persistence.dao.UserPreferencesDAO;
 import org.itracker.services.UserService;
+import org.itracker.services.util.UserUtilities;
 import org.itracker.services.exceptions.UserException;
 import org.junit.Test;
 
@@ -188,6 +189,18 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
         assertFalse(updatedUserPreferences.getSaveLogin());
 
     }
+
+    @Test
+    public void testAllowProfileUpdates() {
+
+        User user = userService.getUser(2);
+
+        boolean allowProfileUpdates = userService.allowProfileUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
+
+        assertTrue(allowProfileUpdates);
+
+    }
+
 
     @Override
     public void onSetUp() throws Exception {
