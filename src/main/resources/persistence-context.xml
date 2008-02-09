@@ -276,12 +276,9 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     </bean>
     
     <bean id="userPreferencesDAOTarget"
-        class="org.itracker.persistence.dao.UserPreferencesDAOImpl"
-        autowire="autodetect">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
-        <constructor-arg ref="userDAO" />
+          class="org.itracker.persistence.dao.UserPreferencesDAOImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="userDAO" ref="userDAO"/>
     </bean>
 
     <!-- The permission DAO -->

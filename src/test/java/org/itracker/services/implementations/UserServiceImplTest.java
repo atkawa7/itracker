@@ -9,9 +9,11 @@ import org.itracker.model.Issue;
 import org.itracker.model.Permission;
 import org.itracker.model.Project;
 import org.itracker.model.User;
+import org.itracker.model.UserPreferences;
 import org.itracker.persistence.dao.PermissionDAO;
 import org.itracker.persistence.dao.ProjectDAO;
 import org.itracker.persistence.dao.UserDAO;
+import org.itracker.persistence.dao.UserPreferencesDAO;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.UserException;
 import org.junit.Test;
@@ -23,6 +25,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     private UserDAO userDAO;
     @SuppressWarnings("unused")
     private PermissionDAO permissionDAO;
+    private UserPreferencesDAO userPreferencesDAO;
 
     @Test
     public void getSuperUsers() {
@@ -30,8 +33,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
         List<User> users = userService.getSuperUsers();
 
         assertNotNull(users);
-
-        assertUsersEqual(users, 2, "admin_test1");
+        assertEquals(1, users.size());
 
     }
 
@@ -172,28 +174,33 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
         assertNotNull(users);
     }
 
+    @Test
+    public void testUpdateUserPreferences() throws UserException {
 
-    private void assertUsersEqual(List<User> users,
-                                  Integer userID,
-                                  String login) {
-        for (User user : users) {
-            assertEquals(userID, user.getId());
-            assertEquals(login, user.getLogin());
-        }
+        UserPreferences userPreferences = userPreferencesDAO.findByUserId(2);
+
+        UserPreferences updatedUserPreferences = userService.updateUserPreferences(userPreferences);
+
+        assertNotNull(updatedUserPreferences);
+
     }
 
     @Override
     public void onSetUp() throws Exception {
+
         super.onSetUp();
+
         userService = (UserService) applicationContext.getBean("userService");
+        userPreferencesDAO = (UserPreferencesDAO) applicationContext.getBean("userPreferencesDAO");
         projectDAO = (ProjectDAO) applicationContext.getBean("projectDAO");
         userDAO = (UserDAO) applicationContext.getBean("userDAO");
-        permissionDAO =
-                (PermissionDAO) applicationContext.getBean("permissionDAO");
+        permissionDAO = (PermissionDAO) applicationContext.getBean("permissionDAO");
+
     }
 
     protected String[] getDataSetFiles() {
         return new String[]{
+                "dataset/userpreferencesbean_dataset.xml",
                 "dataset/userbean_dataset.xml",
                 "dataset/projectbean_dataset.xml",
                 "dataset/permissionbean_dataset.xml"

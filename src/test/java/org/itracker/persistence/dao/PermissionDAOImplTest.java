@@ -74,7 +74,9 @@ public class PermissionDAOImplTest extends AbstractDependencyInjectionTest {
 	}
 
 	protected String[] getDataSetFiles() {
-		return new String[] { "dataset/userbean_dataset.xml",
+		return new String[] {
+                "dataset/userpreferencesbean_dataset.xml",
+                "dataset/userbean_dataset.xml",
 				"dataset/projectbean_dataset.xml",
 				"dataset/permissionbean_dataset.xml" };
 	}

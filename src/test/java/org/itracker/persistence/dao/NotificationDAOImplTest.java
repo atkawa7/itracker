@@ -44,6 +44,7 @@ public class NotificationDAOImplTest extends AbstractDependencyInjectionTest {
 
     protected String[] getDataSetFiles() {
         return new String[]{
+                "dataset/userpreferencesbean_dataset.xml",
                 "dataset/userbean_dataset.xml",
                 "dataset/projectbean_dataset.xml",
                 "dataset/versionbean_dataset.xml",

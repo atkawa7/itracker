@@ -45,11 +45,12 @@
         <property name="registrationType">
             <column name="registration_type" not-null="true"/>
         </property>
-        
-        <many-to-one name="preferences" class="UserPreferences">
-            <column name="preferences_id"/>
-        </many-to-one>
-        
+
+        <many-to-one name="preferences" class="UserPreferences"
+                column="preferences_id"
+                cascade="save-update"
+                unique="true"/>
+
         <bag name="permissions" table="Permission" cascade="all" lazy="true">
             <key>
                 <column name="user_id"/>

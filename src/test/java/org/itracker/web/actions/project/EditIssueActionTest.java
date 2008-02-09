@@ -13,7 +13,6 @@ import org.itracker.web.util.Constants;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockHttpSession;
 
 import javax.servlet.http.HttpSession;
 import java.util.Set;
@@ -75,6 +74,7 @@ public class EditIssueActionTest extends AbstractDependencyInjectionTest {
 
     protected String[] getDataSetFiles() {
         return new String[]{
+                "dataset/userpreferencesbean_dataset.xml",
                 "dataset/userbean_dataset.xml",
                 "dataset/projectbean_dataset.xml",
                 "dataset/versionbean_dataset.xml",
