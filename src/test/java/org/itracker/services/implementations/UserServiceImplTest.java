@@ -178,10 +178,14 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     public void testUpdateUserPreferences() throws UserException {
 
         UserPreferences userPreferences = userPreferencesDAO.findByUserId(2);
+        assertTrue(userPreferences.getSaveLogin());
+
+        userPreferences.setSaveLogin(false);
 
         UserPreferences updatedUserPreferences = userService.updateUserPreferences(userPreferences);
 
         assertNotNull(updatedUserPreferences);
+        assertFalse(updatedUserPreferences.getSaveLogin());
 
     }
 
