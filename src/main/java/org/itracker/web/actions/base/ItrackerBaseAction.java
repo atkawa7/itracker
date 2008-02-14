@@ -19,6 +19,8 @@
 package org.itracker.web.actions.base;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -177,10 +179,20 @@ public abstract class ItrackerBaseAction extends Action {
         }
         return true;
     }
-    
+    /**
+     * 
+     * @param request - request for base-url
+     * @return normalized base-url for the request
+     */
     public String getBaseURL(HttpServletRequest request) {
-        return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-        + request.getContextPath();
+    	String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+		+ request.getContextPath();
+        try {
+			return new URL(url).toString();
+		} catch (MalformedURLException e) {
+			log.error("failed to get URL normalized, returning manual url: " + url);
+		}
+		return url;
     }
     
     protected ITrackerServices getITrackerServices() {
