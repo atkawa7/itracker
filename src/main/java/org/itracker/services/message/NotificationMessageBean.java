@@ -36,14 +36,24 @@ import org.itracker.model.IssueHistory;
 import org.itracker.model.Notification;
 import org.itracker.model.Version;
 import org.itracker.services.ConfigurationService;
+import org.itracker.services.ITrackerServices;
 import org.itracker.services.IssueService;
+import org.itracker.services.implementations.ITrackerServicesImpl;
 import org.itracker.services.implementations.IssueServiceImpl;
 import org.itracker.services.util.EmailService;
 import org.itracker.services.util.HTMLUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NotificationUtilities;
 import org.itracker.services.util.ProjectUtilities;
+import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.ServletContextUtils;
 
+/**
+ * @deprecated this was used only in jms queue notifications implementation. functionality moved to NotificationService
+ * 
+ * @author ranks
+ *
+ */
 public class NotificationMessageBean implements MessageListener {
 
 	public static final String DEFAULT_CONNECTION_FACTORY = "jms/QueueConnectionFactory";
@@ -146,9 +156,7 @@ public class NotificationMessageBean implements MessageListener {
 					lastModifiedDays = new Integer(
 							org.itracker.web.scheduler.tasks.ReminderNotification.DEFAULT_ISSUE_AGE);
 				}
-
-				IssueService issueService = new IssueServiceImpl(null, null,
-						null, null, null, null, null, null, null, null);
+				IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
 				if (addresses == null) {
 					addresses = new HashSet<String>();
 					notifications = issueService.getIssueNotifications(issueId);

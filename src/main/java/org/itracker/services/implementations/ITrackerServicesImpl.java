@@ -3,6 +3,7 @@ package org.itracker.services.implementations;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ITrackerServices;
 import org.itracker.services.IssueService;
+import org.itracker.services.NotificationService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.ReportService;
 import org.itracker.services.UserService;
@@ -26,19 +27,21 @@ public class ITrackerServicesImpl implements ITrackerServices {
     private ConfigurationService configurationService;    
     private ReportService reportService;
     private EmailService emailService;
+    private NotificationService notificationService;
     
     // Factories
            
 	public ITrackerServicesImpl(IssueService issueService,
 			UserService userService, ProjectService projectService,
 			ConfigurationService configurationService,
-			ReportService reportService, EmailService emailService) {
+			ReportService reportService, NotificationService notificationService, EmailService emailService) {
 		super();
 		this.issueService = issueService;
 		this.userService = userService;
 		this.projectService = projectService;
 		this.configurationService = configurationService;
 		this.reportService = reportService;
+		this.notificationService = notificationService;
 		this.emailService = emailService;
 	}      
     
@@ -64,5 +67,10 @@ public class ITrackerServicesImpl implements ITrackerServices {
 
     public EmailService getEmailService() {
         return emailService;
-    }  
+    }
+
+	public NotificationService getNotificationService() {
+
+		return this.notificationService;
+	}  
 }

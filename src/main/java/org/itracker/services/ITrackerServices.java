@@ -24,4 +24,5 @@ public interface ITrackerServices {
 
 	EmailService getEmailService();
 
+	NotificationService getNotificationService();
 }
