@@ -168,7 +168,7 @@
 
               for(int i = 0; i < projects.size(); i++) {
           %>
-                  <tr align="left" class="listRowShaded"><td colspan="8"><it:message key="itracker.web.attr.project"/> <%= projects.get(i).getName() %></td></tr>
+                  <tr align="left" class="listRowShaded"><td colspan="8"><input title="toggle all" type="checkbox" onchange="toggleProjectPermissionsChecked(this)" name="Proj<%= projects.get(i).getId() %>"/>&nbsp;<it:message key="itracker.web.attr.project"/> <%= projects.get(i).getName() %></td></tr>
                   <tr align="right" class="listRowUnshaded">
                   <%
                         java.util.HashMap projectPermissions = (java.util.HashMap) userPermissions.get(projects.get(i).getId());

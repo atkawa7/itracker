@@ -27,6 +27,7 @@
 
 <html:javascript formName="displayReportForm"/>
 
+
 <logic:messagesPresent>
   <center>
     <span class="formError">
@@ -46,7 +47,7 @@
     <td class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.projects"/>:</td>
   </tr>
   <tr align="left" class="listHeading">
-    <td></td>
+    <td><input type="checkbox" name="checkAll" value="false" onchange="toggleChecked(this, 'projectIds')" title="toggle select all" /></td>
     <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4"/></td>
     <td><it:message key="itracker.web.attr.name"/></td>
     <td><it:message key="itracker.web.attr.description"/></td>
@@ -88,7 +89,7 @@
           <td></td>
           <td><%= currentProject.getName() %></td>
           <td><%= currentProject.getDescription() %></td>
-          <td align="left"><%= totalIssueCount %></td>
+          <td><%= totalIssueCount %></td>
           <td><it:formatDate date="<%= newestIssueDate %>" emptyKey="itracker.web.generic.notapplicable"/></td>
         </tr>
 <%
