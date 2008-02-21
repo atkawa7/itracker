@@ -56,7 +56,9 @@ import org.itracker.model.ProjectScript;
 import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.Version;
+import org.itracker.model.Notification.Type;
 import org.itracker.services.IssueService;
+import org.itracker.services.NotificationService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NotificationUtilities;
@@ -102,7 +104,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 
         try {
             IssueService issueService = getITrackerServices().getIssueService();
-
+            NotificationService notificationService = getITrackerServices().getNotificationService();
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
             Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
@@ -149,8 +151,12 @@ public class EditIssueAction extends ItrackerBaseAction {
             } else {
                 processLimitedEdit(issue, project, currUser, userPermissions, currLocale, issueForm, issueService);
             }
+            
+            if (log.isDebugEnabled()) {
+            	log.debug("execute: sending notification");
+            }
 
-            sendNotification(issue, previousStatus, getBaseURL(request), issueService);
+            sendNotification(issue, previousStatus, getBaseURL(request), notificationService);
             session.removeAttribute(Constants.ISSUE_KEY);
 
             WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, null, errors, (ValidatorForm) form);
@@ -499,15 +505,23 @@ public class EditIssueAction extends ItrackerBaseAction {
     private void sendNotification(Issue issue,
                                   int previousStatus,
                                   String baseURL,
-                                  IssueService issueService) {
+                                  NotificationService notificationService) {
 
-        int notificationType = NotificationUtilities.TYPE_UPDATED;
+    	Type notificationType = Type.UPDATED;
+        //int notificationType = NotificationUtilities.TYPE_UPDATED;
 
         if (previousStatus >= IssueUtilities.STATUS_CLOSED && issue.getStatus() >= IssueUtilities.STATUS_CLOSED) {
-            notificationType = NotificationUtilities.TYPE_CLOSED;
+            notificationType = Type.CLOSED;
         }
 
-        issueService.sendNotification(issue.getId(), notificationType, baseURL);
+        if (log.isDebugEnabled()) {
+        	log.debug("notificationService: before send");
+        }
+        notificationService.sendNotification(issue, notificationType, baseURL);
+
+        if (log.isDebugEnabled()) {
+        	log.debug("notificationService: after send");
+        }
     }
 
     private ActionForward getReturnForward(Issue issue,

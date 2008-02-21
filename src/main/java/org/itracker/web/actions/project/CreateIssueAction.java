@@ -55,10 +55,11 @@ import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.Status;
 import org.itracker.model.User;
+import org.itracker.model.Notification.Type;
 import org.itracker.services.IssueService;
+import org.itracker.services.NotificationService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.NotificationUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.services.util.WorkflowUtilities;
@@ -93,6 +94,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
         
         try {
             IssueService issueService = getITrackerServices().getIssueService();
+            NotificationService notificationService = getITrackerServices().getNotificationService();
             ProjectService projectService = getITrackerServices().getProjectService();
             
             HttpSession session = request.getSession(true);
@@ -258,7 +260,8 @@ public class CreateIssueAction extends ItrackerBaseAction {
                         log.debug("Exception adding new issue relation.", e);
                     }
                     
-                    issueService.sendNotification(issue.getId(), NotificationUtilities.TYPE_CREATED, getBaseURL(request));
+                    notificationService.sendNotification(issue, Type.CREATED, getBaseURL(request));
+                 //   issueService.sendNotification(issue.getId(), NotificationUtilities.TYPE_CREATED, getBaseURL(request));
                 }
                 session.removeAttribute(Constants.PROJECT_KEY);
                 
