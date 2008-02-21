@@ -22,255 +22,296 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
+import org.apache.log4j.Logger;
 import org.itracker.services.util.UserUtilities;
 
 /**
- * A user. 
+ * A user.
  * 
  * @author ready
  */
 public class User extends AbstractEntity implements Comparable<User> {
 
-    public static final Comparator<User> NAME_COMPARATOR = 
-            new NameComparator();
-    
-    private String login;
-    
-    private String password;
-    
-    private String firstName;
-    
-    private String lastName;
-    
-    private String email;
-    
-    private int status;
-    
-    private boolean superUser;
-    
-    private int registrationType;
-    
-    /** The system configuration for this User. */
-    private UserPreferences preferences;
-    
-    /** The Permissions of this User on all Projects.  */
-    private List<Permission> permissions = new ArrayList<Permission>();
-    
-    /** The Projects owned by this User. */
-    private List<Project> projects = new ArrayList<Project>();
-    
-    /* This class used to have an <code>activities</code> attribute, which was 
-     * a Collection<IssueActivity>. This has been removed because the association 
-     * User - IssueActivity doesn't need to be navigatable in this direction. 
-     */
-    
-    /* This class used to have a <code>notifications</code> attribute, which was 
-     * a Collection<Notification>. This has been removed because the association 
-     * User - Notification doesn't need to be navigatable in this direction. 
-     */
-    
-    /* This class used to have an <code>attachments</code> attribute, which was 
-     * a Collection<IssueAttachment>. This has been removed because the association 
-     * User - IssueAttachment doesn't need to be navigatable in this direction. 
-     */
-    
-    /* This class used to have a <code>history</code> attribute, which was 
-     * a Collection<IssueHistory>. This has been removed because the association 
-     * User - IssueHistory doesn't need to be navigatable in this direction. 
-     */
-    
-    
-    /**
-     * Default constructor (required by Hibernate). 
-     * 
-     * <p>PENDING: should be <code>private</code> so that it can only be used
-     * by Hibernate, to ensure that the fields which form an instance's 
-     * identity are always initialized/never <tt>null</tt>. </p>
-     */
-    public User() {
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final Logger log = Logger.getLogger(User.class);
+	public static final Comparator<User> NAME_COMPARATOR = new NameComparator();
 
-    public User(String login) {
-        setLogin(login);
-    }
-    
-    public User(String login, String password, String firstName, String lastName, String email, boolean superUser) {
-        this(login, password, firstName, lastName, email, UserUtilities.REGISTRATION_TYPE_ADMIN, superUser);
-    }
+	private String login;
 
-    public User(String login, String password, String firstName, String lastName, String email, int registrationType, boolean superUser) {
-        this(login);
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.registrationType = registrationType;
-        setSuperUser(superUser);
-    }
+	private String password;
 
-    public String getLogin() {
-        return login;
-    }
+	private String firstName;
 
-    public void setLogin(String login) {
-        if (login == null) {
-            throw new IllegalArgumentException("null login");
-        }
-        this.login = login;
-    }
+	private String lastName;
 
-    public String getPassword() {
-        return password;
-    }
+	private String email;
 
-    public void setPassword(String value) {
-        this.password = value;
-    }
+	private int status;
 
-    public String getFirstName() {
-        return firstName;
-    }
+	private boolean superUser;
 
-    public void setFirstName(String value) {
-        firstName = value;
-    }
+	private int registrationType;
 
-    public String getLastName() {
-        return lastName;
-    }
+	/** The system configuration for this User. */
+	private UserPreferences preferences;
 
-    public void setLastName(String value) {
-        this.lastName = value;
-    }
-    
-    public String getEmail() {
-        return email;
-    }
+	/** The Permissions of this User on all Projects. */
+	private List<Permission> permissions = new ArrayList<Permission>();
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	/** The Projects owned by this User. */
+	private List<Project> projects = new ArrayList<Project>();
 
-    public List<Permission> getPermissions() {
-        return permissions;
-    }
+	/*
+	 * This class used to have an <code>activities</code> attribute, which was
+	 * a Collection<IssueActivity>. This has been removed because the
+	 * association User - IssueActivity doesn't need to be navigatable in this
+	 * direction.
+	 */
 
-    public void setPermissions(List<Permission> getPermissions) {
-        this.permissions = getPermissions;
-    }
+	/*
+	 * This class used to have a <code>notifications</code> attribute, which
+	 * was a Collection<Notification>. This has been removed because the
+	 * association User - Notification doesn't need to be navigatable in this
+	 * direction.
+	 */
 
-    public UserPreferences getPreferences() {
-        return preferences;
-    }
+	/*
+	 * This class used to have an <code>attachments</code> attribute, which
+	 * was a Collection<IssueAttachment>. This has been removed because the
+	 * association User - IssueAttachment doesn't need to be navigatable in this
+	 * direction.
+	 */
 
-    public void setPreferences(UserPreferences getPreferences) {
-        this.preferences = getPreferences;
-    }
+	/*
+	 * This class used to have a <code>history</code> attribute, which was a
+	 * Collection<IssueHistory>. This has been removed because the association
+	 * User - IssueHistory doesn't need to be navigatable in this direction.
+	 */
 
-    public int getRegistrationType() {
-        return registrationType;
-    }
+	/**
+	 * Default constructor (required by Hibernate).
+	 * 
+	 * <p>
+	 * PENDING: should be <code>private</code> so that it can only be used by
+	 * Hibernate, to ensure that the fields which form an instance's identity
+	 * are always initialized/never <tt>null</tt>.
+	 * </p>
+	 */
+	public User() {
+	}
 
-    public void setRegistrationType(int registrationType) {
-        this.registrationType = registrationType;
-    }
+	public User(String login) {
+		setLogin(login);
+	}
 
-    public int getStatus() {
-        return status;
-    }
+	public User(String login, String password, String firstName,
+			String lastName, String email, boolean superUser) {
+		this(login, password, firstName, lastName, email,
+				UserUtilities.REGISTRATION_TYPE_ADMIN, superUser);
+	}
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
+	public User(String login, String password, String firstName,
+			String lastName, String email, int registrationType,
+			boolean superUser) {
+		this(login);
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.registrationType = registrationType;
+		setSuperUser(superUser);
+	}
 
-    public boolean isSuperUser() {
-        return superUser;
-    }
-    
-    public void setSuperUser(boolean superUser) {
-        this.superUser = superUser;
-    }
-    
-    public String getFirstInitial() {
-        return (getFirstName().length() > 0 ? getFirstName().substring(0,1).toUpperCase() + "." : "");
-    }
-    
-    public boolean hasRequiredData() {
-        return hasRequiredData(true);
-    }
+	public String getLogin() {
+		return login;
+	}
 
-    public boolean hasRequiredData(boolean passwordRequired) {
-        if(this.getLogin() == null || this.getLogin().equals("") ||
-           this.getFirstName() == null || this.getFirstName().equals("") ||
-           this.getLastName() == null || this.getLastName().equals("") ||
-           this.getEmail() == null || this.getEmail().equals("")) {
-            return false;
-        }
-        if(passwordRequired && (this.getPassword() == null || this.getPassword().equals(""))) {
-            return false;
-        }
-        return true;
-    }
-    
-    public List<Project> getProjects() {
-        return projects;
-    }
-    
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        
-        if (obj instanceof User) {
-            final User other = (User)obj;
-            
-            return this.login.equals(other.login);
-        }
-        return false;
-    }
-    
-    @Override
-    public int hashCode() {
-        return this.login.hashCode();
-    }
-    
-    @Override
-    public String toString() {
-        return "User [id=" + this.id 
-            + ", login=" + this.login + "]";
-    }
-    
-    public int compareTo(User other) {
-        return this.login.compareTo(other.login);
-    }
+	public void setLogin(String login) {
+		if (login == null) {
+			throw new IllegalArgumentException("null login");
+		}
+		this.login = login;
+	}
 
-    /**
-     * Compares 2 users by last and first name. 
-     */
-    private static class NameComparator implements Comparator<User> {
-        
-        public int compare(User a, User b) {
-            if (a.lastName == null && b.lastName == null) {
-                return 0;
-            } else if (a.lastName == null) {
-                return 1;
-            } else if (b.lastName == null) {
-                return -1;
-            }
+	public String getPassword() {
+		return password;
+	}
 
-            final int lastNameComparison = 
-                    a.lastName.compareTo(b.lastName);
-            
-            return (lastNameComparison == 0) 
-                ? a.firstName.compareTo(b.firstName)
-                : lastNameComparison;
-        }
-        
-    }
-    
+	public void setPassword(String value) {
+		this.password = value;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String value) {
+		firstName = value;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String value) {
+		this.lastName = value;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public InternetAddress getEmailAddress() {
+
+		if (null == getEmail() || getEmail().trim().length() == 0) {
+			log.warn("getEmailAddress: failed to get eMail for user " + getLogin() + " (" + getId() + ")");
+			return null;
+		}
+		try {
+			return new InternetAddress(getEmail(), getFirstName() + " "
+					+ getLastName());
+		} catch (Exception e) {
+			try {
+				return new InternetAddress(getEmail());
+			} catch (AddressException e1) {
+				log.error("getEmailAddress: failed to parse email '" + getEmail() + "' for user " + getLogin() + " (" + getId() + "), returning null", e1);
+				return null;
+			}
+		}
+
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public List<Permission> getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(List<Permission> getPermissions) {
+		this.permissions = getPermissions;
+	}
+
+	public UserPreferences getPreferences() {
+		return preferences;
+	}
+
+	public void setPreferences(UserPreferences getPreferences) {
+		this.preferences = getPreferences;
+	}
+
+	public int getRegistrationType() {
+		return registrationType;
+	}
+
+	public void setRegistrationType(int registrationType) {
+		this.registrationType = registrationType;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public boolean isSuperUser() {
+		return superUser;
+	}
+
+	public void setSuperUser(boolean superUser) {
+		this.superUser = superUser;
+	}
+
+	public String getFirstInitial() {
+		return (getFirstName().length() > 0 ? getFirstName().substring(0, 1)
+				.toUpperCase()
+				+ "." : "");
+	}
+
+	public boolean hasRequiredData() {
+		return hasRequiredData(true);
+	}
+
+	public boolean hasRequiredData(boolean passwordRequired) {
+		if (this.getLogin() == null || this.getLogin().equals("")
+				|| this.getFirstName() == null
+				|| this.getFirstName().equals("") || this.getLastName() == null
+				|| this.getLastName().equals("") || this.getEmail() == null
+				|| this.getEmail().equals("")) {
+			return false;
+		}
+		if (passwordRequired
+				&& (this.getPassword() == null || this.getPassword().equals(""))) {
+			return false;
+		}
+		return true;
+	}
+
+	public List<Project> getProjects() {
+		return projects;
+	}
+
+	public void setProjects(List<Project> projects) {
+		this.projects = projects;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (obj instanceof User) {
+			final User other = (User) obj;
+
+			return this.login.equals(other.login);
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return this.login.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + this.id + ", login=" + this.login + "]";
+	}
+
+	public int compareTo(User other) {
+		return this.login.compareTo(other.login);
+	}
+
+	/**
+	 * Compares 2 users by last and first name.
+	 */
+	private static class NameComparator implements Comparator<User> {
+
+		public int compare(User a, User b) {
+			if (a.lastName == null && b.lastName == null) {
+				return 0;
+			} else if (a.lastName == null) {
+				return 1;
+			} else if (b.lastName == null) {
+				return -1;
+			}
+
+			final int lastNameComparison = a.lastName.compareTo(b.lastName);
+
+			return (lastNameComparison == 0) ? a.firstName
+					.compareTo(b.firstName) : lastNameComparison;
+		}
+
+	}
+
 }
