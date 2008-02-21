@@ -29,9 +29,9 @@ import org.apache.log4j.Logger;
 import org.itracker.model.Issue;
 import org.itracker.model.Notification;
 import org.itracker.services.IssueService;
-import org.itracker.services.implementations.IssueServiceImpl;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NotificationUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 /**
   * This class can be used to send reminder emails to owners/admins
@@ -105,8 +105,7 @@ public class ReminderNotification extends BaseJob {
         logger.debug("Reminder Notifications being sent for project " + projectId + " with issues over " + issueAge + " days old with severity " + severity + ".  Base URL = " + baseURL);
 
         try {
-            IssueService issueService = new IssueServiceImpl(null, null, null, null, null, null, null, null, null, null);
-
+            IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
             GregorianCalendar cal = new GregorianCalendar();
             cal.add(Calendar.DAY_OF_MONTH, 0 - issueAge);
             Date oldDate = cal.getTime();
