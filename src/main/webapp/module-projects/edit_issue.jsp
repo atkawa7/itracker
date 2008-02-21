@@ -20,6 +20,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%
+	Logger log = Logger.getLogger(this.getClass());
+	log.debug("_jspService: got request: ih: " +request.getAttribute("ih") + ", currUser: " + request.getSession().getAttribute("currUser")
+			+ ", issue: " + request.getAttribute(Constants.ISSUE_KEY));
 // TODO here we stuck, e.g. when validation had an error
     IssueService ih = (IssueService) request.getAttribute("ih");
     User um = (User) request.getSession().getAttribute("currUser");
@@ -28,12 +31,16 @@
 
     Map<Integer, List<NameValuePair>> listOptions =
             RequestHelper.getListOptions(session);
+    
+    log.debug("_jspService: listOptions: " + listOptions);
     final Map<Integer, Set<PermissionType>> permissions =
             RequestHelper.getUserPermissions(session);
 
-    Project project = (currentIssue != null ? currentIssue.getProject() : null);
-
-    Integer issueId = currentIssue.getId();
+    log.debug("_jspService: permissions: " + permissions);
+    Project project = currentIssue.getProject();
+	
+    
+    
     Integer currUserId = um.getId();
     boolean hasFullEdit = UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
     String formName = "issueForm";
@@ -875,4 +882,5 @@
 </table>
 
 </html:form>
-<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
+<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body><%@page import="org.apache.log4j.Logger"%>
+</html>
