@@ -410,13 +410,20 @@ public class IssueServiceImpl implements IssueService {
 		return issue;
 	}
 
+	/**
+	 * 
+	 * TODO: improve this, verify how the update is done.. is there any reason to swap the issue-object?
+	 * 
+	 */
 	public Issue updateIssue(Issue issue, Integer userId) throws ProjectException {
 		String existingTargetVersion = null;
+		// TODO why is the issue replaced and retrieved from DB again?
 		Issue Updateissue = getIssueDAO().findByPrimaryKey(issue.getId());
 		User user = getUserDAO().findByPrimaryKey(userId);
 		if (Updateissue.getProject().getStatus() != Status.ACTIVE) {
 			throw new ProjectException("Project is not active.");
 		}
+		// TODO: ist there a more 'clean' way to check for description updated? Timestamp e.g.?
 		if (Updateissue.getDescription() != null && issue.getDescription() != null
 				&& !Updateissue.getDescription().equalsIgnoreCase(issue.getDescription())) {
 
@@ -428,7 +435,7 @@ public class IssueServiceImpl implements IssueService {
 			activity.setIssue(Updateissue);
 
 		}
-
+		// TODO: same here?
 		if (Updateissue.getResolution() != null && issue.getResolution() != null
 				&& !Updateissue.getResolution().equalsIgnoreCase(issue.getResolution())) {
 
