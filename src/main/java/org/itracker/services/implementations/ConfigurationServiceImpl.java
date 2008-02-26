@@ -103,18 +103,22 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 					&& jndiPropertiesOverridePrefix.length() > 0) {
 				ctx = NamingUtilites.getDefaultInitialContext();
 				ctx = (Context)NamingUtilites.lookup(ctx, jndiPropertiesOverridePrefix);
-				logger.info("<init>: override properties with jndi override prefix " + jndiPropertiesOverridePrefix);
-				
+
 
 			}
 		} catch (RuntimeException e) {
 			ctx = null;
 			logger.warn("<init>: failed to configure jndi_override_prefix", e);
 		} finally {
-			if (logger.isDebugEnabled()) {
-				logger.debug("<init>: context for jndi override prefix " + ctx);
-			}
 			jndiPropertiesOverride = ctx;
+			
+			logger.info("<init>: now overriding properties with jndi override prefix " + jndiPropertiesOverridePrefix + ", " + jndiPropertiesOverride);
+			
+			if (logger.isDebugEnabled()) {
+
+				logger.debug("<init>: context for jndi override prefix " + jndiPropertiesOverride);
+
+			}
 		}
         props.setProperty("start_time_millis", String.valueOf(_START_TIME_MILLIS));
         this.configurationDAO = configurationDAO;
@@ -131,19 +135,32 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     	if (null != jndiPropertiesOverride) {
 
 			if (logger.isDebugEnabled()) {
+
 				logger.debug("getProperty: looking up '" + name
-						+ "' from jndi "
-						+ jndiPropertiesOverride.toString());
+						+ "' from jndi context "
+						+ jndiPropertiesOverride);
+				
+
 			}
-
-			value = NamingUtilites.getStringValue(this.jndiPropertiesOverride,
-					name, null);
-
+			try {
+				value = NamingUtilites.getStringValue(this.jndiPropertiesOverride,
+						name, null);
+		    	if (null == value) {
+		    		if (logger.isDebugEnabled()) {
+		    			logger.debug("getProperty: value not found in jndi: " + name);
+		    		}	
+		    	}
+			} catch (Exception e) {
+				logger.error("getProperty: exception looking up value for " + name, e);
+			}
 
     	}
     	
     	if (null == value) {
     		value = props.getProperty(name, null);
+    	}
+    	if (logger.isDebugEnabled()) {
+    		logger.debug("getProperty: returning " + value + " for name: " + name);
     	}
     	return value;
     }
