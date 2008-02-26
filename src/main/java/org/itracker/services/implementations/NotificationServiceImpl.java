@@ -43,6 +43,7 @@ import org.itracker.model.Notification.Type;
 import org.itracker.persistence.dao.IssueActivityDAO;
 import org.itracker.persistence.dao.IssueDAO;
 import org.itracker.persistence.dao.NotificationDAO;
+import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.util.EmailService;
@@ -50,6 +51,7 @@ import org.itracker.services.util.HTMLUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 public class NotificationServiceImpl implements NotificationService {
 
@@ -164,216 +166,230 @@ public class NotificationServiceImpl implements NotificationService {
 		try {
 
 			if (logger.isDebugEnabled()) {
-				logger.debug("handleIssueNotification: called with issue: " + issue + ", type: " + type  + "url: " + url + ", receipients: " + (null == receipients? "<null>": String.valueOf(Arrays.asList(receipients))) + ", lastModifiedDays: " + lastModifiedDays);
+				logger.debug("handleIssueNotificationhandleIssueNotification: called with issue: " + issue + ", type: " + type  + "url: " + url + ", receipients: " + (null == receipients? "<null>": String.valueOf(Arrays.asList(receipients))) + ", lastModifiedDays: " + lastModifiedDays);
 			}
 			List<Notification> notifications;
 
-			if (issue != null) {
+			if (issue == null) {
+				logger.warn("handleIssueNotification: issue was null. Notification will not be handled");
+				return;
+			}
 
-				if (lastModifiedDays == null || lastModifiedDays.intValue() < 0) {
-					lastModifiedDays = new Integer(
-							org.itracker.web.scheduler.tasks.ReminderNotification.DEFAULT_ISSUE_AGE);
-				}
+			if (lastModifiedDays == null || lastModifiedDays.intValue() < 0) {
+				lastModifiedDays = new Integer(
+						org.itracker.web.scheduler.tasks.ReminderNotification.DEFAULT_ISSUE_AGE);
+			}
 
-				if (receipients == null) {
-					ArrayList<InternetAddress> recList = new ArrayList<InternetAddress>();
-					notifications = this.getIssueNotifications(issue);
-					Iterator<Notification> it = notifications.iterator();
-					User currentUser;
-					while (it.hasNext()) {
-						currentUser = it.next().getUser();
-						if (null != currentUser && null != currentUser.getEmailAddress() && null != currentUser.getEmail() 
-								&& (!recList.contains(currentUser.getEmailAddress())) 
-								&& currentUser.getEmail()
-										.indexOf('@') >= 0) {
-							
-							recList.add(currentUser.getEmailAddress());
-						}
-					}
-					receipients = recList.toArray(new InternetAddress[]{});
-				}
-
-				List<IssueActivity> activity = //issueService.getIssueActivity(
-						//issue.getId(), false);
-				issue.getActivities();
-				List<IssueHistory> histories = // issueService
-						//.getLastIssueHistory(issue.getId());
-					issue.getHistory();
-				Long changed = 0L;
-				Iterator<IssueHistory> it = histories.iterator();
-				IssueHistory history = null, currentHistory;
+			if (receipients == null) {
+				ArrayList<InternetAddress> recList = new ArrayList<InternetAddress>();
+				notifications = this.getIssueNotifications(issue);
+				Iterator<Notification> it = notifications.iterator();
+				User currentUser;
 				while (it.hasNext()) {
-					currentHistory = (IssueHistory) it.next();
-					if (currentHistory.getLastModifiedDate().getTime() > changed) {
-						changed = currentHistory.getLastModifiedDate().getTime();
-						history = currentHistory;
+					currentUser = it.next().getUser();
+					if (null != currentUser && null != currentUser.getEmailAddress() && null != currentUser.getEmail() 
+							&& (!recList.contains(currentUser.getEmailAddress())) 
+							&& currentUser.getEmail()
+									.indexOf('@') >= 0) {
+						
+						recList.add(currentUser.getEmailAddress());
 					}
 				}
-				
-				
-				List<Component> components = //issueService
-						//.getIssueComponents(issue.getId());
-					issue.getComponents();
-				List<Version> versions = //issueService.getIssueVersions(issue.getId());
-					issue.getVersions();
+				receipients = recList.toArray(new InternetAddress[]{});
+			}
 
-				if (receipients.length > 0) {
-					String subject = "";
-					if (type == Type.CREATED) {
-						subject = ITrackerResources.getString(
-								"itracker.email.issue.subject.created",
-								new Object[] { issue.getId(),
-										issue.getProject().getName(),
-										lastModifiedDays });
-					} else if (type == Type.ASSIGNED) {
-						subject = ITrackerResources.getString(
-								"itracker.email.issue.subject.assigned",
-								new Object[] { issue.getId(),
-										issue.getProject().getName(),
-										lastModifiedDays });
-					} else if (type == Type.CLOSED) {
-						subject = ITrackerResources.getString(
-								"itracker.email.issue.subject.closed",
-								new Object[] { issue.getId(),
-										issue.getProject().getName(),
-										lastModifiedDays });
-					} else if (type == Type.ISSUE_REMINDER) {
-						subject = ITrackerResources.getString(
-								"itracker.email.issue.subject.reminder",
-								new Object[] { issue.getId(),
-										issue.getProject().getName(),
-										lastModifiedDays });
-					} else {
-						subject = ITrackerResources.getString(
-								"itracker.email.issue.subject.updated",
-								new Object[] { issue.getId(),
-										issue.getProject().getName(),
-										lastModifiedDays });
-					}
-
-					String activityString = "";
-					String componentString = "";
-					String versionString = "";
-					for (int i = 0; i < activity.size(); i++) {
-						activityString += IssueUtilities
-								.getActivityName(activity.get(i).getType())
-								+ ": "
-								+ activity.get(i).getDescription()
-								+ "\n";
-					}
-					for (int i = 0; i < components.size(); i++) {
-						componentString += (i != 0 ? ", " : "")
-								+ components.get(i).getName();
-					}
-					for (int i = 0; i < versions.size(); i++) {
-						versionString += (i != 0 ? ", " : "")
-								+ versions.get(i).getNumber();
-					}
-
-					String msgText = "";
-					if (type == Type.ISSUE_REMINDER) {
-						msgText = ITrackerResources
-								.getString(
-										"itracker.email.issue.body.reminder",
-										new Object[] {
-												url + "/view_issue.jsp?id="
-														+ issue.getId(),
-												issue.getProject().getName(),
-												issue.getDescription(),
-												IssueUtilities
-														.getStatusName(issue
-																.getStatus()),
-												IssueUtilities
-														.getSeverityName(issue
-																.getSeverity()),
-												(issue.getOwner()
-														.getFirstName() != null ? issue
-														.getOwner()
-														.getFirstName()
-														: "")
-														+ " "
-														+ (issue.getOwner()
-																.getLastName() != null ? issue
-																.getOwner()
-																.getLastName()
-																: ""),
-												componentString,
-												(history == null ? "" : history
-														.getUser()
-														.getFirstName()
-														+ " "
-														+ history.getUser()
-																.getLastName()),
-												(history == null ? ""
-														: HTMLUtilities
-																.removeMarkup(history
-																		.getDescription())),
-												lastModifiedDays,
-												activityString });
-					} else {
-						String resolution = (issue.getResolution() == null ? ""
-								: issue.getResolution());
-						if (!resolution.equals("")
-								&& ProjectUtilities
-										.hasOption(
-												ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS,
-												issue.getProject().getOptions())) {
-							resolution = IssueUtilities.getResolutionName(
-									resolution, ITrackerResources.getLocale());
-						}
-
-						msgText = ITrackerResources
-								.getString(
-										"itracker.email.issue.body.standard",
-										new Object[] {
-												url + "/view_issue.jsp?id="
-														+ issue.getId()
-														+ "&authtype=5",
-												issue.getProject().getName(),
-												issue.getDescription(),
-												IssueUtilities
-														.getStatusName(issue
-																.getStatus()),
-												resolution,
-												IssueUtilities
-														.getSeverityName(issue
-																.getSeverity()),
-												(issue.getOwner()
-														.getFirstName() != null ? issue
-														.getOwner()
-														.getFirstName()
-														: "")
-														+ " "
-														+ (issue.getOwner()
-																.getLastName() != null ? issue
-																.getOwner()
-																.getLastName()
-																: ""),
-												componentString,
-												(history == null ? "" : history
-														.getUser()
-														.getFirstName()
-														+ " "
-														+ history.getUser()
-																.getLastName()),
-												(history == null ? ""
-														: HTMLUtilities
-																.removeMarkup(history
-																		.getDescription())),
-												activityString });
-					}
-					emailService.sendEmail(receipients, subject, msgText);
-
-					updateIssueActivityNotification(issue,
-							true);
+			List<IssueActivity> activity = getIssueService().getIssueActivity(
+					issue.getId(), false);
+			issue.getActivities();
+			List<IssueHistory> histories = 
+				issue.getHistory();
+			Iterator<IssueHistory> it = histories.iterator();
+			IssueHistory history = null, currentHistory;
+			history = getIssueService().getLastIssueHistory(issue.getId());
+			
+			Integer historyId = 0;
+			// find history with greatest id
+			while (it.hasNext()) {
+				currentHistory = (IssueHistory) it.next();
+				if (logger.isDebugEnabled()) {
+					logger.debug("handleIssueNotification: found history: " + currentHistory.getDescription() + " (time: " + currentHistory.getCreateDate());
+				}
+				if (currentHistory.getId() > historyId) {
+					historyId = currentHistory.getId();
+					history = currentHistory;
 				}
 			}
+			if (logger.isDebugEnabled() && null != history) {
+				logger.debug("handleIssueNotification: got most recent history: " + history + " (" + history.getDescription() + ")");
+			}
+			
+			
+			List<Component> components = //issueService
+					//.getIssueComponents(issue.getId());
+				issue.getComponents();
+			List<Version> versions = //issueService.getIssueVersions(issue.getId());
+				issue.getVersions();
+
+			if (receipients.length > 0) {
+				String subject = "";
+				if (type == Type.CREATED) {
+					subject = ITrackerResources.getString(
+							"itracker.email.issue.subject.created",
+							new Object[] { issue.getId(),
+									issue.getProject().getName(),
+									lastModifiedDays });
+				} else if (type == Type.ASSIGNED) {
+					subject = ITrackerResources.getString(
+							"itracker.email.issue.subject.assigned",
+							new Object[] { issue.getId(),
+									issue.getProject().getName(),
+									lastModifiedDays });
+				} else if (type == Type.CLOSED) {
+					subject = ITrackerResources.getString(
+							"itracker.email.issue.subject.closed",
+							new Object[] { issue.getId(),
+									issue.getProject().getName(),
+									lastModifiedDays });
+				} else if (type == Type.ISSUE_REMINDER) {
+					subject = ITrackerResources.getString(
+							"itracker.email.issue.subject.reminder",
+							new Object[] { issue.getId(),
+									issue.getProject().getName(),
+									lastModifiedDays });
+				} else {
+					subject = ITrackerResources.getString(
+							"itracker.email.issue.subject.updated",
+							new Object[] { issue.getId(),
+									issue.getProject().getName(),
+									lastModifiedDays });
+				}
+
+				String activityString = "";
+				String componentString = "";
+				String versionString = "";
+				for (int i = 0; i < activity.size(); i++) {
+					activityString += IssueUtilities
+							.getActivityName(activity.get(i).getType())
+							+ ": "
+							+ activity.get(i).getDescription()
+							+ "\n";
+				}
+				for (int i = 0; i < components.size(); i++) {
+					componentString += (i != 0 ? ", " : "")
+							+ components.get(i).getName();
+				}
+				for (int i = 0; i < versions.size(); i++) {
+					versionString += (i != 0 ? ", " : "")
+							+ versions.get(i).getNumber();
+				}
+
+				String msgText = "";
+				if (type == Type.ISSUE_REMINDER) {
+					msgText = ITrackerResources
+							.getString(
+									"itracker.email.issue.body.reminder",
+									new Object[] {
+											url + "/view_issue.jsp?id="
+													+ issue.getId(),
+											issue.getProject().getName(),
+											issue.getDescription(),
+											IssueUtilities
+													.getStatusName(issue
+															.getStatus()),
+											IssueUtilities
+													.getSeverityName(issue
+															.getSeverity()),
+											(issue.getOwner()
+													.getFirstName() != null ? issue
+													.getOwner()
+													.getFirstName()
+													: "")
+													+ " "
+													+ (issue.getOwner()
+															.getLastName() != null ? issue
+															.getOwner()
+															.getLastName()
+															: ""),
+											componentString,
+											(history == null ? "" : history
+													.getUser()
+													.getFirstName()
+													+ " "
+													+ history.getUser()
+															.getLastName()),
+											(history == null ? ""
+													: HTMLUtilities
+															.removeMarkup(history
+																	.getDescription())),
+											lastModifiedDays,
+											activityString });
+				} else {
+					String resolution = (issue.getResolution() == null ? ""
+							: issue.getResolution());
+					if (!resolution.equals("")
+							&& ProjectUtilities
+									.hasOption(
+											ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS,
+											issue.getProject().getOptions())) {
+						resolution = IssueUtilities.getResolutionName(
+								resolution, ITrackerResources.getLocale());
+					}
+
+					msgText = ITrackerResources
+							.getString(
+									"itracker.email.issue.body.standard",
+									new Object[] {
+											url + "/view_issue.jsp?id="
+													+ issue.getId()
+													+ "&authtype=5",
+											issue.getProject().getName(),
+											issue.getDescription(),
+											IssueUtilities
+													.getStatusName(issue
+															.getStatus()),
+											resolution,
+											IssueUtilities
+													.getSeverityName(issue
+															.getSeverity()),
+											(issue.getOwner()
+													.getFirstName() != null ? issue
+													.getOwner()
+													.getFirstName()
+													: "")
+													+ " "
+													+ (issue.getOwner()
+															.getLastName() != null ? issue
+															.getOwner()
+															.getLastName()
+															: ""),
+											componentString,
+											(history == null ? "" : history
+													.getUser()
+													.getFirstName()
+													+ " "
+													+ history.getUser()
+															.getLastName()),
+											(history == null ? ""
+													: HTMLUtilities
+															.removeMarkup(history
+																	.getDescription())),
+											activityString });
+				}
+				emailService.sendEmail(receipients, subject, msgText);
+
+				updateIssueActivityNotification(issue,
+						true);
+			}
+		
 		} catch (Exception e) {
 			logger.error("handleIssueNotification: unexpected exception caught, throwing runtime exception", e);
 			throw new RuntimeException(e);
 		}
 	}
 	
+	private IssueService getIssueService() {
+		return ServletContextUtils.getItrackerServices().getIssueService();
+	}
 	public void updateIssueActivityNotification(Issue issue, Boolean notificationSent) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("updateIssueActivityNotification: called with " + issue + ", notificationSent: " + notificationSent);
