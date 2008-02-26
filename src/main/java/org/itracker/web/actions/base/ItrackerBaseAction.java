@@ -87,6 +87,7 @@ public abstract class ItrackerBaseAction extends Action {
     	super();
     }
     
+    // TODO: THIS IS NOT ALWAYS EXECUTED, IT HAS TO BE CALLED FROM EVERY ACTION EXPLICITLY?? Make a filter..
     public void executeAlways(ActionMapping mapping,
             ActionForm form,
             HttpServletRequest request,
