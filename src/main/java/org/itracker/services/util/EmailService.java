@@ -46,6 +46,7 @@ public class EmailService {
 	
 	@Deprecated
 	public static final String DEFAULT_FROM_ADDRESS = "itracker@localhost";
+	@Deprecated
 	public static final String DEFAULT_FROM_TEXT = "ITracker Notification System";
 	@Deprecated
 	public static final String DEFAULT_REPLYTO_ADDRESS = "itracker@localhost";
@@ -108,10 +109,26 @@ public class EmailService {
 	private final void initFrom(String fromAddress, String fromText) {
 		if (null != fromAddress) {
 			try {
-				this.session.getProperties().put(
-						"mail.from",
-						String.valueOf(new InternetAddress(fromAddress,
-								fromText)));
+				
+				if (this.session.getProperties().containsKey("mail.from")) {
+					logger.info("initFrom: already found property 'mail.from': " + this.session.getProperty("mail.from"));
+					try {
+						InternetAddress[] fromAddr = InternetAddress.parse(this.session.getProperty("mail.from"));
+						if (fromAddr.length > 0) {
+							fromAddr[0].setPersonal(fromText);
+						}
+						this.session.getProperties().remove("mail.from");
+						this.session.getProperties().put("mail.from", String.valueOf(fromAddr[0]));
+					} catch (AddressException e) {
+						logger.error("initFrom: failed to parse from-address from session: " + this.session.getProperty("mail.from"), e);
+					}
+				} else {
+				
+					this.session.getProperties().put(
+							"mail.from",
+							String.valueOf(new InternetAddress(fromAddress,
+									fromText)));
+				}
 				logger.info("initFrom: initialized to "
 						+ this.session.getProperty("mail.from"));
 			} catch (UnsupportedEncodingException e) {
@@ -126,7 +143,7 @@ public class EmailService {
 			this.replyTo = new InternetAddress(replyToAddress, replyToText);
 			logger.info("initFrom: initialized reply-to: " + this.replyTo);
 		} catch (UnsupportedEncodingException e) {
-			logger.warn("initReplyTo: could not initialize reply-to", e);
+			logger.warn("initReplyTo: could not initialize reply-to (configured: " + replyToText + " <" + replyToAddress + ">" , e);
 		}
 	}
 
@@ -191,16 +208,12 @@ public class EmailService {
 			}
 		} else {
 			initCharset(smtpCharset);
+			// use mailsession to initialize from.
 			initFrom(fromAddress, fromText);
 		}
 		initReplyTo(replyToAddress, fromText);
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug("init: From Address set to: " + fromAddress);
-			logger.debug("init: From Text set to: " + fromText);
-			logger.debug("init: ReplyTo Address set to: " + replyToAddress);
 
-		}
 	}
 
 	/**
