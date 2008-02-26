@@ -46,6 +46,9 @@ public class NamingUtilites {
 					+ ctx + ", default: " + defaultValue);
 
 		}
+		
+		
+		
 		if (null == ctx) {
 			log.debug("getStringValue: creating new InitialContext");
 			try {
@@ -59,8 +62,10 @@ public class NamingUtilites {
 					log.debug("getStringValue: context was " + ctx);
 			}
 		}
+	
 
 		if (null != ctx) {
+
 
 			val = lookup(ctx, lookupName);
 			if (val instanceof String) {
@@ -72,7 +77,7 @@ public class NamingUtilites {
 		}
 		value = (null == value) ? defaultValue : value;
 		if (log.isDebugEnabled()) {
-			log.debug("getStringValue: returning " + value);
+			log.debug("getStringValue: returning '" + value + "' for " + lookupName);
 
 		}
 
