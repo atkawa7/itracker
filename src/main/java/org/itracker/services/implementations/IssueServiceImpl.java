@@ -410,6 +410,7 @@ public class IssueServiceImpl implements IssueService {
 		return issue;
 	}
 
+
 	/**
 	 * 
 	 * TODO: improve this, verify how the update is done.. is there any reason to swap the issue-object?
@@ -420,53 +421,89 @@ public class IssueServiceImpl implements IssueService {
 		// TODO why is the issue replaced and retrieved from DB again?
 		Issue Updateissue = getIssueDAO().findByPrimaryKey(issue.getId());
 		User user = getUserDAO().findByPrimaryKey(userId);
+		IssueActivity activity;
 		if (Updateissue.getProject().getStatus() != Status.ACTIVE) {
+			// TODO: localization
 			throw new ProjectException("Project is not active.");
 		}
+		
+		// ensure there is no unset description
+		if (null == issue.getDescription() || issue.getDescription().length() < 1) {
+			issue.setDescription(Updateissue.getDescription());
+		}
+		if (logger.isDebugEnabled()) {
+			// some sever informations about updating issue
+			logger.debug("updateIssue: updating issue " + issue.getId() + ", old-description was: '" + Updateissue.getDescription() + "', old Description was: '" + issue.getDescription() + "', equals: " + Updateissue.getDescription().equalsIgnoreCase(issue.getDescription()));
+		}
+		
 		// TODO: ist there a more 'clean' way to check for description updated? Timestamp e.g.?
+	 // are we looking at the subject, or the last description in the history here?
 		if (Updateissue.getDescription() != null && issue.getDescription() != null
 				&& !Updateissue.getDescription().equalsIgnoreCase(issue.getDescription())) {
 
-			IssueActivity activity = new IssueActivity();
+			if (logger.isDebugEnabled()) {
+				logger.debug("updateIssue: creating new description-change activity");
+			}
+			activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_DESCRIPTION_CHANGE);
 			activity.setDescription(ITrackerResources.getString("itracker.web.generic.from") + ": "
 					+ Updateissue.getDescription());
 			activity.setUser(user);
 			activity.setIssue(Updateissue);
+			
+			if (logger.isDebugEnabled()) {
+				logger.debug("updateIssue: added IssueActivity: " + activity);
+			}
 
 		}
 		// TODO: same here?
 		if (Updateissue.getResolution() != null && issue.getResolution() != null
 				&& !Updateissue.getResolution().equalsIgnoreCase(issue.getResolution())) {
-
-			IssueActivity activity = new IssueActivity();
+			if (logger.isDebugEnabled()) {
+				logger.debug("updateIssue: creating new resolution-change activity");
+			}
+			activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_RESOLUTION_CHANGE);
 			activity.setDescription(ITrackerResources.getString("itracker.web.generic.from") + ": "
 					+ Updateissue.getResolution());
 			activity.setIssue(Updateissue);
 			activity.setUser(user);
+			if (logger.isDebugEnabled()) {
+				logger.debug("updateIssue: added IssueActivity: " + activity);
+			}
 		}
 
 		if (Updateissue.getStatus() != issue.getStatus() && issue.getStatus() != -1) {
 
-			IssueActivity activity = new IssueActivity();
+			if (logger.isDebugEnabled()) {
+				logger.debug("updateIssue: creating new status-change activity");
+			}
+			activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_STATUS_CHANGE);
 			activity.setDescription(IssueUtilities.getStatusName(Updateissue.getStatus()) + " "
 					+ ITrackerResources.getString("itracker.web.generic.to") + " "
 					+ IssueUtilities.getStatusName(issue.getStatus()));
 			activity.setIssue(Updateissue);
 			activity.setUser(user);
+			if (logger.isDebugEnabled()) {
+				logger.debug("updateIssue: added IssueActivity: " + activity);
+			}
 		}
 
 		if (Updateissue.getSeverity() != issue.getSeverity() && issue.getSeverity() != -1) {
-
-			IssueActivity activity = new IssueActivity();
+			if (logger.isDebugEnabled()) {
+				logger.debug("updateIssue: creating new severity-change activity");
+			}
+			activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_SEVERITY_CHANGE);
 			activity.setDescription(IssueUtilities.getSeverityName(Updateissue.getSeverity()) + " "
 					+ ITrackerResources.getString("itracker.web.generic.to") + " "
 					+ IssueUtilities.getSeverityName(issue.getSeverity()));
 			activity.setIssue(Updateissue);
 			activity.setUser(user);
+			if (logger.isDebugEnabled()) {
+				logger.debug("updateIssue: added IssueActivity: " + activity);
+			}
 		}
 
 		if (Updateissue.getTargetVersion() != null && issue.getTargetVersion() != null
@@ -482,11 +519,14 @@ public class IssueServiceImpl implements IssueService {
 		Updateissue.setLastModifiedDate(new Date());
 
 		if (issue.getTargetVersion() != null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("updateIssue: creating new targetversion-change activity");
+			}
 			Version version = this.getVersionDAO().findByPrimaryKey(issue.getTargetVersion().getId());
 
 			Updateissue.setTargetVersion(version);
 
-			IssueActivity activity = new IssueActivity();
+			activity = new IssueActivity();
 			activity.setType(IssueUtilities.ACTIVITY_TARGETVERSION_CHANGE);
 			String description = existingTargetVersion + " " + ITrackerResources.getString("itracker.web.generic.to")
 					+ " ";
@@ -494,14 +534,19 @@ public class IssueServiceImpl implements IssueService {
 			activity.setDescription(description);
 			activity.setUser(user);
 			activity.setIssue(Updateissue);
+			if (logger.isDebugEnabled()) {
+				logger.debug("updateIssue: added IssueActivity: " + activity);
+			}
 		} else {
 			Updateissue.setTargetVersion(null);
 		}
-                Updateissue.setFields(issue.getFields());
+        Updateissue.setFields(issue.getFields());
 		// save
-                getIssueDAO().saveOrUpdate(Updateissue);
+        getIssueDAO().saveOrUpdate(Updateissue);
+        
+        return getIssue(issue.getId());
                 
-		return Updateissue;
+		//return Updateissue;
 	}
 
 	/**

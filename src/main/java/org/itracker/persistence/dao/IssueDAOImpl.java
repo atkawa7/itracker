@@ -32,11 +32,14 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
     public Issue findByPrimaryKey(Integer issueId) {
 
         try {
-            return (Issue) getSession().get(Issue.class, issueId);
+            Issue issue = (Issue) getSession().get(Issue.class, issueId);
             //    return (Issue)getSession().load(Issue.class, issueId);
             //} catch (ObjectNotFoundException onfe) {
             //    // PENDING: throw NoSuchEntityException instead of returning null ?
             //    return null;
+            // make sure, its the actual database-object.
+            getSession().refresh(issue);
+            return issue;
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }

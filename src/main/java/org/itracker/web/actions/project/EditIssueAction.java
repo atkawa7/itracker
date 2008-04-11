@@ -61,7 +61,6 @@ import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.NotificationUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.services.util.WorkflowUtilities;
@@ -153,10 +152,11 @@ public class EditIssueAction extends ItrackerBaseAction {
             }
             
             if (log.isDebugEnabled()) {
-            	log.debug("execute: sending notification");
+            	log.debug("execute: sending notification for issue: " + issue + " (HOSTORIES: " + issue.getHistory() + ")");
             }
 
-            sendNotification(issue, previousStatus, getBaseURL(request), notificationService);
+            
+            sendNotification(issue.getId(), previousStatus, getBaseURL(request), notificationService);
             session.removeAttribute(Constants.ISSUE_KEY);
 
             WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, null, errors, (ValidatorForm) form);
@@ -185,7 +185,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 
     }
 
-    private void processFullEdit(Issue issue,
+    private void processFullEdit(final Issue issue,
                                  Project project,
                                  User user,
                                  Map<Integer, Set<PermissionType>> userPermissions,
@@ -257,12 +257,14 @@ public class EditIssueAction extends ItrackerBaseAction {
         issue.setHistory(issue.getHistory());
         issue.setAttachments(issue.getAttachments());
 
-        issue = issueService.updateIssue(issue, user.getId());
+        issueService.updateIssue(issue, user.getId());
+        
+        Issue updatedIssue = issueService.getIssue(issue.getId());
 
-        if (issue != null) {
-            setIssueFields(issue, user, locale, form, issueService);
-            setOwner(issue, user, userPermissions, form, issueService);
-            addHistoryEntry(issue, user, form, issueService);
+        if (updatedIssue != null) {
+            setIssueFields(updatedIssue, user, locale, form, issueService);
+            setOwner(updatedIssue, user, userPermissions, form, issueService);
+            addHistoryEntry(updatedIssue, user, form, issueService);
 
             HashSet<Integer> components = new HashSet<Integer>();
 
@@ -273,7 +275,7 @@ public class EditIssueAction extends ItrackerBaseAction {
                     components.add(componentIds[i]);
                 }
 
-                issueService.setIssueComponents(issue.getId(), components, user.getId());
+                issueService.setIssueComponents(updatedIssue.getId(), components, user.getId());
             }
 
             HashSet<Integer> versions = new HashSet<Integer>();
@@ -285,15 +287,16 @@ public class EditIssueAction extends ItrackerBaseAction {
                     versions.add(versionIds[i]);
                 }
 
-                issueService.setIssueVersions(issue.getId(), versions, user.getId());
+                issueService.setIssueVersions(updatedIssue.getId(), versions, user.getId());
             }
 
-            addAttachment(issue, project, user, form, issueService);
+            addAttachment(updatedIssue, project, user, form, issueService);
         }
+        
 
     }
 
-    private void processLimitedEdit(Issue issue,
+    private void processLimitedEdit(final Issue issue,
                                     Project project,
                                     User user,
                                     Map<Integer, Set<PermissionType>> userPermissionsMap,
@@ -317,7 +320,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 
         }
 
-        issue = issueService.updateIssue(issue, user.getId());
+        Issue updatedIssue = issueService.updateIssue(issue, user.getId());
 
         setIssueFields(issue, user, locale, form, issueService);
         setOwner(issue, user, userPermissionsMap, form, issueService);
@@ -502,7 +505,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 
     }
 
-    private void sendNotification(Issue issue,
+    private void sendNotification(Integer issueId,
                                   int previousStatus,
                                   String baseURL,
                                   NotificationService notificationService) {
@@ -510,6 +513,8 @@ public class EditIssueAction extends ItrackerBaseAction {
     	Type notificationType = Type.UPDATED;
         //int notificationType = NotificationUtilities.TYPE_UPDATED;
 
+    	Issue issue = getITrackerServices().getIssueService().getIssue(issueId);
+    	
         if (previousStatus >= IssueUtilities.STATUS_CLOSED && issue.getStatus() >= IssueUtilities.STATUS_CLOSED) {
             notificationType = Type.CLOSED;
         }
