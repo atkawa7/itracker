@@ -37,7 +37,7 @@ public interface IssueAttachmentDAO extends BaseDAO<IssueAttachment> {
      * @return count of all issue attachments in system
      */ 
     
-    Integer countAll();
+    Long countAll();
     /**
      * Calculates the total Size of attachments in the system. 
      * 

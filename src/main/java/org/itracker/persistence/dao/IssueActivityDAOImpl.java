@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.itracker.model.Issue;
 import org.itracker.model.IssueActivity;
 
 /**
@@ -57,5 +58,6 @@ public class IssueActivityDAOImpl extends BaseHibernateDAOImpl<IssueActivity>
         }
         return activities;
     }
+
 
 }

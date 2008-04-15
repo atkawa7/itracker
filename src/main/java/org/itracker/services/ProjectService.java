@@ -85,9 +85,9 @@ public interface ProjectService {
      * @param componentId Id of the component to which the issues must be associated
      * @return 0 if the component has no issues or doesn't exist
      */
-    public int countIssuesByComponent(Integer componentId);
+    public Long countIssuesByComponent(Integer componentId);
     
-    public int getTotalNumberIssuesByProject(Integer projectId);
+    public Long getTotalNumberIssuesByProject(Integer projectId);
     
     /**
      * Counts the number of issues for a given version. 
@@ -95,7 +95,7 @@ public interface ProjectService {
      * @param versionId Id of the version to which the issues must be associated
      * @return 0 if the version has no issues or doesn't exist
      */
-    public int countIssuesByVersion(Integer versionId);
+    public Long countIssuesByVersion(Integer versionId);
 
     /**
      * Returns the number of open and resolved issues in the given project. 
@@ -105,7 +105,7 @@ public interface ProjectService {
      * 
      * @return int[0] = open issues, int[1] = resolved issues
      */
-    public int[] getProjectStats(Integer projectId);
+    public Long[] getProjectStats(Integer projectId);
     
     public ProjectDAO getProjectDAO();
 }

@@ -167,7 +167,7 @@ public class IssueServiceImpl implements IssueService {
 	/**
 	 * Added implementation to make proper count of ALL issues, instead select them in a list and return its size
 	 */
-	public int getNumberIssues() {
+	public Long getNumberIssues() {
 		return getIssueDAO().countAllIssues();
 	}
 
@@ -419,6 +419,7 @@ public class IssueServiceImpl implements IssueService {
 	public Issue updateIssue(Issue issue, Integer userId) throws ProjectException {
 		String existingTargetVersion = null;
 		// TODO why is the issue replaced and retrieved from DB again?
+	
 		Issue Updateissue = getIssueDAO().findByPrimaryKey(issue.getId());
 		User user = getUserDAO().findByPrimaryKey(userId);
 		IssueActivity activity;
@@ -512,10 +513,15 @@ public class IssueServiceImpl implements IssueService {
 
 		}
 
+		logger.debug("updateIssue: setting description: "  + issue.getDescription());
 		Updateissue.setDescription(issue.getDescription());
+		logger.debug("updateIssue: setting severity: "  + issue.getSeverity());
 		Updateissue.setSeverity(issue.getSeverity());
+		logger.debug("updateIssue: setting status: "  + issue.getStatus());
 		Updateissue.setStatus(issue.getStatus());
+		logger.debug("updateIssue: setting resolution: "  + issue.getResolution());
 		Updateissue.setResolution(issue.getResolution());
+		logger.debug("updateIssue: setting last modified date: "  + issue.getLastModifiedDate());
 		Updateissue.setLastModifiedDate(new Date());
 
 		if (issue.getTargetVersion() != null) {
@@ -544,9 +550,9 @@ public class IssueServiceImpl implements IssueService {
 		// save
         getIssueDAO().saveOrUpdate(Updateissue);
         
-        return getIssue(issue.getId());
+        //return getIssue(issue.getId());
                 
-		//return Updateissue;
+		return Updateissue;
 	}
 
 	/**
@@ -1244,14 +1250,14 @@ public class IssueServiceImpl implements IssueService {
 	/**
 	 * @deprecated use getAllIssuesAttachmentCount() instead.
 	 */
-	public Integer countSystemIssuesAttachments() {
+	public Long countSystemIssuesAttachments() {
 		logger.warn("countSystemIssuesAttachments: use of deprecated API");
 		if (logger.isDebugEnabled()) {
 			logger.debug("countSystemIssuesAttachments: stackgtrace was", new RuntimeException());
 		}
 		
 		
-		return getIssueAttachmentDAO().countAll().intValue();
+		return getIssueAttachmentDAO().countAll();
 	}
 	public Long getAllIssueAttachmentCount() {
 		return getIssueAttachmentDAO().countAll().longValue();

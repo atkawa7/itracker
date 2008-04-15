@@ -34,4 +34,5 @@ public interface IssueActivityDAO extends BaseDAO<IssueActivity> {
     List<IssueActivity> findByIssueIdAndNotification(Integer issueId, 
             boolean notificationSent);
 
+
 }

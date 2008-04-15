@@ -267,28 +267,28 @@ public class ProjectServiceImpl implements ProjectService {
         return editprojectScript;
     }
     
-    public int getTotalNumberIssuesByProject(Integer projectId) {
+    public Long getTotalNumberIssuesByProject(Integer projectId) {
         return issueDAO.countByProject(projectId);
     }
     
-    public int countIssuesByVersion(Integer versionId) {        
+    public Long countIssuesByVersion(Integer versionId) {        
         return issueDAO.countByVersion(versionId);
         
     }
     
-    public int countIssuesByComponent(Integer componentId) {
+    public Long countIssuesByComponent(Integer componentId) {
         return issueDAO.countByComponent(componentId);       
     }
     
-    public int[] getProjectStats(Integer projectId) {
-        final int[] issueStats = new int[2];
+    public Long[] getProjectStats(Integer projectId) {
+        final Long[] issueStats = new Long[2];
 
-        int openIssuesCount = issueDAO.countByProjectAndLowerStatus(projectId, 
+        Long openIssuesCount = issueDAO.countByProjectAndLowerStatus(projectId, 
                 IssueUtilities.STATUS_RESOLVED);
         
         issueStats[0] = openIssuesCount;
         
-        int resolvedIssuesCount = issueDAO.countByProjectAndHigherStatus(
+        Long resolvedIssuesCount = issueDAO.countByProjectAndHigherStatus(
                 projectId, IssueUtilities.STATUS_RESOLVED);
         issueStats[1] = resolvedIssuesCount;
 

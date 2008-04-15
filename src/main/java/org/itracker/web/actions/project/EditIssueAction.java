@@ -252,19 +252,21 @@ public class EditIssueAction extends ItrackerBaseAction {
             }
         }
 
-        issue.setFields(issue.getFields());
-        issue.setOwner(issue.getOwner());
-        issue.setHistory(issue.getHistory());
-        issue.setAttachments(issue.getAttachments());
+        // why this?
+//        issue.setFields(issue.getFields());
+//        issue.setOwner(issue.getOwner());
+//        issue.setHistory(issue.getHistory());
+//        issue.setAttachments(issue.getAttachments());
 
-        issueService.updateIssue(issue, user.getId());
-        
-        Issue updatedIssue = issueService.getIssue(issue.getId());
+//        issueService.updateIssue(issue, user.getId());
+//        
+//        Issue updatedIssue = issueService.getIssue(issue.getId());
 
-        if (updatedIssue != null) {
-            setIssueFields(updatedIssue, user, locale, form, issueService);
-            setOwner(updatedIssue, user, userPermissions, form, issueService);
-            addHistoryEntry(updatedIssue, user, form, issueService);
+        // why is this done after update!?
+//        if (issue != null) {
+            setIssueFields(issue, user, locale, form, issueService);
+            setOwner(issue, user, userPermissions, form, issueService);
+            addHistoryEntry(issue, user, form, issueService);
 
             HashSet<Integer> components = new HashSet<Integer>();
 
@@ -275,7 +277,7 @@ public class EditIssueAction extends ItrackerBaseAction {
                     components.add(componentIds[i]);
                 }
 
-                issueService.setIssueComponents(updatedIssue.getId(), components, user.getId());
+                issueService.setIssueComponents(issue.getId(), components, user.getId());
             }
 
             HashSet<Integer> versions = new HashSet<Integer>();
@@ -287,12 +289,15 @@ public class EditIssueAction extends ItrackerBaseAction {
                     versions.add(versionIds[i]);
                 }
 
-                issueService.setIssueVersions(updatedIssue.getId(), versions, user.getId());
+                issueService.setIssueVersions(issue.getId(), versions, user.getId());
             }
 
-            addAttachment(updatedIssue, project, user, form, issueService);
-        }
+            addAttachment(issue, project, user, form, issueService);
+//        }
+        issueService.updateIssue(issue, user.getId());
         
+//        Issue updatedIssue =
+        issueService.getIssue(issue.getId());
 
     }
 

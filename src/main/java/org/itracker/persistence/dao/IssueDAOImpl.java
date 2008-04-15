@@ -32,7 +32,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
     public Issue findByPrimaryKey(Integer issueId) {
 
         try {
-            Issue issue = (Issue) getSession().get(Issue.class, issueId);
+        	Issue issue = (Issue) getSession().get(Issue.class, issueId);
             //    return (Issue)getSession().load(Issue.class, issueId);
             //} catch (ObjectNotFoundException onfe) {
             //    // PENDING: throw NoSuchEntityException instead of returning null ?
@@ -45,13 +45,13 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         }
     }
 
-    public Integer countAllIssues() {
+    public Long countAllIssues() {
 
-        final Integer count;
+        final Long count;
 
         try {
             final Query query = getSession().getNamedQuery("IssueCountAll");
-            count = (Integer) query.uniqueResult();
+            count = (Long) query.uniqueResult();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -174,15 +174,15 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
     }
 
-    public int countByProject(Integer projectId) {
+    public Long countByProject(Integer projectId) {
 
-        final Integer count;
+        final Long count;
 
         try {
             final Query query = getSession().getNamedQuery(
                     "IssueCountByProjectQuery");
             query.setInteger("projectId", projectId);
-            count = (Integer) query.uniqueResult();
+            count = (Long) query.uniqueResult();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -211,17 +211,17 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
     }
 
-    public int countByProjectAndLowerStatus(Integer projectId,
+    public Long countByProjectAndLowerStatus(Integer projectId,
                                             int maxExclusiveStatus) {
 
-        final Integer count;
+        final Long count;
 
         try {
             final Query query = getSession().getNamedQuery(
                     "IssueCountByProjectAndLowerStatusQuery");
             query.setInteger("projectId", projectId);
             query.setInteger("maxExclusiveStatus", maxExclusiveStatus);
-            count = (Integer) query.uniqueResult();
+            count = (Long) query.uniqueResult();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -250,16 +250,16 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
     }
 
-    public int countByProjectAndHigherStatus(Integer projectId, int minStatus) {
+    public Long countByProjectAndHigherStatus(Integer projectId, int minStatus) {
 
-        final Integer count;
+        final Long count;
 
         try {
             final Query query = getSession().getNamedQuery(
                     "IssueCountByProjectAndHigherStatusQuery");
             query.setInteger("projectId", projectId);
             query.setInteger("minStatus", minStatus);
-            count = (Integer) query.uniqueResult();
+            count = (Long) query.uniqueResult();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -422,15 +422,15 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
     }
 
-    public int countByComponent(Integer componentId) {
+    public Long countByComponent(Integer componentId) {
 
-        final Integer count;
+        final Long count;
 
         try {
             final Query query = getSession().getNamedQuery(
                     "IssueCountByComponentQuery");
             query.setInteger("componentId", componentId);
-            count = (Integer) query.uniqueResult();
+            count = (Long) query.uniqueResult();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -457,15 +457,15 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
     }
 
-    public int countByVersion(Integer versionId) {
+    public Long countByVersion(Integer versionId) {
 
-        final Integer count;
+        final Long count;
 
         try {
             final Query query = getSession().getNamedQuery(
                     "IssueCountByVersionQuery");
             query.setInteger("versionId", versionId);
-            count = (Integer) query.uniqueResult();
+            count = (Long) query.uniqueResult();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }

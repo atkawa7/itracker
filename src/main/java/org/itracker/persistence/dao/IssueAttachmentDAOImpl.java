@@ -66,12 +66,12 @@ public class IssueAttachmentDAOImpl extends BaseHibernateDAOImpl<IssueAttachment
         return attachments;
     }
     
-    public Integer countAll() {
-    	Integer count;
+    public Long countAll() {
+    	Long count;
         try {
             Query query = getSession().getNamedQuery(
                     "AttachmentsCountAllQuery");
-            count = (Integer)query.uniqueResult();
+            count = (Long)query.uniqueResult();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }

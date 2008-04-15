@@ -51,7 +51,7 @@ public interface IssueService {
     List<Issue> getAllIssues();
 
     
-    int getNumberIssues();
+    Long getNumberIssues();
     
     /**
      * Returns an array of issues that are currently at the given status.
@@ -203,7 +203,7 @@ public interface IssueService {
      * @deprecated use getAllIssuesAttachmentCount instead
      * @return
      */
-    Integer countSystemIssuesAttachments();
+    Long countSystemIssuesAttachments();
     
     Long getAllIssueAttachmentCount();
     

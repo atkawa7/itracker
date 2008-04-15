@@ -34,6 +34,7 @@ public abstract class BaseHibernateDAOImpl<T> extends HibernateDaoSupport
     public void saveOrUpdate(T entity) {
         try {
             getSession().saveOrUpdate(entity);
+
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -42,6 +43,7 @@ public abstract class BaseHibernateDAOImpl<T> extends HibernateDaoSupport
     public void delete(T entity) {
         try {
             getSession().delete(entity);
+
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }    
@@ -50,6 +52,7 @@ public abstract class BaseHibernateDAOImpl<T> extends HibernateDaoSupport
     /**
      * return the a <code>Connection</code>
      *
+     * @deprecated don't use connection directly
      * @return a database <code>Connection</code> 
      */
     public Connection getConnection() {

@@ -55,7 +55,7 @@ public class AdminHomeAction extends ItrackerBaseAction {
         Integer numberofActiveSesssions = SessionManager.getNumActiveSessions();
         request.setAttribute("numberofActiveSesssions", numberofActiveSesssions);
 
-        Integer allIssueAttachmentsTotalNumber = issueService.countSystemIssuesAttachments();
+        Long allIssueAttachmentsTotalNumber = issueService.countSystemIssuesAttachments();
         request.setAttribute("allIssueAttachmentsTotalNumber", allIssueAttachmentsTotalNumber);
 
         Long allIssueAttachmentsTotalSize = issueService.totalSystemIssuesAttachmentSize();

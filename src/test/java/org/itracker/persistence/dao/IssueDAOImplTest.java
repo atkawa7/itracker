@@ -23,9 +23,9 @@ public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
     @Test
     public void testCountByProjectAndLowerStatus() {
 
-        int issueCount = issueDAO.countByProjectAndLowerStatus(2, 3);
+        Long issueCount = issueDAO.countByProjectAndLowerStatus(2, 3);
 
-        assertEquals(2, issueCount);
+        assertEquals(Long.valueOf(2), issueCount);
     }
 
     @Test
@@ -42,17 +42,17 @@ public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
     @Test
     public void testCountByProjectAndHigherStatus() {
 
-        int issueCount = issueDAO.countByProjectAndHigherStatus(2, 2);
+        Long issueCount = issueDAO.countByProjectAndHigherStatus(2, 2);
 
-        assertEquals(3, issueCount);
+        assertEquals(Long.valueOf(3), issueCount);
     }
 
     @Test
     public void testCountByProject() {
 
-        int projectCount = issueDAO.countByProject(2);
+        Long projectCount = issueDAO.countByProject(2);
 
-        assertEquals(4, projectCount);
+        assertEquals(Long.valueOf(4), projectCount);
     }
 
     @Test

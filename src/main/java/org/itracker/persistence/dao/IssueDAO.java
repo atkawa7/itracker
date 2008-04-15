@@ -95,7 +95,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param projectId ID of the project of which to count issues
      * @return number of issues
      */
-    int countByProject(Integer projectId);
+    Long countByProject(Integer projectId);
     
     /**
      * Finds all issues of the given project with a status lower than 
@@ -116,7 +116,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param maxExclusiveStatus all issues under this status will be counted
      * @return number of issues
      */
-    int countByProjectAndLowerStatus(Integer projectId, 
+    Long countByProjectAndLowerStatus(Integer projectId, 
             int maxExclusiveStatus);
 
     /**
@@ -138,7 +138,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param minStatus all issues with this status or above will be counted
      * @return number of issues
      */
-    int countByProjectAndHigherStatus(Integer projectId, int minStatus);
+    Long countByProjectAndHigherStatus(Integer projectId, int minStatus);
     
     /**
      * Finds all issues owned by the given user in all projects
@@ -231,7 +231,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * 
      * @return
      */
-    Integer countAllIssues();
+    Long countAllIssues();
     
     /**
      * Counts the number of issues attached to a component. 
@@ -239,7 +239,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param componentId ID of the component
      * @return number of issues
      */
-    int countByComponent(Integer componentId);
+    Long countByComponent(Integer componentId);
     
     /**
      * Finds all issues of the version with the given ID. 
@@ -255,7 +255,7 @@ public interface IssueDAO extends BaseDAO<Issue> {
      * @param versionId ID of the version
      * @return number of issues
      */
-    int countByVersion(Integer versionId);
+    Long countByVersion(Integer versionId);
     
     /**
      * Returns the modification date of the latest modified issue 
