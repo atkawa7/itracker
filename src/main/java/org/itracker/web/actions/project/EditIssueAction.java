@@ -295,9 +295,6 @@ public class EditIssueAction extends ItrackerBaseAction {
             addAttachment(issue, project, user, form, issueService);
 //        }
         issueService.updateIssue(issue, user.getId());
-        
-//        Issue updatedIssue =
-        issueService.getIssue(issue.getId());
 
     }
 
@@ -325,13 +322,12 @@ public class EditIssueAction extends ItrackerBaseAction {
 
         }
 
-        Issue updatedIssue = issueService.updateIssue(issue, user.getId());
-
         setIssueFields(issue, user, locale, form, issueService);
         setOwner(issue, user, userPermissionsMap, form, issueService);
         addHistoryEntry(issue, user, form, issueService);
         addAttachment(issue, project, user, form, issueService);
-
+        
+        issueService.updateIssue(issue, user.getId());
     }
 
     private void setOwner(Issue issue,
