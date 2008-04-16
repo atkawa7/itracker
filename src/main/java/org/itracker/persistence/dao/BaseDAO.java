@@ -18,6 +18,7 @@ public interface BaseDAO<T> {
      * It's here temporarily because the search facility requires connections
      * and operates on JDBC. This should be change to work via the service interfaces...
      * 
+     * @deprecated don't work directly with connection
      * @return
      */
     public Connection getConnection();

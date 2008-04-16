@@ -37,15 +37,17 @@ public class IssueActivity extends AbstractEntity {
     private User user;
     
     /** Type of activity. */
-    private int type;
+//    private int type;
     
     /** Optional activity description. */
-    private String description;
+    private String description = "";
     
     /** 
      * Whether a notification has been sent for this activity.
      */
-    private boolean notificationSent;
+    private boolean notificationSent = false;
+
+	private Type activityType = Type.ISSUE_CREATED;
     
     /**
      * Default constructor (required by Hibernate). 
@@ -56,6 +58,24 @@ public class IssueActivity extends AbstractEntity {
      * are always initialized. </p>
      */
     public IssueActivity() {
+    	
+    }
+    
+    /**
+     * Creates a new instance with a <code>notificationSent</code> flag set 
+     * to <tt>false</tt> and a creation and last modified time stamp 
+     * set to the current time. 
+     * 
+     * @deprecated use {@link IssueActivity#IssueActivity(Issue, User, org.itracker.model.IssueActivity.Type)} instead
+     * @param issue
+     * @param user
+     * @param type 
+     * @param description 
+     */
+    public IssueActivity(Issue issue, User user, int type) {
+        setIssue(issue);
+        setUser(user);
+        setType(type);
     }
     
     /**
@@ -68,10 +88,10 @@ public class IssueActivity extends AbstractEntity {
      * @param type 
      * @param description 
      */
-    public IssueActivity(Issue issue, User user, int type) {
-        setIssue(issue);
-        setUser(user);
-        setType(type);
+    public IssueActivity(Issue issue, User user, Type type) {
+    	setIssue(issue);
+    	setUser(user);
+    	setActivityType(type);
     }
     
     public Issue getIssue() {
@@ -96,14 +116,35 @@ public class IssueActivity extends AbstractEntity {
         this.user = user;
     }
     
+    /**
+     * @deprecated use getActivityType
+     * @return
+     */
     public int getType() {
-        return type;
+    	if (null == this.activityType) {
+    		return -1;
+    	}
+        return this.activityType.code;
     }
 
+    /**
+     * @deprecated use setActivityType
+     * @param type
+     */
     public void setType(int type) {
-        this.type = type;
+    	this.activityType = Type.forCode(type);
+//        this.type = type;
     }
 
+    public void setActivityType(Type type) {
+    	
+//    	this.type = type.code;
+    	this.activityType = type;
+    }
+    
+    public Type getActivityType() {
+    	return this.activityType;
+    }
     public String getDescription() {
         return description;
     }
@@ -130,7 +171,7 @@ public class IssueActivity extends AbstractEntity {
             
             return this.issue.equals(other.issue)
                 && this.user.equals(other.user)
-                && (this.type == other.type)
+                && (this.activityType == other.activityType)
                 && (this.createDate == null) ? (other.createDate == null) 
                     : this.createDate.equals(other.createDate);
         }
@@ -140,7 +181,7 @@ public class IssueActivity extends AbstractEntity {
     public int hashCode() {
         return this.issue.hashCode()
             + this.user.hashCode()
-            + this.type
+            + this.activityType.code
             + ((this.createDate == null) ? 0 : this.createDate.hashCode());
     }
     
@@ -148,7 +189,7 @@ public class IssueActivity extends AbstractEntity {
         return "IssueActivity [id=" + this.id
                 + ",issue=" + this.issue 
                 + ",user=" + this.user 
-                + ",type=" + this.type 
+                + ",type=" + this.activityType 
                 + ",createDate=" + this.createDate + "]";
     }
     
@@ -188,6 +229,46 @@ public class IssueActivity extends AbstractEntity {
             this.code = code;
         }
         
+        /**
+         * @deprecated
+         * @param type
+         * @return
+         */
+        public static final Type forCode(int type) {
+        	switch (type) {
+    		case 1:
+    			return ISSUE_CREATED;
+    		case 2:
+    			return STATUS_CHANGE;
+    		case 3:
+    			return OWNER_CHANGE;
+    		case 4:
+    			return SEVERITY_CHANGE;
+    		case 5:
+    			return COMPONENTS_MODIFIED;
+    		case 6:
+    			return VERSIONS_MODIFIED;
+    		case 7:
+    			return REMOVE_HISTORY;
+    		case 8:
+    			return ISSUE_MOVE;
+    		case 9:
+    			return SYSTEM_UPDATE;
+    		case 10:
+    			return TARGETVERSION_CHANGE;
+    		case 11: 
+    			return DESCRIPTION_CHANGE;
+    		case 12:
+    			return RESOLUTION_CHANGE;
+    		case 13:
+    			return RELATION_ADDED;
+    		case 14:
+    			return RELATION_REMOVED;
+    		}
+        	return null;
+        }
     }
+    
+
     
 }

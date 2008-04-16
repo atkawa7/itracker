@@ -21,9 +21,7 @@ package org.itracker.services.util;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -41,6 +39,7 @@ import org.itracker.model.Notification;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
+import org.itracker.model.IssueActivity.Type;
 
 
 /**
@@ -491,6 +490,12 @@ public class IssueUtilities  {
 
     public static String getActivityName(int value, Locale locale) {
         return ITrackerResources.getString("itracker.activity." + value, locale);
+    }
+    public static String getActivityName(Type type) {
+    	return getActivityName(type, ITrackerResources.getLocale());
+    }
+    public static String getActivityName(Type type, Locale locale) {
+    	return String.valueOf(type.name());
     }
 
     /**

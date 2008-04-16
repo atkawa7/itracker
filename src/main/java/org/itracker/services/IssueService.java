@@ -309,4 +309,6 @@ public interface IssueService {
     boolean canViewIssue(Issue issue, User user);
     
     public List<Issue> searchIssues(IssueSearchQuery queryModel, User user, Map<Integer, Set<PermissionType>> userPermissions) throws IssueSearchException;
+    
+    
 }

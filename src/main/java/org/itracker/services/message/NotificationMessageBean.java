@@ -36,16 +36,12 @@ import org.itracker.model.IssueHistory;
 import org.itracker.model.Notification;
 import org.itracker.model.Version;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.ITrackerServices;
 import org.itracker.services.IssueService;
-import org.itracker.services.implementations.ITrackerServicesImpl;
-import org.itracker.services.implementations.IssueServiceImpl;
 import org.itracker.services.util.EmailService;
 import org.itracker.services.util.HTMLUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NotificationUtilities;
 import org.itracker.services.util.ProjectUtilities;
-import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.ServletContextUtils;
 
 /**
@@ -218,7 +214,7 @@ public class NotificationMessageBean implements MessageListener {
 					String versionString = "";
 					for (int i = 0; i < activity.size(); i++) {
 						activityString += IssueUtilities
-								.getActivityName(activity.get(i).getType())
+								.getActivityName(activity.get(i).getActivityType())
 								+ ": "
 								+ activity.get(i).getDescription()
 								+ "\n";

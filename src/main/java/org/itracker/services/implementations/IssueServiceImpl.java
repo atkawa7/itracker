@@ -356,34 +356,21 @@ public class IssueServiceImpl implements IssueService {
 			throw new ProjectException("Project is not active.");
 		}
 
-		if (createdById == null || createdById.equals(userId)) {
+		IssueActivity activity = new IssueActivity();
+		activity.setActivityType(org.itracker.model.IssueActivity.Type.ISSUE_CREATED);
+		activity.setDescription(ITrackerResources.getString("itracker.activity.system.createdfor") + " "
+				+ creator.getFirstName() + " " + creator.getLastName());
 
-			IssueActivity activity = new IssueActivity();
-			activity.setType(IssueUtilities.ACTIVITY_ISSUE_CREATED);
-			activity.setDescription(ITrackerResources.getString("itracker.activity.system.createdfor") + " "
-					+ creator.getFirstName() + " " + creator.getLastName());
-			activity.setUser(creator);
-			activity.setIssue(issue);
-			activity.setCreateDate(new Date());
-			activity.setLastModifiedDate(new Date());
-			List<IssueActivity> activities = new ArrayList<IssueActivity>();
-			activities.add(activity);
-			issue.setActivities(activities);
+		activity.setIssue(issue);
+//		activity.setCreateDate(new Date());
+//		activity.setLastModifiedDate(new Date());
 
-		} else {
+		
+		if (!(createdById == null || createdById.equals(userId))) {
 
 			User createdBy = getUserDAO().findByPrimaryKey(createdById);
-
-			IssueActivity activity = new IssueActivity();
-			activity.setDescription(ITrackerResources.getString("itracker.activity.system.createdfor") + " "
-					+ creator.getFirstName() + " " + creator.getLastName());
 			activity.setUser(createdBy);
-			activity.setIssue(issue);
-			activity.setCreateDate(new Date());
-			activity.setLastModifiedDate(new Date());
-			List<IssueActivity> activities = new ArrayList<IssueActivity>();
-			activities.add(activity);
-			issue.setActivities(activities);
+			
 			Notification watchModel = new Notification();
 
 			watchModel.setUser(creator);
@@ -395,7 +382,11 @@ public class IssueServiceImpl implements IssueService {
 			addIssueNotification(watchModel);
 
 		}
-
+		List<IssueActivity> activities = new ArrayList<IssueActivity>();
+		activities.add(activity);
+		issue.setActivities(activities);
+		
+		
 		issue.setProject(project);
 
 		issue.setCreator(creator);
@@ -403,8 +394,8 @@ public class IssueServiceImpl implements IssueService {
 		// save
 		// TODO: The filter should automatically take care of the
 		// following two timestamps, removed them
-		issue.setCreateDate(new Timestamp(new Date().getTime()));
-		issue.setLastModifiedDate(issue.getCreateDate());
+//		issue.setCreateDate(new Timestamp(new Date().getTime()));
+//		issue.setLastModifiedDate(issue.getCreateDate());
 		getIssueDAO().save(issue);
 
 		return issue;
@@ -414,7 +405,7 @@ public class IssueServiceImpl implements IssueService {
 	/**
 	 * 
 	 * TODO: improve this, verify how the update is done.. is there any reason to swap the issue-object?
-	 * 
+	 * TODO: activities must be handled elsewhere, so they will be set in issue already before call to updateIssue.
 	 */
 	public Issue updateIssue(Issue issue, Integer userId) throws ProjectException {
 //		String existingTargetVersion = null;
@@ -557,6 +548,7 @@ public class IssueServiceImpl implements IssueService {
                 
 		return issue; //Updateissue;
 	}
+
 
 	/**
 	 * 
@@ -1080,6 +1072,9 @@ public class IssueServiceImpl implements IssueService {
 		attachment.setUser(user);
 		attachment.setCreateDate(new Date());
 		attachment.setLastModifiedDate(attachment.getCreateDate());
+		
+		// TODO: activity for adding attachment?
+//		IssueActivity activityAdd = new IssueActivity(attachment.getIssue(), user, IssueActivity.Type.ATTACHEMENT_ADDED)
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("addIssueAttachment: adding attachment " + attachment);

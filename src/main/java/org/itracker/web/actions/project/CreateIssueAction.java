@@ -104,6 +104,8 @@ public class CreateIssueAction extends ItrackerBaseAction {
             Integer currUserId = currUser.getId();
             
             IssueForm issueForm = (IssueForm)form;
+
+            Integer creator = currUserId;
             
             Project project = null;
             Integer projectId = issueForm.getProjectId();
@@ -134,16 +136,9 @@ public class CreateIssueAction extends ItrackerBaseAction {
                 issue.setSeverity(issueForm.getSeverity());
                 issue.setStatus(IssueUtilities.STATUS_NEW);
                 
-                Integer creator = currUserId;
-                // TODO temporarily disabled creating issues as another user
-                /*if(UserUtilities.hasPermission(currPermissions, projectId, UserUtilities.PERMISSION_CREATE_OTHERS)) {
-                    creator = (Integer) PropertyUtils.getSimpleProperty(form, "creatorId");
-                    logger.debug("New issue creator set to " + creator + ".  Issue created by " + currUserId);
-                }*/
-                issue = issueService.createIssue(issue, projectId,
-                        (creator == null ? currUserId : creator), currUserId);
+
                 
-                if (issue != null) {
+//                if (issue != null) {
                     Integer newOwner = issueForm.getOwnerId();
                     
                     if (newOwner != null && newOwner.intValue() >= 0) {
@@ -179,7 +174,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                         }
                         issueFields = new ArrayList<IssueField>();
                         issueFields = issueFieldsVector;
-                    }
+//                    }
                     issueService.setIssueFields(issue.getId(), issueFields);
                     
                     
@@ -191,6 +186,13 @@ public class CreateIssueAction extends ItrackerBaseAction {
                     
                     HashSet<Integer> components = new HashSet<Integer>();
                     Integer[] componentIds = issueForm.getComponents();
+                    
+                    // TODO temporarily disabled creating issues as another user
+                    /*if(UserUtilities.hasPermission(currPermissions, projectId, UserUtilities.PERMISSION_CREATE_OTHERS)) {
+                        creator = (Integer) PropertyUtils.getSimpleProperty(form, "creatorId");
+                        logger.debug("New issue creator set to " + creator + ".  Issue created by " + currUserId);
+                    }*/
+                    
                     
                     if (componentIds != null) {
                         for (int i = 0; i < componentIds.length; i++) {
@@ -207,6 +209,10 @@ public class CreateIssueAction extends ItrackerBaseAction {
                         }
                         issueService.setIssueVersions(issue.getId(), versions, creator);
                     }
+                    
+
+                    issue = issueService.createIssue(issue, projectId,
+                            (creator == null ? currUserId : creator), currUserId);
                     
                     if(! ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, project.getOptions())) {
                         FormFile file = issueForm.getAttachment();

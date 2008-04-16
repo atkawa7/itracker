@@ -45,10 +45,10 @@ public abstract class AbstractEntity implements Entity {
     protected Integer id;
     
     /** Creation date and time. */
-    protected Date createDate;
+    protected Date createDate = new Date();
     
     /** Last modification date and time. */
-    protected Date lastModifiedDate;
+    protected Date lastModifiedDate = new Date();
 
     /**
      * Default constructor (required by Hibernate).

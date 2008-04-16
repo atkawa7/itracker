@@ -269,7 +269,7 @@ public class NotificationServiceImpl implements NotificationService {
 				String versionString = "";
 				for (int i = 0; i < activity.size(); i++) {
 					activityString += IssueUtilities
-							.getActivityName(activity.get(i).getType())
+							.getActivityName(activity.get(i).getActivityType())
 							+ ": "
 							+ activity.get(i).getDescription()
 							+ "\n";
