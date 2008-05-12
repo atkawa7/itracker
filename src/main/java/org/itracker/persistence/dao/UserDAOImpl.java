@@ -79,7 +79,8 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
         
         try {
             Query query = getSession().getNamedQuery("UsersByStatusQuery");
-            query.setInteger("status", status);
+            //@ToDo Check this query
+            //query.setInteger("status", status);
             users = query.list();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);

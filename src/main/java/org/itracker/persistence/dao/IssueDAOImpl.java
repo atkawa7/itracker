@@ -394,7 +394,8 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
             final Query query = getSession().getNamedQuery(
                     "IssuesByNotificationInAvailableProjectsQuery");
             query.setInteger("userId", userId);
-            query.setInteger("maxExclusiveStatus", maxExclusiveStatus);
+            //@ToDo Check this query.
+            //query.setInteger("maxExclusiveStatus", maxExclusiveStatus);
             issues = query.list();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);

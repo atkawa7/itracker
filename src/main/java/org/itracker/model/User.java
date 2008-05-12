@@ -59,20 +59,29 @@ public class User extends AbstractEntity implements Comparable<User> {
 	private int registrationType;
 
 	/** The system configuration for this User. */
-	private UserPreferences preferences;
+	private UserPreferences userPreferences;
 
 	/** The Permissions of this User on all Projects. */
 	private List<Permission> permissions = new ArrayList<Permission>();
 
 	/** The Projects owned by this User. */
 	private List<Project> projects = new ArrayList<Project>();
+    private UserPreferences preferences;
 
-	/*
-	 * This class used to have an <code>activities</code> attribute, which was
-	 * a Collection<IssueActivity>. This has been removed because the
-	 * association User - IssueActivity doesn't need to be navigatable in this
-	 * direction.
-	 */
+    public UserPreferences getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(UserPreferences preferences) {
+        this.preferences = preferences;
+    }
+
+    /*
+      * This class used to have an <code>activities</code> attribute, which was
+      * a Collection<IssueActivity>. This has been removed because the
+      * association User - IssueActivity doesn't need to be navigatable in this
+      * direction.
+      */
 
 	/*
 	 * This class used to have a <code>notifications</code> attribute, which
@@ -199,12 +208,12 @@ public class User extends AbstractEntity implements Comparable<User> {
 		this.permissions = getPermissions;
 	}
 
-	public UserPreferences getPreferences() {
-		return preferences;
+	public UserPreferences getUserPreferences() {
+		return userPreferences;
 	}
 
-	public void setPreferences(UserPreferences getPreferences) {
-		this.preferences = getPreferences;
+	public void setUserPreferences(UserPreferences getPreferences) {
+		this.userPreferences = getPreferences;
 	}
 
 	public int getRegistrationType() {

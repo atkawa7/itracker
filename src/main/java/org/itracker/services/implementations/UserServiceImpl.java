@@ -316,7 +316,7 @@ public class UserServiceImpl implements UserService {
             this.userPreferencesDAO.saveOrUpdate(NewUserPrefs);
             NewUserPrefs = userPreferencesDAO.findByUserId(user.getId());
 
-            user.setPreferences(NewUserPrefs);
+            user.setUserPreferences(NewUserPrefs);
 
             try {
                 PluggableAuthenticator authenticator =
