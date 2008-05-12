@@ -46,7 +46,7 @@
             <many-to-many class="org.itracker.model.CustomField" column="field_id"/>
         </bag>
         
-        <bag name="components" table="Component" cascade="all" lazy="true">
+        <bag name="components" table="componentbean" cascade="all" lazy="true">
             <key>
                 <column name="project_id"/>
             </key>
@@ -67,7 +67,7 @@
             <one-to-many class="org.itracker.model.Issue"/>
         </bag-->
         
-        <bag name="permissions" table="Permission" cascade="all" lazy="true">
+        <bag name="permissions" table="permissionbean" cascade="all" lazy="true">
             <key>
                 <column name="project_id"/>
             </key>
@@ -81,7 +81,7 @@
             <many-to-many class="User" column="user_id"/>			
         </bag>
         
-        <bag name="scripts" table="ProjectScript" cascade="all" lazy="true">
+        <bag name="scripts" table="projectscriptbean" cascade="all" lazy="true">
             <key>
                 <column name="project_id"/>
             </key>

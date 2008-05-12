@@ -44,7 +44,7 @@
             <column name="last_modified" sql-type="timestamp" not-null="true"/>
         </property>
         
-        <bag name="options" table="CustomFieldValue" cascade="all">
+        <bag name="options" table="customfieldvaluebean" cascade="all">
             <key>
                 <column name="custom_field_id" not-null="true"/>
             </key>

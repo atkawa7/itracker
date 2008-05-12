@@ -67,42 +67,42 @@
             <many-to-many class="Version" column="version_id" outer-join="auto"/>
         </bag>
         
-        <bag name="notifications" table="Notification" cascade="all" lazy="true">
+        <bag name="notifications" table="notificationbean" cascade="all" lazy="true">
             <key>
                 <column name="issue_id"/>
             </key>
             <one-to-many class="Notification"/>
         </bag>
         
-        <bag name="attachments" table="IssueAttachment" cascade="all" lazy="true">
+        <bag name="attachments" table="issueattachmentbean" cascade="all" lazy="true">
             <key>
                 <column name="issue_id"/>
             </key>
             <one-to-many class="IssueAttachment"/>
         </bag>
         
-        <bag name="fields" table="IssueField" cascade="all" lazy="true">
+        <bag name="fields" table="issuefieldbean" cascade="all" lazy="true">
             <key>
                 <column name="issue_id"/>
             </key>
             <one-to-many class="IssueField"/>
         </bag>
         
-        <bag name="history" table="IssueHistory" cascade="all" lazy="true">
+        <bag name="history" table="issuehistorybean" cascade="all" lazy="true">
             <key>
                 <column name="issue_id"/>
             </key>
             <one-to-many class="IssueHistory"/>
         </bag>
         
-        <bag name="relations" table="IssueRelation" cascade="all" lazy="true">
+        <bag name="relations" table="issuerelationbean" cascade="all" lazy="true">
             <key>
                 <column name="issue_id"/>
             </key>
             <one-to-many class="IssueRelation"/>
         </bag>
         
-        <bag name="activities" table="IssueActivity" cascade="all" lazy="true">
+        <bag name="activities" table="issueactivitybean" cascade="all" lazy="true">
             <key>
                 <column name="issue_id"/>
             </key>
