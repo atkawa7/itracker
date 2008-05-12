@@ -349,7 +349,7 @@ public class CustomField extends AbstractEntity
             }
         }
         
-    };
+    }
     
     /** 
      * Date format for fields of type DATE.
@@ -368,6 +368,6 @@ public class CustomField extends AbstractEntity
             this.code = code;
         }
         
-    };
+    }
     
 }
