@@ -32,9 +32,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     <!-- Hibernate local transaction manager -->
     <bean id="transactionManager"
         class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <!-- Issue search service -->
@@ -68,9 +66,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
             </props>
         </property>
         <property name="target" ref="configurationServiceTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.services.ConfigurationService</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.services.ConfigurationService"/>
     </bean>
     
     <bean id="configurationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -103,9 +99,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
             </props>
         </property>
         <property name="target" ref="issueServiceTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.services.IssueService</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.services.IssueService"/>
     </bean>
     
     <bean id="issueServiceTarget" class="org.itracker.services.implementations.IssueServiceImpl">
@@ -155,9 +149,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
             </props>
         </property>
         <property name="target" ref="projectServiceTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.services.ProjectService</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.services.ProjectService"/>
     </bean>
     
     <bean id="projectServiceTarget" class="org.itracker.services.implementations.ProjectServiceImpl">
@@ -180,14 +172,12 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
             </props>
         </property>
         <property name="target" ref="userServiceTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.services.UserService</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.services.UserService"/>
     </bean>
     
     <bean id="userServiceTarget"
         class="org.itracker.services.implementations.UserServiceImpl"
-        autowire="autodetect">
+            >
         <constructor-arg ref="configurationService" />
         <constructor-arg ref="projectService" />
         <constructor-arg ref="userDAO" />
@@ -207,14 +197,12 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
             </props>
         </property>
         <property name="target" ref="reportServiceTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.services.ReportService</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.services.ReportService"/>
     </bean>
     
     <bean id="reportServiceTarget"
         class="org.itracker.services.implementations.ReportServiceImpl"
-        autowire="byName"> 
+            >
         <constructor-arg ref="reportDAO" />
     </bean>
     

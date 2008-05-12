@@ -35,9 +35,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     </bean>
     <bean id="hibernateProperties"
         class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="location">
-            <value>classpath:hibernate.properties</value>
-        </property>
+        <property name="location" value="classpath:hibernate.properties"/>
     </bean>
     
     <bean id="timestampEntityInterceptor"
@@ -46,18 +44,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     <!-- Hibernate interceptor to manage the session outside any transaction scope. -->
     <bean id="hibernateInterceptor"
         class="org.springframework.orm.hibernate3.HibernateInterceptor">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     
     <!-- The configuration DAO -->
     <bean id="configurationDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="configurationDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.ConfigurationDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.ConfigurationDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -67,9 +61,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="configurationDAOTarget"
         class="org.itracker.persistence.dao.ConfigurationDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
         
     <!-- The scheduled task DAO -->
@@ -97,9 +89,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     <bean id="languageDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="languageDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.LanguageDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.LanguageDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -109,18 +99,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="languageDAOTarget"
         class="org.itracker.persistence.dao.LanguageDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <!-- The custom field DAO -->
     <bean id="customFieldDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="customFieldDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.CustomFieldDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.CustomFieldDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -130,18 +116,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="customFieldDAOTarget"
         class="org.itracker.persistence.dao.CustomFieldDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <!-- The custom field value DAO -->
     <bean id="customFieldValueDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="customFieldValueDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.CustomFieldValueDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.CustomFieldValueDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -151,18 +133,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="customFieldValueDAOTarget"
         class="org.itracker.persistence.dao.CustomFieldValueDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <!-- The user DAO -->
     <bean id="userDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="userDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.UserDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.UserDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -172,18 +150,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="userDAOTarget"
         class="org.itracker.persistence.dao.UserDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <!-- The report factory -->
     <bean id="reportDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="reportDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.ReportDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.ReportDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -193,18 +167,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="reportDAOTarget"
         class="org.itracker.persistence.dao.ReportDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <!-- The project DAO -->
     <bean id="projectDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="projectDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.ProjectDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.ProjectDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -214,18 +184,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="projectDAOTarget"
         class="org.itracker.persistence.dao.ProjectDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <!-- The component DAO -->
     <bean id="componentDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="componentDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.ComponentDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.ComponentDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -235,18 +201,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="componentDAOTarget"
         class="org.itracker.persistence.dao.ComponentDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <!-- The version DAO -->
     <bean id="versionDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="versionDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.VersionDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.VersionDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -256,18 +218,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="versionDAOTarget"
         class="org.itracker.persistence.dao.VersionDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <!-- The userpreferences factory -->
     <bean id="userPreferencesDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="userPreferencesDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.UserPreferencesDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.UserPreferencesDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -285,9 +243,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     <bean id="permissionDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="permissionDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.PermissionDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.PermissionDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -297,19 +253,16 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="permissionDAOTarget"
         class="org.itracker.persistence.dao.PermissionDAOImpl"
-        autowire="byName">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+            >
+        <property name="sessionFactory" ref="sessionFactory"/>
+
     </bean>
 
     <!-- The issue DAO -->
     <bean id="issueDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="issueDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.IssueDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.IssueDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -319,9 +272,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="issueDAOTarget"
         class="org.itracker.persistence.dao.IssueDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
         <property name="projectDAO" ref="projectDAO"/>
     </bean>
 
@@ -329,9 +280,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     <bean id="issueHistoryDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="issueHistoryDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.IssueHistoryDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.IssueHistoryDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -341,18 +290,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="issueHistoryDAOTarget"
         class="org.itracker.persistence.dao.IssueHistoryDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <!-- The notification DAO -->
     <bean id="notificationDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="notificationDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.NotificationDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.NotificationDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -362,19 +307,16 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="notificationDAOTarget"
         class="org.itracker.persistence.dao.NotificationDAOImpl"
-        autowire="byName">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+            >
+        <property name="sessionFactory" ref="sessionFactory"/>
+
     </bean>
 
     <!-- The issue relation DAO -->
     <bean id="issueRelationDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="issueRelationDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.IssueRelationDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.IssueRelationDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -384,18 +326,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="issueRelationDAOTarget"
         class="org.itracker.persistence.dao.IssueRelationDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <!-- The issue attachment DAO -->
     <bean id="issueAttachmentDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="issueAttachmentDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.IssueAttachmentDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.IssueAttachmentDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -405,18 +343,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="issueAttachmentDAOTarget"
         class="org.itracker.persistence.dao.IssueAttachmentDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <!-- The issue activity DAO -->
     <bean id="issueActivityDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="issueActivityDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.IssueActivityDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.IssueActivityDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -426,18 +360,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="issueActivityDAOTarget"
         class="org.itracker.persistence.dao.IssueActivityDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>    
 
     <!-- The project script DAO -->
     <bean id="projectScriptDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="projectScriptDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.ProjectScriptDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.ProjectScriptDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -447,18 +377,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="projectScriptDAOTarget"
         class="org.itracker.persistence.dao.ProjectScriptDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     
     <!-- The workflow script DAO -->
     <bean id="workflowScriptDAO"
         class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="workflowScriptDAOTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.persistence.dao.WorkflowScriptDAO</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.persistence.dao.WorkflowScriptDAO"/>
         <property name="interceptorNames">
             <list>
                 <value>hibernateInterceptor</value>
@@ -468,9 +394,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     
     <bean id="workflowScriptDAOTarget"
         class="org.itracker.persistence.dao.WorkflowScriptDAOImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     
 </beans>
