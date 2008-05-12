@@ -274,16 +274,16 @@ a.listRow:link {
   text-decoration: none;
   color: #000000;
 
-  padding: 2 5 2 5;
+  padding: 2px 5px 2px 5px;
   background-color: #8888FF;
   border-style: solid;
   border-color: #DDDDDD #5555FF #5555FF #DDDDDD;
-  border-top-width: 2;
-  border-left-width: 2;
-  border-right-width: 2;
-  border-bottom-width: 2;
+  border-top-width: 2px;
+  border-left-width: 2px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
 }
 .smalltext {
-  font-family: Verdana, Arial;
+  font-family: Verdana, Arial, sans-serif;
   font-size: small;
 }
