@@ -15,11 +15,9 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     <import resource="services-context.xml"/>
 
     <!-- Initialize ITracker Resources -->
-    <bean id="itrackerservices-servletcontextutils-init"
+    <bean id="itrackerservicesservletcontextutilsinit"
         class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="staticMethod">
-            <value>org.itracker.web.util.ServletContextUtils.setITrackerServices</value>
-        </property>
+        <property name="staticMethod" value="org.itracker.web.util.ServletContextUtils.setITrackerServices"/>
         <property name="arguments" ref="itrackerServices" />
     </bean>
 
@@ -38,11 +36,9 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     </bean -->
 
     <!-- Initialize ITracker Resources -->
-    <bean id="resources-init"
+    <bean id="resourcesinit"
         class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="staticMethod">
-            <value>org.itracker.core.resources.ITrackerResources.setConfigurationService</value>
-        </property>
+        <property name="staticMethod" value="org.itracker.core.resources.ITrackerResources.setConfigurationService"/>
         <property name="arguments" ref="configurationService" />
     </bean>
 
@@ -50,9 +46,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     <!-- Usefull for db passwords, etc.. -->
     <bean id="applicationOverride"
         class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
-        <property name="location">
-            <value>classpath:application.properties</value>
-        </property>
+        <property name="location" value="classpath:application.properties"/>
     </bean>
 
 </beans>
