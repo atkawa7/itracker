@@ -58,7 +58,7 @@ public class AttachmentUtilities {
             return false;
         }
         spaceLeft = spaceLeft - origFileSize;
-
+          // @TODO: please check this code and clean up 
 //            filename = attachmentDirName + File.separator + filename;
 
 //            if(logger.isDebugEnabled()) {
