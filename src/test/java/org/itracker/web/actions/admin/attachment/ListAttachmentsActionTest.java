@@ -93,7 +93,8 @@ public class ListAttachmentsActionTest extends AbstractDependencyInjectionTest {
                 "dataset/projectbean_dataset.xml",
                 "dataset/versionbean_dataset.xml",
                 "dataset/issuebean_dataset.xml",
-                "dataset/issueattachmentbean_dataset.xml"
+                "dataset/issueattachmentbean_dataset.xml",
+                "dataset/issueactivitybean_dataset.xml"
         };
     }
 

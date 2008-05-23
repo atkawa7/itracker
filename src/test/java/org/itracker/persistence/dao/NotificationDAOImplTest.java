@@ -49,7 +49,8 @@ public class NotificationDAOImplTest extends AbstractDependencyInjectionTest {
                 "dataset/projectbean_dataset.xml",
                 "dataset/versionbean_dataset.xml",
                 "dataset/issuebean_dataset.xml",
-                "dataset/notificationbean_dataset.xml"
+                "dataset/notificationbean_dataset.xml",
+                "dataset/issueactivitybean_dataset.xml"
         };
     }
 

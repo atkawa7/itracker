@@ -1,11 +1,19 @@
 package org.itracker;
 
-import org.dbunit.database.DatabaseConnection;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.sql.DataSource;
+
 import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.XmlDataSet;
-import org.dbunit.operation.InsertOperation;
 import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
+import org.dbunit.operation.DatabaseOperation;
+import org.dbunit.operation.InsertOperation;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.After;
@@ -16,12 +24,6 @@ import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
 import org.springframework.orm.hibernate3.SessionHolder;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 @RunWith(JUnit4ClassRunner.class)
 public abstract class AbstractDependencyInjectionTest extends AbstractDependencyInjectionSpringContextTests {
@@ -74,7 +76,7 @@ public abstract class AbstractDependencyInjectionTest extends AbstractDependency
         if( dataSets != null ) {
             for( int i = dataSets.size() - 1; i >= 0; i-- ) {
                 IDataSet dataSet = (IDataSet)dataSets.get( i );
-                InsertOperation.DELETE_ALL.execute( dbConnection, dataSet );
+                DatabaseOperation.DELETE_ALL.execute( dbConnection, dataSet );
             }
         }
 
@@ -101,9 +103,11 @@ public abstract class AbstractDependencyInjectionTest extends AbstractDependency
         return dataSets;
     }
 
-    protected String[] getDataSetFiles() {
-        return null;
-    }
+    /**
+     * must make sure, that the order is correct, so no constraints will be violated.
+     * @return
+     */
+    protected abstract String[] getDataSetFiles();
 
     public LocalSessionFactoryBean getSessionFactoryBean() {
         return sessionFactoryBean;

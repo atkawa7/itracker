@@ -44,7 +44,8 @@ public class AdminHomeActionTest extends AbstractDependencyInjectionTest {
                 "dataset/versionbean_dataset.xml",
                 "dataset/permissionbean_dataset.xml",
                 "dataset/issuebean_dataset.xml",
-                "dataset/issueattachmentbean_dataset.xml"
+                "dataset/issueattachmentbean_dataset.xml",
+                "dataset/issueactivitybean_dataset.xml"
         };
     }
 

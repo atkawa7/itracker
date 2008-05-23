@@ -108,7 +108,8 @@ public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
                 "dataset/userbean_dataset.xml",
                 "dataset/projectbean_dataset.xml",
                 "dataset/versionbean_dataset.xml",
-                "dataset/issuebean_dataset.xml"
+                "dataset/issuebean_dataset.xml",
+                "dataset/issueactivitybean_dataset.xml"
         };
     }
 

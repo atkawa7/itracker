@@ -46,6 +46,7 @@ public class EditIssueActionTest extends AbstractDependencyInjectionTest {
         ActionForward actionForward = editIssueAction.execute(actionMapping, issueForm, request, response);
 
         assertNotNull(actionForward);
+        // validation issue?
         assertEquals("listissues?projectId=2", actionForward.getPath());
 
     }
@@ -80,7 +81,8 @@ public class EditIssueActionTest extends AbstractDependencyInjectionTest {
                 "dataset/versionbean_dataset.xml",
                 "dataset/permissionbean_dataset.xml",
                 "dataset/issuebean_dataset.xml",
-                "dataset/issueattachmentbean_dataset.xml"
+                "dataset/issueattachmentbean_dataset.xml",
+                "dataset/issueactivitybean_dataset.xml"
         };
     }
 
