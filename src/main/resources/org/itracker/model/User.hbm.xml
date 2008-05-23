@@ -46,7 +46,12 @@
             <column name="registration_type" not-null="true"/>
         </property>
 
-        <one-to-one name="preferences" class="UserPreferences" cascade="save-update"/>
+<!--  won't work, wrecked unit tests:
+        <one-to-one name="preferences" class="UserPreferences" cascade="save-update" />
+        -->
+        <many-to-one name="preferences" class="UserPreferences" cascade="save-update">
+            <column name="preferences_id"/>
+        </many-to-one>
 
         <bag name="permissions" table="permissionbean" cascade="all" lazy="true">
             <key>
