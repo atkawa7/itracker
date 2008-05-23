@@ -27,7 +27,7 @@ import java.util.Comparator;
  * @author johnny
  */
 public class CustomFieldValue extends AbstractEntity 
-        implements Comparable<CustomFieldValue> {
+        implements Comparable<Entity> {
     
     public static final Comparator<CustomFieldValue> NAME_COMPARATOR = 
             new NameComparator();

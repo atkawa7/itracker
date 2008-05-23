@@ -29,7 +29,7 @@ import java.util.List;
  * 
  * @author ready
  */
-public class Issue extends AbstractEntity implements Comparable<Issue> {
+public class Issue extends AbstractEntity implements Comparable<Entity> {
 
     public static final Comparator<Issue> STATUS_COMPARATOR = 
             new StatusComparator();

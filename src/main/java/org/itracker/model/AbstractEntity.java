@@ -21,6 +21,10 @@ package org.itracker.model;
 import java.util.Comparator;
 import java.util.Date;
 
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.springframework.orm.jpa.EntityManagerHolder;
+
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.
  * 
@@ -32,7 +36,7 @@ import java.util.Date;
  */
 public abstract class AbstractEntity implements Entity {
 
-    public static final Comparator<AbstractEntity> ID_COMPARATOR = 
+    public static final Comparator<Entity> ID_COMPARATOR = 
             new IdComparator();
     
     public static final Comparator<AbstractEntity> CREATE_DATE_COMPARATOR = 
@@ -129,19 +133,19 @@ public abstract class AbstractEntity implements Entity {
     /**
      * Compares 2 instances by ID. 
      */
-    protected static class IdComparator implements Comparator<AbstractEntity> {
+    protected static class IdComparator implements Comparator<Entity> {
         
-        public int compare(AbstractEntity a, AbstractEntity b) {
+        public int compare(Entity a, Entity b) {
             final int result; 
             
-            if (a.id == null && b.id == null) {
+            if (a.getId() == null && b.getId() == null) {
                 result = 0;
-            } else if (a.id == null) {
+            } else if (a.getId() == null) {
                 result = -1;
-            } else if (b.id == null) {
+            } else if (b.getId() == null) {
                 result = 1;
             } else {
-                result = a.id.compareTo(b.id);
+                result = a.getId().compareTo(b.getId());
             }
             return result;
         }
@@ -191,4 +195,38 @@ public abstract class AbstractEntity implements Entity {
 
     }
     
+    @Override
+    public boolean equals(Object obj) {
+
+    	
+    	if (this == obj) {
+    		return true;
+    	}
+    	if (isNew()) {
+    		return false;
+    	}
+    	
+    	if (obj instanceof Entity) {
+    		// TODO how to distinguish the entity of the object? Class can be wrapped..
+			Entity o = (Entity) obj;
+			IdComparator comp = new IdComparator();
+			
+			return 0 == comp.compare(this, o);
+				
+		}
+
+    	return false;
+    	
+
+    }
+    
+    public int compareTo(Entity o) {
+    	if (null == getId())
+    		return getId() == o.getId()? 0:-1;
+    	if (null == o.getId())
+    		return 1;
+    	return getId().compareTo(o.getId());
+    }
+    
+ 
 }

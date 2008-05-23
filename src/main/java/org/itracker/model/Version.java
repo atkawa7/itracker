@@ -25,7 +25,7 @@ import java.util.Comparator;
  * 
  * @author ready
  */
-public class Version extends AbstractEntity implements Comparable<Version> {
+public class Version extends AbstractEntity implements Comparable<Entity> {
 
     /**
      * Invariant: never <tt>null</tt>. 

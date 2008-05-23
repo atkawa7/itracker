@@ -24,7 +24,7 @@ package org.itracker.model;
  * @author ready
  */
 public class Configuration extends AbstractEntity 
-        implements Comparable<Configuration> {
+        implements Comparable<Entity> {
 
     /** 
      * PENDING: this field doesn't exist in the database!? 

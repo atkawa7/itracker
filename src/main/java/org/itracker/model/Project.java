@@ -28,7 +28,7 @@ import java.util.List;
  * 
  * @author ready
  */
-public class Project extends AbstractEntity implements Comparable<Project> {
+public class Project extends AbstractEntity implements Comparable<Entity> {
 
     private String name;
     
@@ -209,13 +209,16 @@ public class Project extends AbstractEntity implements Comparable<Project> {
         if (this == obj) {
             return true;
         }
-        
-        if (obj instanceof Project) {
-            final Project other = (Project)obj;
-            
-            return this.name.equals(other.name);
+        if (!super.equals(obj)) {
+        	return false;
         }
-        return false;
+        
+//        if (obj instanceof Project) {
+//            final Project other = (Project)obj;
+//            
+//            return this.name.equals(other.name);
+//        }
+        return true;
     }
     
     /**

@@ -36,7 +36,7 @@ import java.util.Comparator;
  * @author Johnny
  */
 public class Component extends AbstractEntity 
-        implements Comparable<Component> {
+        implements Comparable<Entity> {
 
     public static final Comparator<Component> NAME_COMPARATOR = 
             new NameComparator();

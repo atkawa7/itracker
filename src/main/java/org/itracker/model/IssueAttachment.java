@@ -28,7 +28,7 @@ import java.util.Comparator;
  * @author ready
  */
 public class IssueAttachment extends AbstractEntity
-        implements Comparable<IssueAttachment> {
+        implements Comparable<Entity> {
     
     /** Compares 2 attachments by file size. */
     public static final Comparator<IssueAttachment> SIZE_COMPARATOR =

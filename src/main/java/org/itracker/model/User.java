@@ -33,7 +33,7 @@ import org.itracker.services.util.UserUtilities;
  * 
  * @author ready
  */
-public class User extends AbstractEntity implements Comparable<User> {
+public class User extends AbstractEntity implements Comparable<Entity> {
 
 	/**
 	 * 

@@ -28,7 +28,7 @@ import java.util.Comparator;
  * @author ready
  */
 public class Notification extends AbstractEntity 
-        implements Comparable<Notification> {
+        implements Comparable<Entity> {
 
     public static final Comparator<Notification> TYPE_COMPARATOR = 
             new RoleComparator();

@@ -57,7 +57,7 @@ import org.itracker.services.util.CustomFieldUtilities;
  * @see IssueField
  */
 public class CustomField extends AbstractEntity 
-        implements Comparable<CustomField> {
+        implements Comparable<Entity> {
     
     /**
 	 * 

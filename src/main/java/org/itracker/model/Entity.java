@@ -19,7 +19,7 @@ import java.io.Serializable;
  * @author johnny
  * @see AbstractEntity
  */
-public interface Entity extends Serializable, Cloneable {
+public interface Entity extends Serializable, Cloneable, Comparable<Entity> {
     
     /* PENDING : should createDate and lastModifiedDate properties 
      * be part of this interface ? 
