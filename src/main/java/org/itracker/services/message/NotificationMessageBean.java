@@ -320,9 +320,9 @@ public class NotificationMessageBean implements MessageListener {
 																		.getDescription())),
 												activityString });
 					}
-					emailService.sendEmail(addresses, subject, msgText);
-					issueService.updateIssueActivityNotification(issue.getId(),
-							true);
+//					emailService.sendEmail(addresses, subject, msgText);
+//					issueService.updateIssueActivityNotification(issue.getId(),
+//							true);
 				}
 			}
 		} catch (Exception e) {

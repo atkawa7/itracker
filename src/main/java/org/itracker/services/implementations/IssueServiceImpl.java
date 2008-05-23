@@ -356,8 +356,8 @@ public class IssueServiceImpl implements IssueService {
 			throw new ProjectException("Project is not active.");
 		}
 
-		IssueActivity activity = new IssueActivity();
-		activity.setActivityType(org.itracker.model.IssueActivity.Type.ISSUE_CREATED);
+		IssueActivity activity = new IssueActivity(issue, creator, IssueActivity.Type.ISSUE_CREATED);
+//		activity.setActivityType(org.itracker.model.IssueActivity.Type.ISSUE_CREATED);
 		activity.setDescription(ITrackerResources.getString("itracker.activity.system.createdfor") + " "
 				+ creator.getFirstName() + " " + creator.getLastName());
 
@@ -381,7 +381,8 @@ public class IssueServiceImpl implements IssueService {
 
 			addIssueNotification(watchModel);
 
-		}
+		} 
+		
 		List<IssueActivity> activities = new ArrayList<IssueActivity>();
 		activities.add(activity);
 		issue.setActivities(activities);
@@ -541,6 +542,9 @@ public class IssueServiceImpl implements IssueService {
 //			Updateissue.setTargetVersion(null);
 //		}
 //        Updateissue.setFields(issue.getFields());
+		
+		logger.info("updateIssue: should cascade activities: " + issue.getActivities());
+		
 		// save
         getIssueDAO().saveOrUpdate(issue);
         

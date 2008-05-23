@@ -132,7 +132,7 @@ public interface IssueService {
     
     //boolean addIssueActivity(IssueActivityModel model);
     
-    void updateIssueActivityNotification(Integer issueId, boolean notificationSent);
+//    void updateIssueActivityNotification(Integer issueId, boolean notificationSent);
     
     boolean addIssueAttachment(IssueAttachment attachment, byte[] data);
     
