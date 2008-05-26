@@ -19,7 +19,6 @@
 package org.itracker.web.actions.project;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -330,7 +329,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 		if (issue.getDescription() != null
 				&& form.getDescription() != null
-				&& !form.getDescription().equalsIgnoreCase(
+				&& !form.getDescription().equals(
 						issue.getDescription())) {
 
 			if (log.isDebugEnabled()) {
@@ -339,19 +338,19 @@ public class EditIssueAction extends ItrackerBaseAction {
 			}
 
 			addActivity(issue, user,
-					org.itracker.model.IssueActivity.Type.DESCRIPTION_CHANGE);
+					org.itracker.model.IssueActivityType.DESCRIPTION_CHANGE);
 		}
 
 		if (form.getResolution() != null
 				&& issue.getResolution() != null
 				&& !form.getResolution()
-						.equalsIgnoreCase(issue.getResolution())) {
+						.equals(issue.getResolution())) {
 			if (log.isDebugEnabled()) {
 				log
 						.debug("processActivities: creating new resolution-change activity");
 			}
 			addActivity(issue, user,
-					org.itracker.model.IssueActivity.Type.RESOLUTION_CHANGE);
+					org.itracker.model.IssueActivityType.RESOLUTION_CHANGE, issue.getResolution());
 		}
 
 		if (form.getStatus() != null && form.getStatus() != issue.getStatus() && issue.getStatus() != -1) {
@@ -361,17 +360,19 @@ public class EditIssueAction extends ItrackerBaseAction {
 						.debug("processActivities: creating new status-change activity");
 			}
 			addActivity(issue, user,
-					org.itracker.model.IssueActivity.Type.STATUS_CHANGE);
+					org.itracker.model.IssueActivityType.STATUS_CHANGE, IssueUtilities.getStatusName(issue.getStatus()));
 		}
 
-		if (form.getSeverity() != issue.getSeverity()
+		if (!form.getSeverity().equals(issue.getSeverity())
 				&& issue.getSeverity() != -1) {
 			if (log.isDebugEnabled()) {
 				log
 						.debug("processActivities: creating new severity-change activity");
 			}
 			addActivity(issue, user,
-					org.itracker.model.IssueActivity.Type.SEVERITY_CHANGE);
+					org.itracker.model.IssueActivityType.SEVERITY_CHANGE, IssueUtilities
+					.getSeverityName(issue
+							.getSeverity()));
 		}
 
 		String existingTargetVersion = null;
@@ -396,19 +397,19 @@ public class EditIssueAction extends ItrackerBaseAction {
 					+ " ";
 			description += version.getNumber();
 			addActivity(issue, user,
-					org.itracker.model.IssueActivity.Type.TARGETVERSION_CHANGE,
+					org.itracker.model.IssueActivityType.TARGETVERSION_CHANGE,
 					description);
 
 		}
 	}
 
 	private void addActivity(Issue issue, User user,
-			org.itracker.model.IssueActivity.Type severity_change) {
-		addActivity(issue, user, severity_change, null);
+			org.itracker.model.IssueActivityType type) {
+		addActivity(issue, user, type, null);
 	}
 
 	private void addActivity(Issue issue, User user,
-			org.itracker.model.IssueActivity.Type type, String description) {
+			org.itracker.model.IssueActivityType type, String description) {
 		IssueActivity activity = new IssueActivity();
 		activity.setActivityType(type);
 		if (null == description) {
@@ -421,12 +422,15 @@ public class EditIssueAction extends ItrackerBaseAction {
 		activity.setUser(user);
 		activity.setIssue(issue);
 		
+		
+		
+		
 //		ArrayList<IssueActivity> activities = new ArrayList<IssueActivity>(issue.getActivities());
 //		
 		
 		
 		
-//		issue.getActivities().add(activity);
+		issue.getActivities().add(activity);
 //		issue.setActivities(activities);
 		
 		// getITrackerServices().getIssueService().addIssueActivity(activity);
