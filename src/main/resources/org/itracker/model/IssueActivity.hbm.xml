@@ -6,6 +6,7 @@
     
 <hibernate-mapping auto-import="true" package="org.itracker.model">
     
+  
     <class name="IssueActivity" table="issueactivitybean">
         
         <id name="id" unsaved-value="null">
@@ -21,9 +22,13 @@
             <column name="user_id" not-null="true"/>
         </many-to-one>
         
-        <property name="type">
+        <property name="activityType">
             <column name="activity_type" sql-type="int"  not-null="true"/>
-        </property>
+
+		    <type name="org.itracker.persistence.dao.EnumCodeUserType">
+		      <param name="enumClassName">org.itracker.model.IssueActivityType</param>
+		    </type>
+       </property>
         
         <property name="description">
             <column name="description" length="255" not-null="false"/>
