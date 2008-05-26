@@ -41,11 +41,11 @@ import org.itracker.model.Configuration;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueActivity;
 import org.itracker.model.Language;
+import org.itracker.model.IssueActivityType;
 import org.itracker.model.User;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
 import org.itracker.services.exceptions.SystemConfigurationException;
-import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
@@ -172,7 +172,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                                     issues.get(i).setStatus(newStatus);
                                     issues.add(issueService.updateIssue(issues.get(i), currUserId));
                                     IssueActivity activity = new IssueActivity();
-                                    activity.setType(IssueUtilities.ACTIVITY_SYSTEM_UPDATE);
+                                    activity.setActivityType(IssueActivityType.SYSTEM_UPDATE);
                                     activity.setDescription(ITrackerResources.getString("itracker.activity.system.status"));
                                     // TODO need to fix this RJST
                                     //activity.setIssue(issues[i]);
