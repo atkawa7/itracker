@@ -38,8 +38,8 @@ import org.itracker.model.NameValuePair;
 import org.itracker.model.Notification;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
+import org.itracker.model.IssueActivityType;
 import org.itracker.model.User;
-import org.itracker.model.IssueActivity.Type;
 
 
 /**
@@ -491,10 +491,10 @@ public class IssueUtilities  {
     public static String getActivityName(int value, Locale locale) {
         return ITrackerResources.getString("itracker.activity." + value, locale);
     }
-    public static String getActivityName(Type type) {
+    public static String getActivityName(IssueActivityType type) {
     	return getActivityName(type, ITrackerResources.getLocale());
     }
-    public static String getActivityName(Type type, Locale locale) {
+    public static String getActivityName(IssueActivityType type, Locale locale) {
     	return String.valueOf(type.name());
     }
 
