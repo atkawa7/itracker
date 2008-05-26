@@ -38,6 +38,7 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueActivity;
+import org.itracker.model.IssueActivityType;
 import org.itracker.model.User;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
@@ -117,7 +118,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                             issues.get(i).setSeverity(newSeverity);
                             issues.add(issueService.updateIssue(issues.get(i), currUserId));
                             IssueActivity activity = new IssueActivity();
-                            activity.setType(IssueUtilities.ACTIVITY_SYSTEM_UPDATE);
+                            activity.setActivityType(IssueActivityType.SYSTEM_UPDATE);
                             activity.setDescription(ITrackerResources.getString("itracker.activity.system.severity"));
                             //, issues.get(i).getId(), currUserId)
                             // TODO: need to fix this - RJST
@@ -166,7 +167,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                             issues.get(i).setStatus(newStatus);
                             issues.add(issueService.updateIssue(issues.get(i), currUserId));
                             IssueActivity activity = new IssueActivity();
-                            activity.setType(IssueUtilities.ACTIVITY_SYSTEM_UPDATE);
+                            activity.setActivityType(IssueActivityType.SYSTEM_UPDATE);
                             activity.setDescription(ITrackerResources.getString("itracker.activity.system.status"));
                             // TODO fix this - RJST
                             //, issues.get(i).getId(), currUserId
