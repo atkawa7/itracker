@@ -51,6 +51,7 @@ import org.itracker.model.Component;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueActivity;
+import org.itracker.model.IssueActivityType;
 import org.itracker.model.IssueAttachment;
 import org.itracker.model.IssueField;
 import org.itracker.model.IssueHistory;
@@ -356,7 +357,7 @@ public class IssueServiceImpl implements IssueService {
 			throw new ProjectException("Project is not active.");
 		}
 
-		IssueActivity activity = new IssueActivity(issue, creator, IssueActivity.Type.ISSUE_CREATED);
+		IssueActivity activity = new IssueActivity(issue, creator, IssueActivityType.ISSUE_CREATED);
 //		activity.setActivityType(org.itracker.model.IssueActivity.Type.ISSUE_CREATED);
 		activity.setDescription(ITrackerResources.getString("itracker.activity.system.createdfor") + " "
 				+ creator.getFirstName() + " " + creator.getLastName());
@@ -581,7 +582,7 @@ public class IssueServiceImpl implements IssueService {
 		User user = getUserDAO().findByPrimaryKey(userId);
 
 		IssueActivity activity = new IssueActivity();
-		activity.setType(IssueUtilities.ACTIVITY_ISSUE_MOVE);
+		activity.setActivityType(org.itracker.model.IssueActivityType.ISSUE_MOVE);
 		activity.setDescription(issue.getProject().getName() + " "
 				+ ITrackerResources.getString("itracker.web.generic.to") + " " + project.getName());
 		activity.setUser(user);
@@ -718,7 +719,7 @@ public class IssueServiceImpl implements IssueService {
 		if (wasChanged) {
 
 			IssueActivity activity = new IssueActivity();
-			activity.setType(IssueUtilities.ACTIVITY_COMPONENTS_MODIFIED);
+			activity.setActivityType(org.itracker.model.IssueActivityType.COMPONENTS_MODIFIED);
 			activity.setDescription(changesBuf.toString());
 			activity.setIssue(issue);
 			// activity.setUser();
@@ -800,7 +801,7 @@ public class IssueServiceImpl implements IssueService {
 		if (wasChanged) {
 
 			IssueActivity activity = new IssueActivity();
-			activity.setType(IssueUtilities.ACTIVITY_VERSIONS_MODIFIED);
+			activity.setActivityType(org.itracker.model.IssueActivityType.TARGETVERSION_CHANGE);
 			activity.setDescription(changesBuf.toString());
 			activity.setIssue(issue);
 			// need to set user here
@@ -862,7 +863,7 @@ public class IssueServiceImpl implements IssueService {
 			relationB.setLastModifiedDate(new java.sql.Timestamp(new java.util.Date().getTime()));
 
 			IssueActivity activity = new IssueActivity();
-			activity.setType(IssueUtilities.ACTIVITY_RELATION_ADDED);
+			activity.setActivityType(org.itracker.model.IssueActivityType.RELATION_ADDED);
 			activity.setDescription(ITrackerResources.getString("itracker.activity.relation.add"));
 			// probably add this to description
 			// new Object[] {IssueUtilities.getRelationName(relationType),
@@ -872,7 +873,7 @@ public class IssueServiceImpl implements IssueService {
 			// need to save here
 
 			activity = new IssueActivity();
-			activity.setType(IssueUtilities.ACTIVITY_RELATION_ADDED);
+			activity.setActivityType(org.itracker.model.IssueActivityType.RELATION_ADDED);
 			activity.setDescription(ITrackerResources.getString("itracker.activity.relation.add",
 					new Object[] { IssueUtilities.getRelationName(matchingRelationType) }));
 			activity.setIssue(relatedIssue);
@@ -895,7 +896,7 @@ public class IssueServiceImpl implements IssueService {
 
 		if (matchingRelationId != null) {
 			IssueActivity activity = new IssueActivity();
-			activity.setType(IssueUtilities.ACTIVITY_RELATION_REMOVED);
+			activity.setActivityType(org.itracker.model.IssueActivityType.RELATION_REMOVED);
 			activity.setDescription(ITrackerResources.getString("itracker.activity.relation.removed", issueId
 					.toString()));
 			// need to fix the commented code and save
@@ -905,7 +906,7 @@ public class IssueServiceImpl implements IssueService {
 		}
 
 		IssueActivity activity = new IssueActivity();
-		activity.setType(IssueUtilities.ACTIVITY_RELATION_REMOVED);
+		activity.setActivityType(org.itracker.model.IssueActivityType.RELATION_REMOVED);
 		activity.setDescription(ITrackerResources.getString("itracker.activity.relation.removed", relatedIssueId
 				.toString()));
 		// activity.setIssue(issueId);
@@ -945,7 +946,7 @@ public class IssueServiceImpl implements IssueService {
 			}
 
 			IssueActivity activity = new IssueActivity();
-			activity.setType(IssueUtilities.ACTIVITY_OWNER_CHANGE);
+			activity.setActivityType(org.itracker.model.IssueActivityType.OWNER_CHANGE);
 			activity.setDescription((currOwner == null ? "["
 					+ ITrackerResources.getString("itracker.web.generic.unassigned") + "]" : currOwner.getLogin())
 					+ " " + ITrackerResources.getString("itracker.web.generic.to") + " " + user.getLogin());
@@ -978,7 +979,7 @@ public class IssueServiceImpl implements IssueService {
 				// TODO check implementation
 				addIssueNotification(notification);
 			}
-			IssueActivity activity = new IssueActivity(issue, assignedByUser, IssueUtilities.ACTIVITY_OWNER_CHANGE);
+			IssueActivity activity = new IssueActivity(issue, assignedByUser, IssueActivityType.OWNER_CHANGE);
 			activity.setDescription((issue.getOwner() == null ? "["
 					+ ITrackerResources.getString("itracker.web.generic.unassigned") + "]" : issue.getOwner()
 					.getLogin())
@@ -1150,7 +1151,7 @@ public class IssueServiceImpl implements IssueService {
 			history.setLastModifiedDate(new Timestamp(new Date().getTime()));
 
 			IssueActivity activity = new IssueActivity();
-			activity.setType(IssueUtilities.ACTIVITY_REMOVE_HISTORY);
+			activity.setActivityType(org.itracker.model.IssueActivityType.REMOVE_HISTORY);
 			activity.setDescription(ITrackerResources.getString("itracker.web.generic.entry") + " " + entryId + " "
 					+ ITrackerResources.getString("itracker.web.generic.removed") + ".");
 
