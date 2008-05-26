@@ -18,6 +18,7 @@
 
 package org.itracker.model;
 
+
 /**
  * An issue activity. 
  * 
@@ -30,14 +31,17 @@ package org.itracker.model;
  */
 public class IssueActivity extends AbstractEntity {
     
-    /** Issue to which this activity is related. */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/** Issue to which this activity is related. */
     private Issue issue;
     
     /** The User who generated this activity. */
     private User user;
     
-    /** Type of activity. */
-//    private int type;
     
     /** Optional activity description. */
     private String description = "";
@@ -47,7 +51,7 @@ public class IssueActivity extends AbstractEntity {
      */
     private boolean notificationSent = false;
 
-	private Type activityType = Type.ISSUE_CREATED;
+	private IssueActivityType activityType = IssueActivityType.ISSUE_CREATED;
     
     /**
      * Default constructor (required by Hibernate). 
@@ -61,22 +65,6 @@ public class IssueActivity extends AbstractEntity {
     	
     }
     
-    /**
-     * Creates a new instance with a <code>notificationSent</code> flag set 
-     * to <tt>false</tt> and a creation and last modified time stamp 
-     * set to the current time. 
-     * 
-     * @deprecated use {@link IssueActivity#IssueActivity(Issue, User, org.itracker.model.IssueActivity.Type)} instead
-     * @param issue
-     * @param user
-     * @param type 
-     * @param description 
-     */
-    public IssueActivity(Issue issue, User user, int type) {
-        setIssue(issue);
-        setUser(user);
-        setType(type);
-    }
     
     /**
      * Creates a new instance with a <code>notificationSent</code> flag set 
@@ -88,7 +76,7 @@ public class IssueActivity extends AbstractEntity {
      * @param type 
      * @param description 
      */
-    public IssueActivity(Issue issue, User user, Type type) {
+    public IssueActivity(Issue issue, User user, IssueActivityType type) {
     	setIssue(issue);
     	setUser(user);
     	setActivityType(type);
@@ -116,33 +104,15 @@ public class IssueActivity extends AbstractEntity {
         this.user = user;
     }
     
-    /**
-     * @deprecated use getActivityType
-     * @return
-     */
-    public int getType() {
-    	if (null == this.activityType) {
-    		return -1;
-    	}
-        return this.activityType.code;
-    }
 
-    /**
-     * @deprecated use setActivityType
-     * @param type
-     */
-    public void setType(int type) {
-    	this.activityType = Type.forCode(type);
-//        this.type = type;
-    }
 
-    public void setActivityType(Type type) {
+    public void setActivityType(IssueActivityType type) {
     	
 //    	this.type = type.code;
     	this.activityType = type;
     }
     
-    public Type getActivityType() {
+    public IssueActivityType getActivityType() {
     	return this.activityType;
     }
     public String getDescription() {
@@ -193,82 +163,5 @@ public class IssueActivity extends AbstractEntity {
                 + ",createDate=" + this.createDate + "]";
     }
     
-    public static enum Type {
-        
-        ISSUE_CREATED(1),
-        
-        STATUS_CHANGE(2),
-        
-        OWNER_CHANGE(3), 
-        
-        SEVERITY_CHANGE(4),
-        
-        COMPONENTS_MODIFIED(5),
-        
-        VERSIONS_MODIFIED(6),
-        
-        REMOVE_HISTORY(7),
-        
-        ISSUE_MOVE(8),
-        
-        SYSTEM_UPDATE(9),
-        
-        TARGETVERSION_CHANGE(10),
-        
-        DESCRIPTION_CHANGE(11),
-        
-        RESOLUTION_CHANGE(12),
-        
-        RELATION_ADDED(13),
-        
-        RELATION_REMOVED(14);
-        
-        private final int code;
-        
-        private Type(int code) {
-            this.code = code;
-        }
-        
-        /**
-         * @deprecated
-         * @param type
-         * @return
-         */
-        public static final Type forCode(int type) {
-        	switch (type) {
-    		case 1:
-    			return ISSUE_CREATED;
-    		case 2:
-    			return STATUS_CHANGE;
-    		case 3:
-    			return OWNER_CHANGE;
-    		case 4:
-    			return SEVERITY_CHANGE;
-    		case 5:
-    			return COMPONENTS_MODIFIED;
-    		case 6:
-    			return VERSIONS_MODIFIED;
-    		case 7:
-    			return REMOVE_HISTORY;
-    		case 8:
-    			return ISSUE_MOVE;
-    		case 9:
-    			return SYSTEM_UPDATE;
-    		case 10:
-    			return TARGETVERSION_CHANGE;
-    		case 11: 
-    			return DESCRIPTION_CHANGE;
-    		case 12:
-    			return RESOLUTION_CHANGE;
-    		case 13:
-    			return RELATION_ADDED;
-    		case 14:
-    			return RELATION_REMOVED;
-    		}
-        	return null;
-        }
-    }
-    
-
     
 }
