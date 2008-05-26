@@ -77,7 +77,7 @@
                   <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>" >
                     <td valign="top"><it:formatDate date="<%= activity.get(i).getCreateDate() %>"/></td>
                     <td></td>
-                    <td valign="top"><%= IssueUtilities.getActivityName(activity.get(i).getType(), (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>
+                    <td valign="top"><%= IssueUtilities.getActivityName(activity.get(i).getActivityType(), (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>
                     <td></td>
                     <td valign="top"><%= activity.get(i).getDescription() %></td>
                     <td></td>
