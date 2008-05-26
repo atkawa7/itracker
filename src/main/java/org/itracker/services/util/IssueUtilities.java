@@ -33,12 +33,12 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
+import org.itracker.model.IssueActivityType;
 import org.itracker.model.IssueRelation;
 import org.itracker.model.NameValuePair;
 import org.itracker.model.Notification;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
-import org.itracker.model.IssueActivityType;
 import org.itracker.model.User;
 
 
@@ -87,20 +87,6 @@ public class IssueUtilities  {
     // they will not be found.
     public static final int STATUS_END = 600;
 
-    public static final int ACTIVITY_ISSUE_CREATED = 1;
-    public static final int ACTIVITY_STATUS_CHANGE = 2;
-    public static final int ACTIVITY_OWNER_CHANGE = 3;
-    public static final int ACTIVITY_SEVERITY_CHANGE = 4;
-    public static final int ACTIVITY_COMPONENTS_MODIFIED = 5;
-    public static final int ACTIVITY_VERSIONS_MODIFIED = 6;
-    public static final int ACTIVITY_REMOVE_HISTORY = 7;
-    public static final int ACTIVITY_ISSUE_MOVE = 8;
-    public static final int ACTIVITY_SYSTEM_UPDATE = 9;
-    public static final int ACTIVITY_TARGETVERSION_CHANGE = 10;
-    public static final int ACTIVITY_DESCRIPTION_CHANGE = 11;
-    public static final int ACTIVITY_RESOLUTION_CHANGE = 12;
-    public static final int ACTIVITY_RELATION_ADDED = 13;
-    public static final int ACTIVITY_RELATION_REMOVED = 14;
 
     public static final int HISTORY_STATUS_REMOVED = -1;
     public static final int HISTORY_STATUS_AVAILABLE = 1;
@@ -484,18 +470,12 @@ public class IssueUtilities  {
         resolutions = (value == null ? new ArrayList<Configuration>() : value);
     }
 
-    public static String getActivityName(int value) {
-        return getActivityName(value, ITrackerResources.getLocale());
-    }
 
-    public static String getActivityName(int value, Locale locale) {
-        return ITrackerResources.getString("itracker.activity." + value, locale);
-    }
     public static String getActivityName(IssueActivityType type) {
     	return getActivityName(type, ITrackerResources.getLocale());
     }
     public static String getActivityName(IssueActivityType type, Locale locale) {
-    	return String.valueOf(type.name());
+    	return ITrackerResources.getString("itracker.activity." + String.valueOf(type.name()), locale);
     }
 
     /**
