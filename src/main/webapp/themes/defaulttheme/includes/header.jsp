@@ -24,10 +24,10 @@ final Map<Integer, Set<PermissionType>> permissions =
   <head>
     <title><it:message key="itracker.web.generic.itracker"/>: <it:message key="${pageTitleKey}" arg0="${pageTitleArg}"/>
    </title>
-    <link rel="STYLESHEET" type="text/css" href="<%= request.getContextPath() %>/themes/defaulttheme/includes/styles.css" ></link>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" ></meta>
-    <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT" ></meta>
-    <meta http-equiv="Pragma" content="no-cache" ></meta>
+    <link rel="STYLESHEET" type="text/css" href="<%= request.getContextPath() %>/themes/defaulttheme/includes/styles.css"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT"/> 
+     <meta http-equiv="Pragma" content="no-cache"/>
     <script type="text/javascript" src="<%= request.getContextPath() %>/themes/defaulttheme/includes/calendar.js"></script>
 
     <script type="text/javascript" src="<%= request.getContextPath() %>/themes/defaulttheme/includes/scripts.js"></script>
