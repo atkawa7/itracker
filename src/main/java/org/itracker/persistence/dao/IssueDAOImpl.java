@@ -604,4 +604,5 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         this.projectDAO = projectDAO;
     }
 
+
 }

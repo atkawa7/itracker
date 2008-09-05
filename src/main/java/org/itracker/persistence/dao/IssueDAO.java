@@ -278,4 +278,5 @@ public interface IssueDAO extends BaseDAO<Issue> {
      */
     List<Issue> query(IssueSearchQuery queryModel, User user, Map<Integer, Set<PermissionType>> userPermissions);
 
+
 }

@@ -3,6 +3,7 @@ package org.itracker.persistence.dao;
 import java.sql.Connection;
 
 import org.hibernate.HibernateException;
+import org.itracker.model.Entity;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -10,7 +11,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * 
  * @author rui silva
  */
-public abstract class BaseHibernateDAOImpl<T> extends HibernateDaoSupport 
+public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDaoSupport 
         implements BaseDAO<T> {
 
     /**
@@ -34,7 +35,6 @@ public abstract class BaseHibernateDAOImpl<T> extends HibernateDaoSupport
     public void saveOrUpdate(T entity) {
         try {
             getSession().saveOrUpdate(entity);
-
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -43,6 +43,7 @@ public abstract class BaseHibernateDAOImpl<T> extends HibernateDaoSupport
     public void delete(T entity) {
         try {
             getSession().delete(entity);
+            
 
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
@@ -63,4 +64,18 @@ public abstract class BaseHibernateDAOImpl<T> extends HibernateDaoSupport
         }
     }
     
+    public void detach(T o) {
+    	getSession().evict(o);
+    }
+    
+    public void refresh(T o) {
+    	getSession().refresh(o);
+    }
+    
+    @SuppressWarnings("unchecked")
+	public T merge(T entity) {
+    	
+    	return (T)getSession().merge(entity);
+    	
+    }
 }

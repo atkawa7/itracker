@@ -45,6 +45,7 @@ public class Component extends AbstractEntity
      * Project to which this component belongs. 
      * Invariant: never <tt>null</tt>. 
      */
+    
     private Project project;
     
     /**
