@@ -256,7 +256,8 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
                     if(history.size() > 0) {
                         for(int j = 0; j < history.size(); j++) {
                             history.get(j).setIssue(issue);
-                            issueService.addIssueHistory(history.get(j));
+                            
+                            issueService.updateIssue(issue, importer.getId());
                         }
                     }
 

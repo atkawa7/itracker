@@ -19,6 +19,7 @@
 package org.itracker.web.actions.admin.configuration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -170,13 +171,15 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                             for(int i = 0; i < issues.size(); i++) {
                                 if(issues.get(i) != null) {
                                     issues.get(i).setStatus(newStatus);
+//                                    IssueActivity activity = new IssueActivity();
+//                                    activity.setActivityType(IssueActivityType.SYSTEM_UPDATE);
+//                                    activity.setDescription(ITrackerResources.getString("itracker.activity.system.status"));
+//                                    issues.get(i).getActivities().add(activity);
+                                    // TODO: is this inteded?
                                     issues.add(issueService.updateIssue(issues.get(i), currUserId));
-                                    IssueActivity activity = new IssueActivity();
-                                    activity.setActivityType(IssueActivityType.SYSTEM_UPDATE);
-                                    activity.setDescription(ITrackerResources.getString("itracker.activity.system.status"));
+                                    
                                     // TODO need to fix this RJST
-                                    //activity.setIssue(issues[i]);
-                                    //.getId(), currUserId);                                    
+//                                    activity.setIssue(issues.get(i));                                    
                                 }
                             }
                         } catch(NumberFormatException nfe) {

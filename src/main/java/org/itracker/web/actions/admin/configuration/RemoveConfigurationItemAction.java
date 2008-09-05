@@ -19,6 +19,7 @@
 package org.itracker.web.actions.admin.configuration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -116,13 +117,8 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                     for(int i = 0; i < issues.size(); i++) {
                         if(issues.get(i) != null) {
                             issues.get(i).setSeverity(newSeverity);
-                            issues.add(issueService.updateIssue(issues.get(i), currUserId));
-                            IssueActivity activity = new IssueActivity();
-                            activity.setActivityType(IssueActivityType.SYSTEM_UPDATE);
-                            activity.setDescription(ITrackerResources.getString("itracker.activity.system.severity"));
-                            //, issues.get(i).getId(), currUserId)
-                            // TODO: need to fix this - RJST
-                            //issueService.addIssueActivity(activity);
+
+                            issues.add(issueService.systemUpdateIssue(issues.get(i), currUserId));
                         }
                     }
                 } catch(Exception e) {
@@ -165,13 +161,13 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                     for(int i = 0; i < issues.size(); i++) {
                         if(issues.get(i) != null) {
                             issues.get(i).setStatus(newStatus);
-                            issues.add(issueService.updateIssue(issues.get(i), currUserId));
-                            IssueActivity activity = new IssueActivity();
-                            activity.setActivityType(IssueActivityType.SYSTEM_UPDATE);
-                            activity.setDescription(ITrackerResources.getString("itracker.activity.system.status"));
-                            // TODO fix this - RJST
-                            //, issues.get(i).getId(), currUserId
-                            //issueService.addIssueActivity(activity);
+                            
+//                            IssueActivity activity = new IssueActivity();
+//                            activity.setActivityType(IssueActivityType.SYSTEM_UPDATE);
+//                            activity.setDescription(ITrackerResources.getString("itracker.activity.system.status"));
+//                            ArrayList<IssueActivity> activities = new ArrayList<IssueActivity>();
+//                            activities.add(activity);
+                            issues.add(issueService.systemUpdateIssue(issues.get(i), currUserId));
                         }
                     }
                 } catch(Exception e) {
