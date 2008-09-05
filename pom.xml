@@ -171,8 +171,8 @@
 										configurationfile="src/main/resources/hibernate.cfg.xml" />
 									<hbm2cfgxml />
 									<hbm2java />
-									<hbm2ddl delimiter=";"
-										export="false" drop="false" create="true"
+									<hbm2ddl drop="false" export="false"
+										delimiter=";" create="true"
 										outputfilename="schema/itracker.sql" format="true" />
 								</hibernatetool>
 							</tasks>
@@ -183,13 +183,20 @@
 					<dependency>
 						<groupId>org.hibernate</groupId>
 						<artifactId>hibernate-tools</artifactId>
-						<version>3.1.0.beta4</version>
+						<version>3.2.0.beta9a</version>
 						<exclusions>
 							<exclusion>
 								<artifactId>jta</artifactId>
 								<groupId>javax.transaction</groupId>
 							</exclusion>
 						</exclusions>
+					</dependency>
+					<dependency>
+
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-entitymanager</artifactId>
+						<version>3.2.1.ga</version>
+
 					</dependency>
 					<dependency>
 						<groupId>log4j</groupId>
@@ -482,16 +489,15 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate</artifactId>
-			<version>3.2.5.ga</version>
-
+			<version>3.2.6.ga</version>
 			<exclusions>
 				<exclusion>
-					<groupId>javax.transaction</groupId>
 					<artifactId>jta</artifactId>
+					<groupId>javax.transaction</groupId>
 				</exclusion>
 			</exclusions>
-
 		</dependency>
+
 	</dependencies>
 	<reporting>
 		<plugins>
