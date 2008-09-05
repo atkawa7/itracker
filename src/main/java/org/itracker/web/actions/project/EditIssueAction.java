@@ -19,6 +19,7 @@
 package org.itracker.web.actions.project;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -125,6 +126,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 			int previousStatus = -1;
 			Issue issue = issueService.getIssue(issueForm.getId());
 
+			
 			if (issue == null || issue.getId() == null || issue.getId() < 0) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"itracker.web.error.invalidissue"));
@@ -166,7 +168,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 			if (log.isDebugEnabled()) {
 				log.debug("execute: sending notification for issue: " + issue
-						+ " (HOSTORIES: " + issue.getHistory() + ")");
+						+ " (HOSTORIES: " + issueService.getIssueHistory(issue.getId()) + ")");
 			}
 
 			sendNotification(issue.getId(), previousStatus,
@@ -207,10 +209,15 @@ public class EditIssueAction extends ItrackerBaseAction {
 			Map<Integer, Set<PermissionType>> userPermissions, Locale locale,
 			IssueForm form, IssueService issueService) throws Exception {
 
-		processActivities(issue, user, form, issueService);
+//		List<IssueActivity> activities = processActivities(issue, user, form, issueService);
 
 		int previousStatus = issue.getStatus();
-
+		
+		/*
+		 * Issue must be detached before update, so the Hibernate-Session-Object won't be dirty
+		 */
+//		issueService.detachIssue(issue);
+		
 		issue.setDescription(form.getDescription());
 		issue.setResolution(form.getResolution());
 		issue.setSeverity(form.getSeverity());
@@ -320,13 +327,22 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 		addAttachment(issue, project, user, form, issueService);
 		// }
+//		issue.getActivities().addAll(activities);
 		issueService.updateIssue(issue, user.getId());
 
 	}
-
-	private void processActivities(Issue issue, User user, IssueForm form,
+/**
+ * @deprecated
+ * @param issue
+ * @param user
+ * @param form
+ * @param issueService
+ * @return
+ */
+	private List<IssueActivity> processActivities(Issue issue, User user, IssueForm form,
 			IssueService issueService) {
 
+		List<IssueActivity> activities = new ArrayList<IssueActivity>();
 		if (issue.getDescription() != null
 				&& form.getDescription() != null
 				&& !form.getDescription().equals(
@@ -337,7 +353,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 						.debug("processActivities: creating new description-change activity");
 			}
 
-			addActivity(issue, user,
+			getActivity(issue, user,
 					org.itracker.model.IssueActivityType.DESCRIPTION_CHANGE);
 		}
 
@@ -349,7 +365,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 				log
 						.debug("processActivities: creating new resolution-change activity");
 			}
-			addActivity(issue, user,
+			getActivity(issue, user,
 					org.itracker.model.IssueActivityType.RESOLUTION_CHANGE, issue.getResolution());
 		}
 
@@ -359,7 +375,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 				log
 						.debug("processActivities: creating new status-change activity");
 			}
-			addActivity(issue, user,
+			getActivity(issue, user,
 					org.itracker.model.IssueActivityType.STATUS_CHANGE, IssueUtilities.getStatusName(issue.getStatus()));
 		}
 
@@ -369,7 +385,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 				log
 						.debug("processActivities: creating new severity-change activity");
 			}
-			addActivity(issue, user,
+			getActivity(issue, user,
 					org.itracker.model.IssueActivityType.SEVERITY_CHANGE, IssueUtilities
 					.getSeverityName(issue
 							.getSeverity()));
@@ -396,19 +412,20 @@ public class EditIssueAction extends ItrackerBaseAction {
 					+ ITrackerResources.getString("itracker.web.generic.to")
 					+ " ";
 			description += version.getNumber();
-			addActivity(issue, user,
+			getActivity(issue, user,
 					org.itracker.model.IssueActivityType.TARGETVERSION_CHANGE,
 					description);
 
 		}
+		return activities;
 	}
 
-	private void addActivity(Issue issue, User user,
+	private IssueActivity getActivity(Issue issue, User user,
 			org.itracker.model.IssueActivityType type) {
-		addActivity(issue, user, type, null);
+		return getActivity(issue, user, type, null);
 	}
 
-	private void addActivity(Issue issue, User user,
+	private IssueActivity getActivity(Issue issue, User user,
 			org.itracker.model.IssueActivityType type, String description) {
 		IssueActivity activity = new IssueActivity();
 		activity.setActivityType(type);
@@ -430,16 +447,18 @@ public class EditIssueAction extends ItrackerBaseAction {
 		
 		
 		
-		issue.getActivities().add(activity);
+//		issue.getActivities().add(activity);
 //		issue.setActivities(activities);
 		
 		// getITrackerServices().getIssueService().addIssueActivity(activity);
 
 		
 		if (log.isDebugEnabled()) {
-			log.debug("addActivity: added IssueActivity: " + activity);
+		//	log.debug("addActivity: added IssueActivity: " + activity);
 			log.debug("addActivity: issue activities are now: " + issue.getActivities());
 		}
+		
+		return activity;
 	}
 
 	private void processLimitedEdit(final Issue issue, Project project,
@@ -447,7 +466,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 			Locale locale, IssueForm form, IssueService issueService)
 			throws Exception {
 
-		processActivities(issue, user, form, issueService);
+//		List<IssueActivity> activities = processActivities(issue, user, form, issueService);
 
 		issue.setDescription(form.getDescription());
 
@@ -470,7 +489,9 @@ public class EditIssueAction extends ItrackerBaseAction {
 		addHistoryEntry(issue, user, form, issueService);
 		addAttachment(issue, project, user, form, issueService);
 
+//		issue.getActivities().addAll(activities);
 		issueService.updateIssue(issue, user.getId());
+		
 	}
 
 	private void setOwner(Issue issue, User user,
@@ -587,12 +608,14 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 		issueHistory.setDescription(((IssueForm) form).getHistory());
 		issueHistory.setCreateDate(new Date());
+		
 
 		if (issueHistory.getLastModifiedDate() == null) {
 			issueHistory.setLastModifiedDate(new Date());
 		}
 
-		issueService.addIssueHistory(issueHistory);
+		issueService.updateIssue(issue, user.getId());
+//		issueService.addIssueHistory(issueHistory);
 
 	}
 
