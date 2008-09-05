@@ -72,7 +72,7 @@ final Map<Integer, Set<PermissionType>> permissions =
     hasProjects = true;
     
     // PENDING: Not scalable, should fetch all in 1 query. 
-    int[] projectStats = ph.getProjectStats(project.getId());
+    Long[] projectStats = ph.getProjectStats(project.getId());
     totalOpenIssues += projectStats[0];
     totalResolvedIssues += projectStats[1];
 %>
