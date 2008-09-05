@@ -11,7 +11,7 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
 
   <appender name="consoleAppender" class="org.apache.log4j.ConsoleAppender">
-    <param name="Threshold" value="DEBUG"/>
+    <param name="Threshold" value="WARN"/>
     <param name="Target" value="System.out"/>
 
     <layout class="org.apache.log4j.PatternLayout">
@@ -32,7 +32,7 @@
   </category>
   
   <category name="org.hibernate">
-    <priority value="INFO"/>
+    <priority value="DEBUG"/>
   </category>
   
   <category name="org.itracker">
