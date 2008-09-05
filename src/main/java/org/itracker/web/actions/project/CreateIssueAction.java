@@ -136,6 +136,34 @@ public class CreateIssueAction extends ItrackerBaseAction {
                 issue.setSeverity(issueForm.getSeverity());
                 issue.setStatus(IssueUtilities.STATUS_NEW);
                 
+                
+                // create the issue in the database
+                issue = issueService.createIssue(issue, projectId,
+                        (creator == null ? currUserId : creator), currUserId);
+                
+                if(! ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, project.getOptions())) {
+                    FormFile file = issueForm.getAttachment();
+                    
+                    if (file != null && ! "".equals(file.getFileName())) {
+                        String origFileName = file.getFileName();
+                        
+                        if (AttachmentUtilities.checkFile(file, this.getITrackerServices())) {
+                            int lastSlash = Math.max(origFileName.lastIndexOf('/'), origFileName.lastIndexOf('\\'));
+                            
+                            if (lastSlash > -1) {
+                                origFileName = origFileName.substring(lastSlash + 1);
+                            }
+                            
+                            IssueAttachment attachmentModel =
+                                    new IssueAttachment(issue, origFileName,
+                                    file.getContentType(),
+                                    issueForm.getAttachmentDescription(),
+                                    file.getFileSize(), currUser);
+                            issueService.addIssueAttachment(attachmentModel, file.getFileData());
+                        }
+                    }
+                }
+                
 
                 
 //                if (issue != null) {
@@ -170,6 +198,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                                     issueFieldsVector.add(issueField);
                                 }
                             } catch(Exception e) {
+                            	log.error("execute: failed to assign issue", e);
                             }
                         }
                         issueFields = new ArrayList<IssueField>();
@@ -182,8 +211,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                             issueForm.getHistory(),
                             IssueUtilities.HISTORY_STATUS_AVAILABLE);
                     issueHistory.setCreateDate(new Date());
-                    issueService.addIssueHistory(issueHistory);
-                    
+                    issueService.updateIssue(issue, currUser.getId());
                     HashSet<Integer> components = new HashSet<Integer>();
                     Integer[] componentIds = issueForm.getComponents();
                     
@@ -211,31 +239,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                     }
                     
 
-                    issue = issueService.createIssue(issue, projectId,
-                            (creator == null ? currUserId : creator), currUserId);
-                    
-                    if(! ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, project.getOptions())) {
-                        FormFile file = issueForm.getAttachment();
-                        
-                        if (file != null && ! "".equals(file.getFileName())) {
-                            String origFileName = file.getFileName();
-                            
-                            if (AttachmentUtilities.checkFile(file, this.getITrackerServices())) {
-                                int lastSlash = Math.max(origFileName.lastIndexOf('/'), origFileName.lastIndexOf('\\'));
-                                
-                                if (lastSlash > -1) {
-                                    origFileName = origFileName.substring(lastSlash + 1);
-                                }
-                                
-                                IssueAttachment attachmentModel =
-                                        new IssueAttachment(issue, origFileName,
-                                        file.getContentType(),
-                                        issueForm.getAttachmentDescription(),
-                                        file.getFileSize(), currUser);
-                                issueService.addIssueAttachment(attachmentModel, file.getFileData());
-                            }
-                        }
-                    }
+
                     
                     try {
                         Integer relatedIssueId = issueForm.getRelatedIssueId();
