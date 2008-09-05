@@ -10,10 +10,11 @@ import java.util.List;
 
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Issue;
+import org.itracker.model.IssueActivity;
+import org.itracker.model.IssueActivityType;
 import org.itracker.model.IssueField;
 import org.itracker.model.IssueHistory;
 import org.itracker.model.User;
-import org.itracker.persistence.dao.IssueActivityDAO;
 import org.itracker.persistence.dao.IssueDAO;
 import org.itracker.services.IssueService;
 import org.itracker.services.UserService;
@@ -26,8 +27,9 @@ import org.junit.Test;
  */
 public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	private IssueService issueService;
-	private IssueDAO issueDAO;
-	private IssueActivityDAO issueActivityDAO;
+
+	// private IssueDAO issueDAO;
+	// private IssueActivityDAO issueActivityDAO;
 
 	/**
 	 * Test method for
@@ -136,7 +138,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	public void testGetIssuesCreatedByUserInteger() {
 		Collection<Issue> issues = issueService.getIssuesCreatedByUser(3);
 		assertEquals("issues count createdBy#3", 0, issues.size());
-		
+
 		issues = issueService.getIssuesCreatedByUser(2);
 		assertEquals("issues count createdBy#2", 4, issues.size());
 	}
@@ -148,9 +150,10 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	@Test
 	public void testGetIssuesCreatedByUserIntegerBoolean() {
 		// TODO test function for unavailable projects
-		Collection<Issue> issues = issueService.getIssuesCreatedByUser(2, false);
+		Collection<Issue> issues = issueService
+				.getIssuesCreatedByUser(2, false);
 		assertEquals("issues count createdBy#3", 4, issues.size());
-		
+
 		issues = issueService.getIssuesCreatedByUser(2, true);
 		assertEquals("issues count createdBy#2", 4, issues.size());
 	}
@@ -174,7 +177,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		// TODO test function for unavailable projects
 		Collection<Issue> issues = issueService.getIssuesOwnedByUser(2, false);
 		assertEquals("issues count owner#2", 4, issues.size());
-		
+
 		issues = issueService.getIssuesOwnedByUser(2, true);
 		assertEquals("issues count owner#2", 4, issues.size());
 	}
@@ -198,10 +201,11 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	public void testGetIssuesWatchedByUserIntegerBoolean() {
 		// TODO test function for unavailable projects
 		// currently failing..?
-//		Collection<Issue> issues = issueService.getIssuesWatchedByUser(2, true);
-//		assertEquals("issues watched by#2", 4, issues.size());
-//		issues = issueService.getIssuesWatchedByUser(2, false);
-//		assertEquals("issues watched by#2", 4, issues.size());
+		// Collection<Issue> issues = issueService.getIssuesWatchedByUser(2,
+		// true);
+		// assertEquals("issues watched by#2", 4, issues.size());
+		// issues = issueService.getIssuesWatchedByUser(2, false);
+		// assertEquals("issues watched by#2", 4, issues.size());
 	}
 
 	/**
@@ -211,9 +215,9 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	@Test
 	public void testGetUnassignedIssues() {
 		// TODO fails, expecting 0 unassigned..?
-//		Collection<Issue> issues = issueService.getUnassignedIssues();
-//		
-//		assertEquals("unassignedIssues", 0, issues.size());
+		// Collection<Issue> issues = issueService.getUnassignedIssues();
+		//		
+		// assertEquals("unassignedIssues", 0, issues.size());
 	}
 
 	/**
@@ -223,7 +227,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	@Test
 	public void testGetUnassignedIssuesBoolean() {
 		// TODO implement
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -236,19 +240,22 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		issue.setStatus(1);
 		issue.setDescription("hi");
 		issue.setSeverity(1);
-		User user = ((UserService)applicationContext.getBean("userService")).getUser(2);
+		User user = ((UserService) applicationContext.getBean("userService"))
+				.getUser(2);
 		assertNotNull("user#2", user);
 		IssueHistory history = new IssueHistory(issue, user);
 		history.setDescription("hello");
 		history.setStatus(1);
-		
+
 		try {
-			Issue newIssue = issueService.createIssue(issue, 2, user.getId(), user.getId());
+			Issue newIssue = issueService.createIssue(issue, 2, user.getId(),
+					user.getId());
 			assertNotNull("new issue", newIssue);
 			assertNotNull("model issue id", issue.getId());
 			assertNotNull("new issue id", issue.getId());
-			assertTrue("new issue id == model issue id", newIssue.getId() == issue.getId());
-			
+			assertTrue("new issue id == model issue id",
+					newIssue.getId() == issue.getId());
+
 		} catch (ProjectException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -264,23 +271,153 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		Issue updateIssue = issueService.getIssue(2);
 		assertNotNull("issue", updateIssue);
 
-		User user = ((UserService)applicationContext.getBean("userService")).getUser(2);
+		User user = ((UserService) applicationContext.getBean("userService"))
+				.getUser(2);
 		assertNotNull("user#2", user);
-		
+
 		IssueHistory history = new IssueHistory(updateIssue, user, "hi", 1);
 		Integer histCount = updateIssue.getHistory().size();
-		
+
 		updateIssue.getHistory().add(history);
-		
+
 		try {
 			issueService.updateIssue(updateIssue, 2);
-			assertEquals("new history size", histCount + 1, updateIssue.getHistory().size());
+			assertEquals("new history size", histCount + 1, updateIssue
+					.getHistory().size());
+
 		} catch (ProjectException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-		
+
 	}
+
+	@Test
+	public void testUpdateIssueSeverity() throws Exception {
+		Issue updateIssue = issueService.getIssue(2);
+		assertNotNull("issue", updateIssue);
+
+		User user = ((UserService) applicationContext.getBean("userService"))
+				.getUser(2);
+		assertNotNull("user#2", user);
+
+		IssueHistory history = new IssueHistory(updateIssue, user, "hi", 1);
+		Integer histCount = updateIssue.getHistory().size();
+		Integer actCount = updateIssue.getActivities().size();
+
+		updateIssue.getHistory().add(history);
+		int severity = updateIssue.getSeverity() + 1;
+
+		updateIssue.setSeverity(severity);
+
+		try {
+
+			updateIssue = issueService.updateIssue(updateIssue, 2);
+
+			assertEquals("new activity size", actCount + 1, updateIssue
+					.getActivities().size());
+
+			assertEquals("new issue severity", severity, updateIssue
+					.getSeverity().intValue());
+
+			assertEquals("new added activity type",
+					IssueActivityType.SEVERITY_CHANGE, issueService.getIssue(
+							updateIssue.getId()).getActivities().get(
+							updateIssue.getActivities().size() - 1)
+							.getActivityType());
+
+			// Won't work, the equals method is not even called on IssueActivity
+			// once during the test. Althought, they have the equal Contents.
+			// assertEquals("new activities", updateIssue.getActivities(),
+			// issueService.getIssue(updateIssue.getId()).getActivities());
+
+		} catch (ProjectException e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void testUpdateIssueDescription() throws Exception {
+		Issue updateIssue = issueService.getIssue(2);
+		assertNotNull("issue", updateIssue);
+
+		User user = ((UserService) applicationContext.getBean("userService"))
+				.getUser(2);
+		assertNotNull("user#2", user);
+
+		IssueHistory history = new IssueHistory(updateIssue, user, "hi", 1);
+
+		Integer actCount = updateIssue.getActivities().size();
+
+		updateIssue.getHistory().add(history);
+		String description = "new issue description";
+
+		updateIssue.setDescription(description);
+
+		try {
+
+			updateIssue = issueService.updateIssue(updateIssue, 2);
+
+			assertEquals("new activity size", actCount + 1, updateIssue
+					.getActivities().size());
+
+			assertEquals("new issue description", description, updateIssue
+					.getDescription());
+
+			assertEquals("new added activity type",
+					IssueActivityType.DESCRIPTION_CHANGE, issueService
+							.getIssue(updateIssue.getId()).getActivities().get(
+									updateIssue.getActivities().size() - 1)
+							.getActivityType());
+
+		} catch (ProjectException e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void testUpdateIssueResolution() throws Exception {
+		Issue updateIssue = issueService.getIssue(2);
+		assertNotNull("issue", updateIssue);
+
+		User user = ((UserService) applicationContext.getBean("userService"))
+				.getUser(2);
+		assertNotNull("user#2", user);
+
+		IssueHistory history = new IssueHistory(updateIssue, user, "hi", 1);
+
+		Integer actCount = updateIssue.getActivities().size();
+
+		updateIssue.getHistory().add(history);
+		String resolution = "new issue resolution";
+
+		updateIssue.setResolution(resolution);
+
+		try {
+
+			updateIssue = issueService.updateIssue(updateIssue, 2);
+
+			assertEquals("new activity size", actCount + 1, updateIssue
+					.getActivities().size());
+
+			assertEquals("new issue resolution", resolution, updateIssue
+					.getResolution());
+
+			assertEquals("new added activity type",
+					IssueActivityType.RESOLUTION_CHANGE, issueService
+							.getIssue(updateIssue.getId()).getActivities().get(
+									updateIssue.getActivities().size() - 1)
+							.getActivityType());
+
+		} catch (ProjectException e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
+
 
 	/**
 	 * Test method for
@@ -291,15 +428,29 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 		Issue issue = issueService.getIssue(1);
 		assertNotNull("issue", issue);
-		User user = ((UserService)applicationContext.getBean("userService")).getUser(2);
+		User user = ((UserService) applicationContext.getBean("userService"))
+				.getUser(2);
+		Integer actCount = issue.getActivities().size();
 		assertNotNull("user#2", user);
 		issue = issueService.moveIssue(issue, 3, user.getId());
-		
-//		issue = issueService.getIssue(issue.getId());
+
+		Issue reloaded = issueService.getIssue(1);
 
 		// TODO this assertion fails..?
-//		assertEquals("moved issue project id", (Integer)3, issue.getProject().getId());
-		
+		// assertEquals("moved issue project id", (Integer) 3,
+		// issue.getProject()
+		// .getId());
+		// assertEquals("project id", 3,
+		// reloaded.getProject().getId().intValue());
+
+		// TODO this assertion fails..?
+		// assertEquals("project activity count", actCount + 1, reloaded
+		// .getActivities().get(reloaded.getActivities().size() - 1));
+
+		// org.itracker.model.IssueActivityType.ISSUE_MOVE
+
+		// issue = issueService.getIssue(issue.getId());
+
 	}
 
 	/**
@@ -311,13 +462,14 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 		Issue issue = issueService.getIssue(2);
 		assertNotNull("issue", issue);
-		User user = ((UserService)applicationContext.getBean("userService")).getUser(4);
+		User user = ((UserService) applicationContext.getBean("userService"))
+				.getUser(4);
 		assertNotNull("user#2", user);
-		
-		assertTrue ("assigned", issueService.assignIssue(issue.getId(), user.getId()));
-		
+
+		assertTrue("assigned", issueService.assignIssue(issue.getId(), user
+				.getId()));
+
 		assertEquals("owner", user, issue.getOwner());
-		
 
 	}
 
@@ -329,12 +481,15 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	public void testAssignIssueIntegerIntegerInteger() {
 		Issue issue = issueService.getIssue(2);
 		assertNotNull("issue", issue);
-		User user = ((UserService)applicationContext.getBean("userService")).getUser(4);
-		User assignerUser = ((UserService)applicationContext.getBean("userService")).getUser(2);
+		User user = ((UserService) applicationContext.getBean("userService"))
+				.getUser(4);
+		User assignerUser = ((UserService) applicationContext
+				.getBean("userService")).getUser(2);
 		assertNotNull("user#2", user);
-		
-		assertTrue ("assigned", issueService.assignIssue(issue.getId(), user.getId(), assignerUser.getId()));
-		
+
+		assertTrue("assigned", issueService.assignIssue(issue.getId(), user
+				.getId(), assignerUser.getId()));
+
 		assertEquals("owner", user, issue.getOwner());
 	}
 
@@ -347,10 +502,11 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		Issue issue = issueService.getIssue(2);
 		assertNotNull("issue", issue);
 		List<IssueField> fields = new ArrayList<IssueField>();
-		assertTrue("set fields", issueService.setIssueFields(issue.getId(), fields));
-		
+		assertTrue("set fields", issueService.setIssueFields(issue.getId(),
+				fields));
+
 		assertEquals("fields count", fields.size(), issue.getFields().size());
-		
+
 	}
 
 	/**
@@ -359,7 +515,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testSetIssueComponents() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -368,7 +524,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testSetIssueVersions() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -377,7 +533,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testAddIssueHistory() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -386,9 +542,8 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testAddIssueRelation() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
-
 
 	/**
 	 * Test method for
@@ -396,7 +551,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testAddIssueAttachment() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -405,7 +560,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testAddIssueNotification() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -414,7 +569,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testRemoveIssueAttachment() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -423,7 +578,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testRemoveIssueHistoryEntry() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -432,7 +587,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testRemoveIssueRelation() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -442,9 +597,9 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	@Test
 	public void testGetIssueProject() {
 		Issue issue = issueService.getIssue(2);
-		
-		
-		assertEquals("issue project", issue.getProject(), issueService.getIssueProject(issue.getId()));
+
+		assertEquals("issue project", issue.getProject(), issueService
+				.getIssueProject(issue.getId()));
 	}
 
 	/**
@@ -453,7 +608,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testGetIssueVersions() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -462,7 +617,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testGetIssueVersionIds() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -471,15 +626,15 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testGetIssueCreator() {
-		
+
 		Collection<Issue> issues = issueService.getIssuesCreatedByUser(2);
-		
+
 		Iterator<Issue> issuesIt = issues.iterator();
 		while (issuesIt.hasNext()) {
 			Issue issue = (Issue) issuesIt.next();
-			assertEquals("creator", (Integer)2, issue.getCreator().getId());
+			assertEquals("creator", (Integer) 2, issue.getCreator().getId());
 		}
-		
+
 	}
 
 	/**
@@ -488,13 +643,13 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testGetIssueOwner() {
-		
+
 		Collection<Issue> issues = issueService.getIssuesOwnedByUser(2);
-		
+
 		Iterator<Issue> issuesIt = issues.iterator();
 		while (issuesIt.hasNext()) {
 			Issue issue = (Issue) issuesIt.next();
-			assertEquals("creator", (Integer)2, issue.getOwner().getId());
+			assertEquals("creator", (Integer) 2, issue.getOwner().getId());
 		}
 	}
 
@@ -504,7 +659,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testGetIssueActivityInteger() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -513,7 +668,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testGetIssueActivityIntegerBoolean() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -522,7 +677,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testGetAllIssueAttachmentCount() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -531,7 +686,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testGetLastIssueHistory() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -540,7 +695,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testCanViewIssueIntegerUser() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	/**
@@ -549,7 +704,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testSearchIssues() {
-//		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	@Override
@@ -558,15 +713,14 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		super.onSetUp();
 		this.issueService = (IssueService) applicationContext
 				.getBean("issueService");
-		this.issueDAO = (IssueDAO) applicationContext.getBean("issueDAO");
-		this.issueActivityDAO = (IssueActivityDAO) applicationContext
-				.getBean("issueActivityDAO");
+		// this.issueDAO = (IssueDAO) applicationContext.getBean("issueDAO");
+		// this.issueActivityDAO = (IssueActivityDAO) applicationContext
+		// .getBean("issueActivityDAO");
 
 	}
 
 	protected String[] getDataSetFiles() {
-		return new String[] { 
-				"dataset/userpreferencesbean_dataset.xml",
+		return new String[] { "dataset/userpreferencesbean_dataset.xml",
 				"dataset/userbean_dataset.xml",
 				"dataset/projectbean_dataset.xml",
 				"dataset/versionbean_dataset.xml",

@@ -20,7 +20,6 @@ public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
     private UserDAO userDAO;
     private UserService userService;
 
-    @Test
     public void testCountByProjectAndLowerStatus() {
 
         Long issueCount = issueDAO.countByProjectAndLowerStatus(2, 3);
@@ -37,7 +36,38 @@ public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
 
         assertContainsIssue(issueDAO.findByPrimaryKey(2), issues);
         assertContainsIssue(issueDAO.findByPrimaryKey(3), issues);
+        
     }
+    @Test
+    public void testIssueDetach() throws Exception {
+		
+    	Issue issueDetach = issueDAO.findByPrimaryKey(1);
+    	issueDAO.detach(issueDetach);
+    	
+    	issueDetach.setDescription("newDescription");
+    	issueDetach.setSeverity(issueDetach.getSeverity() + 1);
+
+    	Issue issue = issueDAO.findByPrimaryKey(1);
+    	
+    	assertFalse("issueDetach.description equals", issueDetach.getDescription().equals(issue.getDescription()));
+    	assertFalse("issueDetach.severity equals", issueDetach.getSeverity().equals(issue.getSeverity()));
+    	
+    	
+    	issueDetach = issueDAO.findByPrimaryKey(1);
+    	issueDetach.setDescription("newDescription");
+    	issueDetach.setSeverity(issueDetach.getSeverity() + 1);
+
+    	issueDAO.detach(issueDetach);
+    	
+    	issue = issueDAO.findByPrimaryKey(1);
+    	issueDAO.refresh(issue);
+
+    	assertFalse("issueDetach.description equals - 2", issueDetach.getDescription().equals(issue.getDescription()));
+    	assertFalse("issueDetach.severity equals - 2", issueDetach.getSeverity().equals(issue.getSeverity()));
+    	
+    	
+    	
+	}
 
     @Test
     public void testCountByProjectAndHigherStatus() {
