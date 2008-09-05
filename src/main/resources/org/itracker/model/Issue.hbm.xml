@@ -102,11 +102,11 @@
             <one-to-many class="IssueRelation"/>
         </bag>
         
-        <bag name="activities" table="issueactivitybean" cascade="all" lazy="true">
+        <bag name="activities" table="issueactivitybean" cascade="all" lazy="false" inverse="false" >
             <key>
-                <column name="issue_id"/>
+                <column name="issue_id" not-null="true" />
             </key>
-            <one-to-many class="IssueActivity"/>
+            <one-to-many class="IssueActivity" />
         </bag>
         
     </class>
