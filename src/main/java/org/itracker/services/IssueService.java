@@ -104,8 +104,16 @@ public interface IssueService {
      */
     Issue createIssue(Issue issue, Integer projectId, Integer userId, Integer createdById)
     throws ProjectException;
-    
+
+	/**
+	 * Save a modified issue to the persistence layer
+	 * 
+	 * @param issueDirty the changed, unsaved issue to update on persistency layer
+	 * @param userId the user-id of the changer
+	 * 
+	 */
     Issue updateIssue(Issue issue, Integer userId) throws ProjectException;
+    Issue systemUpdateIssue(Issue issue, Integer userId) throws ProjectException;
     
     /**
      * Moves an issues from its current project to a new project.

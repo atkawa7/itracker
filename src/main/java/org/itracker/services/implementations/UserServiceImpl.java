@@ -18,7 +18,6 @@
 
 package org.itracker.services.implementations;
 
-import javax.naming.InitialContext;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +28,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.naming.InitialContext;
 
 import org.apache.log4j.Logger;
 import org.itracker.model.Issue;
