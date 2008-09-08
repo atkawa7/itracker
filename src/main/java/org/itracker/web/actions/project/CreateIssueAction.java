@@ -211,6 +211,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                             issueForm.getHistory(),
                             IssueUtilities.HISTORY_STATUS_AVAILABLE);
                     issueHistory.setCreateDate(new Date());
+                    issue.getHistory().add(issueHistory);
                     issueService.updateIssue(issue, currUser.getId());
                     HashSet<Integer> components = new HashSet<Integer>();
                     Integer[] componentIds = issueForm.getComponents();

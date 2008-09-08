@@ -613,6 +613,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 		if (issueHistory.getLastModifiedDate() == null) {
 			issueHistory.setLastModifiedDate(new Date());
 		}
+		issue.getHistory().add(issueHistory);
 
 		issueService.updateIssue(issue, user.getId());
 //		issueService.addIssueHistory(issueHistory);
