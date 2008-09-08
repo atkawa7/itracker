@@ -137,6 +137,13 @@ public class CreateIssueAction extends ItrackerBaseAction {
                 issue.setStatus(IssueUtilities.STATUS_NEW);
                 
                 
+                IssueHistory issueHistory = new IssueHistory(issue, currUser, 
+                        issueForm.getHistory(),
+                        IssueUtilities.HISTORY_STATUS_AVAILABLE);
+                issueHistory.setCreateDate(new Date());
+                issue.getHistory().add(issueHistory);
+                
+                
                 // create the issue in the database
                 issue = issueService.createIssue(issue, projectId,
                         (creator == null ? currUserId : creator), currUserId);
@@ -205,14 +212,8 @@ public class CreateIssueAction extends ItrackerBaseAction {
                         issueFields = issueFieldsVector;
 //                    }
                     issueService.setIssueFields(issue.getId(), issueFields);
-                    
-                    
-                    IssueHistory issueHistory = new IssueHistory(issue, currUser, 
-                            issueForm.getHistory(),
-                            IssueUtilities.HISTORY_STATUS_AVAILABLE);
-                    issueHistory.setCreateDate(new Date());
-                    issue.getHistory().add(issueHistory);
-                    issueService.updateIssue(issue, currUser.getId());
+
+
                     HashSet<Integer> components = new HashSet<Integer>();
                     Integer[] componentIds = issueForm.getComponents();
                     
