@@ -289,7 +289,7 @@ public class NotificationServiceImpl implements NotificationService {
 							.getString(
 									"itracker.email.issue.body.reminder",
 									new Object[] {
-											url + "/view_issue.jsp?id="
+											url + "/module-projects/view_issue.jsp?id="
 													+ issue.getId(),
 											issue.getProject().getName(),
 											issue.getDescription(),
@@ -339,7 +339,7 @@ public class NotificationServiceImpl implements NotificationService {
 							.getString(
 									"itracker.email.issue.body.standard",
 									new Object[] {
-											url + "/view_issue.jsp?id="
+											url + "/module-projects/view_issue.jsp?id="
 													+ issue.getId()
 													+ "&authtype=5",
 											issue.getProject().getName(),
