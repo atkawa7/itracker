@@ -217,8 +217,12 @@
                                 <html:option value="<%=languageListItem%>" styleClass="editColumnText"><%= ITrackerResources.getString("itracker.locale.name", languageListItem) %></html:option>
                         <%  } 
                         }
-                    } else { %>
-                  		<html:option key="<%= ITrackerResources.getString("itracker.locale.name", "en_US") %>" value="en_US" styleClass="editColumnText"><%= ITrackerResources.getString("itracker.locale.name", "en_US") %></html:option>
+                    } else {
+
+                        String name = ITrackerResources.getString("itracker.locale.name", "en_US");
+                        %>
+
+                      <html:option key="<%= name %>" value="en_US" styleClass="editColumnText"><%= name %></html:option>
                  <% } %>
                   </html:select><!-- $ {languageCodeName} -->
                 </td>
