@@ -32,14 +32,24 @@
       if(user.getId().intValue() > 0) {
           isUpdate = true;
       }
-
-      boolean allowProfileUpdate = uh.allowProfileUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
-      boolean allowPasswordUpdate = uh.allowPasswordUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
-      boolean allowPermissionUpdate = uh.allowPermissionUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
+
+<script type="text/javascript">
+    function validateForm() {
+        var userForm = document.forms['userForm'];
+
+        var password = userForm.password.value;
+        var confPassword = userForm.confPassword.value;
+
+        if(password != confPassword) {
+            alert("Password does not match confirmation password.");
+            return false;
+        }
+    }
+</script>
 
       <logic:messagesPresent>
         <center>
@@ -59,74 +69,90 @@
         <table border="0" cellspacing="0"  cellspacing="1" width="800px">
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.login"/>:</td>
-            <% if(isUpdate && ! allowProfileUpdate) { %>
-                <td class="editColumnText"><%= user.getLogin() %><html:hidden property="login" /> 
-                	*</td>
-            <% } else { %>
-                <td><html:text property="login" styleClass="editColumnText"/></td>
-            <% } %>
+              <c:choose>
+                  <c:when test="${isUpdatex && !allowProfileUpdate}">
+                      <td class="editColumnText"><%= user.getLogin() %><html:hidden property="login" />
+                  </c:when>
+                  <c:otherwise>
+                      <td><html:text property="login" styleClass="editColumnText"/></td>
+                  </c:otherwise>
+              </c:choose>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.status"/>:</td>
             <td class="editColumnText"><%= UserUtilities.getStatusName(user.getStatus(), (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>
           </tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.firstname"/>:</td>
-            <% if(isUpdate && ! allowProfileUpdate) { %>
-                <td class="editColumnText"><%= user.getFirstName() %><html:hidden property="firstName" /> 
-                	*</td>
-            <% } else { %>
-                <td><html:text property="firstName" styleClass="editColumnText"/></td>
-            <% } %>
+              <c:choose>
+                  <c:when test="${isUpdate && !allowProfileUpdate}">
+                      <td class="editColumnText"><%= user.getFirstName() %><html:hidden property="firstName" />
+                          *</td>
+                  </c:when>
+                  <c:otherwise>
+                      <td><html:text property="firstName" styleClass="editColumnText"/></td>
+                  </c:otherwise>
+              </c:choose>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.created"/>:</td>
             <td class="editColumnText"><it:formatDate date="<%= user.getCreateDate() %>"/></td>
           </tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.lastname"/>:</td>
-            <% if(isUpdate && ! allowProfileUpdate) { %>
-                <td class="editColumnText"><%= user.getLastName() %><html:hidden property="lastName" /> 
-                	*</td>
-            <% } else { %>
-                <td><html:text property="lastName" styleClass="editColumnText"/></td>
-            <% } %>
+              <c:choose>
+                  <c:when test="${isUpdate && !allowProfileUpdate}">
+                      <td class="editColumnText"><%= user.getLastName() %><html:hidden property="lastName" />
+                          *</td>
+                  </c:when>
+                  <c:otherwise>
+                      <td><html:text property="lastName" styleClass="editColumnText"/></td>
+                  </c:otherwise>
+              </c:choose>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.lastmodified"/>:</td>
             <td class="editColumnText"><it:formatDate date="<%= user.getLastModifiedDate() %>"/></td>
           </tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.email"/>:</td>
-            <% if(isUpdate && ! allowProfileUpdate) { %>
-                <td class="editColumnText"><%= user.getEmail() %><html:hidden property="email" /> 
-                	*</td>
-            <% } else { %>
-                <td><html:text property="email" styleClass="editColumnText"/></td>
-            <% } %>
+              <c:choose>
+                  <c:when test="${isUpdate && !allowProfileUpdate}">
+                      <td class="editColumnText"><%= user.getEmail() %><html:hidden property="email" />
+                          *</td>
+                  </c:when>
+                  <c:otherwise>
+                      <td><html:text property="email" styleClass="editColumnText"/></td>
+                  </c:otherwise>
+              </c:choose>
           </tr>
-          <% if(! isUpdate || allowPasswordUpdate) { %>
-                      <tr>
-                <td class="editColumnTitle"><br></td>
-                <td> </td>
-              </tr>
-              <tr>
-                <td class="editColumnTitle"><it:message key="itracker.web.attr.password"/>:</td>
-                <td><html:password property="password" styleClass="editColumnText" redisplay="false"/></td>
-              </tr>
-              <tr>
-                <td class="editColumnTitle"><it:message key="itracker.web.attr.confpassword"/>:</td>
-                <td><html:password property="confPassword" styleClass="editColumnText" redisplay="false"/></td>
-              </tr>
-          <% } %>
+            <c:if test="${!isUpdate || allowPasswordUpdate}">
+                <tr>
+                    <td class="editColumnTitle"><br></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="editColumnTitle"><it:message key="itracker.web.attr.password"/>:</td>
+                    <td><html:password property="password" styleId="password" styleClass="editColumnText"
+                                       redisplay="false"/></td>
+                </tr>
+                <tr>
+                    <td class="editColumnTitle"><it:message key="itracker.web.attr.confpassword"/>:</td>
+                    <td><html:password property="confPassword" styleId="confPassword" styleClass="editColumnText"
+                                       redisplay="false"/></td>
+                </tr>
+            </c:if>
                       <tr>
                 <td class="editColumnTitle"><br></td>
                 <td> </td>
   
 
             <td class="editColumnTitle"><it:message key="itracker.web.attr.superuser"/>:</td>
-            <% if(isUpdate && ! allowProfileUpdate) { %>
-                <td class="editColumnText"><%= ITrackerResources.getString((user.isSuperUser() ? "itracker.web.generic.yes" : "itracker.web.generic.no"), (java.util.Locale)pageContext.getAttribute("currLocale")) %><html:hidden property="superUser" /></td>
-            <% } else { %>
-                <td class="editColumnText">
-                  <html:radio property="superUser" value="true"/><it:message key="itracker.web.generic.yes"/> &nbsp;&nbsp;&nbsp;&nbsp;
-                  <html:radio property="superUser" value="false"/><it:message key="itracker.web.generic.no"/>
-                </td>
-            <% } %>
+              <c:choose>
+                  <c:when test="${isUpdate && !allowProfileUpdate}">
+                      <td class="editColumnText"><%= ITrackerResources.getString((user.isSuperUser() ? "itracker.web.generic.yes" : "itracker.web.generic.no"), (java.util.Locale)pageContext.getAttribute("currLocale")) %><html:hidden property="superUser" /></td>
+                  </c:when>
+                  <c:otherwise>
+                      <td class="editColumnText">
+                        <html:radio property="superUser" value="true"/><it:message key="itracker.web.generic.yes"/> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <html:radio property="superUser" value="false"/><it:message key="itracker.web.generic.no"/>
+                      </td>
+                  </c:otherwise>
+              </c:choose>
           </tr>
                     <tr>
                 <tr>
@@ -137,7 +163,11 @@
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15" width="1"/></td></tr>
         </table>
           <% if(isUpdate) { %>
-                <html:submit styleClass="button" altKey="itracker.web.button.update.alt" titleKey="itracker.web.button.update.alt"><it:message key="itracker.web.button.update"/></html:submit> 
+                <html:submit styleClass="button"
+                             altKey="itracker.web.button.update.alt"
+                             titleKey="itracker.web.button.update.alt">
+                    <it:message key="itracker.web.button.update"/>
+                </html:submit>
           <% } else { %>
                 <html:submit styleClass="button" altKey="itracker.web.button.create.alt" titleKey="itracker.web.button.create.alt"><it:message key="itracker.web.button.create"/></html:submit> 
           <% } %>
@@ -191,11 +221,14 @@
                   <%        } %>
                             <td></td>
                             <% String keyName = "permissions(Perm" + permissionNames.get(j).getValue() + "Proj" + projects.get(i).getId() + ")"; %>
-                            <% if(isUpdate && ! allowPermissionUpdate) { %>
-                                <td align="left"><html:img page="<%= checkmarkImage %>"/><html:hidden property="<%= keyName %>" /></td>
-                            <% } else { %>
-                                <td align="left"><html:checkbox property="<%= keyName %>" value="on"/></td>
-                            <% } %>
+                            <c:choose>
+                                <c:when test="${isUpdate && !allowPermissionUpdate}">
+                                    <td align="left"><html:img page="<%= checkmarkImage %>"/><html:hidden property="<%= keyName %>" /></td>
+                                </c:when>
+                                <c:otherwise>
+                                    <td align="left"><html:checkbox property="<%= keyName %>" value="on"/></td>
+                                </c:otherwise>
+                            </c:choose>
                             <td><%= permissionNames.get(j).getName() %></td>
                             <td><it:formatDate date="<%= currentPermissionDate %>"/></td>
                   <%    } %>
@@ -206,14 +239,26 @@
         </table>
 
         <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
-        	<c:choose>
-        		<c:when test="${isUpdate}">  
-        		<tr><td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.update.alt" titleKey="itracker.web.button.update.alt"><it:message key="itracker.web.button.update"/></html:submit></td></tr>
-        		</c:when> 
-        		<c:otherwise>
-        		<tr><td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.create.alt" titleKey="itracker.web.button.create.alt"><it:message key="itracker.web.button.create"/></html:submit></td></tr>
-        		</c:otherwise>
-        	</c:choose>    
+            <c:choose>
+                <c:when test="${isUpdate}">
+                <tr>
+                    <td colspan="4" align="left">
+                        <html:submit styleClass="button" altKey="itracker.web.button.update.alt" titleKey="itracker.web.button.update.alt" onclick="validateForm()">
+                            <it:message key="itracker.web.button.update"/>
+                        </html:submit>
+                    </td>
+                </tr>
+                </c:when>
+                <c:otherwise>
+                    <tr>
+                        <td colspan="4" align="left">
+                            <html:submit styleClass="button" altKey="itracker.web.button.create.alt" titleKey="itracker.web.button.create.alt">
+                                <it:message key="itracker.web.button.create"/>
+                            </html:submit>
+                        </td>
+                    </tr>
+                </c:otherwise>
+            </c:choose>
         </table>
 
       </html:form>

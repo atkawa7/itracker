@@ -145,6 +145,19 @@ public class EditUserFormAction extends ItrackerBaseAction {
                         List<Permission> permissionList = userService.getPermissionsByUserId(editUser.getId());
                         HashMap<String, String> formPermissions = new HashMap<String, String>();
 
+                        boolean allowProfileUpdate = userService.allowProfileUpdates(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
+                        request.setAttribute("allowProfileUpdate", allowProfileUpdate);
+
+                        boolean allowPasswordUpdate = userService.allowPasswordUpdates(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
+                        request.setAttribute("allowPasswordUpdate", allowPasswordUpdate);
+
+                        boolean allowPermissionUpdate = userService.allowPermissionUpdates(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
+                        request.setAttribute("allowPermissionUpdate", allowPermissionUpdate);
+
+                        if(editUser.getId() > 0) {
+                            request.setAttribute("isUpdate", true);
+                        }
+
                         for (int i = 0; i < permissionList.size(); i++) {
 
                             log.debug("Processing permission type: " + permissionList.get(i).getPermissionType());
