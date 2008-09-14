@@ -41,12 +41,11 @@ public class PortalHomeAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        ActionForward forward = new ActionForward();
         LOGGER.info("Stepping up into the loginRouter method");
         
         // mayb wrong the next line... setting a default forward...
         ActionForward thisactionforward=mapping.findForward("portalhome");
-        forward = super.loginRouter(mapping,form,request,response, thisactionforward);
+        ActionForward forward = super.loginRouter(mapping,form,request,response, thisactionforward);
         
         if (forward==null) {
             return forward;
