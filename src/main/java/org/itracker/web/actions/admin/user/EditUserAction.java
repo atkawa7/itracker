@@ -21,10 +21,10 @@ package org.itracker.web.actions.admin.user;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -143,7 +143,7 @@ public class EditUserAction extends ItrackerBaseAction {
             }
 
             if(errors.isEmpty() && userService.allowPermissionUpdates(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
-                HashMap<String, String> permissionsMap = userForm.getPermissions();
+                Map<String,String> permissionsMap = userForm.getPermissions();
                 List<Permission> newPermissions = new ArrayList<Permission>();
                 for(Iterator<String> iter = permissionsMap.keySet().iterator(); iter.hasNext(); ) {
                     String paramName = iter.next();
