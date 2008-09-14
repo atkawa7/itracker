@@ -225,23 +225,25 @@ public class UserForm extends ValidatorForm {
 
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 
-        ActionErrors errors = super.validate(mapping, request);
+        ActionErrors errors = new ActionErrors();
 
-        if (password != null && !"".equals(password)) {
-            if (!("register".equalsIgnoreCase(action)
-                    || "create".equalsIgnoreCase(action)
-                    || "update".equalsIgnoreCase(action)
-                    || "preferences".equalsIgnoreCase(action))
-                    && (currPassword == null
-                    || "".equals(currPassword))) {
+        if(password == null || password.trim().equals("")) {
+            return errors;
+        }
 
-                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingpassword"));
-                request.setAttribute("warnings", errors);
+        if (!("register".equalsIgnoreCase(action)
+                || "create".equalsIgnoreCase(action)
+                || "update".equalsIgnoreCase(action)
+                || "preferences".equalsIgnoreCase(action))
+                && (currPassword == null
+                || "".equals(currPassword))) {
 
-            } else if (!password.equals(confPassword)) {
-                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.matchingpass"));
-                request.setAttribute("warnings", errors);
-            }
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingpassword"));
+            request.setAttribute("warnings", errors);
+
+        } else if (!password.equals(confPassword)) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.matchingpass"));
+            request.setAttribute("warnings", errors);
         }
 
         return errors;
