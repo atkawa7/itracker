@@ -1,26 +1,4 @@
-/*
- * This software was designed and created by Jason Carroll.
- * Copyright (c) 2002, 2003, 2004 Jason Carroll.
- * The author can be reached at jcarroll@cowsultants.com
- * ITracker website: http://www.cowsultants.com
- * ITracker forums: http://www.cowsultants.com/phpBB/index.php
- *
- * This program is free software; you can redistribute it and/or modify
- * it only under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
 package org.itracker.web.forms;
-
-import java.util.HashMap;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -28,15 +6,16 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.ValidatorForm;
 
-/**
- * This is the UserForm Struts Form. It is used by the Admin / User Admin and My Preferences forms.
- * @author ready
- *
- */
-public class UserForm extends ValidatorForm  {
-    
-	private String action = null;
-    private Integer id = new Integer(-1);
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+
+public class UserForm extends ValidatorForm {
+
+    private static final long serialVersionUID = 2726189244374789017L;
+
+    private String action = null;
+    private Integer id = -1;
     private String login = null;
     private String currPassword = null;
     private String password = null;
@@ -47,7 +26,7 @@ public class UserForm extends ValidatorForm  {
 
     private boolean superUser = false;
 
-    private HashMap<String,String> permissions = new HashMap<String,String>();
+    private Map<String, String> permissions = new HashMap<String, String>();
 
     private String userLocale = null;
     private String saveLogin = null;
@@ -91,7 +70,7 @@ public class UserForm extends ValidatorForm  {
         currPassword = value;
     }
 
-      public String getPassword() {
+    public String getPassword() {
         return password;
     }
 
@@ -139,11 +118,11 @@ public class UserForm extends ValidatorForm  {
         superUser = value;
     }
 
-    public HashMap<String, String> getPermissions() {
+    public Map<String, String> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(HashMap<String, String> value) {
+    public void setPermissions(Map<String, String> value) {
         permissions = value;
     }
 
@@ -221,7 +200,7 @@ public class UserForm extends ValidatorForm  {
 
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         action = null;
-        id = new Integer(-1);
+        id = -1;
         login = null;
         currPassword = null;
         password = null;
@@ -241,22 +220,31 @@ public class UserForm extends ValidatorForm  {
         sortColumnOnIssueList = null;
         hiddenIndexSections = null;
         rememberLastSearch = null;
-        useTextActions= null;
+        useTextActions = null;
     }
 
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+
         ActionErrors errors = super.validate(mapping, request);
-        if(password != null && ! "".equals(password)) {
-            if(! ("register".equalsIgnoreCase(action) || "create".equalsIgnoreCase(action) || "update".equalsIgnoreCase(action)|| "preferences".equalsIgnoreCase(action)) && (currPassword == null || "".equals(currPassword))) {
+
+        if (password != null && !"".equals(password)) {
+            if (!("register".equalsIgnoreCase(action)
+                    || "create".equalsIgnoreCase(action)
+                    || "update".equalsIgnoreCase(action)
+                    || "preferences".equalsIgnoreCase(action))
+                    && (currPassword == null
+                    || "".equals(currPassword))) {
+
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingpassword"));
-                request.setAttribute("warnings", errors); 
-            } else if(! password.equals(confPassword)) {
+                request.setAttribute("warnings", errors);
+
+            } else if (!password.equals(confPassword)) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.matchingpass"));
-                request.setAttribute("warnings", errors); 
+                request.setAttribute("warnings", errors);
             }
         }
+
         return errors;
     }
-
 
 }
