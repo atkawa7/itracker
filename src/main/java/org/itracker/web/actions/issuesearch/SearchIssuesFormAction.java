@@ -52,19 +52,21 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.SearchForm;
 import org.itracker.web.util.Constants;
 
-
-
 public class SearchIssuesFormAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(SearchIssuesFormAction.class);
-	
-    public SearchIssuesFormAction() {
-    }
+
+    private static final Logger log = Logger.getLogger(SearchIssuesFormAction.class);
 
     @SuppressWarnings("unchecked")
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public ActionForward execute(ActionMapping mapping,
+                                 ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
+            throws ServletException, IOException {
+
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
-        if(! isLoggedIn(request, response)) {
+        super.executeAlways(mapping, form, request, response);
+
+        if (!isLoggedIn(request, response)) {
             return mapping.findForward("login");
         }
 
@@ -75,14 +77,14 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
 
             ReportService reportService = this.getITrackerServices().getReportService();
             UserService userService = this.getITrackerServices().getUserService();
-            request.setAttribute("rh",reportService); 
-            request.setAttribute("uh",userService); 
-            
-            String pageTitleKey = "itracker.web.search.title"; 
-	        String pageTitleArg = "";			
-	        request.setAttribute("pageTitleKey",pageTitleKey); 
-	        request.setAttribute("pageTitleArg",pageTitleArg); 
-            
+            request.setAttribute("rh", reportService);
+            request.setAttribute("uh", userService);
+
+            String pageTitleKey = "itracker.web.search.title";
+            String pageTitleArg = "";
+            request.setAttribute("pageTitleKey", pageTitleKey);
+            request.setAttribute("pageTitleArg", pageTitleArg);
+
             UserPreferences userPrefs = (UserPreferences) session.getAttribute(Constants.PREFERENCES_KEY);
             Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
 
@@ -90,7 +92,7 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
             String action = (String) PropertyUtils.getSimpleProperty((ValidatorForm) form, "action");
 
             SearchForm searchForm = (SearchForm) form;
-            if(searchForm == null) {
+            if (searchForm == null) {
                 searchForm = new SearchForm();
             }
 
@@ -101,23 +103,23 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
             log.debug("query type = " + (query == null ? "NULL" : query.getType().toString()));
             log.debug("query projectid = " + (query == null ? "NULL" : query.getProjectId().toString()));
 
-            if(query == null || query.getType() == null || "reset".equalsIgnoreCase(action) || (userPrefs != null && ! userPrefs.getRememberLastSearch())) {
+            if (query == null || query.getType() == null || "reset".equalsIgnoreCase(action) || (userPrefs != null && !userPrefs.getRememberLastSearch())) {
                 log.debug("New search query.  No existing query, reset forced, or saved querys not allowed.");
                 query = new IssueSearchQuery();
                 query.setType(IssueSearchQuery.TYPE_FULL);
                 newQuery = true;
-            } else if(query.getType().intValue() == IssueSearchQuery.TYPE_FULL.intValue() && projectId != null) {
+            } else if (query.getType().intValue() == IssueSearchQuery.TYPE_FULL.intValue() && projectId != null) {
                 log.debug("New search query.  Previous query FULL, new query PROJECT.");
                 query = new IssueSearchQuery();
                 query.setType(IssueSearchQuery.TYPE_PROJECT);
                 newQuery = true;
-            } else if(query.getType().intValue() == IssueSearchQuery.TYPE_PROJECT.intValue()) {
-                if(projectId == null || projectId.equals("")) {
+            } else if (query.getType().intValue() == IssueSearchQuery.TYPE_PROJECT.intValue()) {
+                if (projectId == null || projectId.equals("")) {
                     log.debug("New search query.  Previous query PROJECT, new query FULL.");
                     query = new IssueSearchQuery();
                     query.setType(IssueSearchQuery.TYPE_FULL);
                     newQuery = true;
-                } else if(! projectId.equals(query.getProjectId().toString())) {
+                } else if (!projectId.equals(query.getProjectId().toString())) {
                     log.debug("New search query.  Requested project (" + projectId + ") different from previous query (" + query.getProjectId().toString() + ")");
                     query = new IssueSearchQuery();
                     query.setType(IssueSearchQuery.TYPE_PROJECT);
@@ -132,117 +134,118 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
 
             List<Project> availableProjectsList = new ArrayList<Project>();
             List<Integer> selectedProjectsList = new ArrayList<Integer>();
-            for(int i = 0; i < projects.size(); i++) {
-                if(! UserUtilities.hasPermission(userPermissions, projects.get(i).getId(), UserUtilities.PERMISSION_VIEW_ALL) &&
-                   ! UserUtilities.hasPermission(userPermissions, projects.get(i).getId(), UserUtilities.PERMISSION_VIEW_USERS)) {
-                       continue;
+
+            for (int i = 0; i < projects.size(); i++) {
+                if (!UserUtilities.hasPermission(userPermissions, projects.get(i).getId(), UserUtilities.PERMISSION_VIEW_ALL) &&
+                        !UserUtilities.hasPermission(userPermissions, projects.get(i).getId(), UserUtilities.PERMISSION_VIEW_USERS)) {
+                    continue;
                 }
+
                 log.debug("Adding project " + projects.get(i).getId() + " to list of available projects.");
                 availableProjectsList.add(projects.get(i));
 
-                if(projectId != null && projects.get(i).getId().toString().equals(projectId)) {
+                if (projectId != null && projects.get(i).getId().toString().equals(projectId)) {
                     query.setType(IssueSearchQuery.TYPE_PROJECT);
                     query.setProject(projects.get(i));
                     break;
                 } else {
-                    for(int j = 0; j < query.getProjects().size(); j++) {
-                        if(query.getProjects().get(j).equals(projects.get(i).getId())) {
+                    for (int j = 0; j < query.getProjects().size(); j++) {
+                        if (query.getProjects().get(j).equals(projects.get(i).getId())) {
                             selectedProjectsList.add(projects.get(i).getId());
                             break;
                         }
                     }
                 }
             }
-         
-            
 
-            if(availableProjectsList.size() != 0) {
-            	log.debug("Issue Search has " + availableProjectsList.size() + " available projects.");
+            if (availableProjectsList.size() != 0) {
+                log.debug("Issue Search has " + availableProjectsList.size() + " available projects.");
                 query.setAvailableProjects(availableProjectsList);
-                if(query.getType().equals(IssueSearchQuery.TYPE_PROJECT)) {
+                if (query.getType().equals(IssueSearchQuery.TYPE_PROJECT)) {
                     searchForm.setProject(query.getProjectId());
                 }
 
-                if(newQuery) {
+                if (newQuery) {
                     log.debug("New search query.  Clearing results and setting defaults.");
                     query.setResults(null);
                     List<Integer> selectedStatusesIntegerList = new ArrayList<Integer>();
-                    for(int i = 0; i < IssueUtilities.getStatuses().size(); i++) {
+                    for (int i = 0; i < IssueUtilities.getStatuses().size(); i++) {
                         try {
                             int statusNumber = Integer.parseInt(IssueUtilities.getStatuses().get(i).getValue());
-                            if(statusNumber < IssueUtilities.STATUS_CLOSED) {
-                            	selectedStatusesIntegerList.add(new Integer(statusNumber));
+                            if (statusNumber < IssueUtilities.STATUS_CLOSED) {
+                                selectedStatusesIntegerList.add(statusNumber);
                             }
-                        } catch(Exception e) {
+                        } catch (Exception e) {
                             log.debug("Invalid status entry: " + IssueUtilities.getStatuses().get(i));
                         }
                     }
+
                     Integer[] statusesArray = new Integer[selectedStatusesIntegerList.size()];
                     selectedStatusesIntegerList.toArray(statusesArray);
                     searchForm.setStatuses(statusesArray);
 
                     List<Integer> selectedSeverities = new ArrayList<Integer>();
-                    for(int i = 1; i <= IssueUtilities.getNumberSeverities(); i++) {
-                        selectedSeverities.add(new Integer(i));
+                    for (int i = 1; i <= IssueUtilities.getNumberSeverities(); i++) {
+                        selectedSeverities.add(i);
                     }
+
                     Integer[] severitiesArray = new Integer[selectedSeverities.size()];
                     selectedSeverities.toArray(severitiesArray);
                     searchForm.setSeverities(severitiesArray);
                 } else {
-                    List<Integer> selectedProjects = new ArrayList<Integer>();
+                    List<Integer> selectedProjects;
                     selectedProjects = selectedProjectsList;
                     query.setProjects(selectedProjects);
-                    
+
                     Integer[] componentsArray = new Integer[query.getComponents().size()];
                     query.getComponents().toArray(componentsArray);
                     searchForm.setComponents(componentsArray);
-                    
+
                     searchForm.setContributor(query.getContributor());
                     searchForm.setCreator(query.getCreator());
                     searchForm.setOrderBy(query.getOrderBy());
                     searchForm.setProject(query.getProjectId());
-                    
+
                     Integer[] projectsArray = new Integer[query.getProjects().size()];
                     query.getProjects().toArray(projectsArray);
                     searchForm.setProjects(projectsArray);
-                    
+
                     searchForm.setResolution(query.getResolution());
-                    
+
                     Integer[] severitiesArray = new Integer[query.getSeverities().size()];
                     query.getSeverities().toArray(severitiesArray);
                     searchForm.setSeverities(severitiesArray);
-    
+
                     Integer[] statusesArray = new Integer[query.getStatuses().size()];
                     query.getStatuses().toArray(statusesArray);
                     searchForm.setStatuses(statusesArray);
-                           
+
                     searchForm.setTargetVersion(query.getTargetVersion());
                     searchForm.setTextphrase(query.getText());
-                    
+
                     Integer[] versionsArray = new Integer[query.getVersions().size()];
                     query.getVersions().toArray(versionsArray);
                     searchForm.setVersions(versionsArray);
-                     
+
                 }
-                
-       
+
                 request.setAttribute("searchForm", searchForm);
-                
+
                 session.setAttribute(Constants.SEARCH_QUERY_KEY, query);
-                
+
             } else {
-            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprojects"));
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprojects"));
             }
 
-            if(errors.isEmpty()) {
+            if (errors.isEmpty()) {
                 return mapping.getInputForward();
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Exception while creating search issues form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
-        if(! errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             saveMessages(request, errors);
         }
 
@@ -250,4 +253,3 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
     }
 
 }
-  

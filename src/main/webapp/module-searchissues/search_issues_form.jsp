@@ -21,47 +21,44 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
-<%--
-    IssueService ih = ServletContextUtils.getItrackerServices(getServletContext()).getIssueService();
-    ProjectService ph = ServletContextUtils.getItrackerServices(getServletContext()).getProjectService();
---%>
-
 <%  // TODO : move redirect logic to the Action class. 
-final Map<Integer, Set<PermissionType>> permissions = 
+    final Map<Integer, Set<PermissionType>> permissions =
     RequestHelper.getUserPermissions(session);
-User um = RequestHelper.getCurrentUser(session);
-        
-        ReportService rh = (ReportService)request.getAttribute("rh");
-	UserService uh = (UserService)request.getAttribute("uh");
-	
+    User um = RequestHelper.getCurrentUser(session);
+
+    ReportService rh = (ReportService)request.getAttribute("rh");
+    UserService uh = (UserService)request.getAttribute("uh");
+
     Integer currUserId = um.getId();
 
     IssueSearchQuery query = (IssueSearchQuery) session.getAttribute(Constants.SEARCH_QUERY_KEY);
-    %>
-    <%   if(query == null) {
+%>
+<%
+    if(query == null) {
 %>
       <logic:forward name="unauthorized"/>
 <%
     } else {
-	    List<Report> reports = new ArrayList<Report>();
-    	try { 
-      		reports = rh.getAllReports();
-		} catch (Exception e) {
-			e.printStackTrace(); 
-		}
-		
-      Project project = null;
-      List<User> possibleContributors = new ArrayList<User>();
-      if(query.getType().equals(IssueSearchQuery.TYPE_PROJECT)) {
-          project = query.getProject();
-          if(project == null) {
+        List<Report> reports = new ArrayList<Report>();
+        try {
+            reports = rh.getAllReports();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Project project = null;
+        List<User> possibleContributors = new ArrayList<User>();
+        if (query.getType().equals(IssueSearchQuery.TYPE_PROJECT)) {
+            project = query.getProject();
+            if (project == null) {
 %>
               <logic:forward name="unauthorized"/>
 <%
-          }
-          possibleContributors = uh.getUsersWithAnyProjectPermission(query.getProjectId(), new int[] { UserUtilities.PERMISSION_CREATE, UserUtilities.PERMISSION_EDIT, UserUtilities.PERMISSION_EDIT_USERS });
-          Collections.sort(possibleContributors, User.NAME_COMPARATOR);
-      }
+            }
+
+            possibleContributors = uh.getUsersWithAnyProjectPermission(query.getProjectId(), new int[]{UserUtilities.PERMISSION_CREATE, UserUtilities.PERMISSION_EDIT, UserUtilities.PERMISSION_EDIT_USERS});
+            Collections.sort(possibleContributors, User.NAME_COMPARATOR);
+        }
 %>
 
       <html:javascript formName="searchForm"/>
@@ -348,4 +345,6 @@ User um = RequestHelper.getCurrentUser(session);
     }
 %>
 
-<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
+<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/>
+</body>
+</html>
