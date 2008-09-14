@@ -1,11 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <%@ page import="org.itracker.web.util.*" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Collections" %>
 <%@ page import="org.itracker.services.util.UserUtilities" %>
 <%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.core.resources.*" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
@@ -16,23 +13,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<% // TODO : move redirect logic to the Action class. 
+<%
+    // TODO : move redirect logic to the Action class. 
     User user = (User) session.getAttribute(Constants.EDIT_USER_KEY);
-    java.util.HashMap userPermissions = (java.util.HashMap) session.getAttribute(Constants.EDIT_USER_PERMS_KEY);
-    %>
-  <%  if(user == null) {
+
+    if(user == null) {
 %>
       <logic:forward name="unauthorized"/>
-<%
-    } else {
-      UserService uh = (UserService) request.getAttribute("uh");
-	  ProjectService ph = (ProjectService) request.getAttribute("ph");
-
-      boolean isUpdate = false;
-      if(user.getId().intValue() > 0) {
-          isUpdate = true;
-      }
-%>
+<%  } %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
@@ -70,7 +58,7 @@
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.login"/>:</td>
               <c:choose>
-                  <c:when test="${isUpdatex && !allowProfileUpdate}">
+                  <c:when test="${isUpdate && !allowProfileUpdate}">
                       <td class="editColumnText"><%= user.getLogin() %><html:hidden property="login" />
                   </c:when>
                   <c:otherwise>
@@ -162,17 +150,21 @@
           </tr>
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15" width="1"/></td></tr>
         </table>
-          <% if(isUpdate) { %>
+        <c:choose>
+            <c:when test="${isUpdate}">
                 <html:submit styleClass="button"
                              altKey="itracker.web.button.update.alt"
                              titleKey="itracker.web.button.update.alt">
                     <it:message key="itracker.web.button.update"/>
                 </html:submit>
-          <% } else { %>
-                <html:submit styleClass="button" altKey="itracker.web.button.create.alt" titleKey="itracker.web.button.create.alt"><it:message key="itracker.web.button.create"/></html:submit> 
-          <% } %>
-     <br/>   <br/>
-     
+            </c:when>
+            <c:otherwise>
+                <html:submit styleClass="button" altKey="itracker.web.button.create.alt" titleKey="itracker.web.button.create.alt"><it:message key="itracker.web.button.create"/></html:submit>
+            </c:otherwise>
+        </c:choose>
+        <br/>
+        <br/>
+
         <table border="0" cellspacing="0"  cellspacing="1"  width="100%" align="center">
           <tr>
             <td class="editColumnTitle" colspan="8"><it:message key="itracker.web.attr.permissions"/>:</td>
@@ -191,51 +183,11 @@
             <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="1" width="10"/></td>
             <td colspan="3"></td>
           </tr>
-          <%
-              List<Project> projects = ph.getAllAvailableProjects();
-              Collections.sort(projects);
-              List<NameValuePair> permissionNames = UserUtilities.getPermissionNames((java.util.Locale)pageContext.getAttribute("currLocale"));
-
-              for(int i = 0; i < projects.size(); i++) {
-          %>
-                  <tr align="left" class="listRowShaded"><td colspan="8"><input title="toggle all" type="checkbox" onchange="toggleProjectPermissionsChecked(this)" name="Proj<%= projects.get(i).getId() %>"/>&nbsp;<it:message key="itracker.web.attr.project"/> <%= projects.get(i).getName() %></td></tr>
-                  <tr align="right" class="listRowUnshaded">
-                  <%
-                        java.util.HashMap projectPermissions = (java.util.HashMap) userPermissions.get(projects.get(i).getId());
-                        java.util.Date currentPermissionDate = null;
-                        String checkmarkImage = "";
-                        for(int j = 0; j < permissionNames.size(); j++) {
-                            currentPermissionDate = null;
-                            if(projectPermissions != null && projectPermissions.get(permissionNames.get(j).getValue()) != null) {
-                                currentPermissionDate = ((Permission) projectPermissions.get(permissionNames.get(j).getValue())).getCreateDate();
-                            }
-                            if(currentPermissionDate == null) {
-                                checkmarkImage = "/themes/defaulttheme/images/checkmark_empty.png";
-                            } else {
-                                checkmarkImage = "/themes/defaulttheme/images/checkmark_checked.png";
-                            }
-
-                            if(j != 0 && j % 2 == 0) {
-                  %>
-                              </tr><tr align="right" class="listRowUnshaded">
-                  <%        } %>
-                            <td></td>
-                            <% String keyName = "permissions(Perm" + permissionNames.get(j).getValue() + "Proj" + projects.get(i).getId() + ")"; %>
-                            <c:choose>
-                                <c:when test="${isUpdate && !allowPermissionUpdate}">
-                                    <td align="left"><html:img page="<%= checkmarkImage %>"/><html:hidden property="<%= keyName %>" /></td>
-                                </c:when>
-                                <c:otherwise>
-                                    <td align="left"><html:checkbox property="<%= keyName %>" value="on"/></td>
-                                </c:otherwise>
-                            </c:choose>
-                            <td><%= permissionNames.get(j).getName() %></td>
-                            <td><it:formatDate date="<%= currentPermissionDate %>"/></td>
-                  <%    } %>
-                  </tr>
-                  <tr><td colspan="8"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="5" width="1"/></td></tr>
-          <% } %>
-          <tr><td colspan="8"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td></tr>
+          <tr>
+              <td colspan="8">
+                  <html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/>
+              </td>
+          </tr>
         </table>
 
         <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
@@ -262,5 +214,6 @@
         </table>
 
       </html:form>
-      <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
-<%  } %>
+      <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/>
+</body>
+</html>
