@@ -21,9 +21,6 @@ package org.itracker.web.actions.base;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -43,18 +40,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.Issue;
-import org.itracker.model.NameValuePair;
 import org.itracker.model.PermissionType;
-import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ITrackerServices;
-import org.itracker.services.IssueService;
-import org.itracker.services.UserService;
-import org.itracker.services.util.Convert;
-import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.user.LoginAction;
 import org.itracker.web.filters.ExecuteAlwaysFilter;
@@ -74,25 +63,9 @@ import org.itracker.web.util.SessionManager;
  */
 public abstract class ItrackerBaseAction extends Action {
 
-	private final Logger log = Logger.getLogger(ItrackerBaseAction.class);
+	private static final Logger log = Logger.getLogger(ItrackerBaseAction.class);
 
-	// private static final Logger log =
-	// Logger.getLogger(ItrackerBaseAction.class);
-	// TODO: there is no state information for an action allowed! use correct
-	// struts action patterns please.
-	private boolean allowSaveLogin = true;
-	// TODO: there is no state information for an action allowed! use correct
-	// struts action patterns please.
-	private String name = Constants.USER_KEY;
-	// TODO: there is no state information for an action allowed! use correct
-	// struts action patterns please.
-	private String page = "/login.do";
-	// TODO: there is no state information for an action allowed! use correct
-	// struts action patterns please.
-	private int permission = -1;
-	// TODO: there is no state information for an action allowed! use correct
-	// struts action patterns please.
-	private Locale currLocale;
+
 
 	public ItrackerBaseAction() {
 		super();
@@ -113,6 +86,9 @@ public abstract class ItrackerBaseAction extends Action {
 		if (log.isDebugEnabled()) {
 			log.debug("Executing Action : " + getClass().getName());
 		}
+		// skipt this due to invalid pattern
+		if (true)
+			return;
 
 		log
 				.info("pageInit: setting the common request attributes, (coming from the former header.jsp)");
@@ -150,13 +126,13 @@ public abstract class ItrackerBaseAction extends Action {
 		// happens... do we really need the following line then?
 		Map<Integer, Set<PermissionType>> permissions = getUserPermissions(request
 				.getSession());
-		currLocale = LoginUtilities.getCurrentLocale(request);
+		Locale locale = LoginUtilities.getCurrentLocale(request);
 		String currLogin = (currUser == null ? null : currUser.getLogin());
 		// now these are put into the request scope... (new).
 		request.setAttribute("baseURL", baseURL);
 		request.getSession().setAttribute("currUser", currUser);
 		request.setAttribute("permissions", permissions);
-		request.setAttribute("currLocale", currLocale);
+		request.setAttribute("currLocale", locale);
 		request.setAttribute("currLogin", currLogin);
 
 	}
@@ -219,7 +195,7 @@ public abstract class ItrackerBaseAction extends Action {
 
 	/**
 	 * 
-	 * TODO: Deprecate and move to {@link org.itracker.web.util.LoginUtilities}
+	 * @deprecated move to {@link org.itracker.web.util.LoginUtilities}
 	 * 
 	 * @param request
 	 * @param response
@@ -277,7 +253,8 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public String getName() {
-		return name;
+		log.warn("getName: is deprecated", new RuntimeException());
+		return null;
 	}
 
 	/**
@@ -286,7 +263,8 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public void setName(String value) {
-		name = value;
+		log.warn("setName: is deprecated", new RuntimeException());
+		// name = value;
 	}
 
 	/**
@@ -295,7 +273,8 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public String getPage() {
-		return page;
+		log.warn("getPage: is deprecated", new RuntimeException());
+		return null;
 	}
 
 	/**
@@ -304,7 +283,8 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public void setPage(String value) {
-		page = value;
+		log.warn("setPage: is deprecated", new RuntimeException());
+		// page = value;
 	}
 
 	/**
@@ -313,7 +293,8 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public int getPermission() {
-		return permission;
+		log.warn("getPermission: is deprecated", new RuntimeException());
+		return -1;
 	}
 
 	/**
@@ -322,7 +303,8 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public void setPermission(int value) {
-		permission = value;
+		log.warn("setPermission: is deprecated", new RuntimeException());
+		// permission = value;
 	}
 
 	/**
@@ -345,7 +327,7 @@ public abstract class ItrackerBaseAction extends Action {
 				.info("Starting loginRouter (formerly Checklogin tag) proceedure...");
 		ConfigurationService configurationService = getITrackerServices()
 				.getConfigurationService();
-		allowSaveLogin = configurationService.getBooleanProperty(
+		boolean allowSaveLogin = configurationService.getBooleanProperty(
 				"allow_save_login", true);
 
 		String requestPath = request.getRequestURI();
@@ -508,7 +490,17 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public Locale getCurrLocale() {
-		return currLocale;
+		return null;
+	}
+
+	/**
+	 * get locale from request-attribute Constants.LOCALE_KEY as initialized by {@link ExecuteAlwaysFilter}.
+	 * 
+	 * @return
+	 * @deprecated use getLocale instead
+	 */
+	public  Locale getCurrLocale(HttpServletRequest request) {
+		return getLocale(request);
 	}
 
 	/**
@@ -517,76 +509,26 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public void setCurrLocale(Locale currLocale) {
-		this.currLocale = currLocale;
+//		this.currLocale = currLocale;
 	}
 
 	/**
-	 * This function will obtain and build a list of possible owners for the
-	 * webpages to display and the operator to choose from.
+	 * set the locale in request attribute Constants.LOCALE_KEY
 	 * 
-	 * TODO: move this to {@link IssueService} method
+	 * @deprecated
 	 */
-	public static List<NameValuePair> GetIssuePossibleOwnersList(Issue issue,
-			Project project, User currUser, Locale currLocale,
-			IssueService issueService, UserService userService,
-			Map<Integer, Set<PermissionType>> userPermissions) {
-		// Map<Integer, List<NameValuePair>> listOptions = new
-		// HashMap<Integer,List<NameValuePair>>();
-		// boolean hasFullEdit = UserUtilities.hasPermission(userPermissions,
-		// project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
-
-		List<NameValuePair> ownersList = new ArrayList<NameValuePair>();
-		if (UserUtilities.hasPermission(userPermissions, project.getId(),
-				UserUtilities.PERMISSION_ASSIGN_OTHERS)) {
-			if (issue.getOwner() == null) {
-				ownersList.add(new NameValuePair(ITrackerResources.getString(
-						"itracker.web.generic.unassigned", currLocale), "-1"));
-			} else {
-				ownersList.add(new NameValuePair(ITrackerResources.getString(
-						"itracker.web.generic.unassign", currLocale), "-1"));
-			}
-			List<User> possibleOwners = userService.getPossibleOwners(issue,
-					project.getId(), currUser.getId());
-			Collections.sort(possibleOwners, User.NAME_COMPARATOR);
-			List<NameValuePair> ownerNames = Convert
-					.usersToNameValuePairs(possibleOwners);
-			for (int i = 0; i < ownerNames.size(); i++) {
-				ownersList.add(ownerNames.get(i));
-			}
-		} else if (UserUtilities.hasPermission(userPermissions,
-				project.getId(), UserUtilities.PERMISSION_ASSIGN_SELF)) {
-			if (issue.getOwner() != null) {
-				if (IssueUtilities.canUnassignIssue(issue, currUser.getId(),
-						userPermissions)) {
-					ownersList.add(new NameValuePair(ITrackerResources
-							.getString("itracker.web.generic.unassign",
-									currLocale), "-1"));
-				}
-				if (!issue.getOwner().getId().equals(currUser.getId())) {
-					ownersList.add(new NameValuePair(issue.getOwner()
-							.getFirstName()
-							+ " " + issue.getOwner().getLastName(), issue
-							.getOwner().getId().toString()));
-					ownersList.add(new NameValuePair(currUser.getFirstName()
-							+ " " + currUser.getLastName(), currUser.getId()
-							.toString()));
-				} else {
-					ownersList.add(new NameValuePair(currUser.getFirstName()
-							+ " " + currUser.getLastName(), currUser.getId()
-							.toString()));
-				}
-			}
-		} else if (issue.getOwner() != null
-				&& IssueUtilities.canUnassignIssue(issue, currUser.getId(),
-						userPermissions)) {
-			ownersList.add(new NameValuePair(ITrackerResources.getString(
-					"itracker.web.generic.unassign", currLocale), "-1"));
-			ownersList.add(new NameValuePair(issue.getOwner().getFirstName()
-					+ " " + issue.getOwner().getLastName(), issue.getOwner()
-					.getId().toString()));
-		}
-
-		return ownersList;
+	public void setCurrLocale(Locale currLocale, HttpServletRequest request) {
+		request.setAttribute(Constants.LOCALE_KEY, currLocale);
+//		this.currLocale = currLocale;
 	}
+	@Override
+	protected Locale getLocale(HttpServletRequest request) {
+		Locale locale = super.getLocale(request);
+		if (null == locale) {
+			locale = LoginUtilities.getCurrentLocale(request);
+		}
+		return locale;
+	}
+
 
 }
