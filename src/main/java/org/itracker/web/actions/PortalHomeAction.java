@@ -52,7 +52,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
         } else if (forward!=null) {
             
             LOGGER.info("Found forward, let's go and check if this forward is portalhome...");
-            super.executeAlways(mapping,form,request,response);
+//            super.executeAlways(mapping,form,request,response);
             
             if (forward.getName().equals("portalhome")||forward.getName().equals("index")) {
                 
@@ -60,11 +60,10 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 ProjectService projectService = this.getITrackerServices().getProjectService();
                 UserService userService = this.getITrackerServices().getUserService();
                 User currUser = (User)request.getSession().getAttribute("currUser");
-                Locale currLocale = super.getLocale(request);
-                Integer userId = currUser.getId();
-                @SuppressWarnings("unused")
-				Map<Integer, Set<PermissionType>> permissions =
-                        (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");
+                Locale locale = super.getLocale(request);
+//                Integer userId = currUser.getId();
+//				Map<Integer, Set<PermissionType>> permissions =
+//                        (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");
                 
                 // GETTING AND SETTING USER PREFS AND HIDDEN SECTIONS ACCORDINGLY
                 UserPreferences userPrefs = currUser.getPreferences();
@@ -188,8 +187,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     //List<User> tempOwners = new ArrayList<User>();
                     List<NameValuePair> ownersList = new ArrayList<NameValuePair>();
                     
-                    ownersList = GetIssuePossibleOwnersList(issue, project, currUser, currLocale,
-                                                            issueService, userService, userPermissions);
+                    ownersList = UserUtilities.getAssignableIssueOwnersList(issue, project, currUser, locale, userService, userPermissions);
                     
                     for ( Iterator idIterator = ownersList.iterator(); idIterator.hasNext(); ) {
                         NameValuePair owner = (NameValuePair) idIterator.next();
@@ -231,7 +229,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 
                 // PUTTING PERMISSIONS INTO THE REQUEST SCOPE
                 
-                request.setAttribute("itracker_web_generic_unassigned", ITrackerResources.getString("itracker.web.generic.unassigned", currLocale));
+                request.setAttribute("itracker_web_generic_unassigned", ITrackerResources.getString("itracker.web.generic.unassigned", locale));
                 
                 // PUTTING ISSUES INTO THE REQUEST SCOPE
                 LOGGER.info("ownedIssues Size: "+ownedIssuePTOs.size());
@@ -274,7 +272,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
     @SuppressWarnings("unchecked")
 	public List<IssuePTO> buildIssueList( List<Issue> issues, HttpServletRequest request ) {
         User currUser = (User)request.getSession().getAttribute("currUser");
-        Locale currLocale = super.getLocale(request);
+        Locale currLocale = getLocale(request);
         //Integer userId = currUser.getId();
         Map<Integer, Set<PermissionType>> permissions =
                 (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");

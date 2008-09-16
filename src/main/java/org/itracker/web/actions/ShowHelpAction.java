@@ -22,19 +22,19 @@ public class ShowHelpAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        super.executeAlways(mapping,form,request,response);
+//        super.executeAlways(mapping,form,request,response);
         
         String helpPage = "";
         String helpParam = request.getParameter("page");
         HttpSession session = request.getSession(true);
-        Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+        Locale locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
         log.debug("Requesting Help Page: " + helpParam);
         if("ct".equals(helpParam)) {
-            helpPage = ITrackerResources.getString("itracker.web.helppage.commontasks", currLocale);
+            helpPage = ITrackerResources.getString("itracker.web.helppage.commontasks", locale);
         } else if("ab".equals(helpParam)) {
             helpPage = "help_about.jsp";
         } else {
-            helpPage = "help_index_" + currLocale + ".jsp";
+            helpPage = "help_index_" + locale + ".jsp";
             if(! (new File(helpPage)).exists()) {
                 helpPage = "help_index.jsp";
             }

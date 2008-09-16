@@ -16,7 +16,7 @@ public class ListProjectsAction extends ItrackerBaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		
-		super.executeAlways(mapping,form,request,response);
+//		super.executeAlways(mapping,form,request,response);
 		 
     	ProjectService projectService = this.getITrackerServices().getProjectService();
     	request.setAttribute("ph",projectService);

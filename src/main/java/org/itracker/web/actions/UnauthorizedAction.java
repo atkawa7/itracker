@@ -17,7 +17,7 @@ public class UnauthorizedAction extends ItrackerBaseAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		 super.executeAlways(mapping,form,request,response);
+//		 super.executeAlways(mapping,form,request,response);
 		// TODO process request and return an ActionForward instance, for example:
 		// return mapping.findForward(UNAUTHORIZED);
 		// return null;
