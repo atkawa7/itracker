@@ -100,7 +100,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
             Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
-            Locale locale = getCurrLocale(request);
+            Locale locale = getLocale(request);
             Integer currUserId = currUser.getId();
             
             IssueForm issueForm = (IssueForm)form;
@@ -135,6 +135,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                 issue.setDescription((String) issueForm.getDescription());
                 issue.setSeverity(issueForm.getSeverity());
                 issue.setStatus(IssueUtilities.STATUS_NEW);
+                issue.setResolution("");
                 
                 
                 IssueHistory issueHistory = new IssueHistory(issue, currUser, 
