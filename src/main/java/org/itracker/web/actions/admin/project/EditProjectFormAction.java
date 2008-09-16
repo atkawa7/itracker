@@ -92,7 +92,7 @@ public class EditProjectFormAction extends ItrackerBaseAction {
             } else {
                 pageTitleKey = "itracker.web.admin.editproject.title.create";
                 //     pageTitleArg = ITrackerResources.getString("itracker.locale.name", parentLocale);
-                pageTitleArg = ITrackerResources.getString("itracker.locale.name", getCurrLocale(request));
+                pageTitleArg = ITrackerResources.getString("itracker.locale.name", getLocale(request));
 
             }
 

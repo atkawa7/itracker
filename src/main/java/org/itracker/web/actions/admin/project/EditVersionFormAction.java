@@ -64,9 +64,9 @@ public class EditVersionFormAction extends ItrackerBaseAction {
         String pageTitleKey = "";
         String pageTitleArg = "";
         
-        if (!isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        if (!isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
         
         try {
             ProjectService projectService = getITrackerServices().getProjectService();
