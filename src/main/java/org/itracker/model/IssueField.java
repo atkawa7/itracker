@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.exceptions.IssueException;
@@ -152,15 +153,18 @@ public class IssueField extends AbstractEntity {
 	 * @param locale
 	 *            a locale to use for any string formatting
 	 * @return the current value of this field
-	 * @deprecated use getValue(ResourceBundle bundle) instead, locale is taken from bundle
+	 * @deprecated use getValue(ResourceBundle bundle) instead, locale is taken
+	 *             from bundle
 	 * 
 	 */
 	public String getValue(ResourceBundle bundle, Locale locale) {
 		if (log.isDebugEnabled()) {
-			log.debug("getValue: called with bundle: " + bundle + ", locale: " + locale);
+			log.debug("getValue: called with bundle: " + bundle + ", locale: "
+					+ locale);
 		}
 		return getValue(bundle);
 	}
+
 	/**
 	 * Gets the custom field value as a String.
 	 * 
@@ -170,15 +174,18 @@ public class IssueField extends AbstractEntity {
 	 */
 	public String getValue(ResourceBundle bundle) {
 		Locale locale = bundle.getLocale();
-		
+
 		if (log.isDebugEnabled()) {
-			log.debug("getValue: called with bundle: " + bundle + ", locale: " + locale);
+			log.debug("getValue: called with bundle: " + bundle + ", locale: "
+					+ locale);
 		}
 		switch (customField.getFieldType()) {
-	
+
 		case INTEGER:
 			if (log.isDebugEnabled()) {
-				log.debug("getValue: type was INTEGER, value: " + this.intValue);
+				log
+						.debug("getValue: type was INTEGER, value: "
+								+ this.intValue);
 			}
 			return Integer.toString(this.intValue);
 
@@ -212,7 +219,8 @@ public class IssueField extends AbstractEntity {
 				sdf = new SimpleDateFormat(dateFormat, locale);
 				String formattedDate = sdf.format(this.dateValue);
 				if (log.isDebugEnabled()) {
-					log.debug("getValue: formated date " + this.dateValue + " to " + formattedDate);
+					log.debug("getValue: formated date " + this.dateValue
+							+ " to " + formattedDate);
 				}
 				return formattedDate;
 			} catch (NullPointerException ne) {
@@ -290,29 +298,10 @@ public class IssueField extends AbstractEntity {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-
-		if (obj instanceof IssueField) {
-			final IssueField other = (IssueField) obj;
-
-			return this.issue.equals(issue)
-					&& this.customField.equals(customField);
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return this.issue.hashCode() + this.customField.hashCode();
-	}
-
-	@Override
 	public String toString() {
-		return "[issue=" + this.issue + ",customField=" + this.customField
-				+ "]";
+		return new ToStringBuilder(this).append("id", id)
+				.append("issue", issue).append("customField", customField)
+				.toString();
 	}
 
 }

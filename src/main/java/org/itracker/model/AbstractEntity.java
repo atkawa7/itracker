@@ -171,7 +171,7 @@ public abstract class AbstractEntity implements Entity {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 
 		if (this == obj) {
 			return true;
@@ -191,7 +191,7 @@ public abstract class AbstractEntity implements Entity {
 
 	}
 
-	public int compareTo(Entity o) {
+	public final int compareTo(Entity o) {
 		if (this.equals(o)) {
 			return 0;
 		}
@@ -200,7 +200,7 @@ public abstract class AbstractEntity implements Entity {
 	}
 
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		return new HashCodeBuilder().append(getId()).toHashCode();
 
 	}

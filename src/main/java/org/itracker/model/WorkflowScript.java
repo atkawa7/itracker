@@ -18,75 +18,92 @@
 
 package org.itracker.model;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
- * A Beanshell script to execute on a particular event. 
+ * A Beanshell script to execute on a particular event.
  * 
- * <p>This allows to dynamically customize the system by executing 
- * custom actions at given extension points where an event is generated. </p>
+ * <p>
+ * This allows to dynamically customize the system by executing custom actions
+ * at given extension points where an event is generated.
+ * </p>
  * 
- * <p>A WorkflowScript needs to be configured to be executed for a particular 
- * field of a Project. This configuration is represented as a ProjectScript. <br>
- * WorkflowScript - ProjectScript is a 1-N relationship. </p>
+ * <p>
+ * A WorkflowScript needs to be configured to be executed for a particular field
+ * of a Project. This configuration is represented as a ProjectScript. <br>
+ * WorkflowScript - ProjectScript is a 1-N relationship.
+ * </p>
  * 
  * @author ready
  * @see ProjectScript
  */
 public class WorkflowScript extends AbstractEntity {
-    
-    private String name;
-    
-    private String script;
-    
-    private int event;
-    
-    // TODO: what's the expected type here? 
-//    private Collection projectFields;
-    private int numUses;
-    
-    /* This class used to have a <code>projectFields</code> attribute, which was 
-     * a Collection<ProjectScript>. This has been removed because the association 
-     * WorkflowScript - ProjectScript doesn't need to be navigatable in this direction. 
-     */
-    
-    public int getEvent() {
-        return event;
-    }
-    
-    public void setEvent(int event) {
-        this.event = event;
-    }
-    
-    public String getName() {
-        return name;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-/*
-    public Collection getProjectFields() {
-        return projectFields;
-    }
-    
-    public void setProjectFields(Collection projectFields) {
-        this.projectFields = projectFields;
-    }
-*/    
-    public String getScript() {
-        return script;
-    }
-    
-    public void setScript(String script) {
-        this.script = script;
-    }
-    
-    public int getNumberUses() {
-        return numUses;
-    }
-    
-    public void setNumberUses(int value) {
-        numUses = value;
-    }
-    
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String name;
+
+	private String script;
+
+	private int event;
+
+	// TODO: what's the expected type here?
+	// private Collection projectFields;
+	private int numUses;
+
+	/*
+	 * This class used to have a <code>projectFields</code> attribute, which
+	 * was a Collection<ProjectScript>. This has been removed because the
+	 * association WorkflowScript - ProjectScript doesn't need to be navigatable
+	 * in this direction.
+	 */
+
+	public int getEvent() {
+		return event;
+	}
+
+	public void setEvent(int event) {
+		this.event = event;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/*
+	 * public Collection getProjectFields() { return projectFields; }
+	 * 
+	 * public void setProjectFields(Collection projectFields) {
+	 * this.projectFields = projectFields; }
+	 */
+	public String getScript() {
+		return script;
+	}
+
+	public void setScript(String script) {
+		this.script = script;
+	}
+
+	public int getNumberUses() {
+		return numUses;
+	}
+
+	public void setNumberUses(int value) {
+		numUses = value;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("id", id).append("name", name)
+				.append("event", event).append("numUses", numUses).append(
+						"script", script).toString();
+	}
+
 }

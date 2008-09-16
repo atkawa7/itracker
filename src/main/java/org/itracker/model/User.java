@@ -25,6 +25,8 @@ import java.util.List;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.itracker.services.util.UserUtilities;
 
@@ -66,22 +68,22 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 
 	/** The Projects owned by this User. */
 	private List<Project> projects = new ArrayList<Project>();
-    private UserPreferences preferences;
+	private UserPreferences preferences;
 
-    public UserPreferences getPreferences() {
-        return preferences;
-    }
+	public UserPreferences getPreferences() {
+		return preferences;
+	}
 
-    public void setPreferences(UserPreferences preferences) {
-        this.preferences = preferences;
-    }
+	public void setPreferences(UserPreferences preferences) {
+		this.preferences = preferences;
+	}
 
-    /*
-      * This class used to have an <code>activities</code> attribute, which was
-      * a Collection<IssueActivity>. This has been removed because the
-      * association User - IssueActivity doesn't need to be navigatable in this
-      * direction.
-      */
+	/*
+	 * This class used to have an <code>activities</code> attribute, which was
+	 * a Collection<IssueActivity>. This has been removed because the
+	 * association User - IssueActivity doesn't need to be navigatable in this
+	 * direction.
+	 */
 
 	/*
 	 * This class used to have a <code>notifications</code> attribute, which
@@ -179,7 +181,8 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 	public InternetAddress getEmailAddress() {
 
 		if (null == getEmail() || getEmail().trim().length() == 0) {
-			log.warn("getEmailAddress: failed to get eMail for user " + getLogin() + " (" + getId() + ")");
+			log.warn("getEmailAddress: failed to get eMail for user "
+					+ getLogin() + " (" + getId() + ")");
 			return null;
 		}
 		try {
@@ -189,7 +192,9 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 			try {
 				return new InternetAddress(getEmail());
 			} catch (AddressException e1) {
-				log.error("getEmailAddress: failed to parse email '" + getEmail() + "' for user " + getLogin() + " (" + getId() + "), returning null", e1);
+				log.error("getEmailAddress: failed to parse email '"
+						+ getEmail() + "' for user " + getLogin() + " ("
+						+ getId() + "), returning null", e1);
 				return null;
 			}
 		}
@@ -273,33 +278,34 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 		this.projects = projects;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-
-		if (obj instanceof User) {
-			final User other = (User) obj;
-
-			return this.login.equals(other.login);
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return this.login.hashCode();
-	}
+	// @Override
+	// public boolean equals(Object obj) {
+	// if (this == obj) {
+	// return true;
+	// }
+	//
+	// if (obj instanceof User) {
+	// final User other = (User) obj;
+	//
+	// return this.login.equals(other.login);
+	// }
+	// return false;
+	// }
+	//
+	// @Override
+	// public int hashCode() {
+	// return this.login.hashCode();
+	// }
 
 	@Override
 	public String toString() {
-		return "User [id=" + this.id + ", login=" + this.login + "]";
+		return new ToStringBuilder(this).append("id", id)
+				.append("login", login).toString();
 	}
 
-	public int compareTo(User other) {
-		return this.login.compareTo(other.login);
-	}
+//	public int compareTo(User other) {
+//		return this.login.compareTo(other.login);
+//	}
 
 	/**
 	 * Compares 2 users by last and first name.
@@ -307,20 +313,17 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 	private static class NameComparator implements Comparator<User> {
 
 		public int compare(User a, User b) {
-			if (a.lastName == null && b.lastName == null) {
-				return 0;
-			} else if (a.lastName == null) {
-				return 1;
-			} else if (b.lastName == null) {
-				return -1;
-			}
-
-			final int lastNameComparison = a.lastName.compareTo(b.lastName);
-
-			return (lastNameComparison == 0) ? a.firstName
-					.compareTo(b.firstName) : lastNameComparison;
+			return new CompareToBuilder().append(a.lastName, b.lastName)
+					.append(a.firstName, b.firstName).toComparison();
 		}
 
+	}
+
+	public static final class LoginComparator implements Comparator<User> {
+		public int compare(User o1, User o2) {
+			return new CompareToBuilder().append(o1.login, o2.login)
+					.toComparison();
+		}
 	}
 
 }

@@ -22,119 +22,117 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.itracker.services.util.SystemConfigurationUtilities;
 
 /**
  * 
  */
 public class SystemConfiguration extends AbstractEntity {
-    
-    private String version;
 
-    private List<CustomField> customFields = new ArrayList<CustomField>();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    private List<Configuration> resolutions = new ArrayList<Configuration>();
-    private List<Configuration> severities = new ArrayList<Configuration>();
-    private List<Configuration> statuses = new ArrayList<Configuration>();
+	private String version;
 
-    public SystemConfiguration() {
-    }
+	private List<CustomField> customFields = new ArrayList<CustomField>();
 
-    public String getVersion() {
-        return (version == null ? "" : version);
-    }
+	private List<Configuration> resolutions = new ArrayList<Configuration>();
+	private List<Configuration> severities = new ArrayList<Configuration>();
+	private List<Configuration> statuses = new ArrayList<Configuration>();
 
-    public void setVersion(String value) {
-        version = value;
-    }
+	public SystemConfiguration() {
+	}
 
-    public List<CustomField> getCustomFields() {
-        return customFields;
-    }
+	public String getVersion() {
+		return (version == null ? "" : version);
+	}
 
-    public void setCustomFields(List<CustomField> value) {
-        if(value != null) {
-            customFields = value;
-        }
-    }
+	public void setVersion(String value) {
+		version = value;
+	}
 
-    public List<Configuration> getResolutions() {
-        return (resolutions == null ? new ArrayList<Configuration>() : resolutions);
-    }
+	public List<CustomField> getCustomFields() {
+		return customFields;
+	}
 
-    public void setResolutions(List<Configuration> value) {
-        if(value != null) {
-            resolutions = value;
-        }
-    }
+	public void setCustomFields(List<CustomField> value) {
+		if (value != null) {
+			customFields = value;
+		}
+	}
 
-    public List<Configuration> getSeverities() {
-        return (severities == null ? new ArrayList<Configuration>() : severities);
-    }
+	public List<Configuration> getResolutions() {
+		return (resolutions == null ? new ArrayList<Configuration>()
+				: resolutions);
+	}
 
-    public void setSeverities(List<Configuration> value) {
-        if(value != null) {
-            severities = value;
-        }
-    }
+	public void setResolutions(List<Configuration> value) {
+		if (value != null) {
+			resolutions = value;
+		}
+	}
 
-    public List<Configuration> getStatuses() {
-        return (statuses == null ? new ArrayList<Configuration>() : statuses);
-    }
+	public List<Configuration> getSeverities() {
+		return (severities == null ? new ArrayList<Configuration>()
+				: severities);
+	}
 
-    public void setStatuses(List<Configuration> value) {
-        if(value != null) {
-            statuses = value;
-        }
-    }
+	public void setSeverities(List<Configuration> value) {
+		if (value != null) {
+			severities = value;
+		}
+	}
 
-    public void addConfiguration(Configuration configuration) {
-        if(configuration != null) {
-            Configuration[] newArray;
+	public List<Configuration> getStatuses() {
+		return (statuses == null ? new ArrayList<Configuration>() : statuses);
+	}
 
-            if(configuration.getType() == SystemConfigurationUtilities.TYPE_RESOLUTION) {
-                newArray = new Configuration[getResolutions().size() + 1];
-                if(getResolutions().size() > 0) {
-                    System.arraycopy((Object) resolutions, 0, (Object) newArray, 0, resolutions.size());
-                }
-                newArray[getResolutions().size()] = configuration;
-                setResolutions(Arrays.asList(newArray));
-            } else if(configuration.getType() == SystemConfigurationUtilities.TYPE_SEVERITY) {
-                newArray = new Configuration[getSeverities().size() + 1];
-                if(getSeverities().size() > 0) {
-                    System.arraycopy((Object) severities, 0, (Object) newArray, 0, severities.size());
-                }
-                newArray[getSeverities().size()] = configuration;
-                setSeverities(Arrays.asList(newArray));
-            } else if(configuration.getType() == SystemConfigurationUtilities.TYPE_STATUS) {
-                newArray = new Configuration[getStatuses().size() + 1];
-                if(getStatuses().size() > 0) {
-                    System.arraycopy((Object) statuses, 0, (Object) newArray, 0, statuses.size());
-                }
-                newArray[getStatuses().size()] = configuration;
-                setStatuses(Arrays.asList(newArray));
-            }
-        }
-    }
+	public void setStatuses(List<Configuration> value) {
+		if (value != null) {
+			statuses = value;
+		}
+	}
 
-    public String toString() {
-        StringBuffer buf = new StringBuffer("SystemConfiguration Version: " + getVersion() + "\n");
-        buf.append("  Resolutions:");
-        for(int i = 0; i < resolutions.size(); i++) {
-            buf.append(" " + resolutions.get(i).getName() + "(" + resolutions.get(i).getValue() + ")");
-        }
-        buf.append("\n");
-        buf.append("  Severities:");
-        for(int i = 0; i < severities.size(); i++) {
-            buf.append(" " + severities.get(i).getName() + "(" + severities.get(i).getValue() + ")");
-        }
-        buf.append("\n");
-        buf.append("  Statuses:");
-        for(int i = 0; i < statuses.size(); i++) {
-            buf.append(" " + statuses.get(i).getName() + "(" + statuses.get(i).getValue() + ")");
-        }
-        buf.append("\n");
+	public void addConfiguration(Configuration configuration) {
+		if (configuration != null) {
+			Configuration[] newArray;
 
-        return buf.toString();
-    }
+			if (configuration.getType() == SystemConfigurationUtilities.TYPE_RESOLUTION) {
+				newArray = new Configuration[getResolutions().size() + 1];
+				if (getResolutions().size() > 0) {
+					System.arraycopy((Object) resolutions, 0,
+							(Object) newArray, 0, resolutions.size());
+				}
+				newArray[getResolutions().size()] = configuration;
+				setResolutions(Arrays.asList(newArray));
+			} else if (configuration.getType() == SystemConfigurationUtilities.TYPE_SEVERITY) {
+				newArray = new Configuration[getSeverities().size() + 1];
+				if (getSeverities().size() > 0) {
+					System.arraycopy((Object) severities, 0, (Object) newArray,
+							0, severities.size());
+				}
+				newArray[getSeverities().size()] = configuration;
+				setSeverities(Arrays.asList(newArray));
+			} else if (configuration.getType() == SystemConfigurationUtilities.TYPE_STATUS) {
+				newArray = new Configuration[getStatuses().size() + 1];
+				if (getStatuses().size() > 0) {
+					System.arraycopy((Object) statuses, 0, (Object) newArray,
+							0, statuses.size());
+				}
+				newArray[getStatuses().size()] = configuration;
+				setStatuses(Arrays.asList(newArray));
+			}
+		}
+	}
+
+	public String toString() {
+
+		return new ToStringBuilder(this).append("id", id).append("version", version).append(
+				"resolutions", resolutions).append("severities", severities)
+				.append("statuses", statuses).toString();
+
+	}
 }

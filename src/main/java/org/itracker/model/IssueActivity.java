@@ -18,150 +18,152 @@
 
 package org.itracker.model;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * An issue activity. 
+ * An issue activity.
  * 
- * <p>An IssueActivity can only belong to 1 Issue (composition). </p>
+ * <p>
+ * An IssueActivity can only belong to 1 Issue (composition).
+ * </p>
  * 
- * <p>The natural key of an IssueActivity is issue + user + type + createDate. 
+ * <p>
+ * The natural key of an IssueActivity is issue + user + type + createDate.
  * </p>
  * 
  * @author ready
  */
 public class IssueActivity extends AbstractEntity {
-    
-    /**
+
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/** Issue to which this activity is related. */
-    private Issue issue;
-    
-    /** The User who generated this activity. */
-    private User user;
-    
-    
-    /** Optional activity description. */
-    private String description = "";
-    
-    /** 
-     * Whether a notification has been sent for this activity.
-     */
-    private boolean notificationSent = false;
+	private Issue issue;
+
+	/** The User who generated this activity. */
+	private User user;
+
+	/** Optional activity description. */
+	private String description = "";
+
+	/**
+	 * Whether a notification has been sent for this activity.
+	 */
+	private boolean notificationSent = false;
 
 	private IssueActivityType activityType = IssueActivityType.ISSUE_CREATED;
-    
-    /**
-     * Default constructor (required by Hibernate). 
-     * 
-     * <p>PENDING: should be <code>private</code> so that it can only be used
-     * by Hibernate, to ensure that <code>issue</code>, <code>user</code> 
-     * and <code>type</code>, which form an instance's identity, 
-     * are always initialized. </p>
-     */
-    public IssueActivity() {
-    	
-    }
-    
-    
-    /**
-     * Creates a new instance with a <code>notificationSent</code> flag set 
-     * to <tt>false</tt> and a creation and last modified time stamp 
-     * set to the current time. 
-     * 
-     * @param issue
-     * @param user
-     * @param type 
-     * @param description 
-     */
-    public IssueActivity(Issue issue, User user, IssueActivityType type) {
-    	setIssue(issue);
-    	setUser(user);
-    	setActivityType(type);
-    }
-    
-    public Issue getIssue() {
-        return issue;
-    }
 
-    public void setIssue(Issue issue) {
-        if (issue == null) {
-            throw new IllegalArgumentException("null issue");
-        }
-        this.issue = issue;
-    }
+	/**
+	 * Default constructor (required by Hibernate).
+	 * 
+	 * <p>
+	 * PENDING: should be <code>private</code> so that it can only be used by
+	 * Hibernate, to ensure that <code>issue</code>, <code>user</code> and
+	 * <code>type</code>, which form an instance's identity, are always
+	 * initialized.
+	 * </p>
+	 */
+	public IssueActivity() {
 
-    public User getUser() {
-        return user;
-    }
+	}
 
-    public void setUser(User user) {
-        if (user == null) {
-            throw new IllegalArgumentException("null user");
-        }
-        this.user = user;
-    }
-    
+	/**
+	 * Creates a new instance with a <code>notificationSent</code> flag set to
+	 * <tt>false</tt> and a creation and last modified time stamp set to the
+	 * current time.
+	 * 
+	 * @param issue
+	 * @param user
+	 * @param type
+	 * @param description
+	 */
+	public IssueActivity(Issue issue, User user, IssueActivityType type) {
+		setIssue(issue);
+		setUser(user);
+		setActivityType(type);
+	}
 
+	public Issue getIssue() {
+		return issue;
+	}
 
-    public void setActivityType(IssueActivityType type) {
-    	
-//    	this.type = type.code;
-    	this.activityType = type;
-    }
-    
-    public IssueActivityType getActivityType() {
-    	return this.activityType;
-    }
-    public String getDescription() {
-        return description;
-    }
+	public void setIssue(Issue issue) {
+		if (issue == null) {
+			throw new IllegalArgumentException("null issue");
+		}
+		this.issue = issue;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public User getUser() {
+		return user;
+	}
 
-    public boolean getNotificationSent() {
-        return notificationSent;
-    }
+	public void setUser(User user) {
+		if (user == null) {
+			throw new IllegalArgumentException("null user");
+		}
+		this.user = user;
+	}
 
-    public void setNotificationSent(boolean sent) {
-        this.notificationSent = sent;
-    }
+	public void setActivityType(IssueActivityType type) {
 
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        
-        if (obj instanceof IssueActivity) {
-            final IssueActivity other = (IssueActivity)obj;
-            
-            return this.issue.equals(other.issue)
-                && this.user.equals(other.user)
-                && (this.activityType == other.activityType)
-                && (this.createDate == null) ? (other.createDate == null) 
-                    : this.createDate.equals(other.createDate);
-        }
-        return false;
-    }
-    
-    public int hashCode() {
-        return this.issue.hashCode()
-            + this.user.hashCode()
-            + this.activityType.code
-            + ((this.createDate == null) ? 0 : this.createDate.hashCode());
-    }
-    
-    public String toString() {
-        return "IssueActivity [id=" + this.id
-                + ",issue=" + this.issue 
-                + ",user=" + this.user 
-                + ",type=" + this.activityType 
-                + ",createDate=" + this.createDate + "]";
-    }
-    
-    
+		// this.type = type.code;
+		this.activityType = type;
+	}
+
+	public IssueActivityType getActivityType() {
+		return this.activityType;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public boolean getNotificationSent() {
+		return notificationSent;
+	}
+
+	public void setNotificationSent(boolean sent) {
+		this.notificationSent = sent;
+	}
+
+	// public boolean equals(Object obj) {
+	// if (this == obj) {
+	// return true;
+	// }
+	//        
+	// if (obj instanceof IssueActivity) {
+	// final IssueActivity other = (IssueActivity)obj;
+	//            
+	// return this.issue.equals(other.issue)
+	// && this.user.equals(other.user)
+	// && (this.activityType == other.activityType)
+	// && (this.createDate == null) ? (other.createDate == null)
+	// : this.createDate.equals(other.createDate);
+	// }
+	// return false;
+	// }
+	//    
+	// public int hashCode() {
+	// return this.issue.hashCode()
+	// + this.user.hashCode()
+	// + this.activityType.code
+	// + ((this.createDate == null) ? 0 : this.createDate.hashCode());
+	// }
+
+	public String toString() {
+		return new ToStringBuilder(this).append("id", id)
+				.append("issue", issue).append("user", user).append("type",
+						activityType).append("createDate", createDate)
+				.toString();
+
+	}
+
 }

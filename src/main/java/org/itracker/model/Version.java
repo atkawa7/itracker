@@ -18,246 +18,261 @@ package org.itracker.model;
 
 import java.util.Comparator;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
- * A Project version. 
+ * A Project version.
  * 
- * <p>A Version can only belong to 1 Project (composition). </p>
+ * <p>
+ * A Version can only belong to 1 Project (composition).
+ * </p>
  * 
  * @author ready
  */
 public class Version extends AbstractEntity implements Comparable<Entity> {
 
-    /**
-     * Invariant: never <tt>null</tt>. 
-     */
-    private Project project;
-    
-    /**
-     * Invariant: never <tt>null</tt>. 
-     */
-    private String number;
-    
-    /* major and minor are only used to compare Versions.  
-     * They can be computed from the <code>number</code> attribute,  
-     * PENDING: We should also allow to specify them separately 
-     * in order not to impose any constraint on the format of the version number.  
-     */
-    private int major;
-    private int minor;
-    
-    private String description;
-    
-    /** 
-     * Version status. 
-     * <p>Invariant: never <tt>null</tt>. </p>
-     */
-    private Status status;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    /* This class used to have a <code>issues</code> attribute, which was 
-     * a Collection<Issue>. This has been removed because the association 
-     * Version - Issue doesn't need to be navigatable in this direction. 
-     */
+	/**
+	 * Invariant: never <tt>null</tt>.
+	 */
+	private Project project;
 
-    private static final Comparator<Version> VERSION_COMPARATOR = 
-            new VersionComparator();
-    
-    /**
-     * Default constructor (required by Hibernate). 
-     * 
-     * <p>PENDING: should be <code>private</code> so that it can only be used 
-     * by Hibernate, to ensure that <code>project</code> and <code>number</code>, 
-     * which form an instance's identity, are never <tt>null</tt>. </p>
-     */
-    public Version() {
-    }
+	/**
+	 * Invariant: never <tt>null</tt>.
+	 */
+	private String number;
 
-    /**
-     * Creates a new active Version for the given Project. 
-     * 
-     * @param project project to which this version belongs
-     * @param number unique within the project
-     */
-    public Version(Project project, String number) {
-        setProject(project);
-        setVersionInfo(number);
-        
-        // A new version is active by default. 
-        this.status = Status.ACTIVE;
-    }
-    
-    public int getMajor() {
-        return major;
-    }
+	/*
+	 * major and minor are only used to compare Versions. They can be computed
+	 * from the <code>number</code> attribute, PENDING: We should also allow
+	 * to specify them separately in order not to impose any constraint on the
+	 * format of the version number.
+	 */
+	private int major;
+	private int minor;
 
-    public void setMajor(int getMajor) {
-        this.major = getMajor;
-    }
+	private String description;
 
-    public int getMinor() {
-        return minor;
-    }
+	/**
+	 * Version status.
+	 * <p>
+	 * Invariant: never <tt>null</tt>.
+	 * </p>
+	 */
+	private Status status;
 
-    public void setMinor(int getMinor) {
-        this.minor = getMinor;
-    }
+	/*
+	 * This class used to have a <code>issues</code> attribute, which was a
+	 * Collection<Issue>. This has been removed because the association Version -
+	 * Issue doesn't need to be navigatable in this direction.
+	 */
 
-    public String getNumber() {
-        return number;
-    }
+	public static final Comparator<Version> VERSION_COMPARATOR = new VersionComparator();
 
-    public void setNumber(String getNumber) {
-        this.number = getNumber;
-    }
+	/**
+	 * Default constructor (required by Hibernate).
+	 * 
+	 * <p>
+	 * PENDING: should be <code>private</code> so that it can only be used by
+	 * Hibernate, to ensure that <code>project</code> and <code>number</code>,
+	 * which form an instance's identity, are never <tt>null</tt>.
+	 * </p>
+	 */
+	public Version() {
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	/**
+	 * Creates a new active Version for the given Project.
+	 * 
+	 * @param project
+	 *            project to which this version belongs
+	 * @param number
+	 *            unique within the project
+	 */
+	public Version(Project project, String number) {
+		setProject(project);
+		setVersionInfo(number);
 
-    public void setDescription(String getDescription) {
-        this.description = getDescription;
-    }
-    
-    public Project getProject() {
-        return project;
-    }
+		// A new version is active by default.
+		this.status = Status.ACTIVE;
+	}
 
-    public void setProject(Project project) {
-        if (project == null) {
-            throw new IllegalArgumentException("null project");
-        }
-        this.project = project;
-    }
+	public int getMajor() {
+		return major;
+	}
 
-    /**
-     * Returns this version's status. 
-     * 
-     * @return enum constant
-     */
-    public Status getStatus() {
-        return status;
-    }
+	public void setMajor(int getMajor) {
+		this.major = getMajor;
+	}
 
-    /**
-     * Sets this version's status. 
-     * 
-     * @param status enum constant
-     * @throws IllegalArgumentException <code>status</code> is <tt>null</tt>
-     */
-    public void setStatus(Status status) {
-        if (status == null) {
-            throw new IllegalArgumentException("null status");
-        }
-        this.status = status;
-    }
+	public int getMinor() {
+		return minor;
+	}
 
-    /**
-     * Convience method to set the number, major and minor
-     * fields with a single call.  It will first set the number to
-     * the provided data, and then attempt to parse the info if in
-     * the form major.minor into parts to set the other information.
-     * 
-     * @param versionInfo the version number string to use
-     */
-    public void setVersionInfo(String versionInfo) {
-        setNumber(versionInfo);
+	public void setMinor(int getMinor) {
+		this.minor = getMinor;
+	}
 
-        String versionNumber = this.number.trim();
-        int firstDot = versionNumber.indexOf('.');
-        String major = "0";
-        major = (firstDot > 0 ? versionNumber.substring(0, firstDot).trim() : versionNumber.trim());
+	public String getNumber() {
+		return number;
+	}
 
-        try {
-            setMajor(Integer.parseInt(major));
-        } catch(NumberFormatException ex) {
-            setMajor(0);
-        }
+	public void setNumber(String getNumber) {
+		this.number = getNumber;
+	}
 
-        int secondDot = (firstDot > -1 ? versionNumber.indexOf('.', firstDot + 1) : -1);
-        String minor = (secondDot > -1 ? versionNumber.substring(firstDot + 1, secondDot).trim() : versionNumber.substring(firstDot + 1).trim());
-        try {
-            setMinor(Integer.parseInt(minor));
-        } catch(NumberFormatException ex) {
-            setMinor(0);
-        }
-    }
-    
-    /**
-     * Compares two versions by their major and minor numbers. 
-     */
-    public int compareTo(Version other) {
-        return VERSION_COMPARATOR.compare(this, other);
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    /**
-     * Two versions are equal if they have the same major and minor numbers. 
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if(! (obj instanceof Version)) {
-            return false;
-        }
-        final Version other = (Version) obj;
-        
-        return (this.major == other.major) && (this.minor == other.minor);
-    }
+	public void setDescription(String getDescription) {
+		this.description = getDescription;
+	}
 
-    /**
-     * Overridden to match implementation of method {@link #equals(Object) }
-     */
-    @Override
-    public int hashCode() {
-        return this.major ^ this.minor;
-    }
+	public Project getProject() {
+		return project;
+	}
 
-    /**
-     * @return <tt>Version [id=<id>, project=<project>, number=<number>]</tt>
-     */
-    @Override
-    public String toString() {
-        return "Version [id=" + this.id + ", project="  + this.project 
-             + ", number=" + this.number + "]";
-    }
-    
-    /**
-     * Compares 2 Versions by major and minor number. 
-     */
-    public static class VersionComparator implements Comparator<Version> {
-        
-        private boolean ascending = true;
+	public void setProject(Project project) {
+		if (project == null) {
+			throw new IllegalArgumentException("null project");
+		}
+		this.project = project;
+	}
 
-        public VersionComparator() {
-        }
+	/**
+	 * Returns this version's status.
+	 * 
+	 * @return enum constant
+	 */
+	public Status getStatus() {
+		return status;
+	}
 
-        @SuppressWarnings("unused")
-		private VersionComparator(boolean ascending) {
-            setAscending(ascending);
-        }
+	/**
+	 * Sets this version's status.
+	 * 
+	 * @param status
+	 *            enum constant
+	 * @throws IllegalArgumentException
+	 *             <code>status</code> is <tt>null</tt>
+	 */
+	public void setStatus(Status status) {
+		if (status == null) {
+			throw new IllegalArgumentException("null status");
+		}
+		this.status = status;
+	}
 
-        @SuppressWarnings("unused")
+	/**
+	 * Convience method to set the number, major and minor fields with a single
+	 * call. It will first set the number to the provided data, and then attempt
+	 * to parse the info if in the form major.minor into parts to set the other
+	 * information.
+	 * 
+	 * @param versionInfo
+	 *            the version number string to use
+	 */
+	public void setVersionInfo(String versionInfo) {
+		setNumber(versionInfo);
+
+		String versionNumber = this.number.trim();
+		int firstDot = versionNumber.indexOf('.');
+		String major = "0";
+		major = (firstDot > 0 ? versionNumber.substring(0, firstDot).trim()
+				: versionNumber.trim());
+
+		try {
+			setMajor(Integer.parseInt(major));
+		} catch (NumberFormatException ex) {
+			setMajor(0);
+		}
+
+		int secondDot = (firstDot > -1 ? versionNumber.indexOf('.',
+				firstDot + 1) : -1);
+		String minor = (secondDot > -1 ? versionNumber.substring(firstDot + 1,
+				secondDot).trim() : versionNumber.substring(firstDot + 1)
+				.trim());
+		try {
+			setMinor(Integer.parseInt(minor));
+		} catch (NumberFormatException ex) {
+			setMinor(0);
+		}
+	}
+
+	// /**
+	// * Compares two versions by their major and minor numbers.
+	// */
+	// public int compareTo(Version other) {
+	// return VERSION_COMPARATOR.compare(this, other);
+	// }
+
+	// /**
+	// * Two versions are equal if they have the same major and minor numbers.
+	// */
+	// @Override
+	// public boolean equals(Object obj) {
+	// if(! (obj instanceof Version)) {
+	// return false;
+	// }
+	// final Version other = (Version) obj;
+	//        
+	// return (this.major == other.major) && (this.minor == other.minor);
+	// }
+	//
+	// /**
+	// * Overridden to match implementation of method {@link #equals(Object) }
+	// */
+	// @Override
+	// public int hashCode() {
+	// return this.major ^ this.minor;
+	// }
+
+	/**
+	 * @return <tt>Version [id=<id>, project=<project>, number=<number>]</tt>
+	 */
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("id", id).append("number",
+				number).append("project", project).append(major).append(minor)
+				.append("status", status).toString();
+	}
+
+	/**
+	 * Compares 2 Versions by major and minor number.
+	 */
+	public static final class VersionComparator implements Comparator<Version> {
+
+		private boolean ascending = true;
+
+		public VersionComparator() {
+		}
+
+		public VersionComparator(boolean ascending) {
+			setAscending(ascending);
+		}
+
+		@SuppressWarnings("unused")
 		private boolean isAscending() {
-            return ascending;
-        }
-        
-        private void setAscending(boolean ascending) {
-            this.ascending = ascending;
-        }
+			return ascending;
+		}
 
-        public int compare(Version a, Version b) {
-            int result;
+		private void setAscending(boolean ascending) {
+			this.ascending = ascending;
+		}
 
-            if (a.major == b.major) {
-                if (a.minor == b.minor) {
-                    result = 0;
-                } else {
-                    result = a.minor - b.minor;
-                }
-            } else {
-                result = a.major - b.major;
-            }
-            
-            return (ascending ? result : -result);
-        }
-        
-    }
+		public int compare(Version a, Version b) {
+			int result = new CompareToBuilder().append(a.major, b.major)
+					.append(a.minor, b.minor).toComparison();
+
+			return (ascending ? result : -result);
+		}
+
+	}
 
 }

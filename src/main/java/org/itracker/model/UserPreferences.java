@@ -18,117 +18,136 @@
 
 package org.itracker.model;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * The system configuration of a User. 
+ * The system configuration of a User.
  * 
- * <p>User - UserPreferences is a 1-1 relationship. </p>
+ * <p>
+ * User - UserPreferences is a 1-1 relationship.
+ * </p>
  * 
  * @author ready
  */
 public class UserPreferences extends AbstractEntity {
 
-    /** The User to whom these preferences belong. */
-    private User user;
-    
-    private boolean saveLogin;
-    
-    private String userLocale;
-    
-    private int numItemsOnIndex;
-    
-    private int numItemsOnIssueList;
-    
-    private boolean showClosedOnIssueList;
-    
-    private String sortColumnOnIssueList;
-    
-    private int hiddenIndexSections;
-    
-    private boolean rememberLastSearch;
-    
-    private boolean useTextActions;
-    
-    
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    public int getHiddenIndexSections() {
-        return hiddenIndexSections;
-    }
+	/** The User to whom these preferences belong. */
+	private User user;
 
-    public void setHiddenIndexSections(int hiddenIndexSections) {
-        this.hiddenIndexSections = hiddenIndexSections;
-    }
+	private boolean saveLogin;
 
-    public int getNumItemsOnIndex() {
-        return numItemsOnIndex;
-    }
+	private String userLocale;
 
-    public void setNumItemsOnIndex(int numItemsOnIndex) {
-        this.numItemsOnIndex = numItemsOnIndex;
-    }
+	private int numItemsOnIndex;
 
-    public int getNumItemsOnIssueList() {
-        return numItemsOnIssueList;
-    }
+	private int numItemsOnIssueList;
 
-    public void setNumItemsOnIssueList(int numItemsOnIssueList) {
-        this.numItemsOnIssueList = numItemsOnIssueList;
-    }
+	private boolean showClosedOnIssueList;
 
-    public boolean getRememberLastSearch() {
-        return rememberLastSearch;
-    }
+	private String sortColumnOnIssueList;
 
-    public void setRememberLastSearch(boolean rememberLastSearch) {
-        this.rememberLastSearch = rememberLastSearch;
-    }
+	private int hiddenIndexSections;
 
-    public boolean getSaveLogin() {
-        return saveLogin;
-    }
+	private boolean rememberLastSearch;
 
-    public void setSaveLogin(boolean saveLogin) {
-        this.saveLogin = saveLogin;
-    }
+	private boolean useTextActions;
 
-    public boolean getShowClosedOnIssueList() {
-        return showClosedOnIssueList;
-    }
+	public int getHiddenIndexSections() {
+		return hiddenIndexSections;
+	}
 
-    public void setShowClosedOnIssueList(boolean showClosedOnIssueList) {
-        this.showClosedOnIssueList = showClosedOnIssueList;
-    }
+	public void setHiddenIndexSections(int hiddenIndexSections) {
+		this.hiddenIndexSections = hiddenIndexSections;
+	}
 
-    public String getSortColumnOnIssueList() {
-        return sortColumnOnIssueList;
-    }
+	public int getNumItemsOnIndex() {
+		return numItemsOnIndex;
+	}
 
-    public void setSortColumnOnIssueList(String sortColumnOnIssueList) {
-        this.sortColumnOnIssueList = sortColumnOnIssueList;
-    }
+	public void setNumItemsOnIndex(int numItemsOnIndex) {
+		this.numItemsOnIndex = numItemsOnIndex;
+	}
 
-    public User getUser() {
-        return user;
-    }
+	public int getNumItemsOnIssueList() {
+		return numItemsOnIssueList;
+	}
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+	public void setNumItemsOnIssueList(int numItemsOnIssueList) {
+		this.numItemsOnIssueList = numItemsOnIssueList;
+	}
 
-    public String getUserLocale() {
-        return userLocale;
-    }
+	public boolean getRememberLastSearch() {
+		return rememberLastSearch;
+	}
 
-    public void setUserLocale(String userLocale) {
-        this.userLocale = userLocale;
-    }
+	public void setRememberLastSearch(boolean rememberLastSearch) {
+		this.rememberLastSearch = rememberLastSearch;
+	}
 
-    public boolean getUseTextActions() {
-        return useTextActions;
-    }
+	public boolean getSaveLogin() {
+		return saveLogin;
+	}
 
-    public void setUseTextActions(boolean useTextActions) {
-        this.useTextActions = useTextActions;
-    }
+	public void setSaveLogin(boolean saveLogin) {
+		this.saveLogin = saveLogin;
+	}
+
+	public boolean getShowClosedOnIssueList() {
+		return showClosedOnIssueList;
+	}
+
+	public void setShowClosedOnIssueList(boolean showClosedOnIssueList) {
+		this.showClosedOnIssueList = showClosedOnIssueList;
+	}
+
+	public String getSortColumnOnIssueList() {
+		return sortColumnOnIssueList;
+	}
+
+	public void setSortColumnOnIssueList(String sortColumnOnIssueList) {
+		this.sortColumnOnIssueList = sortColumnOnIssueList;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getUserLocale() {
+		return userLocale;
+	}
+
+	public void setUserLocale(String userLocale) {
+		this.userLocale = userLocale;
+	}
+
+	public boolean getUseTextActions() {
+		return useTextActions;
+	}
+
+	public void setUseTextActions(boolean useTextActions) {
+		this.useTextActions = useTextActions;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("id", id).append("user", user)
+				.append("userLocale", userLocale).append("useTextActions",
+						useTextActions).append("saveLogin", saveLogin).append(
+						"rememberLastSearch", rememberLastSearch).append(
+						"hiddenIndexSections", hiddenIndexSections).append(
+						"numItemsOnIndex", numItemsOnIndex).append(
+						"numItemsOnIssueList", numItemsOnIssueList).append(
+						"showClosedOnIssueList", showClosedOnIssueList)
+				.toString();
+	}
 
 }

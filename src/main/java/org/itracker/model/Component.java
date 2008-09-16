@@ -20,232 +20,269 @@ package org.itracker.model;
 
 import java.util.Comparator;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
- * Models a project component. 
+ * Models a project component.
  * 
- * <p>A Component is a project subdivision, like a sub-project 
- * or functional area, ... <br>
+ * <p>
+ * A Component is a project subdivision, like a sub-project or functional area,
+ * ... <br>
  * It is identified by a unique name within the project to which it belongs
  * (composition). <br>
- * e.g.: core, web-ui, swing-ui, help, ...</p>
+ * e.g.: core, web-ui, swing-ui, help, ...
+ * </p>
  * 
- * <p>A component cannot have sub-components, unlike categories 
- * and sub-categories that exist in some issue tracking systems. </p>
+ * <p>
+ * A component cannot have sub-components, unlike categories and sub-categories
+ * that exist in some issue tracking systems.
+ * </p>
  * 
  * @author Jason
  * @author Johnny
  */
-public class Component extends AbstractEntity 
-        implements Comparable<Entity> {
+public class Component extends AbstractEntity implements Comparable<Entity> {
 
-    public static final Comparator<Component> NAME_COMPARATOR = 
-            new NameComparator();
-    
-    /**
-     * Project to which this component belongs. 
-     * Invariant: never <tt>null</tt>. 
-     */
-    
-    private Project project;
-    
-    /**
-     * Unique name identifying this component within its project. 
-     * Invariant: never <tt>null</tt>. 
-     */
-    private String name;
-    
-    /** Component description. */
-    private String description;
-    
-    /** 
-     * Component status. 
-     * <p>Invariant: never <tt>null</tt>. </p>
-     */
-    private Status status;
-    
-    /* This class used to have a <code>issues</code> attribute, which was 
-     * a Collection<Issue>. This has been removed because the association 
-     * Component - Issue doesn't need to be navigatable in this direction. 
-     */
-    
-    /**
-     * Default constructor (required by Hibernate). 
-     *
-     * <p>PENDING: should be <code>private</code> so that it can only be used
-     * by Hibernate, to ensure that <code>project</code> and <code>name</code>, 
-     * which form an instance's identity, are never <tt>null</tt>. </p>
-     */
-    public Component() {
-    }
-    
-    /**
-     * Creates a new active Component of the given name for the given Project. 
-     * 
-     * @param project owning this component
-     * @param name unique component name within the project
-     */
-    public Component(Project project, String name) {
-        setProject(project);
-        setName(name);
-        
-        // A new component is active by default. 
-        this.status = Status.ACTIVE;
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * Returns the project owning this component. 
-     * 
-     * @return parent project
-     */
-    public Project getProject() {
-        return project;
-    }
-    
-    /**
-     * Sets the project owning this component. 
-     * 
-     * <p>PENDING: The project shouldn't be modified because it is part of 
-     * a component's natural key and is used in the equals method! </p>
-     * 
-     * @param project parent project
-     * @throws IllegalArgumentException null project
-     */
-    public void setProject(Project project) {
-        if (project == null) {
-            throw new IllegalArgumentException("null project");
-        }
-        this.project = project;
-    }
-    
-    /**
-     * Returns this component's name. 
-     * 
-     * @return unique name within the parent project
-     */
-    public String getName() {
-        return name;
-    }
-    
-    /**
-     * Sets this component's name.
-     * 
-     * <p>PENDING: The name shouldn't be modified because it is part of 
-     * a component's natural key and is used in the equals method! </p>
-     * 
-     * @param name unique name within the parent project
-     * @throws IllegalArgumentException null name
-     */
-    public void setName(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("null name");
-        }
-        this.name = name;
-    }
-    
-    /**
-     * Returns this component's description. 
-     * 
-     * @return description
-     */
-    public String getDescription() {
-        return description;
-    }
-    
-    /**
-     * Sets this component's description. 
-     * 
-     * @param description description
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    
-    /**
-     * Returns this component's status. 
-     * 
-     * @return enum value
-     */
-    public Status getStatus() {
-        return status;
-    }
+	public static final Comparator<Component> NAME_COMPARATOR = new NameComparator();
 
-    /**
-     * Sets this component's status. 
-     * 
-     * @param status enum value
-     * @throws IllegalArgumentException <code>status</code> is <tt>null</tt>
-     */
-    public void setStatus(Status status) {
-        if (status == null) {
-            throw new IllegalArgumentException("null status");
-        }
-        this.status = status;
-    }
-    
-    /**
-     * Two component instances are equal if they belong to the same project 
-     * and have the same name. 
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        
-        if (obj instanceof Component) {
-            final Component other = (Component)obj;
-            
-            return this.project.equals(other.project) 
-                && this.name.equals(other.name);
-        }
-        return false;
-    }
+	/**
+	 * Project to which this component belongs. Invariant: never <tt>null</tt>.
+	 */
 
-    /**
-     * Overridden to match implementation of method {@link #equals(Object)}.
-     */
-    @Override
-    public int hashCode() {
-        return this.project.hashCode() + this.name.hashCode();
-    }
+	private Project project;
 
-    /**
-     * Returns contatanation of system ID and object natural key. 
-     * 
-     * @return <tt>Component [id=this.id, project=this.project, name=this.name]</tt>
-     */
-    @Override
-    public String toString() {
-        return "Component [id=" + this.id 
-                + ", project=" + this.project 
-                + ", name=" + this.name + "]";
-    }
+	/**
+	 * Unique name identifying this component within its project. Invariant:
+	 * never <tt>null</tt>.
+	 */
+	private String name;
 
-    /**
-     * Compares 2 Components by project and name (natural key). 
-     */
-    public int compareTo(Component other) {
-        final int projectComparison = this.project.compareTo(other.project);
-        
-        if (projectComparison == 0) {
-            return this.name.compareTo(other.name);
-        }
-        return projectComparison;
-    }
-    
-    
-    /**
-     * Compares 2 Components by name. 
-     * 
-     * <p>It should only be used to compare components of the same project, 
-     * because it doesn't take the project into account. </p>
-     */
-    private static class NameComparator implements Comparator<Component> {
-        
-        public int compare(Component a, Component b) {
-            return a.name.compareTo(b.name);
-        }
-        
-    }
+	/** Component description. */
+	private String description;
+
+	/**
+	 * Component status.
+	 * <p>
+	 * Invariant: never <tt>null</tt>.
+	 * </p>
+	 */
+	private Status status;
+
+	/*
+	 * This class used to have a <code>issues</code> attribute, which was a
+	 * Collection<Issue>. This has been removed because the association
+	 * Component - Issue doesn't need to be navigatable in this direction.
+	 */
+
+	/**
+	 * Default constructor (required by Hibernate).
+	 * 
+	 * <p>
+	 * PENDING: should be <code>private</code> so that it can only be used by
+	 * Hibernate, to ensure that <code>project</code> and <code>name</code>,
+	 * which form an instance's identity, are never <tt>null</tt>.
+	 * </p>
+	 */
+	public Component() {
+	}
+
+	/**
+	 * Creates a new active Component of the given name for the given Project.
+	 * 
+	 * @param project
+	 *            owning this component
+	 * @param name
+	 *            unique component name within the project
+	 */
+	public Component(Project project, String name) {
+		setProject(project);
+		setName(name);
+
+		// A new component is active by default.
+		this.status = Status.ACTIVE;
+	}
+
+	/**
+	 * Returns the project owning this component.
+	 * 
+	 * @return parent project
+	 */
+	public Project getProject() {
+		return project;
+	}
+
+	/**
+	 * Sets the project owning this component.
+	 * 
+	 * <p>
+	 * PENDING: The project shouldn't be modified because it is part of a
+	 * component's natural key and is used in the equals method!
+	 * </p>
+	 * 
+	 * @param project
+	 *            parent project
+	 * @throws IllegalArgumentException
+	 *             null project
+	 */
+	public void setProject(Project project) {
+		if (project == null) {
+			throw new IllegalArgumentException("null project");
+		}
+		this.project = project;
+	}
+
+	/**
+	 * Returns this component's name.
+	 * 
+	 * @return unique name within the parent project
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Sets this component's name.
+	 * 
+	 * <p>
+	 * PENDING: The name shouldn't be modified because it is part of a
+	 * component's natural key and is used in the equals method!
+	 * </p>
+	 * 
+	 * @param name
+	 *            unique name within the parent project
+	 * @throws IllegalArgumentException
+	 *             null name
+	 */
+	public void setName(String name) {
+		if (name == null) {
+			throw new IllegalArgumentException("null name");
+		}
+		this.name = name;
+	}
+
+	/**
+	 * Returns this component's description.
+	 * 
+	 * @return description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * Sets this component's description.
+	 * 
+	 * @param description
+	 *            description
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
+	 * Returns this component's status.
+	 * 
+	 * @return enum value
+	 */
+	public Status getStatus() {
+		return status;
+	}
+
+	/**
+	 * Sets this component's status.
+	 * 
+	 * @param status
+	 *            enum value
+	 * @throws IllegalArgumentException
+	 *             <code>status</code> is <tt>null</tt>
+	 */
+	public void setStatus(Status status) {
+		if (status == null) {
+			throw new IllegalArgumentException("null status");
+		}
+		this.status = status;
+	}
+
+	// /**
+	// * Two component instances are equal if they belong to the same project
+	// * and have the same name.
+	// */
+	// @Override
+	// public boolean equals(Object obj) {
+	// if (this == obj) {
+	// return true;
+	// }
+	//        
+	// if (obj instanceof Component) {
+	// final Component other = (Component)obj;
+	//            
+	// return this.project.equals(other.project)
+	// && this.name.equals(other.name);
+	// }
+	// return false;
+	// }
+
+	// /**
+	// * Overridden to match implementation of method {@link #equals(Object)}.
+	// */
+	// @Override
+	// public int hashCode() {
+	// return this.project.hashCode() + this.name.hashCode();
+	// }
+
+	/**
+	 * Returns contatanation of system ID and object natural key.
+	 * 
+	 * @return <tt>Component [id=this.id, project=this.project, name=this.name]</tt>
+	 */
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("id", id).append("project",
+				project).append("name", name).toString();
+	}
+
+	// /**
+	// * Compares 2 Components by project and name (natural key).
+	// */
+	// public int compareTo(Component other) {
+	//    	
+	// final int projectComparison = this.project.compareTo(other.project);
+	//        
+	// if (projectComparison == 0) {
+	// return this.name.compareTo(other.name);
+	// }
+	// return projectComparison;
+	// }
+	//    
+
+	/**
+	 * Compares 2 Components by name.
+	 * 
+	 * <p>
+	 * It should only be used to compare components of the same project, because
+	 * it doesn't take the project into account.
+	 * </p>
+	 */
+	private static class NameComparator implements Comparator<Component> {
+
+		public int compare(Component a, Component b) {
+			return a.name.compareTo(b.name);
+		}
+
+	}
+
+	public static final class ProjectNameComparator implements
+			Comparator<Component> {
+		public int compare(Component o1, Component o2) {
+			return new CompareToBuilder().append(o1.project, o2.project)
+					.append(o1.name, o2.name).toComparison();
+		}
+	}
 
 }

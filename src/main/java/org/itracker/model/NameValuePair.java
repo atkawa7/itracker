@@ -21,95 +21,107 @@ package org.itracker.model;
 import java.io.Serializable;
 import java.util.Comparator;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
-  * Class provides basic storage for name values pairs.  The name is usually
-  * a key of some type, like a status number, and the value is a localized name
-  * for that key.
-  */
+ * Class provides basic storage for name values pairs. The name is usually a key
+ * of some type, like a status number, and the value is a localized name for
+ * that key.
+ */
 public class NameValuePair implements Serializable, Comparable<NameValuePair> {
-    
-    private String name = "";
-    
-    private String value = "";
 
-    public static final Comparator<NameValuePair> KEY_COMPARATOR = new Comparator<NameValuePair>(){
-    	public int compare(NameValuePair o1, NameValuePair o2) {
-    		
-    		return o1.name.compareTo(o2.name);    		
-    	};
-    };
-    public static final Comparator<NameValuePair> VALUE_COMPARATOR = new Comparator<NameValuePair>(){
-    	public int compare(NameValuePair o1, NameValuePair o2) {
-    		return o1.value.compareTo(o2.value);    		
-    	};
-    };
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    
-    public NameValuePair(String name, String value) {
-        setName(name);
-        setValue(value);
-    }
+	private String name = "";
 
-    /**
-      * Returns the name of the name/value pair.
-      */
-    public String getName() {
-        return name;
-    }
+	private String value = "";
 
-    /**
-      * Sets the name of the name/value pair.
-      */
-    public void setName(String name) {
-        if (name == null) {
-            name = "";
-        }
-        this.name = name;
-    }
+	public static final Comparator<NameValuePair> KEY_COMPARATOR = new Comparator<NameValuePair>() {
+		public int compare(NameValuePair o1, NameValuePair o2) {
 
-    /**
-      * Returns the value of the name/value pair.
-      */
-    public String getValue() {
-        return value;
-    }
+			return o1.name.compareTo(o2.name);
+		};
+	};
+	public static final Comparator<NameValuePair> VALUE_COMPARATOR = new Comparator<NameValuePair>() {
+		public int compare(NameValuePair o1, NameValuePair o2) {
+			return o1.value.compareTo(o2.value);
+		};
+	};
 
-    /**
-      * Sets the value of the name/value pair.
-      */
-    public void setValue(String value) {
-        this.value = value;
-    }
+	public NameValuePair(String name, String value) {
+		setName(name);
+		setValue(value);
+	}
 
-    public int compareTo(NameValuePair other) {
-        return KEY_COMPARATOR.compare(this, other);
-    }
-    public int compareValueTo(NameValuePair other) {
-    	return VALUE_COMPARATOR.compare(this, other);
-    }
+	/**
+	 * Returns the name of the name/value pair.
+	 */
+	public String getName() {
+		return name;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        
-        if (obj instanceof NameValuePair) {
-            final NameValuePair other = (NameValuePair)obj;
-            
-            return this.name.equals(other.name);
-        }
-        return false;
-    }
-    
-    @Override
-    public int hashCode() {
-        return this.name.hashCode();
-    }
-    
-    @Override
-    public String toString() {
-        return "NameValuePair [name=" + this.name + "]";
-    }
-    
+	/**
+	 * Sets the name of the name/value pair.
+	 */
+	public void setName(String name) {
+		if (name == null) {
+			name = "";
+		}
+		this.name = name;
+	}
+
+	/**
+	 * Returns the value of the name/value pair.
+	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
+	 * Sets the value of the name/value pair.
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public int compareTo(NameValuePair other) {
+		return KEY_COMPARATOR.compare(this, other);
+	}
+
+	public int compareValueTo(NameValuePair other) {
+		return VALUE_COMPARATOR.compare(this, other);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (obj instanceof NameValuePair) {
+			final NameValuePair other = (NameValuePair) obj;
+			return new EqualsBuilder().append(name, other.name).append(value,
+					other.value).isEquals();
+
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(this.name).append(this.value)
+				.toHashCode();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("name", name).append("value",
+				value).toString();
+	}
+
 }

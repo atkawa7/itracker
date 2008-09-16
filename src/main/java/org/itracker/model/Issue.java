@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
  * A project issue. 
  * 
@@ -31,6 +33,10 @@ import java.util.List;
  */
 public class Issue extends AbstractEntity implements Comparable<Entity> {
 
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
     public static final Comparator<Issue> STATUS_COMPARATOR = 
             new StatusComparator();
     
@@ -280,42 +286,42 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
     public void setVersions(List<Version> versions) {
         this.versions = versions;
     }
+//    
+//    /**
+//     * Compares by status. 
+//     */
+//    public int compareTo(Issue other) {
+//        return STATUS_COMPARATOR.compare(this, other);
+//    }
     
-    /**
-     * Compares by status. 
-     */
-    public int compareTo(Issue other) {
-        return STATUS_COMPARATOR.compare(this, other);
-    }
-    
-    /**
-     * TODO: fix this!
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        
-        if (obj instanceof Issue) {
-            final Issue other = (Issue)obj;
-            
-            return this.id == other.id;
-        }
-        return false;
-    }
-    
-    /**
-     * TODO: fix this!
-     */
-    @Override
-    public int hashCode() {
-        return (this.id == null) ? 0 : this.id.intValue();
-    }
+//    /**
+//     * TODO: fix this!
+//     */
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (this == obj) {
+//            return true;
+//        }
+//        
+//        if (obj instanceof Issue) {
+//            final Issue other = (Issue)obj;
+//            
+//            return this.id == other.id;
+//        }
+//        return false;
+//    }
+//    
+//    /**
+//     * TODO: fix this!
+//     */
+//    @Override
+//    public int hashCode() {
+//        return (this.id == null) ? 0 : this.id.intValue();
+//    }
     
     @Override
     public String toString() {
-        return "Issue [id=" + this.id + "]";
+    	return new ToStringBuilder(this).append("id", id).append("description", description).toString();
     }
     
     

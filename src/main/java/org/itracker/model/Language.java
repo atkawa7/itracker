@@ -18,97 +18,105 @@
 
 package org.itracker.model;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
- * Models a language entry. 
- *
+ * Models a language entry.
+ * 
  * @author ready
  */
 public class Language extends AbstractEntity {
 
-    private String locale;
-    
-    private String resourceKey;
-    
-    private String resourceValue;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * Default constructor (required by Hibernate). 
-     * 
-     * <p>PENDING: should be <code>private</code> so that it can only be used
-     * by Hibernate, to ensure that the fields which form an instance's 
-     * identity are always initialized/never <tt>null</tt>. </p>
-     */
-    public Language() {
-    }
+	private String locale;
 
-    public Language(String locale, String key) {
-        setLocale(locale);
-        setResourceKey(key);
-    }
+	private String resourceKey;
 
-    /**
-     * Convenience constructor to set the value too. 
-     */
-    public Language(String locale, String key, String value) {
-        this(locale, key);
-        setResourceValue(value);
-    }
-    
-    public String getLocale() {
-        return locale;
-    }
+	private String resourceValue;
 
-    public void setLocale(String locale) {
-        if (locale == null) {
-            throw new IllegalArgumentException("null locale");
-        }
-        this.locale = locale;
-    }
+	/**
+	 * Default constructor (required by Hibernate).
+	 * 
+	 * <p>
+	 * PENDING: should be <code>private</code> so that it can only be used by
+	 * Hibernate, to ensure that the fields which form an instance's identity
+	 * are always initialized/never <tt>null</tt>.
+	 * </p>
+	 */
+	public Language() {
+	}
 
-    public String getResourceKey() {
-        return resourceKey;
-    }
+	public Language(String locale, String key) {
+		setLocale(locale);
+		setResourceKey(key);
+	}
 
-    public void setResourceKey(String resourceKey) {
-        if (resourceKey == null) {
-            throw new IllegalArgumentException("null resourceKey");
-        }
-        this.resourceKey = resourceKey;
-    }
+	/**
+	 * Convenience constructor to set the value too.
+	 */
+	public Language(String locale, String key, String value) {
+		this(locale, key);
+		setResourceValue(value);
+	}
 
-    public String getResourceValue() {
-        return resourceValue;
-    }
+	public String getLocale() {
+		return locale;
+	}
 
-    public void setResourceValue(String resourceValue) {
-        this.resourceValue = resourceValue;
-    }
+	public void setLocale(String locale) {
+		if (locale == null) {
+			throw new IllegalArgumentException("null locale");
+		}
+		this.locale = locale;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        
-        if (obj instanceof Language) {
-            final Language other = (Language)obj;
-            
-            return this.resourceKey.equals(other.resourceKey)
-                && this.locale.equals(other.locale);
-        }
-        return false;
-    }
+	public String getResourceKey() {
+		return resourceKey;
+	}
 
-    @Override
-    public int hashCode() {
-        return this.resourceKey.hashCode() + this.locale.hashCode();
-    }
-    
-    @Override
-    public String toString() {
-        return "Language[id=" + this.id 
-            + ", resourceKey" + this.resourceKey 
-            + ", locale=" + this.locale + "]";
-    }
-    
+	public void setResourceKey(String resourceKey) {
+		if (resourceKey == null) {
+			throw new IllegalArgumentException("null resourceKey");
+		}
+		this.resourceKey = resourceKey;
+	}
+
+	public String getResourceValue() {
+		return resourceValue;
+	}
+
+	public void setResourceValue(String resourceValue) {
+		this.resourceValue = resourceValue;
+	}
+
+	// @Override
+	// public boolean equals(Object obj) {
+	// if (this == obj) {
+	// return true;
+	// }
+	//        
+	// if (obj instanceof Language) {
+	// final Language other = (Language)obj;
+	//            
+	// return this.resourceKey.equals(other.resourceKey)
+	// && this.locale.equals(other.locale);
+	// }
+	// return false;
+	// }
+	//
+	// @Override
+	// public int hashCode() {
+	// return this.resourceKey.hashCode() + this.locale.hashCode();
+	// }
+	//    
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("id", id).append("resourceKey",
+				resourceKey).append("locale", locale).toString();
+	}
+
 }
