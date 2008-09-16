@@ -6,7 +6,12 @@ package org.itracker.web.scheduler.tasks;
  */
 public class NotificationException extends Exception {
 
-    public NotificationException() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public NotificationException() {
     }
     
     public NotificationException(String msg) {

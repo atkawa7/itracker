@@ -32,7 +32,12 @@ import org.itracker.services.ReportService;
 
 public class ReportDownloadController extends GenericController {
  
-    public ReportDownloadController() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public ReportDownloadController() {
     }
 
     public void init(ServletConfig config) {

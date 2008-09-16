@@ -50,7 +50,7 @@ public class ReportChartController extends GenericController {
             return;
         }
         
-        Map imagesMap = (Map) session.getAttribute(Constants.REPORT_IMAGEMAP_KEY);
+        Map<?, ?> imagesMap = (Map<?, ?>) session.getAttribute(Constants.REPORT_IMAGEMAP_KEY);
         
         if(imagesMap != null) {
             String imageName = request.getParameter("image");

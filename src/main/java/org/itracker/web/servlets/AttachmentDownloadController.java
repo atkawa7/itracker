@@ -40,7 +40,12 @@ import org.itracker.services.IssueService;
  */
 public class AttachmentDownloadController extends GenericController {
 
-    public AttachmentDownloadController() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public AttachmentDownloadController() {
     }
 
     public void init(ServletConfig config) {
