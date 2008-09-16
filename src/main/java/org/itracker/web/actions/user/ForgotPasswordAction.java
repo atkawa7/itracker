@@ -48,7 +48,7 @@ public class ForgotPasswordAction extends ItrackerBaseAction {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
+//        super.executeAlways(mapping,form,request,response);
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
             UserService userService = getITrackerServices().getUserService();

@@ -19,7 +19,7 @@ public class ListReportsAction extends ItrackerBaseAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-			super.executeAlways(mapping,form,request,response);
+//			super.executeAlways(mapping,form,request,response);
 			IssueService issueService = this.getITrackerServices().getIssueService();
 			ProjectService projectService = this.getITrackerServices().getProjectService();
 			ReportService reportService = this.getITrackerServices().getReportService();

@@ -54,7 +54,7 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
     @SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
+//        super.executeAlways(mapping,form,request,response);
         
         
         String pageTitleKey = "itracker.web.moveissue.title"; 
@@ -63,9 +63,9 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
 		request.setAttribute("pageTitleArg",pageTitleArg); 
         
         
-        if(! isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        if(! isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
 
         try {
             IssueService issueService = getITrackerServices().getIssueService();

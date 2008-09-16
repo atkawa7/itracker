@@ -82,11 +82,11 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 		log.info("execute: called");
 		ActionErrors errors = new ActionErrors();
-		super.executeAlways(mapping, form, request, response);
-		if (!isLoggedIn(request, response)) {
-			log.info("execute: Forward: login");
-			return mapping.findForward("login");
-		}
+//		super.executeAlways(mapping, form, request, response);
+//		if (!isLoggedIn(request, response)) {
+//			log.info("execute: Forward: login");
+//			return mapping.findForward("login");
+//		}
 
 		if (!isTokenValid(request)) {
 			log.debug("execute: Invalid request token while editing issue.");
@@ -110,7 +110,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 			HttpSession session = request.getSession(true);
 			User currUser = (User) session.getAttribute(Constants.USER_KEY);
 			Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
-			Locale currLocale = (Locale) session
+			Locale locale = (Locale) session
 					.getAttribute(Constants.LOCALE_KEY);
 			Integer currUserId = currUser.getId();
 
@@ -160,10 +160,10 @@ public class EditIssueAction extends ItrackerBaseAction {
 			if (UserUtilities.hasPermission(userPermissions, project.getId(),
 					UserUtilities.PERMISSION_EDIT_FULL)) {
 				processFullEdit(issue, project, currUser, userPermissions,
-						currLocale, issueForm, issueService);
+						locale, issueForm, issueService);
 			} else {
 				processLimitedEdit(issue, project, currUser, userPermissions,
-						currLocale, issueForm, issueService);
+						locale, issueForm, issueService);
 			}
 
 			if (log.isDebugEnabled()) {

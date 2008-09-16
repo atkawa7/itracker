@@ -37,7 +37,6 @@ import org.itracker.model.WorkflowScript;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.UserUtilities;
-import org.itracker.web.actions.admin.configuration.EditCustomFieldAction;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.WorkflowScriptForm;
 import org.itracker.web.util.Constants;
@@ -47,19 +46,17 @@ import org.itracker.web.util.Constants;
 public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(EditWorkflowScriptFormAction.class);
 	
-    public EditWorkflowScriptFormAction() {
-    }
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
+//        super.executeAlways(mapping,form,request,response);
         
         String pageTitleKey = "";
         String pageTitleArg = "";
         
-        if(! isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        if(! isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
 
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");

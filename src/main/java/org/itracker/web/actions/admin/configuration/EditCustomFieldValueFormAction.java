@@ -54,11 +54,11 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
-        
-        if (! isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        super.executeAlways(mapping,form,request,response);
+//        
+//        if (! isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
 
         if (! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
@@ -69,7 +69,6 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
 
             // TODO: it looks like to following 3 lines can be removed, we comment them and add a task.
             HttpSession session = request.getSession(true);
-            //Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
             Map<String, List<String>> languages = configurationService.getAvailableLanguages();
             
             CustomFieldValueForm customFieldValueForm = (CustomFieldValueForm) form;

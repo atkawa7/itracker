@@ -49,10 +49,10 @@ public class CreateLanguageKeyAction extends ItrackerBaseAction {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
-        if(! isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        super.executeAlways(mapping,form,request,response);
+//        if(! isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while creating language key.");
             return mapping.findForward("listlanguages");
@@ -63,16 +63,16 @@ public class CreateLanguageKeyAction extends ItrackerBaseAction {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
 
             String key = (String) PropertyUtils.getSimpleProperty(form, "key");
-            HashMap items = (HashMap) PropertyUtils.getSimpleProperty(form, "items");
+            HashMap<String, String> items = (HashMap<String, String>) PropertyUtils.getSimpleProperty(form, "items");
 
             // Move to validation code
             if(items != null) {
                 log.debug("Adding new language key: " + key);
-                for(Iterator iter = items.keySet().iterator(); iter.hasNext(); ) {
-                    String locale = (String) iter.next();
+                for(Iterator<String> iter = items.keySet().iterator(); iter.hasNext(); ) {
+                    String locale = iter.next();
                     log.debug("Checking translation for locale " + locale);
                     if(locale != null) {
-                        String value = (String) items.get(locale);
+                        String value = items.get(locale);
                         log.debug("Locale value: " + value);
                         if(value != null && ! value.equals("")) {
                             log.debug("Adding new translation for locale " + locale + " for key " + key);

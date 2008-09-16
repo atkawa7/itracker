@@ -42,7 +42,7 @@ public class LogoffAction extends ItrackerBaseAction {
     }
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        super.executeAlways(mapping,form,request,response);
+//        super.executeAlways(mapping,form,request,response);
         try {
             
             HttpSession session = request.getSession(true);
@@ -53,7 +53,8 @@ public class LogoffAction extends ItrackerBaseAction {
                 log.info("User " + login + " logged out successfully.");
             }
         } catch(Exception e) {
-            log.error("Error logging out user. " + e.getMessage());
+        	if (log.isDebugEnabled())
+        		log.debug("execute: Error logging out user. " + e.getMessage());
         }
         
         String pageTitleKey = "itracker.web.login.title";
@@ -73,7 +74,7 @@ public class LogoffAction extends ItrackerBaseAction {
                 SessionManager.invalidateSession(login);
             }
         } catch(Exception e) {
-            log.error("Unable to clear session for user " + (login == null ? "UNKNOWN" : login));
+            log.debug("Unable to clear session for user " + (login == null ? "UNKNOWN" : login));
             return false;
         }
         return true;

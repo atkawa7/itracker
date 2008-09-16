@@ -18,9 +18,9 @@ public class ViewIssueAction extends ItrackerBaseAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		
-			super.executeAlways(mapping,form,request,response);
-			
+//		
+//			super.executeAlways(mapping,form,request,response);
+//			
 			IssueService issueService = this.getITrackerServices().getIssueService();	
 			request.setAttribute("ih",issueService);
 			
@@ -33,11 +33,6 @@ public class ViewIssueAction extends ItrackerBaseAction {
 			log.info("ViewIssueAction: Forward: viewissue");			
 			return mapping.findForward("viewissue");
 	 
-	}
-
-	public ViewIssueAction() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 }

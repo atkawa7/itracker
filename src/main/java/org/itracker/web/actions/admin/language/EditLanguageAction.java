@@ -56,10 +56,10 @@ public class EditLanguageAction extends ItrackerBaseAction {
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
-        if(! isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        super.executeAlways(mapping,form,request,response);
+//        if(! isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while editing language.");
             return mapping.findForward("listlanguages");
@@ -73,7 +73,7 @@ public class EditLanguageAction extends ItrackerBaseAction {
             String action = (String) PropertyUtils.getSimpleProperty(form, "action");
             String locale = (String) PropertyUtils.getSimpleProperty(form, "locale");
             String localeTitle = (String) PropertyUtils.getSimpleProperty(form, "localeTitle");
-            HashMap items = (HashMap) PropertyUtils.getSimpleProperty(form, "items");
+            HashMap<String, String> items = (HashMap<String, String>) PropertyUtils.getSimpleProperty(form, "items");
             
             if(items == null) {
                 return mapping.findForward("listlanguages");
@@ -102,10 +102,10 @@ public class EditLanguageAction extends ItrackerBaseAction {
                     } else {
                         
                         configurationService.updateLanguageItem(new Language(locale, "itracker.locale.name", localeTitle));
-                        for(Iterator iter = items.keySet().iterator(); iter.hasNext(); ) {
-                            String key = (String) iter.next();
+                        for(Iterator<String> iter = items.keySet().iterator(); iter.hasNext(); ) {
+                            String key = iter.next();
                             if(key != null) {
-                                String value = (String) items.get(key);
+                                String value = items.get(key);
                                 if(value != null && ! value.trim().equals("")) {
                                     configurationService.updateLanguageItem(new Language(locale, key.replace('/', '.'), value));
                                 }
@@ -127,10 +127,10 @@ public class EditLanguageAction extends ItrackerBaseAction {
                 
                 configurationService.updateLanguageItem(new Language(locale, "itracker.locale.name", localeTitle));
                 Locale updateLocale = ITrackerResources.getLocale(locale);
-                for(Iterator iter = items.keySet().iterator(); iter.hasNext(); ) {
-                    String key = (String) iter.next();
+                for(Iterator<String> iter = items.keySet().iterator(); iter.hasNext(); ) {
+                    String key = iter.next();
                     if(key != null) {
-                        String value = (String) items.get(key);
+                        String value = items.get(key);
                         try {
                             String currValue = ITrackerResources.getCheckForKey(key.replace('/', '.'), updateLocale);
                             if(value == null || value.trim().equals("")) {

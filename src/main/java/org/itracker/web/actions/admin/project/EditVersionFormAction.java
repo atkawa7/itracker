@@ -49,9 +49,7 @@ import org.itracker.web.util.Constants;
  */
 public class EditVersionFormAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(EditVersionFormAction.class);
-	
-    public EditVersionFormAction() {
-    }
+
     
     @SuppressWarnings("unchecked")
     public ActionForward execute(ActionMapping mapping,
@@ -61,8 +59,8 @@ public class EditVersionFormAction extends ItrackerBaseAction {
             throws ServletException, IOException {
         
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
-        
+//        super.executeAlways(mapping,form,request,response);
+//        
         String pageTitleKey = "";
         String pageTitleArg = "";
         

@@ -37,10 +37,10 @@ public class SelfRegisterFormAction extends ItrackerBaseAction {
     }
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	 super.executeAlways(mapping,form,request,response);
-    	if(isLoggedIn(request, response)) {
-            return mapping.findForward("index");
-        }
+//    	 super.executeAlways(mapping,form,request,response);
+//    	if(isLoggedIn(request, response)) {
+//            return mapping.findForward("index");
+//        }
 
         saveToken(request);
         return mapping.getInputForward();

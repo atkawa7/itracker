@@ -54,11 +54,11 @@ public class EditUserFormAction extends ItrackerBaseAction {
 
         ActionErrors errors = new ActionErrors();
 
-        super.executeAlways(mapping, form, request, response);
-
-        if (!isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        super.executeAlways(mapping, form, request, response);
+//
+//        if (!isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
 
         if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");

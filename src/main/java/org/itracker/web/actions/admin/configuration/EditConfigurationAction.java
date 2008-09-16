@@ -19,10 +19,10 @@
 package org.itracker.web.actions.admin.configuration;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -40,9 +40,7 @@ import org.apache.struts.action.ActionMessages;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
 import org.itracker.model.Issue;
-import org.itracker.model.IssueActivity;
 import org.itracker.model.Language;
-import org.itracker.model.IssueActivityType;
 import org.itracker.model.User;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
@@ -59,10 +57,10 @@ public class EditConfigurationAction extends ItrackerBaseAction {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
-        if(! isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        super.executeAlways(mapping,form,request,response);
+//        if(! isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while editing configuration.");
             return mapping.findForward("listconfiguration");
@@ -77,7 +75,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
             String formValue = (String) PropertyUtils.getSimpleProperty(form, "value");
             
             String initialLanguageKey = null;
-            HashMap translations = (HashMap) PropertyUtils.getSimpleProperty(form, "translations");
+            HashMap<String, String> translations = (HashMap<String, String>) PropertyUtils.getSimpleProperty(form, "translations");
 
             if(action == null) {
                 return mapping.findForward("listconfiguration");
@@ -209,18 +207,18 @@ public class EditConfigurationAction extends ItrackerBaseAction {
             log.debug("Processing translations for configuration item " + configItem.getId() + " with key " + key);
             if(translations != null && key != null && ! key.equals("")) {
             	String locale, translation;
-            	Iterator iter = translations.keySet().iterator();
+            	Iterator<String> iter = translations.keySet().iterator();
                 while (iter.hasNext()) {
-                    locale = (String) iter.next();
+                    locale = iter.next();
                     if(locale != null) {
-                        translation = (String) translations.get(locale);
+                        translation = translations.get(locale);
                         if(translation != null && ! translation.equals("")) {
                             log.debug("Adding new translation for locale " + locale + " for " + configItem);
                             configurationService.updateLanguageItem(new Language(locale, key, translation));
                         }
                     }
                 }
-                String baseValue = (String) translations.get(ITrackerResources.BASE_LOCALE);
+                String baseValue = translations.get(ITrackerResources.BASE_LOCALE);
                 configurationService.updateLanguageItem(new Language(ITrackerResources.BASE_LOCALE, key, baseValue));
                 // remove old languageItems if resource key has changed
                 if ( initialLanguageKey != null && !initialLanguageKey.equals( key ) ) {
@@ -243,13 +241,14 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                isUpdate = true;
                pageTitleKey = "itracker.web.admin.editconfiguration.title.update";
             } else {
+            	Locale locale = getCurrLocale(request);
                pageTitleKey = "itracker.web.admin.editconfiguration.title.create";
                if("createseverity".equals(request.getAttribute("action"))) {  
-                   pageTitleArg = ITrackerResources.getString("itracker.web.attr.severity", this.getCurrLocale());
+                   pageTitleArg = ITrackerResources.getString("itracker.web.attr.severity", locale);
                } else if("createstatus".equals(request.getAttribute("action"))) {
-                   pageTitleArg = ITrackerResources.getString("itracker.web.attr.status", this.getCurrLocale());
+                   pageTitleArg = ITrackerResources.getString("itracker.web.attr.status", locale);
                } else if("createresolution".equals(request.getAttribute("action"))) {
-                   pageTitleArg = ITrackerResources.getString("itracker.web.attr.resolution", this.getCurrLocale());
+                   pageTitleArg = ITrackerResources.getString("itracker.web.attr.resolution", locale);
                } else {
             	   return mapping.findForward("unauthorized");
                         }

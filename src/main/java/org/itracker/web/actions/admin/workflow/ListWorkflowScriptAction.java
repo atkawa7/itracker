@@ -12,15 +12,11 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 public class ListWorkflowScriptAction extends ItrackerBaseAction {
 
-	public ListWorkflowScriptAction() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-			super.executeAlways(mapping,form,request,response);
+//			super.executeAlways(mapping,form,request,response);
 			ConfigurationService configurationService = this.getITrackerServices().getConfigurationService();
 			request.setAttribute("sc",configurationService);
 			

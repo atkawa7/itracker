@@ -20,7 +20,7 @@ public class ListConfigurationAction extends ItrackerBaseAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-			super.executeAlways(mapping,form,request,response);
+//			super.executeAlways(mapping,form,request,response);
 			ConfigurationService configurationService = this.getITrackerServices().getConfigurationService();
 			request.setAttribute("sc",configurationService);
 			return mapping.findForward("listconfiguration");

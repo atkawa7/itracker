@@ -48,8 +48,6 @@ import org.itracker.web.util.Constants;
 public class EditComponentFormAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(EditComponentFormAction.class);
 	
-    public EditComponentFormAction() {
-    }
 
     @SuppressWarnings("unchecked")
     public ActionForward execute(ActionMapping mapping, 
@@ -59,7 +57,7 @@ public class EditComponentFormAction extends ItrackerBaseAction {
             throws ServletException, IOException {
         
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
+//        super.executeAlways(mapping,form,request,response);
         
         String pageTitleKey = ""; 
         String pageTitleArg = "";

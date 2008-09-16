@@ -54,8 +54,6 @@ public class EditProjectFormAction extends ItrackerBaseAction {
 
     private static final Logger log = Logger.getLogger(EditProjectFormAction.class);
 
-    public EditProjectFormAction() {
-    }
 
     @SuppressWarnings("unchecked")
     public ActionForward execute(ActionMapping mapping,
@@ -66,11 +64,11 @@ public class EditProjectFormAction extends ItrackerBaseAction {
 
         ActionErrors errors = new ActionErrors();
 
-        super.executeAlways(mapping, form, request, response);
-
-        if (!isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        super.executeAlways(mapping, form, request, response);
+//
+//        if (!isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
 
         try {
             ProjectService projectService = getITrackerServices().getProjectService();
@@ -94,7 +92,7 @@ public class EditProjectFormAction extends ItrackerBaseAction {
             } else {
                 pageTitleKey = "itracker.web.admin.editproject.title.create";
                 //     pageTitleArg = ITrackerResources.getString("itracker.locale.name", parentLocale);
-                pageTitleArg = ITrackerResources.getString("itracker.locale.name", this.getCurrLocale());
+                pageTitleArg = ITrackerResources.getString("itracker.locale.name", getCurrLocale(request));
 
             }
 

@@ -49,11 +49,11 @@ public class SelfRegisterAction extends ItrackerBaseAction {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
-        log.debug("Checking transactional control token.");
-        if(! isTokenValid(request)) {
-            return mapping.findForward("login");
-        }
+//        super.executeAlways(mapping,form,request,response);
+//        log.debug("Checking transactional control token.");
+//        if(! isTokenValid(request)) {
+//            return mapping.findForward("login");
+//        }
         resetToken(request);
 
         try {

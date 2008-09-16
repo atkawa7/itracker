@@ -80,8 +80,8 @@ public class ListIssuesAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        super.executeAlways(mapping,form,request,response);
-        Locale currLocale = super.getLocale(request);
+//        super.executeAlways(mapping,form,request,response);
+        Locale locale = getCurrLocale(request);
         // get the services
         IssueService issueService = this.getITrackerServices().getIssueService();
         ProjectService projectService = this.getITrackerServices().getProjectService();
@@ -166,11 +166,11 @@ public class ListIssuesAction extends ItrackerBaseAction {
             issue = issuesIt.next();
             issuePTO = new IssuePTO(issue);
             
-            statusLocalizedString=IssueUtilities.getStatusName(issue.getStatus(), currLocale);
-            severityLocalizedString = IssueUtilities.getSeverityName(issue.getSeverity(), currLocale) ;
+            statusLocalizedString=IssueUtilities.getStatusName(issue.getStatus(), locale);
+            severityLocalizedString = IssueUtilities.getSeverityName(issue.getSeverity(), locale) ;
             if (issue.getComponents().size() == 0) {
 				componentsSize = ITrackerResources.getString(
-						RES_KEY_UNKNOWN, currLocale);
+						RES_KEY_UNKNOWN, locale);
 			} else {
 				componentsSize = issue.getComponents().get(0).getName()
 						+ (issue.getComponents().size() > 1 ? " (+)" : "");
@@ -221,7 +221,7 @@ public class ListIssuesAction extends ItrackerBaseAction {
         request.setAttribute(ATT_NAME_NUM_VIEWABLE, new Integer(numViewable));
         request.setAttribute(ATT_NAME_K, new Integer(k));
          
-        request.setAttribute(ATT_NAME_UNASSIGNED, ITrackerResources.getString(RES_KEY_UNASSIGNED, currLocale));
+        request.setAttribute(ATT_NAME_UNASSIGNED, ITrackerResources.getString(RES_KEY_UNASSIGNED, locale));
         String pageTitleArg = project.getName();
         request.setAttribute(ATT_NAME_PAGE_TITLE_KEY, LIST_ISSUES_PAGE_TITLE_KEY);
         request.setAttribute(ATT_NAME_PAGE_TITLE_ARG, pageTitleArg);

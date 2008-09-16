@@ -1,14 +1,13 @@
 package org.itracker.web.actions.admin;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
@@ -27,7 +26,7 @@ public class AdminHomeAction extends ItrackerBaseAction {
                                  HttpServletResponse response)
             throws Exception {
 
-        super.executeAlways(mapping, form, request, response);
+//        super.executeAlways(mapping, form, request, response);
 
         IssueService issueService = this.getITrackerServices().getIssueService();
         ProjectService projectService = this.getITrackerServices().getProjectService();
@@ -61,8 +60,8 @@ public class AdminHomeAction extends ItrackerBaseAction {
         Long allIssueAttachmentsTotalSize = issueService.totalSystemIssuesAttachmentSize();
         request.setAttribute("allIssueAttachmentsTotalSize", allIssueAttachmentsTotalSize);
 
-        Locale currLocale = super.getLocale(request);
-        SimpleDateFormat sdf = new SimpleDateFormat(ITrackerResources.getString("itracker.dateformat.full"), currLocale);
+        Locale locale = getCurrLocale(request);
+//        SimpleDateFormat sdf = new SimpleDateFormat(ITrackerResources.getString("itracker.dateformat.full"), locale);
         String lastRun = null;//(Scheduler.getLastRun() == null ? "-" : sdf.format(Scheduler.getLastRun()));
 
         request.setAttribute("lastRun", lastRun);

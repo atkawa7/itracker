@@ -27,7 +27,6 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.model.PermissionType;
 import org.itracker.services.util.UserUtilities;
-import org.itracker.web.actions.admin.configuration.EditCustomFieldAction;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
 /**
@@ -59,12 +58,12 @@ public class RemoveWorkflowScriptAction extends ItrackerBaseAction {
      @SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
+//        super.executeAlways(mapping,form,request,response);
         ActionForward fw = mapping.findForward("error");
         
-        if(! isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        if(! isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
         
         // check permissions
         HttpSession session = request.getSession(true);

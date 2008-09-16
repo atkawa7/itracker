@@ -9,21 +9,16 @@ import org.apache.struts.action.ActionMapping;
 import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
-
 public class ListLanguagesAction extends ItrackerBaseAction {
-
-	public ListLanguagesAction() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-			super.executeAlways(mapping,form,request,response);
-			ConfigurationService configurationService = this.getITrackerServices().getConfigurationService();
-			request.setAttribute("sc",configurationService);
-			return mapping.findForward("listlanguages");
-		 
+		// super.executeAlways(mapping,form,request,response);
+		ConfigurationService configurationService = this.getITrackerServices()
+				.getConfigurationService();
+		request.setAttribute("sc", configurationService);
+		return mapping.findForward("listlanguages");
+
 	}
 }

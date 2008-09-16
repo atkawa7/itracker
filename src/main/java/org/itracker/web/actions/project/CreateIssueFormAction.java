@@ -69,13 +69,13 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
-        
-        
-        
-        if(! isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        super.executeAlways(mapping,form,request,response);
+//        
+//        
+//        
+//        if(! isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
 
         try {
             ProjectService projectService = getITrackerServices().getProjectService();
@@ -86,7 +86,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
             Map<Integer, Set<PermissionType>> Permissions = getUserPermissions(session);
-            Locale currLocale = LoginUtilities.getCurrentLocale(request);
+            Locale locale = LoginUtilities.getCurrentLocale(request);
 
             if(! UserUtilities.hasPermission(Permissions, projectId, UserUtilities.PERMISSION_CREATE)) {
                 log.debug("Unauthorized user requested access to create issue for project " + projectId);
@@ -121,7 +121,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                     listOptions.put(new Integer(IssueUtilities.FIELD_CREATOR), Convert.usersToNameValuePairs(possibleCreators));
                 }
 
-                List<NameValuePair> severities = IssueUtilities.getSeverities(currLocale);
+                List<NameValuePair> severities = IssueUtilities.getSeverities(locale);
                 listOptions.put(new Integer(IssueUtilities.FIELD_SEVERITY), severities);
 
                 List<Component> components = new ArrayList<Component>();
@@ -136,7 +136,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                 List<CustomField> projectFields = project.getCustomFields();
                 for(int i = 0; i < projectFields.size(); i++) {
                     if(projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
-                        projectFields.get(i).setLabels(currLocale);
+                        projectFields.get(i).setLabels(locale);
                         listOptions.put(projectFields.get(i).getId(), Convert.customFieldOptionsToNameValuePairs(projectFields.get(i).getOptions()));
                     }
                 }

@@ -77,11 +77,11 @@ public class CreateIssueAction extends ItrackerBaseAction {
     @SuppressWarnings("unchecked")
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
-        
-        if (!isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        super.executeAlways(mapping,form,request,response);
+//        
+//        if (!isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
         
         if (! isTokenValid(request)) {
             log.info("Invalid request token while creating issue.");
@@ -100,7 +100,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
             Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
-            Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+            Locale locale = getCurrLocale(request);
             Integer currUserId = currUser.getId();
             
             IssueForm issueForm = (IssueForm)form;
@@ -191,7 +191,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                     
                     if (customFields != null && customFields.size() > 0) {
                         List<IssueField> issueFieldsVector = new ArrayList<IssueField>();
-                        ResourceBundle bundle = ITrackerResources.getBundle(currLocale);
+                        ResourceBundle bundle = ITrackerResources.getBundle(locale);
                         
                         for(Iterator iter = customFields.keySet().iterator(); iter.hasNext(); ) {
                             try {
@@ -201,7 +201,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                                 
                                 if (fieldValue != null && ! fieldValue.equals("")) {
                                     IssueField issueField = new IssueField(issue, field);
-                                    issueField.setValue(fieldValue, currLocale, bundle);
+                                    issueField.setValue(fieldValue, locale, bundle);
                                     issueFieldsVector.add(issueField);
                                 }
                             } catch(Exception e) {

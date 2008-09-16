@@ -56,16 +56,16 @@ public class MoveIssueAction extends ItrackerBaseAction {
             HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
+//        super.executeAlways(mapping,form,request,response);
         
         String pageTitleKey = "itracker.web.moveissue.title";
         String pageTitleArg = request.getParameter("id");
         request.setAttribute("pageTitleKey",pageTitleKey);
         request.setAttribute("pageTitleArg",pageTitleArg);
         
-        if(! isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        if(! isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while creating issue.");
             return mapping.findForward("index");

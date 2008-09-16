@@ -58,10 +58,10 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
-        if(! isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        super.executeAlways(mapping,form,request,response);
+//        if(! isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
 
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
@@ -84,7 +84,7 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
             }
 
             HttpSession session = request.getSession(true);
-            Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+            Locale locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
 
             CustomFieldForm customFieldForm = (CustomFieldForm) form;
             if(customFieldForm == null) {
@@ -113,7 +113,7 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
                     translations.put(languageItems.get(i).getLocale(), languageItems.get(i).getResourceValue());
                 }
                 customFieldForm.setTranslations(translations);
-                customField.setLabels(currLocale);
+                customField.setLabels(locale);
             }
             request.setAttribute("sc",configurationService);
             request.setAttribute("customFieldForm", customFieldForm);

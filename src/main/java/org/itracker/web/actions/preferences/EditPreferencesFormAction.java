@@ -58,11 +58,11 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
-        
-        if(! isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        super.executeAlways(mapping,form,request,response);
+//        
+//        if(! isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
 
         try {
             UserService userService = getITrackerServices().getUserService();
@@ -122,16 +122,16 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
             userForm.setUseTextActions((userPrefs.getUseTextActions() ? "true" : "false"));
  
       
-            Locale currLocale = super.getCurrLocale();
-            String statusName = UserUtilities.getStatusName(user.getStatus(), currLocale) ;
+            Locale locale = getCurrLocale(request);
+            String statusName = UserUtilities.getStatusName(user.getStatus(), locale) ;
             request.setAttribute("statusName",statusName);
             String userLocaleAsString = ITrackerResources.getString("itracker.locale.name", userPrefs.getUserLocale()) ;
             request.setAttribute("userLocaleAsString",userLocaleAsString);
-            String getSaveLoginLocalized = ITrackerResources.getString((userPrefs.getSaveLogin() ? "itracker.web.generic.yes" : "itracker.web.generic.no"), super.getCurrLocale());
+            String getSaveLoginLocalized = ITrackerResources.getString((userPrefs.getSaveLogin() ? "itracker.web.generic.yes" : "itracker.web.generic.no"), locale);
             request.setAttribute("getSaveLoginLocalized",getSaveLoginLocalized);
-            String showClosedOnIssueListLocalized = ITrackerResources.getString((userPrefs.getShowClosedOnIssueList() ? "itracker.web.generic.yes" : "itracker.web.generic.no"), super.getCurrLocale());
+            String showClosedOnIssueListLocalized = ITrackerResources.getString((userPrefs.getShowClosedOnIssueList() ? "itracker.web.generic.yes" : "itracker.web.generic.no"), locale);
             request.setAttribute("showClosedOnIssueListLocalized",showClosedOnIssueListLocalized);
-            String getRememberLastSearchLocalized = ITrackerResources.getString((userPrefs.getRememberLastSearch() ? "itracker.web.generic.yes" : "itracker.web.generic.no"),  super.getCurrLocale());
+            String getRememberLastSearchLocalized = ITrackerResources.getString((userPrefs.getRememberLastSearch() ? "itracker.web.generic.yes" : "itracker.web.generic.no"),  locale);
             request.setAttribute("getRememberLastSearchLocalized",getRememberLastSearchLocalized);
             request.setAttribute("preferencesForm", userForm);
             session.setAttribute(Constants.EDIT_USER_KEY, user);

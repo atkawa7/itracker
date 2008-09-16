@@ -1,16 +1,17 @@
 package org.itracker.web.actions.admin.attachment;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.model.IssueAttachment;
 import org.itracker.services.IssueService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class ListAttachmentsAction extends ItrackerBaseAction {
@@ -24,7 +25,7 @@ public class ListAttachmentsAction extends ItrackerBaseAction {
         boolean hasAttachments = false;
         long sizeOfAllAttachments = 0;
 
-        super.executeAlways(mapping, form, request, response);
+//        super.executeAlways(mapping, form, request, response);
 
         IssueService issueService = this.getITrackerServices().getIssueService();
 

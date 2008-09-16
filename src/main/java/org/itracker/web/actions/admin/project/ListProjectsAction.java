@@ -15,16 +15,13 @@ public class ListProjectsAction extends ItrackerBaseAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		super.executeAlways(mapping,form,request,response);
-		 
+//		super.executeAlways(mapping,form,request,response);
+//		 
 		  ProjectService projectService = this.getITrackerServices().getProjectService();
 		  request.setAttribute("ph",projectService);
 	 
 		return mapping.findForward("listprojects");
 	}
 
-	public ListProjectsAction() {
-		super();
-	}
 
 }

@@ -19,7 +19,7 @@ public class ListReportsAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        super.executeAlways(mapping,form,request,response);
+//        super.executeAlways(mapping,form,request,response);
         
         ProjectService projectService = this.getITrackerServices().getProjectService();
         ReportService reportService = this.getITrackerServices().getReportService();
@@ -33,24 +33,7 @@ public class ListReportsAction extends ItrackerBaseAction {
         
         List<Report> reports = reportService.getAllReports();
         request.setAttribute("reports",reports);
-        //  String dataTypeString = "";
-        // String reportTypeString = "";
-        
-        //  if(reports.get(i).getReportType() == ReportUtilities.REPORTTYPE_JFREE) {
-        //        reportTypeString = "JFreeReport";
-        //	  } else if(reports.get(i).getReportType() == ReportUtilities.REPORTTYPE_JASPER) {
-        //        reportTypeString = "JasperReport";
-        //		  } else {
-        //        reportTypeString = ITrackerResources.getString("itracker.web.generic.unknown", (java.util.Locale)pageContext.getAttribute("currLocale"));
-        //  }
-        
-        //	  if(reports.get(i).getDataType() == ReportUtilities.DATATYPE_ISSUE) {
-        //        dataTypeString = ITrackerResources.getString("itracker.web.attr.issues", (java.util.Locale)pageContext.getAttribute("currLocale"));
-        //  } else if(reports.get(i).getDataType() == ReportUtilities.DATATYPE_PROJECT) {
-        //       dataTypeString = ITrackerResources.getString("itracker.web.attr.projects", (java.util.Locale)pageContext.getAttribute("currLocale"));
-        // } else {
-        //     dataTypeString = ITrackerResources.getString("itracker.web.generic.unknown", (java.util.Locale)pageContext.getAttribute("currLocale"));
-        // }
+
         
         return mapping.findForward("listreportsadmin");
     }

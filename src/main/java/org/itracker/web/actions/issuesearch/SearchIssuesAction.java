@@ -51,22 +51,21 @@ import org.itracker.web.util.Constants;
 public class SearchIssuesAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(SearchIssuesAction.class);
 	
-    public SearchIssuesAction() {
-    }
+
     
     @SuppressWarnings("unchecked")
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        super.executeAlways(mapping,form,request,response);
+//        super.executeAlways(mapping,form,request,response);
         
         String pageTitleKey = "itracker.web.search.title";
         String pageTitleArg = "";
         request.setAttribute("pageTitleKey",pageTitleKey);
         request.setAttribute("pageTitleArg",pageTitleArg);
         
-        if(! isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        if(! isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
         
         HttpSession session = request.getSession();
         
