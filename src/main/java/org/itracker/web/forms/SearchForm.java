@@ -18,11 +18,11 @@
 
 package org.itracker.web.forms;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.

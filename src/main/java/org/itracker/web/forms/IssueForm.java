@@ -36,15 +36,13 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
 import org.itracker.model.NameValuePair;
-import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.Status;
 import org.itracker.model.User;
-import org.itracker.services.IssueService;
-import org.itracker.services.ProjectService;
 import org.itracker.services.exceptions.IssueException;
 import org.itracker.services.exceptions.WorkflowException;
 import org.itracker.services.util.CustomFieldUtilities;
+import org.itracker.services.util.UserUtilities;
 import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.actions.project.EditIssueFormAction;
 import org.itracker.web.util.Constants;
@@ -256,12 +254,11 @@ public class IssueForm extends ITrackerForm  {
         	if (null != getId()) {
 	            Issue issue = getITrackerServices().getIssueService().getIssue(getId());
 	            
-	            Locale currLocale = (Locale) request.getSession().getAttribute(Constants.LOCALE_KEY);
+	            Locale locale = (Locale) request.getSession().getAttribute(Constants.LOCALE_KEY);
                 User currUser = (User) request.getSession().getAttribute(Constants.USER_KEY);
-                List<NameValuePair> ownersList = EditIssueFormAction.GetIssuePossibleOwnersList(issue, issue.getProject(), currUser, currLocale, 
-						getITrackerServices().getIssueService(),
+                List<NameValuePair> ownersList = UserUtilities.getAssignableIssueOwnersList(issue, issue.getProject(), currUser, locale, 
 						getITrackerServices().getUserService(), RequestHelper.getUserPermissions(request.getSession()));
-	            
+
 	            EditIssueFormAction.setupJspEnv(mapping, this, request, issue,
 						getITrackerServices().getIssueService(),
 						getITrackerServices().getUserService(), RequestHelper
@@ -296,12 +293,12 @@ public class IssueForm extends ITrackerForm  {
         if(projectFields.size() > 0) {
             HttpSession session = request.getSession();
 
-            Locale currLocale = ITrackerResources.getLocale();
+            Locale locale = ITrackerResources.getLocale();
             if(session != null) {
-                currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+                locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
             }
             
-            ResourceBundle bundle = ITrackerResources.getBundle(currLocale);
+            ResourceBundle bundle = ITrackerResources.getBundle(locale);
             
             for(int i = 0; i < projectFields.size(); i++) {
                 CustomField customField = projectFields.get(i);
@@ -313,14 +310,13 @@ public class IssueForm extends ITrackerForm  {
                     // setValue to validate the value! 
                     //IssueField issueField = new IssueField(projectFields.get(i));
                     try {
-                    //    issueField.setValue(fieldValue, currLocale);
-                        customField.checkAssignable(fieldValue, currLocale, bundle);
+                        customField.checkAssignable(fieldValue, locale, bundle);
                     } catch(IssueException ie) {
-                        String label = CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId(), currLocale);
+                        String label = CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId(), locale);
                         errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(ie.getType(), label));
                     }
                 } else if(projectFields.get(i).isRequired()) {
-                    String label = CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId(), currLocale);
+                    String label = CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId(), locale);
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(IssueException.TYPE_CF_REQ_FIELD, label));
                 }
             }
