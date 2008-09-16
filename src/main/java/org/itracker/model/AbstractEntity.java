@@ -21,10 +21,6 @@ package org.itracker.model;
 import java.util.Comparator;
 import java.util.Date;
 
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.springframework.orm.jpa.EntityManagerHolder;
-
 /**
  * This is a POJO Business Domain Object. Hibernate Bean.
  * 
