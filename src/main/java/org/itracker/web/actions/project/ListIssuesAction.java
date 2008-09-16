@@ -81,7 +81,7 @@ public class ListIssuesAction extends ItrackerBaseAction {
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 //        super.executeAlways(mapping,form,request,response);
-        Locale locale = getCurrLocale(request);
+        Locale locale = getLocale(request);
         // get the services
         IssueService issueService = this.getITrackerServices().getIssueService();
         ProjectService projectService = this.getITrackerServices().getProjectService();
