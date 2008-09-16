@@ -15,8 +15,8 @@ import org.itracker.persistence.dao.ProjectDAO;
 import org.itracker.persistence.dao.UserDAO;
 import org.itracker.persistence.dao.UserPreferencesDAO;
 import org.itracker.services.UserService;
-import org.itracker.services.util.UserUtilities;
 import org.itracker.services.exceptions.UserException;
+import org.itracker.services.util.UserUtilities;
 import org.junit.Test;
 
 public class UserServiceImplTest extends AbstractDependencyInjectionTest {

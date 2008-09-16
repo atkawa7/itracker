@@ -1,5 +1,7 @@
 package org.itracker.web.actions.admin.attachment;
 
+import java.util.List;
+
 import org.apache.struts.action.ActionForward;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.IssueAttachment;
@@ -8,8 +10,6 @@ import org.itracker.web.struts.mock.MockActionMapping;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-
-import java.util.List;
 
 public class ListAttachmentsActionTest extends AbstractDependencyInjectionTest {
 
@@ -45,18 +45,19 @@ public class ListAttachmentsActionTest extends AbstractDependencyInjectionTest {
         // TODO: Rename attribute key
         assertTrue((Boolean) request.getAttribute("hasAttachments"));
 
-        List<IssueAttachment> attachments = (List<IssueAttachment>) request.getAttribute("attachments");
+        List<?> attachments = (List<?>) request.getAttribute("attachments");
 
         assertEquals(4, attachments.size());
 
     }
 
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void testAttachmentDetails() throws Exception {
 
         ListAttachmentsAction listAttachmentsAction = new ListAttachmentsAction();
         listAttachmentsAction.execute(actionMapping, null, request, response);
-        Object attList = request.getAttribute("attachments");
+//        Object attList = request.getAttribute("attachments");
         List<IssueAttachment> attachments = (List<IssueAttachment>) request.getAttribute("attachments");
 
         assertContainsAttachment(issueAttachmentDAO.findByPrimaryKey(1), attachments);

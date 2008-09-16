@@ -1,15 +1,15 @@
 package org.itracker.persistence.dao;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Permission;
 import org.itracker.model.Project;
 import org.itracker.model.User;
-import org.junit.Test;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.springframework.dao.DataAccessException;
-
-import java.util.List;
-import java.sql.SQLException;
 
 public class PermissionDAOImplTest extends AbstractDependencyInjectionTest {
 

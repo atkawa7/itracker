@@ -1,27 +1,18 @@
 package org.itracker.persistence.dao;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.itracker.AbstractDependencyInjectionTest;
-import org.itracker.model.Issue;
 import org.itracker.model.IssueActivity;
 import org.itracker.model.IssueActivityType;
-import org.itracker.model.IssueSearchQuery;
-import org.itracker.model.PermissionType;
-import org.itracker.model.User;
-import org.itracker.services.UserService;
-import org.itracker.services.util.AuthenticationConstants;
 import org.junit.Test;
 
 public class IssueActivityDAOImplTest extends AbstractDependencyInjectionTest {
 
-	private IssueDAO issueDAO;
+//	private IssueDAO issueDAO;
 	private IssueActivityDAO issueActivityDAO;
-	private UserDAO userDAO;
-	private UserService userService;
+//	private UserDAO userDAO;
+//	private UserService userService;
 
 	@Test
 	public void testFindByIssueId() {
@@ -47,12 +38,12 @@ public class IssueActivityDAOImplTest extends AbstractDependencyInjectionTest {
 	public void onSetUp() throws Exception {
 		super.onSetUp();
 
-		issueDAO = (IssueDAO) applicationContext.getBean("issueDAO");
+//		issueDAO = (IssueDAO) applicationContext.getBean("issueDAO");
 		issueActivityDAO = (IssueActivityDAO) applicationContext
 				.getBean("issueActivityDAO");
-		userDAO = (UserDAO) applicationContext.getBean("userDAO");
+//		userDAO = (UserDAO) applicationContext.getBean("userDAO");
 
-		userService = (UserService) applicationContext.getBean("userService");
+//		userService = (UserService) applicationContext.getBean("userService");
 
 	}
 

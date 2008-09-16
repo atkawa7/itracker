@@ -2,7 +2,6 @@ package org.itracker.web.actions.admin;
 
 import org.apache.struts.action.ActionForward;
 import org.itracker.AbstractDependencyInjectionTest;
-import org.itracker.services.IssueService;
 import org.itracker.web.struts.mock.MockActionMapping;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;

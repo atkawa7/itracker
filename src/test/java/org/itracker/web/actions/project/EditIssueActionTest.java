@@ -1,10 +1,15 @@
 package org.itracker.web.actions.project;
 
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.util.TokenProcessor;
 import org.itracker.AbstractDependencyInjectionTest;
-import org.itracker.model.User;
 import org.itracker.model.PermissionType;
+import org.itracker.model.User;
 import org.itracker.services.UserService;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.web.forms.IssueForm;
@@ -13,10 +18,6 @@ import org.itracker.web.util.Constants;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-
-import javax.servlet.http.HttpSession;
-import java.util.Set;
-import java.util.Map;
 
 public class EditIssueActionTest extends AbstractDependencyInjectionTest {
 

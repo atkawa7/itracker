@@ -10,12 +10,10 @@ import java.util.List;
 
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Issue;
-import org.itracker.model.IssueActivity;
 import org.itracker.model.IssueActivityType;
 import org.itracker.model.IssueField;
 import org.itracker.model.IssueHistory;
 import org.itracker.model.User;
-import org.itracker.persistence.dao.IssueDAO;
 import org.itracker.services.IssueService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.ProjectException;
@@ -302,7 +300,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		assertNotNull("user#2", user);
 
 		IssueHistory history = new IssueHistory(updateIssue, user, "hi", 1);
-		Integer histCount = updateIssue.getHistory().size();
+//		Integer histCount = updateIssue.getHistory().size();
 		Integer actCount = updateIssue.getActivities().size();
 
 		updateIssue.getHistory().add(history);
@@ -430,11 +428,11 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		assertNotNull("issue", issue);
 		User user = ((UserService) applicationContext.getBean("userService"))
 				.getUser(2);
-		Integer actCount = issue.getActivities().size();
+//		Integer actCount = issue.getActivities().size();
 		assertNotNull("user#2", user);
 		issue = issueService.moveIssue(issue, 3, user.getId());
 
-		Issue reloaded = issueService.getIssue(1);
+//		Issue reloaded = issueService.getIssue(1);
 
 		// TODO this assertion fails..?
 		// assertEquals("moved issue project id", (Integer) 3,

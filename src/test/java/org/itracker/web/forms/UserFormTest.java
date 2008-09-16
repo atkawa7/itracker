@@ -1,13 +1,14 @@
 package org.itracker.web.forms;
 
+import java.util.Iterator;
+
 import junit.framework.TestCase;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.springframework.mock.web.MockHttpServletRequest;
-
-import java.util.Iterator;
 
 public class UserFormTest extends TestCase {
 
@@ -24,7 +25,7 @@ public class UserFormTest extends TestCase {
         assertNotNull(errors);
         assertEquals(1, errors.size());
 
-        Iterator iterator = errors.get(ActionMessages.GLOBAL_MESSAGE);
+        Iterator<?> iterator = errors.get(ActionMessages.GLOBAL_MESSAGE);
         ActionMessage message = (ActionMessage) iterator.next();
         assertEquals("itracker.web.error.matchingpass", message.getKey());
     }
