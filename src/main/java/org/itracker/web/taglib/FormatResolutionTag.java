@@ -82,11 +82,11 @@ public class FormatResolutionTag extends BodyTagSupport {
     public int doEndTag() throws JspException {
         StringBuffer results = new StringBuffer();
         if(text != null && ! text.trim().equals("")) {
-            Locale currLocale = null;
+            Locale locale = null;
 
             HttpSession session = pageContext.getSession();
             if(session != null) {
-                currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+                locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
             }
 
             try {
@@ -97,7 +97,7 @@ public class FormatResolutionTag extends BodyTagSupport {
 
             if(ProjectUtilities.hasOption(ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS, projectOptions)) {
                 try {
-                    text = IssueUtilities.checkResolutionName(text, currLocale);
+                    text = IssueUtilities.checkResolutionName(text, locale);
                 } catch(MissingResourceException mre) {
                     // Key didn't exist so just stick the key in as a real number.
                 }

@@ -69,15 +69,15 @@ public class FormatIssueOwnerTag extends TagSupport {
     
     public int doEndTag() throws JspException {
         String value = "";
-        Locale currLocale = null;
+        Locale locale = null;
         
         HttpSession session = pageContext.getSession();
         if(session != null) {
-            currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+            locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
         }
         
         if(issue == null || issue.getOwner() == null) {
-            value = ITrackerResources.getString(emptyKey, currLocale);
+            value = ITrackerResources.getString(emptyKey, locale);
         } else {
             try {
                 if("short".equalsIgnoreCase(format)) {
@@ -87,7 +87,7 @@ public class FormatIssueOwnerTag extends TagSupport {
                     value = issue.getOwner().getFirstName() + " " + issue.getOwner().getLastName();
                 }
             } catch(Exception e) {
-                value = ITrackerResources.getString(emptyKey, currLocale);
+                value = ITrackerResources.getString(emptyKey, locale);
             }
         }
         

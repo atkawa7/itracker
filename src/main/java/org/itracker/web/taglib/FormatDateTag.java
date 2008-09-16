@@ -71,31 +71,31 @@ public class FormatDateTag extends TagSupport {
     public int doEndTag() throws JspException {
         String value = "";
         SimpleDateFormat sdf;
-        Locale currLocale = null;
+        Locale locale = null;
 
         HttpSession session = pageContext.getSession();
         if(session != null) {
-            currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+            locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
         }
 
-        if(currLocale == null) {
-            currLocale = ITrackerResources.getLocale();
+        if(locale == null) {
+            locale = ITrackerResources.getLocale();
         }
 
         if(date == null) {
-            value = ITrackerResources.getString(emptyKey, currLocale);
+            value = ITrackerResources.getString(emptyKey, locale);
         } else {
             try {
                 if("short".equalsIgnoreCase(format)) {
-                    sdf = new SimpleDateFormat(ITrackerResources.getString("itracker.dateformat.short", currLocale), currLocale);
+                    sdf = new SimpleDateFormat(ITrackerResources.getString("itracker.dateformat.short", locale), locale);
                 } else if("notime".equalsIgnoreCase(format)) {
-                    sdf = new SimpleDateFormat(ITrackerResources.getString("itracker.dateformat.dateonly", currLocale), currLocale);
+                    sdf = new SimpleDateFormat(ITrackerResources.getString("itracker.dateformat.dateonly", locale), locale);
                 } else {
-                    sdf = new SimpleDateFormat(ITrackerResources.getString("itracker.dateformat.full", currLocale), currLocale);
+                    sdf = new SimpleDateFormat(ITrackerResources.getString("itracker.dateformat.full", locale), locale);
                 }
                 value = sdf.format(date);
             } catch(Exception e) {
-                value = ITrackerResources.getString(emptyKey, currLocale);
+                value = ITrackerResources.getString(emptyKey, locale);
             }
         }
         // ResponseUtils.write(pageContext, value);

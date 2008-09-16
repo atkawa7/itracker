@@ -162,11 +162,11 @@ public final class FormatImageActionTag extends TagSupport {
     public int doEndTag() throws JspException {
         boolean hasParams = false;
         boolean useTextActions = false;
-        Locale currLocale = null;
+        Locale locale = null;
 
         HttpSession session = pageContext.getSession();
         if(session != null) {
-            currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+            locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
             UserPreferences currUserPrefs = (UserPreferences) session.getAttribute(Constants.PREFERENCES_KEY);
             useTextActions = (currUserPrefs != null ? currUserPrefs.getUseTextActions() : false);
         }
@@ -195,9 +195,9 @@ public final class FormatImageActionTag extends TagSupport {
             buf.append(" target=\"" + target + "\"");
         }
         if(useTextActions) {
-            buf.append(" title=\"" + ITrackerResources.getString(altKey, currLocale, (arg0 == null ? "" : arg0)) + "\"");
+            buf.append(" title=\"" + ITrackerResources.getString(altKey, locale, (arg0 == null ? "" : arg0)) + "\"");
             buf.append(" class=\"action\">");
-            buf.append(ITrackerResources.getString(textActionKey, currLocale));
+            buf.append(ITrackerResources.getString(textActionKey, locale));
         } else {
             buf.append(">");
             buf.append("<img src=\"");
@@ -210,8 +210,8 @@ public final class FormatImageActionTag extends TagSupport {
             }
             buf.append("\"");
             if(altKey != null) {
-                buf.append(" alt=\"" + ITrackerResources.getString(altKey, currLocale, (arg0 == null ? "" : arg0)) + "\"");
-                buf.append(" title=\"" + ITrackerResources.getString(altKey, currLocale, (arg0 == null ? "" : arg0)) + "\"");
+                buf.append(" alt=\"" + ITrackerResources.getString(altKey, locale, (arg0 == null ? "" : arg0)) + "\"");
+                buf.append(" title=\"" + ITrackerResources.getString(altKey, locale, (arg0 == null ? "" : arg0)) + "\"");
             }
             buf.append(" border=\"" + (border == null ? "0" : border) + "\"");
             buf.append(">");

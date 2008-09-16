@@ -136,11 +136,11 @@ public class FormatHistoryEntryTag extends BodyTagSupport {
 
     public int doEndTag() throws JspException {
         if(text != null) {
-            Locale currLocale = null;
+            Locale locale = null;
 
             HttpSession session = pageContext.getSession();
             if(session != null) {
-                currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+                locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
             }
 
             if(ProjectUtilities.hasOption(ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML, projectOptions)) {
@@ -152,7 +152,7 @@ public class FormatHistoryEntryTag extends BodyTagSupport {
             }
 
             try {
-                Pattern pattern = compiler.compile("(" + ITrackerResources.getString(issueNamesKey, currLocale) + ")\\s(\\d+)", Perl5Compiler.CASE_INSENSITIVE_MASK);
+                Pattern pattern = compiler.compile("(" + ITrackerResources.getString(issueNamesKey, locale) + ")\\s(\\d+)", Perl5Compiler.CASE_INSENSITIVE_MASK);
 
                 StringBuffer buf = new StringBuffer("<a href=\"");
                 try {

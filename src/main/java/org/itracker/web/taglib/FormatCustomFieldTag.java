@@ -94,15 +94,15 @@ public final class FormatCustomFieldTag extends TagSupport {
     }
     
     public int doEndTag() throws JspException {
-        Locale currLocale = null;
+        Locale locale = null;
         
         if(field != null) {
             HttpSession session = pageContext.getSession();
             if(session != null) {
-                currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+                locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
             }
             
-            field.setLabels(currLocale);
+            field.setLabels(locale);
             
             StringBuffer buf = new StringBuffer();
             buf.append("<td class=\"" + (DISPLAY_TYPE_VIEW.equalsIgnoreCase(displayType) ? "editColumnTitle" : "editColumnTitle") +"\">");

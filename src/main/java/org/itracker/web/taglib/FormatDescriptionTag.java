@@ -74,16 +74,9 @@ public class FormatDescriptionTag extends BodyTagSupport {
     public int doEndTag() throws JspException {
         StringBuffer results = new StringBuffer();
         if(text != null) {
-           // Locale currLocale = null;
-
-//            HttpSession session = pageContext.getSession();
-//            if(session != null) {
-//                currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
-//            }
-
             // fixing bug https://sourceforge.net/tracker/index.php?func=detail&aid=1872304&group_id=54141&atid=472807
            /* if(text.length() > truncateLength) {
-                String truncateValue = ITrackerResources.getString(truncateKey, currLocale);
+                String truncateValue = ITrackerResources.getString(truncateKey, locale);
                 if(truncateValue == null) {
                     truncateValue = "";
                 }

@@ -155,11 +155,11 @@ public final class FormatLinkTag extends BodyTagSupport {
 
     public int doEndTag() throws JspException {
         boolean hasParams = false;
-        Locale currLocale = null;
+        Locale locale = null;
 
         HttpSession session = pageContext.getSession();
         if(session != null) {
-            currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+            locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
         }
 
         StringBuffer buf = new StringBuffer("<a href=\"");
@@ -190,7 +190,7 @@ public final class FormatLinkTag extends BodyTagSupport {
             buf.append(" target=\"" + target + "\"");
         }
         if(titleKey != null) {
-            buf.append(" title=\"" + ITrackerResources.getString(titleKey, currLocale, (arg0 == null ? "" : arg0)) + "\"");
+            buf.append(" title=\"" + ITrackerResources.getString(titleKey, locale, (arg0 == null ? "" : arg0)) + "\"");
         }
         if(styleClass != null) {
             buf.append(" class=\"" + styleClass + "\"");
