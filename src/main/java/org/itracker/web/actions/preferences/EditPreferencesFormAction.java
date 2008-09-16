@@ -122,7 +122,7 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
             userForm.setUseTextActions((userPrefs.getUseTextActions() ? "true" : "false"));
  
       
-            Locale locale = getCurrLocale(request);
+            Locale locale = getLocale(request);
             String statusName = UserUtilities.getStatusName(user.getStatus(), locale) ;
             request.setAttribute("statusName",statusName);
             String userLocaleAsString = ITrackerResources.getString("itracker.locale.name", userPrefs.getUserLocale()) ;
