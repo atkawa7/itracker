@@ -19,7 +19,6 @@
 package org.itracker.web.actions.project;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,7 +47,6 @@ import org.apache.struts.validator.ValidatorForm;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
-import org.itracker.model.IssueActivity;
 import org.itracker.model.IssueAttachment;
 import org.itracker.model.IssueField;
 import org.itracker.model.IssueHistory;
@@ -331,135 +329,8 @@ public class EditIssueAction extends ItrackerBaseAction {
 		issueService.updateIssue(issue, user.getId());
 
 	}
-/**
- * @deprecated
- * @param issue
- * @param user
- * @param form
- * @param issueService
- * @return
- */
-	private List<IssueActivity> processActivities(Issue issue, User user, IssueForm form,
-			IssueService issueService) {
 
-		List<IssueActivity> activities = new ArrayList<IssueActivity>();
-		if (issue.getDescription() != null
-				&& form.getDescription() != null
-				&& !form.getDescription().equals(
-						issue.getDescription())) {
 
-			if (log.isDebugEnabled()) {
-				log
-						.debug("processActivities: creating new description-change activity");
-			}
-
-			getActivity(issue, user,
-					org.itracker.model.IssueActivityType.DESCRIPTION_CHANGE);
-		}
-
-		if (form.getResolution() != null
-				&& issue.getResolution() != null
-				&& !form.getResolution()
-						.equals(issue.getResolution())) {
-			if (log.isDebugEnabled()) {
-				log
-						.debug("processActivities: creating new resolution-change activity");
-			}
-			getActivity(issue, user,
-					org.itracker.model.IssueActivityType.RESOLUTION_CHANGE, issue.getResolution());
-		}
-
-		if (form.getStatus() != null && form.getStatus() != issue.getStatus() && issue.getStatus() != -1) {
-
-			if (log.isDebugEnabled()) {
-				log
-						.debug("processActivities: creating new status-change activity");
-			}
-			getActivity(issue, user,
-					org.itracker.model.IssueActivityType.STATUS_CHANGE, IssueUtilities.getStatusName(issue.getStatus()));
-		}
-
-		if (!form.getSeverity().equals(issue.getSeverity())
-				&& issue.getSeverity() != -1) {
-			if (log.isDebugEnabled()) {
-				log
-						.debug("processActivities: creating new severity-change activity");
-			}
-			getActivity(issue, user,
-					org.itracker.model.IssueActivityType.SEVERITY_CHANGE, IssueUtilities
-					.getSeverityName(issue
-							.getSeverity()));
-		}
-
-		String existingTargetVersion = null;
-		if (form.getTargetVersion() != null
-				&& issue.getTargetVersion() != null
-				&& !form.getTargetVersion().equals(
-						issue.getTargetVersion().getId())) {
-			existingTargetVersion = issue.getTargetVersion().getNumber();
-
-			ProjectService projectService = getITrackerServices()
-					.getProjectService();
-			Version version = projectService.getProjectVersion(form
-					.getTargetVersion());
-
-			if (log.isDebugEnabled()) {
-				log
-						.debug("processActivities: creating new targetversion-change activity");
-			}
-
-			String description = existingTargetVersion + " "
-					+ ITrackerResources.getString("itracker.web.generic.to")
-					+ " ";
-			description += version.getNumber();
-			getActivity(issue, user,
-					org.itracker.model.IssueActivityType.TARGETVERSION_CHANGE,
-					description);
-
-		}
-		return activities;
-	}
-
-	private IssueActivity getActivity(Issue issue, User user,
-			org.itracker.model.IssueActivityType type) {
-		return getActivity(issue, user, type, null);
-	}
-
-	private IssueActivity getActivity(Issue issue, User user,
-			org.itracker.model.IssueActivityType type, String description) {
-		IssueActivity activity = new IssueActivity();
-		activity.setActivityType(type);
-		if (null == description) {
-			activity.setDescription(ITrackerResources
-					.getString("itracker.web.generic.from")
-					+ ": " + issue.getDescription());
-		} else {
-			activity.setDescription(description);
-		}
-		activity.setUser(user);
-		activity.setIssue(issue);
-		
-		
-		
-		
-//		ArrayList<IssueActivity> activities = new ArrayList<IssueActivity>(issue.getActivities());
-//		
-		
-		
-		
-//		issue.getActivities().add(activity);
-//		issue.setActivities(activities);
-		
-		// getITrackerServices().getIssueService().addIssueActivity(activity);
-
-		
-		if (log.isDebugEnabled()) {
-		//	log.debug("addActivity: added IssueActivity: " + activity);
-			log.debug("addActivity: issue activities are now: " + issue.getActivities());
-		}
-		
-		return activity;
-	}
 
 	private void processLimitedEdit(final Issue issue, Project project,
 			User user, Map<Integer, Set<PermissionType>> userPermissionsMap,
