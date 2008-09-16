@@ -131,7 +131,7 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                     // Fix for bug in beanutils.  Can remove this logic here and in EditLanguageAction
                     // once the bug is fixed.
                     // languageForm.set("items", items);
-                    for (Iterator iter = baseItems.keySet().iterator(); iter.hasNext(); ) {
+                    for (Iterator<String> iter = baseItems.keySet().iterator(); iter.hasNext(); ) {
                         String key = (String) iter.next();
                         String itemStr = (String) items.get(key);
                         if ( itemStr == null || itemStr.length() == 0 )
@@ -140,7 +140,7 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
 
                     Map<String,String> formItems = new HashMap<String,String>();
                     
-                    for(Iterator iter = items.keySet().iterator(); iter.hasNext(); ) {
+                    for(Iterator<String> iter = items.keySet().iterator(); iter.hasNext(); ) {
                             String key = (String) iter.next();
                             formItems.put(key.replace('.', '/'), (String) items.get(key));
                     }
@@ -154,7 +154,7 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                     langItems = configurationService.getDefinedKeys(parentLocale);
                     Map<String,String> formItems = new HashMap<String,String>();
                     
-                    for (Iterator iter = items.keySet().iterator(); iter.hasNext(); ) {
+                    for (Iterator<String> iter = items.keySet().iterator(); iter.hasNext(); ) {
                         String key = (String) iter.next();
                         formItems.put(key.replace('.', '/'), (String) langItems.get(key));
                     }
