@@ -216,13 +216,14 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 			}
 
 		}
-
-		List<NameValuePair> statuses;
-		statuses = statusList;
-		listOptions.put(IssueUtilities.FIELD_STATUS, statuses);
+		// sort by status code so it will be ascending output.
+		Collections.sort(statusList, NameValuePair.VALUE_COMPARATOR);
+		listOptions.put(IssueUtilities.FIELD_STATUS, statusList);
 
 		List<NameValuePair> severities = IssueUtilities
 				.getSeverities(locale);
+		// sort by severity code so it will be ascending output.
+		Collections.sort(severities, NameValuePair.VALUE_COMPARATOR);
 		listOptions.put(IssueUtilities.FIELD_SEVERITY, severities);
 
 		List<NameValuePair> resolutions = IssueUtilities

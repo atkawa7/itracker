@@ -19,6 +19,7 @@
 package org.itracker.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
   * Class provides basic storage for name values pairs.  The name is usually
@@ -31,9 +32,19 @@ public class NameValuePair implements Serializable, Comparable<NameValuePair> {
     
     private String value = "";
 
-    public NameValuePair() {
-    }
+    public static final Comparator<NameValuePair> KEY_COMPARATOR = new Comparator<NameValuePair>(){
+    	public int compare(NameValuePair o1, NameValuePair o2) {
+    		
+    		return o1.name.compareTo(o2.name);    		
+    	};
+    };
+    public static final Comparator<NameValuePair> VALUE_COMPARATOR = new Comparator<NameValuePair>(){
+    	public int compare(NameValuePair o1, NameValuePair o2) {
+    		return o1.value.compareTo(o2.value);    		
+    	};
+    };
 
+    
     public NameValuePair(String name, String value) {
         setName(name);
         setValue(value);
@@ -71,7 +82,10 @@ public class NameValuePair implements Serializable, Comparable<NameValuePair> {
     }
 
     public int compareTo(NameValuePair other) {
-        return this.name.compareTo(other.name);
+        return KEY_COMPARATOR.compare(this, other);
+    }
+    public int compareValueTo(NameValuePair other) {
+    	return VALUE_COMPARATOR.compare(this, other);
     }
 
     @Override

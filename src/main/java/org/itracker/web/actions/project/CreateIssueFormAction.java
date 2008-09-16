@@ -122,6 +122,8 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                 }
 
                 List<NameValuePair> severities = IssueUtilities.getSeverities(locale);
+        		// sort by severity code so it will be ascending output.
+        		Collections.sort(severities, NameValuePair.VALUE_COMPARATOR);
                 listOptions.put(new Integer(IssueUtilities.FIELD_SEVERITY), severities);
 
                 List<Component> components = new ArrayList<Component>();
@@ -148,10 +150,11 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                 issueForm.setCreatorId(currUser.getId());
                 if(severities.size() > 0) {
                     try {
+                    	// FIXME this code can not be understood simply. Documentation or simplification please.
                         int midPoint = (severities.size() / 2);
                         issueForm.setSeverity(new Integer(severities.get(midPoint).getValue()));
                     } catch(NumberFormatException nfe) {
-                        log.debug("Invalid status number found while preparing create issue form.");
+                        log.debug("Invalid status number found while preparing create issue form.", nfe);
                     }
                 }
 
