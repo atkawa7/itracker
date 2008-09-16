@@ -22,7 +22,12 @@ import java.io.IOException;
 
 public class ByteLimitExceededException extends IOException {
 
-    public ByteLimitExceededException() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public ByteLimitExceededException() {
     }
 
     public ByteLimitExceededException( String message ) {
