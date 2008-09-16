@@ -141,18 +141,8 @@ public abstract class AbstractEntity implements Entity {
 	protected static class IdComparator implements Comparator<Entity> {
 
 		public int compare(Entity a, Entity b) {
-			final int result;
-
-			if (a.getId() == null && b.getId() == null) {
-				result = 0;
-			} else if (a.getId() == null) {
-				result = -1;
-			} else if (b.getId() == null) {
-				result = 1;
-			} else {
-				result = a.getId().compareTo(b.getId());
-			}
-			return result;
+			return new CompareToBuilder().append(a.getId(), b.getId())
+					.toComparison();
 		}
 
 	}
@@ -161,18 +151,8 @@ public abstract class AbstractEntity implements Entity {
 			Comparator<AbstractEntity> {
 
 		public int compare(AbstractEntity a, AbstractEntity b) {
-			final int result;
-
-			if (a.createDate == null && b.createDate == null) {
-				result = 0;
-			} else if (a.createDate == null) {
-				result = -1;
-			} else if (b.createDate == null) {
-				result = 1;
-			} else {
-				result = a.createDate.compareTo(b.createDate);
-			}
-			return result;
+			return new CompareToBuilder().append(a.getCreateDate(),
+					b.getCreateDate()).toComparison();
 		}
 
 	}
@@ -184,18 +164,8 @@ public abstract class AbstractEntity implements Entity {
 			Comparator<AbstractEntity> {
 
 		public int compare(AbstractEntity a, AbstractEntity b) {
-			final int result;
-
-			if (a.lastModifiedDate == null && b.lastModifiedDate == null) {
-				result = 0;
-			} else if (a.lastModifiedDate == null) {
-				result = -1;
-			} else if (b.lastModifiedDate == null) {
-				result = 1;
-			} else {
-				result = a.lastModifiedDate.compareTo(b.lastModifiedDate);
-			}
-			return result;
+			return new CompareToBuilder().append(a.getLastModifiedDate(),
+					b.getLastModifiedDate()).toComparison();
 		}
 
 	}
