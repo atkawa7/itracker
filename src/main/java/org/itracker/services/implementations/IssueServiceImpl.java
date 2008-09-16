@@ -128,7 +128,7 @@ public class IssueServiceImpl implements IssueService {
 			IssueDAO issueDAO, IssueHistoryDAO issueHistoryDAO,
 			IssueRelationDAO issueRelationDAO,
 			IssueAttachmentDAO issueAttachmentDAO, ComponentDAO componentDAO,
-			IssueActivityDAO issueActivityDAO, VersionDAO versionDAO) {
+			IssueActivityDAO issueActivityDAO, VersionDAO versionDAO, NotificationService notificationService) {
 
 		this.userDAO = userDAO;
 		this.projectDAO = projectDAO;
@@ -139,6 +139,7 @@ public class IssueServiceImpl implements IssueService {
 		this.componentDAO = componentDAO;
 		this.issueActivityDAO = issueActivityDAO;
 		this.versionDAO = versionDAO;
+		this.notificationService = notificationService;
 	}
 
 	public void setNotificationService(NotificationService notificationService) {
@@ -164,7 +165,7 @@ public class IssueServiceImpl implements IssueService {
 	public List<Issue> getAllIssues() {
 		logger.warn("getAllIssues: use of deprecated API");
 		if (logger.isDebugEnabled()) {
-			logger.debug("getAllIssues: stackgtrace was",
+			logger.debug("getAllIssues: stacktrace was",
 					new RuntimeException());
 		}
 		return getIssueDAO().findAll();
@@ -881,7 +882,7 @@ public class IssueServiceImpl implements IssueService {
 			relationA.setRelatedIssue(relatedIssue);
 
 			relationA.setLastModifiedDate(new java.sql.Timestamp(
-					new java.util.Date().getTime()));
+					new Date().getTime()));
 
 			IssueRelation relationB = new IssueRelation();
 
@@ -894,7 +895,7 @@ public class IssueServiceImpl implements IssueService {
 			relationB.setRelatedIssue(issue);
 
 			relationB.setLastModifiedDate(new java.sql.Timestamp(
-					new java.util.Date().getTime()));
+					new Date().getTime()));
 
 			IssueActivity activity = new IssueActivity();
 			activity
@@ -1874,8 +1875,5 @@ public class IssueServiceImpl implements IssueService {
 		return getIssueAttachmentDAO().totalAttachmentsSize();
 	}
 
-	// public void detachIssue(Issue issue) {
-	// getIssueDAO().detach(issue);
-	//	
-	// }
+
 }
