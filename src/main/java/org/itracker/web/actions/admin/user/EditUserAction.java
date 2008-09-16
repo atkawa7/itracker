@@ -154,8 +154,8 @@ public class EditUserAction extends ItrackerBaseAction {
                     if ( permissionIntValue == UserUtilities.PERMISSION_PRODUCT_ADMIN ) {
                         List<User> users = projectService.getProjectOwners(projectIntValue);
                         HashSet<Integer> owners = new HashSet<Integer>();
-                        for ( Iterator userIterator = users.iterator(); userIterator.hasNext(); ) {
-                            User user = (User) userIterator.next();
+                        for ( Iterator<User> userIterator = users.iterator(); userIterator.hasNext(); ) {
+                            User user = userIterator.next();
                             owners.add(user.getId());
                         }
                         owners.add(editUser.getId());
