@@ -26,30 +26,35 @@ import org.apache.struts.validator.ValidatorForm;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
+ * 
  * @author ready
- *
+ * 
  */
-public class WorkflowScriptForm extends ValidatorForm  {
-    
-    String action;
-    Integer id;
-    String name;
-    Integer event;
-    String script;
-    
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		action = null;    
-		id = null;
-		name= null;
-		event= null;
-		script= null;
-    }
+public class WorkflowScriptForm extends ValidatorForm {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	String action;
+	Integer id;
+	String name;
+	Integer event;
+	String script;
 
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-        ActionErrors errors = super.validate(mapping, request);
-      
-        return errors;
-    }
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		action = null;
+		id = null;
+		name = null;
+		event = null;
+		script = null;
+	}
+
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
+		ActionErrors errors = super.validate(mapping, request);
+
+		return errors;
+	}
 
 	public String getAction() {
 		return action;
@@ -90,6 +95,5 @@ public class WorkflowScriptForm extends ValidatorForm  {
 	public void setScript(String script) {
 		this.script = script;
 	}
-
 
 }

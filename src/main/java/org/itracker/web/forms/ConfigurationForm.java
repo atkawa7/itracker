@@ -28,34 +28,35 @@ import org.apache.struts.validator.ValidatorForm;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
+ * 
  * @author ready
- *
+ * 
  */
-public class ConfigurationForm extends ValidatorForm  {
-    
-	 String action;
-     Integer id;
-     String value;
-     Integer order;
-	 String key;
+public class ConfigurationForm extends ValidatorForm {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	String action;
+	Integer id;
+	String value;
+	Integer order;
+	String key;
 
-//	  let's try to put String,String here:
-     HashMap<String,String> translations = new HashMap<String,String>();
-     
-/*	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		action = null;    
-		id = null;
-		value = null;
-		order = null;
-		key = null;
-		translations = null;
-    }
-*/
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-        ActionErrors errors = super.validate(mapping, request);
-      
-        return errors;
-    }
+	// let's try to put String,String here:
+	HashMap<String, String> translations = new HashMap<String, String>();
+
+	/*
+	 * public void reset(ActionMapping mapping, HttpServletRequest request) {
+	 * action = null; id = null; value = null; order = null; key = null;
+	 * translations = null; }
+	 */
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
+		ActionErrors errors = super.validate(mapping, request);
+
+		return errors;
+	}
 
 	public String getAction() {
 		return action;
@@ -89,13 +90,13 @@ public class ConfigurationForm extends ValidatorForm  {
 		this.order = order;
 	}
 
-//  let's try to put String,String here:
-	public HashMap<String,String> getTranslations() {
+	// let's try to put String,String here:
+	public HashMap<String, String> getTranslations() {
 		return translations;
 	}
 
-//  let's try to put String,String here:
-	public void setTranslations(HashMap<String,String> translations) {
+	// let's try to put String,String here:
+	public void setTranslations(HashMap<String, String> translations) {
 		this.translations = translations;
 	}
 
@@ -106,6 +107,5 @@ public class ConfigurationForm extends ValidatorForm  {
 	public void setValue(String value) {
 		this.value = value;
 	}
-
 
 }

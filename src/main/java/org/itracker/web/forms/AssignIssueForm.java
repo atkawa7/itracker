@@ -26,26 +26,31 @@ import org.apache.struts.validator.ValidatorForm;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
+ * 
  * @author ready
- *
+ * 
  */
-public class AssignIssueForm extends ValidatorForm  {
-    
-	  String issueId;
-      String projectId;
-      String userId;
-      
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-    	issueId = null;    
-        projectId = null;
-        userId = null;
-    }
+public class AssignIssueForm extends ValidatorForm {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	String issueId;
+	String projectId;
+	String userId;
 
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-        ActionErrors errors = super.validate(mapping, request);
-      
-        return errors;
-    }
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		issueId = null;
+		projectId = null;
+		userId = null;
+	}
+
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
+		ActionErrors errors = super.validate(mapping, request);
+
+		return errors;
+	}
 
 	public String getIssueId() {
 		return issueId;
@@ -70,6 +75,5 @@ public class AssignIssueForm extends ValidatorForm  {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-
 
 }

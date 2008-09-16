@@ -26,170 +26,174 @@ import org.apache.struts.validator.ValidatorForm;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
- *
+ * 
  * @author ready
  */
 public class SearchForm extends ValidatorForm {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	String action;
+	Integer[] components;
+	Integer contributor;
+	Integer creator;
+	String orderBy;
+	Integer owner;
+	Integer project;
+	Integer[] projects;
+	String resolution;
+	Integer[] severities;
+	Integer[] statuses;
+	Integer targetVersion;
+	String textphrase;
+	Integer type;
+	Integer[] versions;
 
-    String action;
-    Integer[] components;
-    Integer contributor;
-    Integer creator;
-    String orderBy;
-    Integer owner;
-    Integer project;
-    Integer[] projects;
-    String resolution;
-    Integer[] severities;
-    Integer[] statuses;
-    Integer targetVersion;
-    String textphrase;
-    Integer type;
-    Integer[] versions;
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		action = null;
+		components = null;
+		contributor = null;
+		creator = null;
+		orderBy = null;
+		owner = null;
+		project = null;
+		projects = null;
+		resolution = null;
+		severities = null;
+		statuses = null;
+		targetVersion = null;
+		textphrase = null;
+		type = null;
+		versions = null;
 
-    public void reset(ActionMapping mapping, HttpServletRequest request) {
-        action = null;
-        components = null;
-        contributor = null;
-        creator = null;
-        orderBy = null;
-        owner = null;
-        project = null;
-        projects = null;
-        resolution = null;
-        severities = null;
-        statuses = null;
-        targetVersion = null;
-        textphrase = null;
-        type = null;
-        versions = null;
+	}
 
-    }
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
+		ActionErrors errors = super.validate(mapping, request);
 
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-        ActionErrors errors = super.validate(mapping, request);
+		return errors;
+	}
 
-        return errors;
-    }
+	public String getAction() {
+		return action;
+	}
 
-    public String getAction() {
-        return action;
-    }
+	public void setAction(String action) {
+		this.action = action;
+	}
 
-    public void setAction(String action) {
-        this.action = action;
-    }
+	public Integer[] getComponents() {
+		return components;
+	}
 
-    public Integer[] getComponents() {
-        return components;
-    }
+	public void setComponents(Integer[] components) {
+		this.components = components;
+	}
 
-    public void setComponents(Integer[] components) {
-        this.components = components;
-    }
+	public Integer getContributor() {
+		return contributor;
+	}
 
-    public Integer getContributor() {
-        return contributor;
-    }
+	public void setContributor(Integer contributor) {
+		this.contributor = contributor;
+	}
 
-    public void setContributor(Integer contributor) {
-        this.contributor = contributor;
-    }
+	public Integer getCreator() {
+		return creator;
+	}
 
-    public Integer getCreator() {
-        return creator;
-    }
+	public void setCreator(Integer creator) {
+		this.creator = creator;
+	}
 
-    public void setCreator(Integer creator) {
-        this.creator = creator;
-    }
+	public String getOrderBy() {
+		return orderBy;
+	}
 
-    public String getOrderBy() {
-        return orderBy;
-    }
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
+	}
 
-    public void setOrderBy(String orderBy) {
-        this.orderBy = orderBy;
-    }
+	public Integer getOwner() {
+		return owner;
+	}
 
-    public Integer getOwner() {
-        return owner;
-    }
+	public void setOwner(Integer owner) {
+		this.owner = owner;
+	}
 
-    public void setOwner(Integer owner) {
-        this.owner = owner;
-    }
+	public Integer getProject() {
+		return project;
+	}
 
-    public Integer getProject() {
-        return project;
-    }
+	public void setProject(Integer project) {
+		this.project = project;
+	}
 
-    public void setProject(Integer project) {
-        this.project = project;
-    }
+	public Integer[] getProjects() {
+		return projects;
+	}
 
-    public Integer[] getProjects() {
-        return projects;
-    }
+	public void setProjects(Integer[] projects) {
+		this.projects = projects;
+	}
 
-    public void setProjects(Integer[] projects) {
-        this.projects = projects;
-    }
+	public String getResolution() {
+		return resolution;
+	}
 
-    public String getResolution() {
-        return resolution;
-    }
+	public void setResolution(String resolution) {
+		this.resolution = resolution;
+	}
 
-    public void setResolution(String resolution) {
-        this.resolution = resolution;
-    }
+	public Integer[] getSeverities() {
+		return severities;
+	}
 
-    public Integer[] getSeverities() {
-        return severities;
-    }
+	public void setSeverities(Integer[] severities) {
+		this.severities = severities;
+	}
 
-    public void setSeverities(Integer[] severities) {
-        this.severities = severities;
-    }
+	public Integer[] getStatuses() {
+		return statuses;
+	}
 
-    public Integer[] getStatuses() {
-        return statuses;
-    }
+	public void setStatuses(Integer[] statuses) {
+		this.statuses = statuses;
+	}
 
-    public void setStatuses(Integer[] statuses) {
-        this.statuses = statuses;
-    }
+	public Integer getTargetVersion() {
+		return targetVersion;
+	}
 
-    public Integer getTargetVersion() {
-        return targetVersion;
-    }
+	public void setTargetVersion(Integer targetVersion) {
+		this.targetVersion = targetVersion;
+	}
 
-    public void setTargetVersion(Integer targetVersion) {
-        this.targetVersion = targetVersion;
-    }
+	public String getTextphrase() {
+		return textphrase;
+	}
 
-    public String getTextphrase() {
-        return textphrase;
-    }
+	public void setTextphrase(String textphrase) {
+		this.textphrase = textphrase;
+	}
 
-    public void setTextphrase(String textphrase) {
-        this.textphrase = textphrase;
-    }
+	public Integer getType() {
+		return type;
+	}
 
-    public Integer getType() {
-        return type;
-    }
+	public void setType(Integer type) {
+		this.type = type;
+	}
 
-    public void setType(Integer type) {
-        this.type = type;
-    }
+	public Integer[] getVersions() {
+		return versions;
+	}
 
-    public Integer[] getVersions() {
-        return versions;
-    }
-
-    public void setVersions(Integer[] versions) {
-        this.versions = versions;
-    }
+	public void setVersions(Integer[] versions) {
+		this.versions = versions;
+	}
 
 }

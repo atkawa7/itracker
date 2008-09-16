@@ -26,32 +26,38 @@ import org.apache.struts.validator.ValidatorForm;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
+ * 
  * @author ready
- *
+ * 
  */
-public class ImportForm extends ValidatorForm  {
-		org.apache.struts.upload.FormFile importFile;
-	    Boolean optionreuseusers;
-	    Boolean optionreuseprojects;
-	    Boolean optionreuseconfig;
-	    Boolean optionreusefields;
-	    Boolean optioncreatepasswords;
- 
+public class ImportForm extends ValidatorForm {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	org.apache.struts.upload.FormFile importFile;
+	Boolean optionreuseusers;
+	Boolean optionreuseprojects;
+	Boolean optionreuseconfig;
+	Boolean optionreusefields;
+	Boolean optioncreatepasswords;
+
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		importFile = null;    
+		importFile = null;
 		optionreuseusers = null;
 		optionreuseprojects = null;
 		optionreuseconfig = null;
 		optionreusefields = null;
 		optioncreatepasswords = null;
-     
-    }
 
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-        ActionErrors errors = super.validate(mapping, request);
-      
-        return errors;
-    }
+	}
+
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
+		ActionErrors errors = super.validate(mapping, request);
+
+		return errors;
+	}
 
 	public org.apache.struts.upload.FormFile getImportFile() {
 		return importFile;
@@ -100,6 +106,5 @@ public class ImportForm extends ValidatorForm  {
 	public void setOptionreuseusers(Boolean optionreuseusers) {
 		this.optionreuseusers = optionreuseusers;
 	}
-
 
 }

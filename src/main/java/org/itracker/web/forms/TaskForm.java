@@ -26,42 +26,46 @@ import org.apache.struts.validator.ValidatorForm;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
+ * 
  * @author ready
- *
+ * 
  */
-public class TaskForm extends ValidatorForm  {
-    
-   String action;
-   Integer id;
-   String  months;
-   String daysOfMonth;
-   String hours;
-   String minutes;
-   String weekdays;
-   String className;
-   String classNameText;
-   String args;
-    
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		action = null;    
-		id = null;
-		months= null;
-		daysOfMonth= null;
-		hours= null;
-		minutes= null;
-		weekdays= null;
-		className= null;
-		classNameText= null;
-		args = null;
-		
-     
-    }
+public class TaskForm extends ValidatorForm {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	String action;
+	Integer id;
+	String months;
+	String daysOfMonth;
+	String hours;
+	String minutes;
+	String weekdays;
+	String className;
+	String classNameText;
+	String args;
 
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-        ActionErrors errors = super.validate(mapping, request);
-      
-        return errors;
-    }
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		action = null;
+		id = null;
+		months = null;
+		daysOfMonth = null;
+		hours = null;
+		minutes = null;
+		weekdays = null;
+		className = null;
+		classNameText = null;
+		args = null;
+
+	}
+
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
+		ActionErrors errors = super.validate(mapping, request);
+
+		return errors;
+	}
 
 	public String getAction() {
 		return action;
@@ -142,6 +146,5 @@ public class TaskForm extends ValidatorForm  {
 	public void setWeekdays(String weekdays) {
 		this.weekdays = weekdays;
 	}
-
 
 }

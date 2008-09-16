@@ -26,29 +26,34 @@ import org.apache.struts.validator.ValidatorForm;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
+ * 
  * @author ready
- *
+ * 
  */
-public class IssueRelationForm extends ValidatorForm  {
-    
-	  String caller;
-      Integer issueId;
-      Integer relatedIssueId;
-      Integer relationType;
+public class IssueRelationForm extends ValidatorForm {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	String caller;
+	Integer issueId;
+	Integer relatedIssueId;
+	Integer relationType;
 
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		caller = null;    
+		caller = null;
 		issueId = null;
-		relatedIssueId = null;    
-		relationType = null;    
-     
-    }
+		relatedIssueId = null;
+		relationType = null;
 
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-        ActionErrors errors = super.validate(mapping, request);
-      
-        return errors;
-    }
+	}
+
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
+		ActionErrors errors = super.validate(mapping, request);
+
+		return errors;
+	}
 
 	public String getCaller() {
 		return caller;
@@ -81,6 +86,5 @@ public class IssueRelationForm extends ValidatorForm  {
 	public void setRelationType(Integer relationType) {
 		this.relationType = relationType;
 	}
-
 
 }

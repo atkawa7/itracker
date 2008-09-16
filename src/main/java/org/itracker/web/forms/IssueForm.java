@@ -48,285 +48,314 @@ import org.itracker.web.actions.project.EditIssueFormAction;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.RequestHelper;
 
-
-
 /**
  * This form is by the struts actions to pass issue data.
  */
-public class IssueForm extends ITrackerForm  {
-    
+public class IssueForm extends ITrackerForm {
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = Logger.getLogger(IssueForm.class);
-	
-     Integer id = null;
-     String caller = null;
-     Integer projectId = null;
-     Integer creatorId = null;
-     Integer ownerId = null;
-     String description = null;
-     Integer severity = null;
-     Integer status = null;
-     Integer prevStatus = null;
-     String resolution = null;
-     Integer targetVersion = null;
-     Integer[] components = new Integer[0];
-     Integer[] versions = new Integer[0];
-     String attachmentDescription = null;
-     FormFile attachment = null;
-     String history = null;
-    // lets try to put Integer,String here:
-     HashMap<String,String> customFields = new HashMap<String,String>();
-     Integer relationType = null;
-     Integer relatedIssueId = null;
-    
-    public FormFile getAttachment() {
-        return attachment;
-    }
-    
-    public void setAttachment(FormFile attachment) {
-        this.attachment = attachment;
-    }
-    
-    public String getAttachmentDescription() {
-        return attachmentDescription;
-    }
-    
-    public void setAttachmentDescription(String attachmentDescription) {
-        this.attachmentDescription = attachmentDescription;
-    }
-    
-    public String getCaller() {
-        return caller;
-    }
-    
-    public void setCaller(String caller) {
-        this.caller = caller;
-    }
-    
-    public Integer[] getComponents() {
-        return components;
-    }
-    
-    public void setComponents(Integer[] components) {
-        this.components = components;
-    }
-    
-    public Integer getCreatorId() {
-        return creatorId;
-    }
-    
-    public void setCreatorId(Integer creatorId) {
-        this.creatorId = creatorId;
-    }
-    // let's try to put Integer,String here:
-    public HashMap<String,String> getCustomFields() {
-        return customFields;
-    }
-//  let's try to put Integer,String here:
-    public void setCustomFields(HashMap<String,String> customFields) {
-        this.customFields = customFields;
-    }
-    
-    public String getDescription() {
-        return description;
-    }
-    
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    
-    public String getHistory() {
-        return history;
-    }
-    
-    public void setHistory(String history) {
-        this.history = history;
-    }
-    
-    public Integer getId() {
-        return id;
-    }
-    
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    
-    public Integer getOwnerId() {
-        return ownerId;
-    }
-    
-    public void setOwnerId(Integer ownerId) {
-        this.ownerId = ownerId;
-    }
-    
-    public Integer getPrevStatus() {
-        return prevStatus;
-    }
-    
-    public void setPrevStatus(Integer prevStatus) {
-        this.prevStatus = prevStatus;
-    }
-    
-    public Integer getProjectId() {
-        return projectId;
-    }
-    
-    public void setProjectId(Integer projectId) {
-        this.projectId = projectId;
-    }
-    
-    public Integer getRelatedIssueId() {
-        return relatedIssueId;
-    }
-    
-    public void setRelatedIssueId(Integer relatedIssueId) {
-        this.relatedIssueId = relatedIssueId;
-    }
-    
-    public Integer getRelationType() {
-        return relationType;
-    }
-    
-    public void setRelationType(Integer relationType) {
-        this.relationType = relationType;
-    }
-    
-    public String getResolution() {
-        return resolution;
-    }
-    
-    public void setResolution(String resolution) {
-        this.resolution = resolution;
-    }
-    
-    public Integer getSeverity() {
-        return severity;
-    }
-    
-    public void setSeverity(Integer severity) {
-        this.severity = severity;
-    }
-    
-    public Integer getStatus() {
-        return status;
-    }
-    
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-    
-    public Integer getTargetVersion() {
-        return targetVersion;
-    }
-    
-    public void setTargetVersion(Integer targetVersion) {
-        this.targetVersion = targetVersion;
-    }
-    
-    public Integer[] getVersions() {
-        return versions;
-    }
-    
-    public void setVersions(Integer[] versions) {
-        this.versions = versions;
-    }
-    
-    /**
-     * This methods adds in validation for custom fields.  It makes sure the datatype
-     * matches and also that all required fields have been populated.
-     * @param mapping the ActionMapping object
-     * @param request the current HttpServletRequest object
-     * @return an ActionErrors object containing any validation errors
-     */
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-        ActionErrors errors = super.validate(mapping, request);
-        
-        if (log.isDebugEnabled()) {
-        	log.debug("validate called: mapping: " + mapping + ", request: " + request + ", errors: " + errors);
-        }
-        
 
-        try {
-        	if (null != getId()) {
-	            Issue issue = getITrackerServices().getIssueService().getIssue(getId());
-	            
-	            Locale locale = (Locale) request.getSession().getAttribute(Constants.LOCALE_KEY);
-                User currUser = (User) request.getSession().getAttribute(Constants.USER_KEY);
-                List<NameValuePair> ownersList = UserUtilities.getAssignableIssueOwnersList(issue, issue.getProject(), currUser, locale, 
-						getITrackerServices().getUserService(), RequestHelper.getUserPermissions(request.getSession()));
+	Integer id = null;
+	String caller = null;
+	Integer projectId = null;
+	Integer creatorId = null;
+	Integer ownerId = null;
+	String description = null;
+	Integer severity = null;
+	Integer status = null;
+	Integer prevStatus = null;
+	String resolution = null;
+	Integer targetVersion = null;
+	Integer[] components = new Integer[0];
+	Integer[] versions = new Integer[0];
+	String attachmentDescription = null;
+	FormFile attachment = null;
+	String history = null;
+	// lets try to put Integer,String here:
+	HashMap<String, String> customFields = new HashMap<String, String>();
+	Integer relationType = null;
+	Integer relatedIssueId = null;
 
-	            EditIssueFormAction.setupJspEnv(mapping, this, request, issue,
+	public FormFile getAttachment() {
+		return attachment;
+	}
+
+	public void setAttachment(FormFile attachment) {
+		this.attachment = attachment;
+	}
+
+	public String getAttachmentDescription() {
+		return attachmentDescription;
+	}
+
+	public void setAttachmentDescription(String attachmentDescription) {
+		this.attachmentDescription = attachmentDescription;
+	}
+
+	public String getCaller() {
+		return caller;
+	}
+
+	public void setCaller(String caller) {
+		this.caller = caller;
+	}
+
+	public Integer[] getComponents() {
+		return components;
+	}
+
+	public void setComponents(Integer[] components) {
+		this.components = components;
+	}
+
+	public Integer getCreatorId() {
+		return creatorId;
+	}
+
+	public void setCreatorId(Integer creatorId) {
+		this.creatorId = creatorId;
+	}
+
+	// let's try to put Integer,String here:
+	public HashMap<String, String> getCustomFields() {
+		return customFields;
+	}
+
+	// let's try to put Integer,String here:
+	public void setCustomFields(HashMap<String, String> customFields) {
+		this.customFields = customFields;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getHistory() {
+		return history;
+	}
+
+	public void setHistory(String history) {
+		this.history = history;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getOwnerId() {
+		return ownerId;
+	}
+
+	public void setOwnerId(Integer ownerId) {
+		this.ownerId = ownerId;
+	}
+
+	public Integer getPrevStatus() {
+		return prevStatus;
+	}
+
+	public void setPrevStatus(Integer prevStatus) {
+		this.prevStatus = prevStatus;
+	}
+
+	public Integer getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Integer projectId) {
+		this.projectId = projectId;
+	}
+
+	public Integer getRelatedIssueId() {
+		return relatedIssueId;
+	}
+
+	public void setRelatedIssueId(Integer relatedIssueId) {
+		this.relatedIssueId = relatedIssueId;
+	}
+
+	public Integer getRelationType() {
+		return relationType;
+	}
+
+	public void setRelationType(Integer relationType) {
+		this.relationType = relationType;
+	}
+
+	public String getResolution() {
+		return resolution;
+	}
+
+	public void setResolution(String resolution) {
+		this.resolution = resolution;
+	}
+
+	public Integer getSeverity() {
+		return severity;
+	}
+
+	public void setSeverity(Integer severity) {
+		this.severity = severity;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Integer getTargetVersion() {
+		return targetVersion;
+	}
+
+	public void setTargetVersion(Integer targetVersion) {
+		this.targetVersion = targetVersion;
+	}
+
+	public Integer[] getVersions() {
+		return versions;
+	}
+
+	public void setVersions(Integer[] versions) {
+		this.versions = versions;
+	}
+
+	/**
+	 * This methods adds in validation for custom fields. It makes sure the
+	 * datatype matches and also that all required fields have been populated.
+	 * 
+	 * @param mapping
+	 *            the ActionMapping object
+	 * @param request
+	 *            the current HttpServletRequest object
+	 * @return an ActionErrors object containing any validation errors
+	 */
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
+		ActionErrors errors = super.validate(mapping, request);
+
+		if (log.isDebugEnabled()) {
+			log.debug("validate called: mapping: " + mapping + ", request: "
+					+ request + ", errors: " + errors);
+		}
+
+		try {
+			if (null != getId()) {
+				Issue issue = getITrackerServices().getIssueService().getIssue(
+						getId());
+
+				Locale locale = (Locale) request.getSession().getAttribute(
+						Constants.LOCALE_KEY);
+				User currUser = (User) request.getSession().getAttribute(
+						Constants.USER_KEY);
+				List<NameValuePair> ownersList = UserUtilities
+						.getAssignableIssueOwnersList(issue,
+								issue.getProject(), currUser, locale,
+								getITrackerServices().getUserService(),
+								RequestHelper.getUserPermissions(request
+										.getSession()));
+
+				EditIssueFormAction.setupJspEnv(mapping, this, request, issue,
 						getITrackerServices().getIssueService(),
 						getITrackerServices().getUserService(), RequestHelper
-								.getUserPermissions(request.getSession()), 
-								EditIssueFormAction.getListOptions(request, issue, ownersList, RequestHelper.getUserPermissions(request.getSession()), issue.getProject(), currUser), errors);
-	            
-	            
-	            if(errors.isEmpty() && issue.getProject() == null) {
-	                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-	            } else if(errors.isEmpty() && issue.getProject().getStatus() != Status.ACTIVE) {
-	                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
-	            } else if(errors.isEmpty()) {
-	                
-	                
-	            	validateProjectFields(issue, request, errors);
-	                validateProjectScripts(issue, errors);
-	            }
-        	}
-        } catch(Exception e) {
-            e.printStackTrace();
-            log.error("validate: unexpected exception", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        }
-        if (log.isDebugEnabled()) {
-        	log.debug("validate: returning errors: " + errors);
-        }
-        return errors;
-    }
-    
-    private static void validateProjectFields(Issue issue, HttpServletRequest request, ActionErrors errors) {
-        List<CustomField> projectFields = issue.getProject().getCustomFields();
-        if(projectFields.size() > 0) {
-            HttpSession session = request.getSession();
+								.getUserPermissions(request.getSession()),
+						EditIssueFormAction.getListOptions(request, issue,
+								ownersList, RequestHelper
+										.getUserPermissions(request
+												.getSession()), issue
+										.getProject(), currUser), errors);
 
-            Locale locale = ITrackerResources.getLocale();
-            if(session != null) {
-                locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
-            }
-            
-            ResourceBundle bundle = ITrackerResources.getBundle(locale);
-            
-            for(int i = 0; i < projectFields.size(); i++) {
-                CustomField customField = projectFields.get(i);
-                
-                String fieldValue = request.getParameter("customFields(" + customField.getId() +")");
-                if(fieldValue != null && ! fieldValue.equals("")) {
-                    
-                    // Don't create an IssueField only so that we can call 
-                    // setValue to validate the value! 
-                    //IssueField issueField = new IssueField(projectFields.get(i));
-                    try {
-                        customField.checkAssignable(fieldValue, locale, bundle);
-                    } catch(IssueException ie) {
-                        String label = CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId(), locale);
-                        errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(ie.getType(), label));
-                    }
-                } else if(projectFields.get(i).isRequired()) {
-                    String label = CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId(), locale);
-                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(IssueException.TYPE_CF_REQ_FIELD, label));
-                }
-            }
-        }
-    }
-    
-    private void validateProjectScripts(Issue issue, ActionErrors errors) throws WorkflowException {
+				if (errors.isEmpty() && issue.getProject() == null) {
+					errors.add(ActionMessages.GLOBAL_MESSAGE,
+							new ActionMessage(
+									"itracker.web.error.invalidproject"));
+				} else if (errors.isEmpty()
+						&& issue.getProject().getStatus() != Status.ACTIVE) {
+					errors.add(ActionMessages.GLOBAL_MESSAGE,
+							new ActionMessage(
+									"itracker.web.error.projectlocked"));
+				} else if (errors.isEmpty()) {
 
-        List<ProjectScript> scripts = issue.getProject().getScripts();
-        WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONVALIDATE, null, errors, this);
-    }
-    
+					validateProjectFields(issue, request, errors);
+					validateProjectScripts(issue, errors);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("validate: unexpected exception", e);
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"itracker.web.error.system"));
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("validate: returning errors: " + errors);
+		}
+		return errors;
+	}
+
+	private static void validateProjectFields(Issue issue,
+			HttpServletRequest request, ActionErrors errors) {
+		List<CustomField> projectFields = issue.getProject().getCustomFields();
+		if (projectFields.size() > 0) {
+			HttpSession session = request.getSession();
+
+			Locale locale = ITrackerResources.getLocale();
+			if (session != null) {
+				locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+			}
+
+			ResourceBundle bundle = ITrackerResources.getBundle(locale);
+
+			for (int i = 0; i < projectFields.size(); i++) {
+				CustomField customField = projectFields.get(i);
+
+				String fieldValue = request.getParameter("customFields("
+						+ customField.getId() + ")");
+				if (fieldValue != null && !fieldValue.equals("")) {
+
+					// Don't create an IssueField only so that we can call
+					// setValue to validate the value!
+					// IssueField issueField = new
+					// IssueField(projectFields.get(i));
+					try {
+						customField.checkAssignable(fieldValue, locale, bundle);
+					} catch (IssueException ie) {
+						String label = CustomFieldUtilities.getCustomFieldName(
+								projectFields.get(i).getId(), locale);
+						errors.add(ActionMessages.GLOBAL_MESSAGE,
+								new ActionMessage(ie.getType(), label));
+					}
+				} else if (projectFields.get(i).isRequired()) {
+					String label = CustomFieldUtilities.getCustomFieldName(
+							projectFields.get(i).getId(), locale);
+					errors.add(ActionMessages.GLOBAL_MESSAGE,
+							new ActionMessage(IssueException.TYPE_CF_REQ_FIELD,
+									label));
+				}
+			}
+		}
+	}
+
+	private void validateProjectScripts(Issue issue, ActionErrors errors)
+			throws WorkflowException {
+
+		List<ProjectScript> scripts = issue.getProject().getScripts();
+		WorkflowUtilities.processFieldScripts(scripts,
+				WorkflowUtilities.EVENT_FIELD_ONVALIDATE, null, errors, this);
+	}
+
 }

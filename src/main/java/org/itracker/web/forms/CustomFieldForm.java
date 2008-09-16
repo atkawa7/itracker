@@ -28,37 +28,37 @@ import org.apache.struts.validator.ValidatorForm;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
+ * 
  * @author ready
- *
+ * 
  */
-public class CustomFieldForm extends ValidatorForm  {
-      String action = null;
-      Integer id = null;
-      Integer fieldType = null;
-      String required = null;
-      String dateFormat = null;
-      String sortOptionsByName = null;
-      String value = null;
-//    let's try to put String,String here:
-      HashMap<String,String> translations = new HashMap<String,String>();
- 
-/*	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		action = null;    
-		id = null;
-		fieldType = null;
-		required= null;
-		dateFormat= null;
-		sortOptionsByName= null;
-		value= null;
-		translations = null;
-     
-    }
-*/
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-        ActionErrors errors = super.validate(mapping, request);
-      
-        return errors;
-    }
+public class CustomFieldForm extends ValidatorForm {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	String action = null;
+	Integer id = null;
+	Integer fieldType = null;
+	String required = null;
+	String dateFormat = null;
+	String sortOptionsByName = null;
+	String value = null;
+	// let's try to put String,String here:
+	HashMap<String, String> translations = new HashMap<String, String>();
+
+	/*
+	 * public void reset(ActionMapping mapping, HttpServletRequest request) {
+	 * action = null; id = null; fieldType = null; required= null; dateFormat=
+	 * null; sortOptionsByName= null; value= null; translations = null;
+	 *  }
+	 */
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
+		ActionErrors errors = super.validate(mapping, request);
+
+		return errors;
+	}
 
 	public String getAction() {
 		return action;
@@ -107,12 +107,14 @@ public class CustomFieldForm extends ValidatorForm  {
 	public void setSortOptionsByName(String sortOptionsByName) {
 		this.sortOptionsByName = sortOptionsByName;
 	}
-//  let's try to put String,String here:
-	public HashMap<String,String> getTranslations() {
+
+	// let's try to put String,String here:
+	public HashMap<String, String> getTranslations() {
 		return translations;
 	}
-//  let's try to put String,String here:
-	public void setTranslations(HashMap<String,String> translations) {
+
+	// let's try to put String,String here:
+	public void setTranslations(HashMap<String, String> translations) {
 		this.translations = translations;
 	}
 
@@ -123,6 +125,5 @@ public class CustomFieldForm extends ValidatorForm  {
 	public void setValue(String value) {
 		this.value = value;
 	}
-
 
 }

@@ -26,41 +26,46 @@ import org.apache.struts.validator.ValidatorForm;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
+ * 
  * @author ready
- *
+ * 
  */
-public class ReportForm extends ValidatorForm  {
-     
-     String action;
-     //String id;
-     Integer id;
-     String name;
-     String nameKey;
-     String description;
-     Integer dataType;
-     Integer reportType;
-     org.apache.struts.upload.FormFile fileDataFile;
-     String fileData;
-     String className;
-     
+public class ReportForm extends ValidatorForm {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	String action;
+	// String id;
+	Integer id;
+	String name;
+	String nameKey;
+	String description;
+	Integer dataType;
+	Integer reportType;
+	org.apache.struts.upload.FormFile fileDataFile;
+	String fileData;
+	String className;
+
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		action = null;    
+		action = null;
 		id = null;
 		name = null;
 		nameKey = null;
-		description = null;   
-		dataType = null;   
-		reportType = null; 
-                fileDataFile = null;
-		fileData = null;   
-		className = null;   
-    }
+		description = null;
+		dataType = null;
+		reportType = null;
+		fileDataFile = null;
+		fileData = null;
+		className = null;
+	}
 
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-        ActionErrors errors = super.validate(mapping, request);
-      
-        return errors;
-    }
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
+		ActionErrors errors = super.validate(mapping, request);
+
+		return errors;
+	}
 
 	public String getAction() {
 		return action;
@@ -141,6 +146,5 @@ public class ReportForm extends ValidatorForm  {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 
 }
