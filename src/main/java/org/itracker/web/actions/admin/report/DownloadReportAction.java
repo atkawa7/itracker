@@ -51,9 +51,9 @@ public class DownloadReportAction extends ItrackerBaseAction {
         String pageTitleKey = "";
         String pageTitleArg = "";
         
-        if(! isLoggedIn(request, response)) {
-            return mapping.findForward("login");
-        }
+//        if(! isLoggedIn(request, response)) {
+//            return mapping.findForward("login");
+//        }
 
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
