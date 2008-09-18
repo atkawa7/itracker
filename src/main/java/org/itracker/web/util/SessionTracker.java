@@ -18,54 +18,63 @@
 
 package org.itracker.web.util;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
 
-
 /**
  * What's this for? Please comment!
- *
+ * 
  * @author ready
  */
-public class SessionTracker {
+public class SessionTracker implements Serializable {
 
-    private final Logger logger;
-    private Date now;
-    private String login;
-    private String sessionId;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static transient final Logger logger = Logger
+			.getLogger(SessionTracker.class);
+	private Date now;
+	private String login;
+	private String sessionId;
 
-    public SessionTracker() {
-        now = new Date();
-        this.logger = Logger.getLogger(getClass());
-    }
+	public SessionTracker() {
+		now = new Date();
+	}
 
-    public SessionTracker(String login, String sessionId) {
-        this();
-        this.login = login;
-        this.sessionId = sessionId;
-    }
+	public SessionTracker(String login, String sessionId) {
+		this();
+		this.login = login;
+		this.sessionId = sessionId;
+	}
 
-    protected void finalize() throws Throwable {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Invalidating SessionManager info for " + this.login);
-        }
-        SessionManager.invalidateSession(this.login);
-    }
+	protected void finalize() throws Throwable {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Invalidating SessionManager info for " + this.login);
+		}
+		SessionManager.invalidateSession(this.login);
+	}
 
-    public String getSessionId() {
-        return sessionId;
-    }
+	public String getSessionId() {
+		return sessionId;
+	}
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
 
-    public Date getNow() {
-        return now;
-    }
+	public Date getNow() {
+		if (null == now)
+			return null;
+		return new Date(now.getTime());
+	}
 
-    public void setNow(Date now) {
-        this.now = now;
-    }
+	public void setNow(Date now) {
+		if (null == now)
+			this.now = null;
+		else
+			this.now = new Date(now.getTime());
+	}
 }

@@ -48,8 +48,8 @@ public class LoginUtilities {
 							request.getContextPath().length())
 							+ (request.getQueryString() != null ? "?"
 									+ request.getQueryString() : "");
-					request.setAttribute(Constants.AUTH_TYPE_KEY, new Integer(
-							AuthenticationConstants.AUTH_TYPE_REQUEST));
+					request.setAttribute(Constants.AUTH_TYPE_KEY,
+							AuthenticationConstants.AUTH_TYPE_REQUEST);
 					request.setAttribute(Constants.AUTH_REDIRECT_KEY,
 							redirectURL);
 					request.setAttribute("processLogin", "true");
@@ -88,11 +88,9 @@ public class LoginUtilities {
 								request.setAttribute(Constants.AUTH_LOGIN_KEY,
 										cookies[i].getValue().substring(0,
 												seperator));
-								request
-										.setAttribute(
-												Constants.AUTH_TYPE_KEY,
-												new Integer(
-														AuthenticationConstants.AUTH_TYPE_PASSWORD_ENC));
+								request.setAttribute(Constants.AUTH_TYPE_KEY,
+
+								AuthenticationConstants.AUTH_TYPE_PASSWORD_ENC);
 								request.setAttribute(Constants.AUTH_VALUE_KEY,
 										cookies[i].getValue().substring(
 												seperator + 1));
@@ -168,84 +166,80 @@ public class LoginUtilities {
 		Locale requestLocale = null;
 		HttpSession session = request.getSession(true);
 		try {
-			if (request != null) {
 
-				requestLocale = (Locale) request
-						.getAttribute(Constants.LOCALE_KEY);
+			requestLocale = (Locale) request.getAttribute(Constants.LOCALE_KEY);
 
+			if (logger.isDebugEnabled()) {
+				logger.debug("getCurrentLocale: request-attribute was "
+						+ requestLocale);
+			}
+
+			if (null == requestLocale) {
+				// get locale from request param
+				requestLocale = ITrackerResources.getLocale(request
+						.getParameter("loc"));
 				if (logger.isDebugEnabled()) {
-					logger.debug("getCurrentLocale: request-attribute was "
+					logger.debug("getCurrentLocale: request-parameter was "
 							+ requestLocale);
 				}
+			}
 
-				if (null == requestLocale) {
-					// get locale from request param
-					requestLocale = ITrackerResources.getLocale(request
-							.getParameter("loc"));
+			if (null == requestLocale) {
+				// get it from the session
+				requestLocale = (Locale) session
+						.getAttribute(Constants.LOCALE_KEY);
+				if (logger.isDebugEnabled()) {
+					logger.debug("getCurrentLocale: session-attribute was "
+							+ requestLocale);
+				}
+			}
+
+			if (null == requestLocale) {
+				ResourceBundle bundle = ITrackerResources.getBundle(request
+						.getLocale());
+				if (logger.isDebugEnabled()) {
+					logger
+							.debug("getCurrentLocale: trying request header locale "
+									+ request.getLocale());
+				}
+				if (bundle.getLocale().getLanguage().equals(
+						request.getLocale().getLanguage())) {
+					requestLocale = request.getLocale();
 					if (logger.isDebugEnabled()) {
-						logger.debug("getCurrentLocale: request-parameter was "
+						logger.debug("getCurrentLocale: request-locale was "
 								+ requestLocale);
 					}
 				}
+			}
 
-				if (null == requestLocale) {
-					// get it from the session
-					requestLocale = (Locale) session
-							.getAttribute(Constants.LOCALE_KEY);
-					if (logger.isDebugEnabled()) {
-						logger.debug("getCurrentLocale: session-attribute was "
-								+ requestLocale);
-					}
-				}
+			// is there no way to detect supported locales of current
+			// installation?
 
-				if (null == requestLocale) {
-					ResourceBundle bundle = ITrackerResources.getBundle(request
-							.getLocale());
+			if (null == requestLocale) {
+				Enumeration<Locale> locales = (Enumeration<Locale>) request
+						.getLocales();
+				ResourceBundle bundle;
+				Locale locale;
+				while (locales.hasMoreElements()) {
+					locale = (Locale) locales.nextElement();
+					bundle = ITrackerResources.getBundle(locale);
 					if (logger.isDebugEnabled()) {
 						logger
-								.debug("getCurrentLocale: trying request header locale "
-										+ request.getLocale());
+								.debug("getCurrentLocale: request-locales prcessing "
+										+ locale + ", bundle: " + bundle);
 					}
 					if (bundle.getLocale().getLanguage().equals(
-							request.getLocale().getLanguage())) {
-						requestLocale = request.getLocale();
+							locale.getLanguage())) {
+						requestLocale = locale;
 						if (logger.isDebugEnabled()) {
 							logger
-									.debug("getCurrentLocale: request-locale was "
+									.debug("getCurrentLocale: request-locales locale was "
 											+ requestLocale);
 						}
 					}
 				}
-
-				// is there no way to detect supported locales of current
-				// installation?
-
-				if (null == requestLocale) {
-					Enumeration<Locale> locales = (Enumeration<Locale>) request
-							.getLocales();
-					ResourceBundle bundle;
-					Locale locale;
-					while (locales.hasMoreElements()) {
-						locale = (Locale) locales.nextElement();
-						bundle = ITrackerResources.getBundle(locale);
-						if (logger.isDebugEnabled()) {
-							logger
-									.debug("getCurrentLocale: request-locales prcessing "
-											+ locale + ", bundle: " + bundle);
-						}
-						if (bundle.getLocale().getLanguage().equals(
-								locale.getLanguage())) {
-							requestLocale = locale;
-							if (logger.isDebugEnabled()) {
-								logger
-										.debug("getCurrentLocale: request-locales locale was "
-												+ requestLocale);
-							}
-						}
-					}
-				}
-
 			}
+
 		} finally {
 			if (null == requestLocale) {
 				// fall back to default locale

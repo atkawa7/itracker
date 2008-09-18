@@ -59,7 +59,7 @@ public class NamingUtilites {
 			} catch (NamingException e) {
 				log.warn("getStringValue: failed to create InitialContext", e);
 				if (log.isDebugEnabled())
-					log.debug("getStringValue: context was " + ctx);
+					log.debug("getStringValue: context was null, exception from new initial context caught", e);
 			}
 		}
 	

@@ -74,7 +74,7 @@ public class SessionManager {
     }
 
     public static void setSessionNeedsReset(String login) {
-        activeSessionsReset.put(login, new Integer(1));
+        activeSessionsReset.put(login, 1);
     }
 
     public static void addRenamedLogin(String prevLogin, String newLogin) {
@@ -95,7 +95,7 @@ public class SessionManager {
 
     public static void setAllSessionsNeedsReset() {
         for(Iterator<String> iter = activeSessionsStarted.keySet().iterator(); iter.hasNext(); ) {
-            activeSessionsReset.put((String) iter.next(), new Integer(1));
+            activeSessionsReset.put((String) iter.next(), 1);
         }
     }
 
