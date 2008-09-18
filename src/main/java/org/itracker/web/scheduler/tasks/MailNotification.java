@@ -90,7 +90,7 @@ public class MailNotification extends BaseJob {
         Folder src_folder = store.getFolder(folderName);
 
         if (src_folder == null) {
-            throw new NotificationException("Unable to get folder: " + src_folder);
+            throw new NotificationException("Unable to get folder: null");
         }
         // Get message count
         //

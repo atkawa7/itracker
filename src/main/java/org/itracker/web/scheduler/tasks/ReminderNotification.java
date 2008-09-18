@@ -112,7 +112,7 @@ public class ReminderNotification extends BaseJob {
             Date currentDate = new Date();
 
             if(projectId > 0) {
-                issues = issueService.getIssuesByProjectId(new Integer(projectId), IssueUtilities.STATUS_RESOLVED);
+                issues = issueService.getIssuesByProjectId(projectId, IssueUtilities.STATUS_RESOLVED);
             } else {
                 issues = issueService.getIssuesWithStatusLessThan(IssueUtilities.STATUS_RESOLVED);
             }
@@ -134,7 +134,7 @@ public class ReminderNotification extends BaseJob {
                             }
                         }
                         logger.debug("Sending reminder notification for issue " + issues.get(i).getId() + " to " + addresses.size() + " users.");
-                        issueService.sendNotification(issues.get(i).getId(), NotificationUtilities.TYPE_ISSUE_REMINDER, baseURL, addresses, new Integer(numDays));
+                        issueService.sendNotification(issues.get(i).getId(), NotificationUtilities.TYPE_ISSUE_REMINDER, baseURL, addresses, numDays);
                     }
                 }
             }
