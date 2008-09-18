@@ -18,6 +18,7 @@
 
 package org.itracker.model;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -408,7 +409,11 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 
 	}
 
-	public static final class NameComparator implements Comparator<CustomField> {
+	public static final class NameComparator implements Comparator<CustomField>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		public int compare(CustomField o1, CustomField o2) {
 			return new CompareToBuilder().append(o1.name, o2.name)

@@ -19,6 +19,7 @@
 package org.itracker.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.log4j.Logger;
 
 public class ImportDataModel extends AbstractEntity {
 
@@ -26,6 +27,7 @@ public class ImportDataModel extends AbstractEntity {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final Logger log = Logger.getLogger(ImportDataModel.class);
 	private AbstractEntity[] dataModels;
 	private boolean[] existingModel;
 
@@ -41,11 +43,11 @@ public class ImportDataModel extends AbstractEntity {
 	}
 
 	public AbstractEntity[] getData() {
-		return (dataModels == null ? new AbstractEntity[0] : dataModels);
+		return (dataModels == null ? new AbstractEntity[0] : dataModels.clone());
 	}
 
 	public boolean[] getExistingModel() {
-		return (existingModel == null ? new boolean[0] : existingModel);
+		return (existingModel == null ? new boolean[0] : existingModel.clone());
 	}
 
 	public boolean getExistingModel(int i) {
@@ -62,9 +64,11 @@ public class ImportDataModel extends AbstractEntity {
 	public void setData(AbstractEntity[] dataModels, boolean[] existingModel) {
 		if (dataModels != null && existingModel != null
 				&& dataModels.length == existingModel.length) {
-			this.dataModels = dataModels;
-			this.existingModel = existingModel;
+			this.dataModels = dataModels.clone();
+			this.existingModel = existingModel.clone();
 			this.verifyStatistics = new int[7][2];
+		} else {
+			throw new IllegalArgumentException("Data model must not be null and existing model must not be null nor empty.");
 		}
 	}
 
@@ -135,7 +139,9 @@ public class ImportDataModel extends AbstractEntity {
 	public void addVerifyStatistic(int itemType, int category) {
 		try {
 			verifyStatistics[itemType][category]++;
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
+			log.error("addVerifyStatistic: faild with runtime exception", e);
+			throw e;
 		}
 	}
 

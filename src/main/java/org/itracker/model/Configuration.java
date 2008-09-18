@@ -18,6 +18,7 @@
 
 package org.itracker.model;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -254,7 +255,11 @@ public class Configuration extends AbstractEntity implements Comparable<Entity> 
 	}
 
 	public static final class ConfigurationOrderComparator implements
-			Comparator<Configuration> {
+			Comparator<Configuration>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		public int compare(Configuration o1, Configuration o2) {
 			return new CompareToBuilder().append(o1.order, o2.order)

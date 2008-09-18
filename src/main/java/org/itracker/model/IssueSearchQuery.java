@@ -34,8 +34,8 @@ public class IssueSearchQuery implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public static final Integer TYPE_FULL = new Integer(1);
-	public static final Integer TYPE_PROJECT = new Integer(2);
+	public static final Integer TYPE_FULL = 1;
+	public static final Integer TYPE_PROJECT = 2;
 
 	private List<Project> availableProjects = new ArrayList<Project>();
 
@@ -53,9 +53,9 @@ public class IssueSearchQuery implements Serializable {
 
 	private String orderBy = null;
 
-	private Integer type = new Integer(-1);
+	private Integer type = -1;
 	private Project project = null;
-	private Integer projectId = new Integer(-1);
+	private Integer projectId = -1;
 	private String projectName = "";
 
 	private List<Issue> results = null;

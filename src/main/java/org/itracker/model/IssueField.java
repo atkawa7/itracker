@@ -127,11 +127,16 @@ public class IssueField extends AbstractEntity {
 	}
 
 	public Date getDateValue() {
-		return dateValue;
+		if (null == dateValue)
+			return null;
+		return new Date(dateValue.getTime());
 	}
 
 	public void setDateValue(Date dateValue) {
-		this.dateValue = dateValue;
+		if (null == dateValue)
+			this.dateValue = null;
+		else
+			this.dateValue = new Date(dateValue.getTime());
 	}
 
 	/**

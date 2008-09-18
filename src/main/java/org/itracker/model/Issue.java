@@ -18,6 +18,7 @@
 
 package org.itracker.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -328,7 +329,11 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
     /**
      * Compares 2 Issues by status and severity. 
      */
-    private static class StatusComparator implements Comparator<Issue> {
+    private static class StatusComparator implements Comparator<Issue>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
         public int compare(Issue a, Issue b) {
             final int statusComparison = a.status - b.status;
@@ -341,7 +346,11 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
         
     }
 
-    private static class ProjectAndStatusComparator implements Comparator<Issue> {
+    private static class ProjectAndStatusComparator implements Comparator<Issue>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
         public int compare(Issue a, Issue b) {
             final int projectComparison = a.project.compareTo(b.project);
@@ -354,7 +363,11 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
         
     }
 
-    private static class OwnerAndStatusComparator implements Comparator<Issue> {
+    private static class OwnerAndStatusComparator implements Comparator<Issue>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
         public int compare(Issue a, Issue b) {
             // PENDING : Used to be a last + first name comparison. 
@@ -367,7 +380,11 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
         }
     }
 
-    private static class SeverityComparator implements Comparator<Issue> {
+    private static class SeverityComparator implements Comparator<Issue>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
         
         public int compare(Issue a, Issue b) {
             final int severityComparison = a.severity - b.severity;

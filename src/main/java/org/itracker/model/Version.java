@@ -16,6 +16,7 @@
  */
 package org.itracker.model;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -246,7 +247,11 @@ public class Version extends AbstractEntity implements Comparable<Entity> {
 	/**
 	 * Compares 2 Versions by major and minor number.
 	 */
-	public static final class VersionComparator implements Comparator<Version> {
+	public static final class VersionComparator implements Comparator<Version>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		private boolean ascending = true;
 

@@ -18,6 +18,7 @@
 
 package org.itracker.model;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -162,11 +163,15 @@ public class IssueAttachment extends AbstractEntity implements
 	}
 
 	public byte[] getFileData() {
-		return (fileData);
+		if (null == fileData)
+			return null;
+		return fileData.clone();
 	}
 
 	public void setFileData(byte[] value) {
-		fileData = value;
+		if (null == value)
+			throw new IllegalArgumentException("value must not be null");
+		fileData = value.clone();
 	}
 
 	public String getDescription() {
@@ -228,7 +233,11 @@ public class IssueAttachment extends AbstractEntity implements
 	/**
 	 * Compares 2 attachments by file size.
 	 */
-	public static class SizeComparator implements Comparator<IssueAttachment> {
+	public static class SizeComparator implements Comparator<IssueAttachment>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		public int compare(IssueAttachment a, IssueAttachment b) {
 			return new CompareToBuilder().append(a.size, b.size).toComparison();
@@ -240,7 +249,11 @@ public class IssueAttachment extends AbstractEntity implements
 	 * @author ranks
 	 *
 	 */
-	public static final class OriginalFilenameComparator implements Comparator<IssueAttachment> {
+	public static final class OriginalFilenameComparator implements Comparator<IssueAttachment>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		public int compare(IssueAttachment o1, IssueAttachment o2) {
 				return new CompareToBuilder().append(o1.issue, o2.issue).append(

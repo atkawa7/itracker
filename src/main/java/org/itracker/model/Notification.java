@@ -18,6 +18,7 @@
 
 package org.itracker.model;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -167,14 +168,22 @@ public class Notification extends AbstractEntity implements Comparable<Entity> {
 	 * 
 	 */
 	public static final class IssueUserRoleComparator implements
-			Comparator<Notification> {
+			Comparator<Notification>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		public int compare(Notification o1, Notification o2) {
 			return new CompareToBuilder().append(o1.issue, o2.issue).append(
 					o1.user, o2.user).append(o1.role, o2.role).toComparison();
 		}
 	}
 
-	private static class UserComparator implements Comparator<Notification> {
+	private static class UserComparator implements Comparator<Notification>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		public int compare(Notification a, Notification b) {
 			return User.NAME_COMPARATOR.compare(a.user, b.user);
@@ -182,7 +191,11 @@ public class Notification extends AbstractEntity implements Comparable<Entity> {
 
 	}
 
-	private static class RoleComparator implements Comparator<Notification> {
+	private static class RoleComparator implements Comparator<Notification>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		public int compare(Notification a, Notification b) {
 			return a.role.code - b.role.code;

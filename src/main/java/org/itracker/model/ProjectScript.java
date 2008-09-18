@@ -18,6 +18,7 @@
 
 package org.itracker.model;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -100,7 +101,11 @@ public class ProjectScript extends AbstractEntity {
 	}
 
 	public static class CompareByFieldAndPriority implements
-			Comparator<ProjectScript> {
+			Comparator<ProjectScript>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		public int compare(ProjectScript a, ProjectScript b) {
 			final int fieldIdComparator = a.fieldId - b.fieldId;

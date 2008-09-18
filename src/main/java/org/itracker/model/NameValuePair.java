@@ -41,17 +41,27 @@ public class NameValuePair implements Serializable, Comparable<NameValuePair> {
 
 	private String value = "";
 
-	public static final Comparator<NameValuePair> KEY_COMPARATOR = new Comparator<NameValuePair>() {
+	private static final class NameComparator implements Comparator<NameValuePair>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		public int compare(NameValuePair o1, NameValuePair o2) {
 
 			return o1.name.compareTo(o2.name);
 		};
-	};
-	public static final Comparator<NameValuePair> VALUE_COMPARATOR = new Comparator<NameValuePair>() {
+	}
+	private static final class ValueComparator implements Comparator<NameValuePair>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		public int compare(NameValuePair o1, NameValuePair o2) {
 			return o1.value.compareTo(o2.value);
 		};
-	};
+	}
+	public static final Comparator<NameValuePair> KEY_COMPARATOR = new NameComparator();
+	public static final Comparator<NameValuePair> VALUE_COMPARATOR = new ValueComparator();
 
 	public NameValuePair(String name, String value) {
 		setName(name);

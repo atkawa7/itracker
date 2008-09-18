@@ -18,6 +18,7 @@
 
 package org.itracker.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -279,7 +280,11 @@ public class Project extends AbstractEntity implements Comparable<Entity> {
 	// }
 	// return name.compareTo((null==other.name)? "": other.name);
 	// }
-	public static final class ProjectComparator implements Comparator<Project> {
+	public static final class ProjectComparator implements Comparator<Project>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		public int compare(Project o1, Project o2) {
 			return new CompareToBuilder().append(o1.name, o2.name).append(
 					o1.description, o2.description).toComparison();

@@ -18,6 +18,7 @@
 
 package org.itracker.model;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -29,8 +30,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author ready
  * @author johnny
  */
-public class CustomFieldValue extends AbstractEntity implements
-		Comparable<Entity> {
+public class CustomFieldValue extends AbstractEntity {
 
 	/**
 	 * 
@@ -115,24 +115,24 @@ public class CustomFieldValue extends AbstractEntity implements
 		this.sortOrder = sortOrder;
 	}
 
-	/**
-	 * Uses the <code>sortOrder</code> ascending order as natural ordering.
-	 * 
-	 * <p>
-	 * Natural ordering != natural key ascending order, but this implementation
-	 * is still consistent with <code>equals</code>.
-	 * </p>
-	 */
-	public int compareTo(CustomFieldValue other) {
-		final int fieldComparison = this.customField
-				.compareTo(other.customField);
-
-		if (fieldComparison == 0) {
-			// return this.value.compareTo(other.value);
-			return this.sortOrder - other.sortOrder;
-		}
-		return fieldComparison;
-	}
+//	/**
+//	 * Uses the <code>sortOrder</code> ascending order as natural ordering.
+//	 * 
+//	 * <p>
+//	 * Natural ordering != natural key ascending order, but this implementation
+//	 * is still consistent with <code>equals</code>.
+//	 * </p>
+//	 */
+//	public int compareTo(CustomFieldValue other) {
+//		final int fieldComparison = this.customField
+//				.compareTo(other.customField);
+//
+//		if (fieldComparison == 0) {
+//			// return this.value.compareTo(other.value);
+//			return this.sortOrder - other.sortOrder;
+//		}
+//		return fieldComparison;
+//	}
 
 	//
 	// /**
@@ -182,7 +182,11 @@ public class CustomFieldValue extends AbstractEntity implements
 	 */
 	@SuppressWarnings("unused")
 	private static class SortOrderComparator implements
-			Comparator<CustomFieldValue> {
+			Comparator<CustomFieldValue>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		public int compare(CustomFieldValue a, CustomFieldValue b) {
 			return new CompareToBuilder().append(a.sortOrder, b.sortOrder)
@@ -204,7 +208,11 @@ public class CustomFieldValue extends AbstractEntity implements
 	 * single custom field.
 	 * </p>
 	 */
-	private static class NameComparator implements Comparator<CustomFieldValue> {
+	private static class NameComparator implements Comparator<CustomFieldValue>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		private NameComparator() {
 		}

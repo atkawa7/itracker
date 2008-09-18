@@ -18,6 +18,7 @@
 
 package org.itracker.model;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -269,7 +270,12 @@ public class Component extends AbstractEntity implements Comparable<Entity> {
 	 * it doesn't take the project into account.
 	 * </p>
 	 */
-	private static class NameComparator implements Comparator<Component> {
+	private static class NameComparator implements Comparator<Component>, Serializable {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		public int compare(Component a, Component b) {
 			return a.name.compareTo(b.name);
@@ -278,7 +284,12 @@ public class Component extends AbstractEntity implements Comparable<Entity> {
 	}
 
 	public static final class ProjectNameComparator implements
-			Comparator<Component> {
+			Comparator<Component>, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public int compare(Component o1, Component o2) {
 			return new CompareToBuilder().append(o1.project, o2.project)
 					.append(o1.name, o2.name).toComparison();
