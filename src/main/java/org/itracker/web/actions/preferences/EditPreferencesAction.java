@@ -37,6 +37,8 @@ import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.AuthenticatorException;
+import org.itracker.services.exceptions.PasswordException;
+import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
@@ -104,7 +106,9 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                                 existingUser.setPassword(UserUtilities.encryptPassword(userForm.getPassword().trim()));
                             } catch(AuthenticatorException ae) {
                             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.wrongpassword"));
-                            }
+                            } catch (PasswordException e) {
+                            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.wrongpassword"));
+							}
                         }
                     }
                 }
@@ -160,10 +164,13 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                 session.removeAttribute(Constants.EDIT_USER_KEY);
                 session.removeAttribute(Constants.EDIT_USER_PREFS_KEY);
             }
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
             e.printStackTrace();
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.save"));
-        }
+        } catch (UserException e) {
+            e.printStackTrace();
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.save"));
+		}
 
       	if(! errors.isEmpty()) {
       	    saveMessages(request, errors);

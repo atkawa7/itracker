@@ -31,7 +31,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.itracker.model.Notification;
 import org.itracker.model.User;
+import org.itracker.model.Notification.Role;
+import org.itracker.model.Notification.Type;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.UserException;
@@ -79,7 +82,12 @@ public class SelfRegisterAction extends ItrackerBaseAction {
                     try {
                         if(userService.allowRegistration(user, regForm.getPassword(), AuthenticationConstants.AUTH_TYPE_PASSWORD_PLAIN, AuthenticationConstants.REQ_SOURCE_WEB)) {
                             user = userService.createUser(user);
-                            userService.sendNotification(user.getLogin(), user.getEmail(), getBaseURL(request));
+                            Notification notification = new Notification();
+                            notification.setUser(user);
+                            notification.setRole(Role.ANY);
+                            getITrackerServices().getNotificationService().sendNotification(notification, Type.SELF_REGISTER, getBaseURL(request));
+//                            userService.sendNotification(user.getLogin(), user.getEmail(), getBaseURL(request));
+                            
                         } else {
                         	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.register.unauthorized"));
                         }

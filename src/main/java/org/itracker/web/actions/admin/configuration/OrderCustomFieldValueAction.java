@@ -122,7 +122,7 @@ public class OrderCustomFieldValueAction extends ItrackerBaseAction {
                 }
             }
             
-            newCustomFieldValueItems = configurationService.updateCustomFieldValues(customField.getId(),newCustomFieldValueItems);
+//            newCustomFieldValueItems = configurationService.updateCustomFieldValues(customField.getId(),newCustomFieldValueItems);
             
 /*            for(int i = 0; i < values.size(); i++) {
                 if(values.get(i) != null && valueId.equals(values.get(i).getId())) {

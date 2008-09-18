@@ -95,7 +95,7 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
                 workflowScriptForm.setAction("update");
                 workflowScriptForm.setId(workflowScript.getId());
                 workflowScriptForm.setName(workflowScript.getName());
-                workflowScriptForm.setEvent(new Integer(workflowScript.getEvent()));
+                workflowScriptForm.setEvent(workflowScript.getEvent());
                 workflowScriptForm.setScript(workflowScript.getScript());
                
                 pageTitleArg = workflowScript.getName();

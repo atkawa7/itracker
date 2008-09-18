@@ -457,7 +457,7 @@ public abstract class ItrackerBaseAction extends Action {
 							hasGlobalPermission = false;
 							// check this...
 							request.setAttribute("hasGlobalPermission",
-									new Boolean(hasGlobalPermission));
+									hasGlobalPermission);
 							if (!requestPath.endsWith("/unauthorized.do")) {
 								// pageContext.forward("/unauthorized.do");
 								// RETURN return SKIP_PAGE;

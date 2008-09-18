@@ -106,7 +106,7 @@ public class EditLanguageAction extends ItrackerBaseAction {
                             String key = iter.next();
                             if(key != null) {
                                 String value = items.get(key);
-                                if(value != null && ! value.trim().equals("")) {
+                                if(value != null && !(value.trim().length() == 0)) {
                                     configurationService.updateLanguageItem(new Language(locale, key.replace('/', '.'), value));
                                 }
                             }

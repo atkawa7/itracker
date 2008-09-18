@@ -107,7 +107,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
 
                     HttpSession session = request.getSession(true);
                     User currUser = (User) session.getAttribute(Constants.USER_KEY);
-                    Integer currUserId = (currUser == null ? new Integer(-1) : currUser.getId());
+                    Integer currUserId = (currUser == null ? -1 : currUser.getId());
 
                     IssueService issueService = getITrackerServices().getIssueService();
                     List<Issue> issues = issueService.getIssuesWithSeverity(currSeverity);
@@ -151,7 +151,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
 
                     HttpSession session = request.getSession(true);
                     User currUser = (User) session.getAttribute(Constants.USER_KEY);
-                    Integer currUserId = (currUser == null ? new Integer(-1) : currUser.getId());
+                    Integer currUserId = (currUser == null ? -1 : currUser.getId());
 
                     IssueService issueService = getITrackerServices().getIssueService();
                     List<Issue> issues = issueService.getIssuesWithStatus(currStatus);

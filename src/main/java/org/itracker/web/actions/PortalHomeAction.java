@@ -49,7 +49,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
         
         if (forward==null) {
             return forward;
-        } else if (forward!=null) {
+        } else {
             
             LOGGER.info("Found forward, let's go and check if this forward is portalhome...");
 //            super.executeAlways(mapping,form,request,response);
@@ -74,10 +74,10 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     hiddenSections = userPrefs.getHiddenIndexSections();
                 }
                 
-                List<IssuePTO> createdIssuePTOs = new ArrayList<IssuePTO>();
-                List<IssuePTO> ownedIssuePTOs = new ArrayList<IssuePTO>();
-                List<IssuePTO> unassignedIssuePTOs = new ArrayList<IssuePTO>();
-                List<IssuePTO> watchedIssuePTOs = new ArrayList<IssuePTO>();
+                final List<IssuePTO> createdIssuePTOs;
+                final List<IssuePTO> ownedIssuePTOs;
+                final List<IssuePTO> unassignedIssuePTOs;
+                final List<IssuePTO> watchedIssuePTOs;
                 
                 // POPULATING ISSUE MODELS
                 final List<Issue> createdIssues;
@@ -185,7 +185,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     final Project project = issueService.getIssueProject(issue.getId());
                     
                     //List<User> tempOwners = new ArrayList<User>();
-                    List<NameValuePair> ownersList = new ArrayList<NameValuePair>();
+                    final List<NameValuePair> ownersList;
                     
                     ownersList = UserUtilities.getAssignableIssueOwnersList(issue, project, currUser, locale, userService, userPermissions);
                     
@@ -263,7 +263,6 @@ public class PortalHomeAction extends ItrackerBaseAction {
             }
             return forward;
         }
-        return forward;
     }
     
     // this function is used to load the issue type PTOs List with issue/owner/project data.  It will return this the the main

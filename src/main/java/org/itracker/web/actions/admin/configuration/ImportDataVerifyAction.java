@@ -274,7 +274,9 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                             log.debug("Reusing existing user " + user.getLogin() + "(" + user.getId() + ") during import.");
                         } else {
                             log.debug("Existing user " + existingUser.getLogin() + "(" + existingUser.getId() + ") during import.  Adding to invalid login list.");
-                            invalidLogins = (invalidLogins == null ? existingUser.getLogin() : invalidLogins + ", " + existingUser.getLogin());
+                            invalidLogins = (invalidLogins == null ? 
+                            		existingUser.getLogin() : 
+                            	new StringBuffer(invalidLogins).append(", ").append(existingUser.getLogin()).toString());
                         }
                     } else {
                         model.addVerifyStatistic(ImportExportUtilities.IMPORT_STAT_USERS, ImportExportUtilities.IMPORT_STAT_NEW);

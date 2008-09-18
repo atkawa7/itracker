@@ -98,9 +98,7 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             } else if("update".equals(action)) {
                 Integer id = (Integer) PropertyUtils.getSimpleProperty(form, "id");
                 customFieldValue = configurationService.getCustomFieldValue(id);
-                if(customField == null) {
-                    throw new SystemConfigurationException("Invalid custom field value id " + id);
-                }
+
                 customFieldValue.setValue(customFieldValueForm.getValue());
                 String name = CustomFieldUtilities.getCustomFieldOptionName(customFieldValue.getCustomField().getId(), id);
                 customFieldValue.setName(name);

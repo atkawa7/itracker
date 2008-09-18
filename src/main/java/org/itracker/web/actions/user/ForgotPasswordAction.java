@@ -90,7 +90,7 @@ public class ForgotPasswordAction extends ItrackerBaseAction {
                         .sendEmail(user.getEmail(), subject, msgText.toString());
                 } catch(PasswordException pe) {
                     if(log.isDebugEnabled()) {
-                        log.debug("Password Exception for user " + (login != null ? login : "UNKNOWN") + ". Type = " + pe.getType());
+                        log.debug("Password Exception for user " + login + ". Type = " + pe.getType());
                     }
                     if(pe.getType() == PasswordException.INVALID_NAME) {
                         errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.forgotpass.lastname"));

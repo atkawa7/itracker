@@ -113,7 +113,7 @@ public class EditProjectFormAction extends ItrackerBaseAction {
                 boolean allowPermissionUpdate = userService.allowPermissionUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
                 request.setAttribute("allowPermissionUpdate", allowPermissionUpdate);
                 project = new Project();
-                project.setId(new Integer(-1));
+                project.setId(-1);
                 projectForm.setAction("create");
                 projectForm.setId(project.getId());
             } else if ("update".equals(action)) {

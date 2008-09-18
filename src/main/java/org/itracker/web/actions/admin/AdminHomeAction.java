@@ -60,7 +60,7 @@ public class AdminHomeAction extends ItrackerBaseAction {
         Long allIssueAttachmentsTotalSize = issueService.totalSystemIssuesAttachmentSize();
         request.setAttribute("allIssueAttachmentsTotalSize", allIssueAttachmentsTotalSize);
 
-        Locale locale = getCurrLocale(request);
+//        Locale locale = getCurrLocale(request);
 //        SimpleDateFormat sdf = new SimpleDateFormat(ITrackerResources.getString("itracker.dateformat.full"), locale);
         String lastRun = null;//(Scheduler.getLastRun() == null ? "-" : sdf.format(Scheduler.getLastRun()));
 

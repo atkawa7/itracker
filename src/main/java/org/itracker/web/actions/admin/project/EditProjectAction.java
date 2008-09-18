@@ -19,6 +19,7 @@
 package org.itracker.web.actions.admin.project;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -166,7 +167,7 @@ public class EditProjectAction extends ItrackerBaseAction {
                             userPermissionModels.add(new Permission(permissions[i], usermodel, project));
                         }
                         userService.setUserPermissions(usermodel.getId(), userPermissionModels );
-                        userService.UpdateAuthenticator(usermodel.getId(), userPermissionModels);
+                        userService.updateAuthenticator(usermodel.getId(), userPermissionModels);
                     }
                 }
                 for(int i = 0; i < userIds.length; i++) {
@@ -210,7 +211,7 @@ public class EditProjectAction extends ItrackerBaseAction {
                             }
                         }
                         userService.setUserPermissions(usermodel.getId(), permissionModels);
-                        userService.UpdateAuthenticator(usermodel.getId(), permissionModels);
+                        userService.updateAuthenticator(usermodel.getId(), permissionModels);
                 }
                 
                 projectService.setProjectOwners(project, owners);
@@ -219,10 +220,19 @@ public class EditProjectAction extends ItrackerBaseAction {
             }
             session.removeAttribute(Constants.PROJECT_KEY);
             return mapping.findForward("listprojectsadmin");
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
             log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        }
+        } catch (IllegalAccessException e) {
+            log.error("Exception processing form data", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		} catch (InvocationTargetException e) {
+            log.error("Exception processing form data", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		} catch (NoSuchMethodException e) {
+            log.error("Exception processing form data", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		}
         
         if(! errors.isEmpty()) {
             saveMessages(request, errors);

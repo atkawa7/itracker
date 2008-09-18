@@ -19,6 +19,7 @@
 package org.itracker.web.actions.admin.language;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -170,16 +171,25 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                 session.setAttribute(Constants.EDIT_LANGUAGE_BASE_KEY, baseItems);
                 session.setAttribute(Constants.EDIT_LANGUAGE_LANG_KEY, langItems);
                 session.setAttribute(Constants.EDIT_LANGUAGE_LOC_KEY, locItems);
-                session.setAttribute(Constants.EDIT_LANGUAGE_TYPE_KEY, new Integer(localeType));
+                session.setAttribute(Constants.EDIT_LANGUAGE_TYPE_KEY, localeType);
                 request.setAttribute("languageForm", languageForm);
                 log.debug("Locale = " + languageForm.getLocale());
                 saveToken(request);
                 return mapping.getInputForward();
             }
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
             log.error("Exception while creating edit language form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        }
+        } catch (IllegalAccessException e) {
+            log.error("Exception while creating edit language form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		} catch (InvocationTargetException e) {
+            log.error("Exception while creating edit language form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		} catch (NoSuchMethodException e) {
+            log.error("Exception while creating edit language form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		}
 
         if(! errors.isEmpty()) {
         	saveMessages(request, errors);

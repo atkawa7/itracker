@@ -19,6 +19,7 @@
 package org.itracker.web.actions.project;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -48,6 +50,7 @@ import org.itracker.web.util.Constants;
 
 public class AddIssueRelationAction extends ItrackerBaseAction {
 
+	private static final Logger log = Logger.getLogger(AddIssueRelationAction.class);
     public AddIssueRelationAction() {
     }
 
@@ -100,9 +103,19 @@ public class AddIssueRelationAction extends ItrackerBaseAction {
                 	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.relation.adderror"));
                 }
             }
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
+        	log.info("execute: caught exception ", e);
         	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        }
+        } catch (IllegalAccessException e) {
+        	log.info("execute: caught exception ", e);
+        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		} catch (InvocationTargetException e) {
+        	log.info("execute: caught exception ", e);
+        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		} catch (NoSuchMethodException e) {
+        	log.info("execute: caught exception ", e);
+        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		}
 
         if(! errors.isEmpty()) {
             saveMessages(request, errors);

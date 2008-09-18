@@ -50,6 +50,7 @@ import org.itracker.model.User;
 import org.itracker.model.Version;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
+import org.itracker.services.exceptions.WorkflowException;
 import org.itracker.services.util.Convert;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.UserUtilities;
@@ -107,32 +108,31 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                 if(UserUtilities.hasPermission(Permissions, project.getId(), UserUtilities.PERMISSION_ASSIGN_OTHERS)) {
                     List<User> possibleOwners = userService.getPossibleOwners(null, project.getId(), currUser.getId());
                     Collections.sort(possibleOwners, User.NAME_COMPARATOR);
-                    listOptions.put(new Integer(IssueUtilities.FIELD_OWNER), Convert.usersToNameValuePairs(possibleOwners));
+                    listOptions.put(IssueUtilities.FIELD_OWNER, Convert.usersToNameValuePairs(possibleOwners));
                 } else if(UserUtilities.hasPermission(Permissions, project.getId(), UserUtilities.PERMISSION_ASSIGN_SELF)) {
                 	NameValuePair myNameValuePair = new NameValuePair(currUser.getFirstName() + " " + currUser.getLastName(), currUser.getId().toString());
                 	List<NameValuePair> myNameValuePairList =  new ArrayList<NameValuePair>();
                 	myNameValuePairList.add(myNameValuePair);
-                    listOptions.put(new Integer(IssueUtilities.FIELD_OWNER),myNameValuePairList);
+                    listOptions.put(IssueUtilities.FIELD_OWNER,myNameValuePairList);
                 }
 
                 if(UserUtilities.hasPermission(Permissions, project.getId(), UserUtilities.PERMISSION_CREATE_OTHERS)) {
                     List<User> possibleCreators = userService.getUsersWithAnyProjectPermission(project.getId(), new int[] {UserUtilities.PERMISSION_VIEW_ALL, UserUtilities.PERMISSION_VIEW_USERS});
                     Collections.sort(possibleCreators, User.NAME_COMPARATOR);
-                    listOptions.put(new Integer(IssueUtilities.FIELD_CREATOR), Convert.usersToNameValuePairs(possibleCreators));
+                    listOptions.put(IssueUtilities.FIELD_CREATOR, Convert.usersToNameValuePairs(possibleCreators));
                 }
 
                 List<NameValuePair> severities = IssueUtilities.getSeverities(locale);
         		// sort by severity code so it will be ascending output.
         		Collections.sort(severities, NameValuePair.VALUE_COMPARATOR);
-                listOptions.put(new Integer(IssueUtilities.FIELD_SEVERITY), severities);
+                listOptions.put(IssueUtilities.FIELD_SEVERITY, severities);
 
-                List<Component> components = new ArrayList<Component>();
-                components = project.getComponents();
+                List<Component> components = project.getComponents();
                 Collections.sort(components, Component.NAME_COMPARATOR);
-                listOptions.put(new Integer(IssueUtilities.FIELD_COMPONENTS), Convert.componentsToNameValuePairs(components));
+                listOptions.put(IssueUtilities.FIELD_COMPONENTS, Convert.componentsToNameValuePairs(components));
                 List<Version> versions = project.getVersions();
                 Collections.sort(versions, new Version.VersionComparator());
-                listOptions.put(new Integer(IssueUtilities.FIELD_VERSIONS), Convert.versionsToNameValuePairs(versions));
+                listOptions.put(IssueUtilities.FIELD_VERSIONS, Convert.versionsToNameValuePairs(versions));
 
 
                 List<CustomField> projectFields = project.getCustomFields();
@@ -152,7 +152,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                     try {
                     	// FIXME this code can not be understood simply. Documentation or simplification please.
                         int midPoint = (severities.size() / 2);
-                        issueForm.setSeverity(new Integer(severities.get(midPoint).getValue()));
+                        issueForm.setSeverity(Integer.valueOf(severities.get(midPoint).getValue()));
                     } catch(NumberFormatException nfe) {
                         log.debug("Invalid status number found while preparing create issue form.", nfe);
                     }
@@ -180,10 +180,14 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                     return mapping.getInputForward();
                 }
             }
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
             log.error("Exception while creating create issue form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        }
+        } catch (WorkflowException e) {
+			// TODO Auto-generated catch block
+            log.error("Exception while creating create issue form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		}
 
         if(! errors.isEmpty()) {
             saveMessages(request, errors);

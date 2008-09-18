@@ -44,92 +44,103 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.VersionForm;
 import org.itracker.web.util.Constants;
 
-
 public class EditVersionAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(EditVersionAction.class);
-	
-    public EditVersionAction() {
-    }
-    
-    @SuppressWarnings("unchecked")
-    public ActionForward execute(ActionMapping mapping, ActionForm form,
-            HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        ActionErrors errors = new ActionErrors();
-//        
-//        super.executeAlways(mapping,form,request,response);
-//        
-//        if (!isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
-        
-        if (!isTokenValid(request)) {
-            log.debug("Invalid request token while editing version.");
-            return mapping.findForward("listprojectsadmin");
-        }
-        resetToken(request);
-        
-        Version version = null;
-        Project project = null;
-        
-        try {
-            VersionForm versionForm = (VersionForm)form;
-            ProjectService projectService = getITrackerServices().getProjectService();
-            
-            HttpSession session = request.getSession(true);
-            Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
-            
-            Integer projectId = versionForm.getProjectId();
-            
-            if (projectId == null) {
-                errors.add(ActionMessages.GLOBAL_MESSAGE, 
-                        new ActionMessage("itracker.web.error.invalidproject"));
-            } else {
-                project = projectService.getProject(projectId);
-                
-                boolean authorised = UserUtilities.hasPermission(userPermissions, 
-                        project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN);
-                
-                if (project == null) {
-                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
-                            new ActionMessage("itracker.web.error.invalidproject"));
-                } else if (!authorised) {
-                    return mapping.findForward("unauthorised");
-                } else {
-                    
-                    String action = (String) request.getParameter("action");
-                    
-                    if ("create".equals(action)) {
-                        version = new Version(project, versionForm.getNumber());
-                        version.setDescription(versionForm.getDescription());
-                        version = projectService.addProjectVersion(project.getId(), version);
-                    } else if ("update".equals(action)) {
-                        version = projectService.getProjectVersion(versionForm.getId());
-                        version.setLastModifiedDate(new Date());
-                        version.setNumber(versionForm.getNumber());
-                        version.setProject(project);
-                        version.setDescription(versionForm.getDescription());
-                        version = projectService.updateProjectVersion(version);
-                    }
-                    session.removeAttribute(Constants.VERSION_KEY);
-                    
-                    return new ActionForward(
-                            mapping.findForward("editproject").getPath() 
-                            + "?id=" + project.getId() +"&action=update");
-                }
-            }
-        } catch(Exception ex) {
-            log.error("Exception processing form data", ex);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, 
-                    new ActionMessage("itracker.web.error.system"));
-        }
-        
-        if (!errors.isEmpty()) {
-            saveMessages(request, errors);
-        }
-        return mapping.findForward("error");
-    }
-    
-}
 
+	public EditVersionAction() {
+	}
+
+	@SuppressWarnings("unchecked")
+	public ActionForward execute(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		ActionErrors errors = new ActionErrors();
+		//        
+		// super.executeAlways(mapping,form,request,response);
+		//        
+		// if (!isLoggedIn(request, response)) {
+		// return mapping.findForward("login");
+		// }
+
+		if (!isTokenValid(request)) {
+			log.debug("Invalid request token while editing version.");
+			return mapping.findForward("listprojectsadmin");
+		}
+		resetToken(request);
+
+		Version version = null;
+		Project project = null;
+
+		try {
+			VersionForm versionForm = (VersionForm) form;
+			ProjectService projectService = getITrackerServices()
+					.getProjectService();
+
+			HttpSession session = request.getSession(true);
+			Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+
+			Integer projectId = versionForm.getProjectId();
+
+			if (projectId == null) {
+				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+						"itracker.web.error.invalidproject"));
+			} else {
+				project = projectService.getProject(projectId);
+
+				if (project == null) {
+					errors.add(ActionMessages.GLOBAL_MESSAGE,
+							new ActionMessage(
+									"itracker.web.error.invalidproject"));
+				} else {
+					boolean authorised = UserUtilities.hasPermission(
+							userPermissions, project.getId(),
+							UserUtilities.PERMISSION_PRODUCT_ADMIN);
+
+					if (!authorised) {
+						return mapping.findForward("unauthorised");
+					} else {
+
+						String action = (String) request.getParameter("action");
+
+						if ("create".equals(action)) {
+							version = new Version(project, versionForm
+									.getNumber());
+							version
+									.setDescription(versionForm
+											.getDescription());
+							version = projectService.addProjectVersion(project
+									.getId(), version);
+						} else if ("update".equals(action)) {
+							version = projectService
+									.getProjectVersion(versionForm.getId());
+							version.setLastModifiedDate(new Date());
+							version.setNumber(versionForm.getNumber());
+							version.setProject(project);
+							version
+									.setDescription(versionForm
+											.getDescription());
+							version = projectService
+									.updateProjectVersion(version);
+						}
+						session.removeAttribute(Constants.VERSION_KEY);
+
+						return new ActionForward(mapping.findForward(
+								"editproject").getPath()
+								+ "?id=" + project.getId() + "&action=update");
+					}
+				}
+			}
+		} catch (RuntimeException ex) {
+			log.error("Exception processing form data", ex);
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"itracker.web.error.system"));
+		}
+
+		if (!errors.isEmpty()) {
+			saveMessages(request, errors);
+		}
+		return mapping.findForward("error");
+	}
+
+}

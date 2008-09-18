@@ -1,6 +1,7 @@
 package org.itracker.web.actions.admin.report;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Set;
 
@@ -74,7 +75,7 @@ public class EditReportFormAction extends ItrackerBaseAction {
             
             if("create".equals(action)) {
                 report = new Report();
-                report.setId(new Integer(-1)); 
+                report.setId(-1); 
                 reportForm.setAction("create");
                 reportForm.setId(report.getId()); 
             } else if ("update".equals(action)) {
@@ -88,8 +89,8 @@ public class EditReportFormAction extends ItrackerBaseAction {
                     reportForm.setName(report.getName());
                     reportForm.setNameKey(report.getNameKey());
                     reportForm.setDescription(report.getDescription());
-                    reportForm.setReportType(new Integer(report.getReportType()));
-                    reportForm.setDataType(new Integer(report.getDataType()));
+                    reportForm.setReportType(report.getReportType());
+                    reportForm.setDataType(report.getDataType());
                     reportForm.setClassName(report.getClassName());
                     //reportForm.setFileData(new String((byte[]) report.getFileData()));
                 }
@@ -103,10 +104,19 @@ public class EditReportFormAction extends ItrackerBaseAction {
                 saveToken(request);
                 return mapping.getInputForward();
             }
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
             log.error("Exception while creating edit report form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        }
+        } catch (IllegalAccessException e) {
+            log.error("Exception while creating edit report form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		} catch (InvocationTargetException e) {
+            log.error("Exception while creating edit report form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		} catch (NoSuchMethodException e) {
+            log.error("Exception while creating edit report form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		}
 
         if(! errors.isEmpty()) {
             saveMessages(request, errors);

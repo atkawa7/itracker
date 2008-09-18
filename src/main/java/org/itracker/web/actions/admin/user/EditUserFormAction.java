@@ -74,7 +74,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
         if (action != null && action.equals("update")) {
 
             isUpdate = true;
-            request.setAttribute("isUpdate", new Boolean(isUpdate));
+            request.setAttribute("isUpdate", isUpdate);
             pageTitleKey = "itracker.web.admin.edituser.title.update";
             pageTitleArg = user.getLogin();
             request.setAttribute("pageTitleKey", pageTitleKey);
@@ -82,7 +82,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
 
         } else {
 
-            request.setAttribute("isUpdate", new Boolean(isUpdate));
+            request.setAttribute("isUpdate", isUpdate);
             pageTitleKey = "itracker.web.admin.edituser.title.create";
             //     pageTitleArg = ITrackerResources.getString("itracker.locale.name", parentLocale);
             //    pageTitleArg = ITrackerResources.getString("itracker.locale.name", this.getCurrLocale());
@@ -115,7 +115,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
                 }
 
                 editUser = new User();
-                editUser.setId(new Integer(-1));
+                editUser.setId(-1);
                 editUser.setStatus(UserUtilities.STATUS_ACTIVE);
                 userForm.setAction("create");
                 userForm.setId(editUser.getId());

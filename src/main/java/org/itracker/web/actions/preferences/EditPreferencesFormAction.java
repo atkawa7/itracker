@@ -71,8 +71,7 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
             request.setAttribute("sc",configurationService);
             Map<String,List<String>> languagesMap = configurationService.getAvailableLanguages();
             request.setAttribute("languagesMap",languagesMap);
-            Set<String> languageCodes = new HashSet<String>();
-            languageCodes = languagesMap.keySet();
+            Set<String> languageCodes = languagesMap.keySet();
             request.setAttribute("languageCodes",languageCodes);
             
             List<String> languagesList = new ArrayList<String>();

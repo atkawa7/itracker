@@ -92,7 +92,7 @@ public class ExportReportAction extends ItrackerBaseAction {
                 log.debug("Unknown report " + reportId + " specified for export");
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreport"));
             }
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
         	pageTitleKey = "itracker.web.error.title";
         	request.setAttribute("pageTitleKey",pageTitleKey); 
             request.setAttribute("pageTitleArg",pageTitleArg); 

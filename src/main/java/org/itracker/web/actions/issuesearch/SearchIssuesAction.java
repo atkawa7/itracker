@@ -19,6 +19,7 @@
 package org.itracker.web.actions.issuesearch;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -190,7 +191,7 @@ public class SearchIssuesAction extends ItrackerBaseAction {
             }
             
             Integer targetVersion = (Integer) PropertyUtils.getSimpleProperty(form, "targetVersion");
-            if(targetVersion != null && ! targetVersion.equals("") && targetVersion.intValue() != -1) {
+            if(targetVersion != null && targetVersion > 0) {
                 isqm.setTargetVersion(targetVersion);
             } else {
                 isqm.setTargetVersion(null);
@@ -205,10 +206,19 @@ public class SearchIssuesAction extends ItrackerBaseAction {
             if(type != null) {
                 isqm.setType(type);
             }
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
             log.debug("Unable to parse search query parameters: " + e.getMessage(), e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidsearchquery"));
-        }
+        } catch (IllegalAccessException e) {
+            log.debug("Unable to parse search query parameters: " + e.getMessage(), e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidsearchquery"));
+		} catch (InvocationTargetException e) {
+            log.debug("Unable to parse search query parameters: " + e.getMessage(), e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidsearchquery"));
+		} catch (NoSuchMethodException e) {
+            log.debug("Unable to parse search query parameters: " + e.getMessage(), e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidsearchquery"));
+		}
         
         return isqm;
     }

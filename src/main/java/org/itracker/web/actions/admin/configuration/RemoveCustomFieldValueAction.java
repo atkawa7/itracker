@@ -81,7 +81,7 @@ public class RemoveCustomFieldValueAction extends ItrackerBaseAction {
             
             if(status ) {
                 if ( key != null) {
-                    status = configurationService.removeLanguageKey(key);
+//                    status = configurationService.removeLanguageKey(key);
                     ITrackerResources.clearKeyFromBundles(key, false);
                 }
                 configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);

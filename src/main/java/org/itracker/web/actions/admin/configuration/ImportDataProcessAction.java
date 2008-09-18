@@ -53,6 +53,8 @@ import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
+import org.itracker.services.exceptions.PasswordException;
+import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.ImportExportUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
@@ -152,7 +154,7 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
                 }
             }
             configurationService.resetConfigurationCache();
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
             return false;
         }
 
@@ -176,9 +178,13 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
                     user.setId(newUser.getId());
                 }
             }
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
             return false;
-        }
+        } catch (PasswordException e) {
+			return false;
+		} catch (UserException e) {
+			return false;
+		}
 
         return true;
     }
@@ -218,7 +224,7 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
                     }
                 }
             }
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
             return false;
         }
 

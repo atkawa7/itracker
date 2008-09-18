@@ -136,10 +136,11 @@ public class EditConfigurationAction extends ItrackerBaseAction {
             } else if("update".equals(action)) {
                 Integer id = (Integer) PropertyUtils.getSimpleProperty(form, "id");
                 configItem = configurationService.getConfigurationItem(id);
-                formValue = configItem.getValue();
+
                 if(configItem == null) {
                     throw new SystemConfigurationException("Invalid configuration item id " + id);
                 }
+                formValue = configItem.getValue();
                 
                 initialLanguageKey = SystemConfigurationUtilities.getLanguageKey(configItem);
                 
@@ -161,7 +162,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                             log.debug("Changing issue status values from " + configItem.getValue() + " to " + formValue);
 
                             User currUser = (User) session.getAttribute(Constants.USER_KEY);
-                            Integer currUserId = (currUser == null ? new Integer(-1) : currUser.getId());
+                            Integer currUserId = (currUser == null ? Integer.valueOf(-1) : currUser.getId());
 
                             IssueService issueService = getITrackerServices().getIssueService();
                             
@@ -241,7 +242,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                isUpdate = true;
                pageTitleKey = "itracker.web.admin.editconfiguration.title.update";
             } else {
-            	Locale locale = getCurrLocale(request);
+               Locale locale = getLocale(request);
                pageTitleKey = "itracker.web.admin.editconfiguration.title.create";
                if("createseverity".equals(request.getAttribute("action"))) {  
                    pageTitleArg = ITrackerResources.getString("itracker.web.attr.severity", locale);
@@ -253,7 +254,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
             	   return mapping.findForward("unauthorized");
                         }
             }
-            request.setAttribute("isUpdate",new Boolean(isUpdate)); 
+            request.setAttribute("isUpdate",Boolean.valueOf(isUpdate)); 
             request.setAttribute("pageTitleKey",pageTitleKey); 
             request.setAttribute("pageTitleArg",pageTitleArg); 
             return mapping.findForward("listconfiguration");

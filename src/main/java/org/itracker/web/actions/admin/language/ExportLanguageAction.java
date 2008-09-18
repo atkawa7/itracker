@@ -19,6 +19,7 @@
 package org.itracker.web.actions.admin.language;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -81,10 +82,19 @@ public class ExportLanguageAction extends ItrackerBaseAction {
                 return null;
             }
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidlocale"));
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
             log.error("Exception while exporting language.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        }
+        } catch (IllegalAccessException e) {
+            log.error("Exception while exporting language.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		} catch (InvocationTargetException e) {
+            log.error("Exception while exporting language.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		} catch (NoSuchMethodException e) {
+            log.error("Exception while exporting language.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		}
 
         if(! errors.isEmpty()) {
             saveMessages(request, errors);

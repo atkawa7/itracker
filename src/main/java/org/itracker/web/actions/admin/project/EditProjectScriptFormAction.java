@@ -19,7 +19,7 @@
 package org.itracker.web.actions.admin.project;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -74,14 +74,14 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
         
         try {
             ProjectScriptForm projectScriptForm = (ProjectScriptForm) form;
-            ProjectService projectService = getITrackerServices().getProjectService();
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+            final ProjectService projectService = getITrackerServices().getProjectService();
+            final ConfigurationService configurationService = getITrackerServices().getConfigurationService();
             
             if(projectScriptForm == null) {
                 projectScriptForm = new ProjectScriptForm();
             }
-            List<ProjectScript> projectScripts = new ArrayList<ProjectScript>();
-            List<WorkflowScript> workflowScripts = configurationService.getWorkflowScripts();
+            final List<ProjectScript> projectScripts;
+            final List<WorkflowScript> workflowScripts = configurationService.getWorkflowScripts();
             
             
             action = request.getParameter("action");
@@ -120,7 +120,7 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
                 String pristr = "";
                 for ( Iterator<ProjectScript> psIterator = projectScripts.iterator(); psIterator.hasNext(); ) {
                     ProjectScript chkprojectScript = psIterator.next();
-                    if ( workflowScript.getId() == chkprojectScript.getScript().getId() ) {
+                    if ( workflowScript.getId().equals(chkprojectScript.getScript()) ) {
                         idstr = String.valueOf(chkprojectScript.getId());
                         fidstr = String.valueOf(chkprojectScript.getFieldId());
                         pristr = String.valueOf(chkprojectScript.getPriority());
@@ -169,17 +169,26 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
                 request.setAttribute("pageTitleArg",pageTitleArg);
                 return mapping.getInputForward();
             }
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
             log.error("Exception while the "+ action + " of ProjectScript form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        }
+        } catch (IllegalAccessException e) {
+            log.error("Exception while the "+ action + " of ProjectScript form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		} catch (InvocationTargetException e) {
+            log.error("Exception while the "+ action + " of ProjectScript form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		} catch (NoSuchMethodException e) {
+            log.error("Exception while the "+ action + " of ProjectScript form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		}
         
         if(! errors.isEmpty()) {
             saveMessages(request, errors);
         }
         request.setAttribute("pageTitleKey",pageTitleKey);
         request.setAttribute("pageTitleArg",pageTitleArg);
-        request.setAttribute("isUpdate",new Boolean(isUpdate));
+        request.setAttribute("isUpdate",isUpdate);
         return mapping.findForward("error");
     }
     

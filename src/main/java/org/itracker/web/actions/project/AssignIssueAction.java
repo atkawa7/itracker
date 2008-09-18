@@ -19,6 +19,7 @@
 package org.itracker.web.actions.project;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.beanutils.converters.IntegerConverter;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -48,6 +50,7 @@ import org.itracker.web.util.Constants;
 
 public class AssignIssueAction extends ItrackerBaseAction {
 
+	private static final Logger log = Logger.getLogger(AssignIssueAction.class);
     public AssignIssueAction() {
     }
 
@@ -64,7 +67,7 @@ public class AssignIssueAction extends ItrackerBaseAction {
             IssueService issueService = getITrackerServices().getIssueService();
             ProjectService projectService = getITrackerServices().getProjectService();
 
-            Integer defaultValue = new Integer(-1);
+            Integer defaultValue = -1;
             IntegerConverter converter = new IntegerConverter(defaultValue);
             Integer issueId = (Integer) converter.convert(Integer.class, (String) PropertyUtils.getSimpleProperty(form, "issueId"));
             Integer projectId = (Integer) converter.convert(Integer.class, (String) PropertyUtils.getSimpleProperty(form, "projectId"));
@@ -91,9 +94,19 @@ public class AssignIssueAction extends ItrackerBaseAction {
             } else {
                 issueService.assignIssue(issueId, userId, currUserId);                
             }
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
+        	log.warn("execute: caught exception", e);
         	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        }
+        } catch (IllegalAccessException e) {
+        	log.warn("execute: caught exception", e);
+        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		} catch (InvocationTargetException e) {
+        	log.warn("execute: caught exception", e);
+        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		} catch (NoSuchMethodException e) {
+        	log.warn("execute: caught exception", e);
+        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+		}
 
         if(! errors.isEmpty()) {
             saveMessages(request, errors);

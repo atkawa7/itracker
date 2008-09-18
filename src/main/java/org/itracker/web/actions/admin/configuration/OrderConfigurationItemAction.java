@@ -120,7 +120,7 @@ public class OrderConfigurationItemAction extends ItrackerBaseAction {
                 }
             }
             
-            newConfigItems = configurationService.updateConfigurationItems(newConfigItems,configType);
+//            newConfigItems = configurationService.updateConfigurationItems(newConfigItems,configType);
             
             // Only resolutions and severities can be reordered at this point.  Statuses
             // and some basic workflow depend on the actual value of the status, so

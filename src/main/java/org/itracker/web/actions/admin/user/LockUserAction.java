@@ -56,13 +56,13 @@ public class LockUserAction extends ItrackerBaseAction {
         try {
             UserService userService = getITrackerServices().getUserService();
 
-            Integer userId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
+            Integer userId = Integer.valueOf((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
             User user = userService.getUser(userId);
             user.setStatus(UserUtilities.STATUS_LOCKED);
             
             if(user.getStatus() == UserUtilities.STATUS_LOCKED) {
                 userService.clearOwnedProjects(user);                
-                if(user != null && SessionManager.getSessionStart(user.getLogin()) != null) {
+                if(SessionManager.getSessionStart(user.getLogin()) != null) {
                     SessionManager.setSessionNeedsReset(user.getLogin());
                 }
             }

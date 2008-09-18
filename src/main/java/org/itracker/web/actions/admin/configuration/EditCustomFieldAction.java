@@ -85,10 +85,10 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             } else if("update".equals(action)) {
                 Integer id = (Integer) PropertyUtils.getSimpleProperty(form, "id");
                 customField = configurationService.getCustomField(id);
-                List<CustomFieldValue> customFieldValues = customField.getOptions();
                 if(customField == null) {
                     throw new SystemConfigurationException("Invalid custom field id " + id);
                 }
+                List<CustomFieldValue> customFieldValues = customField.getOptions();
                 customField.setName(CustomFieldUtilities.getCustomFieldName(id));
                 customField.setFieldType(CustomField.Type.valueOf(customFieldForm.getFieldType()));
                 customField.setRequired(("true".equals((String) PropertyUtils.getSimpleProperty(form, "required")) ? true : false));
@@ -110,7 +110,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             String key = CustomFieldUtilities.getCustomFieldLabelKey(customField.getId());
             log.debug("Processing label translations for custom field " + customField.getId() + " with key " + key);
             if(translations != null && key != null && ! key.equals("")) {
-                for(Iterator iter = translations.keySet().iterator(); iter.hasNext(); ) {
+                for(Iterator<String> iter = translations.keySet().iterator(); iter.hasNext(); ) {
                     String locale = (String) iter.next();
                     if(locale != null) {
                         String translation = (String) translations.get(locale);

@@ -91,7 +91,7 @@ public class ListIssuesAction extends ItrackerBaseAction {
         Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
         // get the request parameters
         UserPreferences userPrefs = (UserPreferences) request.getSession().getAttribute(SES_ATT_NAME_PREFERENCES);
-        Integer projectId = new Integer((request.getParameter(PARAM_NAME_PROJECT_ID) == null ? "-1" : (request.getParameter(PARAM_NAME_PROJECT_ID))));
+        Integer projectId = Integer.valueOf(request.getParameter(PARAM_NAME_PROJECT_ID) == null ? "-1" : (request.getParameter(PARAM_NAME_PROJECT_ID)));
         log.info("execute: " + PARAM_NAME_PROJECT_ID + " was: " + projectId);
         
         // get some values
@@ -211,15 +211,15 @@ public class ListIssuesAction extends ItrackerBaseAction {
         
         // populate the request
         request.setAttribute(ATT_NAME_HAS_ORDER_PARAM, new Boolean(hasOrderParam));
-        request.setAttribute(ATT_NAME_START, new Integer(start));
+        request.setAttribute(ATT_NAME_START, start);
         request.setAttribute(ATT_NAME_ORDER_PARAM, orderParam);
         request.setAttribute(ATT_NAME_ISSUE_PTOS, issuePTOs);
         request.setAttribute(ATT_NAME_PROJECT, project);
         request.setAttribute(ATT_NAME_PROJCET_ID, projectId);
-        request.setAttribute(ATT_NAME_HAS_ISSUES, new Boolean(hasIssues));
-        request.setAttribute(ATT_NAME_HAS_VIEW_ALL, new Boolean(hasViewAll));
-        request.setAttribute(ATT_NAME_NUM_VIEWABLE, new Integer(numViewable));
-        request.setAttribute(ATT_NAME_K, new Integer(k));
+        request.setAttribute(ATT_NAME_HAS_ISSUES, hasIssues);
+        request.setAttribute(ATT_NAME_HAS_VIEW_ALL, hasViewAll);
+        request.setAttribute(ATT_NAME_NUM_VIEWABLE, numViewable);
+        request.setAttribute(ATT_NAME_K, k);
          
         request.setAttribute(ATT_NAME_UNASSIGNED, ITrackerResources.getString(RES_KEY_UNASSIGNED, locale));
         String pageTitleArg = project.getName();
