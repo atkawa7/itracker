@@ -62,11 +62,11 @@
 			<param-name>LoginForward</param-name>
 			<param-value>/login.do</param-value>
 		</init-param>
-		<!-- <init-param>
+		<init-param>
 			<description>List of regex url-patterns to exclude from authentication. Automatically excluded is the LoginForward-path.</description>
 			<param-name>AuthExcludedPaths</param-name>
-			<param-value></param-value>
-			</init-param>-->
+			<param-value>.*\.js$, .*\.jpg$, .*\.gif$, .*\.css$</param-value>
+		</init-param>
 	</filter>
 
 	<filter>
@@ -172,25 +172,6 @@
 		</servlet-class>
 	</servlet>
 
-	<servlet>
-		<servlet-name>action_tmp</servlet-name>
-		<servlet-class>
-			org.apache.struts.action.ActionServlet
-		</servlet-class>
-		<init-param>
-			<param-name>config</param-name>
-			<param-value>/WEB-INF/config/struts-config.xml</param-value>
-		</init-param>
-		<init-param>
-			<param-name>debug</param-name>
-			<param-value>3</param-value>
-		</init-param>
-		<init-param>
-			<param-name>detail</param-name>
-			<param-value>3</param-value>
-		</init-param>
-		<load-on-startup>0</load-on-startup>
-	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>action</servlet-name>
