@@ -176,11 +176,16 @@ public class UserForm extends ValidatorForm {
 	}
 
 	public Integer[] getHiddenIndexSections() {
-		return hiddenIndexSections;
+		if (null == hiddenIndexSections)
+			return null;
+		return hiddenIndexSections.clone();
 	}
 
 	public void setHiddenIndexSections(Integer[] value) {
-		hiddenIndexSections = value;
+		if (null == value)
+			this.hiddenIndexSections = null;
+		else
+			hiddenIndexSections = value.clone();
 	}
 
 	public String getRememberLastSearch() {

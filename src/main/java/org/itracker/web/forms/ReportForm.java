@@ -35,17 +35,17 @@ public class ReportForm extends ValidatorForm {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	String action;
+	private String action;
 	// String id;
-	Integer id;
-	String name;
-	String nameKey;
-	String description;
-	Integer dataType;
-	Integer reportType;
-	org.apache.struts.upload.FormFile fileDataFile;
-	String fileData;
-	String className;
+	private Integer id;
+	private String name;
+	private String nameKey;
+	private String description;
+	private Integer dataType;
+	private Integer reportType;
+	private transient org.apache.struts.upload.FormFile fileDataFile;
+	private String fileData;
+	private String className;
 
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		action = null;

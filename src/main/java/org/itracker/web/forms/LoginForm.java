@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.ValidatorForm;
 
 /**
@@ -37,6 +38,7 @@ public class LoginForm extends ValidatorForm {
 	private static final long serialVersionUID = 1L;
 	private String login = null;
 	private String password = null;
+	private boolean skip = false;
 
 	public String getLogin() {
 		return login;
@@ -60,10 +62,31 @@ public class LoginForm extends ValidatorForm {
 
 	}
 
+	/**
+	 * Skip login authentication.
+	 * 
+	 * @return
+	 */
+	public boolean isSkip() {
+		return skip;
+	}
+
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
-		ActionErrors errors = super.validate(mapping, request);
-
+		Boolean skipLogin = (Boolean) request.getSession().getAttribute(
+				"loginForwarded");
+		ActionErrors errors;
+		/*
+		 * SKIP credentials validation when forwarded to login.
+		 */
+		if (skipLogin == null || !skipLogin.booleanValue()) {
+			// log.debug("execute: forwarded, skip login.");
+			errors = super.validate(mapping, request);
+		} else {
+			request.getSession().removeAttribute("loginForwarded");
+			this.skip = true;
+			return new ActionErrors();
+		}
 		return errors;
 	}
 

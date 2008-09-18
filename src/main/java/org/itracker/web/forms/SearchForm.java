@@ -34,21 +34,21 @@ public class SearchForm extends ValidatorForm {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	String action;
-	Integer[] components;
-	Integer contributor;
-	Integer creator;
-	String orderBy;
-	Integer owner;
-	Integer project;
-	Integer[] projects;
-	String resolution;
-	Integer[] severities;
-	Integer[] statuses;
-	Integer targetVersion;
-	String textphrase;
-	Integer type;
-	Integer[] versions;
+	private String action;
+	private Integer[] components;
+	private Integer contributor;
+	private Integer creator;
+	private String orderBy;
+	private Integer owner;
+	private Integer project;
+	private Integer[] projects;
+	private String resolution;
+	private Integer[] severities;
+	private Integer[] statuses;
+	private Integer targetVersion;
+	private String textphrase;
+	private Integer type;
+	private Integer[] versions;
 
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		action = null;
@@ -85,11 +85,16 @@ public class SearchForm extends ValidatorForm {
 	}
 
 	public Integer[] getComponents() {
-		return components;
+		if (null == components)
+			return null;
+		return components.clone();
 	}
 
 	public void setComponents(Integer[] components) {
-		this.components = components;
+		if (null == components)
+			this.components = null;
+		else
+			this.components = components.clone();
 	}
 
 	public Integer getContributor() {
@@ -133,11 +138,16 @@ public class SearchForm extends ValidatorForm {
 	}
 
 	public Integer[] getProjects() {
-		return projects;
+		if (null == projects)
+			return null;
+		return projects.clone();
 	}
 
 	public void setProjects(Integer[] projects) {
-		this.projects = projects;
+		if (null == projects)
+			this.projects = null;
+		else
+			this.projects = projects.clone();
 	}
 
 	public String getResolution() {
@@ -149,19 +159,29 @@ public class SearchForm extends ValidatorForm {
 	}
 
 	public Integer[] getSeverities() {
-		return severities;
+		if (null == severities)
+			return null;
+		return severities.clone();
 	}
 
 	public void setSeverities(Integer[] severities) {
-		this.severities = severities;
+		if (null == severities)
+			this.severities = null;
+		else
+			this.severities = severities.clone();
 	}
 
 	public Integer[] getStatuses() {
-		return statuses;
+		if (null == statuses)
+			return null;
+		return statuses.clone();
 	}
 
 	public void setStatuses(Integer[] statuses) {
-		this.statuses = statuses;
+		if (null == statuses)
+			this.statuses = null;
+		else
+			this.statuses = statuses.clone();
 	}
 
 	public Integer getTargetVersion() {
@@ -189,11 +209,16 @@ public class SearchForm extends ValidatorForm {
 	}
 
 	public Integer[] getVersions() {
-		return versions;
+		if (null == this.versions)
+			return null;
+		return versions.clone();
 	}
 
 	public void setVersions(Integer[] versions) {
-		this.versions = versions;
+		if (null == versions)
+			this.versions = null;
+		else
+			this.versions = versions.clone();
 	}
 
 }

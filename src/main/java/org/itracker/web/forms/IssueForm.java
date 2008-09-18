@@ -60,26 +60,26 @@ public class IssueForm extends ITrackerForm {
 
 	private static final Logger log = Logger.getLogger(IssueForm.class);
 
-	Integer id = null;
-	String caller = null;
-	Integer projectId = null;
-	Integer creatorId = null;
-	Integer ownerId = null;
-	String description = null;
-	Integer severity = null;
-	Integer status = null;
-	Integer prevStatus = null;
-	String resolution = null;
-	Integer targetVersion = null;
-	Integer[] components = new Integer[0];
-	Integer[] versions = new Integer[0];
-	String attachmentDescription = null;
-	FormFile attachment = null;
-	String history = null;
+	private Integer id = null;
+	private String caller = null;
+	private Integer projectId = null;
+	private Integer creatorId = null;
+	private Integer ownerId = null;
+	private String description = null;
+	private Integer severity = null;
+	private Integer status = null;
+	private Integer prevStatus = null;
+	private String resolution = null;
+	private Integer targetVersion = null;
+	private Integer[] components = new Integer[0];
+	private Integer[] versions = new Integer[0];
+	private String attachmentDescription = null;
+	transient private FormFile attachment = null;
+	private String history = null;
 	// lets try to put Integer,String here:
-	HashMap<String, String> customFields = new HashMap<String, String>();
-	Integer relationType = null;
-	Integer relatedIssueId = null;
+	private HashMap<String, String> customFields = new HashMap<String, String>();
+	private Integer relationType = null;
+	private Integer relatedIssueId = null;
 
 	public FormFile getAttachment() {
 		return attachment;
@@ -106,11 +106,16 @@ public class IssueForm extends ITrackerForm {
 	}
 
 	public Integer[] getComponents() {
-		return components;
+		if (null == components)
+			return null;
+		return components.clone();
 	}
 
 	public void setComponents(Integer[] components) {
-		this.components = components;
+		if (null == components)
+			this.components = null;
+		else
+			this.components = components.clone();
 	}
 
 	public Integer getCreatorId() {
@@ -228,11 +233,16 @@ public class IssueForm extends ITrackerForm {
 	}
 
 	public Integer[] getVersions() {
-		return versions;
+		if (null == versions)
+			return null;
+		return versions.clone();
 	}
 
 	public void setVersions(Integer[] versions) {
-		this.versions = versions;
+		if (null == versions)
+			this.versions = null;
+		else
+			this.versions = versions.clone();
 	}
 
 	/**

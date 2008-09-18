@@ -35,16 +35,16 @@ public class ProjectForm extends ValidatorForm {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	String action;
-	Integer id;
-	String name;
-	Integer status;
-	String description;
-	Integer[] owners;
-	Integer[] users;
-	Integer[] permissions;
-	Integer[] options;
-	Integer[] fields;
+	private String action;
+	private Integer id;
+	private String name;
+	private Integer status;
+	private String description;
+	private Integer[] owners;
+	private Integer[] users;
+	private Integer[] permissions;
+	private Integer[] options;
+	private Integer[] fields;
 
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		action = null;
@@ -84,11 +84,16 @@ public class ProjectForm extends ValidatorForm {
 	}
 
 	public Integer[] getFields() {
-		return fields;
+		if (null == fields)
+			return null;
+		return fields.clone();
 	}
 
 	public void setFields(Integer[] fields) {
-		this.fields = fields;
+		if (null == fields)
+			this.fields = null;
+		else
+			this.fields = fields.clone();
 	}
 
 	public Integer getId() {
@@ -108,27 +113,37 @@ public class ProjectForm extends ValidatorForm {
 	}
 
 	public Integer[] getOptions() {
-		return options;
+		if (null == options)
+			return null;
+		return options.clone();
 	}
 
 	public void setOptions(Integer[] options) {
-		this.options = options;
+		if (null == options)
+			this.options = null;
+		else
+			this.options = options.clone();
 	}
 
 	public Integer[] getOwners() {
-		return owners;
+		if (null == owners)
+			return null;
+		return owners.clone();
 	}
 
 	public void setOwners(Integer[] owners) {
-		this.owners = owners;
+		if (null == owners)
+			this.owners = null;
+		else
+			this.owners = owners.clone();
 	}
 
 	public Integer[] getPermissions() {
-		return permissions;
+		return permissions.clone();
 	}
 
 	public void setPermissions(Integer[] permissions) {
-		this.permissions = permissions;
+		this.permissions = permissions.clone();
 	}
 
 	public Integer getStatus() {
@@ -140,11 +155,15 @@ public class ProjectForm extends ValidatorForm {
 	}
 
 	public Integer[] getUsers() {
-		return users;
+		if (null == users)
+			return null;
+		return users.clone();
 	}
 
 	public void setUsers(Integer[] users) {
-		this.users = users;
+		if (null == users)
+			this.users = null;
+		else
+			this.users = users.clone();
 	}
-
 }

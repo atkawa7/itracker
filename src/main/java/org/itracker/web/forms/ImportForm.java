@@ -35,12 +35,12 @@ public class ImportForm extends ValidatorForm {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	org.apache.struts.upload.FormFile importFile;
-	Boolean optionreuseusers;
-	Boolean optionreuseprojects;
-	Boolean optionreuseconfig;
-	Boolean optionreusefields;
-	Boolean optioncreatepasswords;
+	private transient org.apache.struts.upload.FormFile importFile;
+	private Boolean optionreuseusers;
+	private Boolean optionreuseprojects;
+	private Boolean optionreuseconfig;
+	private Boolean optionreusefields;
+	private Boolean optioncreatepasswords;
 
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		importFile = null;

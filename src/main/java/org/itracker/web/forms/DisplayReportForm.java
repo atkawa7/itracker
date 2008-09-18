@@ -35,10 +35,10 @@ public class DisplayReportForm extends ValidatorForm {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	String type;
-	Integer[] projectIds;
-	Integer reportId;
-	String reportOutput;
+	private String type;
+	private Integer[] projectIds;
+	private Integer reportId;
+	private String reportOutput;
 
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		type = null;
@@ -56,11 +56,16 @@ public class DisplayReportForm extends ValidatorForm {
 	}
 
 	public Integer[] getProjectIds() {
-		return projectIds;
+		if (null == projectIds)
+			return null;
+		return projectIds.clone();
 	}
 
 	public void setProjectIds(Integer[] projectIds) {
-		this.projectIds = projectIds;
+		if (null == projectIds)
+			this.projectIds = null;
+		else
+			this.projectIds = projectIds.clone();
 	}
 
 	public Integer getReportId() {
