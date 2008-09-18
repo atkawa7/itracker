@@ -113,6 +113,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     	<constructor-arg ref="issueActivityDAO"/>
     	<constructor-arg ref="versionDAO"/>
     	<constructor-arg ref="notificationService"/>
+        <constructor-arg ref="customFieldDAO"/>
     </bean>
 
 	<!--  Notification service -->
