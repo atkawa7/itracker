@@ -1,6 +1,7 @@
 package org.itracker.persistence.dao;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.itracker.model.WorkflowScript;
@@ -11,6 +12,7 @@ import org.itracker.model.WorkflowScript;
 public class WorkflowScriptDAOImpl extends BaseHibernateDAOImpl<WorkflowScript> 
         implements WorkflowScriptDAO {
 
+	private static final Logger log = Logger.getLogger(WorkflowScript.class);
     /**
      * Find a <code>WorkflowScript</code> by its primary key
      *
@@ -19,10 +21,10 @@ public class WorkflowScriptDAOImpl extends BaseHibernateDAOImpl<WorkflowScript>
      */
     public WorkflowScript findByPrimaryKey(Integer id) {      
         try {
-            WorkflowScript workflowScriptBean = new WorkflowScript ();
-            workflowScriptBean = (WorkflowScript)getSession().get(WorkflowScript.class, id);
+            WorkflowScript workflowScriptBean = (WorkflowScript)getSession().get(WorkflowScript.class, id);
             return workflowScriptBean;
         } catch (HibernateException ex) {
+        	log.error("findByPrimaryKey: failed with hibernate exception", ex);
             throw convertHibernateAccessException(ex);
         }
     }

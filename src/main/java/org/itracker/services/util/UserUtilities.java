@@ -45,7 +45,7 @@ import org.itracker.services.exceptions.PasswordException;
 import sun.misc.BASE64Encoder;
 
 public class UserUtilities implements AuthenticationConstants {
-    public static final char[] alphabet = new char[] {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    protected static final char[] alphabet = new char[] {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
     
     public static final int STATUS_DELETED = -1;
     public static final int STATUS_ACTIVE = 1;
@@ -320,7 +320,7 @@ public class UserUtilities implements AuthenticationConstants {
             permissionsList.add(new Permission(permissions[i], user, project));
         }
         permissionsArray = new Permission[permissionsList.size()];
-        permissionsArray = (Permission[])permissionsList.toArray();
+        permissionsArray = permissionsList.toArray(new Permission[]{});
         
         return permissionsArray;
     }
@@ -368,16 +368,16 @@ public class UserUtilities implements AuthenticationConstants {
     public static Integer[] getHiddenIndexSections(int sections) {
         List<Integer> sectionsList = new ArrayList<Integer>();
         if(hideIndexSection(PREF_HIDE_ASSIGNED, sections)) {
-            sectionsList.add(new Integer(PREF_HIDE_ASSIGNED));
+            sectionsList.add(Integer.valueOf(PREF_HIDE_ASSIGNED));
         }
         if(hideIndexSection(PREF_HIDE_UNASSIGNED, sections)) {
-            sectionsList.add(new Integer(PREF_HIDE_UNASSIGNED));
+            sectionsList.add(Integer.valueOf(PREF_HIDE_UNASSIGNED));
         }
         if(hideIndexSection(PREF_HIDE_CREATED, sections)) {
-            sectionsList.add(new Integer(PREF_HIDE_CREATED));
+            sectionsList.add(Integer.valueOf(PREF_HIDE_CREATED));
         }
         if(hideIndexSection(PREF_HIDE_WATCHED, sections)) {
-            sectionsList.add(new Integer(PREF_HIDE_WATCHED));
+            sectionsList.add(Integer.valueOf(PREF_HIDE_WATCHED));
         }
         Integer[] sectionsArray = new Integer[sectionsList.size()];
         sectionsList.toArray(sectionsArray);

@@ -52,7 +52,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class ImportHandler extends DefaultHandler implements ImportExportTags {
     
     private final Logger logger;
-    private List<Object> items;
+    private List<AbstractEntity> items;
     private StringBuffer tagBuffer;
     private SAXException endException;
 
@@ -63,13 +63,12 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
 
     public ImportHandler() {
         this.logger = Logger.getLogger(getClass());
-        this.items = new ArrayList<Object>();
+        this.items = new ArrayList<AbstractEntity>();
         this.endException = null;
     }
 
     public AbstractEntity[] getModels() {
-        AbstractEntity[] modelsArray = new AbstractEntity[items.size()];
-        modelsArray = (AbstractEntity[])items.toArray();
+        AbstractEntity[] modelsArray = items.toArray(new AbstractEntity[]{});
         return modelsArray;
     }
 
@@ -213,7 +212,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
         }
     }
 
-    public void endElement(String uri, String name, String qName) {
+    public void endElement(String uri, String name, String qName) throws SAXException {
         logger.debug("Completing import tag " + qName);
 
         //logger.debug("ParentModel: " + parentModel);
@@ -221,19 +220,19 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
 
         try {
             if(TAG_ISSUE.equals(qName) || TAG_PROJECT.equals(qName) || TAG_USER.equals(qName) || TAG_CONFIGURATION.equals(qName)) {
-            	items.add(parentModel.clone());
+            	items.add((AbstractEntity)parentModel.clone());
                 parentModel = null;
                 childModel = null;
                 itemList = null;
             } else if(TAG_RESOLUTION.equals(qName) || TAG_SEVERITY.equals(qName) || TAG_STATUS.equals(qName)) {
                 ((Configuration) childModel).setName(getBuffer());
-                items.add(childModel.clone());
+                items.add((AbstractEntity)childModel.clone());
                 ((SystemConfiguration) parentModel).addConfiguration((Configuration) childModel);
                 childModel = null;
             } else if(TAG_COMPONENT.equals(qName) || TAG_VERSION.equals(qName) || TAG_CUSTOM_FIELD.equals(qName)) {
                 // Add to both so we can search the the models for components, customfields, and versions later
                 // Make sure they are double added when processed
-            	items.add(childModel.clone());
+            	items.add((AbstractEntity)childModel.clone());
                 itemList.add(childModel.clone());
                 childModel = null;
             } else if(TAG_HISTORY_ENTRY.equals(qName)) {
@@ -421,10 +420,18 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if(TAG_VERSION_NUMBER.equals(qName)) {
                 ((Version) childModel).setVersionInfo(getBuffer());
             }
-        } catch(Exception e) {
-            logger.debug("Error importing data.", e);
+        } catch(RuntimeException e) {
+            logger.debug("endElement: RuntimeException importing data.", e);
             endException = new SAXException("Error processing tag " + qName + ": " + e.getMessage());
-        }
+            throw endException;
+        } catch (SAXException e) {
+            logger.debug("endElement: SAXException importing data.", e);
+            throw e;
+		} catch (CloneNotSupportedException e) {
+            logger.debug("endElement: CloneNotSupportedException importing data.", e);
+            endException = new SAXException("Error processing tag " + qName + ": " + e.getMessage());
+            throw endException;
+		} 
         tagBuffer = null;
     }
 

@@ -125,25 +125,25 @@ public class ProjectUtilities  {
     public static Integer[] getOptions(int currentOptions) {
         List<Integer> options = new ArrayList<Integer>();
         if(hasOption(OPTION_SURPRESS_HISTORY_HTML, currentOptions)) {
-            options.add(new Integer(OPTION_SURPRESS_HISTORY_HTML));
+            options.add(OPTION_SURPRESS_HISTORY_HTML);
         }
         if(hasOption(OPTION_ALLOW_ASSIGN_TO_CLOSE, currentOptions)) {
-            options.add(new Integer(OPTION_ALLOW_ASSIGN_TO_CLOSE));
+            options.add(OPTION_ALLOW_ASSIGN_TO_CLOSE);
         }
         if(hasOption(OPTION_PREDEFINED_RESOLUTIONS, currentOptions)) {
-            options.add(new Integer(OPTION_PREDEFINED_RESOLUTIONS));
+            options.add(OPTION_PREDEFINED_RESOLUTIONS);
         }
         if(hasOption(OPTION_ALLOW_SELF_REGISTERED_CREATE, currentOptions)) {
-            options.add(new Integer(OPTION_ALLOW_SELF_REGISTERED_CREATE));
+            options.add(OPTION_ALLOW_SELF_REGISTERED_CREATE);
         }
         if(hasOption(OPTION_ALLOW_SELF_REGISTERED_VIEW_ALL, currentOptions)) {
-            options.add(new Integer(OPTION_ALLOW_SELF_REGISTERED_VIEW_ALL));
+            options.add(OPTION_ALLOW_SELF_REGISTERED_VIEW_ALL);
         }
         if(hasOption(OPTION_NO_ATTACHMENTS, currentOptions)) {
-            options.add(new Integer(OPTION_NO_ATTACHMENTS));
+            options.add(OPTION_NO_ATTACHMENTS);
         }
         if(hasOption(OPTION_LITERAL_HISTORY_HTML, currentOptions)) {
-            options.add(new Integer(OPTION_LITERAL_HISTORY_HTML));
+            options.add(OPTION_LITERAL_HISTORY_HTML);
         }
         Integer[] optionsArray = new Integer[options.size()];
         options.toArray(optionsArray);

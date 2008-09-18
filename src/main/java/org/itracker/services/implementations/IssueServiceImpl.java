@@ -128,7 +128,7 @@ public class IssueServiceImpl implements IssueService {
 			IssueDAO issueDAO, IssueHistoryDAO issueHistoryDAO,
 			IssueRelationDAO issueRelationDAO,
 			IssueAttachmentDAO issueAttachmentDAO, ComponentDAO componentDAO,
-			IssueActivityDAO issueActivityDAO, VersionDAO versionDAO, NotificationService notificationService) {
+			IssueActivityDAO issueActivityDAO, VersionDAO versionDAO, CustomFieldDAO customFieldDAO, NotificationService notificationService) {
 
 		this.userDAO = userDAO;
 		this.projectDAO = projectDAO;
@@ -139,6 +139,7 @@ public class IssueServiceImpl implements IssueService {
 		this.componentDAO = componentDAO;
 		this.issueActivityDAO = issueActivityDAO;
 		this.versionDAO = versionDAO;
+		this.customFieldDAO = customFieldDAO;
 		this.notificationService = notificationService;
 	}
 
@@ -663,8 +664,7 @@ public class IssueServiceImpl implements IssueService {
 
 		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
 
-		List<Component> components = new ArrayList<Component>();
-		components = issue.getComponents();
+		List<Component> components = issue.getComponents();
 
 		if (components != null) {
 
@@ -1265,7 +1265,7 @@ public class IssueServiceImpl implements IssueService {
 
 		}
 
-		return new Integer(-1);
+		return Integer.valueOf(-1);
 
 	}
 
@@ -1314,12 +1314,10 @@ public class IssueServiceImpl implements IssueService {
 
 		int i = 0;
 
-		IssueActivity[] activityArray = new IssueActivity[0];
-
 		Collection<IssueActivity> activity = getIssueActivityDAO()
 				.findByIssueId(issueId);
 
-		activityArray = new IssueActivity[activity.size()];
+		IssueActivity[] activityArray = new IssueActivity[activity.size()];
 
 		for (Iterator<IssueActivity> iterator = activity.iterator(); iterator
 				.hasNext(); i++) {
@@ -1340,12 +1338,12 @@ public class IssueServiceImpl implements IssueService {
 
 		int i = 0;
 
-		IssueActivity[] activityArray = new IssueActivity[0];
+		
 
 		Collection<IssueActivity> activity = getIssueActivityDAO()
 				.findByIssueIdAndNotification(issueId, notificationSent);
 
-		activityArray = new IssueActivity[activity.size()];
+		IssueActivity[] activityArray = new IssueActivity[activity.size()];
 
 		for (Iterator<IssueActivity> iterator = activity.iterator(); iterator
 				.hasNext(); i++) {
@@ -1423,7 +1421,7 @@ public class IssueServiceImpl implements IssueService {
 
 	public byte[] getIssueAttachmentData(Integer attachmentId) {
 
-		byte[] data = new byte[0];
+		byte[] data;
 
 		IssueAttachment attachment = getIssueAttachmentDAO().findByPrimaryKey(
 				attachmentId);

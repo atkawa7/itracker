@@ -29,10 +29,10 @@ public class IssueException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = 3433495017849044287L;
-	public static String TYPE_UNKNOWN = "itracker.web.error.system";
-    public static String TYPE_CF_PARSE_NUM = "itracker.web.error.validate.number";
-    public static String TYPE_CF_PARSE_DATE = "itracker.web.error.validate.date";
-    public static String TYPE_CF_REQ_FIELD = "itracker.web.error.validate.required";
+	public static final String TYPE_UNKNOWN = "itracker.web.error.system";
+    public static final String TYPE_CF_PARSE_NUM = "itracker.web.error.validate.number";
+    public static final String TYPE_CF_PARSE_DATE = "itracker.web.error.validate.date";
+    public static final String TYPE_CF_REQ_FIELD = "itracker.web.error.validate.required";
 
     private String type;
 

@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.naming.Context;
@@ -52,7 +53,6 @@ import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.persistence.dao.ProjectScriptDAO;
 import org.itracker.persistence.dao.WorkflowScriptDAO;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
@@ -924,10 +924,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     
     public String[] getSortedKeys() {
         
-        String[] sortedKeys = new String[0];
         int i = 0;
         Collection<Language> items = languageDAO.findByLocale(ITrackerResources.BASE_LOCALE);
-        sortedKeys = new String[items.size()];
+        String[] sortedKeys = new String[items.size()];
         
         for (Iterator<Language> iter = items.iterator(); iter.hasNext(); i++) {
             Language item = (Language) iter.next();
@@ -959,7 +958,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
     
     public List<NameValuePair> getDefinedKeysAsArray(String locale) {
-        NameValuePair[] keys = new NameValuePair[0];
+        NameValuePair[] keys = null;
         if (locale == null || locale.equals("")) {
             locale = ITrackerResources.BASE_LOCALE;
         }
@@ -986,9 +985,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     
     public List<Language> getLanguage(Locale locale) {
         
-        Language[] languageArray = new Language[0];
         
-        HashMap<String,String> language = new HashMap<String,String>();
+        Map<String,String> language = new HashMap<String,String>();
         
         Collection<Language> baseItems = languageDAO.findByLocale(ITrackerResources.BASE_LOCALE);
         
@@ -1028,7 +1026,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             
         }
         
-        languageArray = new Language[language.size()];
+        Language[] languageArray = new Language[language.size()];
         
         int i = 0;
         
@@ -1037,7 +1035,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         for (Iterator<String> iterator = language.keySet().iterator(); iterator.hasNext(); i++) {
             
             String key = (String) iterator.next();
-            
+
             languageArray[i] = new Language(localeString, key, (String) language.get(key));
             
         }
@@ -1228,8 +1226,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         // the config and update
         
         // if necessary
-        
-        try {
+
             
             List<Configuration> initialized = getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_INITIALIZED);
             
@@ -1241,7 +1238,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                 
                 if (baseLanguage == null || baseLanguage.size() == 0) {
                     
-                    throw new SystemConfigurationException(
+                    throw new IllegalStateException (
                             "Languages must be initialized before the system configuration can be loaded.");
                     
                 }
@@ -1273,9 +1270,10 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                                     SystemConfigurationUtilities.TYPE_RESOLUTION, resolutionString, props
                                     .getProperty("version"), resolutionNumber));
                             
-                        } catch (Exception e) {
+                        } catch (RuntimeException e) {
                             
                             logger.error("Unable to load resolution value: " + baseLanguage.get(i).getResourceKey(), e);
+                            throw e;
                             
                         }
                         
@@ -1294,10 +1292,10 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                             createConfigurationItem(new Configuration(SystemConfigurationUtilities.TYPE_SEVERITY,
                                     severityString, props.getProperty("version"), severityNumber));
                             
-                        } catch (Exception e) {
+                        } catch (RuntimeException e) {
                             
                             logger.error("Unable to load severity value: " + baseLanguage.get(i).getResourceKey(), e);
-                            
+                            throw e;
                         }
                         
                     }
@@ -1314,17 +1312,16 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                             
                             createConfigurationItem(new Configuration(SystemConfigurationUtilities.TYPE_STATUS,
                                     statusString, props.getProperty("version"), statusNumber));
-                        } catch (Exception e) {
+                        } catch (RuntimeException e) {
                             logger.error("Unable to load status value: " + baseLanguage.get(i).getResourceKey(), e);
+                            throw e;
                         }
                     }
                 }
                 createConfigurationItem(new Configuration(SystemConfigurationUtilities.TYPE_INITIALIZED, "1",
                         props.getProperty("version")));
             }
-        } catch (Exception e) {
-            logger.error("Unable to initialize system configuration.", e);
-        }
+        
         
     }
     

@@ -69,18 +69,21 @@ public class NotificationServiceImpl implements NotificationService {
 		this.projectService = null;
 		this.notificationDao = null;
 	}
-	public NotificationServiceImpl(
-			EmailService emailService, ProjectService projectService, NotificationDAO notificationDao) {
+
+	public NotificationServiceImpl(EmailService emailService,
+			ProjectService projectService, NotificationDAO notificationDao) {
 		this();
 		this.setEmailService(emailService);
 		this.setProjectService(projectService);
 		this.setNotificationDao(notificationDao);
 	}
 
-	public void sendNotification(Notification notification, Type type, String url) {
+	public void sendNotification(Notification notification, Type type,
+			String url) {
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("sendNotification: called with notification: " + notification + ", type: " + url + ", url: " + url);
+			logger.debug("sendNotification: called with notification: "
+					+ notification + ", type: " + url + ", url: " + url);
 		}
 		if (null == notification) {
 			throw new IllegalArgumentException("notification must not be null");
@@ -89,20 +92,24 @@ public class NotificationServiceImpl implements NotificationService {
 			throw new IllegalStateException("service not initialized yet");
 		}
 		if (type == Type.SELF_REGISTER) {
-			this.handleSelfRegistrationNotification(notification.getUser().getLogin(), notification.getUser().getEmailAddress(), url);
+			this.handleSelfRegistrationNotification(notification.getUser()
+					.getLogin(), notification.getUser().getEmailAddress(), url);
 		} else {
 			handleIssueNotification(notification.getIssue(), type, url);
-			
+
 		}
 
 	}
+
 	public void sendNotification(Issue issue, Type type, String baseURL) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("sendNotification: called with issue: " + issue + ", type: " + type + ", baseURL: " + baseURL);
+			logger.debug("sendNotification: called with issue: " + issue
+					+ ", type: " + type + ", baseURL: " + baseURL);
 		}
 		handleIssueNotification(issue, type, baseURL);
-		
+
 	}
+
 	public void setEmailService(EmailService emailService) {
 
 		if (null == emailService)
@@ -115,8 +122,6 @@ public class NotificationServiceImpl implements NotificationService {
 
 	}
 
-
-
 	/**
 	 * 
 	 * @param notificationMsg
@@ -125,11 +130,17 @@ public class NotificationServiceImpl implements NotificationService {
 	private void handleSelfRegistrationNotification(String login,
 			InternetAddress toAddress, String url) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("handleSelfRegistrationNotification: called with login: " + login + ", toAddress" + toAddress + ", url: " + url);
+			logger
+					.debug("handleSelfRegistrationNotification: called with login: "
+							+ login
+							+ ", toAddress"
+							+ toAddress
+							+ ", url: "
+							+ url);
 		}
 		try {
 
-			if (toAddress != null && !"".equals(toAddress)) {
+			if (toAddress != null && !"".equals(toAddress.getAddress())) {
 				String subject = ITrackerResources
 						.getString("itracker.email.selfreg.subject");
 				String msgText = ITrackerResources.getString(
@@ -137,11 +148,19 @@ public class NotificationServiceImpl implements NotificationService {
 								.getDefaultLocale(), new Object[] { login,
 								url + "/login.do" });
 				emailService.sendEmail(toAddress, subject, msgText);
+			} else {
+				throw new IllegalArgumentException(
+						"To-address must be set for self registration notification.");
 			}
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
+			logger.error("failed to handle self registration notification for "
+					+ toAddress, e);
+			throw e;
 		}
 	}
-	/** Method for internal sending of a notification of specific type.
+
+	/**
+	 * Method for internal sending of a notification of specific type.
 	 * 
 	 * @param notificationMsg
 	 * @param type
@@ -150,10 +169,12 @@ public class NotificationServiceImpl implements NotificationService {
 	private void handleIssueNotification(Issue issue, Type type, String url) {
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("handleIssueNotification: called with issue: " + issue + ", type: " + type  + "url: " + url);
+			logger.debug("handleIssueNotification: called with issue: " + issue
+					+ ", type: " + type + "url: " + url);
 		}
 		this.handleIssueNotification(issue, type, url, null, null);
 	}
+
 	/**
 	 * Method for internal sending of a notification of specific type.
 	 * 
@@ -161,22 +182,34 @@ public class NotificationServiceImpl implements NotificationService {
 	 * @param type
 	 * @param url
 	 */
-	private void handleIssueNotification(Issue issue, Type type, String url, InternetAddress[] receipients, Integer lastModifiedDays) {
+	private void handleIssueNotification(Issue issue, Type type, String url,
+			InternetAddress[] receipients, Integer lastModifiedDays) {
 		try {
 
 			if (logger.isDebugEnabled()) {
-				logger.debug("handleIssueNotificationhandleIssueNotification: called with issue: " + issue + ", type: " + type  + "url: " + url + ", receipients: " + (null == receipients? "<null>": String.valueOf(Arrays.asList(receipients))) + ", lastModifiedDays: " + lastModifiedDays);
+				logger
+						.debug("handleIssueNotificationhandleIssueNotification: called with issue: "
+								+ issue
+								+ ", type: "
+								+ type
+								+ "url: "
+								+ url
+								+ ", receipients: "
+								+ (null == receipients ? "<null>" : String
+										.valueOf(Arrays.asList(receipients)))
+								+ ", lastModifiedDays: " + lastModifiedDays);
 			}
 			List<Notification> notifications;
 
 			if (issue == null) {
-				logger.warn("handleIssueNotification: issue was null. Notification will not be handled");
+				logger
+						.warn("handleIssueNotification: issue was null. Notification will not be handled");
 				return;
 			}
 
 			if (lastModifiedDays == null || lastModifiedDays.intValue() < 0) {
-				lastModifiedDays = new Integer(
-						org.itracker.web.scheduler.tasks.ReminderNotification.DEFAULT_ISSUE_AGE);
+				lastModifiedDays = Integer
+						.valueOf(org.itracker.web.scheduler.tasks.ReminderNotification.DEFAULT_ISSUE_AGE);
 			}
 
 			if (receipients == null) {
@@ -186,32 +219,35 @@ public class NotificationServiceImpl implements NotificationService {
 				User currentUser;
 				while (it.hasNext()) {
 					currentUser = it.next().getUser();
-					if (null != currentUser && null != currentUser.getEmailAddress() && null != currentUser.getEmail() 
-							&& (!recList.contains(currentUser.getEmailAddress())) 
-							&& currentUser.getEmail()
-									.indexOf('@') >= 0) {
-						
+					if (null != currentUser
+							&& null != currentUser.getEmailAddress()
+							&& null != currentUser.getEmail()
+							&& (!recList
+									.contains(currentUser.getEmailAddress()))
+							&& currentUser.getEmail().indexOf('@') >= 0) {
+
 						recList.add(currentUser.getEmailAddress());
 					}
 				}
-				receipients = recList.toArray(new InternetAddress[]{});
+				receipients = recList.toArray(new InternetAddress[] {});
 			}
 
 			List<IssueActivity> activity = getIssueService().getIssueActivity(
 					issue.getId(), false);
 			issue.getActivities();
-			List<IssueHistory> histories = 
-				issue.getHistory();
+			List<IssueHistory> histories = issue.getHistory();
 			Iterator<IssueHistory> it = histories.iterator();
 			IssueHistory history = null, currentHistory;
 			history = getIssueService().getLastIssueHistory(issue.getId());
-			
+
 			Integer historyId = 0;
 			// find history with greatest id
 			while (it.hasNext()) {
 				currentHistory = (IssueHistory) it.next();
 				if (logger.isDebugEnabled()) {
-					logger.debug("handleIssueNotification: found history: " + currentHistory.getDescription() + " (time: " + currentHistory.getCreateDate());
+					logger.debug("handleIssueNotification: found history: "
+							+ currentHistory.getDescription() + " (time: "
+							+ currentHistory.getCreateDate());
 				}
 				if (currentHistory.getId() > historyId) {
 					historyId = currentHistory.getId();
@@ -219,15 +255,19 @@ public class NotificationServiceImpl implements NotificationService {
 				}
 			}
 			if (logger.isDebugEnabled() && null != history) {
-				logger.debug("handleIssueNotification: got most recent history: " + history + " (" + history.getDescription() + ")");
+				logger
+						.debug("handleIssueNotification: got most recent history: "
+								+ history
+								+ " ("
+								+ history.getDescription()
+								+ ")");
 			}
-			
-			
-			List<Component> components = //issueService
-					//.getIssueComponents(issue.getId());
-				issue.getComponents();
-			List<Version> versions = //issueService.getIssueVersions(issue.getId());
-				issue.getVersions();
+
+			List<Component> components = // issueService
+			// .getIssueComponents(issue.getId());
+			issue.getComponents();
+			List<Version> versions = // issueService.getIssueVersions(issue.getId());
+			issue.getVersions();
 
 			if (receipients.length > 0) {
 				String subject = "";
@@ -263,16 +303,18 @@ public class NotificationServiceImpl implements NotificationService {
 									lastModifiedDays });
 				}
 
-				String activityString = "";
+				String activityString;
 				String componentString = "";
 				String versionString = "";
+				StringBuffer sb = new StringBuffer();
 				for (int i = 0; i < activity.size(); i++) {
-					activityString += IssueUtilities
-							.getActivityName(activity.get(i).getActivityType())
-							+ ": "
-							+ activity.get(i).getDescription()
-							+ "\n";
+					sb.append(
+							IssueUtilities.getActivityName(activity.get(i)
+									.getActivityType())).append(": ").append(
+							activity.get(i).getDescription()).append("\n");
+
 				}
+				activityString = sb.toString();
 				for (int i = 0; i < components.size(); i++) {
 					componentString += (i != 0 ? ", " : "")
 							+ components.get(i).getName();
@@ -288,20 +330,18 @@ public class NotificationServiceImpl implements NotificationService {
 							.getString(
 									"itracker.email.issue.body.reminder",
 									new Object[] {
-											url + "/module-projects/view_issue.do?id="
+											url
+													+ "/module-projects/view_issue.do?id="
 													+ issue.getId(),
 											issue.getProject().getName(),
 											issue.getDescription(),
-											IssueUtilities
-													.getStatusName(issue
-															.getStatus()),
+											IssueUtilities.getStatusName(issue
+													.getStatus()),
 											IssueUtilities
 													.getSeverityName(issue
 															.getSeverity()),
-											(issue.getOwner()
-													.getFirstName() != null ? issue
-													.getOwner()
-													.getFirstName()
+											(issue.getOwner().getFirstName() != null ? issue
+													.getOwner().getFirstName()
 													: "")
 													+ " "
 													+ (issue.getOwner()
@@ -311,8 +351,7 @@ public class NotificationServiceImpl implements NotificationService {
 															: ""),
 											componentString,
 											(history == null ? "" : history
-													.getUser()
-													.getFirstName()
+													.getUser().getFirstName()
 													+ " "
 													+ history.getUser()
 															.getLastName()),
@@ -320,8 +359,7 @@ public class NotificationServiceImpl implements NotificationService {
 													: HTMLUtilities
 															.removeMarkup(history
 																	.getDescription())),
-											lastModifiedDays,
-											activityString });
+											lastModifiedDays, activityString });
 				} else {
 					String resolution = (issue.getResolution() == null ? ""
 							: issue.getResolution());
@@ -338,21 +376,19 @@ public class NotificationServiceImpl implements NotificationService {
 							.getString(
 									"itracker.email.issue.body.standard",
 									new Object[] {
-											url + "/module-projects/view_issue.do?id="
+											url
+													+ "/module-projects/view_issue.do?id="
 													+ issue.getId(),
 											issue.getProject().getName(),
 											issue.getDescription(),
-											IssueUtilities
-													.getStatusName(issue
-															.getStatus()),
+											IssueUtilities.getStatusName(issue
+													.getStatus()),
 											resolution,
 											IssueUtilities
 													.getSeverityName(issue
 															.getSeverity()),
-											(issue.getOwner()
-													.getFirstName() != null ? issue
-													.getOwner()
-													.getFirstName()
+											(issue.getOwner().getFirstName() != null ? issue
+													.getOwner().getFirstName()
 													: "")
 													+ " "
 													+ (issue.getOwner()
@@ -362,8 +398,7 @@ public class NotificationServiceImpl implements NotificationService {
 															: ""),
 											componentString,
 											(history == null ? "" : history
-													.getUser()
-													.getFirstName()
+													.getUser().getFirstName()
 													+ " "
 													+ history.getUser()
 															.getLastName()),
@@ -375,26 +410,31 @@ public class NotificationServiceImpl implements NotificationService {
 				}
 				emailService.sendEmail(receipients, subject, msgText);
 
-				updateIssueActivityNotification(issue,
-						true);
+				updateIssueActivityNotification(issue, true);
 			}
-		
+
 		} catch (Exception e) {
-			logger.error("handleIssueNotification: unexpected exception caught, throwing runtime exception", e);
+			logger
+					.error(
+							"handleIssueNotification: unexpected exception caught, throwing runtime exception",
+							e);
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private IssueService getIssueService() {
 		return ServletContextUtils.getItrackerServices().getIssueService();
 	}
-	public void updateIssueActivityNotification(Issue issue, Boolean notificationSent) {
+
+	public void updateIssueActivityNotification(Issue issue,
+			Boolean notificationSent) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("updateIssueActivityNotification: called with " + issue + ", notificationSent: " + notificationSent);
+			logger.debug("updateIssueActivityNotification: called with "
+					+ issue + ", notificationSent: " + notificationSent);
 		}
-		
-		
-		Collection<IssueActivity> activity = getIssueActivityDao().findByIssueId(issue.getId());
+
+		Collection<IssueActivity> activity = getIssueActivityDao()
+				.findByIssueId(issue.getId());
 
 		for (Iterator<IssueActivity> iter = activity.iterator(); iter.hasNext();) {
 
@@ -402,12 +442,13 @@ public class NotificationServiceImpl implements NotificationService {
 
 		}
 	}
-	
+
 	/**
 	 */
 	public boolean addIssueNotification(Notification notification) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("addIssueNotification: called with notification: " + notification);
+			logger.debug("addIssueNotification: called with notification: "
+					+ notification);
 		}
 		Issue issue = notification.getIssue();
 		if (notification.getCreateDate() == null) {
@@ -424,26 +465,31 @@ public class NotificationServiceImpl implements NotificationService {
 		getIssueDao().saveOrUpdate(issue);
 		return true;
 	}
-	
+
 	/**
 	 * 
 	 */
 	public List<Notification> getIssueNotifications(Issue issue,
 			boolean primaryOnly, boolean activeOnly) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("getIssueNotifications: called with issue: " + issue + ", primaryOnly: " + primaryOnly + ", activeOnly: " + activeOnly);
+			logger.debug("getIssueNotifications: called with issue: " + issue
+					+ ", primaryOnly: " + primaryOnly + ", activeOnly: "
+					+ activeOnly);
 		}
 		// TODO Auto-generated method stub
 		List<Notification> issueNotifications = new ArrayList<Notification>();
 
 		if (!primaryOnly) {
-			List<Notification> notifications = getNotificationDAO().findByIssueId(issue.getId());
+			List<Notification> notifications = getNotificationDAO()
+					.findByIssueId(issue.getId());
 
-			for (Iterator<Notification> iterator = notifications.iterator(); iterator.hasNext();) {
+			for (Iterator<Notification> iterator = notifications.iterator(); iterator
+					.hasNext();) {
 				Notification notification = iterator.next();
 				User notificationUser = notification.getUser();
 
-				if (!activeOnly || notificationUser.getStatus() == UserUtilities.STATUS_ACTIVE) {
+				if (!activeOnly
+						|| notificationUser.getStatus() == UserUtilities.STATUS_ACTIVE) {
 					issueNotifications.add(notification);
 				}
 			}
@@ -453,13 +499,15 @@ public class NotificationServiceImpl implements NotificationService {
 		// etc...
 
 		boolean hasOwner = false;
-		//getIssueDAO().findByPrimaryKey(issueId);
+		// getIssueDAO().findByPrimaryKey(issueId);
 		if (issue != null) {
 			if (issue.getOwner() != null) {
 				User ownerModel = issue.getOwner();
 
-				if (ownerModel != null && (!activeOnly || ownerModel.getStatus() == UserUtilities.STATUS_ACTIVE)) {
-					issueNotifications.add(new Notification(ownerModel, issue, Role.OWNER));
+				if (ownerModel != null
+						&& (!activeOnly || ownerModel.getStatus() == UserUtilities.STATUS_ACTIVE)) {
+					issueNotifications.add(new Notification(ownerModel, issue,
+							Role.OWNER));
 					hasOwner = true;
 				}
 			}
@@ -467,44 +515,54 @@ public class NotificationServiceImpl implements NotificationService {
 			if (!primaryOnly || !hasOwner) {
 				User creatorModel = issue.getCreator();
 
-				if (creatorModel != null && (!activeOnly || creatorModel.getStatus() == UserUtilities.STATUS_ACTIVE)) {
-					issueNotifications.add(new Notification(creatorModel, issue, Role.CREATOR));
+				if (creatorModel != null
+						&& (!activeOnly || creatorModel.getStatus() == UserUtilities.STATUS_ACTIVE)) {
+					issueNotifications.add(new Notification(creatorModel,
+							issue, Role.CREATOR));
 				}
 			}
 
-			Project project = getProjectService().getProject(issue.getProject().getId());
+			Project project = getProjectService().getProject(
+					issue.getProject().getId());
 			Collection<User> projectOwners = project.getOwners();
 
-			for (Iterator<User> iterator = projectOwners.iterator(); iterator.hasNext();) {
+			for (Iterator<User> iterator = projectOwners.iterator(); iterator
+					.hasNext();) {
 				User projectOwner = (User) iterator.next();
 
-				if (projectOwner != null && (!activeOnly || projectOwner.getStatus() == UserUtilities.STATUS_ACTIVE)) {
-					issueNotifications.add(new Notification(projectOwner, issue, Role.PO));
+				if (projectOwner != null
+						&& (!activeOnly || projectOwner.getStatus() == UserUtilities.STATUS_ACTIVE)) {
+					issueNotifications.add(new Notification(projectOwner,
+							issue, Role.PO));
 				}
 			}
 		}
-		
+
 		if (logger.isDebugEnabled()) {
-			logger.debug("getIssueNotifications: returning " + issueNotifications);
+			logger.debug("getIssueNotifications: returning "
+					+ issueNotifications);
 		}
 		return issueNotifications;
 	}
+
 	public List<Notification> getIssueNotifications(Issue issue) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getIssueNotifications: called with: " + issue);
 		}
 		return this.getIssueNotifications(issue, false, true);
 	}
-	
+
 	public List<Notification> getPrimaryIssueNotifications(Issue issue) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getPrimaryIssueNotifications: called with: " + issue);
 		}
 		return this.getIssueNotifications(issue, true, false);
 	}
+
 	public boolean hasIssueNotification(Issue issue, Integer userId) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("hasIssueNotification: called with: " + issue + ", userId: " + userId);
+			logger.debug("hasIssueNotification: called with: " + issue
+					+ ", userId: " + userId);
 		}
 		return hasIssueNotification(issue, userId, Role.ANY);
 	}
@@ -519,7 +577,8 @@ public class NotificationServiceImpl implements NotificationService {
 
 		if (issue != null && userId != null) {
 
-			List<Notification> notifications = getIssueNotifications(issue, false, false);
+			List<Notification> notifications = getIssueNotifications(issue,
+					false, false);
 
 			for (int i = 0; i < notifications.size(); i++) {
 
@@ -540,19 +599,21 @@ public class NotificationServiceImpl implements NotificationService {
 		return false;
 
 	}
-	
+
 	public boolean removeIssueNotification(Integer notificationId) {
-		Notification notification = this.getNotificationDAO().findById(notificationId);
+		Notification notification = this.getNotificationDAO().findById(
+				notificationId);
 		getNotificationDAO().delete(notification);
 		return true;
 	}
 
 	public void sendNotification(Issue issue, Type type, String baseURL,
 			InternetAddress[] receipients, Integer lastModifiedDays) {
-		this.handleIssueNotification(issue, type, baseURL, receipients, lastModifiedDays);
-		
+		this.handleIssueNotification(issue, type, baseURL, receipients,
+				lastModifiedDays);
+
 	}
-	
+
 	public NotificationDAO getNotificationDAO() {
 		return this.notificationDao;
 	}
@@ -563,30 +624,37 @@ public class NotificationServiceImpl implements NotificationService {
 	public EmailService getEmailService() {
 		return emailService;
 	}
+
 	/**
 	 * @return the notificationDao
 	 */
 	public NotificationDAO getNotificationDao() {
 		return notificationDao;
 	}
+
 	/**
 	 * @return the projectService
 	 */
 	public ProjectService getProjectService() {
 		return projectService;
 	}
+
 	/**
-	 * @param projectService the projectService to set
+	 * @param projectService
+	 *            the projectService to set
 	 */
 	public void setProjectService(ProjectService projectService) {
 		this.projectService = projectService;
 	}
+
 	/**
-	 * @param notificationDao the notificationDao to set
+	 * @param notificationDao
+	 *            the notificationDao to set
 	 */
 	public void setNotificationDao(NotificationDAO notificationDao) {
 		if (null == notificationDao) {
-			throw new IllegalArgumentException("notification dao must not be null");
+			throw new IllegalArgumentException(
+					"notification dao must not be null");
 		}
 		if (null != this.notificationDao) {
 			throw new IllegalStateException("notification dao allready set");
@@ -595,7 +663,9 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	/**
-	 * TODO url should be automatically generated by configuration (baseurl) and notification (issue-id).
+	 * TODO url should be automatically generated by configuration (baseurl) and
+	 * notification (issue-id).
+	 * 
 	 * @param notificationId
 	 * @param url
 	 */
@@ -612,26 +682,28 @@ public class NotificationServiceImpl implements NotificationService {
 	public IssueActivityDAO getIssueActivityDao() {
 		return issueActivityDao;
 	}
+
 	/**
-	 * @param issueActivityDao the issueActivityDao to set
+	 * @param issueActivityDao
+	 *            the issueActivityDao to set
 	 */
 	public void setIssueActivityDao(IssueActivityDAO issueActivityDao) {
 		this.issueActivityDao = issueActivityDao;
 	}
+
 	/**
 	 * @return the issueDao
 	 */
 	public IssueDAO getIssueDao() {
 		return issueDao;
 	}
+
 	/**
-	 * @param issueDao the issueDao to set
+	 * @param issueDao
+	 *            the issueDao to set
 	 */
 	public void setIssueDao(IssueDAO issueDao) {
 		this.issueDao = issueDao;
 	}
-	
-	
-	
-	
+
 }

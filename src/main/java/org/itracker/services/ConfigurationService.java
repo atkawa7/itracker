@@ -334,6 +334,12 @@ public interface ConfigurationService {
     
     int getNumberAvailableLanguages();
     
+    /**
+     * returns languages for the locale as list of Language-objects
+     * 
+     * @param locale
+     * @return
+     */
     List<Language> getLanguage(Locale locale);
     
     void updateLanguage(Locale locale, List<Language> languages);

@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.naming.InitialContext;
-
 import org.apache.log4j.Logger;
 import org.itracker.model.Issue;
 import org.itracker.model.Permission;
@@ -39,7 +37,6 @@ import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
 import org.itracker.persistence.dao.NoSuchEntityException;
-import org.itracker.persistence.dao.NotificationDAO;
 import org.itracker.persistence.dao.PermissionDAO;
 import org.itracker.persistence.dao.ProjectDAO;
 import org.itracker.persistence.dao.ReportDAO;
@@ -67,39 +64,45 @@ public class UserServiceImpl implements UserService {
     private static final String DEFAULT_AUTHENTICATOR =
             "org.itracker.services.authentication.DefaultAuthenticator";
 
-    private static String authenticatorClassName = null;
-    private static Class authenticatorClass = null;
-    private static String systemBaseURL = "";
-    private static boolean allowSelfRegister = false;
+    
+    
+    private String authenticatorClassName = null;
+    private Class<?> authenticatorClass = null;
+    private String systemBaseURL = "";
+    private boolean allowSelfRegister = false;
 
-    private final Logger logger;
-    @SuppressWarnings("unused")
-    private InitialContext initialContext = null;
-    @SuppressWarnings("unused")
-    private NotificationDAO notificationDAO = null;
+    private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
+//    @SuppressWarnings("unused")
+//    private InitialContext initialContext = null;
+//    @SuppressWarnings("unused")
+//    private NotificationDAO notificationDAO = null;
     private PermissionDAO permissionDAO = null;
-    @SuppressWarnings("unused")
-    private ProjectDAO projectDAO = null;
-    @SuppressWarnings("unused")
-    private ReportDAO reportDAO = null;
+//    @SuppressWarnings("unused")
+//    private ProjectDAO projectDAO = null;
+//    @SuppressWarnings("unused")
+//    private ReportDAO reportDAO = null;
     private UserDAO userDAO = null;
     private UserPreferencesDAO userPreferencesDAO = null;
     private ProjectService projectService;
     private ConfigurationService configurationService;
-
+    
+    /**
+     * @param configurationService
+     * @param projectService
+     * @param userDAO
+     * @param permissionDAO
+     * @param userPreferencesDAO
+     */
     public UserServiceImpl(ConfigurationService configurationService,
-                           ProjectService projectService,
-                           UserDAO userDAO,
-                           ProjectDAO projectDAO,
-                           ReportDAO reportDAO,
-                           PermissionDAO permissionDAO,
-                           UserPreferencesDAO userPreferencesDAO) {
-        this.logger = Logger.getLogger(getClass());
+            ProjectService projectService,
+            UserDAO userDAO,
+            PermissionDAO permissionDAO,
+            UserPreferencesDAO userPreferencesDAO) {
+    	
+        
         this.configurationService = configurationService;
         this.projectService = projectService;
         this.userDAO = userDAO;
-        this.projectDAO = projectDAO;
-        this.reportDAO = reportDAO;
         this.userPreferencesDAO = userPreferencesDAO;
         this.permissionDAO = permissionDAO;
 
@@ -112,6 +115,25 @@ public class UserServiceImpl implements UserService {
         } catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         }
+    }
+    /**
+     * @deprecated use constructor without projectDA= und reportDAO instead
+     * @param configurationService
+     * @param projectService
+     * @param userDAO
+     * @param projectDAO
+     * @param reportDAO
+     * @param permissionDAO
+     * @param userPreferencesDAO
+     */
+    public UserServiceImpl(ConfigurationService configurationService,
+                           ProjectService projectService,
+                           UserDAO userDAO,
+                           ProjectDAO projectDAO,
+                           ReportDAO reportDAO,
+                           PermissionDAO permissionDAO,
+                           UserPreferencesDAO userPreferencesDAO) {
+    	this(configurationService, projectService, userDAO, permissionDAO, userPreferencesDAO);
     }
 
     public User getUser(Integer userId) {
@@ -423,7 +445,7 @@ public class UserServiceImpl implements UserService {
         return permissions;
     }
 
-    public boolean UpdateAuthenticator(Integer userId, List<Permission> permissions) {
+    public boolean updateAuthenticator(Integer userId, List<Permission> permissions) {
         boolean successful = false;
 
         try {
@@ -440,7 +462,7 @@ public class UserServiceImpl implements UserService {
                             .updateProfile(user, AuthenticationConstants.UPDATE_TYPE_PERMISSION_SET, null,
                                     AuthenticationConstants.AUTH_TYPE_UNKNOWN,
                                     AuthenticationConstants.REQ_SOURCE_UNKNOWN)) {
-                        permissions = user.getPermissions();
+//                        permissions = user.getPermissions();
                     }
                 } else {
                     logger.error("Unable to create new authenticator.");
@@ -929,15 +951,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public void sendNotification(String login, String email, String baseURL) {
-    }
 
-    public static String getSystemBaseURL() {
-        return systemBaseURL;
-    }
+    
+    public String getSystemBaseUrl() {
+    	return this.systemBaseURL;
+    };
 
-    public static void setSystemBaseURL(String systemBaseURL) {
-        UserServiceImpl.systemBaseURL = systemBaseURL;
-    }
 
 }

@@ -80,7 +80,7 @@ public class WorkflowUtilities  {
     }
     
     public static List<NameValuePair> getListOptions(Map<Integer, List<NameValuePair>> listOptions, int fieldId) {
-        return getListOptions(listOptions, new Integer(fieldId));
+        return getListOptions(listOptions, Integer.valueOf(fieldId));
     }
     
     @SuppressWarnings("unchecked")

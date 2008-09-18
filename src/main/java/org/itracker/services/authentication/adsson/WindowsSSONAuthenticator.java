@@ -39,7 +39,7 @@ public abstract class WindowsSSONAuthenticator extends DefaultAuthenticator {
         try {
             // this authenticator only handles authType=AUTH_TYPE_REQUEST
             // (HttpServletRequest)
-            if (authType != AUTH_TYPE_REQUEST) {
+            if (authType != AUTH_TYPE_REQUEST || !(authentication instanceof HttpServletRequest)) {
                 logger.error("Only http request authentication supported by this single sign on class. Received "
                         + authType);
                 throw new AuthenticatorException(
@@ -51,19 +51,26 @@ public abstract class WindowsSSONAuthenticator extends DefaultAuthenticator {
             // have a valid authentication object
             // TODO
             // get user from jcifs
-            login = ((HttpServletRequest) authentication).getRemoteUser();
+            String theLogin = ((HttpServletRequest) authentication).getRemoteUser();
 
-            if (login == null) {
+            if (theLogin == null) {
                 throw new AuthenticatorException("User obtained from jcifs is null. Check that jcifs is active",
                         AuthenticatorException.CUSTOM_ERROR);
             }
 
             // sometimes jcifs sends the username in the form of DOMAIN\USER
-            if (login.indexOf("\\") > 0) {
-                login = login.substring(login.indexOf("\\") + 1);
+            if (theLogin.indexOf("\\") > 0) {
+            	theLogin = theLogin.substring(theLogin.indexOf("\\") + 1);
+            }
+            if (!theLogin.equals(login)) {
+            	// FIXME: should an exception be thrown here?
+            	AuthenticatorException ex = new AuthenticatorException("User obtained from authenticator does not match, got " + theLogin + ", expected " + login + ".",
+                        AuthenticatorException.CUSTOM_ERROR); 
+            	logger.warn("checkLogin: checking login for " + login + " but got " + theLogin + " in authentication " + authentication, ex);
+                throw ex;
             }
 
-            userModel = updateOrCreateUser(login, userService);
+            userModel = updateOrCreateUser(theLogin, userService);
             return userModel;
         } catch (RemoteException ex) {
             logger.error("pt_PT", ex);

@@ -17,20 +17,24 @@ import org.itracker.model.AbstractEntity;
  */
 public class TimestampInterceptor extends EmptyInterceptor {
     
-    /** The name of the AbstractEntity.createDate property */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/** The name of the AbstractEntity.createDate property */
     private static final String CREATE_DATE_PROPERTY = "createDate";
     
     /** The name of the AbstractEntity.lastModifiedDate property */
     private static final String LAST_MODIFIED_DATE_PROPERTY = "lastModifiedDate";
     
     @SuppressWarnings("unused")
-	private final Logger logger;
+	private static final transient Logger logger = Logger.getLogger(TimestampInterceptor.class);
     
     /**
      * 
      */
     public TimestampInterceptor() {
-       this.logger = Logger.getLogger(TimestampInterceptor.class);
     }
 
     /**

@@ -185,18 +185,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
     
     public List<CustomField> getProjectFields(Integer projectId) {
+    	return getProjectFields(projectId, null);
+    }
+    
+    /**
+     * TODO: implement Locale-aware ProjectFields.
+     */
+    public List<CustomField> getProjectFields(Integer projectId, Locale locale) {
+
         Project project = projectDAO.findByPrimaryKey(projectId);
         List<CustomField> fields = project.getCustomFields();
         
         return fields;
     }
     
-    public List<CustomField> getProjectFields(Integer projectId, Locale locale) {
-    	return getProjectFields(projectId, locale);
-    }
-    
     public boolean setProjectFields(Project project, Set<Integer> setOfNewsFieldIds) {
-        List<CustomField> fields = new ArrayList<CustomField>();
+        List<CustomField> fields;
         fields = project.getCustomFields();
         fields.clear();
         

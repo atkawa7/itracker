@@ -24,7 +24,7 @@ public class ConfigurationDAOImpl extends BaseHibernateDAOImpl<Configuration>
     @SuppressWarnings("unchecked")
     public List<Configuration> findByType(int type) {
         Criteria criteria = getSession().createCriteria(Configuration.class);
-        criteria.add(Expression.eq("type", new Integer(type)));
+        criteria.add(Expression.eq("type", Integer.valueOf(type)));
         
         try {
             return criteria.list();
@@ -36,7 +36,7 @@ public class ConfigurationDAOImpl extends BaseHibernateDAOImpl<Configuration>
     @SuppressWarnings("unchecked")
     public List<Configuration> findByTypeAndValue(int type, String value) {
         Criteria criteria = getSession().createCriteria(Configuration.class);
-        criteria.add(Expression.eq("type", new Integer(type)));
+        criteria.add(Expression.eq("type", Integer.valueOf(type)));
         criteria.add(Expression.eq("value", value));
         
         try {

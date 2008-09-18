@@ -101,7 +101,7 @@ public interface UserService {
      * @return true if the operation was successful
      */
 
-    public boolean UpdateAuthenticator(Integer userId, List<Permission> newPermissions);
+    public boolean updateAuthenticator(Integer userId, List<Permission> newPermissions);
     
     /**
      * Resets all of the permissions for a user in the database.  The new permissions for the user are contained in a
@@ -315,7 +315,7 @@ public interface UserService {
      * @throws AuthenticatorException an exception if an error occurs
      */
     public boolean allowPreferenceUpdates(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
-    
-    public void sendNotification(String login, String email, String baseURL);
+        
+    public String getSystemBaseUrl();
 
 }
