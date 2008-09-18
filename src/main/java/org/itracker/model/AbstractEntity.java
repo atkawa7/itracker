@@ -18,6 +18,7 @@
 
 package org.itracker.model;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -71,7 +72,9 @@ public abstract class AbstractEntity implements Entity {
 	 * @return creation time stamp or <tt>null</tt> for transient entities
 	 */
 	public Date getCreateDate() {
-		return createDate;
+		if (null == createDate)
+			createDate = new Date();
+		return new Date(createDate.getTime());
 	}
 
 	/**
@@ -92,7 +95,9 @@ public abstract class AbstractEntity implements Entity {
 	 *            creation time stamp
 	 */
 	public void setCreateDate(Date dateTime) {
-		this.createDate = dateTime;
+		if (null == dateTime)
+			return;
+		this.createDate = new Date(dateTime.getTime());
 	}
 
 	/**
@@ -100,7 +105,9 @@ public abstract class AbstractEntity implements Entity {
 	 *         entities
 	 */
 	public Date getLastModifiedDate() {
-		return lastModifiedDate;
+		if (null == this.lastModifiedDate)
+			this.lastModifiedDate = new Date();
+		return new Date(lastModifiedDate.getTime());
 	}
 
 	/**
@@ -118,7 +125,9 @@ public abstract class AbstractEntity implements Entity {
 	 *            last modification time stamp
 	 */
 	public void setLastModifiedDate(Date dateTime) {
-		this.lastModifiedDate = dateTime;
+		if (null == dateTime)
+			return;
+		this.lastModifiedDate = new Date(dateTime.getTime());
 	}
 
 	/**
@@ -138,7 +147,12 @@ public abstract class AbstractEntity implements Entity {
 	/**
 	 * Compares 2 instances by ID.
 	 */
-	protected static class IdComparator implements Comparator<Entity> {
+	protected static class IdComparator implements Comparator<Entity>, Serializable {
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		public int compare(Entity a, Entity b) {
 			return new CompareToBuilder().append(a.getId(), b.getId())
@@ -148,8 +162,13 @@ public abstract class AbstractEntity implements Entity {
 	}
 
 	protected static class CreateDateComparator implements
-			Comparator<AbstractEntity> {
-
+			Comparator<AbstractEntity>, Serializable {
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		
 		public int compare(AbstractEntity a, AbstractEntity b) {
 			return new CompareToBuilder().append(a.getCreateDate(),
 					b.getCreateDate()).toComparison();
@@ -161,8 +180,13 @@ public abstract class AbstractEntity implements Entity {
 	 * Compares 2 instances by last modified date.
 	 */
 	protected static class LastModifiedDateComparator implements
-			Comparator<AbstractEntity> {
-
+			Comparator<AbstractEntity>, Serializable {
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		
 		public int compare(AbstractEntity a, AbstractEntity b) {
 			return new CompareToBuilder().append(a.getLastModifiedDate(),
 					b.getLastModifiedDate()).toComparison();
