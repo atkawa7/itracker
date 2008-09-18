@@ -91,7 +91,7 @@ public final class FormatPaginationLinkTag extends BodyTagSupport {
         if(projectId != null) {
             buf.append("&projectId=" + projectId);
         }
-        if(order != null || ! order.equals("")) {
+        if(order != null && order.trim().length() > 0) {
             buf.append("&order=" + order);
         }
         buf.append("\"");

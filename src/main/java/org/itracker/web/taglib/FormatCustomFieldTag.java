@@ -100,9 +100,9 @@ public final class FormatCustomFieldTag extends TagSupport {
             HttpSession session = pageContext.getSession();
             if(session != null) {
                 locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+                field.setLabels(locale);
             }
             
-            field.setLabels(locale);
             
             StringBuffer buf = new StringBuffer();
             buf.append("<td class=\"" + (DISPLAY_TYPE_VIEW.equalsIgnoreCase(displayType) ? "editColumnTitle" : "editColumnTitle") +"\">");
