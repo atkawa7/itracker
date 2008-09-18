@@ -52,13 +52,15 @@ public class ITrackerResourceBundle extends ResourceBundle {
         // Only load the array if it is requested for some reason.
         if(dataArray == null) {
             int i = 0;
-            Object[][] dataArray = new Object[2][data.size()];
-            for(Iterator iter = data.keySet().iterator(); iter.hasNext(); i++) {
-                dataArray[0][i] = iter.next();
-                dataArray[1][i] = data.get(dataArray[0][i]);
+            Object[][] newData = new Object[2][data.size()];
+            for(Iterator<String> iter = data.keySet().iterator(); iter.hasNext(); i++) {
+                newData[0][i] = iter.next();
+                newData[1][i] = data.get(newData[0][i]);
             }
+            this.dataArray = newData;
         }
-        return dataArray;
+        
+        return dataArray.clone();
     }
 
     public void setContents(List<Language> content) {
@@ -135,7 +137,7 @@ public class ITrackerResourceBundle extends ResourceBundle {
         if(key != null) {
             synchronized (data) {
                 if(markDirty) {
-                    data.put(key, new DirtyKey());
+                    data.put(key, new DirtyKey(){});
                 } else {
                     data.remove(key);
                 }
@@ -164,6 +166,6 @@ public class ITrackerResourceBundle extends ResourceBundle {
         return table.keys();
     }
 
-    public class DirtyKey {
+    public static interface DirtyKey {
     }
 }
