@@ -57,18 +57,18 @@ public class ExecuteAlwaysFilter implements Filter {
 	/**
 	 * this match paths which are not protected
 	 */
-	private Set<String> unprotectedMatches = null;
+	private Set<Pattern> unprotectedPaterns = null;
 
 	private String loginForwardPath;
 
 	public void destroy() {
-		this.unprotectedMatches = null;
+		this.unprotectedPaterns = null;
 	}
 
 	public void doFilter(ServletRequest servletRequest,
 			ServletResponse response, FilterChain chain) throws IOException,
 			ServletException {
-		if (null == this.unprotectedMatches) {
+		if (null == this.unprotectedPaterns) {
 			RuntimeException re = new IllegalStateException(
 					"Filter has not been initialized yet.");
 			log.error("doFilter: failed, not initialized", re);
@@ -101,7 +101,7 @@ public class ExecuteAlwaysFilter implements Filter {
 				.getConfigurationService();
 		setupCommonReqAttributes(request, configurationService);
 
-		boolean protect = isProtected(path, this.unprotectedMatches);
+		boolean protect = isProtected(path, this.unprotectedPaterns);
 
 		// do not protect the login-page itself.
 		if (protect && this.loginForwardPath.equals(path)) {
@@ -122,26 +122,24 @@ public class ExecuteAlwaysFilter implements Filter {
 		// Map<Integer, Set<PermissionType>> permissions =
 		// getUserPermissions(request
 		// .getSession());
-//		Locale currLocale = LoginUtilities.getCurrentLocale(request);
-//		request.setAttribute("currLocale", currLocale);
-
+		// Locale currLocale = LoginUtilities.getCurrentLocale(request);
+		// request.setAttribute("currLocale", currLocale);
+		
 		User currUser = (User) session.getAttribute("currUser");
 		if (null != currUser) {
 			if (log.isDebugEnabled()) {
 				log.debug("doFilter: found user in session");
 			}
-			String currLogin = (currUser == null ? null : currUser.getLogin());
+			String currLogin = currUser.getLogin();
 			request.setAttribute("currLogin", currLogin);
 		} else if (!protect) {
-			session.setAttribute("currUser", currUser);
 			// request.setAttribute("permissions", permissions);
 			// TODO: itracker.web.generic.unknown for unknown user?
 			request.setAttribute("currLogin", ITrackerResources
 					.getString("itracker.web.generic.unknown"));
-			request.getSession().setAttribute("currUser", null);
 		} else {
 			// unauthenticated.. forward to login
-
+			log.info("doFilter: forwarding to login");
 			forwardToLogin(path
 					+ (request.getQueryString() != null ? "?"
 							+ request.getQueryString() : ""), request,
@@ -195,7 +193,7 @@ public class ExecuteAlwaysFilter implements Filter {
 		alternateLogo = configurationService
 				.getProperty("alternate_logo", null);
 		Locale currLocale = LoginUtilities.getCurrentLocale(request);
-		
+
 		// TODO: this should be configured per-instance. Request server-name
 		// should only be used for exception and logged (configuration not
 		// found!)
@@ -214,36 +212,28 @@ public class ExecuteAlwaysFilter implements Filter {
 		request.setAttribute(Constants.LOCALE_KEY, currLocale);
 	}
 
-	private static final boolean isProtected(String path, Set<String> patterns) {
+	private static final boolean isProtected(String path, Set<Pattern> patterns) {
 		if (null == path) {
-			// match the empty path
-			if (patterns.contains("") || patterns.contains("/")
-					|| patterns.contains("/*") || patterns.contains("/**")) {
+			path = "";
+		}
+
+		Iterator<Pattern> matchPattern = patterns.iterator();
+		Pattern pattern;
+
+		while (matchPattern.hasNext()) {
+			pattern = matchPattern.next();
+			if (log.isDebugEnabled()) {
+				log.debug("isProtected: processing path " + path
+						+ " for pattern " + pattern.pattern());
+			}
+			if (pattern.matcher(path).matches()) {
 				if (log.isDebugEnabled()) {
 					log.debug("isProtected: matched path: " + path);
 				}
 				return false;
 			}
-		} else {
-
-			Iterator<String> matchPattern = patterns.iterator();
-			Pattern pattern;
-
-			while (matchPattern.hasNext()) {
-				pattern = Pattern.compile(matchPattern.next());
-				if (log.isDebugEnabled()) {
-					log.debug("isProtected: processing path " + path
-							+ " for pattern " + pattern.pattern());
-				}
-				if (pattern.matcher(path).matches()) {
-					if (log.isDebugEnabled()) {
-						log.debug("isProtected: matched path: " + path);
-					}
-					return false;
-				}
-			}
-
 		}
+
 		if (log.isDebugEnabled()) {
 			log.debug("isProtected: protecting " + path);
 		}
@@ -254,7 +244,7 @@ public class ExecuteAlwaysFilter implements Filter {
 	 * 
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException {
-		if (null != unprotectedMatches) {
+		if (null != unprotectedPaterns) {
 			throw new IllegalStateException(
 					"Filter was already initialized before.");
 		}
@@ -265,16 +255,16 @@ public class ExecuteAlwaysFilter implements Filter {
 		if (null == this.loginForwardPath) {
 			this.loginForwardPath = DEFAULT_LOGIN_FORWARD;
 		}
-		this.unprotectedMatches = new HashSet<String>();
+		this.unprotectedPaterns = new HashSet<Pattern>();
 		if (null != excludePaths) {
 			StringTokenizer tk = new StringTokenizer(excludePaths, ",");
 			while (tk.hasMoreTokens()) {
-				this.unprotectedMatches.add(tk.nextToken());
+				this.unprotectedPaterns.add(Pattern.compile(tk.nextToken().trim()));
 			}
 		}
 		if (log.isInfoEnabled()) {
 			log.info("init: initialized with " + this.loginForwardPath
-					+ ", excludes: " + this.unprotectedMatches);
+					+ ", excludes: " + this.unprotectedPaterns);
 		}
 	}
 
@@ -307,14 +297,13 @@ public class ExecuteAlwaysFilter implements Filter {
 					.debug("forwardToLogin: (formerly Checklogin tag) procedure... to "
 							+ forwardPath);
 		}
+		HttpSession session = request.getSession();
 		try {
-
-			HttpSession session = request.getSession();
 
 			log.info("forwardToLogin: setting redirectURL "
 					+ SES_KEY_REDIRECT_ON_SUCCESS + " = " + path);
 			session.setAttribute(SES_KEY_REDIRECT_ON_SUCCESS, path);
-
+			session.setAttribute("loginForwarded", true);
 			response.sendRedirect(forwardPath);
 			response.flushBuffer();
 
@@ -322,6 +311,7 @@ public class ExecuteAlwaysFilter implements Filter {
 			log.error("forwardToLogin: IOException while checking login", e);
 			response.reset();
 			try {
+				session.setAttribute("loginForwarded", Boolean.TRUE);
 				response.sendRedirect(forwardPath);
 			} catch (IOException e1) {
 				log.error("forwardToLogin: failed to redirect to "
@@ -349,7 +339,7 @@ public class ExecuteAlwaysFilter implements Filter {
 		String path = (String) request.getSession().getAttribute(
 				SES_KEY_REDIRECT_ON_SUCCESS);
 		if (null == path) {
-			return new ActionForward("arrivalforward");
+			path ="/";
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("redirectToOnLoginSuccess: sending redirect to " + path);
