@@ -5,6 +5,8 @@ import org.itracker.model.Project;
 import org.itracker.model.Status;
 import org.junit.Test;
 
+import java.util.List;
+
 public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
 
     private ProjectDAO projectDAO;
@@ -18,8 +20,22 @@ public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
         assertEquals( "test_name", foundProject.getName() );
         assertEquals( "test_description", foundProject.getDescription() );
         assertEquals( Status.ACTIVE, foundProject.getStatus() );
-     
+    }
 
+    @Test
+    public void testFindByStatus() {
+        List<Project> projects = projectDAO.findByStatus(1);
+
+        assertNotNull(projects);
+        assertEquals(2, projects.size());
+    }
+
+    @Test
+    public void testFindAllAvailable() {
+        List<Project> projects = projectDAO.findAllAvailable();
+
+        assertNotNull(projects);
+        assertEquals(2, projects.size());
     }
 
     @Override

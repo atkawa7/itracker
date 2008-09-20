@@ -64,6 +64,51 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
 
     }
 
+    @Test
+    public void testFindAll() {
+        List<User> users = userDAO.findAll();
+
+        assertNotNull(users);
+        assertEquals(5, users.size());
+    }
+
+    @Test
+    public void testFindActive() {
+        List<User> users = userDAO.findActive();
+
+        assertNotNull(users);
+        assertEquals(4, users.size());
+    }
+
+    @Test
+    public void testFindByStatus() {
+        List<User> users = userDAO.findByStatus(1);
+
+        assertNotNull(users);
+        assertEquals(4, users.size());
+    }
+
+    @Test
+    public void testFindSuperUsers() {
+        List<User> users = userDAO.findSuperUsers();
+
+        assertNotNull(users);
+        assertEquals(1, users.size());
+    }
+
+    @Test
+    public void testFindByRegistrationType() {
+        List<User> users = userDAO.findByRegistrationType(1);
+
+        assertNotNull(users);
+        assertEquals(5, users.size());
+    }
+
+    @Test
+    public void testGetUsersMapOfProjectsAndPermissionTypes() {
+        // todo: need to implement test case...
+    }
+
     private void assertContainsUser(User user, List<User> users) {
 
         if (!users.contains(user)) {

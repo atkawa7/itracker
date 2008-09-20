@@ -43,6 +43,7 @@
             <value>1</value>
             <value>0</value>
             <value>1</value>
+            <null/>
         </row>
 
         <!-- Project admin (Refer to permissionbean_dataset.xml -->
@@ -58,6 +59,7 @@
             <value>1</value>
             <value>0</value>
             <value>1</value>
+            <null/>
         </row>
 
         <!-- Inactive user -->
@@ -73,6 +75,7 @@
             <value>0</value>
             <value>0</value>
             <value>1</value>
+            <null/>
         </row>
 
         <!-- User that doesn't belong to any projects -->
@@ -88,6 +91,7 @@
             <value>1</value>
             <value>0</value>
             <value>1</value>
+            <null/>
         </row>
 
     </table>
