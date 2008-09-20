@@ -17,7 +17,7 @@ public class VersionDAOImpl extends BaseHibernateDAOImpl<Version>
     /**
      * find <code>Version</code> by id
      *
-     * @param targetVersionId id of the <code>Version</code> to find
+     * @param versionId id of the <code>Version</code> to find
      * @return <code>Version</code> found
      */
     public Version findByPrimaryKey(Integer versionId) {
@@ -39,7 +39,7 @@ public class VersionDAOImpl extends BaseHibernateDAOImpl<Version>
     public List<Version> findByProjectId(Integer projectId) { 
         try {
             Project project = (Project) getSession().load(Project.class,projectId);
-            return getSession().createCriteria(Component.class)
+            return getSession().createCriteria(Version.class)
                    .add(Expression.eq("project", project))
                    .list();
         } catch (HibernateException e) {
