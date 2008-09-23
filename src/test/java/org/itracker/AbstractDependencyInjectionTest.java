@@ -1,12 +1,13 @@
 package org.itracker;
 
-import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
@@ -26,114 +27,145 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @RunWith(JUnit4ClassRunner.class)
-public abstract class AbstractDependencyInjectionTest extends AbstractDependencyInjectionSpringContextTests {
+public abstract class AbstractDependencyInjectionTest extends
+		AbstractDependencyInjectionSpringContextTests {
 
-    private DataSource dataSource;
-    private LocalSessionFactoryBean sessionFactoryBean;
-    public ClassLoader classLoader;
-    public List<IDataSet> dataSets;
-    private SessionFactory sessionFactory;
+	private static final Logger log = Logger
+			.getLogger(AbstractDependencyInjectionSpringContextTests.class);
+	private DataSource dataSource;
+	private LocalSessionFactoryBean sessionFactoryBean;
+	public ClassLoader classLoader;
+	public List<IDataSet> dataSets;
+	private SessionFactory sessionFactory;
 
-    protected AbstractDependencyInjectionTest() {
-        classLoader = getClass().getClassLoader();
-    }
+	protected AbstractDependencyInjectionTest() {
+		classLoader = getClass().getClassLoader();
+	}
 
-    @Override
-    public void onSetUp() throws Exception {
+	@Override
+	public void onSetUp() throws Exception {
 
-        sessionFactory = (SessionFactory) applicationContext.getBean("sessionFactory");
-        Session session = sessionFactory.openSession();
-        TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
+		sessionFactory = (SessionFactory) applicationContext
+				.getBean("sessionFactory");
+		Session session = sessionFactory.openSession();
+		TransactionSynchronizationManager.bindResource(sessionFactory,
+				new SessionHolder(session));
 
-        dataSets = getDataSet();
+		dataSets = getDataSet();
+		DatabaseConnection dbConnection = null;
+		try {
+			dbConnection = new DatabaseConnection(getDataSource().getConnection());
+			dbConnection.getConfig().setProperty(
+					DatabaseConfig.PROPERTY_DATATYPE_FACTORY,
+					new HsqldbDataTypeFactory());
 
-        Connection connection = getDataSource().getConnection();
+			if (dataSets != null) {
+				for (Iterator<IDataSet> iterator = dataSets.iterator(); iterator
+						.hasNext();) {
+					IDataSet dataSet = (IDataSet) iterator.next();
+					InsertOperation.INSERT.execute(dbConnection, dataSet);
+				}
+			}
 
-        DatabaseConnection dbConnection = new DatabaseConnection( connection );
-        dbConnection.getConfig().setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY,
-                new HsqldbDataTypeFactory());
+			if (!dbConnection.getConnection().getAutoCommit()) {
+				dbConnection.getConnection().commit();
+			}
+		} catch (Exception e) {
+			log.error("onSetUp: failed to set up datasets", e);
+			throw e;
+		} finally {
+			if (null != dbConnection) {
+				try {
+					dbConnection.close();
+				} catch (SQLException e) {
+					log.warn("onSetUp: failed to close connection", e);
+				}
+			}
+		}
+	}
 
-        if( dataSets != null ) {
-            for( Iterator<IDataSet> iterator = dataSets.iterator(); iterator.hasNext(); ) {
-                IDataSet dataSet = (IDataSet)iterator.next();
-                InsertOperation.INSERT.execute( dbConnection, dataSet );
-            }
-        }
+	@Override
+	public void onTearDown() throws Exception {
+		DatabaseConnection dbConnection = null;
+		try {
+			dbConnection = new DatabaseConnection(getDataSource()
+					.getConnection());
 
-        if( !connection.getAutoCommit() ) {
-            connection.commit();
-        }
+			if (dataSets != null) {
+				for (int i = dataSets.size() - 1; i >= 0; i--) {
+					IDataSet dataSet = (IDataSet) dataSets.get(i);
+					DatabaseOperation.DELETE_ALL.execute(dbConnection, dataSet);
+				}
+			}
 
-    }
+			if (!dbConnection.getConnection().getAutoCommit()) {
+				dbConnection.getConnection().commit();
+			}
 
-    @Override
-    public void onTearDown() throws Exception {
+		} catch (Exception e) {
+			log.error("onTearDown: failed to tear down datasets", e);
+			throw e;
+		} finally {
+			TransactionSynchronizationManager.unbindResource(sessionFactory);
+			sessionFactoryBean.destroy();
 
-        Connection connection = getDataSource().getConnection();
+			if (null != dbConnection) {
+				try {
+					dbConnection.close();
+				} catch (SQLException e) {
+					log.warn("onTearDown: failed to close connection", e);
+				}
+			}
+		}
+	}
 
-        DatabaseConnection dbConnection = new DatabaseConnection( connection );
+	private List<IDataSet> getDataSet() throws Exception {
+		List<IDataSet> dataSets = new ArrayList<IDataSet>();
 
-        if( dataSets != null ) {
-            for( int i = dataSets.size() - 1; i >= 0; i-- ) {
-                IDataSet dataSet = (IDataSet)dataSets.get( i );
-                DatabaseOperation.DELETE_ALL.execute( dbConnection, dataSet );
-            }
-        }
+		String[] aDataSet = getDataSetFiles();
 
-        if( !connection.getAutoCommit() ) {
-            connection.commit();
-        }
+		for (int i = 0; i < aDataSet.length; i++) {
+			IDataSet dataset = new XmlDataSet(classLoader
+					.getResourceAsStream(aDataSet[i]));
 
-        TransactionSynchronizationManager.unbindResource(sessionFactory);
-        sessionFactoryBean.destroy();
+			dataSets.add(dataset);
+		}
 
-    }
+		return dataSets;
+	}
 
-    private List<IDataSet> getDataSet() throws Exception {
-    	List<IDataSet> dataSets = new ArrayList<IDataSet>();
+	/**
+	 * must make sure, that the order is correct, so no constraints will be
+	 * violated.
+	 * 
+	 * @return
+	 */
+	protected abstract String[] getDataSetFiles();
 
-        String[] aDataSet = getDataSetFiles();
+	public LocalSessionFactoryBean getSessionFactoryBean() {
+		return sessionFactoryBean;
+	}
 
-        for( int i = 0; i < aDataSet.length; i++ ) {
-            IDataSet dataset = new XmlDataSet( classLoader.getResourceAsStream( aDataSet[i] ) );
+	public void setSessionFactoryBean(LocalSessionFactoryBean sessionFactoryBean) {
+		this.sessionFactoryBean = sessionFactoryBean;
+	}
 
-            dataSets.add( dataset );
-        }
+	public DataSource getDataSource() {
+		return dataSource;
+	}
 
-        return dataSets;
-    }
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
 
-    /**
-     * must make sure, that the order is correct, so no constraints will be violated.
-     * @return
-     */
-    protected abstract String[] getDataSetFiles();
+	@Before
+	public final void callSetup() throws Exception {
+		super.setUp();
+	}
 
-    public LocalSessionFactoryBean getSessionFactoryBean() {
-        return sessionFactoryBean;
-    }
-
-    public void setSessionFactoryBean(
-            LocalSessionFactoryBean sessionFactoryBean ) {
-        this.sessionFactoryBean = sessionFactoryBean;
-    }
-
-    public DataSource getDataSource() {
-        return dataSource;
-    }
-
-    public void setDataSource( DataSource dataSource ) {
-        this.dataSource = dataSource;
-    }
-
-    @Before
-    public final void callSetup() throws Exception {
-        super.setUp();
-    }
-
-    @After
-    public final void callTeardown() throws Exception {
-        super.tearDown();
-    }
+	@After
+	public final void callTeardown() throws Exception {
+		super.tearDown();
+	}
 
 }

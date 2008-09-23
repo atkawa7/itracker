@@ -1,6 +1,5 @@
 package org.itracker.persistence.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.itracker.AbstractDependencyInjectionTest;
@@ -33,18 +32,16 @@ public class PermissionDAOImplTest extends AbstractDependencyInjectionTest {
 
 	}
 
+// TODO: fix implementation or test
 	@Ignore
 	public void testFailedFindByUserId() {
 
 		try {
-			getDataSource().getConnection().close();
 			List<Permission> permissions = permissionDAO.findByUserId(-1);
 			fail("Should have thrown a DataAccessException. Size of list:"
 					+ permissions.size());
 		} catch (DataAccessException e) {
 			// Expected behavior
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 	}
 

@@ -22,13 +22,13 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
         userDAO.saveOrUpdate( user );
 
         User foundUser = userDAO.findByLogin( "admin_test2" );
-
         assertNotNull( foundUser );
         assertEquals( "admin_test2", foundUser.getPassword() );
         assertEquals( "admin firstname2", foundUser.getFirstName() );
         assertEquals( "admin lastname2", foundUser.getLastName() );
         assertTrue( foundUser.isSuperUser() );
-
+        // delete for repeated testing in same persistence
+        userDAO.delete(user);
     }
 
     @Test

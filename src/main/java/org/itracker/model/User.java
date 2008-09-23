@@ -18,7 +18,6 @@
 
 package org.itracker.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -311,11 +310,7 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 	/**
 	 * Compares 2 users by last and first name.
 	 */
-	private static class NameComparator implements Comparator<User>, Serializable {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
+	private static class NameComparator implements Comparator<User> {
 
 		public int compare(User a, User b) {
 			return new CompareToBuilder().append(a.lastName, b.lastName)
@@ -324,11 +319,7 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 
 	}
 
-	public static final class LoginComparator implements Comparator<User>, Serializable {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
+	public static final class LoginComparator implements Comparator<User> {
 		public int compare(User o1, User o2) {
 			return new CompareToBuilder().append(o1.login, o2.login)
 					.toComparison();
