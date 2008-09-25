@@ -6,6 +6,10 @@
   <name>itracker</name>
   <version>3.0</version>
   <url>http://itracker.sourceforge.net/</url>
+  <properties>
+  	<clover.maven.charset>UTF-8</clover.maven.charset>
+  	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
   <issueManagement>
     <system>SourceForge</system>
     <url>http://sourceforge.net/tracker/?group_id=54141</url>
@@ -469,6 +473,10 @@
         <groupId>com.atlassian.maven.plugins</groupId>
         <artifactId>maven-clover-plugin</artifactId>
         <version>3.6</version>
+        <configuration>
+          <licenseLocation>src/test/resources/clover.license</licenseLocation>
+          <jdk>1.5</jdk>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
