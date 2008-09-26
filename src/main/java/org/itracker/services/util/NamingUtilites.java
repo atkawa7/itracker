@@ -1,4 +1,6 @@
-package org.itracker.web.util;
+package org.itracker.services.util;
+
+import java.util.Hashtable;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -18,15 +20,7 @@ public class NamingUtilites {
 	private static final Logger log = Logger.getLogger(NamingUtilites.class
 			.getName());
 
-	private static final InitialContext initialContext;	
-	static {
-		try {
-			initialContext = new InitialContext();
-		} catch (NamingException e) {
-			throw new Error("failed to initialize naming utility", e);
-		}
 
-	}
 	/**
 	 * Read a String value of any type of object
 	 * 
@@ -107,8 +101,10 @@ public class NamingUtilites {
 			return ctx.lookup(lookupName);
 		} catch (NamingException e) {
 			if (e instanceof NameNotFoundException) {
-				log.info("lookup: failed to lookup " + lookupName
+				if (log.isDebugEnabled()){
+					log.debug("lookup: failed to lookup " + lookupName
 						+ ": name not found");
+				}
 			} else {
 				log.warn("lookup: failed to lookup " + lookupName
 						+ " in context " + ctx, e);
@@ -120,13 +116,19 @@ public class NamingUtilites {
 	/**
 	 * get a default initial context
 	 * @return initial context.
+	 * @throws NamingException 
 	 * @throws IllegalStateException - if initial context was null
 	 */
-	public static final Context getDefaultInitialContext() {
-		if (null == initialContext) {
-			throw new IllegalStateException("initial context was not initialized");
-		}
-		return initialContext;
+	public static final Context getDefaultInitialContext(Hashtable<?,?> environment) throws NamingException {
+		return new InitialContext(environment);
 	}
-
+	/**
+	 * get a default initial context
+	 * @return initial context.
+	 * @throws NamingException 
+	 * @throws IllegalStateException - if initial context was null
+	 */
+	public static final Context getDefaultInitialContext() throws NamingException {
+		return new InitialContext();
+	}
 }

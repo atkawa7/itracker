@@ -35,10 +35,12 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 import org.itracker.services.ConfigurationService;
-import org.itracker.web.util.NamingUtilites;
+import org.jfree.util.Log;
 
 public class EmailService {
 
@@ -172,12 +174,15 @@ public class EmailService {
 				.info("init: looking for Session in JNDI, lookup name from configuration: "
 						+ mailSessionLookupName);
 
-		logger.debug("init: got Mailsession from Naming Context:" + NamingUtilites.lookup(NamingUtilites
-				.getDefaultInitialContext(), mailSessionLookupName));
-		
-		this.session = (Session) NamingUtilites.lookup(NamingUtilites
-				.getDefaultInitialContext(), mailSessionLookupName);
+		try {
+			InitialContext ctx = new InitialContext();
+			logger.debug("init: got Mailsession from Naming Context:" + NamingUtilites.lookup(ctx, mailSessionLookupName));
 
+		
+			this.session = (Session) NamingUtilites.lookup(ctx, mailSessionLookupName);
+		} catch (NamingException e) {
+			Log.warn("init: failed to get Mailsession from initial context.", e);
+		}
 		if (null == this.session) {
 			logger
 					.warn("init: failed to lookup Session from JNDI lookup " + mailSessionLookupName + ", using manual session");

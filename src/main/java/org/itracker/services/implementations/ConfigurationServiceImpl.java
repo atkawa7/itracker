@@ -32,7 +32,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
@@ -55,8 +56,9 @@ import org.itracker.persistence.dao.WorkflowScriptDAO;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.IssueUtilities;
+import org.itracker.services.util.NamingUtilites;
 import org.itracker.services.util.SystemConfigurationUtilities;
-import org.itracker.web.util.NamingUtilites;
+import org.jfree.util.Log;
 
 /**
  * Implementation of the ConfigurationService Interface.
@@ -74,10 +76,10 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     private LanguageDAO languageDAO;
     private ProjectScriptDAO projectScriptDAO;
     private WorkflowScriptDAO workflowScriptDAO;
-    // TODO make final static?
-    private final Context jndiPropertiesOverride;
+
     
     private static final Long _START_TIME_MILLIS = System.currentTimeMillis();
+    private String jndiPropertiesOverridePrefix;
     
     /**
      * Creates a new instance using the given configuration.
@@ -92,35 +94,13 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         if (configurationProperties == null) {
             throw new IllegalArgumentException("null configurationProperties");
         }
-        Context ctx = null;
         this.props = configurationProperties;
+        props.setProperty("start_time_millis", String.valueOf(_START_TIME_MILLIS));
         
         // initialize naming context prefix for properties overrides
-        String jndiPropertiesOverridePrefix = props.getProperty(
+        this.jndiPropertiesOverridePrefix = props.getProperty(
 				"jndi_override_prefix", null);
-		try {
-			if (null != jndiPropertiesOverridePrefix
-					&& jndiPropertiesOverridePrefix.length() > 0) {
-				ctx = NamingUtilites.getDefaultInitialContext();
-				ctx = (Context)NamingUtilites.lookup(ctx, jndiPropertiesOverridePrefix);
-
-
-			}
-		} catch (RuntimeException e) {
-			ctx = null;
-			logger.warn("<init>: failed to configure jndi_override_prefix", e);
-		} finally {
-			jndiPropertiesOverride = ctx;
-			
-			logger.info("<init>: now overriding properties with jndi override prefix " + jndiPropertiesOverridePrefix + ", " + jndiPropertiesOverride);
-			
-			if (logger.isDebugEnabled()) {
-
-				logger.debug("<init>: context for jndi override prefix " + jndiPropertiesOverride);
-
-			}
-		}
-        props.setProperty("start_time_millis", String.valueOf(_START_TIME_MILLIS));
+        
         this.configurationDAO = configurationDAO;
         this.customFieldDAO = customFieldDAO;
         this.customFieldValueDAO = customFieldValueDAO;
@@ -132,19 +112,19 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     
     public String getProperty(String name) {
     	String value = null;
-    	if (null != jndiPropertiesOverride) {
+    	if (null != jndiPropertiesOverridePrefix) {
 
 			if (logger.isDebugEnabled()) {
 
 				logger.debug("getProperty: looking up '" + name
 						+ "' from jndi context "
-						+ jndiPropertiesOverride);
+						+ jndiPropertiesOverridePrefix);
 				
 
 			}
 			try {
-				value = NamingUtilites.getStringValue(this.jndiPropertiesOverride,
-						name, null);
+				value = NamingUtilites.getStringValue(new InitialContext(),
+						jndiPropertiesOverridePrefix + "/" + name, null);
 		    	if (null == value) {
 		    		if (logger.isDebugEnabled()) {
 		    			logger.debug("getProperty: value not found in jndi: " + name);
@@ -166,7 +146,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
     
     public String getProperty(String name, String defaultValue) {
-        String val =  getProperty(name);
+        String val = getProperty(name);
     	return (val == null) ? defaultValue : val;
     }
     
@@ -189,7 +169,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     
     public long getLongProperty(String name, long defaultValue) {
         String value = getProperty(name);
-        
         try {
             return (value == null) ? defaultValue : Long.parseLong(value);
         } catch (NumberFormatException ex) {
@@ -210,20 +189,35 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			@Override
     		public synchronized Object get(Object key) {
-    			if (null != jndiPropertiesOverride) {
-
-					logger.info("get: looking for override for " + key
-							+ " in jndi properties override: "
-							+ jndiPropertiesOverride);
-					Object val = NamingUtilites.lookup(jndiPropertiesOverride,
-							String.valueOf(key));
+    			if (null != super.getProperty(
+    					"jndi_override_prefix", null)) {
+    				if (logger.isInfoEnabled()) {
+						logger.info("get: looking for override for " + key
+								+ " in jndi properties override: "
+								+ super.getProperty(
+				    					"jndi_override_prefix", null));
+    				}
+					Object val = null;
+					try {
+						val = NamingUtilites.lookup(new InitialContext(),
+								super.getProperty(
+				    					"jndi_override_prefix", null) + "/" + String.valueOf(key));
+					} catch (NamingException e) {
+						if (Log.isDebugEnabled()) {
+							logger.debug("get: failed to create initial context", e);
+						}
+					}
 					if (null != val) {
-						logger.debug("get: returning " + val);
+						if (logger.isDebugEnabled()) {
+							logger.debug("get: returning " + val);
+						}
 						return val;
 					}
 
 				}
-    			logger.debug("get: get value of " + key + " from super");
+    			if (logger.isDebugEnabled()) {
+    				logger.debug("get: get value of " + key + " from super");
+    			}
     			return super.get(key);
     		}
     	};
