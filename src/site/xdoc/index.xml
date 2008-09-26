@@ -2,35 +2,38 @@
 
 <document>
 
-    <properties>
-        <title>About itracker</title>
-    </properties>
+	<properties>
+		<title>About itracker</title>
+	</properties>
 
-    <body>
+	<body>
 
-        <section name="About itracker">
-            <p>
-                itracker is a true open source issue tracking system
-                licensed under the LGPL license.
+		<section name="About itracker">
+			<p>
+				itracker is a true open source issue tracking system
+				licensed under the LGPL license.
             </p>
-            <p>
-                itracker is built using Java enterprise technology.
+			<p>
+				itracker is built using Java enterprise technology.
             </p>
-            <p>
-                itracker is a professional, easy to use, open, integrable, fast,
-                modular, customizable and scalable solution for all kind of projects.
+			<p>
+				itracker is a professional, easy to use, open, integrable, fast,
+				modular, customizable and scalable solution for all kind of projects.
             </p>
-            <p>
-                Currently there is a bunch of people rewriting itracker towards
-                a new Release 3.0, but it seems to take time. The refactoring is
-                based on Spring 2.0, Hibernate 3 and Struts.
-                <a href="https://sourceforge.net/tracker/?group_id=54141&amp;atid=472807"></a>
-                The Release 3.0 is not yet finished, and if you or your company can give us a
-                hand you are more than welcome to contribute! If you are able to help
-                (by programming, documenting or testing...), then please feel free to join.
-                <a href="https://sourceforge.net/tracker/?group_id=54141&amp;atid=472807">
-                    <br/>
-                    THERE ARE STILL SOME BUGS TO GO (COME ON GUYS - OPEN SOURCE MEANS EVERYONE WORKS ;-&gt;)
+			<p>
+				Currently there is a bunch of people rewriting itracker towards
+				a new Release 3.0, but it seems to take time. The refactoring is
+				based on Spring 2.0, Hibernate 3 and Struts.
+				<a href="https://sourceforge.net/tracker/?group_id=54141&amp;atid=472807"></a>
+				The Release 3.0 is not yet finished, and if you or your company can
+				give us a
+				hand you are more than welcome to contribute! If you are able to help
+				(by programming, documenting or testing...), then please feel free
+				to join.
+				<a href="https://sourceforge.net/tracker/?group_id=54141&amp;atid=472807">
+					<br />
+					THERE ARE STILL SOME BUGS TO GO (COME ON GUYS - OPEN SOURCE MEANS
+					EVERYONE WORKS ;-&gt;)
                 </a>
                 - please help.
             </p>
@@ -42,6 +45,10 @@
 
         <section name="News">
             <table border="1">
+                <tr>
+                    <td>2008-09-29</td>
+                    <td>First release candidate for version 3.0 is available for <a href="/downloads.html">download</a>. Release-notes: <a href="/release-notes/itracker-3.0-rc1.html">itracker-3.0-rc1</a></td>
+                </tr>
                 <tr>
                     <td>2008-01-01</td>
                     <td>Version 3.0 development has resumed.</td>
