@@ -190,6 +190,19 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 
     }
 
+    @Test 
+    public void testGetUserByLogin() {
+    	
+    	try {
+    	User user = userService.getUserByLogin("admin_test1");
+    	
+    	assertNotNull("admin_test1", user);
+    	
+    	} catch (Exception e) {
+    		logger.error("testGetUserByLogin: failed to lookup user", e);
+    		fail(e.getMessage());
+    	}
+    }
     @Test
     public void testAllowProfileUpdates() {
 
