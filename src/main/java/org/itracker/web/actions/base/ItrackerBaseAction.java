@@ -21,6 +21,7 @@ package org.itracker.web.actions.base;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +32,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.apache.struts.Globals;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionErrors;
@@ -53,6 +56,8 @@ import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
 import org.itracker.web.util.SessionManager;
 
+import com.sun.java_cup.internal.production;
+
 /**
  * 
  * This seems to be an action that is called always, checking for Permissions,
@@ -63,9 +68,8 @@ import org.itracker.web.util.SessionManager;
  */
 public abstract class ItrackerBaseAction extends Action {
 
-	private static final Logger log = Logger.getLogger(ItrackerBaseAction.class);
-
-
+	private static final Logger log = Logger
+			.getLogger(ItrackerBaseAction.class);
 
 	public ItrackerBaseAction() {
 		super();
@@ -219,8 +223,8 @@ public abstract class ItrackerBaseAction extends Action {
 
 	/**
 	 * 
-	 * @param request -
-	 *            request for base-url
+	 * @param request
+	 *            - request for base-url
 	 * @return normalized base-url for the request
 	 */
 	public String getBaseURL(HttpServletRequest request) {
@@ -494,12 +498,13 @@ public abstract class ItrackerBaseAction extends Action {
 	}
 
 	/**
-	 * get locale from request-attribute Constants.LOCALE_KEY as initialized by {@link ExecuteAlwaysFilter}.
+	 * get locale from request-attribute Constants.LOCALE_KEY as initialized by
+	 * {@link ExecuteAlwaysFilter}.
 	 * 
 	 * @return
 	 * @deprecated use getLocale instead
 	 */
-	public  Locale getCurrLocale(HttpServletRequest request) {
+	public Locale getCurrLocale(HttpServletRequest request) {
 		return getLocale(request);
 	}
 
@@ -509,7 +514,7 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public void setCurrLocale(Locale currLocale) {
-//		this.currLocale = currLocale;
+		// this.currLocale = currLocale;
 	}
 
 	/**
@@ -519,8 +524,9 @@ public abstract class ItrackerBaseAction extends Action {
 	 */
 	public void setCurrLocale(Locale currLocale, HttpServletRequest request) {
 		request.setAttribute(Constants.LOCALE_KEY, currLocale);
-//		this.currLocale = currLocale;
+		// this.currLocale = currLocale;
 	}
+
 	@Override
 	protected Locale getLocale(HttpServletRequest request) {
 		Locale locale = super.getLocale(request);
@@ -530,5 +536,35 @@ public abstract class ItrackerBaseAction extends Action {
 		return locale;
 	}
 
+	/**
+	 * Log time passed since timestamp startTime was set. After logging, the passed startTime-Date is reset to
+	 * {@link System#currentTimeMillis()}. This helps on actions performance issues.
+	 * 
+	 * 
+	 * @param message
+	 * @param startTime
+	 * @param log
+	 * @param priority
+	 */
+	protected void logTimeMillies(String message, Date startTime, Logger log,
+			Level level) {
+		if (log.isEnabledFor(level)) {
+			long milliesStart = startTime.getTime();
+			long milliesEnd = System.currentTimeMillis();
+			if (null == log) {
+				log = ItrackerBaseAction.log;
+			}
+			if (null == level) {
+				level = Level.INFO;
+			}
+			
+			log.log(level, new StringBuilder().append("logTimeMillies: ").append(
+					message).append(" took ").append(milliesEnd - milliesStart)
+					.append("ms.").toString());
+	
+			// reset the timestamp for next log
+			startTime.setTime(System.currentTimeMillis());
+		}
+	}
 
 }
