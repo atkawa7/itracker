@@ -52,6 +52,7 @@ import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
+import org.jfree.util.Log;
 
 /**
  * Implements the UserService interface. See that interface for method
@@ -282,7 +283,14 @@ public class UserServiceImpl implements UserService {
         } catch (AuthenticatorException ex) {
             throw new UserException("Unable to update user.", ex);
         }
-        User existinguser = userDAO.findByPrimaryKey(user.getId());
+        
+        // detach, so we can compare the new loaded with changed user
+        Integer id = user.getId();
+        userDAO.detach(user);
+        
+        User existinguser = userDAO.findByPrimaryKey(id);
+        userDAO.refresh(existinguser);
+        
         existinguser.setLogin(user.getLogin());
         existinguser.setFirstName(user.getFirstName());
         existinguser.setLastName(user.getLastName());
@@ -290,13 +298,17 @@ public class UserServiceImpl implements UserService {
         existinguser.setSuperUser(user.isSuperUser());
         existinguser.setLastModifiedDate(new Timestamp(new Date().getTime()));
 
-        // Only set the password if it is a new value...
-        if (user.getPassword() != null && !user.getPassword().equals("")
-                && !user.getPassword().equals(user.getPassword())) {
+//        // Only set the password if it is a new value...
+//        if (user.getPassword() != null && (!user.getPassword().equals(""))
+//                && (!user.getPassword().equals(user.getPassword()))) {
+        	Log.info("updateUser: setting new password for " + user.getLogin());
             existinguser.setPassword(user.getPassword());
-        }
+//        }
 
         userDAO.saveOrUpdate(existinguser);
+        
+//        user = userDAO.findByPrimaryKey(id);
+//        userDAO.refresh(user);
         return existinguser;
     }
 
