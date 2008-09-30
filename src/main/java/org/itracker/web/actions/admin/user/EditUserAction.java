@@ -76,7 +76,7 @@ public class EditUserAction extends ItrackerBaseAction {
             return mapping.findForward("listusers");
         }
 
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession();
 
         try {
             UserService userService = getITrackerServices().getUserService();
@@ -105,28 +105,62 @@ public class EditUserAction extends ItrackerBaseAction {
 
                     log.debug("Creating new userid.");
                     editUser.setRegistrationType(UserUtilities.REGISTRATION_TYPE_ADMIN);
-                    if(userService.allowPasswordUpdates(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
-                        editUser.setPassword(UserUtilities.encryptPassword(userForm.getPassword()));
+                    if (null != userForm.getPassword() && userForm.getPassword().length() > 0) {
+	                    if(userService.allowPasswordUpdates(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
+	                        editUser.setPassword(UserUtilities.encryptPassword(userForm.getPassword()));
+	                    } else {
+	                    	// Passwort was attempted to set, but authenticator is not able to. Exception
+//	                    	itracker.web.error.nopasswordupdates
+	                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
+	                        saveMessages(request, errors);
+	                        return mapping.findForward("error");
+	                    }
                     }
                     editUser = userService.createUser(editUser);
                 } else if ("update".equals(userForm.getAction())) {
                     User existingUser = userService.getUser(editUser.getId());
                     if(existingUser != null) {
                         previousLogin = existingUser.getLogin();
-                        boolean performUpdate = true;
+                        boolean performUpdate = false;
                         if(! userService.allowProfileUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
                             editUser = existingUser;
-                            performUpdate = false;
-                        }
-                        if(userService.allowPasswordUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
-                            if(userForm.getPassword() != null && ! userForm.getPassword().equals("")) {
-                                editUser.setPassword(UserUtilities.encryptPassword(userForm.getPassword()));
-                                performUpdate = true;
-                            }
+//                            itracker.web.error.noprofileupdates
+	                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprofileupdates"));
+	                        saveMessages(request, errors);
+	                        return mapping.findForward("error");
+                        } else {
+
+//                            log.debug("updating " + editUser);
+	                        if (null != userForm.getPassword() && !userForm.getPassword().equals("")) {
+		                        if(userService.allowPasswordUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
+
+	                                editUser.setPassword(UserUtilities.encryptPassword(userForm.getPassword()));
+//	                                if (log.isDebugEnabled()) {
+//	                                	log.debug("execute: setting password: " + userForm.getPassword() + " encrypted: " + editUser.getPassword());
+//	                                }
+	                                performUpdate = true;
+		                            
+		                        } else {
+			                    	// Passwort was attempted to set, but authenticator is not able to. Exception
+		                            editUser = existingUser;
+//		                            itracker.web.error.nopasswordupdates
+			                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
+			                        saveMessages(request, errors);
+			                        return mapping.findForward("error");
+		                        }
+	                        }
                         }
                         if(performUpdate) {
+                        	if (log.isDebugEnabled()) {
+                        		log.debug("execute: applying updates on user " + editUser);
+                        	}
                             editUser = userService.updateUser(editUser);
+                        	if (log.isDebugEnabled()) {
+                        		log.debug("execute: applied updates on user " + editUser);
+                        	}
                         }
+                    } else {
+                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invaliduser"));
                     }
                 } else {
                 	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidaction"));

@@ -110,6 +110,11 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.wrongpassword"));
 							}
                         }
+                    } else {
+//                        itracker.web.error.noprofileupdates
+                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
+                        saveMessages(request, errors);
+                        return mapping.findForward("error");
                     }
                 }
 
@@ -117,6 +122,10 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                     existingUser.setFirstName(userForm.getFirstName());
                     existingUser.setLastName(userForm.getLastName());
                     existingUser.setEmail(userForm.getEmail());
+                } else {
+                	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprofileupdates"));
+                    saveMessages(request, errors);
+                    return mapping.findForward("error");
                 }
             }
 
