@@ -125,7 +125,8 @@ public class ExecuteAlwaysFilter implements Filter {
 		// Locale currLocale = LoginUtilities.getCurrentLocale(request);
 		// request.setAttribute("currLocale", currLocale);
 		
-		User currUser = (User) session.getAttribute("currUser");
+		
+		User currUser = LoginUtilities.getCurrentUser(request);
 		if (null != currUser) {
 			if (log.isDebugEnabled()) {
 				log.debug("doFilter: found user in session");

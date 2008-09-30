@@ -28,6 +28,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.User;
 import org.itracker.services.util.AuthenticationConstants;
 
 public class LoginUtilities {
@@ -110,13 +111,14 @@ public class LoginUtilities {
 			 * an unknown type, just in case // This will allow authenticators
 			 * to check whatever they want for an auto login if(! foundLogin) {
 			 * String redirectURL =
-			 * request.getRequestURI().substring(request.getContextPath().length()) +
-			 * (request.getQueryString() != null ? "?" +
+			 * request.getRequestURI().substring(request.getContextPath
+			 * ().length()) + (request.getQueryString() != null ? "?" +
 			 * request.getQueryString() : "");
 			 * request.setAttribute(Constants.AUTH_TYPE_KEY, new
 			 * Integer(AuthenticationConstants.AUTH_TYPE_UNKNOWN));
 			 * request.setAttribute(Constants.AUTH_REDIRECT_KEY, redirectURL);
-			 * request.setAttribute("processLogin", "true"); foundLogin = true; }
+			 * request.setAttribute("processLogin", "true"); foundLogin = true;
+			 * }
 			 */
 		}
 
@@ -261,5 +263,22 @@ public class LoginUtilities {
 		}
 
 		return requestLocale;
+	}
+
+	/**
+	 * get current user from request-attribute currUser, if not set from request-session
+	 * 
+	 * @param request
+	 * @return current user or null if unauthenticated
+	 * @throws NullPointerException
+	 *             if the request was null
+	 */
+	public static final User getCurrentUser(HttpServletRequest request) {
+
+		User currUser = (User) request.getAttribute("currUser");
+		if (null == currUser) {
+			currUser = (User) request.getSession().getAttribute("currUser");
+		}
+		return currUser;
 	}
 }
