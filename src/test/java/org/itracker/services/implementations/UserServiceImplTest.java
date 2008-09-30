@@ -166,6 +166,17 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
+    public void testUpdateUserPw() throws UserException {
+        User user = userService.getUser(2);
+
+        user.setPassword("new password");
+
+        User updatedUser = userService.updateUser(user);
+
+        assertNotNull(updatedUser);
+        assertEquals("new password", updatedUser.getPassword());
+    }
+    @Test
     public void testGetPossibleOwners() {
         Issue issue = new Issue();
         Integer projectId = 2;
