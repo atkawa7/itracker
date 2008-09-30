@@ -44,6 +44,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
 
 
 
@@ -77,25 +78,43 @@ public class EditPreferencesAction extends ItrackerBaseAction {
         try {
             UserService userService = getITrackerServices().getUserService();
 
+            // TODO following checks make no sence from my perspective.
+            // This check should happen in the ExecuteAlways filter maybe
             HttpSession session = request.getSession();
-            user = (User) session.getAttribute(Constants.USER_KEY);
-            if(user == null) {
-                return mapping.findForward("login");
-            }
-
-            User existingUser = userService.getUser(user.getId());
-            if(existingUser == null || user.getId().intValue() != existingUser.getId().intValue()) {
-                log.debug("Unauthorized edit preferences request from " + user.getLogin() + "(" + user.getId() + ") for " + existingUser.getLogin() + "(" + existingUser.getId() + ")");
-                return mapping.findForward("unauthorized");
-            }
+//            user = (User) session.getAttribute(Constants.USER_KEY);
+//            if(user == null) {
+//                return mapping.findForward("login");
+//            }
+//
+//            User existingUser = userService.getUser(user.getId());
+//            if(existingUser == null || user.getId() != existingUser.getId()) {
+//            	if (log.isDebugEnabled()) {
+//            		log.debug("execute: Unauthorized edit preferences request from " + user.getLogin() + "(" + user.getId() + ") for " + existingUser.getLogin() + "(" + existingUser.getId() + ")");
+//            	}
+//                return mapping.findForward("unauthorized");
+//            }
             UserForm userForm = (UserForm) form;
+            
+            if (LoginUtilities.getCurrentUser(request) != null) {
+            	user = LoginUtilities.getCurrentUser(request);
+            }
 
+            if (log.isInfoEnabled()) {
+            	log.info("execute: ");
+            }
             errors = form.validate(mapping, request);
 
+            User existingUser = userService.getUser(user.getId());
+            // edit user-object
             if(errors.isEmpty()) {
+            	if (log.isDebugEnabled()){
+            		log.debug("execute: updating user-attributes.");
+            	}
+            		
                 if(userService.allowPasswordUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
                     if(userForm.getPassword() != null && userForm.getPassword().trim().length() > 1) {
                         if(userForm.getCurrPassword() == null || "".equals(userForm.getCurrPassword())) {
+                        	log.error("execute: current password was not set");
                         	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingpassword"));
                         } else {
                             try {
@@ -103,30 +122,46 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                                 if(passwordCheck == null) {
                                     throw new AuthenticatorException(AuthenticatorException.INVALID_DATA);
                                 }
-                                existingUser.setPassword(UserUtilities.encryptPassword(userForm.getPassword().trim()));
+                                if (log.isDebugEnabled()) {
+                                	log.debug("execute: setting new user password");
+                                }
+                                existingUser.setPassword(UserUtilities.encryptPassword(userForm.getPassword()));
                             } catch(AuthenticatorException ae) {
+                            	log.error("execute: current password was wrong, AuthenticatorException", ae);
                             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.wrongpassword"));
                             } catch (PasswordException e) {
+                            	log.error("execute: current password was wrong", e);
                             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.wrongpassword"));
 							}
                         }
-                    } else {
-//                        itracker.web.error.noprofileupdates
-                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
-                        saveMessages(request, errors);
-                        return mapping.findForward("error");
                     }
+                } else {
+//                  itracker.web.error.noprofileupdates
+                	log.info("execute: passwords can not be changed in preferences due to incapable authenticator");
+                	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
+                    saveMessages(request, errors);
+                    return mapping.findForward("error");
                 }
 
+                // TODO: should this check happen earlier?
                 if(userService.allowProfileUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
+                	if (log.isInfoEnabled()) {
+                		log.info("execute: allowing profile updates for " + existingUser);
+                	}
                     existingUser.setFirstName(userForm.getFirstName());
                     existingUser.setLastName(userForm.getLastName());
                     existingUser.setEmail(userForm.getEmail());
                 } else {
+                	log.error("execute: profile updates are not allowed for " + existingUser);
                 	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprofileupdates"));
                     saveMessages(request, errors);
                     return mapping.findForward("error");
                 }
+            } else {
+            	// validation errors
+            	if (log.isInfoEnabled()) {
+            		log.info("execute: got actions errors from validation: " + errors);
+            	}
             }
 
             if(errors.isEmpty()) {
@@ -138,18 +173,19 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                     userPrefs.setUser(existingUser);
 
                     userPrefs.setUserLocale(userForm.getUserLocale());
-                    userPrefs.setSaveLogin(("true".equals(userForm.getSaveLogin()) ? true : false));
+                    
+                    userPrefs.setSaveLogin(Boolean.valueOf(userForm.getSaveLogin()));
                     try {
-                        userPrefs.setNumItemsOnIndex(Integer.parseInt(userForm.getNumItemsOnIndex()));
+                        userPrefs.setNumItemsOnIndex(Integer.valueOf(userForm.getNumItemsOnIndex()));
                     } catch(NumberFormatException nfe) {
                         userPrefs.setNumItemsOnIndex(-1);
                     }
                     try {
-                        userPrefs.setNumItemsOnIssueList(Integer.parseInt(userForm.getNumItemsOnIssueList()));
+                        userPrefs.setNumItemsOnIssueList(Integer.valueOf(userForm.getNumItemsOnIssueList()));
                     } catch(NumberFormatException nfe) {
                         userPrefs.setNumItemsOnIssueList(-1);
                     }
-                    userPrefs.setShowClosedOnIssueList(("true".equals(userForm.getShowClosedOnIssueList()) ? true : false));
+                    userPrefs.setShowClosedOnIssueList(Boolean.valueOf(userForm.getShowClosedOnIssueList()));
                     userPrefs.setSortColumnOnIssueList(userForm.getSortColumnOnIssueList());
 
                     int hiddenSections = 0;
@@ -161,8 +197,8 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                     }
                     userPrefs.setHiddenIndexSections(hiddenSections);
 
-                    userPrefs.setRememberLastSearch(("true".equals(userForm.getRememberLastSearch()) ? true : false));
-                    userPrefs.setUseTextActions(("true".equals(userForm.getUseTextActions()) ? true : false));
+                    userPrefs.setRememberLastSearch(Boolean.valueOf(userForm.getRememberLastSearch()));
+                    userPrefs.setUseTextActions(Boolean.valueOf(userForm.getUseTextActions()));
 
                     userPrefs = userService.updateUserPreferences(userPrefs);
                 }
@@ -172,22 +208,35 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                 session.setAttribute(Constants.LOCALE_KEY, ITrackerResources.getLocale(userPrefs.getUserLocale()));
                 session.removeAttribute(Constants.EDIT_USER_KEY);
                 session.removeAttribute(Constants.EDIT_USER_PREFS_KEY);
+            } else {
+            	// validation errors
+            	if (log.isInfoEnabled()) {
+            		log.info("execute: got actions errors from user manipulation: " + errors);
+            	}
+                
             }
         } catch(RuntimeException e) {
-            e.printStackTrace();
+            log.error("execute", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.save"));
         } catch (UserException e) {
-            e.printStackTrace();
+            log.error("execute", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.save"));
 		}
 
       	if(! errors.isEmpty()) {
+      		
+        	if (log.isInfoEnabled()) {
+        		log.info("execute: got actions errors: " + errors);
+        	}
+            
       	    saveMessages(request, errors);
             saveToken(request);
-            return mapping.getInputForward();
       	}
-
-        return mapping.findForward("index");
+  		
+    	if (log.isDebugEnabled()) {
+    		log.debug("execute: done, forward to input forward");
+    	}
+        return mapping.getInputForward();
     }
 }
   
