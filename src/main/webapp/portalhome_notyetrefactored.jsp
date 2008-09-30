@@ -50,10 +50,10 @@
     <td style="text-align:right;" ><it:message key="itracker.web.attr.lastmodified"/></td>
 </tr>
 
-<c:forEach items="${ownedIssues}" var="ownedIssues" step="1" varStatus="i">
+<c:forEach items="${ownedIssues}" var="ownedIssue" step="1" varStatus="i">
     
     <tr class="listRowUnshaded">
-        <c:if test="${(userPrefs.numItemsOnIndex > 0) && (ownedIssues >=userPrefs.numItemsOnIndex) && ! showAll}">
+        <c:if test="${(userPrefs.numItemsOnIndex > 0) && (i.count >=userPrefs.numItemsOnIndex) && ! showAll}">
             <td style="text-align:left;" colspan="15"><html:link module="/" action="/portalhome" paramId="showAll" ><it:message key="itracker.web.index.moreissues"/></html:link></td>
         </c:if>
     </tr>
@@ -68,27 +68,27 @@
     </c:choose>
     
     <td style="white-space: nowrap">
-        <c:if test="${ownedIssues.userCanViewIssue}">
-        	<it:formatImageAction forward="viewissue" paramName="id" paramValue="${ownedIssues.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${ownedIssues.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
+        <c:if test="${ownedIssue.userCanViewIssue}">
+        	<it:formatImageAction forward="viewissue" paramName="id" paramValue="${ownedIssue.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${ownedIssue.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
         </c:if>
-        <c:if test="${ownedIssues.userCanEdit}">
-            <it:formatImageAction action="/module-projects/editissueform" paramName="id" paramValue="${ownedIssues.issue.id}" caller="index" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="${ownedIssues.issue.id}" textActionKey="itracker.web.image.edit.texttag"/>
+        <c:if test="${ownedIssue.userCanEdit}">
+            <it:formatImageAction action="/module-projects/editissueform" paramName="id" paramValue="${ownedIssue.issue.id}" caller="index" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="${ownedIssue.issue.id}" textActionKey="itracker.web.image.edit.texttag"/>
         </c:if>
     </td>
     <td></td>
-    <td align="left">${ownedIssues.issue.id}</td>
+    <td align="left">${ownedIssue.issue.id}</td>
     <td></td>
-    <td style="white-space: nowrap"><c:out value="${ownedIssues.issue.project.name}"/></td>
+    <td style="white-space: nowrap"><c:out value="${ownedIssue.issue.project.name}"/></td>
     <td></td>
-    <td nowrap="nowrap">${ownedIssues.statusLocalizedString}</td>
+    <td nowrap="nowrap">${ownedIssue.statusLocalizedString}</td>
     <td></td>
-    <td>${ownedIssues.severityLocalizedString}</td>
+    <td>${ownedIssue.severityLocalizedString}</td>
     <td></td>
-    <td><it:formatDescription><c:out value="${ownedIssues.issue.description}"/></it:formatDescription></td>
+    <td><it:formatDescription><c:out value="${ownedIssue.issue.description}"/></it:formatDescription></td>
     <td></td>
-    <td nowrap>${ownedIssues.issue.owner.firstName} ${ownedIssues.issue.owner.lastName}</td>
+    <td nowrap>${ownedIssue.issue.owner.firstName} ${ownedIssue.issue.owner.lastName}</td>
     <td></td>
-    <td align="right" style="white-space: nowrap"><it:formatDate date="${ownedIssues.issue.lastModifiedDate}"/></td>
+    <td align="right" style="white-space: nowrap"><it:formatDate date="${ownedIssue.issue.lastModifiedDate}"/></td>
     </tr>
 </c:forEach>
 <tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>	
@@ -125,7 +125,7 @@
         
         <c:if test="${unassignedIssues.userCanViewIssue}">  
             
-            <c:if test="${userPrefs.numItemsOnIndex > 0 && i >= userPrefs.numItemsOnIndex && ! showAll}">
+            <c:if test="${userPrefs.numItemsOnIndex > 0 && i.count >= userPrefs.numItemsOnIndex && ! showAll}">
                 <tr class="listRowUnshaded"><td align="left" colspan="15"><html:link page="/index.jsp?showAll=true"><it:message key="itracker.web.index.moreissues"/></html:link></td></tr>
             </c:if>
             
@@ -359,7 +359,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 
 <c:forEach items="${watchedIssues}" var="watchedIssues" step="1" varStatus="z">
     
-    <c:if test="${(userPrefs.numItemsOnIndex > 0) && (watchedIssues >= userPrefs.numItemsOnIndex) && ! showAll}">
+    <c:if test="${(userPrefs.numItemsOnIndex > 0) && (z.count >= userPrefs.numItemsOnIndex) && ! showAll}">
 		<tr class="listRowUnshaded">
 			<td align="left" colspan="15">
 			    <html:link
