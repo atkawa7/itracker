@@ -258,6 +258,9 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 request.setAttribute("uh",userService);
                 request.setAttribute("userPrefs",userPrefs);
                 //TODO: set the next value based on the request attribute!
+                //String showall = null == request.getParameter("showAll")? "false": request.getParameter("showAll");
+                
+                //request.setAttribute("showAll", Boolean.valueOf(showall));
                 request.setAttribute("showAll", Boolean.TRUE);
                 LOGGER.info("Action is trying to forward portalhome");
             }
