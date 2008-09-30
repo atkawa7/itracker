@@ -1362,7 +1362,7 @@ public class IssueServiceImpl implements IssueService {
 	public Long countSystemIssuesAttachments() {
 		logger.warn("countSystemIssuesAttachments: use of deprecated API");
 		if (logger.isDebugEnabled()) {
-			logger.debug("countSystemIssuesAttachments: stackgtrace was",
+			logger.debug("countSystemIssuesAttachments: stacktrace was",
 					new RuntimeException());
 		}
 
@@ -1398,7 +1398,7 @@ public class IssueServiceImpl implements IssueService {
 		logger
 				.warn("getAllIssueAttachmentsSizeAndCount: use of deprecated API");
 		if (logger.isDebugEnabled()) {
-			logger.debug("getAllIssueAttachmentsSizeAndCount: stackgtrace was",
+			logger.debug("getAllIssueAttachmentsSizeAndCount: stacktrace was",
 					new RuntimeException());
 		}
 
