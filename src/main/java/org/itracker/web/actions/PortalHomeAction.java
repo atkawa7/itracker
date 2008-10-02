@@ -70,7 +70,13 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 if(userPrefs == null) userPrefs = new UserPreferences();
                 
                 int hiddenSections = 0;
-                if(! "all".equalsIgnoreCase(request.getParameter("sections"))) {
+                Boolean allSections = null == request.getSession().getAttribute("allSections") ? false: Boolean.valueOf(request.getSession().getAttribute("allSections").toString());
+                if (null != request.getParameter("allSections"))
+                {
+                	allSections = Boolean.valueOf(request.getParameter("allSections"));
+                }
+                
+                if(!allSections) {
                     hiddenSections = userPrefs.getHiddenIndexSections();
                 }
                 
@@ -86,8 +92,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 final List<Issue> watchedIssues;
                 
                 // PUTTING PREFERENCES INTO THE REQUEST SCOPE
-// Marky:  since the setAttribute is done below,  changed code to place attribute where it is
-//         set.
+                
                 if(UserUtilities.hideIndexSection(UserUtilities.PREF_HIDE_CREATED, hiddenSections)) {
                     createdIssues  = new ArrayList<Issue>();
                     request.setAttribute("UserUtilities_PREF_HIDE_CREATED", Boolean.TRUE);
@@ -245,6 +250,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 request.setAttribute("watchedIssues",watchedIssuePTOs);
                 
                 
+                
                 LOGGER.info("Found forward: "+forward.getName()+" and stepped into action method that's populating portalhome");
                 
                 
@@ -258,10 +264,25 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 request.setAttribute("uh",userService);
                 request.setAttribute("userPrefs",userPrefs);
                 //TODO: set the next value based on the request attribute!
-                //String showall = null == request.getParameter("showAll")? "false": request.getParameter("showAll");
+                Boolean showall = null == request.getSession().getAttribute("showAll") ? false : Boolean.valueOf(request.getSession().getAttribute("showAll").toString());
+                
+                if (null != request.getParameter("showAll")) {
+                	showall = Boolean.valueOf(request.getParameter("showAll"));
+                }
+                if (!showall && userPrefs.getNumItemsOnIndex() < 1) {
+                	showall=true;
+                }
+                
+                LOGGER.info("userPrefs.getNumItemsOnIndex(): " + userPrefs.getNumItemsOnIndex() + ", showAll: " + showall);
                 
                 //request.setAttribute("showAll", Boolean.valueOf(showall));
-                request.setAttribute("showAll", Boolean.TRUE);
+                request.getSession().setAttribute("showAll", showall);
+                
+
+                
+                request.getSession().setAttribute("allSections", allSections);
+                
+                
                 LOGGER.info("Action is trying to forward portalhome");
             }
             return forward;
