@@ -65,7 +65,7 @@
 		<init-param>
 			<description>List of regex url-patterns to exclude from authentication. Automatically excluded is the LoginForward-path.</description>
 			<param-name>AuthExcludedPaths</param-name>
-			<param-value>.*\.js$, .*\.jpg$, .*\.gif$, .*\.css$</param-value>
+			<param-value>.*\.js$, .*\.jpg$, .*\.gif$, .*\.css$, .*/forgotpassword.*\.do, .*/selfregister.*\.do, .*/error\.do, .*/logoff\.do, .*/unauthorized\.do</param-value>
 		</init-param>
 	</filter>
 
