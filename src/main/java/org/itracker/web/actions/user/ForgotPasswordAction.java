@@ -84,7 +84,10 @@ public class ForgotPasswordAction extends ItrackerBaseAction {
                     String subject = ITrackerResources.getString("itracker.email.forgotpass.subject");
                     StringBuffer msgText = new StringBuffer();
                     msgText.append(ITrackerResources.getString("itracker.email.forgotpass.body"));
-                    msgText.append(ITrackerResources.getString("itracker.web.attr.password") + ": " + userService.generateUserPassword(user));
+                    String newPass = userService.generateUserPassword(user);
+//                    user.setPassword(newPass);
+                    userService.updateUser(user);
+                    msgText.append(ITrackerResources.getString("itracker.web.attr.password") + ": " + newPass);
                     
                     getITrackerServices().getEmailService()
                         .sendEmail(user.getEmail(), subject, msgText.toString());
