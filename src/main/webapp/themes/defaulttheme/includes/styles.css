@@ -246,6 +246,14 @@ a.listRow:link {
 	text-decoration: none;
 }
 
+.portalhomeMain {
+	width: 100%; 
+	border-spacing: 0; 
+	padding: 1px; 
+	margin: 0; 
+	border: none;
+}
+
 .historyName {
   font-style: italic;
 	font-size: 10px;
