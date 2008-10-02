@@ -91,11 +91,6 @@
 	    	</c:otherwise>
 	    </c:choose>
 	</c:forEach>
-	<c:if test="${showAll}">
-		<tr class="listRowUnshaded">
-            <td class="moreissues" colspan="15"><html:link module="/" action="/portalhome?showAll=false" ><it:message key="itracker.web.index.lessissues"/></html:link></td>
-   		</tr>
-	</c:if>
 	<tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>	
 <%-- END c:if UserUtilities_PREF_HIDE_ASSIGNED --%>
 </c:if>
@@ -279,11 +274,6 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 			</c:choose>
 		</c:if>
 	</c:forEach>
-	<c:if test="${showAll}">
-		<tr class="listRowUnshaded">
-            <td class="moreissues" colspan="15"><html:link module="/" action="/portalhome?showAll=false" ><it:message key="itracker.web.index.lessissues"/></html:link></td>
-   		</tr>
-	</c:if>
    	<tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
 </c:if>  
 
@@ -373,11 +363,6 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 		</c:choose>
 
 	</c:forEach>
-	<c:if test="${showAll}">
-		<tr class="listRowUnshaded">
-            <td class="moreissues" colspan="15"><html:link module="/" action="/portalhome?showAll=false" ><it:message key="itracker.web.index.lessissues"/></html:link></td>
-   		</tr>
-	</c:if>
 	<tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
 </c:if>
 
@@ -423,76 +408,77 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 		varStatus="i">
 
 
-			<c:choose>
-				<c:when test="${showAll || (i.count <=userPrefs.numItemsOnIndex)}">
+		<c:choose>
+			<c:when test="${showAll || (i.count <=userPrefs.numItemsOnIndex)}">
 
-					<c:set var="listRowClass"
-						value="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}" />
-					<tr class="${listRowClass}">
-						<td style="white-space: nowrap"><it:formatImageAction
-							forward="watchissue" paramName="id"
-							paramValue="${watchedIssue.issue.id}" caller="index"
-							src="/themes/defaulttheme/images/unwatch.gif"
-							altKey="itracker.web.image.unwatch.issue.alt"
+				<c:set var="listRowClass"
+					value="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}" />
+				<tr class="${listRowClass}">
+					<td style="white-space: nowrap"><it:formatImageAction
+						forward="watchissue" paramName="id"
+						paramValue="${watchedIssue.issue.id}" caller="index"
+						src="/themes/defaulttheme/images/unwatch.gif"
+						altKey="itracker.web.image.unwatch.issue.alt"
+						arg0="${watchedIssue.issue.id}"
+						textActionKey="itracker.web.image.unwatch.texttag" /> <c:if
+						test="${watchedIssue.userCanViewIssue}">
+						<it:formatImageAction forward="viewissue" paramName="id"
+							paramValue="${watchedIssue.issue.id}"
+							src="/themes/defaulttheme/images/view.gif"
+							altKey="itracker.web.image.view.issue.alt"
 							arg0="${watchedIssue.issue.id}"
-							textActionKey="itracker.web.image.unwatch.texttag" /> <c:if
-							test="${watchedIssue.userCanViewIssue}">
-							<it:formatImageAction forward="viewissue" paramName="id"
-								paramValue="${watchedIssue.issue.id}"
-								src="/themes/defaulttheme/images/view.gif"
-								altKey="itracker.web.image.view.issue.alt"
-								arg0="${watchedIssue.issue.id}"
-								textActionKey="itracker.web.image.view.texttag" />
-						</c:if> <%-- %>	<c:if test="${watchedIssue.canEditIssue}">
-        	<it:formatImageAction action="/module-projects/editissueform" paramName="id" paramValue="${watchedIssue.issue.id}" caller="index" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="${watchedIssue.issue.id}" textActionKey="itracker.web.image.edit.texttag"/>
-        	</c:if> --%></td>
-						<td></td>
-						<td style="text-align: left;">${watchedIssue.issue.id}</td>
-						<td></td>
-						<td style="white-space: nowrap">${watchedIssue.issue.project.name}</td>
-						<td></td>
-						<td style="white-space: nowrap">${watchedIssue.statusLocalizedString}</td>
-						<td></td>
-						<td>${watchedIssue.severityLocalizedString}</td>
-						<td></td>
-						<td><it:formatDescription>${watchedIssue.issue.description}</it:formatDescription></td>
-						<td></td>
-						<td>
-							<c:choose>
-								<c:when test="${watchedIssue.unassigned}">
-					              unassigned
-					          </c:when>
-							  <c:otherwise>
-					              ${watchedIssue.issue.owner.firstName} ${watchedIssue.issue.owner.lastName}
-					          </c:otherwise>
-							</c:choose>
-						</td>
-						<td></td>
-						<td style="text-align: right; white-space: nowrap"><it:formatDate
-							date="${watchedIssue.issue.lastModifiedDate}" /></td>
+							textActionKey="itracker.web.image.view.texttag" />
+					</c:if> <%-- %>	<c:if test="${watchedIssue.canEditIssue}">
+       	<it:formatImageAction action="/module-projects/editissueform" paramName="id" paramValue="${watchedIssue.issue.id}" caller="index" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="${watchedIssue.issue.id}" textActionKey="itracker.web.image.edit.texttag"/>
+       	</c:if> --%></td>
+					<td></td>
+					<td style="text-align: left;">${watchedIssue.issue.id}</td>
+					<td></td>
+					<td style="white-space: nowrap">${watchedIssue.issue.project.name}</td>
+					<td></td>
+					<td style="white-space: nowrap">${watchedIssue.statusLocalizedString}</td>
+					<td></td>
+					<td>${watchedIssue.severityLocalizedString}</td>
+					<td></td>
+					<td><it:formatDescription>${watchedIssue.issue.description}</it:formatDescription></td>
+					<td></td>
+					<td>
+						<c:choose>
+							<c:when test="${watchedIssue.unassigned}">
+				              unassigned
+				          </c:when>
+						  <c:otherwise>
+				              ${watchedIssue.issue.owner.firstName} ${watchedIssue.issue.owner.lastName}
+				          </c:otherwise>
+						</c:choose>
+					</td>
+					<td></td>
+					<td style="text-align: right; white-space: nowrap"><it:formatDate
+						date="${watchedIssue.issue.lastModifiedDate}" /></td>
 
+				</tr>
+			</c:when>
+			<c:otherwise>
+				<c:if test="${i.count == userPrefs.numItemsOnIndex + 1}">
+					<tr class="listRowUnshaded">
+						<td class="moreissues" colspan="15"><html:link anchor="watchedIssues" module="/" action="/portalhome?showAll=true" ><it:message key="itracker.web.index.moreissues"/></html:link></td>
 					</tr>
-				</c:when>
-				<c:otherwise>
-					<c:if test="${i.count == userPrefs.numItemsOnIndex + 1}">
-						<tr class="listRowUnshaded">
-							<td class="moreissues" colspan="15"><html:link anchor="watchedIssues" module="/" action="/portalhome?showAll=true" ><it:message key="itracker.web.index.moreissues"/></html:link></td>
-						</tr>
-					</c:if>
-				</c:otherwise>
-			</c:choose>
+				</c:if>
+			</c:otherwise>
+		</c:choose>
 
-		</c:forEach>
-	<c:if test="${showAll}">
-		<tr class="listRowUnshaded">
-            <td class="moreissues" colspan="15"><html:link module="/" action="/portalhome?showAll=false" ><it:message key="itracker.web.index.lessissues"/></html:link></td>
-   		</tr>
-	</c:if>
+	</c:forEach>
 	<tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
 </c:if>
 
 <!-- view hidden sections link -->
 
+
+	<c:if test="${showAll && userPrefs.numItemsOnIndex > 0}">
+		<tr class="listRowUnshaded">
+            <td class="moreissues" colspan="15"><html:link module="/" action="/portalhome?showAll=false" ><it:message key="itracker.web.index.lessissues"/></html:link></td>
+   		</tr>
+	</c:if>
 	<c:if test="${userPrefs.hiddenIndexSections>0}">
 		<tr style="text-align: left;" class="listRowUnshaded">
 			<td colspan="15" style="text-align: left;"><c:choose>
