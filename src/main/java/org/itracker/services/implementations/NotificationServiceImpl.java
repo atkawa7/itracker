@@ -387,12 +387,12 @@ public class NotificationServiceImpl implements NotificationService {
 											IssueUtilities
 													.getSeverityName(issue
 															.getSeverity()),
-											(issue.getOwner().getFirstName() != null ? issue
+											(null != issue.getOwner() && null != issue.getOwner().getFirstName() ? issue
 													.getOwner().getFirstName()
 													: "")
 													+ " "
-													+ (issue.getOwner()
-															.getLastName() != null ? issue
+													+ (null != issue.getOwner() && null != issue.getOwner()
+															.getLastName() ? issue
 															.getOwner()
 															.getLastName()
 															: ""),
