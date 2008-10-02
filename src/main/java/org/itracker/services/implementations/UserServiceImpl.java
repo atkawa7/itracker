@@ -314,7 +314,7 @@ public class UserServiceImpl implements UserService {
 
     public String generateUserPassword(User user) throws PasswordException {
         String password = UserUtilities.generatePassword();
-        user.setPassword(password);
+        user.setPassword(UserUtilities.encryptPassword(password));
         return password;
         // throw new PasswordException(PasswordException.UNKNOWN_USER);
     }
