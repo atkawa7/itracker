@@ -12,6 +12,7 @@
 			<ol>
 				<li>Download and customize <a href="mysql/create_itracker_mig_and_transform.sh">create_itracker_mig_and_transform.sh"</a>
 				</li>
+				<li>Download to the same directory: <a href="mysql/itracker_migration_transform_script.sql">itracker_migration_transform_script.sql</a></li>
 				<li>Stop any running itracker-instances pointing to the new database, if appropriate.</li>
 				<li>Execute the migration-script: <code>$ ./mysql/create_itracker_mig_and_transform.sh [&lt;password&gt;]</code></li>
 				<li>Start itracker3 configured to the migrated database</li>
@@ -19,7 +20,7 @@
 			</ol>
 			
 		</section>
-		<section name="Customize transrformation">
+		<section name="Customize transformation">
 			Variables which can be set:<ol>
 				<li>DBUSER: Username for connecting Database.</li>
 				<li>DBPASS: Will be passed as an argument to the execution-call.</li>
