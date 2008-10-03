@@ -18,6 +18,16 @@ Development Environment Setup
 
 * {Eclipse}
 
+** {using maven integration plugin for eclipse}
+
+  This will not work for older Eclipse versions (pre 3.4 Ganymede).\
+  Install the eclipse-plugin 'Eclipse Maven Integration' from update site {{http://m2eclipse.codehaus.org/update/}}.\
+  Check out itracker from SVN, usually trunk-version.\
+  Import the checked out project using maven import-wizzard: File > Import ... > General > Maven Projects\
+  More information: {{http://m2eclipse.codehaus.org/}}
+
+** {maven generated (old path)}
+
  To generate the Eclipse project files from your POM execute the
  following command:
 
@@ -55,8 +65,7 @@ mvn eclipse:eclipse -DdownloadJavadoc=true -DdownloadSources=true
 mvn idea:idea -DdownloadJavadoc=true -DdownloadSources=true
 +----+
 
- Lorem ipsum...
 
 * {NetBeans}
 
- Lorem ipsum...
+ TODO
