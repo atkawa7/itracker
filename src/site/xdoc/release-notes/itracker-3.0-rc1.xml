@@ -18,6 +18,28 @@
 				<li>provide feedback on bugs or failures in JIRA please.</li>
 			</ul>
 		</section>
+		<section name="environmental changes since 2.4">
+			<ul>
+				<li>
+					Built using Maven 2, tests with Dbunit and in-memory hsqldb
+				</li>
+				<li>
+					Based on Java 5, Servlets 2.4
+				</li>
+				<li>
+					Replaced service EJBs by POJO Spring-2.0 services
+				</li>
+				<li>
+					Freed Struts-actions from mandatory calls in execute-method (replaced by servlet-filter)
+				</li>
+				<li>
+					New generation of web-site including automatic reports (incubating)
+				</li>
+				<li>
+					Java Naming (JNDI) support for configuration added
+				</li>
+			</ul>
+		</section>
 		<section name="Itracker 3.0-rc1 release-notes - fixed bugs">
 			<table>
 				<tr>
