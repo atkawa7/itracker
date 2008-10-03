@@ -9,21 +9,21 @@
 	<body>
 		<section name="3.0 Screenshots">
 		
-		<dl>
+		<dl name="screenshots" >
 			<dt>Login-screen</dt>
-			<dd><img src="/images/screenshots/login.png" alt="login-screen" /></dd>
+			<dd><img src="../images/screenshots/login.png" alt="login-screen" /></dd>
 			<dt>Home-screen with all sections, displaying 10 issues per section</dt>
-			<dd><img src="/images/screenshots/home.png" alt="portal home" /></dd>
+			<dd><img src="../images/screenshots/home.png" alt="portal home" /></dd>
 			<dt>Preferences for users</dt>
-			<dd><img src="/images/screenshots/myPreferences.png" alt="My preferences" /></dd>
+			<dd><img src="../images/screenshots/myPreferences.png" alt="my preferences" /></dd>
 			<dt>Project issues</dt>
-			<dd><img src="/images/screenshots/project-issues.png" alt="Project" /></dd>
+			<dd><img src="../images/screenshots/project-issues.png" alt="project" /></dd>
 			<dt>View issue</dt>
-			<dd><img src="/images/screenshots/view-issue.png" alt="View issue" /></dd>
+			<dd><img src="../images/screenshots/view-issue.png" alt="view issue" /></dd>
 			<dt>Edit issue</dt>
-			<dd><img src="/images/screenshots/edit-issue.png" alt="Edit issue" /></dd>
+			<dd><img src="../images/screenshots/edit-issue.png" alt="edit issue" /></dd>
 			<dt>Issue search</dt>
-			<dd><img src="/images/screenshots/issue-search.png" alt="Edit issue" /></dd>
+			<dd><img src="../images/screenshots/issue-search.png" alt="search issues" /></dd>
 		</dl>
 		
 		</section>
