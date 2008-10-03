@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<document>
+
+	<properties>
+		<title>Itracker Screenshots</title>
+	</properties>
+
+	<body>
+		<section name="3.0 Screenshots">
+		
+		<dl>
+			<dt>Login-screen</dt>
+			<dd><img src="/images/screenshots/login.png" alt="login-screen" /></dd>
+			<dt>Home-screen with all sections, displaying 10 issues per section</dt>
+			<dd><img src="/images/screenshots/home.png" alt="portal home" /></dd>
+			<dt>Preferences for users</dt>
+			<dd><img src="/images/screenshots/myPreferences.png" alt="My preferences" /></dd>
+			<dt>Project issues</dt>
+			<dd><img src="/images/screenshots/project-issues.png" alt="Project" /></dd>
+			<dt>View issue</dt>
+			<dd><img src="/images/screenshots/view-issue.png" alt="View issue" /></dd>
+			<dt>Edit issue</dt>
+			<dd><img src="/images/screenshots/edit-issue.png" alt="Edit issue" /></dd>
+			<dt>Issue search</dt>
+			<dd><img src="/images/screenshots/issue-search.png" alt="Edit issue" /></dd>
+		</dl>
+		
+		</section>
+	</body>
+</document>
