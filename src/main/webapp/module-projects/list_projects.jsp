@@ -17,10 +17,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<%
-final Map<Integer, Set<PermissionType>> permissions = 
-    RequestHelper.getUserPermissions(session);
-%>
 
 <bean:define id="pageTitleKey" value="itracker.web.listprojects.title"/>
 <bean:define id="pageTitleArg" value=""/>
@@ -52,70 +48,63 @@ final Map<Integer, Set<PermissionType>> permissions =
     <td align="left"><it:message key="itracker.web.attr.totalissues"/></td>
     <td align="right"><it:message key="itracker.web.attr.lastissueupdate"/></td>
   </tr>
+  
+  	<c:set var="hasProjects" value="false" />	 
+  	<c:set var="totalOpenIssues" value="0" />
+  	<c:set var="totalResolvedIssues" value="0" />
+  	<c:set var="totalNumberProjects" value="0" />
+  	<c:forEach var="project" varStatus="i" items="${ projects }" step="1" >
+	
+	  	<c:set var="totalOpenIssues" value="${ project.totalOpenIssues + totalOpenIssues }" />
+	  	<c:set var="totalResolvedIssues" value="${ project.totalResolvedIssues + totalResolvedIssues}" />
+  		<c:set var="totalNumberProjects" value="${ totalNumberProjects + 1 }" />
 
-<%
-  ProjectService ph = (ProjectService)request.getAttribute("ph");
-  List<Project> projects = (List<Project>)request.getAttribute("projects");
-    
-  boolean hasProjects = false;
-  int numDisplayed = 0;
-  int totalOpenIssues = 0;
-  int totalResolvedIssues = 0;
-  
-  for(int i = 0; i < projects.size(); i++) {
-      Project project = projects.get(i);
-    
-    // TODO: move this to the Action class. 
-    if(! UserUtilities.hasPermission(permissions, project.getId(), new int[] { UserUtilities.PERMISSION_VIEW_ALL, UserUtilities.PERMISSION_VIEW_USERS })) {
-         continue;
-    }
-    hasProjects = true;
-    
-    // PENDING: Not scalable, should fetch all in 1 query. 
-    Long[] projectStats = ph.getProjectStats(project.getId());
-    totalOpenIssues += projectStats[0];
-    totalResolvedIssues += projectStats[1];
-%>
-    <tr align="right" class="<%= (numDisplayed % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ) %>">
-      <td nowrap>
-        <it:formatImageAction forward="listissues" paramName="projectId" paramValue="<%= project.getId() %>" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.project.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.view.texttag"/>
-        <% if(project.getStatus() == Status.ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_CREATE)) { %>
-        <it:formatImageAction forward="createissue" paramName="projectId" paramValue="<%= project.getId() %>" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.issue.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.create.texttag"/>
-        <% } %>
-        <it:formatImageAction forward="searchissues" paramName="projectId" paramValue="<%= project.getId() %>" src="/themes/defaulttheme/images/search.gif" altKey="itracker.web.image.search.issue.alt" arg0="<%= project.getName() %>" textActionKey="itracker.web.image.search.texttag"/>
-      </td>
-      <td></td>
-      <td><%= project.getName() %></td>
-      <td align="left"><%= projectStats[0] %></td>
-      <td align="left"><%= projectStats[1] %></td>
-      <td align="left"><%= projectStats[0] + projectStats[1] %></td>
-      <td align="right"><it:formatDate date="<%= new Date() %>" emptyKey="itracker.web.generic.notapplicable"/></td>
-    </tr>
-<%
-    numDisplayed++;
-  } 
-  int totalIssues = totalOpenIssues + totalResolvedIssues;
-  %>
-  
- <% if(hasProjects) {
-%>
-    <tr><td colspan="7"><html:img height="3" src="../themes/defaulttheme/images/blank.gif"/></td></tr>
-    <tr><td colspan="7" class="listHeadingBackground"><html:img height="2" src="../themes/defaulttheme/images/blank.gif"/></td></tr>
-    <tr><td colspan="7"><html:img height="3" src="../themes/defaulttheme/images/blank.gif"/></td></tr>
-   <tr></tr>
-    <tr class="listRowUnshaded">
-      <td colspan="2"></td>
-      <td align="right"><it:message key="itracker.web.attr.total"/>:</td>
-      <td align="left"><%= totalOpenIssues %></td>
-      <td align="left"><%= totalResolvedIssues %></td>
-      <td align="left"><%= totalIssues %></td>
-      <td></td>
-    </tr>
-<% } else { %>
-      <tr align="left"><td colspan="7" class="listRowUnshaded" style="text-align: center;"><it:message key="itracker.web.error.noprojects"/></td></tr>
-<%
-  }
-%>
+	    <tr class="${ i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded' }">
+	      <td nowrap>
+	        <it:formatImageAction forward="listissues" paramName="projectId" paramValue="${ project.id }" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.project.alt" arg0="${ project.name }" textActionKey="itracker.web.image.view.texttag"/>
+	        <c:if test="${ project.active && project.canCreate }">
+	        	<it:formatImageAction forward="createissue" paramName="projectId" paramValue="${ project.id }" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.issue.alt" arg0="${ project.name }" textActionKey="itracker.web.image.create.texttag"/>
+	        </c:if>
+	        <it:formatImageAction forward="searchissues" paramName="projectId" paramValue="${ project.id }" src="/themes/defaulttheme/images/search.gif" altKey="itracker.web.image.search.issue.alt" arg0="${ project.name }" textActionKey="itracker.web.image.search.texttag"/>
+	      </td>
+	      <td></td>
+	      <td>${ project.name }</td>
+	      <td align="left">${ project.totalOpenIssues }</td>
+	      <td align="left">${ project.totalResolvedIssues }</td>
+	      <td align="left">${ project.totalNumberIssues }</td>
+	      <td align="right"><it:formatDate date="${ project.lastModifiedDate }" emptyKey="itracker.web.generic.notapplicable"/></td>
+	    </tr>
+	    
+  		<c:set var="hasProjects" value="true" />
+
+	</c:forEach>
+
+	<c:choose>
+		<c:when test="${ hasProjects }">
+			<tr>
+				<td colspan="7"><html:img height="3"
+					src="../themes/defaulttheme/images/blank.gif" /></td>
+			</tr>
+
+			<tr class="listRowUnshaded listProjectsTotals">
+				<td colspan="2"></td>
+				<td align="right"><strong><it:message key="itracker.web.attr.total" />:&nbsp;<%-- ${ totalNumberProjects }--%></strong></td>
+
+				<td align="left"><strong>${ totalOpenIssues }</strong></td>
+				<td align="left"><strong>${ totalResolvedIssues }</strong></td>
+				<td align="left"><strong>${ totalOpenIssues + totalResolvedIssues }</strong></td>
+				<td></td>
+			</tr>
+		</c:when>
+		<c:otherwise>
+			<tr align="left">
+				<td colspan="7" class="listRowUnshaded" style="text-align: center;"><strong><it:message
+					key="itracker.web.error.noprojects" /></strong></td>
+			</tr>
+		</c:otherwise>
+	</c:choose>
+
+
 </table>
 
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>

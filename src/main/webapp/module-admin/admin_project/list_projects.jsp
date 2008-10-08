@@ -17,11 +17,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<% 
-final Map<Integer, Set<PermissionType>> permissions = 
-    RequestHelper.getUserPermissions(session);
-%>
-
 <bean:define id="pageTitleKey" value="itracker.web.admin.listprojects.title"/>
 <bean:define id="pageTitleArg" value=""/>
 
@@ -31,12 +26,12 @@ final Map<Integer, Set<PermissionType>> permissions =
 <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
   <tr>
     <td class="editColumnTitle" colspan="6"><it:message key="itracker.web.attr.projects"/>:</td>
-    <% if(UserUtilities.isSuperUser(permissions)) { %>
+    <c:if test="${ isSuperUser }">
          <td align="right">
            <it:formatImageAction action="editprojectform" targetAction="create" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.project.alt" textActionKey="itracker.web.image.create.texttag"/>
            <it:formatImageAction forward="listattachments" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.attachments.alt" textActionKey="itracker.web.image.view.texttag"/>
          </td>
-    <% } %>
+    </c:if>
   </tr>
   <tr align="left" class="listHeading">
     <td width="1"></td>
@@ -48,45 +43,52 @@ final Map<Integer, Set<PermissionType>> permissions =
     <td align="left"><it:message key="itracker.web.attr.issues"/></td>
   </tr>
 
-<%
-  ProjectService ph = (ProjectService)request.getAttribute("ph");
-  List<Project> projects = ph.getAllProjects();
+	<c:set var="hasProjects" value="false" />
+	<c:forEach var="project" varStatus="i" items="${ projects }" step="1">
 
-  Collections.sort(projects);
+		<tr
+			class="${ i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded' }"
+			style="${ project.active ? ( project.viewable ? 'color: yellow' : ''): 'color: red' }">
 
-  for(int i = 0; i < projects.size(); i++) {
-    if(! UserUtilities.hasPermission(permissions, projects.get(i).getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
-        continue;
-    }
-    String style = "";
-    if(projects.get(i).getStatus() == Status.VIEWABLE) {
-        style = "style=\"color: #CC8800;\"";
-    } else if(projects.get(i).getStatus() != Status.ACTIVE) {
-        style = "style=\"color: red;\"";
-    }
+			<td>
+				<it:formatImageAction action="editprojectform"
+					paramName="id" paramValue="${ project.id }"
+					targetAction="update" src="/themes/defaulttheme/images/edit.gif"
+					altKey="itracker.web.image.edit.project.alt"
+					arg0="${ project.name }"
+					textActionKey="itracker.web.image.edit.texttag" />
+			</td>
+			<td>
+			</td>
+			<td>${ project.name }</td>
+			<td>${ project.description }</td>
+			<td><it:formatDate date="${ project.createDate }" /></td>
+			<td><it:formatDate
+				date="${ project.lastModifiedDate }" /></td>
+			<td align="left">${ project.totalNumberIssues }</td>
+		</tr>
+		<c:set var="hasProjects" value="true" />
 
-    if(i % 2 == 1) {
-%>
-      <tr align="right" class="listRowShaded" <%= style %>>
-<%  } else { %>
-      <tr align="right" class="listRowUnshaded" <%= style %>>
-<%  } %>
-      <td>
-        <it:formatImageAction action="editprojectform" paramName="id" paramValue="<%= projects.get(i).getId() %>" targetAction="update" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.project.alt" arg0="<%= projects.get(i).getName() %>" textActionKey="itracker.web.image.edit.texttag"/>
-      </td>
-      <td></td>
-      <td><%= projects.get(i).getName() %></td>
-      <td><%= projects.get(i).getDescription() %></td>
-      <td><it:formatDate date="<%= projects.get(i).getCreateDate() %>"/></td>
-      <td><it:formatDate date="<%= projects.get(i).getLastModifiedDate() %>"/></td>
-      <td align="left"><%= ph.getTotalNumberIssuesByProject(projects.get(i).getId()) %></td>
-    </tr>
-<%
-  }
-%>
+	</c:forEach>
 
-  <tr><td><html:img height="8" width="1" src="/themes/defaulttheme/images/blank.gif"/></td></tr>
-  <tr><td colspan="7" class="tableNote"><it:message key="itracker.web.admin.listprojects.note"/></td></tr>
+	<c:choose>
+		<c:when test="${ hasProjects }">
+			<tr>
+				
+			</tr>
+			<tr>
+				<td colspan="7"><html:img height="3"
+					src="../themes/defaulttheme/images/blank.gif" /></td>
+			</tr>
+  			<tr><td colspan="7" class="tableNote"><it:message key="itracker.web.admin.listprojects.note"/></td></tr>
+		</c:when>
+		<c:otherwise>
+			<tr align="left">
+				<td colspan="7" class="listRowUnshaded" style="text-align: center;"><strong><it:message
+					key="itracker.web.error.noprojects" /></strong></td>
+			</tr>
+		</c:otherwise>
+	</c:choose>
 </table>
 
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
