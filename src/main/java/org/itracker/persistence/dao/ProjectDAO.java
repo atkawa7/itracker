@@ -1,5 +1,6 @@
 package org.itracker.persistence.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.itracker.model.Project;
@@ -38,5 +39,11 @@ public interface ProjectDAO extends BaseDAO<Project> {
      * @return list of projects in unspecified order
      */
     List<Project> findAllAvailable();
-    
+    /**
+     * Returns the projects with id projectId latest modified issues modification date
+     * 
+     * @param projectId
+     * @return
+     */
+    public Date getLastIssueUpdateDate(Integer projectId); 
 }

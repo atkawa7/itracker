@@ -1,5 +1,6 @@
 package org.itracker.persistence.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -62,6 +63,17 @@ public class ProjectDAOImpl extends BaseHibernateDAOImpl<Project>
             throw convertHibernateAccessException(ex);
         }
         return projects;
+    }
+    
+    public Date getLastIssueUpdateDate(Integer projectId) {
+    	Query q = getSession().getNamedQuery("ProjectsLastModifiedIssueDate");
+    	q.setParameter("projectId", projectId);
+    	
+    	List result = q.list();
+    	if (result != null && result.size() == 1) {
+    		return (Date)result.get(0);
+    	}
+    	return null;
     }
 
 }
