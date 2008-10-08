@@ -279,7 +279,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		updateIssue.getHistory().add(history);
 
 		try {
-			issueService.updateIssue(updateIssue, 2);
+			updateIssue = issueService.updateIssue(updateIssue, 2);
 			assertEquals("new history size", histCount + 1, updateIssue
 					.getHistory().size());
 
