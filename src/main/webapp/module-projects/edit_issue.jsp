@@ -287,7 +287,16 @@
 </tr>
 <tr>
     <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.project"/>:</td>
-    <td valign="top" class="editColumnText">${issue.project.name}</td>
+    <td valign="top" class="editColumnText">
+    	<it:formatImageAction forward="listissues"
+		                       paramName="projectId"
+		                       paramValue="${issue.project.id}"
+		                       caller="editissue"
+		                       src="/themes/defaulttheme/images/list.gif"
+		                       altKey="itracker.web.image.issuelist.issue.alt"
+		                       textActionKey="itracker.web.image.issuelist.texttag"/>
+		   ${issue.project.name}
+		</td>
 
     <%
         List<NameValuePair> components = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_COMPONENTS);

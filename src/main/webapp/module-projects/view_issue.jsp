@@ -171,7 +171,15 @@ User um = RequestHelper.getCurrentUser(session);
               <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
               <tr>
                 <td class="editColumnTitle"><it:message key="itracker.web.attr.project"/>: </td>
-                <td class="editColumnText"><%= issue.getProject().getName() %></td>
+                <td class="editColumnText">
+                	<it:formatImageAction forward="listissues"
+                                          paramName="projectId"
+                                          paramValue="${issue.project.id}"
+                                          caller="editissue"
+                                          src="/themes/defaulttheme/images/list.gif"
+                                          altKey="itracker.web.image.issuelist.issue.alt"
+                                          textActionKey="itracker.web.image.issuelist.texttag"/>
+                                          <%= issue.getProject().getName() %></td>
                 <% if(project.getVersions().size() > 0) { %>
                     <td class="editColumnTitle" style="white-space: nowrap;" nowrap><it:message key="itracker.web.attr.target"/>:</td>
                     <td class="editColumnText"><%= (issue.getTargetVersion() == null) ? "" : issue.getTargetVersion().getNumber() %></td>
