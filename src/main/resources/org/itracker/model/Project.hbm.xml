@@ -109,4 +109,12 @@
     where project.status in (1, 2) ]]>
     </query>
     
+    <query name="ProjectsLastModifiedIssueDate"><![CDATA[
+    select max(issue.lastModifiedDate)
+    from Issue as issue
+    where issue.project.id = :projectId ]]>
+    </query>
+    
+    
+    
 </hibernate-mapping>

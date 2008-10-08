@@ -18,6 +18,7 @@
 
 package org.itracker.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -88,6 +89,8 @@ public interface ProjectService {
     public Long countIssuesByComponent(Integer componentId);
     
     public Long getTotalNumberIssuesByProject(Integer projectId);
+    public Long getTotalNumberOpenIssuesByProject(Integer projectId);
+    public Long getTotalNumberResolvedIssuesByProject(Integer projectId);
     
     /**
      * Counts the number of issues for a given version. 
@@ -102,10 +105,17 @@ public interface ProjectService {
      * 
      * <p>PENDING: should use a class to hold statistics info to improve type-
      * safety. </p>
+     * @deprecated count open/closed issues with new methods: getTotalNumberOpenIssuesByProject, getTotalNumberResolvedIssuesByProject
      * 
      * @return int[0] = open issues, int[1] = resolved issues
      */
     public Long[] getProjectStats(Integer projectId);
     
+    public Date getLatestIssueUpdatedDateByProjectId(Integer projectId);
+    
+    /**
+     * @deprecated the service should 'encapsulate' the DAO and must not expose it!
+     * @return
+     */
     public ProjectDAO getProjectDAO();
 }
