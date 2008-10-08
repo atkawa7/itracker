@@ -20,6 +20,7 @@ package org.itracker.web.actions.project;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -114,6 +115,8 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
 								new ActionMessage(
 										"itracker.web.error.noprojects"));
 					}
+					
+					Collections.sort(projects, new Project.ProjectComparator());
 
 					if (errors.isEmpty()) {
 						MoveIssueForm moveIssueForm = (MoveIssueForm) form;
