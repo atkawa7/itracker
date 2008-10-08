@@ -280,6 +280,9 @@ public class Project extends AbstractEntity implements Comparable<Entity> {
 	// }
 	// return name.compareTo((null==other.name)? "": other.name);
 	// }
+	/**
+	 * Comparator for comparing projects by name
+	 */
 	public static final class ProjectComparator implements Comparator<Project>, Serializable {
 		/**
 		 * 
