@@ -1,29 +1,51 @@
 package org.itracker.web.actions.admin.project;
 
+import java.util.Map;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.itracker.services.ProjectService;
-import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.model.PermissionType;
+import org.itracker.services.util.UserUtilities;
+import org.itracker.web.actions.project.ListProjectsAction;
+import org.itracker.web.util.RequestHelper;
 
 
-public class ListProjectsAdminAction extends ItrackerBaseAction {
+/**
+ * Action for preparing request for list_projects.jsp.
+ * @author ranks
+ *
+ */
+public class ListProjectsAdminAction extends ListProjectsAction {
 
+	private static final Logger log = Logger.getLogger(ListProjectsAdminAction.class);
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-//		super.executeAlways(mapping,form,request,response);
-		 
-		  ProjectService projectService = this.getITrackerServices().getProjectService();
-		  request.setAttribute("ph",projectService);
-		  
-		  String pageTitleKey = "itracker.web.admin.listprojects.title"; 
-	      String pageTitleArg = "";			
-	      request.setAttribute("pageTitleKey",pageTitleKey); 
-	      request.setAttribute("pageTitleArg",pageTitleArg); 
+				
+		final Map<Integer, Set<PermissionType>> permissions = 
+		    RequestHelper.getUserPermissions(request.getSession());
+		Boolean isSuperUser = UserUtilities.isSuperUser(permissions);
+		
+		// filter projects, so only administrated projects remain
+		if (log.isDebugEnabled()) {
+			log.debug("execute: setting project-ptos to request: " + getAllPTOs(getITrackerServices().getProjectService(), new int[] { UserUtilities.PERMISSION_PRODUCT_ADMIN }, permissions));
+		}
+			
+		request.setAttribute("projects", getAllPTOs(getITrackerServices().getProjectService(), new int[] { UserUtilities.PERMISSION_PRODUCT_ADMIN }, permissions));
+        
+		request.setAttribute("isSuperUser", isSuperUser);
+		
+		String pageTitleKey = "itracker.web.admin.listprojects.title";
+		String pageTitleArg = "";
+		request.setAttribute("pageTitleKey", pageTitleKey);
+		request.setAttribute("pageTitleArg", pageTitleArg); 
 	 
 		return mapping.findForward("listprojectsadmin");
 	}
