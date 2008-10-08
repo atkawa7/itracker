@@ -70,8 +70,9 @@
         <action path="/unauthorized" type="org.itracker.web.actions.UnauthorizedAction">
             <forward name="unauthorized" path="/unauthorized.jsp"/>
         </action>
+        <!--  TODO: deprecated, remove this action /listprojects, only use /listprojectsadmin -->
         <action path="/listprojects"
-                type="org.itracker.web.actions.admin.project.ListProjectsAction">
+                type="org.itracker.web.actions.admin.project.ListProjectsAdminAction">
             <forward name="listprojects" path="/admin_project/list_projects.jsp"/>
         </action>
         <action path="/listattachments"
@@ -89,6 +90,7 @@
         </action>
         <action path="/listprojectsadmin"
                 type="org.itracker.web.actions.admin.project.ListProjectsAdminAction">
+            <forward name="listprojects" path="/admin_project/list_projects.jsp"/>
             <forward name="listprojectsadmin" path="/admin_project/list_projects.jsp"/>
         </action>
         <action path="/listreportsadmin"
