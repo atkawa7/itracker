@@ -308,6 +308,7 @@
               <tr class="listRowUnshaded" align="left"><td colspan="10" align="left"><it:message key="itracker.web.error.noissues"/></td></tr>
            
           <% } else { %>
+          <%-- TODO: fix reports 
               <html:form action="/displayreport" target="_blank">
                 <tr><td colspan="99"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="10"/></td></tr>
                 <tr class="listRowUnshaded" align="left" style="vertical-align: top;">
@@ -336,6 +337,7 @@
                   </td>
                 </tr>
               </html:form>
+              --%>
           <% } %>
         </table>
         </td></tr>
