@@ -116,7 +116,7 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
 										"itracker.web.error.noprojects"));
 					}
 					
-					Collections.sort(projects, new Project.ProjectComparator());
+					Collections.sort(availableProjects, new Project.ProjectComparator());
 
 					if (errors.isEmpty()) {
 						MoveIssueForm moveIssueForm = (MoveIssueForm) form;
