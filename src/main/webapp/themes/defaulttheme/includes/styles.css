@@ -10,11 +10,6 @@ hr {
 	height: 1px;
 	background: black;	
 }
-td.top_ruler{
-	background-color: #CCC;
-	/*background-color: #9999FF;*/
-	
-}
 
 a:hover {
 	color: #000000;
