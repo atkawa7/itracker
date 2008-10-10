@@ -130,7 +130,6 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
             query.setAvailableProjects(null);
 
             List<Project> projects = projectService.getAllAvailableProjects();
-            Collections.sort(projects);
 
             List<Project> availableProjectsList = new ArrayList<Project>();
             List<Integer> selectedProjectsList = new ArrayList<Integer>();
@@ -158,8 +157,10 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
                 }
             }
 
-            if (availableProjectsList.size() != 0) {
+            if (!availableProjectsList.isEmpty()) {
                 log.debug("Issue Search has " + availableProjectsList.size() + " available projects.");
+
+                Collections.sort(availableProjectsList, new Project.ProjectComparator());
                 query.setAvailableProjects(availableProjectsList);
                 if (query.getType().equals(IssueSearchQuery.TYPE_PROJECT)) {
                     searchForm.setProject(query.getProjectId());
