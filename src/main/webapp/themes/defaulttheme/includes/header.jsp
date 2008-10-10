@@ -34,7 +34,6 @@
   </head>
 
   <body>
-    <form name="lookupForm" action="<html:rewrite module="/module-projects" forward="viewissue"/>">
  
     <table border="0" cellspacing="1" cellspacing="0" width="100%">
       <tr>
@@ -46,9 +45,8 @@
           <% } %> --%>
         </td>
         <td align="right" valign="bottom" class="headerText">
-          <it:message key="itracker.web.header.welcome"/><%-- TODO: temp. remove code, fix again 
-          <%= (currUser == null ? ITrackerResources.getString("itracker.web.header.guest", currLocale) :
-                                currUser.getFirstName() + " " + currUser.getLastName()) %> --%>
+          <it:message key="itracker.web.header.welcome"/>
+		  <c:if test="${ currUser != null}">${ currUser.login }</c:if></td>
         </td>
       </tr>
       <tr><td colspan="2" class="top_ruler"><hr/></td></tr>
@@ -56,11 +54,11 @@
     <table border="0" cellspacing="0" cellspacing="0" width="100%">
       <tr>
         <td class="headerLinks" align="left">
-        	<%-- <nitrox:var name="currLogin" type="java.lang.String"/> --%>
         	<c:if test="${currUser != null}">
-        	 <%-- TODO: temp. remove code, fix again  <a title="<%= ITrackerResources.getString("itracker.web.header.quickview.alt", currLocale) %>" onclick="document.lookupForm.submit();" class="headerLinks">
-                <it:message key="itracker.web.header.quickview"/> </a> --%>
+        	
+    	<form name="lookupForm" action="<html:rewrite module="/module-projects" forward="viewissue"/>">
                 <input type="text" name="id" size="5" class="lookupBox" onchange="document.lookupForm.submit();">
+    	</form>
         	</c:if>
         </td>
         <td class="headerLinks" align="right">
@@ -144,7 +142,6 @@
         </td>
       </tr>
     </table>
-    </form>
     
     <p class="pageHeader"><%-- TODO: temp. removed code, fix this: <it:message key="<%= pageTitleKey %>" arg0="<%= pageTitleArg %>"/>--%></p>
  
