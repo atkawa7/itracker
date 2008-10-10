@@ -81,7 +81,7 @@
 					titleKey="itracker.web.header.menu.search.alt">
 					<it:message key="itracker.web.header.menu.search" />
 				</html:link>
-	
+				<%-- TODO: fix reports-section 
 				<c:if
 					test="<%=UserUtilities.hasPermission(permissions,
 										UserUtilities.PERMISSION_VIEW_ALL)%>">
@@ -92,6 +92,7 @@
 						<it:message key="itracker.web.header.menu.reports" />
 					</html:link>
 				</c:if>
+				--%>
 				<c:if
 					test="<%=UserUtilities.hasPermission(permissions,
 										UserUtilities.PERMISSION_USER_ADMIN)%>">
