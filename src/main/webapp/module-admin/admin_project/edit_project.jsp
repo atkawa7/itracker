@@ -344,6 +344,7 @@
 
 <% if (isUpdate) { %>
 
+<%-- 
 <table border="0" cellspacing="0" cellspacing="1" width="100%">
 <tr>
     <td class="editColumnTitle" colspan="5"><it:message key="itracker.web.attr.scripts"/>:</td>
@@ -366,7 +367,6 @@
     <td align="left"><it:message key="itracker.web.attr.priority"/></td>
     <td><it:message key="itracker.web.attr.event"/></td>
 </tr>
-
 <%
     List<CustomField> customFields2 = IssueUtilities.getCustomFields();
     List<ProjectScript> scripts = project.getScripts();
@@ -407,7 +407,7 @@
 <tr>
     <td colspan="6"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15"/></td>
 </tr>
-
+--%>
 <tr>
     <td class="editColumnTitle" colspan="5"><it:message key="itracker.web.attr.versions"/>:</td>
     <td align="right">
@@ -421,6 +421,7 @@
                               textActionKey="itracker.web.image.createtexttag"/>
     </td>
 </tr>
+
 <tr align="left" class="listHeading">
     <td width="40"></td>
     <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4"/></td>
