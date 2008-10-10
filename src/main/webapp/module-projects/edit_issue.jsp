@@ -91,6 +91,7 @@
             <tr>
                 <td style="text-align: right; vertical-align: bottom; white-space: nowrap;" class="editColumnText" >
                     <it:formatImageAction forward="listissues"
+                                          module="/module-projects"
                                           paramName="projectId"
                                           paramValue="${issue.project.id}"
                                           caller="editissue"
@@ -101,6 +102,7 @@
                     <% if (!ih.hasIssueNotification(currentIssue.getId(), currUserId)) { %>
 
                     <it:formatImageAction forward="watchissue"
+                                          module="/module-projects"
                                           paramName="id"
                                           paramValue="${issue.id}"
                                           caller="editissue"
@@ -114,6 +116,7 @@
                     <% if (UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT)) { %>
 
                     <it:formatImageAction action="moveissueform"
+                                          module="/module-projects"
                                           paramName="id"
                                           paramValue="${issue.id}"
                                           caller="editissue"
@@ -131,6 +134,7 @@
                     <% if (project.getStatus() == Status.ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_CREATE)) { %>
 
                     <it:formatImageAction forward="createissue"
+                                          module="/module-projects"
                                           paramName="projectId"
                                           paramValue="${issue.project.id}"
                                           src="/themes/defaulttheme/images/create.gif"
@@ -289,13 +293,13 @@
     <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.project"/>:</td>
     <td valign="top" class="editColumnText">
     	<it:formatImageAction forward="listissues"
+                               module="/module-projects"
 		                       paramName="projectId"
 		                       paramValue="${issue.project.id}"
 		                       caller="editissue"
 		                       src="/themes/defaulttheme/images/list.gif"
 		                       altKey="itracker.web.image.issuelist.issue.alt"
-		                       textActionKey="itracker.web.image.issuelist.texttag"/>
-		   ${issue.project.name}
+		                       textActionKey="itracker.web.image.issuelist.texttag"/>&nbsp;${issue.project.name}
 		</td>
 
     <%

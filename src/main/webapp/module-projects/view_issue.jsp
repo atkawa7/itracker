@@ -87,7 +87,7 @@ User um = RequestHelper.getCurrentUser(session);
                       <td style="text-align: right; vertical-align: top;"  class="editColumnText" style="white-space: nowrap;" nowrap>
 
                         <it:formatImageAction forward="listissues"
-                                              module=""
+                                              module="/module-projects"
                                               paramName="projectId"
                                               paramValue="<%= project.getId() %>"
                                               caller="viewissue"
@@ -97,6 +97,7 @@ User um = RequestHelper.getCurrentUser(session);
 
                         <% if(! ih.hasIssueNotification(issue.getId(), currUserId)) { %>
                              <it:formatImageAction forward="watchissue"
+                                              module="/module-projects"
                                                    paramName="id"
                                                    paramValue="<%= issue.getId() %>"
                                                    caller="viewissue"
@@ -172,14 +173,16 @@ User um = RequestHelper.getCurrentUser(session);
               <tr>
                 <td class="editColumnTitle"><it:message key="itracker.web.attr.project"/>: </td>
                 <td class="editColumnText">
-                	<it:formatImageAction forward="listissues"
-                                          paramName="projectId"
-                                          paramValue="${issue.project.id}"
-                                          caller="editissue"
-                                          src="/themes/defaulttheme/images/list.gif"
-                                          altKey="itracker.web.image.issuelist.issue.alt"
-                                          textActionKey="itracker.web.image.issuelist.texttag"/>
-                                          <%= issue.getProject().getName() %></td>
+                                          
+                        <it:formatImageAction forward="listissues"
+                                              module="/module-projects"
+                                              paramName="projectId"
+                                              paramValue="<%= issue.getProject().getId() %>"
+                                              caller="viewissue"
+                                              src="/themes/defaulttheme/images/list.gif"
+                                              altKey="itracker.web.image.issuelist.issue.alt"
+                                              textActionKey="itracker.web.image.issuelist.texttag"/>&nbsp;<%= issue.getProject().getName() %>
+                </td>
                 <% if(project.getVersions().size() > 0) { %>
                     <td class="editColumnTitle" style="white-space: nowrap;" nowrap><it:message key="itracker.web.attr.target"/>:</td>
                     <td class="editColumnText"><%= (issue.getTargetVersion() == null) ? "" : issue.getTargetVersion().getNumber() %></td>

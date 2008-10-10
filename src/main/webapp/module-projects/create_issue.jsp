@@ -103,6 +103,23 @@
           </tr>
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
           <tr>
+            <td class="editColumnTitle"><it:message key="itracker.web.attr.project"/>: </td>
+            <td class="editColumnText">
+                                      
+                    <it:formatImageAction forward="listissues"
+                                          module="/module-projects"
+                                          paramName="projectId"
+                                          paramValue="<%= project.getId() %>"
+                                          caller="viewissue"
+                                          src="/themes/defaulttheme/images/list.gif"
+                                          altKey="itracker.web.image.issuelist.issue.alt"
+                                          textActionKey="itracker.web.image.issuelist.texttag"/>&nbsp;<%= project.getName() %>
+            </td>
+
+          </tr>
+              
+          <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
+          <tr>
             <%
                List<NameValuePair> components = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_COMPONENTS);
                List<NameValuePair> versions = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_VERSIONS);
