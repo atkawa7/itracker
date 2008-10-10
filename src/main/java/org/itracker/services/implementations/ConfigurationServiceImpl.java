@@ -231,6 +231,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     
     public List<Configuration> getConfigurationItemsByType(int type) {
         List<Configuration> configItems = configurationDAO.findByType(type);
+        Collections.sort(configItems, new Configuration.ConfigurationOrderComparator());
         return configItems;
     }
     
@@ -583,6 +584,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     
     public List<CustomField> getCustomFields() {
         List<CustomField> customFields = customFieldDAO.findAll();
+        Collections.sort(customFields, new CustomField.NameComparator());
         return customFields;
         
     }
@@ -596,6 +598,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             fields.get(i).setLabels(locale);
             
         }
+        Collections.sort(fields,  new CustomField.NameComparator());
         
         return fields;
         
