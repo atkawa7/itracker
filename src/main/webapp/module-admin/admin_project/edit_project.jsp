@@ -48,14 +48,14 @@
     <br>
 </logic:messagesPresent>
 
-<table width="100%" align="left">
+<table>
 <tr>
 <td>
 <html:form action="/editproject">
 <html:hidden property="action"/>
 <html:hidden property="id"/>
 
-<table border="0" cellspacing="0" cellspacing="1" width="800px">
+<table border="0" cellspacing="0" cellspacing="1" width="800">
 <tr>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.name"/>:</td>
     <td><html:text property="name" styleClass="editColumnText"/></td>
