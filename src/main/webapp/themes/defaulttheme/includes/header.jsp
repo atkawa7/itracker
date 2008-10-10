@@ -44,7 +44,8 @@
                 <!--  <html:img page="/themes/defaulttheme/images/logo.gif"/> itracker.org<br>
           <% } %> --%>
         </td>
-        <td align="right" valign="bottom" class="headerText">
+        <td class="headerTextPageTitle"><h1><it:message key="${pageTitleKey}" arg0="${pageTitleArg}"/></h1></td>
+        <td class="headerTextWelcome">
           <it:message key="itracker.web.header.welcome"/>
 		  <c:choose>
 		  	<c:when test="${ currUser != null}">${ currUser.firstName } ${ currUser.lastName } (<em>${ currUser.login }</em>)</c:when>
@@ -53,7 +54,7 @@
 		  </td>
         </td>
       </tr>
-      <tr><td colspan="2" class="top_ruler"><hr/></td></tr>
+      <tr><td colspan="3" class="top_ruler"><hr/></td></tr>
     </table>
     <table border="0" cellspacing="0" cellspacing="0" width="100%">
       <tr>

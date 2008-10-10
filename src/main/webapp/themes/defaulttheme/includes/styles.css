@@ -66,21 +66,34 @@ a.history:visited {
 	text-decoration: none;
 }
 
-.headerText {
+
+.headerText,
+.headerTextWelcome {
+	width: 250px;
+}
+.headerText, .headerTextWelcome, .headerTextPageTitle {
 	font-weight: bold;
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	color: black;
-  background-color: white;
+  	background-color: white;
 	text-decoration: none;
 }
-
+.headerTextWelcome {
+	text-align: right;
+}
+.headerTextPageTitle,
+.headerTextPageTitle h1 {
+	text-align: center;
+	font-size: 14px;
+	margin: 0;
+}
 .headerLinks {
 	font-weight: normal;
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	color: #9999FF;
-  background-color: white;
+  	background-color: white;
 	text-decoration: none;
 }
 
