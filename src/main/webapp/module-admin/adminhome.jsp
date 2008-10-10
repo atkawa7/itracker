@@ -171,7 +171,7 @@
      
         <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15" width="1"/></td></tr>
 
-        <tr>
+       <%--  <tr>
           <td colspan="3" class="editColumnTitle"><it:message key="itracker.web.admin.index.scheduleradmin"/></td>
           <td colspan="2" align="right"><it:link forward="listtasks" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link></td>
         </tr>
@@ -183,7 +183,7 @@
           <td></td>
           <td class="editColumnTitle"><it:message key="itracker.web.attr.lastrun"/>: </td>
           <td class="editColumnText"><c:out value="${lastRun}"/></td>
-        </tr>
+        </tr>--%>
       </table>
       <br>
       <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
