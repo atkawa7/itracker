@@ -32,15 +32,19 @@ public class ListProjectsAdminAction extends ListProjectsAction {
 		final Map<Integer, Set<PermissionType>> permissions = 
 		    RequestHelper.getUserPermissions(request.getSession());
 		Boolean isSuperUser = UserUtilities.isSuperUser(permissions);
+		Boolean showAll = Boolean.valueOf(request.getParameter("showAll"));
 		
 		// filter projects, so only administrated projects remain
 		if (log.isDebugEnabled()) {
 			log.debug("execute: setting project-ptos to request: " + getAllPTOs(getITrackerServices().getProjectService(), new int[] { UserUtilities.PERMISSION_PRODUCT_ADMIN }, permissions));
 		}
-			
-		request.setAttribute("projects", getAllPTOs(getITrackerServices().getProjectService(), new int[] { UserUtilities.PERMISSION_PRODUCT_ADMIN }, permissions));
-        
+		if (showAll) {
+			request.setAttribute("projects", getAllPTOs(getITrackerServices().getProjectService(), new int[] { UserUtilities.PERMISSION_PRODUCT_ADMIN }, permissions));
+		} else {
+			request.setAttribute("projects", getPTOs(getITrackerServices().getProjectService(), new int[] { UserUtilities.PERMISSION_PRODUCT_ADMIN }, permissions));
+		}
 		request.setAttribute("isSuperUser", isSuperUser);
+		request.setAttribute("showAll", showAll);
 		
 		String pageTitleKey = "itracker.web.admin.listprojects.title";
 		String pageTitleArg = "";

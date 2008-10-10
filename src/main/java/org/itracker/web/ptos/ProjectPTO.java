@@ -10,7 +10,6 @@ public class ProjectPTO {
 
 	private final Project project;
 	
-//	private Long totalNumberIssues = 0l;
 	private Long totalOpenIssues = 0l;
 	private Long totalResolvedIssues = 0l;
 	private Date lastUpdatedIssueDate = null;
@@ -29,9 +28,10 @@ public class ProjectPTO {
 	public Long getTotalNumberIssues() {
 		return totalOpenIssues + totalResolvedIssues;
 	}
-//	public void setTotalNumberIssues(Long totalNumberIssues) {
-//		this.totalNumberIssues = totalNumberIssues;
-//	}
+	public void setTotalNumberIssues(Long totalNumberIssues) {
+		setTotalOpenIssues(totalNumberIssues);
+		setTotalResolvedIssues(0l);
+	}
 	
 	public void setTotalOpenIssues(Long totalOpenIssues) {
 		this.totalOpenIssues = totalOpenIssues;

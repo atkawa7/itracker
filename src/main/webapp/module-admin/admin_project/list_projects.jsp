@@ -28,6 +28,14 @@
     <td class="editColumnTitle" colspan="6"><it:message key="itracker.web.attr.projects"/>:</td>
     <c:if test="${ isSuperUser }">
          <td align="right">
+         	<c:choose>
+         		<c:when test="${ showAll }">
+         			<html:link module="/module-admin" action="/listprojectsadmin?showAll=false"><it:message key="itracker.web.listprojects.locked.hide"/></html:link>
+         		</c:when>
+         		<c:otherwise>
+         			<html:link module="/module-admin" action="/listprojectsadmin?showAll=true"><it:message key="itracker.web.listprojects.locked.show"/></html:link>
+         		</c:otherwise>
+         	</c:choose>
            <it:formatImageAction action="editprojectform" targetAction="create" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.project.alt" textActionKey="itracker.web.image.create.texttag"/>
            <it:formatImageAction forward="listattachments" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.attachments.alt" textActionKey="itracker.web.image.view.texttag"/>
          </td>
