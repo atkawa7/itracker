@@ -46,7 +46,11 @@
         </td>
         <td align="right" valign="bottom" class="headerText">
           <it:message key="itracker.web.header.welcome"/>
-		  <c:if test="${ currUser != null}">${ currUser.login }</c:if></td>
+		  <c:choose>
+		  	<c:when test="${ currUser != null}">${ currUser.firstName } ${ currUser.lastName } (<em>${ currUser.login }</em>)</c:when>
+		  	<c:otherwise><em><it:message key="itracker.web.header.guest"/></em></c:otherwise>
+		  </c:choose>	
+		  </td>
         </td>
       </tr>
       <tr><td colspan="2" class="top_ruler"><hr/></td></tr>
