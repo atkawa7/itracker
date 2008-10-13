@@ -34,6 +34,7 @@
         <forward name="logoff" path="/logoff.do" module="/"/>
         <forward name="index" path="/portalhome.do" module="/"/>
         <forward name="editissueform" module="/module-projects" path="/editissueform.do"/>
+        <forward name="watchissue" module="/module-projects" path="/watchissue.do"/>
     </global-forwards>
 
     <!-- ==================================== Action Mappings    -->
