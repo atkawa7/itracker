@@ -1342,4 +1342,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         return workflowScriptDAO;
     }
     
+    public String getSystemBaseURL() {
+	    return getProperty(PNAME_SYSTEM_BASE_URL);
+    }
 }

@@ -37,6 +37,8 @@ import org.itracker.model.WorkflowScript;
  */
 public interface ConfigurationService {
     
+	public static final String PNAME_SYSTEM_BASE_URL = "system_base_url";
+	
     Properties getProperties();
 
     String getProperty(String name);
@@ -361,5 +363,7 @@ public interface ConfigurationService {
       * <b>must</b> be performed before this method is called.
       */
     void initializeConfiguration();
+    
+    String getSystemBaseURL();
     
 }
