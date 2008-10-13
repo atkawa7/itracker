@@ -228,13 +228,23 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return normalized base-url for the request
 	 */
 	public String getBaseURL(HttpServletRequest request) {
-		String url = request.getScheme() + "://" + request.getServerName()
-				+ ":" + request.getServerPort() + request.getContextPath();
+		
+		String url = getITrackerServices().getConfigurationService().getSystemBaseURL();
+		if (null == url) {
+			url = new StringBuffer(request.getScheme()).append("://").append(
+					request.getServerName()).append(":").append(
+					request.getServerPort()).append(request.getContextPath())
+					.toString();
+
+			log
+					.warn("getBaseURL: no base-url is configured, determin from request. ("
+							+ url + ")");
+		}
 		try {
-			return new URL(url).toString();
+			return new URL(url).toExternalForm();
 		} catch (MalformedURLException e) {
-			log.error("failed to get URL normalized, returning manual url: "
-					+ url);
+			log.warn("failed to get URL normalized, returning manual url: "
+					+ url, e);
 		}
 		return url;
 	}

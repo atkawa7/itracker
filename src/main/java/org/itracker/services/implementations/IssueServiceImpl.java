@@ -81,6 +81,7 @@ import org.itracker.services.exceptions.IssueSearchException;
 import org.itracker.services.exceptions.ProjectException;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.IssueUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -93,10 +94,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class IssueServiceImpl implements IssueService {
 
-	// TODO: work on these 3 not yet used items: notificationFactoryName,
-	// notificationQueueName, systemBaseURL;
-
-	private static String systemBaseURL = "";
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger
@@ -1016,11 +1013,10 @@ public class IssueServiceImpl implements IssueService {
 			}
 		}
 		// send assignment notification
-		// TODO refactor
+		// TODO: configurationService should be set from context
 		notificationService.sendNotification(issue, Type.ASSIGNED,
-				getSystemBaseURL());
-		// sendNotification(issueId, NotificationUtilities.TYPE_ASSIGNED,
-		// "baseURL");
+				ServletContextUtils.getItrackerServices()
+						.getConfigurationService().getSystemBaseURL());
 		return true;
 
 	}
@@ -1675,58 +1671,7 @@ public class IssueServiceImpl implements IssueService {
 
 	}
 
-	/**
-	 * TODO move to {@link NotificationService}
-	 * 
-	 * @deprecated
-	 */
-	public void sendNotification(Integer issueId, int type, String baseURL) {
-		logger.warn("sendNotification: use of deprecated API");
-		if (logger.isDebugEnabled()) {
-			logger.debug("sendNotification: stackgtrace was",
-					new RuntimeException());
-		}
 
-		logger.warn("sendNotification: method not implemented yet!!");
-		throw new NotImplementedException();
-	}
-
-	/**
-	 * TODO move to {@link NotificationService}
-	 * 
-	 * @deprecated
-	 */
-	public void sendNotification(Integer issueId, int type, String baseURL,
-			HashSet<String> addresses, Integer lastModifiedDays) {
-		logger.warn("sendNotification: use of deprecated API");
-		if (logger.isDebugEnabled()) {
-			logger.debug("sendNotification: stackgtrace was",
-					new RuntimeException());
-		}
-
-		logger.warn("sendNotification: method not implemented yet!!");
-
-		// Issue issue = getIssueDAO().findByPrimaryKey(issueId);
-
-		throw new NotImplementedException();
-
-		/*
-		 * try {
-		 * 
-		 * message.setInt("issueId", issueId.intValue()); message.setInt("type",
-		 * type); message.setObject("lastModifiedDays", (lastModifiedDays ==
-		 * null ? new Integer(-1) : lastModifiedDays)); if (systemBaseURL !=
-		 * null && !systemBaseURL.equals("")) { message.setString("baseURL",
-		 * systemBaseURL); } else if (baseURL != null) {
-		 * message.setString("baseURL", baseURL); }
-		 * 
-		 * ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		 * ObjectOutputStream oos = new ObjectOutputStream(baos);
-		 * oos.writeObject(addresses); message.setObject("addresses",
-		 * baos.toByteArray()); } sender.send(message);
-		 */
-
-	}
 
 	public boolean canViewIssue(Integer issueId, User user) {
 
@@ -1805,15 +1750,7 @@ public class IssueServiceImpl implements IssueService {
 		return getIssueDAO().query(queryModel, user, userPermissions);
 	}
 
-	/**
-	 * TODO right place here? ConfigurationService probably.
-	 * 
-	 * @param systemBaseURL
-	 */
-	public static void setSystemBaseURL(String systemBaseURL) {
-		IssueServiceImpl.systemBaseURL = systemBaseURL;
 
-	}
 
 	/**
 	 * @deprecated no more factory is used
@@ -1863,10 +1800,6 @@ public class IssueServiceImpl implements IssueService {
 			logger.debug("setNotificationQueueName: stackgtrace was",
 					new RuntimeException());
 		}
-	}
-
-	public static String getSystemBaseURL() {
-		return systemBaseURL;
 	}
 
 	public Long totalSystemIssuesAttachmentSize() {

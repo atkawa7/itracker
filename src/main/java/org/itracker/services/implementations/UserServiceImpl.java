@@ -69,7 +69,6 @@ public class UserServiceImpl implements UserService {
     
     private String authenticatorClassName = null;
     private Class<?> authenticatorClass = null;
-    private String systemBaseURL = "";
     private boolean allowSelfRegister = false;
 
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
@@ -109,7 +108,6 @@ public class UserServiceImpl implements UserService {
 
         try {
             allowSelfRegister = configurationService.getBooleanProperty("allow_self_register", false);
-            systemBaseURL = configurationService.getProperty("system_base_url", "");
 
             authenticatorClassName = configurationService.getProperty("authenticator_class", DEFAULT_AUTHENTICATOR);
             authenticatorClass = Class.forName(authenticatorClassName);
@@ -965,9 +963,6 @@ public class UserServiceImpl implements UserService {
 
 
     
-    public String getSystemBaseUrl() {
-    	return this.systemBaseURL;
-    };
 
 
 }

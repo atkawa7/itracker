@@ -316,6 +316,5 @@ public interface UserService {
      */
     public boolean allowPreferenceUpdates(User user, Object authentication, int authType, int reqSource) throws AuthenticatorException;
         
-    public String getSystemBaseUrl();
 
 }

@@ -81,11 +81,6 @@ public class CreateIssueAction extends ItrackerBaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ActionErrors errors = new ActionErrors();
-		// super.executeAlways(mapping,form,request,response);
-		//        
-		// if (!isLoggedIn(request, response)) {
-		// return mapping.findForward("login");
-		// }
 
 		if (!isTokenValid(request)) {
 			log.info("Invalid request token while creating issue.");
@@ -94,7 +89,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 			request.setAttribute("projects", projectService.getAllProjects());
 			request.setAttribute("ph", projectService);
 			return mapping.findForward("listprojects");
-		}
+		} 
 		resetToken(request);
 
 		try {

@@ -286,24 +286,7 @@ public interface IssueService {
      */
     boolean hasIssueNotification(Integer issueId, Integer userId);
     
-    /**
-     * @deprecated moved to NotificationService
-     * 
-     * @param issueId
-     * @param type
-     * @param baseURL
-     */
-    void sendNotification(Integer issueId, int type, String baseURL);
-    /**
-     * @deprecated Will not be replaced yet
-     * @param issueId
-     * @param type
-     * @param baseURL
-     * @param addresses
-     * @param lastModifiedDays
-     */
-    void sendNotification(Integer issueId, int type, String baseURL, HashSet<String> addresses, Integer lastModifiedDays);
-    
+
     int getOpenIssueCountByProjectId(Integer projectId);
     
     int getResolvedIssueCountByProjectId(Integer projectId);

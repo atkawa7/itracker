@@ -376,9 +376,7 @@ public class NotificationServiceImpl implements NotificationService {
 							.getString(
 									"itracker.email.issue.body.standard",
 									new Object[] {
-											url
-													+ "/module-projects/view_issue.do?id="
-													+ issue.getId(),
+											new StringBuffer(url).append("/module-projects/view_issue.do?id=").append(issue.getId()).toString(),
 											issue.getProject().getName(),
 											issue.getDescription(),
 											IssueUtilities.getStatusName(issue

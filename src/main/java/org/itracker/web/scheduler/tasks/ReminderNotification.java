@@ -19,16 +19,24 @@
 package org.itracker.web.scheduler.tasks;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.mail.internet.InternetAddress;
+
 import org.apache.log4j.Logger;
 import org.itracker.model.Issue;
 import org.itracker.model.Notification;
+import org.itracker.model.Notification.Type;
+import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
+import org.itracker.services.NotificationService;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NotificationUtilities;
 import org.itracker.web.util.ServletContextUtils;
@@ -74,11 +82,16 @@ public class ReminderNotification extends BaseJob {
         int issueAge = DEFAULT_ISSUE_AGE;
         int projectId = -1;
         int severity = -1;
+        ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
 
         // Process arguments.
         if(args != null) {
             if(args.length > 0 && args[0] != null) {
                 baseURL = args[0];
+            }
+            
+            if (null == baseURL) {
+            	baseURL = configurationService.getSystemBaseURL();
             }
             if(args.length > 1) {
                 try {
@@ -106,6 +119,7 @@ public class ReminderNotification extends BaseJob {
 
         try {
             IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
+            NotificationService notificationService = ServletContextUtils.getItrackerServices().getNotificationService();
             GregorianCalendar cal = new GregorianCalendar();
             cal.add(Calendar.DAY_OF_MONTH, 0 - issueAge);
             Date oldDate = cal.getTime();
@@ -122,24 +136,30 @@ public class ReminderNotification extends BaseJob {
                         continue;
                     }
                     if(issues.get(i).getLastModifiedDate() != null && issues.get(i).getLastModifiedDate().before(oldDate)) {
-                        HashSet<String> addresses = new HashSet<String>();
+                        HashSet<InternetAddress> addresses = new HashSet<InternetAddress>();
                         long numMillis = currentDate.getTime() - issues.get(i).getLastModifiedDate().getTime();
                         int numDays = (int) (numMillis / (24 * 60 * 60 * 1000));
 
-                        List<Notification> notifications = issueService.getPrimaryIssueNotifications(issues.get(i).getId());
+                        List<Notification> notifications = notificationService.getPrimaryIssueNotifications(issues.get(i));
                         for(int j = 0; j < notifications.size(); j++) {
                             if(notifications.get(j).getUser().getEmail() != null 
                                     && notifications.get(j).getUser().getEmail().indexOf('@') >= 0) {
-                                addresses.add(notifications.get(j).getUser().getEmail());
+                                addresses.add(notifications.get(j).getUser().getEmailAddress());
                             }
                         }
-                        logger.debug("Sending reminder notification for issue " + issues.get(i).getId() + " to " + addresses.size() + " users.");
-                        issueService.sendNotification(issues.get(i).getId(), NotificationUtilities.TYPE_ISSUE_REMINDER, baseURL, addresses, numDays);
+                        InternetAddress[] addressesArray = new ArrayList<InternetAddress>(addresses).toArray(new InternetAddress[]{});
+                        
+                        if (logger.isDebugEnabled()) {
+                        	logger.debug("Sending reminder notification for issue " + issues.get(i).getId() + " to " + addressesArray.length + " users.");
+                        }
+                        notificationService.sendNotification(issues.get(i), Type.ISSUE_REMINDER, baseURL, addressesArray, numDays);
+
                     }
                 }
             }
         } catch(Exception e) {
-            logger.error("Error sending reminder notifications. Message: " + e.getMessage());
+            logger.error("Error sending reminder notifications. Message: ", e);
+            throw new RuntimeException("failed to send reminder notifications.", e);
         }
     }
 }
