@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
@@ -287,38 +288,6 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
     public void setVersions(List<Version> versions) {
         this.versions = versions;
     }
-//    
-//    /**
-//     * Compares by status. 
-//     */
-//    public int compareTo(Issue other) {
-//        return STATUS_COMPARATOR.compare(this, other);
-//    }
-    
-//    /**
-//     * TODO: fix this!
-//     */
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (this == obj) {
-//            return true;
-//        }
-//        
-//        if (obj instanceof Issue) {
-//            final Issue other = (Issue)obj;
-//            
-//            return this.id == other.id;
-//        }
-//        return false;
-//    }
-//    
-//    /**
-//     * TODO: fix this!
-//     */
-//    @Override
-//    public int hashCode() {
-//        return (this.id == null) ? 0 : this.id.intValue();
-//    }
     
     @Override
     public String toString() {
@@ -336,12 +305,7 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
 		private static final long serialVersionUID = 1L;
 
         public int compare(Issue a, Issue b) {
-            final int statusComparison = a.status - b.status;
-            
-            if (statusComparison == 0) {
-                return a.severity - b.severity;
-            }
-            return statusComparison;
+            return new CompareToBuilder().append(a.status, b.status).append(a.severity, b.severity).append(a, b).toComparison();
         }
         
     }
@@ -353,12 +317,7 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
 		private static final long serialVersionUID = 1L;
 
         public int compare(Issue a, Issue b) {
-            final int projectComparison = a.project.compareTo(b.project);
-            
-            if (projectComparison == 0) {
-                return STATUS_COMPARATOR.compare(a, b);
-            }
-            return projectComparison;
+        	return new CompareToBuilder().append(a.project, b.project).append(a.status, b.status).append(a, b).toComparison();
         }
         
     }
@@ -370,13 +329,9 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
 		private static final long serialVersionUID = 1L;
 
         public int compare(Issue a, Issue b) {
-            // PENDING : Used to be a last + first name comparison. 
-            final int ownerComparison = a.owner.compareTo(b.owner);
-            
-            if (ownerComparison == 0) {
-                return STATUS_COMPARATOR.compare(a, b);
-            }
-            return ownerComparison;
+        	
+        	return new CompareToBuilder().append(a.owner, b.owner).append(a.status, b.status).append(a, b).toComparison();
+
         }
     }
 
@@ -387,12 +342,8 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
 		private static final long serialVersionUID = 1L;
         
         public int compare(Issue a, Issue b) {
-            final int severityComparison = a.severity - b.severity;
-            
-            if(severityComparison == 0) {
-                return a.status - b.status;
-            }
-            return severityComparison;
+        	
+        	return new CompareToBuilder().append(a.getSeverity(), b.getSeverity()).append(a.getStatus(), b.getStatus()).append(a, b).toComparison();
         }
         
     }
