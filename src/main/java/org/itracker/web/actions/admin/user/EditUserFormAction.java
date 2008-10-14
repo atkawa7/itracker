@@ -19,6 +19,7 @@
 package org.itracker.web.actions.admin.user;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,7 +35,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.itracker.model.NameValuePair;
 import org.itracker.model.Permission;
+import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
@@ -94,11 +97,13 @@ public class EditUserFormAction extends ItrackerBaseAction {
         try {
 
             UserService userService = getITrackerServices().getUserService();
-            request.setAttribute("uh", userService);
             ProjectService projectService = getITrackerServices().getProjectService();
-            request.setAttribute("ph", projectService);
+
+            List<Project> projects = null;
             User editUser = null;
             HashMap<Integer, HashMap<Integer, Permission>> userPermissions = new HashMap<Integer, HashMap<Integer, Permission>>();
+
+            List<NameValuePair> permissionNames = UserUtilities.getPermissionNames(getLocale(request));
             UserForm userForm = (UserForm) form;
 
             if (userForm == null) {
@@ -215,10 +220,16 @@ public class EditUserFormAction extends ItrackerBaseAction {
             }
 
             if (errors.isEmpty()) {
+            	
+            	projects = projectService.getAllAvailableProjects();
+            	Collections.sort(projects, Project.PROJECT_COMPARATOR);
+            	request.setAttribute(Constants.PROJECTS_KEY, projects);
 
                 request.setAttribute("userForm", userForm);
                 session.setAttribute(Constants.EDIT_USER_KEY, editUser);
                 session.setAttribute(Constants.EDIT_USER_PERMS_KEY, userPermissions);
+                request.setAttribute("permissionNames", permissionNames);
+                request.setAttribute("permissionRowColIdxes", new Integer[]{0,1});
                 saveToken(request);
 
                 return mapping.findForward("edituserform");

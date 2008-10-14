@@ -183,7 +183,55 @@
             <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="1" width="10"/></td>
             <td colspan="3"></td>
           </tr>
-          <tr>
+
+
+		<c:forEach items="${projects}" var="project" varStatus="i" step="1">
+			<tr align="left" class="listRowShaded">
+				<td colspan="8"><input title="toggle all" type="checkbox"
+					onchange="toggleProjectPermissionsChecked(this)"
+					name="Proj${ project.id }" />&nbsp;<it:message
+					key="itracker.web.attr.project" /> ${ project.name }</td>
+			</tr>
+			
+			<c:set var="projectPermissions"
+				value="${ edituserperms[project.id] }" />
+			<c:set var="currentPermissionDate" value="${ null }" />
+			
+			<c:forEach items="${ permissionNames }" step="2" var="permissionName" varStatus="j">
+				<tr class="listRowUnshaded">
+					<td><!-- ${ j.index } --></td>
+
+					<c:forEach items="${ permissionRowColIdxes }" var="idxAdd"
+						varStatus="idxStatus">
+						<c:if test="${ permissionNames[j.index + idxStatus.index] != null }">
+							<c:set var="keyName"
+								value="permissions(Perm${ permissionNames[j.index + idxStatus.index].value }Proj${ project.id })" />
+							<c:set var="keyId"
+								value="Perm${ permissionNames[j.index + idxStatus.index].value }_Proj${ project.id }" />
+							<td><c:choose>
+								<c:when test="${isUpdate && !allowPermissionUpdate}">
+									<html:img page="/themes/defaulttheme/images/${ checkmarkImage }" />
+									
+									<html:hidden property="${ keyName }" />
+								</c:when>
+								<c:otherwise>
+									<html:checkbox property="${ keyName }" value="on" />
+								</c:otherwise>
+							</c:choose></td>
+							<td>${ permissionNames[j.index + idxStatus.index].name }</td>
+							<td><it:formatDate date="${ currentPermissionDate}" /></td>
+						</c:if>
+						<td></td>
+					</c:forEach>
+				</tr>
+			</c:forEach>
+			<tr>
+				<td colspan="8"><html:img module="/"
+					page="/themes/defaulttheme/images/blank.gif" height="5" width="1" /></td>
+			</tr>
+		</c:forEach>
+
+		<tr>
               <td colspan="8">
                   <html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/>
               </td>
