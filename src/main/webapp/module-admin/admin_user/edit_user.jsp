@@ -21,7 +21,7 @@
 %>
       <logic:forward name="unauthorized"/>
 <%  } %>
-
+<c:set var="user" value="<%= user %>" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
@@ -94,7 +94,7 @@
                   </c:otherwise>
               </c:choose>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.lastmodified"/>:</td>
-            <td class="editColumnText"><it:formatDate date="${user.lastModifiedDate}"/></td>
+            <td class="editColumnText"><it:formatDate date="${ user.lastModifiedDate }"/></td>
           </tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.email"/>:</td>
@@ -197,17 +197,22 @@
 				value="${ edituserperms[project.id] }" />
 			<c:set var="currentPermissionDate" value="${ null }" />
 			
+			<%-- iterate over all permissions, step: 2 --%>
 			<c:forEach items="${ permissionNames }" step="2" var="permissionName" varStatus="j">
 				<tr class="listRowUnshaded">
 					<td><!-- ${ j.index } --></td>
-
+					<%-- iterate over all columns --%>
 					<c:forEach items="${ permissionRowColIdxes }" var="idxAdd"
 						varStatus="idxStatus">
-						<c:if test="${ permissionNames[j.index + idxStatus.index] != null }">
+						<%-- skip last row second column if not present --%>
+						
+						<c:set var="permissionName" value="${ permissionNames[ j.index + idxStatus.index] }" />
+						<c:if test="${ permissionName != null }">
 							<c:set var="keyName"
-								value="permissions(Perm${ permissionNames[j.index + idxStatus.index].value }Proj${ project.id })" />
-							<c:set var="keyId"
-								value="Perm${ permissionNames[j.index + idxStatus.index].value }_Proj${ project.id }" />
+								value="permissions(Perm${ permissionName.value }Proj${ project.id })" />
+								
+							<c:set var="permission" value="${ projectPermissions[ permissionName.value ] }" />
+							
 							<td><c:choose>
 								<c:when test="${isUpdate && !allowPermissionUpdate}">
 									<html:img page="/themes/defaulttheme/images/${ checkmarkImage }" />
@@ -218,8 +223,12 @@
 									<html:checkbox property="${ keyName }" value="on" />
 								</c:otherwise>
 							</c:choose></td>
-							<td>${ permissionNames[j.index + idxStatus.index].name }</td>
-							<td><it:formatDate date="${ currentPermissionDate}" /></td>
+							<td>${ permissionName.name }</td>
+							<td>
+								<c:if test="${ permission != null }">
+									<it:formatDate date="${ permission.lastModifiedDate }" />
+								</c:if>
+							</td>
 						</c:if>
 						<td></td>
 					</c:forEach>
