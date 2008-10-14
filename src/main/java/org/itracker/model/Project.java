@@ -37,6 +37,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class Project extends AbstractEntity implements Comparable<Entity> {
 
+	public static final ProjectComparator PROJECT_COMPARATOR = new ProjectComparator();
 	/**
 	 * 
 	 */
