@@ -102,7 +102,7 @@
 		</form>
 
 		<form name="moveIssueForm">
-			<field property="id" depends="required,long">
+			<field property="issueId" depends="required,long">
 				<arg0 key="itracker.web.attr.issue" />
 			</field>
 			<field property="projectId" depends="required,long">
