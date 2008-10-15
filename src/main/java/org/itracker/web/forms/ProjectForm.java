@@ -139,11 +139,18 @@ public class ProjectForm extends ValidatorForm {
 	}
 
 	public Integer[] getPermissions() {
+		if (null == permissions)
+			return null;
+		
 		return permissions.clone();
+		
 	}
 
 	public void setPermissions(Integer[] permissions) {
-		this.permissions = permissions.clone();
+		if (null == permissions)
+			this.permissions = null;
+		else 
+			this.permissions = permissions.clone();
 	}
 
 	public Integer getStatus() {
