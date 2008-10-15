@@ -178,11 +178,14 @@ public class LoginUtilities {
 
 			if (null == requestLocale) {
 				// get locale from request param
-				requestLocale = ITrackerResources.getLocale(request
-						.getParameter("loc"));
+				String loc = request
+				.getParameter("loc");
+				if (null != loc && loc.trim().length() > 1) {
+					requestLocale = ITrackerResources.getLocale(loc);
+				}
 				if (logger.isDebugEnabled()) {
 					logger.debug("getCurrentLocale: request-parameter was "
-							+ requestLocale);
+							+ loc);
 				}
 			}
 
