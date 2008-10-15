@@ -57,8 +57,8 @@ public class NotificationServiceImpl implements NotificationService {
 	private EmailService emailService;
 	private NotificationDAO notificationDao;
 	private ProjectService projectService;
-	IssueActivityDAO issueActivityDao;
-	IssueDAO issueDao;
+	private IssueActivityDAO issueActivityDao;
+	private IssueDAO issueDao;
 
 	private static final Logger logger = Logger
 			.getLogger(NotificationServiceImpl.class);
@@ -71,11 +71,13 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	public NotificationServiceImpl(EmailService emailService,
-			ProjectService projectService, NotificationDAO notificationDao) {
+			ProjectService projectService, NotificationDAO notificationDao, IssueActivityDAO issueActivityDao, IssueDAO issueDao) {
 		this();
 		this.setEmailService(emailService);
 		this.setProjectService(projectService);
 		this.setNotificationDao(notificationDao);
+		this.setIssueActivityDao(issueActivityDao);
+		this.setIssueDao(issueDao);
 	}
 
 	public void sendNotification(Notification notification, Type type,
