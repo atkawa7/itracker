@@ -132,7 +132,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 				List<ProjectScript> scripts = project.getScripts();
 				WorkflowUtilities.processFieldScripts(scripts,
 						WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, null,
-						errors, (ValidatorForm) form);
+						errors, issueForm);
 
 				Issue issue = new Issue();
 				issue.setDescription((String) issueForm.getDescription());
@@ -146,9 +146,19 @@ public class CreateIssueAction extends ItrackerBaseAction {
 				issueHistory.setCreateDate(new Date());
 				issue.getHistory().add(issueHistory);
 
+				// creating issues as another user
+
+				if (UserUtilities.hasPermission(userPermissionsMap,
+						projectId, UserUtilities.PERMISSION_CREATE_OTHERS)) {
+					creator = null != issueForm.getCreatorId()? issueForm.getCreatorId(): currUserId;
+					if (log.isDebugEnabled()) {
+						log.debug("New issue creator set to " + creator
+							+ ". Issue created by " + currUserId); 
+					}
+				}
 				// create the issue in the database
 				issue = issueService.createIssue(issue, projectId,
-						(creator == null ? currUserId : creator), currUserId);
+						 creator, currUserId);
 
 				if (!ProjectUtilities.hasOption(
 						ProjectUtilities.OPTION_NO_ATTACHMENTS, project
@@ -195,18 +205,17 @@ public class CreateIssueAction extends ItrackerBaseAction {
 					}
 
 					List<IssueField> issueFields = new ArrayList<IssueField>();
-					Map customFields = issueForm.getCustomFields();
+					Map<String, String> customFields = issueForm.getCustomFields();
 
 					if (customFields != null && customFields.size() > 0) {
 						List<IssueField> issueFieldsVector = new ArrayList<IssueField>();
 						ResourceBundle bundle = ITrackerResources
 								.getBundle(locale);
 
-						for (Iterator iter = customFields.keySet().iterator(); iter
+						for (Iterator<String> iter = customFields.keySet().iterator(); iter
 								.hasNext();) {
 							try {
-								Integer fieldId = new Integer((String) iter
-										.next());
+								Integer fieldId = Integer.valueOf(iter.next());
 								CustomField field = IssueUtilities
 										.getCustomField(fieldId);
 								String fieldValue = (String) PropertyUtils
@@ -214,7 +223,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 												"customFields(" + fieldId + ")");
 
 								if (fieldValue != null
-										&& !fieldValue.equals("")) {
+										&& fieldValue.trim().length() != 0) {
 									IssueField issueField = new IssueField(
 											issue, field);
 									issueField.setValue(fieldValue, locale,
@@ -233,14 +242,8 @@ public class CreateIssueAction extends ItrackerBaseAction {
 					HashSet<Integer> components = new HashSet<Integer>();
 					Integer[] componentIds = issueForm.getComponents();
 
-					// TODO temporarily disabled creating issues as another user
-					/*
-					 * if(UserUtilities.hasPermission(currPermissions,
-					 * projectId, UserUtilities.PERMISSION_CREATE_OTHERS)) {
-					 * creator = (Integer) PropertyUtils.getSimpleProperty(form,
-					 * "creatorId"); logger.debug("New issue creator set to " +
-					 * creator + ". Issue created by " + currUserId); }
-					 */
+
+					 
 
 					if (componentIds != null) {
 						for (int i = 0; i < componentIds.length; i++) {
@@ -312,14 +315,12 @@ public class CreateIssueAction extends ItrackerBaseAction {
 
 					notificationService.sendNotification(issue, Type.CREATED,
 							getBaseURL(request));
-					// issueService.sendNotification(issue.getId(),
-					// NotificationUtilities.TYPE_CREATED, getBaseURL(request));
 				}
 				session.removeAttribute(Constants.PROJECT_KEY);
 
 				WorkflowUtilities.processFieldScripts(scripts,
 						WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, null,
-						errors, (ValidatorForm) form);
+						errors, issueForm);
 
 				request.setAttribute("projects", projectService
 						.getAllProjects());
