@@ -123,6 +123,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 		<property name="notificationDao" ref="notificationDAO" />
 		<property name="projectService" ref="projectService" />
 		<property name="issueActivityDao" ref="issueActivityDAO" />
+		<property name="issueDao" ref="issueDAO" />
 	</bean>
 	    <!-- Issue Service -->
     <!-- TODO make a  proxy
