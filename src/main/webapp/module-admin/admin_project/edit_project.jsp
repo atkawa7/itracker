@@ -115,7 +115,7 @@
         <html:select property="users" size="5" multiple="true" styleClass="editColumnText">
 
             <%
-                List<User> users = uh.getAllUsers();
+                List<User> users = uh.getActiveUsers();
                 Collections.sort(users, User.NAME_COMPARATOR);
                 for (int i = 0; i < users.size(); i++) {
                     if (owners.contains(users.get(i))) {
