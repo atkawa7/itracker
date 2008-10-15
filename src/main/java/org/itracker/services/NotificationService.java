@@ -80,7 +80,8 @@ public interface NotificationService {
      * @param type
      * @param baseURL
      */
-    void sendNotification(Notification notification, Type type, String baseURL);    /**
+    void sendNotification(Notification notification, Type type, String baseURL);    
+    /**
      * 
      * @param issue
      * @param type
@@ -96,5 +97,11 @@ public interface NotificationService {
      */
     void sendNotification(Issue issue, Type type, String baseURL, InternetAddress[] receipients, Integer lastModifiedDays);
     
-    
+	/**
+	 * TODO: whats its use? 
+	 * 
+	 * Moved from {@link IssueService}, could not find out the purpose of this method. What will happen with this added {@link Notification}?
+	 * 
+	 */
+	boolean addIssueNotification(Notification notification);
 }

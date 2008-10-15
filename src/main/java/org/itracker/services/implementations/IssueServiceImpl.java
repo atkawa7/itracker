@@ -535,7 +535,21 @@ public class IssueServiceImpl implements IssueService {
 			activity.setIssue(issueDirty);
 			issueDirty.getActivities().add(activity);
 		}
+		if (persistedIssue.getOwner() != issueDirty.getOwner()) {
+			
+			if (issueDirty.getOwner() == null) {
+				unassignIssue(persistedIssue.getId(), user.getId());
+			} else {
+				assignIssue(persistedIssue.getId(), issueDirty.getOwner().getId(), user.getId());
+			}
+			
+		}
+		if (persistedIssue.getOwner() != null && issueDirty.getOwner() != null) {
+			
+		} else {
 
+		}
+		
 		// persistedIssue.setDescription(issueDirty.getDescription());
 		// persistedIssue.setSeverity(issueDirty.getSeverity());
 		// persistedIssue.setStatus(issueDirty.getStatus());
@@ -1014,9 +1028,13 @@ public class IssueServiceImpl implements IssueService {
 		}
 		// send assignment notification
 		// TODO: configurationService should be set from context
-		notificationService.sendNotification(issue, Type.ASSIGNED,
-				ServletContextUtils.getItrackerServices()
-						.getConfigurationService().getSystemBaseURL());
+		// This is not good, when an issue is updated and reassigned, 
+		// there is two notifications sent (first assigned-notification, 
+		// but old history, then the updated-notification)
+//		notificationService.sendNotification(issue, Type.ASSIGNED,
+//				ServletContextUtils.getItrackerServices()
+//						.getConfigurationService().getSystemBaseURL());
+		
 		return true;
 
 	}
@@ -1376,7 +1394,7 @@ public class IssueServiceImpl implements IssueService {
 	public List<IssueAttachment> getAllIssueAttachments() {
 		logger.warn("getAllIssueAttachments: use of deprecated API");
 		if (logger.isDebugEnabled()) {
-			logger.debug("getAllIssueAttachments: stackgtrace was",
+			logger.debug("getAllIssueAttachments: stacktrace was",
 					new RuntimeException());
 		}
 
@@ -1574,7 +1592,7 @@ public class IssueServiceImpl implements IssueService {
 
 		logger.warn("getIssueNotifications: use of deprecated API");
 		if (logger.isDebugEnabled()) {
-			logger.debug("getIssueNotifications: stackgtrace was",
+			logger.debug("getIssueNotifications: stacktrace was",
 					new RuntimeException());
 		}
 
@@ -1591,7 +1609,7 @@ public class IssueServiceImpl implements IssueService {
 	public boolean removeIssueNotification(Integer notificationId) {
 		logger.warn("removeIssueNotification: use of deprecated API");
 		if (logger.isDebugEnabled()) {
-			logger.debug("removeIssueNotification: stackgtrace was",
+			logger.debug("removeIssueNotification: stacktrace was",
 					new RuntimeException());
 		}
 
@@ -1599,27 +1617,35 @@ public class IssueServiceImpl implements IssueService {
 	}
 
 	/**
+	 * 
+	 * @deprecated moved to {@link NotificationService}
 	 */
-	public boolean addIssueNotification(Notification thisnotification) {
-		User user = thisnotification.getUser();
-
-		Issue issue = thisnotification.getIssue();
-		if (thisnotification.getCreateDate() == null) {
-			thisnotification.setCreateDate(new Date());
+	public boolean addIssueNotification(Notification notification) {		
+		logger.warn("addIssueNotification: use of deprecated API");
+		if (logger.isDebugEnabled()) {
+			logger.debug("addIssueNotification: stacktrace was",
+					new RuntimeException());
 		}
-		if (thisnotification.getLastModifiedDate() == null) {
-			thisnotification.setLastModifiedDate(new Date());
-		}
-		List<Notification> notifications = new ArrayList<Notification>();
-		notifications.add(thisnotification);
-		issue.setNotifications(notifications);
-		// TODO: check these 3 lines - do we need them?:
-		Notification notification = new Notification();
-		notification.setIssue(issue);
-		notification.setUser(user);
-
-		getIssueDAO().saveOrUpdate(issue);
-		return true;
+		return notificationService.addIssueNotification(notification);
+//		User user = thisnotification.getUser();
+//
+//		Issue issue = thisnotification.getIssue();
+//		if (thisnotification.getCreateDate() == null) {
+//			thisnotification.setCreateDate(new Date());
+//		}
+//		if (thisnotification.getLastModifiedDate() == null) {
+//			thisnotification.setLastModifiedDate(new Date());
+//		}
+//		List<Notification> notifications = new ArrayList<Notification>();
+//		notifications.add(thisnotification);
+//		issue.setNotifications(notifications);
+//		// TODO: check these 3 lines - do we need them?:
+//		Notification notification = new Notification();
+//		notification.setIssue(issue);
+//		notification.setUser(user);
+//
+//		getIssueDAO().saveOrUpdate(issue);
+//		return true;
 	}
 
 	/**
@@ -1630,7 +1656,7 @@ public class IssueServiceImpl implements IssueService {
 	public boolean hasIssueNotification(Integer issueId, Integer userId) {
 		logger.warn("hasIssueNotification: use of deprecated API");
 		if (logger.isDebugEnabled()) {
-			logger.debug("hasIssueNotification: stackgtrace was",
+			logger.debug("hasIssueNotification: stacktrace was",
 					new RuntimeException());
 		}
 		Issue issue = getIssue(issueId);
@@ -1758,7 +1784,7 @@ public class IssueServiceImpl implements IssueService {
 	public static String getNotificationFactoryName() {
 		logger.warn("getNotificationFactoryName: use of deprecated API");
 		if (logger.isDebugEnabled()) {
-			logger.debug("getNotificationFactoryName: stackgtrace was",
+			logger.debug("getNotificationFactoryName: stacktrace was",
 					new RuntimeException());
 		}
 
@@ -1772,7 +1798,7 @@ public class IssueServiceImpl implements IssueService {
 	public static void setNotificationFactoryName(String notificationFactoryName) {
 		logger.warn("setNotificationFactoryName: use of deprecated API");
 		if (logger.isDebugEnabled()) {
-			logger.debug("setNotificationFactoryName: stackgtrace was",
+			logger.debug("setNotificationFactoryName: stacktrace was",
 					new RuntimeException());
 		}
 	}
@@ -1784,7 +1810,7 @@ public class IssueServiceImpl implements IssueService {
 	public static String getNotificationQueueName() {
 		logger.warn("getNotificationQueueName: use of deprecated API");
 		if (logger.isDebugEnabled()) {
-			logger.debug("getNotificationQueueName: stackgtrace was",
+			logger.debug("getNotificationQueueName: stacktrace was",
 					new RuntimeException());
 		}
 		return null;
@@ -1797,7 +1823,7 @@ public class IssueServiceImpl implements IssueService {
 	public static void setNotificationQueueName(String notificationQueueName) {
 		logger.warn("setNotificationQueueName: use of deprecated API");
 		if (logger.isDebugEnabled()) {
-			logger.debug("setNotificationQueueName: stackgtrace was",
+			logger.debug("setNotificationQueueName: stacktrace was",
 					new RuntimeException());
 		}
 	}
