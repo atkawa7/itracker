@@ -409,9 +409,14 @@ public class EditIssueAction extends ItrackerBaseAction {
 		// can only contain Strings and some simple objects types...
 		HashMap<String, String> formCustomFields = form.getCustomFields();
 
+		if (log.isDebugEnabled()) {
+			log.debug("setIssueFields: customfields form form: " + formCustomFields);
+		}
+		
 		if (formCustomFields == null || formCustomFields.size() == 0) {
 			return;
 		}
+		
 
 		// List<IssueField> issueFieldsList = new ArrayList<IssueField>();
 		ResourceBundle bundle = ITrackerResources.getBundle(locale);
@@ -555,7 +560,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 		Issue issue = getITrackerServices().getIssueService().getIssue(issueId);
 
-		if (previousStatus >= IssueUtilities.STATUS_CLOSED
+		if ((previousStatus < IssueUtilities.STATUS_CLOSED)
 				&& issue.getStatus() >= IssueUtilities.STATUS_CLOSED) {
 			notificationType = Type.CLOSED;
 		}
