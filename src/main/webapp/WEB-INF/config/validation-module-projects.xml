@@ -61,12 +61,13 @@
 				<arg0 key="itracker.web.attr.description" />
 			</field>
 			<field property="history" depends="validwhen">
+				<msg key="itracker.web.error.validate.required.issuedescription" name="validwhen" />
 				<arg0 key="itracker.web.attr.history" />
 				<var>
 					<var-name>test</var-name>
-					<!-- allow empty history on edit if status not changed -->
+					<!-- allow empty history on edit if status not changed, or closed(500) -->
 					<var-value>
-						((prevStatus == status) or (*this* != null))
+						(((prevStatus == status) or (status >= 500)) or (*this* != null))
 					</var-value>
 				</var>
 			</field>
@@ -86,8 +87,7 @@
 				<var>
 					<var-name>test</var-name>
 					<var-value>
-						((attachmentDescription == null) or (*this* !=
-						null))
+						((attachmentDescription == null) or (*this* != null))
 					</var-value>
 				</var>
 
@@ -95,7 +95,10 @@
 		</form>
 
 		<form name="issueRelationForm">
-			<field property="id" depends="required,long">
+			<field property="issueId" depends="required,long">
+				<arg0 key="itracker.web.attr.issue" />
+			</field>
+			<field property="relatedIssueId" depends="required,long">
 				<arg0 key="itracker.web.attr.issue" />
 			</field>
 			<field property="relationType"></field>
