@@ -93,7 +93,7 @@
     <query name="UsersActiveQuery"><![CDATA[
     select user 
     from User as user 
-    where user.status > 0 ]]>
+    where user.status = 1 ]]>
     </query>
     
     <query name="UsersSuperQuery"><![CDATA[
