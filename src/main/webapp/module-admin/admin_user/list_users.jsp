@@ -59,7 +59,7 @@
   </tr>
 
 <%
-    List<User> users = uh.getActiveUsers();
+    List<User> users = uh.getAllUsers();
 
     Collections.sort(users, User.NAME_COMPARATOR);
 	User currentUser = null;
