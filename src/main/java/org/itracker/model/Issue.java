@@ -291,7 +291,7 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
     
     @Override
     public String toString() {
-    	return new ToStringBuilder(this).append("id", id).append("description", description).toString();
+    	return new ToStringBuilder(this).append("id", id).append("description", description).append("owner", owner).append("severity", severity).append("status", status).toString();
     }
     
     
