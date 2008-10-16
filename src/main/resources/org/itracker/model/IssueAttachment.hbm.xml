@@ -21,7 +21,7 @@
             <column name="orig_file_name" not-null="true" unique-key="issue_attachment_ak"/>
         </property>
 
-        <property name="fileName">
+        <property name="fileName" index="issueattachmentbeanFileNameIdx">
             <column name="file_name" not-null="true" unique-key="issue_attachment_ak1"/>
         </property>
         
@@ -29,7 +29,7 @@
             <column name="user_id" not-null="true"/>
         </many-to-one>
         
-        <property name="type">
+        <property name="type" index="typeIdx">
             <column name="attachment_type" not-null="true"/>
         </property>
         

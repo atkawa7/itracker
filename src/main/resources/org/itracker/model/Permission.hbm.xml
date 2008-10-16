@@ -13,7 +13,7 @@
             <generator class="native"/>
         </id>
 
-        <property name="permissionType">
+        <property name="permissionType" index="permisionTypeIdx">
             <column name="permission_type" not-null="true"/>
         </property>
 

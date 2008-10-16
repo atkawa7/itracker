@@ -11,11 +11,11 @@
             <generator class="native"/>
         </id>
 
-        <property name="locale">
+        <property name="locale" index="languagebeanLocaleIdx">
             <column name="locale" not-null="true" unique-key="language_ak"/>
         </property>
 
-        <property name="resourceKey">
+        <property name="resourceKey" index="languagebeanKeyIdx">
             <column name="resource_key" not-null="true" unique-key="language_ak"/>
         </property>
 

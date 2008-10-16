@@ -13,7 +13,7 @@
             <generator class="native"/>
         </id>
         
-        <property name="fieldType">
+        <property name="fieldType" index="customfieldbeanFieldTypeIdx">
             <column name="field_type" not-null="true"/>
             <type name="org.itracker.persistence.dao.EnumCodeUserType">
                 <!-- java.lang.ClassNotFoundException: org.itracker.model.CustomField.Type

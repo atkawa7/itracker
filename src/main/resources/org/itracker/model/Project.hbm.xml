@@ -12,7 +12,7 @@
             <generator class="native"/>
         </id>		
 
-        <property name="name">
+        <property name="name" index="projectbeanNameIdx">
             <column name="name" not-null="true" unique-key="project_ak"/>
         </property>
 
@@ -20,7 +20,7 @@
             <column name="description" not-null="true"/>
         </property>
         
-        <property name="status">
+        <property name="status" index="projectbeanStatusIdx">
             <column name="status" not-null="true"/>
             <type name="org.itracker.persistence.dao.EnumCodeUserType">
                 <param name="enumClassName">org.itracker.model.Status</param>

@@ -15,11 +15,11 @@
         
         <natural-id mutable="true">
         
-            <property name="type">
+            <property name="type" index="configurationbeanTypeIdx">
                 <column name="item_type" not-null="true"/>
             </property>
 
-            <property name="value">
+            <property name="value" index="configurationbeanValIdx">
                 <column name="item_value" not-null="true"/>
             </property>
         
@@ -31,13 +31,13 @@
                 <column name="item_name" not-null="true"/>
             </property-->
 
-            <property name="version">
+            <property name="version" index="configurationbeanVersionIdx">
                 <column name="item_version" not-null="true"/>
             </property>
         
         <!--/natural-id-->
         
-        <property name="order">
+        <property name="order" index="configurationbeanOrderIdx">
             <column name="item_order" not-null="true"/>
         </property>
         

@@ -17,7 +17,7 @@
             <column name="project_id" not-null="true" unique-key="version_ak"/>
         </many-to-one>
 
-        <property name="number">
+        <property name="number" index="versionbeanNumberIdx">
             <column name="version_number" not-null="true" unique-key="version_ak"/>
         </property>
 

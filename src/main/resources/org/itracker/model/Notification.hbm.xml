@@ -23,7 +23,7 @@
                 <column name="user_id" not-null="true"/>
             </many-to-one>
 
-            <property name="notificationRole">
+            <property name="notificationRole" index="notificationRoleIdx">
                 <column name="user_role" not-null="true"/>
             </property>
         

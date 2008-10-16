@@ -18,7 +18,7 @@
                 unique-key="component_ak"/>
         </many-to-one>
 
-        <property name="name">
+        <property name="name" index="componentbeanNameIdx">
             <column name="name" length="30" not-null="true"
                 unique-key="component_ak"/>
         </property>
@@ -27,7 +27,7 @@
             <column name="description" length="255" not-null="true"/>
         </property>
         
-        <property name="status">
+        <property name="status" index="componentbeanStatusIdx">
             <column name="status" not-null="true"/>
             <type name="org.itracker.persistence.dao.EnumCodeUserType">
                 <param name="enumClassName">org.itracker.model.Status</param>

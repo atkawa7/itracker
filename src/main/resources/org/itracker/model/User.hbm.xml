@@ -13,7 +13,7 @@
             <generator class="native"/>
         </id>
 
-        <property name="login">
+        <property name="login" index="loginIdx">
             <column name="login" not-null="true" unique-key="user_ak"/>
         </property>
 
@@ -33,16 +33,16 @@
             <column name="email" not-null="true"/>
         </property>
         
-        <property name="status">
+        <property name="status" index="userbeanStatusIdx">
             <column name="status" not-null="true"/>
         </property>
         
-        <property name="superUser"
+        <property name="superUser" index="userbeanSUIdx"
                 type="org.itracker.persistence.dao.IntBooleanType">
             <column name="super_user" not-null="true"/>
         </property>
     
-        <property name="registrationType">
+        <property name="registrationType" index="userbeanRegTypeIdx">
             <column name="registration_type" not-null="true"/>
         </property>
 

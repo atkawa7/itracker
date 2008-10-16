@@ -22,12 +22,12 @@
                 unique-key="issue_relation_ak"/>
         </many-to-one>
 
-        <property name="relationType">
+        <property name="relationType" index="issuerelationbeanTypeIdx">
             <column name="relation_type" not-null="true"
                 unique-key="issue_relation_ak"/>
         </property>
 
-        <property name="matchingRelationId">
+        <property name="matchingRelationId" index="issuerelationbeanMatchingRelationIdIdx">
             <column name="matching_relation_id" not-null="true"/>
         </property>
         
