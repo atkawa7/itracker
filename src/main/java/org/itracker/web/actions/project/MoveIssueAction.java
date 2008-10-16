@@ -59,7 +59,7 @@ public class MoveIssueAction extends ItrackerBaseAction {
 //        super.executeAlways(mapping,form,request,response);
         
         String pageTitleKey = "itracker.web.moveissue.title";
-        String pageTitleArg = request.getParameter("id");
+        String pageTitleArg = request.getParameter("issueId");
         request.setAttribute("pageTitleKey",pageTitleKey);
         request.setAttribute("pageTitleArg",pageTitleArg);
         
@@ -85,6 +85,12 @@ public class MoveIssueAction extends ItrackerBaseAction {
             Issue issue = issueService.getIssue(issueId);
             if(issue == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidissue"));
+            }
+            
+            if (issue.getProject() != null && issue.getProject().getId().equals(projectId)) {
+            	// is already on this issue
+            	log.error("execute: attempted to move issue to its containing project");
+            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
             }
             
             if(errors.isEmpty()) {
