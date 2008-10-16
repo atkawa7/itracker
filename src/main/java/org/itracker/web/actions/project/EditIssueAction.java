@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -80,12 +79,8 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 		log.info("execute: called");
 		ActionErrors errors = new ActionErrors();
-//		super.executeAlways(mapping, form, request, response);
-//		if (!isLoggedIn(request, response)) {
-//			log.info("execute: Forward: login");
-//			return mapping.findForward("login");
-//		}
 
+		// TODO: can we make this token optional (configurable) and probably by form, not over the whole app..
 		if (!isTokenValid(request)) {
 			log.debug("execute: Invalid request token while editing issue.");
 			ProjectService projectService = getITrackerServices()
@@ -114,21 +109,15 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 			IssueForm issueForm = (IssueForm) form;
 
-			if (issueForm.getId() == null) {
-				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-						"itracker.web.error.invalidissue"));
-				log.info("execute: Forward: Error");
-				return mapping.findForward("error");
-			}
 
 			int previousStatus = -1;
 			Issue issue = issueService.getIssue(issueForm.getId());
 
 			
-			if (issue == null || issue.getId() == null || issue.getId() < 0) {
+			if (issue == null) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"itracker.web.error.invalidissue"));
-				log.info("execute: Forward: Error");
+				log.info("execute: invalidissue " + issueForm.getId() + ", Forward: Error");
 				return mapping.findForward("error");
 			}
 
@@ -157,9 +146,15 @@ public class EditIssueAction extends ItrackerBaseAction {
 			previousStatus = issue.getStatus();
 			if (UserUtilities.hasPermission(userPermissions, project.getId(),
 					UserUtilities.PERMISSION_EDIT_FULL)) {
+				if (log.isDebugEnabled()) {
+					log.debug("execute: edit full, " + issue);
+				}
 				processFullEdit(issue, project, currUser, userPermissions,
 						locale, issueForm, issueService);
-			} else {
+			} else {				
+				if (log.isDebugEnabled()) {
+					log.debug("execute: edit limited, " + issue);
+				}
 				processLimitedEdit(issue, project, currUser, userPermissions,
 						locale, issueForm, issueService);
 			}
@@ -207,18 +202,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 			Map<Integer, Set<PermissionType>> userPermissions, Locale locale,
 			IssueForm form, IssueService issueService) throws Exception {
 
-//		List<IssueActivity> activities = processActivities(issue, user, form, issueService);
-
 		int previousStatus = issue.getStatus();
-		
-		/*
-		 * Issue must be detached before update, so the Hibernate-Session-Object won't be dirty
-		 */
-//		issueService.detachIssue(issue);
-		
-		issue.setDescription(form.getDescription());
-		issue.setResolution(form.getResolution());
-		issue.setSeverity(form.getSeverity());
 
 		Integer targetVersion = form.getTargetVersion();
 
@@ -237,10 +221,9 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 		}
 
-		if (form.getStatus() != null) {
-			issue.setStatus(form.getStatus());
-		}
 
+
+		// TODO not so nice code. what means -1?
 		if (previousStatus != -1) {
 			// Reopened the issue. Reset the resolution field.
 			if ((issue.getStatus() >= IssueUtilities.STATUS_ASSIGNED && issue
@@ -281,20 +264,10 @@ public class EditIssueAction extends ItrackerBaseAction {
 			}
 		}
 
-		// why this?
-		// issue.setFields(issue.getFields());
-		// issue.setOwner(issue.getOwner());
-		// issue.setHistory(issue.getHistory());
-		// issue.setAttachments(issue.getAttachments());
 
-		// issueService.updateIssue(issue, user.getId());
-		//        
-		// Issue updatedIssue = issueService.getIssue(issue.getId());
-
-		// why is this done after update!?
-		// if (issue != null) {
 		setIssueFields(issue, user, locale, form, issueService);
 		setOwner(issue, user, userPermissions, form, issueService);
+		
 		addHistoryEntry(issue, user, form, issueService);
 
 		HashSet<Integer> components = new HashSet<Integer>();
@@ -324,8 +297,14 @@ public class EditIssueAction extends ItrackerBaseAction {
 		}
 
 		addAttachment(issue, project, user, form, issueService);
-		// }
-//		issue.getActivities().addAll(activities);
+		
+		issue.setDescription(form.getDescription());
+		issue.setResolution(form.getResolution());
+		issue.setSeverity(form.getSeverity());
+		if (form.getStatus() != null) {
+			issue.setStatus(form.getStatus());
+		}
+		
 		issueService.updateIssue(issue, user.getId());
 
 	}
@@ -337,7 +316,6 @@ public class EditIssueAction extends ItrackerBaseAction {
 			Locale locale, IssueForm form, IssueService issueService)
 			throws Exception {
 
-//		List<IssueActivity> activities = processActivities(issue, user, form, issueService);
 
 		issue.setDescription(form.getDescription());
 
@@ -360,7 +338,6 @@ public class EditIssueAction extends ItrackerBaseAction {
 		addHistoryEntry(issue, user, form, issueService);
 		addAttachment(issue, project, user, form, issueService);
 
-//		issue.getActivities().addAll(activities);
 		issueService.updateIssue(issue, user.getId());
 		
 	}
@@ -485,12 +462,10 @@ public class EditIssueAction extends ItrackerBaseAction {
 		issueHistory.setDescription(((IssueForm) form).getHistory());
 		issueHistory.setCreateDate(new Date());
 		
-
-		if (issueHistory.getLastModifiedDate() == null) {
-			issueHistory.setLastModifiedDate(new Date());
-		}
+		issueHistory.setLastModifiedDate(new Date());
 		issue.getHistory().add(issueHistory);
 
+//  TODO why do we need to updateIssue here, and can not later?
 		issueService.updateIssue(issue, user.getId());
 //		issueService.addIssueHistory(issueHistory);
 
@@ -581,16 +556,17 @@ public class EditIssueAction extends ItrackerBaseAction {
 		if ("index".equals(form.getCaller())) {
 			log.info("EditIssueAction: Forward: index");
 			return mapping.findForward("index");
-		} else if ("viewissue".equals((String) PropertyUtils.getSimpleProperty(
-				form, "caller"))) {
+		} else {
+//			if ("viewissue".equals((String) PropertyUtils.getSimpleProperty(
+//				form, "caller"))) {
 			log.info("EditIssueAction: Forward: viewissue");
 			return new ActionForward(mapping.findForward("viewissue").getPath()
 					+ "?id=" + issue.getId());
-		} else {
-			log.info("EditIssueAction: Forward: listissues");
-			return new ActionForward(mapping.findForward("listissues")
-					.getPath()
-					+ "?projectId=" + project.getId());
+//		} else {
+//			log.info("EditIssueAction: Forward: listissues");
+//			return new ActionForward(mapping.findForward("listissues")
+//					.getPath()
+//					+ "?projectId=" + project.getId());
 		}
 
 	}
