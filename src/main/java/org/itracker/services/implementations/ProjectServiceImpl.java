@@ -84,7 +84,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	public Component updateProjectComponent(Component component) {
-		component.setLastModifiedDate(new Date());
+//		component.setLastModifiedDate(new Date());
 		componentDAO.saveOrUpdate(component);
 		return component;
 	}
@@ -237,8 +237,8 @@ public class ProjectServiceImpl implements ProjectService {
 		addprojectScript.setPriority(projectScript.getPriority());
 		addprojectScript.setProject(projectScript.getProject());
 		addprojectScript.setScript(projectScript.getScript());
-		addprojectScript.setCreateDate(new Date());
-		addprojectScript.setLastModifiedDate(addprojectScript.getCreateDate());
+//		addprojectScript.setCreateDate(new Date());
+//		addprojectScript.setLastModifiedDate(addprojectScript.getCreateDate());
 		this.projectScriptDAO.save(addprojectScript);
 
 		return addprojectScript;
@@ -271,7 +271,7 @@ public class ProjectServiceImpl implements ProjectService {
 		editprojectScript.setProject(projectScript.getProject());
 		editprojectScript.setScript(projectScript.getScript());
 		// editprojectScript.setCreateDate(projectScript.getCreateDate());
-		editprojectScript.setLastModifiedDate(new Date());
+//		editprojectScript.setLastModifiedDate(new Date());
 
 		this.projectScriptDAO.saveOrUpdate(editprojectScript);
 

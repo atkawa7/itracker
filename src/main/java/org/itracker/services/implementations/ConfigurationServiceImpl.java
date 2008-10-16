@@ -306,8 +306,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             Configuration configurationItem = (Configuration) iterator.next();
             Configuration curConfiguration = configurationDAO.findByPrimaryKey(configurationItem.getId());
             
-            curConfiguration.setCreateDate(configurationItem.getCreateDate());
-            curConfiguration.setLastModifiedDate(configurationItem.getLastModifiedDate());
+//            curConfiguration.setCreateDate(configurationItem.getCreateDate());
+//            curConfiguration.setLastModifiedDate(configurationItem.getLastModifiedDate());
             curConfiguration.setName(configurationItem.getName());
             curConfiguration.setOrder(configurationItem.getOrder());
             curConfiguration.setType(configurationItem.getType());
@@ -315,7 +315,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             curConfiguration.setVersion(configurationItem.getVersion());
             
             // set Modified date
-            curConfiguration.setLastModifiedDate(new Date());
+//            curConfiguration.setLastModifiedDate(new Date());
             // save or update
             this.configurationDAO.saveOrUpdate( curConfiguration );
             configurationItems.add(curConfiguration);
@@ -474,8 +474,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editprojectScript.setPriority(projectScript.getPriority());
         editprojectScript.setProject(projectScript.getProject());
         editprojectScript.setScript(projectScript.getScript());
-        editprojectScript.setCreateDate(new Date());
-        editprojectScript.setLastModifiedDate(editprojectScript.getCreateDate());
+//        moved date stuff to BaseHibernateDAO
+//        editprojectScript.setCreateDate(new Date());
+//        editprojectScript.setLastModifiedDate(editprojectScript.getCreateDate());
         
         // save entity
         this.projectScriptDAO.save(editprojectScript);
@@ -491,7 +492,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editprojectScript.setPriority(projectScript.getPriority());
         editprojectScript.setProject(projectScript.getProject());
         editprojectScript.setScript(projectScript.getScript());
-        editprojectScript.setLastModifiedDate(new Date());
+//      moved date stuff to BaseHibernateDAO
+//        editprojectScript.setLastModifiedDate(new Date());
         this.projectScriptDAO.saveOrUpdate(editprojectScript);
         return editprojectScript;
     }
@@ -537,9 +539,10 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editworkflowScript.setName(workflowScript.getName());
         editworkflowScript.setScript(workflowScript.getScript());
         editworkflowScript.setEvent(workflowScript.getEvent());
-        editworkflowScript.setLastModifiedDate(new Date());
-        editworkflowScript.setCreateDate(new Date());
-        editworkflowScript.setLastModifiedDate(editworkflowScript.getCreateDate());
+//      moved date stuff to BaseHibernateDAO
+//        editworkflowScript.setLastModifiedDate(new Date());
+//        editworkflowScript.setCreateDate(new Date());
+//        editworkflowScript.setLastModifiedDate(editworkflowScript.getCreateDate());
         
         // save entity
         workflowScriptDAO.save(editworkflowScript);
@@ -554,7 +557,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editworkflowScript.setName(workflowScript.getName());
         editworkflowScript.setScript(workflowScript.getScript());
         editworkflowScript.setEvent(workflowScript.getEvent());
-        editworkflowScript.setLastModifiedDate(new Date());
+//      moved date stuff to BaseHibernateDAO
+//        editworkflowScript.setLastModifiedDate(new Date());
         workflowScriptDAO.saveOrUpdate(editworkflowScript);
         return editworkflowScript;
     }
@@ -640,7 +644,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editcustomField.setOptions(customField.getOptions());
         editcustomField.setName(customField.getName());
         editcustomField.setRequired(customField.isRequired());
-        editcustomField.setLastModifiedDate(new Date());
+//      moved date stuff to BaseHibernateDAO
+//        editcustomField.setLastModifiedDate(new Date());
         
         this.customFieldDAO.saveOrUpdate( editcustomField );
         
@@ -718,10 +723,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
      */
     public CustomFieldValue updateCustomFieldValue(CustomFieldValue customFieldValue) {
         CustomFieldValue editcustomFieldValue = this.customFieldValueDAO.findByPrimaryKey( customFieldValue.getId() );
-        editcustomFieldValue.setCreateDate(customFieldValue.getCreateDate());
+//      moved date stuff to BaseHibernateDAO
+//        editcustomFieldValue.setCreateDate(customFieldValue.getCreateDate());
         editcustomFieldValue.setCustomField(customFieldValue.getCustomField());
         editcustomFieldValue.setValue(customFieldValue.getValue());
-        editcustomFieldValue.setLastModifiedDate(new Date());
+//      moved date stuff to BaseHibernateDAO
+//        editcustomFieldValue.setLastModifiedDate(new Date());
         editcustomFieldValue.setName(customFieldValue.getName());
         this.customFieldValueDAO.saveOrUpdate( editcustomFieldValue );
         return editcustomFieldValue;
@@ -744,14 +751,15 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                         CustomFieldValue curCustomFieldValue = customFieldValueDAO.findByPrimaryKey(customFieldValueItem.getId());
                         
                         curCustomFieldValue.setCreateDate(customFieldValueItem.getCreateDate());
-                        curCustomFieldValue.setLastModifiedDate(customFieldValueItem.getLastModifiedDate());
+//                      moved date stuff to BaseHibernateDAO
+//                        curCustomFieldValue.setLastModifiedDate(customFieldValueItem.getLastModifiedDate());
                         curCustomFieldValue.setName(customFieldValueItem.getName());
                         curCustomFieldValue.setValue(customFieldValueItem.getValue());
                         curCustomFieldValue.setCustomField(customFieldValueItem.getCustomField());
                         curCustomFieldValue.setSortOrder(customFieldValueItem.getSortOrder());
                         
                         // set Modified date
-                        curCustomFieldValue.setLastModifiedDate(new Date());
+//                        curCustomFieldValue.setLastModifiedDate(new Date());
                         // save or update
                         this.customFieldValueDAO.saveOrUpdate( curCustomFieldValue );
                         customFieldValueItems.add(curCustomFieldValue);
@@ -862,15 +870,17 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             languageItem.setLocale(language.getLocale());
             languageItem.setResourceKey(language.getResourceKey());
             languageItem.setResourceValue(language.getResourceValue());
-            languageItem.setLastModifiedDate(new Timestamp(new Date().getTime()));
+//          moved date stuff to BaseHibernateDAO
+//            languageItem.setLastModifiedDate(new Timestamp(new Date().getTime()));
         } catch (NoSuchEntityException fe) {
             logger.debug("NoSuchEntityException: Language, now populating Language");
             languageItem = new Language();
             languageItem.setLocale(language.getLocale());
             languageItem.setResourceKey(language.getResourceKey());
             languageItem.setResourceValue(language.getResourceValue());
-            languageItem.setCreateDate(new Timestamp(new Date().getTime()));
-            languageItem.setLastModifiedDate(languageItem.getCreateDate());
+//          moved date stuff to BaseHibernateDAO
+//            languageItem.setCreateDate(new Timestamp(new Date().getTime()));
+//            languageItem.setLastModifiedDate(languageItem.getCreateDate());
         }
         logger.debug("Start saveOrUpdate Language");
         languageDAO.saveOrUpdate(languageItem);

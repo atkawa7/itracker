@@ -91,7 +91,6 @@ import org.itracker.services.util.IssueUtilities;
 public class IssueServiceImpl implements IssueService {
 
 
-	@SuppressWarnings("unused")
 	private static final Logger logger = Logger
 			.getLogger(IssueServiceImpl.class);
 
@@ -452,6 +451,9 @@ public class IssueServiceImpl implements IssueService {
 				&& !persistedIssue.getDescription().equalsIgnoreCase(
 						issueDirty.getDescription())) {
 
+			if (logger.isDebugEnabled()) {
+				logger.debug("updateIssue: updating description from " + persistedIssue.getDescription());
+			}
 			IssueActivity activity = new IssueActivity();
 			activity.setActivityType(IssueActivityType.DESCRIPTION_CHANGE);
 			activity.setDescription(ITrackerResources

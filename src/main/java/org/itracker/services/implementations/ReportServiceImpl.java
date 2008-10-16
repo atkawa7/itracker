@@ -77,8 +77,8 @@ public class ReportServiceImpl implements ReportService {
 
 	// kill this
 	public Report createReport(Report report) {
-		report.setCreateDate(new Date());
-		report.setLastModifiedDate(report.getCreateDate());
+//		report.setCreateDate(new Date());
+//		report.setLastModifiedDate(report.getCreateDate());
 		reportDAO.save(report);
 		return report;
 	}

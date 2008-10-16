@@ -457,12 +457,14 @@ public class NotificationServiceImpl implements NotificationService {
 		if (notification.getLastModifiedDate() == null) {
 			notification.setLastModifiedDate(new Date());
 		}
-		List<Notification> notifications = new ArrayList<Notification>();
+//		List<Notification> notifications = new ArrayList<Notification>();
 		// TODO: check these 3 lines - do we need them?:
-		notifications.addAll(issue.getNotifications());
-		notifications.add(notification);
-		issue.setNotifications(notifications);
+//		notifications.addAll(issue.getNotifications());
+//		notifications.add(notification);
+//		issue.setNotifications(notifications);
 
+		issue.getNotifications().add(notification);
+		
 		getIssueDao().saveOrUpdate(issue);
 		return true;
 	}
