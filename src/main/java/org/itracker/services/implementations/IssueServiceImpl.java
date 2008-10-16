@@ -64,7 +64,6 @@ import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.Version;
 import org.itracker.model.Notification.Role;
-import org.itracker.model.Notification.Type;
 import org.itracker.persistence.dao.ComponentDAO;
 import org.itracker.persistence.dao.CustomFieldDAO;
 import org.itracker.persistence.dao.IssueActivityDAO;
@@ -81,9 +80,6 @@ import org.itracker.services.exceptions.IssueSearchException;
 import org.itracker.services.exceptions.ProjectException;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.IssueUtilities;
-import org.itracker.web.util.ServletContextUtils;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Issue related service layer. A bit "fat" at this time, because of being a
@@ -431,6 +427,9 @@ public class IssueServiceImpl implements IssueService {
 	 */
 	public Issue updateIssue(Issue issueDirty, Integer userId)
 			throws ProjectException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("updateIssue: updating issue " + issueDirty);
+		}
 		String existingTargetVersion = null;
 
 		// detach the modified Issue form the Hibernate Session
@@ -535,33 +534,20 @@ public class IssueServiceImpl implements IssueService {
 			activity.setIssue(issueDirty);
 			issueDirty.getActivities().add(activity);
 		}
-		if (persistedIssue.getOwner() != issueDirty.getOwner()) {
-			
-			if (issueDirty.getOwner() == null) {
-				unassignIssue(persistedIssue.getId(), user.getId());
-			} else {
-				assignIssue(persistedIssue.getId(), issueDirty.getOwner().getId(), user.getId());
-			}
-			
-		}
-		if (persistedIssue.getOwner() != null && issueDirty.getOwner() != null) {
-			
-		} else {
-
+	
+		if (logger.isDebugEnabled()) {
+			logger.debug("updateIssue: merging issue " + issueDirty + " to " + persistedIssue);
 		}
 		
-		// persistedIssue.setDescription(issueDirty.getDescription());
-		// persistedIssue.setSeverity(issueDirty.getSeverity());
-		// persistedIssue.setStatus(issueDirty.getStatus());
-		// persistedIssue.setResolution(issueDirty.getResolution());
-		// persistedIssue.setLastModifiedDate(new Date());
-
-		// persistedIssue.setFields(issueDirty.getFields());
-		// merge and save
 		persistedIssue = getIssueDAO().merge(issueDirty);
 
+		if (logger.isDebugEnabled()) {
+			logger.debug("updateIssue: merged issue for saving: " + persistedIssue);
+		}
 		getIssueDAO().saveOrUpdate(persistedIssue);
-
+		if (logger.isDebugEnabled()) {
+			logger.debug("updateIssue: saved issue: " + persistedIssue);
+		}
 		return persistedIssue;
 	}
 
@@ -587,10 +573,18 @@ public class IssueServiceImpl implements IssueService {
 	 */
 
 	public Issue moveIssue(Issue issue, Integer projectId, Integer userId) {
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("moveIssue: " + issue + " to project#" + projectId + ", user#" + userId);
+		}
+		
 		Project project = getProjectDAO().findByPrimaryKey(projectId);
-
 		User user = getUserDAO().findByPrimaryKey(userId);
-
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("moveIssue: " + issue + " to project: " + project + ", user: " + user);
+		}
+		
 		IssueActivity activity = new IssueActivity();
 		activity
 				.setActivityType(org.itracker.model.IssueActivityType.ISSUE_MOVE);
@@ -600,17 +594,32 @@ public class IssueServiceImpl implements IssueService {
 		activity.setUser(user);
 		activity.setIssue(issue);
 		issue.setProject(project);
-
+		
+		
 		// The versions and components are per project so we need to delete
 		// these
 
-		setIssueComponents(issue.getId(), new HashSet<Integer>(), userId);
-
-		setIssueVersions(issue.getId(), new HashSet<Integer>(), userId);
-
+// TODO: ranks, removed following lines due to failing issue-save. is it really necessary? how can it be done?
+//		setIssueComponents(issue.getId(), new HashSet<Integer>(), userId);
+//
+//		setIssueVersions(issue.getId(), new HashSet<Integer>(), userId);
+//
+//		setIssueFields(issue.getId(), new ArrayList<IssueField>());
+		
 		issue.getActivities().add(activity);
-		getIssueDAO().saveOrUpdate(issue);
-
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("moveIssue: updated issue: " + issue);
+		}
+		try {
+			getIssueDAO().saveOrUpdate(issue);
+		} catch(Exception e) {
+			logger.error("moveIssue: failed to save issue: " + issue, e);
+			return null;
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("moveIssue: saved move-issue to " + project);
+		}
 		return issue;
 
 	}
@@ -621,7 +630,8 @@ public class IssueServiceImpl implements IssueService {
 	 */
 	public boolean addIssueHistory(IssueHistory history) {
 		getIssueHistoryDAO().saveOrUpdate(history);
-
+		history.getIssue().getHistory().add(history);
+		getIssueDAO().saveOrUpdate(history.getIssue());
 		return true;
 	}
 
@@ -861,7 +871,11 @@ public class IssueServiceImpl implements IssueService {
 		return issueRelation;
 
 	}
-
+	/**
+	 * add a relation between two issues.
+	 * 
+	 * TODO: There is no relation saved to database yet?
+	 */
 	public boolean addIssueRelation(Integer issueId, Integer relatedIssueId,
 			int relationType, Integer userId) {
 
@@ -1180,8 +1194,6 @@ public class IssueServiceImpl implements IssueService {
 
 		attachment.setIssue(issue);
 		attachment.setUser(user);
-		attachment.setCreateDate(new Date());
-		attachment.setLastModifiedDate(attachment.getCreateDate());
 
 		// TODO: activity for adding attachment?
 		// IssueActivity activityAdd = new IssueActivity(attachment.getIssue(),
@@ -1257,7 +1269,8 @@ public class IssueServiceImpl implements IssueService {
 
 			history.setStatus(IssueUtilities.HISTORY_STATUS_REMOVED);
 
-			history.setLastModifiedDate(new Timestamp(new Date().getTime()));
+//	      moved date stuff to BaseHibernateDAO
+//			history.setLastModifiedDate(new Timestamp(new Date().getTime()));
 
 			IssueActivity activity = new IssueActivity();
 			activity

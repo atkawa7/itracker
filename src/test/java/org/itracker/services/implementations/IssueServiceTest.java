@@ -428,26 +428,23 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		assertNotNull("issue", issue);
 		User user = ((UserService) applicationContext.getBean("userService"))
 				.getUser(2);
-//		Integer actCount = issue.getActivities().size();
+		Integer actCount = issue.getActivities().size();
 		assertNotNull("user#2", user);
 		issue = issueService.moveIssue(issue, 3, user.getId());
 
-//		Issue reloaded = issueService.getIssue(1);
+		Issue reloaded = issueService.getIssue(1);
 
-		// TODO this assertion fails..?
-		// assertEquals("moved issue project id", (Integer) 3,
-		// issue.getProject()
-		// .getId());
-		// assertEquals("project id", 3,
-		// reloaded.getProject().getId().intValue());
 
-		// TODO this assertion fails..?
-		// assertEquals("project activity count", actCount + 1, reloaded
-		// .getActivities().get(reloaded.getActivities().size() - 1));
+		assertEquals("issue.project.id", Integer.valueOf(3), issue
+				.getProject().getId());
+		assertEquals("reloaded.project.id", Integer.valueOf(3), reloaded.getProject()
+				.getId());
+
+		assertEquals("reloaded.activities.size", actCount + 1, reloaded
+				.getActivities().size());
 
 		// org.itracker.model.IssueActivityType.ISSUE_MOVE
 
-		// issue = issueService.getIssue(issue.getId());
 
 	}
 
