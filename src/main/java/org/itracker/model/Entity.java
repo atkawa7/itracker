@@ -1,6 +1,7 @@
 package org.itracker.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * All database entities must implement this interface, which represents 
@@ -41,4 +42,10 @@ public interface Entity extends Serializable, Cloneable, Comparable<Entity> {
      */
     void setId(Integer id);
     
+    void setLastModifiedDate(Date date);
+    Date getLastModifiedDate();
+    
+    void setCreateDate(Date date);
+    
+    Date getCreateDate();
 }
