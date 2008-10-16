@@ -17,14 +17,19 @@
  */
 package org.itracker.web.taglib;
 
+import java.util.Arrays;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
+
 
 public class FormatMessageTag extends TagSupport {
 
@@ -36,6 +41,8 @@ public class FormatMessageTag extends TagSupport {
     private String locale = null;
     private String localeKey = Constants.LOCALE_KEY;
     
+    private static final Logger log = Logger.getLogger(FormatMessageTag.class);
+   
     protected static final Locale defaultLocale = ITrackerResources.getLocale();
     
     public String getArg0() {
@@ -93,24 +100,32 @@ public class FormatMessageTag extends TagSupport {
     public int doEndTag() throws JspException {
         String message = null;
         Locale messageLocale = defaultLocale;
-        
-        messageLocale = (Locale) (pageContext.getSession().getAttribute(getLocaleKey()));
+        messageLocale = (Locale)LoginUtilities.getCurrentLocale((HttpServletRequest)pageContext.getRequest());
+//        messageLocale = (Locale) (pageContext.getSession().getAttribute(getLocaleKey()));
         
         if (locale != null) {
             messageLocale = ITrackerResources.getLocale(locale);
+            if (log.isDebugEnabled()) {
+            	log.debug("doEndTag: locale resolved to " + messageLocale);
+            }
         }
-        
+        Object[] args = null;
         if(getArg0() == null) {
             message = ITrackerResources.getString(key, messageLocale);
         } else if(getArg2() != null) {
-            Object args[] = { getArg0(), getArg1(), getArg2() };
+            args = new Object[]{ getArg0(), getArg1(), getArg2() };
             message = ITrackerResources.getString(key, messageLocale, args);
         } else if(getArg1() != null) {
-            Object args[] = { getArg0(), getArg1() };
+        	args = new Object[]{ getArg0(), getArg1() };
             message = ITrackerResources.getString(key, messageLocale, args);
         } else {
-            Object args[] = { getArg0() };
+        	args = new Object[]{ getArg0() };
             message = ITrackerResources.getString(key, messageLocale, args);
+        }
+        
+        if (log.isDebugEnabled()) {
+        	StringBuffer sb = new StringBuffer("doEndTag: resolved ").append(key).append(" for locale: ").append(" to '").append(message).append("', args_: ").append((null == args? null:Arrays.asList(args)));
+        	log.debug(sb.toString());
         }
         
         //ResponseUtils.write(pageContext, message);
