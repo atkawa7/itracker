@@ -98,6 +98,10 @@ public class ITrackerResources {
     }
 
     public static Locale getLocale(String localeString) {
+    	
+    	if (logger.isDebugEnabled()) {
+    		logger.debug("getLocale: " + localeString);
+    	}
         if (localeString == null || localeString.trim().equals("")) {
             return getLocale(getDefaultLocale());
         }
@@ -105,7 +109,9 @@ public class ITrackerResources {
         Locale locale = locales.get(localeString);
         if (locale == null && localeString != null && !localeString.trim().equals("")) {
             try {
-                logger.debug("Creating new locale for '" + localeString + "'");
+            	if (logger.isDebugEnabled()) {
+	                logger.debug("Creating new locale for '" + localeString + "'");
+	            }
                 if (localeString.length() == 5) {
                     locale = new Locale(localeString.substring(0, 2), localeString.substring(3));
                 } else if (localeString.length() == 2) {
@@ -113,7 +119,10 @@ public class ITrackerResources {
                 } else if (localeString.equals(BASE_LOCALE)) {
                     locale = new Locale("", "");
                 } else {
-                    logger.debug("Invalid locale '" + localeString + "' specified.  It must be either LN or LN_CN.");
+                
+			    	if (logger.isDebugEnabled()) {
+            	        logger.debug("Invalid locale '" + localeString + "' specified.  It must be either LN or LN_CN.");
+            	    }
                     throw new Exception("Invalid locale string");
                 }
             } catch (Exception ex) {
