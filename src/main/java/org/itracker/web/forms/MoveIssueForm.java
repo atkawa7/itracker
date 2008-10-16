@@ -35,9 +35,9 @@ public class MoveIssueForm extends ValidatorForm {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	String caller;
-	Integer issueId;
-	Integer projectId;
+	private String caller;
+	private Integer issueId;
+	private Integer projectId;
 
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		caller = null;

@@ -35,10 +35,10 @@ public class IssueRelationForm extends ValidatorForm {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	String caller;
-	Integer issueId;
-	Integer relatedIssueId;
-	Integer relationType;
+	private String caller;
+	private Integer issueId;
+	private Integer relatedIssueId;
+	private Integer relationType;
 
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		caller = null;
