@@ -28,6 +28,13 @@
     User um = (User) request.getSession().getAttribute("currUser");
 
     Issue currentIssue = (Issue) request.getAttribute(Constants.ISSUE_KEY);
+    if (null == currentIssue) {
+    	
+    	%>
+    	
+    	<logic:forward name="error"  />
+    	<%
+    }
 
     Map<Integer, List<NameValuePair>> listOptions =
             RequestHelper.getListOptions(session);
