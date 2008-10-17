@@ -45,6 +45,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ejb.RemoveException;
+
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Component;
@@ -637,6 +639,10 @@ public class IssueServiceImpl implements IssueService {
 		return true;
 	}
 
+	/**
+	 * TODO maybe it has no use at all. is it obsolete?
+	 * when I'd set the issue-fields on an issue and then save/update issue, would it be good enough?
+	 */
 	public boolean setIssueFields(Integer issueId, List<IssueField> fields) {
 		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
 		List<IssueField> issueFields = issue.getFields();
@@ -664,15 +670,24 @@ public class IssueServiceImpl implements IssueService {
 
 		if (fields.size() > 0) {
 			for (int i = 0; i < fields.size(); i++) {
-				IssueField field = new IssueField();
+				
+				
+				IssueField field = fields.get(i);
+				if (issueFields.contains(field)) {
+					issueFields.remove(field);
+				}
+				
 				CustomField customField = getCustomFieldDAO().findByPrimaryKey(
 						fields.get(i).getCustomField().getId());
 				field.setCustomField(customField);
 				field.setIssue(issue);
-				field.setDateValue(new Timestamp(new Date().getTime()));
+				
+//				what date value?
+//				field.setDateValue(new Timestamp(new Date().getTime()));
 				issueFields.add(field);
 			}
 		}
+		issue.setFields(issueFields);
 
 		getIssueDAO().saveOrUpdate(issue);
 		return true;
