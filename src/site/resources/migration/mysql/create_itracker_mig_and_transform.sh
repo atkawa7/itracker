@@ -40,4 +40,6 @@ mysql -h$DBHOST -u"$DBUSER" -p"$DBPASS" "$DBTARGET" < "$DUMPFILE"
 echo "applying transformations of database structure ..."
 mysql -h$DBHOST -u"$DBUSER" -p"$DBPASS" "$DBTARGET" < ./itracker_migration_transform_script.sql
 
+mysql -h$DBHOST -u"$DBUSER" -p"$DBPASS" "$DBTARGET" < ./itracker_migration_new_indexes.sql
+
 echo "DONE: Successfully dumped and transformed to 3.0"
