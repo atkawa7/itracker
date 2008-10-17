@@ -128,6 +128,12 @@ public interface IssueService {
     
     boolean assignIssue(Integer issueId, Integer userId, Integer assignedByUserId);
     
+    /**
+     * TODO: describe what is the use for this method.
+     * @param issueId
+     * @param fields
+     * @return
+     */
     boolean setIssueFields(Integer issueId, List<IssueField> fields);
     
     boolean setIssueComponents(Integer issueId, HashSet<Integer> componentIds, Integer userId);
