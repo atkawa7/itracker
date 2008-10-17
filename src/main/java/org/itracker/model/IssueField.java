@@ -48,10 +48,7 @@ public class IssueField extends AbstractEntity {
 
 	private static transient final Logger log = Logger
 			.getLogger(IssueField.class);
-	/*
-	 * PENDING : there are no create_date or last_modified fields in DB =>
-	 * should add them to DB or not inherit AbstractEntity.
-	 */
+
 
 	private Issue issue;
 
@@ -260,12 +257,14 @@ public class IssueField extends AbstractEntity {
 	 *            the ResourceBundle used for any string formatting
 	 * @throws IssueException
 	 *             represents an error formatting or parsing the value
+	 *             
+	 * @deprecated locale is redundant set, in bundle and as separate parameter. use {@link IssueField#setValue(String, ResourceBundle)} instead
 	 */
 	public void setValue(String value, Locale locale, ResourceBundle bundle)
 			throws IssueException {
 		if (value != null) {
 			switch (customField.getFieldType()) {
-
+		
 			case INTEGER:
 				try {
 					setIntValue(Integer.parseInt(value));
@@ -300,6 +299,27 @@ public class IssueField extends AbstractEntity {
 			}
 
 		}
+	}
+	/**
+	 * Sets the custom field value.
+	 * 
+	 * <p>
+	 * Takes a string and then converts the value to the appropriate type based
+	 * on the defined field type.
+	 * </p>
+	 * 
+	 * TODO : throw IllegalArgumentException instead of IssueException ?
+	 * 
+	 * @param value
+	 *            the value to set this field to as a string
+	 * @param bundle
+	 *            the ResourceBundle used for any string formatting
+	 * @throws IssueException
+	 *             represents an error formatting or parsing the value
+	 *             
+	 */
+	public void setValue(String value, ResourceBundle bundle) throws IssueException {
+		setValue(value, bundle.getLocale(), bundle);
 	}
 
 	@Override
