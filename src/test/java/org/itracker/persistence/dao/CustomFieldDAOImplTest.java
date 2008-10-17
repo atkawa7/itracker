@@ -26,7 +26,7 @@ public class CustomFieldDAOImplTest extends AbstractDependencyInjectionTest {
     public void testFindAll() {
         List<CustomField> customFields = customFieldDAO.findAll();
 
-        assertEquals(1, customFields.size());
+        assertEquals(4, customFields.size());
 
         CustomField customField = customFields.get(0);
 

@@ -3,20 +3,39 @@
  */
 package org.itracker.services.implementations;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.itracker.AbstractDependencyInjectionTest;
+import org.itracker.core.resources.ITrackerResourceBundle;
+import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueActivityType;
 import org.itracker.model.IssueField;
 import org.itracker.model.IssueHistory;
+import org.itracker.model.IssueSearchQuery;
+import org.itracker.model.PermissionType;
 import org.itracker.model.User;
+import org.itracker.model.CustomField.Type;
 import org.itracker.services.IssueService;
 import org.itracker.services.UserService;
+import org.itracker.services.exceptions.IssueException;
+import org.itracker.services.exceptions.IssueSearchException;
 import org.itracker.services.exceptions.ProjectException;
+import org.itracker.services.util.AuthenticationConstants;
+import org.itracker.web.util.ServletContextUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -24,10 +43,10 @@ import org.junit.Test;
  * 
  */
 public class IssueServiceTest extends AbstractDependencyInjectionTest {
-	private IssueService issueService;
 
-	// private IssueDAO issueDAO;
-	// private IssueActivityDAO issueActivityDAO;
+	private static final Logger logger = Logger
+			.getLogger(IssueServiceTest.class);
+	private IssueService issueService;
 
 	/**
 	 * Test method for
@@ -81,7 +100,8 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssuesWithStatusLessThan(int)}.
+	 * {@link org.itracker.services.IssueService#getIssuesWithStatusLessThan(int)}
+	 * .
 	 */
 	@Test
 	public void testGetIssuesWithStatusLessThan() {
@@ -107,7 +127,8 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssuesByProjectId(java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#getIssuesByProjectId(java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	public void testGetIssuesByProjectIdInteger() {
@@ -118,7 +139,8 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssuesByProjectId(java.lang.Integer, int)}.
+	 * {@link org.itracker.services.IssueService#getIssuesByProjectId(java.lang.Integer, int)}
+	 * .
 	 */
 	@Test
 	public void testGetIssuesByProjectIdIntegerInt() {
@@ -130,7 +152,8 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssuesCreatedByUser(java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#getIssuesCreatedByUser(java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	public void testGetIssuesCreatedByUserInteger() {
@@ -143,7 +166,8 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssuesCreatedByUser(java.lang.Integer, boolean)}.
+	 * {@link org.itracker.services.IssueService#getIssuesCreatedByUser(java.lang.Integer, boolean)}
+	 * .
 	 */
 	@Test
 	public void testGetIssuesCreatedByUserIntegerBoolean() {
@@ -158,7 +182,8 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssuesOwnedByUser(java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#getIssuesOwnedByUser(java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	public void testGetIssuesOwnedByUserInteger() {
@@ -168,7 +193,8 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssuesOwnedByUser(java.lang.Integer, boolean)}.
+	 * {@link org.itracker.services.IssueService#getIssuesOwnedByUser(java.lang.Integer, boolean)}
+	 * .
 	 */
 	@Test
 	public void testGetIssuesOwnedByUserIntegerBoolean() {
@@ -182,7 +208,8 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssuesWatchedByUser(java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#getIssuesWatchedByUser(java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	public void testGetIssuesWatchedByUserInteger() {
@@ -193,10 +220,13 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssuesWatchedByUser(java.lang.Integer, boolean)}.
+	 * {@link org.itracker.services.IssueService#getIssuesWatchedByUser(java.lang.Integer, boolean)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testGetIssuesWatchedByUserIntegerBoolean() {
+		fail("Not yet implemented");
 		// TODO test function for unavailable projects
 		// currently failing..?
 		// Collection<Issue> issues = issueService.getIssuesWatchedByUser(2,
@@ -211,7 +241,9 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 * {@link org.itracker.services.IssueService#getUnassignedIssues()}.
 	 */
 	@Test
+	@Ignore
 	public void testGetUnassignedIssues() {
+		fail("Not yet implemented");
 		// TODO fails, expecting 0 unassigned..?
 		// Collection<Issue> issues = issueService.getUnassignedIssues();
 		//		
@@ -223,14 +255,15 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 * {@link org.itracker.services.IssueService#getUnassignedIssues(boolean)}.
 	 */
 	@Test
+	@Ignore
 	public void testGetUnassignedIssuesBoolean() {
-		// TODO implement
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#createIssue(org.itracker.model.Issue, java.lang.Integer, java.lang.Integer, java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#createIssue(org.itracker.model.Issue, java.lang.Integer, java.lang.Integer, java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	public void testCreateIssue() {
@@ -262,7 +295,8 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#updateIssue(org.itracker.model.Issue, java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#updateIssue(org.itracker.model.Issue, java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	public void testUpdateIssue() {
@@ -300,7 +334,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		assertNotNull("user#2", user);
 
 		IssueHistory history = new IssueHistory(updateIssue, user, "hi", 1);
-//		Integer histCount = updateIssue.getHistory().size();
+		// Integer histCount = updateIssue.getHistory().size();
 		Integer actCount = updateIssue.getActivities().size();
 
 		updateIssue.getHistory().add(history);
@@ -357,20 +391,34 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 			updateIssue = issueService.updateIssue(updateIssue, 2);
 
-			assertEquals("new activity size", actCount + 1, updateIssue
-					.getActivities().size());
+			assertEquals("updateIssue.activities.size", actCount + 1,
+					updateIssue.getActivities().size());
 
-			assertEquals("new issue description", description, updateIssue
+			assertEquals("updateIssue.description", description, updateIssue
 					.getDescription());
 
-			assertEquals("new added activity type",
-					IssueActivityType.DESCRIPTION_CHANGE, issueService
-							.getIssue(updateIssue.getId()).getActivities().get(
+			assertEquals("updateIssue.activity.last.type",
+					IssueActivityType.DESCRIPTION_CHANGE, updateIssue
+							.getActivities().get(
 									updateIssue.getActivities().size() - 1)
 							.getActivityType());
+			// test reloaded issue values
+			Issue reloadedIssue = issueService.getIssue(updateIssue.getId());
 
+			assertEquals("reloadedIssue.activities.size", actCount + 1,
+					updateIssue.getActivities().size());
+
+			assertEquals("reloadedIssue.description", description, updateIssue
+					.getDescription());
+
+			assertEquals("reloadedIssue.activity.last.type",
+					IssueActivityType.DESCRIPTION_CHANGE, reloadedIssue
+							.getActivities().get(
+									reloadedIssue.getActivities().size() - 1)
+							.getActivityType());
 		} catch (ProjectException e) {
-			e.printStackTrace();
+			logger.error("testUpdateIssueDescription: failed to test, failing",
+					e);
 			fail(e.getMessage());
 		}
 	}
@@ -404,9 +452,9 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 					.getResolution());
 
 			assertEquals("new added activity type",
-					IssueActivityType.RESOLUTION_CHANGE, issueService
-							.getIssue(updateIssue.getId()).getActivities().get(
-									updateIssue.getActivities().size() - 1)
+					IssueActivityType.RESOLUTION_CHANGE, issueService.getIssue(
+							updateIssue.getId()).getActivities().get(
+							updateIssue.getActivities().size() - 1)
 							.getActivityType());
 
 		} catch (ProjectException e) {
@@ -415,11 +463,10 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		}
 	}
 
-
-
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#moveIssue(org.itracker.model.Issue, java.lang.Integer, java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#moveIssue(org.itracker.model.Issue, java.lang.Integer, java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	public void testMoveIssue() {
@@ -434,23 +481,22 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 		Issue reloaded = issueService.getIssue(1);
 
-
-		assertEquals("issue.project.id", Integer.valueOf(3), issue
-				.getProject().getId());
-		assertEquals("reloaded.project.id", Integer.valueOf(3), reloaded.getProject()
+		assertEquals("issue.project.id", Integer.valueOf(3), issue.getProject()
 				.getId());
+		assertEquals("reloaded.project.id", Integer.valueOf(3), reloaded
+				.getProject().getId());
 
 		assertEquals("reloaded.activities.size", actCount + 1, reloaded
 				.getActivities().size());
 
 		// org.itracker.model.IssueActivityType.ISSUE_MOVE
 
-
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#assignIssue(java.lang.Integer, java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#assignIssue(java.lang.Integer, java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	public void testAssignIssueIntegerInteger() {
@@ -470,7 +516,8 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#assignIssue(java.lang.Integer, java.lang.Integer, java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#assignIssue(java.lang.Integer, java.lang.Integer, java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	public void testAssignIssueIntegerIntegerInteger() {
@@ -489,105 +536,205 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.itracker.services.IssueService#setIssueFields(java.lang.Integer, java.util.List)}.
+	 * TODO: please somebody do tests on populate (multiple?) custom fields on
+	 * an issue Test method for
+	 * {@link org.itracker.services.IssueService#setIssueFields(java.lang.Integer, java.util.List)}
+	 * .
 	 */
 	@Test
 	public void testSetIssueFields() {
 		Issue issue = issueService.getIssue(2);
 		assertNotNull("issue", issue);
-		List<IssueField> fields = new ArrayList<IssueField>();
-		assertTrue("set fields", issueService.setIssueFields(issue.getId(),
-				fields));
+		assertEquals("issue.fields.size", 2, issue.getProject().getCustomFields().size());
 
-		assertEquals("fields count", fields.size(), issue.getFields().size());
-
+		assertEquals("issue.fields[0].customField", issue.getProject().getCustomFields().get(0), issue.getFields().get(0).getCustomField());
+		
+		IssueField field = issue.getFields().get(0);
+		assertEquals("issue.fields[0].fieldType", Type.STRING, field.getCustomField().getFieldType());
+		
+		try {
+			field.setValue("1", ITrackerResources.getBundle(Locale.US));
+		} catch (IssueException e) {
+			logger.error("testSetIssueFields: failed to set value", e);
+			fail(e.getMessage());
+		}
+		
+		issueService.setIssueFields(issue.getId(), issue.getFields());
+		
+		CustomField dateField = issue.getProject().getCustomFields().get(1);
+		IssueField dateFieldValue = new IssueField(issue, dateField);
+		
+		// 1973-11-16
+		dateFieldValue.setDateValue(new Date(122255164431l));
+		
+//		issue.getFields().add(dateFieldValue);
+		ArrayList<IssueField> issueFields = new ArrayList<IssueField>(issue.getFields().size() + 1);
+		issueFields.add(dateFieldValue);
+		
+		issueService.setIssueFields(issue.getId(), issueFields);
+		
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		issue = issueService.getIssue(2);
+		
+		assertEquals("issue.fields[0]", field, issue.getFields().get(0));
+		assertEquals("issue.fields[1]", df.format(dateFieldValue.getDateValue()), df.format(issue.getFields().get(1).getDateValue().getTime()));
+		
 	}
 
+	@Test
+	public void testUpdateIssueCustomFields() {
+		
+		Issue issue = issueService.getIssue(2);
+		assertNotNull("issue", issue);
+		assertEquals("issue.fields.size", 2, issue.getProject().getCustomFields().size());
+
+		assertEquals("issue.fields[0].customField", issue.getProject().getCustomFields().get(0), issue.getFields().get(0).getCustomField());
+		
+		IssueField field = issue.getFields().get(0);
+		assertEquals("issue.fields[0].fieldType", Type.STRING, field.getCustomField().getFieldType());
+		
+		try {
+			field.setValue("1", ITrackerResources.getBundle(Locale.US));
+			
+		} catch (IssueException e) {
+			logger.error("testSetIssueFields: failed to set value", e);
+			fail(e.getMessage());
+		}
+        
+		try {
+			issueService.updateIssue(issue, issue.getOwner().getId());
+		} catch (ProjectException e) {
+			logger.error("testSetIssueFields: failed to update issue", e);
+			fail(e.getMessage());
+		}
+
+		
+		CustomField dateField = issue.getProject().getCustomFields().get(1);
+		IssueField dateFieldValue = new IssueField(issue, dateField);
+		
+		// 1973-11-16
+		dateFieldValue.setDateValue(new Date(122255164431l));
+		
+		issue.getFields().add(dateFieldValue);
+
+		try {
+			issueService.updateIssue(issue, issue.getOwner().getId());
+		} catch (ProjectException e) {
+			logger.error("testSetIssueFields: failed to update issue", e);
+			fail(e.getMessage());
+		}
+		
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		issue = issueService.getIssue(2);
+		
+		assertEquals("issue.fields[0]", field, issue.getFields().get(0));
+		assertEquals("issue.fields[1]", df.format(dateFieldValue.getDateValue()), df.format(issue.getFields().get(1).getDateValue().getTime()));
+		
+		
+	}
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#setIssueComponents(java.lang.Integer, java.util.HashSet, java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#setIssueComponents(java.lang.Integer, java.util.HashSet, java.lang.Integer)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testSetIssueComponents() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#setIssueVersions(java.lang.Integer, java.util.HashSet, java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#setIssueVersions(java.lang.Integer, java.util.HashSet, java.lang.Integer)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testSetIssueVersions() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#addIssueHistory(org.itracker.model.IssueHistory)}.
+	 * {@link org.itracker.services.IssueService#addIssueHistory(org.itracker.model.IssueHistory)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testAddIssueHistory() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#addIssueRelation(java.lang.Integer, java.lang.Integer, int, java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#addIssueRelation(java.lang.Integer, java.lang.Integer, int, java.lang.Integer)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testAddIssueRelation() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#addIssueAttachment(org.itracker.model.IssueAttachment, byte[])}.
+	 * {@link org.itracker.services.IssueService#addIssueAttachment(org.itracker.model.IssueAttachment, byte[])}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testAddIssueAttachment() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#addIssueNotification(org.itracker.model.Notification)}.
+	 * {@link org.itracker.services.IssueService#addIssueNotification(org.itracker.model.Notification)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testAddIssueNotification() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#removeIssueAttachment(java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#removeIssueAttachment(java.lang.Integer)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testRemoveIssueAttachment() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#removeIssueHistoryEntry(java.lang.Integer, java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#removeIssueHistoryEntry(java.lang.Integer, java.lang.Integer)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testRemoveIssueHistoryEntry() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#removeIssueRelation(java.lang.Integer, java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#removeIssueRelation(java.lang.Integer, java.lang.Integer)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testRemoveIssueRelation() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssueProject(java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#getIssueProject(java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	public void testGetIssueProject() {
@@ -599,25 +746,30 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssueVersions(java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#getIssueVersions(java.lang.Integer)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testGetIssueVersions() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssueVersionIds(java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#getIssueVersionIds(java.lang.Integer)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testGetIssueVersionIds() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssueCreator(java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#getIssueCreator(java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	public void testGetIssueCreator() {
@@ -634,7 +786,8 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssueOwner(java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#getIssueOwner(java.lang.Integer)}
+	 * .
 	 */
 	@Test
 	public void testGetIssueOwner() {
@@ -650,20 +803,24 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssueActivity(java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#getIssueActivity(java.lang.Integer)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testGetIssueActivityInteger() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssueActivity(java.lang.Integer, boolean)}.
+	 * {@link org.itracker.services.IssueService#getIssueActivity(java.lang.Integer, boolean)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testGetIssueActivityIntegerBoolean() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
@@ -671,35 +828,68 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 * {@link org.itracker.services.IssueService#getAllIssueAttachmentCount()}.
 	 */
 	@Test
+	@Ignore
 	public void testGetAllIssueAttachmentCount() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#getLastIssueHistory(java.lang.Integer)}.
+	 * {@link org.itracker.services.IssueService#getLastIssueHistory(java.lang.Integer)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testGetLastIssueHistory() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.itracker.services.IssueService#canViewIssue(java.lang.Integer, org.itracker.model.User)}.
+	 * {@link org.itracker.services.IssueService#canViewIssue(java.lang.Integer, org.itracker.model.User)}
+	 * .
 	 */
 	@Test
+	@Ignore
 	public void testCanViewIssueIntegerUser() {
-		// fail("Not yet implemented");
+		fail("Not yet implemented");
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.itracker.services.IssueService#searchIssues(org.itracker.model.IssueSearchQuery, org.itracker.model.User, java.util.Map)}.
+	 * Simple test to search for text. Test method for
+	 * {@link org.itracker.services.IssueService#searchIssues(org.itracker.model.IssueSearchQuery, org.itracker.model.User, java.util.Map)}
+	 * .
 	 */
 	@Test
 	public void testSearchIssues() {
-		// fail("Not yet implemented");
+		Issue expected = issueService.getIssue(2);
+		assertNotNull("expected", expected);
+		assertEquals("expected.history[0].description", "hello..", expected
+				.getHistory().get(0).getDescription());
+
+		IssueSearchQuery query = new IssueSearchQuery();
+
+		query.setText("hello");
+
+		ArrayList<Integer> projectIds = new ArrayList<Integer>();
+		projectIds.add(2);
+		query.setProjects(projectIds);
+
+		User user = expected.getOwner();
+
+		Map<Integer, Set<PermissionType>> permissionsMap = ServletContextUtils
+				.getItrackerServices().getUserService()
+				.getUsersMapOfProjectIdsAndSetOfPermissionTypes(user,
+						AuthenticationConstants.REQ_SOURCE_WEB);
+
+		try {
+			List<Issue> result = issueService.searchIssues(query, user,
+					permissionsMap);
+			assertTrue("result.contains(expected)", result.contains(expected));
+		} catch (IssueSearchException e) {
+			logger.error("testSearchIssues: failed to search issues", e);
+			fail(e.getMessage());
+		}
 	}
 
 	@Override
@@ -708,19 +898,20 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		super.onSetUp();
 		this.issueService = (IssueService) applicationContext
 				.getBean("issueService");
-		// this.issueDAO = (IssueDAO) applicationContext.getBean("issueDAO");
-		// this.issueActivityDAO = (IssueActivityDAO) applicationContext
-		// .getBean("issueActivityDAO");
 
 	}
 
 	protected String[] getDataSetFiles() {
 		return new String[] { "dataset/userpreferencesbean_dataset.xml",
 				"dataset/userbean_dataset.xml",
+				"dataset/customfieldbean_dataset.xml",
+				"dataset/customfieldvaluebean_dataset.xml",
 				"dataset/projectbean_dataset.xml",
+				"dataset/projectbean_field_rel_dataset.xml",
 				"dataset/versionbean_dataset.xml",
 				"dataset/permissionbean_dataset.xml",
 				"dataset/issuebean_dataset.xml",
+				"dataset/issuefieldbean_dataset.xml",
 				"dataset/issueattachmentbean_dataset.xml",
 				"dataset/issueactivitybean_dataset.xml",
 				"dataset/issuehistorybean_dataset.xml",

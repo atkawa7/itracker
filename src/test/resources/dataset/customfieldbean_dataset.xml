@@ -12,6 +12,7 @@
 
         <row>
             <value>1</value>
+             <!-- 1: Text-Type -->
             <value>1</value>
             <value>mm-dd-yyyy</value>
             <value>1</value>
@@ -20,6 +21,38 @@
             <value>2008-01-01</value>
         </row>
 
+        <row>
+            <value>2</value>
+             <!-- 2: Integer-Type -->
+            <value>2</value>
+            <value>mm-dd-yyyy</value>
+            <value>1</value>
+            <value>1</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+        </row>
+        
+        <row>
+            <value>3</value>
+             <!-- 3: Date-Type -->
+            <value>3</value>
+            <value>mm-dd-yyyy</value>
+            <value>1</value>
+            <value>1</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+        </row>
+        
+        <row>
+            <value>4</value>
+             <!-- 4: List-Type -->
+            <value>4</value>
+            <value>mm-dd-yyyy</value>
+            <value>1</value>
+            <value>0</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+        </row>
     </table>
 
 </dataset>
