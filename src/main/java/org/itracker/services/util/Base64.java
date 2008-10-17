@@ -507,8 +507,8 @@ public class Base64 {
 	 *            the index where output will be put
 	 * @return the number of decoded bytes converted
 	 */
-	private static int decode4to3(byte[] source, int srcOffset,
-			byte[] destination, int destOffset) {
+	private static int decode4to3(final byte[] source, final int srcOffset,
+			final byte[] destination, final int destOffset) {
 		// Example: Dk==
 		if (source[srcOffset + 2] == EQUALS_SIGN) {
 			// Two ways to do the same thing. Don't know which way I like best.
@@ -553,14 +553,21 @@ public class Base64 {
 
 				return 3;
 			} catch (Exception e) {
-				System.out.println("" + source[srcOffset] + ": "
-						+ (DECODABET[source[srcOffset]]));
-				System.out.println("" + source[srcOffset + 1] + ": "
-						+ (DECODABET[source[srcOffset + 1]]));
-				System.out.println("" + source[srcOffset + 2] + ": "
-						+ (DECODABET[source[srcOffset + 2]]));
-				System.out.println("" + source[srcOffset + 3] + ": "
-						+ (DECODABET[source[srcOffset + 3]]));
+				log.error(new StringBuffer(
+						"decode4to3: failed to decode source: ").append(source)
+						.append(", srcOffset: ").append(srcOffset).append(
+								", destination: ").append(destination).append(
+								", destOffset: ").append(destOffset), e);
+				if (log.isInfoEnabled()) {
+					log.info("" + source[srcOffset] + ": "
+							+ (DECODABET[source[srcOffset]]));
+					log.info("" + source[srcOffset + 1] + ": "
+							+ (DECODABET[source[srcOffset + 1]]));
+					log.info("" + source[srcOffset + 2] + ": "
+							+ (DECODABET[source[srcOffset + 2]]));
+					log.info("" + source[srcOffset + 3] + ": "
+							+ (DECODABET[source[srcOffset + 3]]));
+				}
 				return -1;
 			}
 		}
@@ -611,7 +618,7 @@ public class Base64 {
 				} // end if: equals sign or better
 
 			} else {
-				System.err.println("Bad Base64 input character at " + i + ": "
+				log.error("decode: Bad Base64 input character at " + i + ": "
 						+ source[i] + "(decimal)");
 				return new byte[0];
 			} // end else:
