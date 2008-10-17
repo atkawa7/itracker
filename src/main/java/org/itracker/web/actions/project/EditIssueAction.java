@@ -19,6 +19,7 @@
 package org.itracker.web.actions.project;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -72,7 +73,6 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 	private static final Logger log = Logger.getLogger(EditIssueAction.class);
 
-	@SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -149,13 +149,13 @@ public class EditIssueAction extends ItrackerBaseAction {
 				if (log.isDebugEnabled()) {
 					log.debug("execute: edit full, " + issue);
 				}
-				processFullEdit(issue, project, currUser, userPermissions,
+				issue = processFullEdit(issue, project, currUser, userPermissions,
 						locale, issueForm, issueService);
 			} else {				
 				if (log.isDebugEnabled()) {
 					log.debug("execute: edit limited, " + issue);
 				}
-				processLimitedEdit(issue, project, currUser, userPermissions,
+				issue = processLimitedEdit(issue, project, currUser, userPermissions,
 						locale, issueForm, issueService);
 			}
 
@@ -198,7 +198,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 	}
 
-	private void processFullEdit(final Issue issue, Project project, User user,
+	private Issue processFullEdit(Issue issue, Project project, User user,
 			Map<Integer, Set<PermissionType>> userPermissions, Locale locale,
 			IssueForm form, IssueService issueService) throws Exception {
 
@@ -268,7 +268,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 		setIssueFields(issue, user, locale, form, issueService);
 		setOwner(issue, user, userPermissions, form, issueService);
 		
-		addHistoryEntry(issue, user, form, issueService);
+		issue = addHistoryEntry(issue, user, form, issueService);
 
 		HashSet<Integer> components = new HashSet<Integer>();
 
@@ -305,13 +305,13 @@ public class EditIssueAction extends ItrackerBaseAction {
 			issue.setStatus(form.getStatus());
 		}
 		
-		issueService.updateIssue(issue, user.getId());
+		return issueService.updateIssue(issue, user.getId());
 
 	}
 
 
 
-	private void processLimitedEdit(final Issue issue, Project project,
+	private Issue processLimitedEdit(final Issue issue, Project project,
 			User user, Map<Integer, Set<PermissionType>> userPermissionsMap,
 			Locale locale, IssueForm form, IssueService issueService)
 			throws Exception {
@@ -338,7 +338,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 		addHistoryEntry(issue, user, form, issueService);
 		addAttachment(issue, project, user, form, issueService);
 
-		issueService.updateIssue(issue, user.getId());
+		return issueService.updateIssue(issue, user.getId());
 		
 	}
 
@@ -369,104 +369,96 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	private void setIssueFields(Issue issue, User user, Locale locale,
 			IssueForm form, IssueService issueService) throws Exception {
 
+		if (log.isDebugEnabled()) {
+			log.debug("setIssueFields: called");
+		}
 		List<CustomField> projectCustomFields = issue.getProject()
 				.getCustomFields();
-
-		if (projectCustomFields == null || projectCustomFields.size() == 0) {
-			return;
+		if (log.isDebugEnabled()) {
+			log.debug("setIssueFields: got project custom fields: " + projectCustomFields);
 		}
 
-		// List<IssueField> issueFields = new ArrayList<IssueField>();
-
+		if (projectCustomFields == null || projectCustomFields.size() == 0) {
+			log.debug("setIssueFields: no custom fields, returning...");
+			return;
+		}
+		
+		
 		// here you see some of the ugly side of Struts 1.3 - the forms... they
 		// can only contain Strings and some simple objects types...
 		HashMap<String, String> formCustomFields = form.getCustomFields();
-
+		
 		if (log.isDebugEnabled()) {
-			log.debug("setIssueFields: customfields form form: " + formCustomFields);
+			log.debug("setIssueFields: got form custom fields: " + formCustomFields);
 		}
 		
 		if (formCustomFields == null || formCustomFields.size() == 0) {
+			log.debug("setIssueFields: no form custom fields, returning..");
 			return;
 		}
 		
-
-		// List<IssueField> issueFieldsList = new ArrayList<IssueField>();
 		ResourceBundle bundle = ITrackerResources.getBundle(locale);
-		List<IssueField> issueFieldsList = issue.getFields();
+		List<IssueField> issueFieldsList = new ArrayList<IssueField>(projectCustomFields.size());
 		Iterator<CustomField> customFieldsIt = projectCustomFields.iterator();
 		// declare iteration fields
 		CustomField field;
 		String fieldValue;
 		IssueField issueField;
-		Iterator<IssueField> issueFieldsIt = null;
-		boolean addIssueField;
 		try {
-
+			if (log.isDebugEnabled()) {
+				log.debug("setIssueFields: processing project fields");
+			}
+			// set values to issue-fields and add if needed
 			while (customFieldsIt.hasNext()) {
 
 				field = customFieldsIt.next();
 				fieldValue = (String) formCustomFields.get(String.valueOf(field
 						.getId()));
 
-				if (fieldValue != null && !fieldValue.equals("")) {
+				if (fieldValue != null && fieldValue.trim().length() > 0) {
 
 					issueField = new IssueField(issue, field);
-					addIssueField = true;
-					issueFieldsIt = issueFieldsList.iterator();
-					while (issueFieldsIt.hasNext()) {
-						issueField = issueFieldsIt.next();
-						if (issueField.getIssue().getId() == issue.getId()
-								&& issueField.getCustomField().getId() == field
-										.getId()) {
-							addIssueField = false;
-							break;
-						}
-					}
+					issueField.setValue(fieldValue, bundle);
+					
+					issueFieldsList.add(issueField);
 
-					issueField.setValue(fieldValue, locale, bundle);
-
-					if (addIssueField) {
-						issueFieldsList.add(issueField);
-					}
 				}
 			}
-
+			issueService.setIssueFields(issue.getId(), issueFieldsList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("setIssueFields: failed to process custom fields", e);
+			throw e;
 		}
-
-		// issueFields = new ArrayList<IssueField>(issueFieldsList);
-		issue.setFields(issueFieldsList);
-
-		// issueService.setIssueFields(issue.getId(), issueFields);
-
 	}
 
-	private void addHistoryEntry(Issue issue, User user, IssueForm form,
+	private Issue addHistoryEntry(Issue issue, User user, IssueForm form,
 			IssueService issueService) throws Exception {
 
-		String history = form.getHistory();
+			try {
+			String history = form.getHistory();
+	
+			if (history == null || history.equals("")) {
+				return issue;
+			}
 
-		if (history == null || history.equals("")) {
-			return;
-		}
-
-		IssueHistory issueHistory = new IssueHistory(issue, user, history,
+			IssueHistory issueHistory = new IssueHistory(issue, user, history,
 				IssueUtilities.HISTORY_STATUS_AVAILABLE);
 
-		issueHistory.setDescription(((IssueForm) form).getHistory());
-		issueHistory.setCreateDate(new Date());
+			issueHistory.setDescription(((IssueForm) form).getHistory());
+			issueHistory.setCreateDate(new Date());
 		
-		issueHistory.setLastModifiedDate(new Date());
-		issue.getHistory().add(issueHistory);
+			issueHistory.setLastModifiedDate(new Date());
+			issue.getHistory().add(issueHistory);
 
 //  TODO why do we need to updateIssue here, and can not later?
-		issueService.updateIssue(issue, user.getId());
+		return issueService.updateIssue(issue, user.getId());
+		} catch (Exception e) {
+			log.error("addHistoryEntry: failed to add", e);
+			throw e;
+		}
 //		issueService.addIssueHistory(issueHistory);
 
 	}
@@ -481,7 +473,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 		FormFile file = form.getAttachment();
 
-		if (file == null || file.getFileName().equals("")) {
+		if (file == null || file.getFileName().trim().length() < 1) {
 			log.info("addAttachment: skipping file " + file);
 			return;
 		}
@@ -503,11 +495,6 @@ public class EditIssueAction extends ItrackerBaseAction {
 					+ " of type " + file.getContentType() + ", description: "
 					+ form.getAttachmentDescription());
 		}
-
-		// int numAttachments =
-		// issueService.getIssueAttachmentCount(issue.getId()) + 1;
-		// String filename = "proj" + project.getId() + "_issue" + issue.getId()
-		// + "_attachment" + numAttachments;
 
 		if (AttachmentUtilities.checkFile(file, this.getITrackerServices())) {
 			int lastSlash = Math.max(origFileName.lastIndexOf('/'),
@@ -531,7 +518,6 @@ public class EditIssueAction extends ItrackerBaseAction {
 			String baseURL, NotificationService notificationService) {
 
 		Type notificationType = Type.UPDATED;
-		// int notificationType = NotificationUtilities.TYPE_UPDATED;
 
 		Issue issue = getITrackerServices().getIssueService().getIssue(issueId);
 
@@ -556,17 +542,15 @@ public class EditIssueAction extends ItrackerBaseAction {
 		if ("index".equals(form.getCaller())) {
 			log.info("EditIssueAction: Forward: index");
 			return mapping.findForward("index");
-		} else {
-//			if ("viewissue".equals((String) PropertyUtils.getSimpleProperty(
-//				form, "caller"))) {
+		} else if ("viewissue".equals(form.getCaller()) && issue.getStatus() >= IssueUtilities.STATUS_CLOSED) {
 			log.info("EditIssueAction: Forward: viewissue");
 			return new ActionForward(mapping.findForward("viewissue").getPath()
 					+ "?id=" + issue.getId());
-//		} else {
-//			log.info("EditIssueAction: Forward: listissues");
-//			return new ActionForward(mapping.findForward("listissues")
-//					.getPath()
-//					+ "?projectId=" + project.getId());
+		} else {
+			log.info("EditIssueAction: Forward: listissues");
+			return new ActionForward(mapping.findForward("listissues")
+					.getPath()
+					+ "?projectId=" + project.getId());
 		}
 
 	}
