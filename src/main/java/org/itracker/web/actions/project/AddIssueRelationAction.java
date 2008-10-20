@@ -74,12 +74,11 @@ public class AddIssueRelationAction extends ItrackerBaseAction {
             caller = (String) PropertyUtils.getSimpleProperty(form, "caller");
             issueId = (Integer) PropertyUtils.getSimpleProperty(form, "issueId");
             Integer relatedIssueId = (Integer) PropertyUtils.getSimpleProperty(form, "relatedIssueId");
-            int relationType = ((Integer) PropertyUtils.getSimpleProperty(form, "relationType")).intValue();
+            Integer relationType = (Integer)PropertyUtils.getSimpleProperty(form, "relationType");
 
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
-            // HashMap<Integer,HashSet<Object>> userPermissions = (HashMap) session.getAttribute(Constants.PERMISSIONS_KEY);
-            
+
             Map<Integer, Set<PermissionType>> usersMapOfProjectIdsAndSetOfPermissionTypes = 
                     userService.getUsersMapOfProjectIdsAndSetOfPermissionTypes(currUser, AuthenticationConstants.REQ_SOURCE_WEB);
             

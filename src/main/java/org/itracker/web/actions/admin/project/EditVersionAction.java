@@ -19,7 +19,6 @@
 package org.itracker.web.actions.admin.project;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,6 +43,12 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.VersionForm;
 import org.itracker.web.util.Constants;
 
+/**
+ * Action for edit a version.
+ * 
+ * @author ranks
+ *
+ */
 public class EditVersionAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(EditVersionAction.class);
 
@@ -114,7 +119,7 @@ public class EditVersionAction extends ItrackerBaseAction {
 						} else if ("update".equals(action)) {
 							version = projectService
 									.getProjectVersion(versionForm.getId());
-							version.setLastModifiedDate(new Date());
+//							version.setLastModifiedDate(new Date());
 							version.setNumber(versionForm.getNumber());
 							version.setProject(project);
 							version

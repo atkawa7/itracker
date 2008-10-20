@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -79,7 +80,9 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 		log.info("execute: called");
 		ActionErrors errors = new ActionErrors();
-
+		Date logDate = new Date();
+		Date startDate = new Date();
+		logTimeMillies("execute: called", logDate, log, Level.DEBUG);
 		// TODO: can we make this token optional (configurable) and probably by form, not over the whole app..
 		if (!isTokenValid(request)) {
 			log.debug("execute: Invalid request token while editing issue.");
@@ -98,13 +101,17 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 		try {
 			IssueService issueService = getITrackerServices().getIssueService();
+			logTimeMillies("execute: got issueService", logDate, log, Level.DEBUG);
 			NotificationService notificationService = getITrackerServices()
 					.getNotificationService();
+			logTimeMillies("execute: got notificationService", logDate, log, Level.DEBUG);
 			HttpSession session = request.getSession(true);
 			User currUser = (User) session.getAttribute(Constants.USER_KEY);
+			logTimeMillies("execute: got currUser", logDate, log, Level.DEBUG);
+			
 			Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
-			Locale locale = (Locale) session
-					.getAttribute(Constants.LOCALE_KEY);
+			logTimeMillies("execute: got userPermissions", logDate, log, Level.DEBUG);
+
 			Integer currUserId = currUser.getId();
 
 			IssueForm issueForm = (IssueForm) form;
@@ -113,6 +120,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 			int previousStatus = -1;
 			Issue issue = issueService.getIssue(issueForm.getId());
 
+			logTimeMillies("execute: got issue", logDate, log, Level.DEBUG);
 			
 			if (issue == null) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -122,6 +130,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 			}
 
 			Project project = issue.getProject();
+			logTimeMillies("execute: got project", logDate, log, Level.DEBUG);
 			if (project == null) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"itracker.web.error.invalidproject"));
@@ -139,24 +148,28 @@ public class EditIssueAction extends ItrackerBaseAction {
 			}
 
 			List<ProjectScript> scripts = project.getScripts();
+			logTimeMillies("execute: got scripts", logDate, log, Level.DEBUG);
 			WorkflowUtilities.processFieldScripts(scripts,
 					WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, null, errors,
 					(ValidatorForm) form);
+			logTimeMillies("execute: processed field scripts EVENT_FIELD_ONPRESUBMIT", logDate, log, Level.DEBUG);
 
 			previousStatus = issue.getStatus();
 			if (UserUtilities.hasPermission(userPermissions, project.getId(),
 					UserUtilities.PERMISSION_EDIT_FULL)) {
 				if (log.isDebugEnabled()) {
-					log.debug("execute: edit full, " + issue);
+					log.debug("execute: process full, " + issue);
 				}
 				issue = processFullEdit(issue, project, currUser, userPermissions,
-						locale, issueForm, issueService);
+						getLocale(request), issueForm, issueService);
+				logTimeMillies("execute: processed fulledit", logDate, log, Level.DEBUG);
 			} else {				
 				if (log.isDebugEnabled()) {
-					log.debug("execute: edit limited, " + issue);
+					log.debug("execute: process limited, " + issue);
 				}
 				issue = processLimitedEdit(issue, project, currUser, userPermissions,
-						locale, issueForm, issueService);
+						getLocale(request), issueForm, issueService);
+				logTimeMillies("execute: processed limited edit", logDate, log, Level.DEBUG);
 			}
 
 			if (log.isDebugEnabled()) {
@@ -166,11 +179,13 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 			sendNotification(issue.getId(), previousStatus,
 					getBaseURL(request), notificationService);
+			logTimeMillies("execute: sent notification", logDate, log, Level.DEBUG);
 			session.removeAttribute(Constants.ISSUE_KEY);
 
 			WorkflowUtilities.processFieldScripts(scripts,
 					WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, null, errors,
 					(ValidatorForm) form);
+			logTimeMillies("execute: processed field scripts EVENT_FIELD_ONPOSTSUBMIT", logDate, log, Level.DEBUG);
 
 			ProjectService projectService = getITrackerServices()
 					.getProjectService();
@@ -184,6 +199,8 @@ public class EditIssueAction extends ItrackerBaseAction {
 			log.error("execute: Exception processing form data", e);
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.system"));
+		} finally {
+			logTimeMillies("execute: processed", startDate, log, Level.DEBUG);
 		}
 
 		if (!errors.isEmpty()) {

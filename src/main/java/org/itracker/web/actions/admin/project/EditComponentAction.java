@@ -19,7 +19,6 @@
 package org.itracker.web.actions.admin.project;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,6 +43,13 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ComponentForm;
 import org.itracker.web.util.Constants;
 
+
+/**
+ * Action for edit a component entity
+ * 
+ * @author ranks
+ *
+ */
 public class EditComponentAction extends ItrackerBaseAction {
 	private static final Logger log = Logger
 			.getLogger(EditComponentAction.class);
@@ -53,12 +59,6 @@ public class EditComponentAction extends ItrackerBaseAction {
 			throws ServletException, IOException {
 
 		ActionErrors errors = new ActionErrors();
-
-		// super.executeAlways(mapping,form, request, response);
-		//        
-		// if (!isLoggedIn(request, response)) {
-		// return mapping.findForward("login");
-		// }
 
 		if (!isTokenValid(request)) {
 			log.debug("Invalid request token while editing component.");
@@ -103,13 +103,13 @@ public class EditComponentAction extends ItrackerBaseAction {
 									.getName());
 							component.setDescription(componentForm
 									.getDescription());
-							component.setCreateDate(new Date());
+//							component.setCreateDate(new Date());
 							component = projectService.addProjectComponent(
 									project.getId(), component);
 						} else if ("update".equals(action)) {
 							component = projectService
 									.getProjectComponent(componentForm.getId());
-							component.setLastModifiedDate(new Date());
+//							component.setLastModifiedDate(new Date());
 							component.setName(componentForm.getName());
 							component.setDescription(componentForm
 									.getDescription());

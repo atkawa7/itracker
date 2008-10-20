@@ -319,6 +319,10 @@ public class LoginAction extends ItrackerBaseAction {
 
 	public User setupSession(String login, HttpServletRequest request,
 			HttpServletResponse response) {
+		if (null == login) {
+			log.warn("setupSession: null login", (log.isDebugEnabled()? new RuntimeException(): null));
+			throw new IllegalArgumentException("null login");
+		}
 		UserService userService = getITrackerServices().getUserService();
 		User user = userService.getUserByLogin(login);
 		if (user != null) {
@@ -344,7 +348,8 @@ public class LoginAction extends ItrackerBaseAction {
 	public User setupSession(User user, String encPassword,
 			HttpServletRequest request, HttpServletResponse response) {
 		if (user == null) {
-			return null;
+			log.warn("setupSession: null user", (log.isDebugEnabled()? new RuntimeException(): null));
+			throw new IllegalArgumentException("null user");
 		}
 
 		UserService userService = getITrackerServices().getUserService();

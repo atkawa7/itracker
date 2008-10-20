@@ -43,7 +43,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
-import org.apache.struts.validator.ValidatorForm;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
@@ -76,7 +75,6 @@ public class CreateIssueAction extends ItrackerBaseAction {
 	public CreateIssueAction() {
 	}
 
-	@SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -204,6 +202,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 						}
 					}
 
+					// FIXME this is absolutely complex, unreadable code. why do it, what does it do, can we keep it simple?
 					List<IssueField> issueFields = new ArrayList<IssueField>();
 					Map<String, String> customFields = issueForm.getCustomFields();
 
@@ -226,8 +225,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 										&& fieldValue.trim().length() != 0) {
 									IssueField issueField = new IssueField(
 											issue, field);
-									issueField.setValue(fieldValue, locale,
-											bundle);
+									issueField.setValue(fieldValue, bundle);
 									issueFieldsVector.add(issueField);
 								}
 							} catch (Exception e) {
