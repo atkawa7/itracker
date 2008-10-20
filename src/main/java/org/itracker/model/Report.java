@@ -19,7 +19,9 @@
 package org.itracker.model;
 
 import java.io.InputStream;
+import java.util.Comparator;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
@@ -33,6 +35,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class Report extends AbstractEntity {
 
+	public static final Comparator<Report> NAME_COMPARATOR = new NameComparator();
 	/**
 	 * 
 	 */
@@ -123,10 +126,18 @@ public class Report extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id).append("name", name).append(
-				"description", description).append("nameKey", nameKey).append(
-				"reportType", reportType).append("dataType", dataType)
-				.toString();
+		return new ToStringBuilder(this).append("id", getId()).append("name",
+				getName()).append("description", getDescription()).append(
+				"nameKey", getNameKey()).append("reportType", getReportType())
+				.append("dataType", getDataType()).toString();
+	}
+
+	private static final class NameComparator implements Comparator<Report> {
+		public int compare(Report o1, Report o2) {
+			return new CompareToBuilder().append(o1.getName(), o2.getName())
+					.append(o1.getNameKey(), o2.getNameKey()).append(
+							o1.getId(), o2.getId()).toComparison();
+		}
 	}
 
 }

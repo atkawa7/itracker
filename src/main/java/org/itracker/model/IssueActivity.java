@@ -134,34 +134,10 @@ public class IssueActivity extends AbstractEntity {
 		this.notificationSent = sent;
 	}
 
-	// public boolean equals(Object obj) {
-	// if (this == obj) {
-	// return true;
-	// }
-	//        
-	// if (obj instanceof IssueActivity) {
-	// final IssueActivity other = (IssueActivity)obj;
-	//            
-	// return this.issue.equals(other.issue)
-	// && this.user.equals(other.user)
-	// && (this.activityType == other.activityType)
-	// && (this.createDate == null) ? (other.createDate == null)
-	// : this.createDate.equals(other.createDate);
-	// }
-	// return false;
-	// }
-	//    
-	// public int hashCode() {
-	// return this.issue.hashCode()
-	// + this.user.hashCode()
-	// + this.activityType.code
-	// + ((this.createDate == null) ? 0 : this.createDate.hashCode());
-	// }
-
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id)
-				.append("issue", issue).append("user", user).append("type",
-						activityType).append("createDate", createDate)
+		return new ToStringBuilder(this).append("id", getId())
+				.append("issue", getIssue()).append("user", getUser()).append("type",
+						getActivityType()).append("createDate", getCreateDate())
 				.toString();
 
 	}

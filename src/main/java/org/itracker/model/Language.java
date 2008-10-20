@@ -115,8 +115,8 @@ public class Language extends AbstractEntity {
 	//    
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id).append("resourceKey",
-				resourceKey).append("locale", locale).toString();
+		return new ToStringBuilder(this).append("id", getId()).append("resourceKey",
+				getResourceKey()).append("locale", getLocale()).append("value", getResourceValue()).toString();
 	}
 
 }

@@ -230,57 +230,16 @@ public class Project extends AbstractEntity implements Comparable<Entity> {
 		this.scripts = getScripts;
 	}
 
-	// /**
-	// * Two project instances are equal if they have the same name.
-	// */
-	// @Override
-	// public boolean equals(Object obj) {
-	// if (this == obj) {
-	// return true;
-	// }
-	// if (!super.equals(obj)) {
-	// return false;
-	// }
-	//        
-	// // if (obj instanceof Project) {
-	// // final Project other = (Project)obj;
-	// //
-	// // return this.name.equals(other.name);
-	// // }
-	// return true;
-	// }
-	//    
-	// /**
-	// * Overridden to match implementation of method {@link #equals(Object)}.
-	// */
-	// @Override
-	// public int hashCode() {
-	// return this.name.hashCode();
-	// }
-
 	/**
 	 * @return <tt>Project [id=id, name=name]</tt>
 	 */
 	@Override
 	public String toString() {
 
-		return new ToStringBuilder(this).append("id", this.id).append("name",
-				this.name).append("description", description).toString();
+		return new ToStringBuilder(this).append("id", this.getId()).append("name",
+				this.getName()).append("description", getDescription()).toString();
 	}
 
-	// /**
-	// * Compares 2 projects by name.
-	// */
-	// public int compareTo(Project other) {
-	// if (equals(other)) {
-	// return 0;
-	// }
-	// String name = this.name;
-	// if (name == null) {
-	// name = "";
-	// }
-	// return name.compareTo((null==other.name)? "": other.name);
-	// }
 	/**
 	 * Comparator for comparing projects by name
 	 */
@@ -290,8 +249,8 @@ public class Project extends AbstractEntity implements Comparable<Entity> {
 		 */
 		private static final long serialVersionUID = 1L;
 		public int compare(Project o1, Project o2) {
-			return new CompareToBuilder().append(o1.name, o2.name).append(
-					o1.description, o2.description).toComparison();
+			return new CompareToBuilder().append(o1.getName(), o2.getName()).append(
+					o1.getId(), o2.getId()).toComparison();
 		}
 	}
 }

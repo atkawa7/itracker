@@ -97,34 +97,12 @@ public class IssueRelation extends AbstractEntity {
 		this.matchingRelationId = matchingRelationId;
 	}
 
-	// @Override
-	// public boolean equals(Object obj) {
-	// if (this == obj) {
-	// return true;
-	// }
-	//        
-	// if (obj instanceof IssueRelation) {
-	// final IssueRelation other = (IssueRelation)obj;
-	//            
-	// return this.issue.equals(other.issue)
-	// && this.relatedIssue.equals(other.relatedIssue)
-	// && this.type == other.type;
-	// }
-	// return false;
-	// }
-	//    
-	// @Override
-	// public int hashCode() {
-	// return this.issue.hashCode()
-	// + this.relatedIssue.hashCode()
-	// + this.type;
-	// }
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id)
-				.append("issue", issue).append("relatedIssue", relatedIssue)
-				.append("type", type).toString();
+		return new ToStringBuilder(this).append("id", getId())
+				.append("issue", getIssue()).append("relatedIssue", getRelatedIssue())
+				.append("type", getRelationType()).toString();
 	}
 
 	public static enum Type {

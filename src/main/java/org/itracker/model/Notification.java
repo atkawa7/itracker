@@ -108,9 +108,13 @@ public class Notification extends AbstractEntity implements Comparable<Entity> {
 	 * @return
 	 */
 	public int getNotificationRole() {
-		return role.code;
+		return getRole().code;
 	}
 
+	/**
+	 * @deprecated
+	 * @param role
+	 */
 	public void setNotificationRole(int role) {
 
 		this.setRole(getRoleForCode(role));
@@ -133,32 +137,11 @@ public class Notification extends AbstractEntity implements Comparable<Entity> {
 		this.role = role;
 	}
 
-	// @Override
-	// public boolean equals(Object obj) {
-	// if (this == obj) {
-	// return true;
-	// }
-	//
-	// if (obj instanceof Notification) {
-	// final Notification other = (Notification) obj;
-	//
-	// return this.issue.equals(other.issue)
-	// && this.user.equals(other.user) && this.role == other.role;
-	// }
-	// return false;
-	// }
-	//
-	// @Override
-	// public int hashCode() {
-	// return this.issue.hashCode() + this.user.hashCode()
-	// + this.role.hashCode();
-	// }
-
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id)
-				.append("issue", issue).append("user", user).append("role",
-						role).toString();
+		return new ToStringBuilder(this).append("id", getId())
+				.append("issue", getIssue()).append("user", getUser()).append("role",
+						getRole()).toString();
 	}
 
 	/**
@@ -174,8 +157,8 @@ public class Notification extends AbstractEntity implements Comparable<Entity> {
 		 */
 		private static final long serialVersionUID = 1L;
 		public int compare(Notification o1, Notification o2) {
-			return new CompareToBuilder().append(o1.issue, o2.issue).append(
-					o1.user, o2.user).append(o1.role, o2.role).toComparison();
+			return new CompareToBuilder().append(o1.getIssue(), o2.getIssue()).append(
+					o1.getUser(), o2.getUser()).append(o1.getRole().getCode(), o2.getRole().getCode()).toComparison();
 		}
 	}
 
@@ -186,7 +169,7 @@ public class Notification extends AbstractEntity implements Comparable<Entity> {
 		private static final long serialVersionUID = 1L;
 
 		public int compare(Notification a, Notification b) {
-			return User.NAME_COMPARATOR.compare(a.user, b.user);
+			return User.NAME_COMPARATOR.compare(a.getUser(), b.getUser());
 		}
 
 	}
@@ -198,7 +181,7 @@ public class Notification extends AbstractEntity implements Comparable<Entity> {
 		private static final long serialVersionUID = 1L;
 
 		public int compare(Notification a, Notification b) {
-			return a.role.code - b.role.code;
+			return new CompareToBuilder().append(a.getRole().getCode(), b.getRole().getCode()).toComparison();
 		}
 
 	}
@@ -234,6 +217,8 @@ public class Notification extends AbstractEntity implements Comparable<Entity> {
 		public Integer getCode() {
 			return this.code;
 		}
+		
+		
 
 	}
 

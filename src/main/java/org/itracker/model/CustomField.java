@@ -71,6 +71,7 @@ import org.itracker.services.util.CustomFieldUtilities;
  */
 public class CustomField extends AbstractEntity implements Comparable<Entity> {
 
+	public static final Comparator<CustomField> NAME_COMPARATOR = new NameComparator();
 	/**
 	 * 
 	 */
@@ -257,31 +258,30 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 	 *            the locale to use for the names
 	 */
 	public void setLabels(Locale locale) {
-		@SuppressWarnings("unused")
-		String localeCode = locale.toString();
+//		String localeCode = locale.toString();
 
-		this.name = CustomFieldUtilities.getCustomFieldName(getId(), locale);
+		setName(CustomFieldUtilities.getCustomFieldName(getId(), locale));
 
-		final Iterator<CustomFieldValue> iter = this.options.iterator();
+		final Iterator<CustomFieldValue> iter = this.getOptions().iterator();
 
 		while (iter.hasNext()) {
 			CustomFieldValue option = iter.next();
 
 			option.setName(CustomFieldUtilities.getCustomFieldOptionName(
-					this.id, option.getId(), locale));
+					this.getId(), option.getId(), locale));
 		}
 
 		if (isSortOptionsByName()) {
 			// Specify ordering other than the natural ordering of
 			// CustomFieldValue.
-			Collections.sort(this.options, CustomFieldValue.NAME_COMPARATOR);
+			Collections.sort(this.getOptions(), CustomFieldValue.NAME_COMPARATOR);
 		}
 	}
 
 	@Override
 	public String toString() {
 
-		return new ToStringBuilder(this).append("id", id).append("name", name)
+		return new ToStringBuilder(this).append("id", getId()).append("name", getName())
 				.toString();
 	}
 
@@ -416,7 +416,7 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 		private static final long serialVersionUID = 1L;
 
 		public int compare(CustomField o1, CustomField o2) {
-			return new CompareToBuilder().append(o1.name, o2.name)
+			return new CompareToBuilder().append(o1.getName(), o2.getName()).append(o1.getId(), o2.getId())
 					.toComparison();
 		}
 

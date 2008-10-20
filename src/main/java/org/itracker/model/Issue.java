@@ -291,7 +291,7 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
     
     @Override
     public String toString() {
-    	return new ToStringBuilder(this).append("id", id).append("description", description).append("owner", owner).append("severity", severity).append("status", status).toString();
+    	return new ToStringBuilder(this).append("id", getId()).append("description", getDescription()).append("owner", getOwner()).append("severity", getSeverity()).append("status", getStatus()).toString();
     }
     
     
@@ -305,7 +305,7 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
 		private static final long serialVersionUID = 1L;
 
         public int compare(Issue a, Issue b) {
-            return new CompareToBuilder().append(a.status, b.status).append(a.severity, b.severity).append(a, b).toComparison();
+            return new CompareToBuilder().append(a.getStatus(), b.getStatus()).append(a.getSeverity(), b.getSeverity()).append(a.getId(), b.getId()).toComparison();
         }
         
     }
@@ -317,7 +317,7 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
 		private static final long serialVersionUID = 1L;
 
         public int compare(Issue a, Issue b) {
-        	return new CompareToBuilder().append(a.project, b.project).append(a.status, b.status).append(a, b).toComparison();
+        	return new CompareToBuilder().append(a.getProject(), b.getProject(), Project.PROJECT_COMPARATOR).append(a.getStatus(), b.getStatus()).append(a.getId(), b.getId()).toComparison();
         }
         
     }
@@ -330,7 +330,7 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
 
         public int compare(Issue a, Issue b) {
         	
-        	return new CompareToBuilder().append(a.owner, b.owner).append(a.status, b.status).append(a, b).toComparison();
+        	return new CompareToBuilder().append(a.getOwner(), b.getOwner(), User.NAME_COMPARATOR).append(a.getStatus(), b.getStatus()).append(a.getId(), b.getId()).toComparison();
 
         }
     }
@@ -343,7 +343,7 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
         
         public int compare(Issue a, Issue b) {
         	
-        	return new CompareToBuilder().append(a.getSeverity(), b.getSeverity()).append(a.getStatus(), b.getStatus()).append(a, b).toComparison();
+        	return new CompareToBuilder().append(a.getSeverity(), b.getSeverity()).append(a.getStatus(), b.getStatus()).append(a.getId(), b.getId()).toComparison();
         }
         
     }

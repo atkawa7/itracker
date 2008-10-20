@@ -154,10 +154,10 @@ public class IssueAttachment extends AbstractEntity implements
 	}
 
 	public String getFileExtension() {
-		final int lastIndex = this.originalFileName.lastIndexOf('.');
+		final int lastIndex = this.getOriginalFileName().lastIndexOf('.');
 
 		if (lastIndex > 0) {
-			return this.originalFileName.substring(lastIndex);
+			return this.getOriginalFileName().substring(lastIndex);
 		}
 		return "";
 	}
@@ -199,35 +199,11 @@ public class IssueAttachment extends AbstractEntity implements
 	}
 
 
-
-//	@Override
-//	public boolean equals(Object obj) {
-//
-//		if (this == obj) {
-//			return true;
-//		}
-//
-//		if (obj instanceof IssueAttachment) {
-//
-//			final IssueAttachment other = (IssueAttachment) obj;
-//			return new EqualsBuilder().append(issue, other.issue).append(
-//					originalFileName, other.originalFileName).isEquals();
-//
-//		}
-//		return false;
-//	}
-//
-//	@Override
-//	public int hashCode() {
-//		return new HashCodeBuilder().append(issue).append(originalFileName)
-//				.toHashCode();
-//	}
-
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id)
-				.append("issue", issue).append("originalfileName",
-						originalFileName).toString();
+		return new ToStringBuilder(this).append("id", getId())
+				.append("issue", getIssue()).append("originalfileName",
+						getOriginalFileName()).toString();
 	}
 
 	/**
@@ -240,7 +216,7 @@ public class IssueAttachment extends AbstractEntity implements
 		private static final long serialVersionUID = 1L;
 
 		public int compare(IssueAttachment a, IssueAttachment b) {
-			return new CompareToBuilder().append(a.size, b.size).toComparison();
+			return new CompareToBuilder().append(a.getSize(), b.getSize()).append(a.getOriginalFileName(), b.getOriginalFileName()).append(a.getCreateDate(), b.getCreateDate()).toComparison();
 		}
 
 	}
@@ -256,8 +232,8 @@ public class IssueAttachment extends AbstractEntity implements
 		private static final long serialVersionUID = 1L;
 
 		public int compare(IssueAttachment o1, IssueAttachment o2) {
-				return new CompareToBuilder().append(o1.issue, o2.issue).append(
-						o1.originalFileName, o1.originalFileName).toComparison();
+				return new CompareToBuilder().append(o1.getIssue(), o2.getIssue()).append(
+						o1.getOriginalFileName(), o1.getOriginalFileName()).toComparison();
 			
 		}
 		

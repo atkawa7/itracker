@@ -20,8 +20,10 @@ package org.itracker.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.itracker.services.util.SystemConfigurationUtilities;
 
@@ -30,6 +32,8 @@ import org.itracker.services.util.SystemConfigurationUtilities;
  */
 public class SystemConfiguration extends AbstractEntity {
 
+	
+	public static final Comparator<SystemConfiguration> VERSION_COMPARATOR = new SystemConfigurationComparator();
 	/**
 	 * 
 	 */
@@ -130,9 +134,16 @@ public class SystemConfiguration extends AbstractEntity {
 
 	public String toString() {
 
-		return new ToStringBuilder(this).append("id", id).append("version", version).append(
-				"resolutions", resolutions).append("severities", severities)
-				.append("statuses", statuses).toString();
+		return new ToStringBuilder(this).append("id", getId()).append("version", getVersion()).toString();
 
+	}
+	
+	private static final class SystemConfigurationComparator implements
+			Comparator<SystemConfiguration> {
+		public int compare(SystemConfiguration o1, SystemConfiguration o2) {
+			return new CompareToBuilder().append(o1.getVersion(),
+					o2.getVersion()).append(o1.getId(), o2.getId())
+					.toComparison();
+		}
 	}
 }

@@ -248,9 +248,9 @@ public class Configuration extends AbstractEntity implements Comparable<Entity> 
 	 */
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id).append("type", type)
-				.append("name", name).append("version", version).append(
-						"value", value).toString();
+		return new ToStringBuilder(this).append("id", getId()).append("type", getType())
+				.append("name", getName()).append("version", getVersion()).append(
+						"value", getValue()).toString();
 
 	}
 
@@ -262,21 +262,10 @@ public class Configuration extends AbstractEntity implements Comparable<Entity> 
 		private static final long serialVersionUID = 1L;
 
 		public int compare(Configuration o1, Configuration o2) {
-			return new CompareToBuilder().append(o1.order, o2.order)
+			return new CompareToBuilder().append(o1.getOrder(), o2.getOrder()).append(o1.getValue(), o2.getValue())
 					.toComparison();
 		}
 
-		// /**
-		// * Compares configuration items by order, value.
-		// */
-		// public int compareTo(Configuration other) {
-		// final int orderComparison = this.order - other.order;
-		//            
-		// if (orderComparison == 0) {
-		// return this.value.compareTo(other.value);
-		// }
-		// return orderComparison;
-		// }
 
 	}
 

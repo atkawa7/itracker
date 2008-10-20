@@ -155,10 +155,10 @@ public class ImportDataModel extends AbstractEntity {
 	}
 
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id).append(
-				"dataModels.length", dataModels.length).append("reuseUsers",
-				reuseUsers).append("reuseProjects", reuseProjects).append(
-				"reuseUsers", reuseUsers).append("reuseFields", reuseFields)
-				.append("createPasswords", createPasswords).toString();
+		return new ToStringBuilder(this).append("id", getId()).append(
+				"dataModels.length", getData().length).append("reuseUsers",
+				getReuseUsers()).append("reuseProjects", getReuseProjects()).append(
+				"reuseFields", getReuseFields()).append("reuseConfig", getReuseConfig())
+				.append("createPasswords", getCreatePasswords()).toString();
 	}
 }

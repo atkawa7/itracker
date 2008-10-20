@@ -244,8 +244,8 @@ public class Component extends AbstractEntity implements Comparable<Entity> {
 	 */
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id).append("project",
-				project).append("name", name).toString();
+		return new ToStringBuilder(this).append("id", getId()).append("project",
+				getProject()).append("name", getName()).toString();
 	}
 
 	// /**
@@ -278,7 +278,8 @@ public class Component extends AbstractEntity implements Comparable<Entity> {
 		private static final long serialVersionUID = 1L;
 
 		public int compare(Component a, Component b) {
-			return a.name.compareTo(b.name);
+			return new CompareToBuilder().append(a.getName(), b.getName()).append(a.getId(), b.getId()).toComparison();
+
 		}
 
 	}
@@ -291,8 +292,8 @@ public class Component extends AbstractEntity implements Comparable<Entity> {
 		private static final long serialVersionUID = 1L;
 
 		public int compare(Component o1, Component o2) {
-			return new CompareToBuilder().append(o1.project, o2.project)
-					.append(o1.name, o2.name).toComparison();
+			return new CompareToBuilder().append(o1.getProject(), o2.getProject())
+					.append(o1.getName(), o2.getName()).toComparison();
 		}
 	}
 

@@ -119,35 +119,11 @@ public class Permission extends AbstractEntity {
 		this.project = project;
 	}
 
-	// @Override
-	// public boolean equals(Object obj) {
-	// if (this == obj) {
-	// return true;
-	// }
-	//        
-	// if (obj instanceof Permission) {
-	// final Permission other = (Permission)obj;
-	//            
-	// return (this.type == other.type)
-	// && this.user.equals(other.user)
-	// && ( (this.project == null)
-	// ? (other.project == null)
-	// : this.project.equals(other.project));
-	// }
-	// return false;
-	// }
-	//
-	// @Override
-	// public int hashCode() {
-	// return this.type
-	// + this.user.hashCode()
-	// + ((this.project == null) ? 0 : this.project.hashCode());
-	// }
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id).append("type", type)
-				.append("user", user).append("project", project).toString();
+		return new ToStringBuilder(this).append("id", getId()).append("type", getPermissionType())
+				.append("user", getUser()).append("project", getProject()).toString();
 	}
 
 }

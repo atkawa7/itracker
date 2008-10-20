@@ -39,6 +39,11 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public abstract class AbstractEntity implements Entity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public static final Comparator<Entity> ID_COMPARATOR = new IdComparator();
 
 	public static final Comparator<AbstractEntity> CREATE_DATE_COMPARATOR = new CreateDateComparator();
@@ -46,13 +51,13 @@ public abstract class AbstractEntity implements Entity {
 	public static final Comparator<AbstractEntity> LAST_MODIFIED_DATE_COMPARATOR = new LastModifiedDateComparator();
 
 	/** System ID */
-	protected Integer id;
+	private Integer id;
 
 	/** Creation date and time. */
-	protected Date createDate = new Date();
+	private Date createDate = new Date();
 
 	/** Last modification date and time. */
-	protected Date lastModifiedDate = new Date();
+	private Date lastModifiedDate = new Date();
 
 	/**
 	 * Default constructor (required by Hibernate).
@@ -136,7 +141,7 @@ public abstract class AbstractEntity implements Entity {
 	 * @return <tt>true</tt> if <code>id</code> is <tt>null</tt>
 	 */
 	public boolean isNew() {
-		return (this.id == null);
+		return (this.getId() == null);
 	}
 
 	@Override
@@ -219,14 +224,20 @@ public abstract class AbstractEntity implements Entity {
 		if (this.equals(o)) {
 			return 0;
 		}
-		return new CompareToBuilder().append(getClass(), o.getClass()).append(
+		return new CompareToBuilder().append(getClass(), o.getClass(), AbstractEntity.CLASS_COMPARATOR).append(
 				getId(), o.getId()).toComparison();
 	}
 
 	@Override
 	public final int hashCode() {
-		return new HashCodeBuilder().append(getId()).toHashCode();
+		return new HashCodeBuilder().append(getClass()).append(getId()).toHashCode();
 
 	}
+	
+	private static final Comparator<Class<?>> CLASS_COMPARATOR = new Comparator<Class<?>>() {
+		public int compare(Class<?> o1, Class<?> o2) {
+			return new CompareToBuilder().append(o1.getSimpleName(), o2.getSimpleName()).append(o1.hashCode(), hashCode()).toComparison();
+		}
+	};
 
 }

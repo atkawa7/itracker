@@ -114,36 +114,15 @@ public class IssueHistory extends AbstractEntity {
 		this.description = description;
 	}
 
-//	@Override
-//	public boolean equals(Object obj) {
-//		if (super.equals(obj)) {
-//			return true;
-//		}
-//
-//		if (obj instanceof IssueHistory) {
-//
-//			final IssueHistory other = (IssueHistory) obj;
-//			return new EqualsBuilder().append(id, other.id).append(issue,
-//					other.issue).append(creator, other.creator).append(
-//					createDate, other.createDate).isEquals();
-//		}
-//		return false;
-//	}
-//
-//	@Override
-//	public int hashCode() {
-//		return new HashCodeBuilder().append(id).append(issue).append(creator).append(
-//				createDate).toHashCode();
-//	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id)
-				.append("issue", issue).append("creator", creator).append(
-						"createDate", createDate).toString();
+		return new ToStringBuilder(this).append("id", getId())
+				.append("issue", issue).append("creator", getUser()).append(
+						"createDate", getCreateDate()).toString();
 	}
 
-	public static enum Status {
+	public static enum Status  {
 
 		STATUS_REMOVED(-1),
 

@@ -77,13 +77,6 @@ public class IssueField extends AbstractEntity {
 		setCustomField(field);
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public Issue getIssue() {
 		return issue;
@@ -324,8 +317,8 @@ public class IssueField extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id)
-				.append("issue", issue).append("customField", customField)
+		return new ToStringBuilder(this).append("id", getId())
+				.append("issue", getIssue()).append("customField", getCustomField())
 				.toString();
 	}
 

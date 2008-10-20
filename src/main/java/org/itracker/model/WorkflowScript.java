@@ -101,9 +101,9 @@ public class WorkflowScript extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id).append("name", name)
-				.append("event", event).append("numUses", numUses).append(
-						"script", script).toString();
+		return new ToStringBuilder(this).append("id", getId()).append("name", getName())
+				.append("event", getEvent()).append("numberUses", getNumberUses()).append(
+						"script", getScript()).toString();
 	}
 
 }

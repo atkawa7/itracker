@@ -206,42 +206,14 @@ public class Version extends AbstractEntity implements Comparable<Entity> {
 		}
 	}
 
-	// /**
-	// * Compares two versions by their major and minor numbers.
-	// */
-	// public int compareTo(Version other) {
-	// return VERSION_COMPARATOR.compare(this, other);
-	// }
-
-	// /**
-	// * Two versions are equal if they have the same major and minor numbers.
-	// */
-	// @Override
-	// public boolean equals(Object obj) {
-	// if(! (obj instanceof Version)) {
-	// return false;
-	// }
-	// final Version other = (Version) obj;
-	//        
-	// return (this.major == other.major) && (this.minor == other.minor);
-	// }
-	//
-	// /**
-	// * Overridden to match implementation of method {@link #equals(Object) }
-	// */
-	// @Override
-	// public int hashCode() {
-	// return this.major ^ this.minor;
-	// }
-
 	/**
 	 * @return <tt>Version [id=<id>, project=<project>, number=<number>]</tt>
 	 */
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id).append("number",
-				number).append("project", project).append(major).append(minor)
-				.append("status", status).toString();
+		return new ToStringBuilder(this).append("id", getId()).append("number",
+				getNumber()).append("project", getProject()).append(getMajor()).append(getMinor())
+				.append("status", getStatus()).toString();
 	}
 
 	/**
@@ -262,7 +234,6 @@ public class Version extends AbstractEntity implements Comparable<Entity> {
 			setAscending(ascending);
 		}
 
-		@SuppressWarnings("unused")
 		private boolean isAscending() {
 			return ascending;
 		}
@@ -272,10 +243,10 @@ public class Version extends AbstractEntity implements Comparable<Entity> {
 		}
 
 		public int compare(Version a, Version b) {
-			int result = new CompareToBuilder().append(a.major, b.major)
-					.append(a.minor, b.minor).toComparison();
+			int result = new CompareToBuilder().append(a.getNumber(), b.getNumber())
+					.append(a.getMajor(), b.getMajor()).append(a.getMinor(), b.getMinor()).toComparison();
 
-			return (ascending ? result : -result);
+			return (isAscending() ? result : -result);
 		}
 
 	}

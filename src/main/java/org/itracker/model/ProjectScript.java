@@ -21,6 +21,7 @@ package org.itracker.model;
 import java.io.Serializable;
 import java.util.Comparator;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
@@ -30,6 +31,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class ProjectScript extends AbstractEntity {
 
+	public static final CompareByFieldAndPriority FIELD_PRIORITY_COMPARATOR = new CompareByFieldAndPriority();
 	/**
 	 * 
 	 */
@@ -108,21 +110,17 @@ public class ProjectScript extends AbstractEntity {
 		private static final long serialVersionUID = 1L;
 
 		public int compare(ProjectScript a, ProjectScript b) {
-			final int fieldIdComparator = a.fieldId - b.fieldId;
-
-			if (fieldIdComparator == 0) {
-				return a.priority - b.priority;
-			}
-			return fieldIdComparator;
+			
+			return new CompareToBuilder().append(a.getFieldId(), b.getFieldId()).append(a.getPriority(), b.getPriority()).toComparison();
 		}
 
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id).append("script", script).append(
-				"fieldId", fieldId).append("priority", priority).append(
-				"project", project).toString();
+		return new ToStringBuilder(this).append("id", getId()).append("script", getScript()).append(
+				"fieldId", getFieldId()).append("priority", getPriority()).append(
+				"project", getProject()).toString();
 	}
 
 }

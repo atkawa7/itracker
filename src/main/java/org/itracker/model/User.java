@@ -278,34 +278,11 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 		this.projects = projects;
 	}
 
-	// @Override
-	// public boolean equals(Object obj) {
-	// if (this == obj) {
-	// return true;
-	// }
-	//
-	// if (obj instanceof User) {
-	// final User other = (User) obj;
-	//
-	// return this.login.equals(other.login);
-	// }
-	// return false;
-	// }
-	//
-	// @Override
-	// public int hashCode() {
-	// return this.login.hashCode();
-	// }
-
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id)
-				.append("login", login).toString();
+		return new ToStringBuilder(this).append("id", getId())
+				.append("login", getLogin()).toString();
 	}
-
-//	public int compareTo(User other) {
-//		return this.login.compareTo(other.login);
-//	}
 
 	/**
 	 * Compares 2 users by last and first name.
@@ -313,15 +290,15 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 	private static class NameComparator implements Comparator<User> {
 
 		public int compare(User a, User b) {
-			return new CompareToBuilder().append(a.lastName, b.lastName)
-					.append(a.firstName, b.firstName).toComparison();
+			return new CompareToBuilder().append(a.getLastName(), b.getLastName())
+			.append(a.getFirstName(), b.getFirstName()).append(a.getLogin(), b.getLogin()).toComparison();
 		}
 
 	}
 
 	public static final class LoginComparator implements Comparator<User> {
 		public int compare(User o1, User o2) {
-			return new CompareToBuilder().append(o1.login, o2.login)
+			return new CompareToBuilder().append(o1.getLogin(), o2.getLogin())
 					.toComparison();
 		}
 	}

@@ -139,14 +139,14 @@ public class UserPreferences extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", id).append("user", user)
-				.append("userLocale", userLocale).append("useTextActions",
-						useTextActions).append("saveLogin", saveLogin).append(
-						"rememberLastSearch", rememberLastSearch).append(
-						"hiddenIndexSections", hiddenIndexSections).append(
-						"numItemsOnIndex", numItemsOnIndex).append(
-						"numItemsOnIssueList", numItemsOnIssueList).append(
-						"showClosedOnIssueList", showClosedOnIssueList)
+		return new ToStringBuilder(this).append("id", getId()).append("user", getUser())
+				.append("userLocale", getUserLocale()).append("useTextActions",
+						getUseTextActions()).append("saveLogin", getSaveLogin()).append(
+						"rememberLastSearch", getRememberLastSearch()).append(
+						"hiddenIndexSections", getHiddenIndexSections()).append(
+						"numItemsOnIndex", getNumItemsOnIndex()).append(
+						"numItemsOnIssueList", getNumItemsOnIssueList()).append(
+						"showClosedOnIssueList", getShowClosedOnIssueList())
 				.toString();
 	}
 
