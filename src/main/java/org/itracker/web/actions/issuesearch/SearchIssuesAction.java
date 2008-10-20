@@ -53,28 +53,19 @@ public class SearchIssuesAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(SearchIssuesAction.class);
 	
 
-    
-    @SuppressWarnings("unchecked")
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
         
         String pageTitleKey = "itracker.web.search.title";
         String pageTitleArg = "";
         request.setAttribute("pageTitleKey",pageTitleKey);
         request.setAttribute("pageTitleArg",pageTitleArg);
         
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
-        
         HttpSession session = request.getSession();
         
         User user = (User) session.getAttribute(Constants.USER_KEY);
         Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
-        if(user == null || userPermissions == null) {
-            return mapping.findForward("login");
-        }
+
         
         try {
             
@@ -145,8 +136,8 @@ public class SearchIssuesAction extends ItrackerBaseAction {
             }
             
             String textValue = (String) PropertyUtils.getSimpleProperty(form, "textphrase");
-            if(textValue != null && ! textValue.equals("")) {
-                isqm.setText(textValue);
+            if(textValue != null && textValue.trim().length() > 0) {
+                isqm.setText(textValue.trim());
             } else {
                 isqm.setText(null);
             }
@@ -199,24 +190,30 @@ public class SearchIssuesAction extends ItrackerBaseAction {
             
             String orderBy = (String) PropertyUtils.getSimpleProperty(form, "orderBy");
             if(orderBy != null && ! orderBy.equals("")) {
+            	if (log.isDebugEnabled()) {
+            		log.debug("processQueryParameters: set orderBy: " + orderBy);
+            	}
                 isqm.setOrderBy(orderBy);
             }
             
             Integer type = (Integer) PropertyUtils.getSimpleProperty(form, "type");
             if(type != null) {
+            	if (log.isDebugEnabled()) {
+            		log.debug("processQueryParameters: set type: " + type);
+            	}
                 isqm.setType(type);
             }
         } catch(RuntimeException e) {
-            log.debug("Unable to parse search query parameters: " + e.getMessage(), e);
+            log.error("processQueryParameters: Unable to parse search query parameters: " + e.getMessage(), e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidsearchquery"));
         } catch (IllegalAccessException e) {
-            log.debug("Unable to parse search query parameters: " + e.getMessage(), e);
+            log.error("processQueryParameters: Unable to parse search query parameters: " + e.getMessage(), e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidsearchquery"));
 		} catch (InvocationTargetException e) {
-            log.debug("Unable to parse search query parameters: " + e.getMessage(), e);
+            log.error("processQueryParameters: Unable to parse search query parameters: " + e.getMessage(), e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidsearchquery"));
 		} catch (NoSuchMethodException e) {
-            log.debug("Unable to parse search query parameters: " + e.getMessage(), e);
+            log.error("processQueryParameters: Unable to parse search query parameters: " + e.getMessage(), e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidsearchquery"));
 		}
         
