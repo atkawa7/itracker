@@ -498,71 +498,71 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
      * fix for the fact that IssueSearchQuery handles ids and not objects
      */
     public List<Issue> query(
-            IssueSearchQuery queryModel,
+            IssueSearchQuery searchQuery,
             final User user,
             final Map<Integer, Set<PermissionType>> userPermissions) {
 
         Criteria criteria = getSession().createCriteria(Issue.class);
 
         // projects
-        Collection projects = queryModel.getProjectsObjects(projectDAO);
+        Collection projects = searchQuery.getProjectsObjects(projectDAO);
 
         if (projects.size() > 0) {
             criteria.add(Restrictions.in("project", projects));
         }
 
         // severities
-        if (queryModel.getSeverities().size() > 0) {
-            criteria.add(Restrictions.in("severity", queryModel.getSeverities()));
+        if (searchQuery.getSeverities().size() > 0) {
+            criteria.add(Restrictions.in("severity", searchQuery.getSeverities()));
         }
 
         // status
-        if (queryModel.getStatuses().size() > 0) {
-            criteria.add(Restrictions.in("status", queryModel.getStatuses()));
+        if (searchQuery.getStatuses().size() > 0) {
+            criteria.add(Restrictions.in("status", searchQuery.getStatuses()));
         }
 
         // componentes
-        if (queryModel.getComponents().size() > 0) {
-            criteria.add(Restrictions.in("components", queryModel.getComponents()));
+        if (searchQuery.getComponents().size() > 0) {
+            criteria.add(Restrictions.in("components", searchQuery.getComponents()));
         }
 
         // versions
-        if (queryModel.getVersions().size() > 0) {
-            criteria.add(Restrictions.in("version", queryModel.getVersions()));
+        if (searchQuery.getVersions().size() > 0) {
+            criteria.add(Restrictions.in("version", searchQuery.getVersions()));
         }
 
         // contributor
-        if (queryModel.getContributor() != null) {
-            criteria.add(Restrictions.eq("contributor", queryModel.getContributor()));
+        if (searchQuery.getContributor() != null) {
+            criteria.add(Restrictions.eq("contributor", searchQuery.getContributor()));
         }
 
         // creator
-        if (queryModel.getCreator() != null) {
-            criteria.add(Restrictions.eq("creator", queryModel.getCreator()));
+        if (searchQuery.getCreator() != null) {
+            criteria.add(Restrictions.eq("creator", searchQuery.getCreator()));
         }
 
         // owner
-        if (queryModel.getOwner() != null) {
-            criteria.add(Restrictions.eq("owner", queryModel.getOwner()));
+        if (searchQuery.getOwner() != null) {
+            criteria.add(Restrictions.eq("owner", searchQuery.getOwner()));
         }
 
         // description and history
-        if (queryModel.getText() != null && !queryModel.getText().equals("")) {
+        if (searchQuery.getText() != null && !searchQuery.getText().equals("")) {
             criteria.createAlias("history", "history").
                     add(Restrictions.or(
-                            Restrictions.ilike("description", "%" + queryModel.getText() + "%"),
-                            Restrictions.ilike("history.description", "%" + queryModel.getText() + "%")
+                            Restrictions.ilike("description", "%" + searchQuery.getText() + "%"),
+                            Restrictions.ilike("history.description", "%" + searchQuery.getText() + "%")
                     ));
         }
 
         // resolution
-        if (queryModel.getResolution() != null) {
-            criteria.add(Restrictions.eq("resolution", queryModel.getResolution()));
+        if (searchQuery.getResolution() != null) {
+            criteria.add(Restrictions.eq("resolution", searchQuery.getResolution()));
         }
 
         // resolution
-        if (queryModel.getTargetVersion() != null) {
-            criteria.add(Restrictions.eq("targetVersion", queryModel.getTargetVersion()));
+        if (searchQuery.getTargetVersion() != null) {
+            criteria.add(Restrictions.eq("targetVersion", searchQuery.getTargetVersion()));
         }
 
         Collection list = criteria.list();
@@ -574,10 +574,10 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
             }
         });
 
-        List sortedList = new LinkedList(list);
+        List<Issue> sortedList = new LinkedList(list);
 
         // sort
-        String order = queryModel.getOrderBy();
+        String order = searchQuery.getOrderBy();
         if ("id".equals(order)) {
             Collections.sort(sortedList, Issue.ID_COMPARATOR);
         } else if ("sev".equals(order)) {
