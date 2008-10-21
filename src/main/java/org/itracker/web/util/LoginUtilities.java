@@ -357,9 +357,6 @@ public class LoginUtilities {
 					}
 				}
 			}
-			if (logger.isDebugEnabled()) {
-				logger.debug("setupSession: calling setupSession(" + user + "," + encPassword);
-			}
 
 			return setupSession(user, encPassword, request, response);
 		}
