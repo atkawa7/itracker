@@ -46,6 +46,17 @@
       </roles>
       <timezone>1</timezone>
     </developer>
+    <developer>
+    	<id>MarkyGoldstein</id>
+    	<name>Marky Goldstein</name>
+    	<email>ready@rosa.com</email>
+    	<organization>R.Ø.S.A. Creation. Technology. Intelligence. AG, Zurich</organization>
+    	<organizationUrl>http://www.rosa.com</organizationUrl>
+    	<timezone>1</timezone>
+    	<roles>
+    		<role>Developer</role>
+    	</roles>
+    </developer>
   </developers>
   <licenses>
     <license>
