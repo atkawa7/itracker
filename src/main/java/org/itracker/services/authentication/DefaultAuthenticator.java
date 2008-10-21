@@ -50,7 +50,7 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
      * @return a User if the login is successful
      * @throws AuthenticatorException an exception if the login is unsuccessful, or an error occurs
      */
-    public User checkLogin(String login, Object authentication, int authType, int reqSource) throws AuthenticatorException {
+    public User checkLogin(final String login, final Object authentication, final int authType, final int reqSource) throws AuthenticatorException {
         if (logger.isDebugEnabled()) {
             logger.debug("Checking login for " + login + " using DefaultAuthenticator");
         }
