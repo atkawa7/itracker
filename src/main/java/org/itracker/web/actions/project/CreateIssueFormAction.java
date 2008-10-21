@@ -150,9 +150,9 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                 issueForm.setCreatorId(currUser.getId());
                 if(severities.size() > 0) {
                     try {
-                    	// FIXME this code can not be understood simply. Documentation or simplification please.
-                        int midPoint = (severities.size() / 2);
-                        issueForm.setSeverity(Integer.valueOf(severities.get(midPoint).getValue()));
+                       	// this sets the selected severity to a medium level (middleSeverity). It was argued that this is not simple to understand and therefore needs simplification or refactoring
+                        int middleSeverity = (severities.size() / 2);
+                        issueForm.setSeverity(Integer.valueOf(severities.get(middleSeverity).getValue()));
                     } catch(NumberFormatException nfe) {
                         log.debug("Invalid status number found while preparing create issue form.", nfe);
                     }
