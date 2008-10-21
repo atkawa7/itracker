@@ -57,10 +57,7 @@ import org.itracker.web.util.SessionTracker;
 public class LoginAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(LoginAction.class);
 
-	// TODO: this should live in ConfigurationService. [Whoever wrote this,
-	// could you please explain why?]
 
-	private int SESSION_TIMEOUT = 30;
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -165,7 +162,7 @@ public class LoginAction extends ItrackerBaseAction {
 					}
 					login = user.getLogin();
 
-					setupSession(user, encPassword, request, response);
+					LoginUtilities.setupSession(user, encPassword, request, response);
 					SessionManager.createSession(login);
 
 					try {
@@ -317,126 +314,5 @@ public class LoginAction extends ItrackerBaseAction {
 				: errorMapping);
 	}
 
-	public User setupSession(String login, HttpServletRequest request,
-			HttpServletResponse response) {
-		if (null == login) {
-			log.warn("setupSession: null login", (log.isDebugEnabled()? new RuntimeException(): null));
-			throw new IllegalArgumentException("null login");
-		}
-		UserService userService = getITrackerServices().getUserService();
-		User user = userService.getUserByLogin(login);
-		if (user != null) {
-			String encPassword = null;
-			Cookie[] cookies = request.getCookies();
-			if (cookies != null) {
-				for (int i = 0; i < cookies.length; i++) {
-					if (Constants.COOKIE_NAME.equals(cookies[i].getName())) {
-						int seperator = cookies[i].getValue().indexOf('~');
-						if (seperator > 0) {
-							encPassword = cookies[i].getValue().substring(
-									seperator + 1);
-						}
-					}
-				}
-			}
 
-			return setupSession(user, encPassword, request, response);
-		}
-		return null;
-	}
-
-	public User setupSession(User user, String encPassword,
-			HttpServletRequest request, HttpServletResponse response) {
-		if (user == null) {
-			log.warn("setupSession: null user", (log.isDebugEnabled()? new RuntimeException(): null));
-			throw new IllegalArgumentException("null user");
-		}
-
-		UserService userService = getITrackerServices().getUserService();
-
-		if (log.isDebugEnabled()) {
-			log.debug("Creating new session");
-		}
-		HttpSession session = request.getSession(true);
-
-		if (log.isDebugEnabled()) {
-			log.debug("Setting session timeout to "
-					+ getConfiguredSessionTimeout() + " minutes");
-		}
-		session.setMaxInactiveInterval(getConfiguredSessionTimeout() * 60);
-
-		if (log.isDebugEnabled()) {
-			log.debug("Setting session tracker");
-		}
-		session.setAttribute(Constants.SESSION_TRACKER_KEY, new SessionTracker(
-				user.getLogin(), session.getId()));
-
-		if (log.isDebugEnabled()) {
-			log.debug("Setting user information");
-		}
-		session.setAttribute(Constants.USER_KEY, user);
-
-		if (log.isDebugEnabled()) {
-			log.debug("Setting preferences for user " + user.getLogin());
-		}
-		UserPreferences userPrefs = user.getPreferences();
-		// TODO : this is a hack, remove when possible
-		if (userPrefs == null) {
-			userPrefs = new UserPreferences();
-		}
-		session.setAttribute(Constants.PREFERENCES_KEY, userPrefs);
-
-		if (log.isDebugEnabled()) {
-			log.debug("Setting user locale to "
-					+ ITrackerResources.getLocale(userPrefs.getUserLocale()));
-		}
-		session.setAttribute(Constants.LOCALE_KEY, ITrackerResources
-				.getLocale(userPrefs.getUserLocale()));
-
-		if (log.isDebugEnabled()) {
-			log.debug("Setting autologin cookie for user " + user.getLogin());
-		}
-		Cookie cookie = new Cookie(Constants.COOKIE_NAME, "");
-		cookie.setPath(request.getContextPath());
-		if (userPrefs.getSaveLogin()) {
-			if (encPassword != null) {
-				if (log.isDebugEnabled()) {
-					log.debug("User allows autologin");
-				}
-				cookie.setComment("ITracker autologin cookie");
-				cookie.setValue(user.getLogin() + "~" + encPassword);
-				cookie.setMaxAge(30 * 24 * 60 * 60);
-			}
-		} else {
-			if (log.isDebugEnabled()) {
-				log.debug("User does not allow autologin");
-			}
-			cookie.setValue("");
-			cookie.setMaxAge(0);
-		}
-		response.addCookie(cookie);
-
-		if (log.isDebugEnabled()) {
-			log.debug("Setting permissions for user " + user.getLogin());
-		}
-		Map<Integer, Set<PermissionType>> usersMapOfProjectIdsAndSetOfPermissionTypes = userService
-				.getUsersMapOfProjectIdsAndSetOfPermissionTypes(user,
-						AuthenticationConstants.REQ_SOURCE_WEB);
-		session.setAttribute(Constants.PERMISSIONS_KEY,
-				usersMapOfProjectIdsAndSetOfPermissionTypes);
-
-		// Reset some session forms
-		session.setAttribute(Constants.SEARCH_QUERY_KEY, null);
-
-		SessionManager.clearSessionNeedsReset(user.getLogin());
-		if (log.isDebugEnabled()) {
-			log.debug("User session data updated.");
-		}
-		return user;
-	}
-
-	private int getConfiguredSessionTimeout() {
-		return (getITrackerServices().getConfigurationService()
-				.getIntegerProperty("web_session_timeout", SESSION_TIMEOUT));
-	}
 }

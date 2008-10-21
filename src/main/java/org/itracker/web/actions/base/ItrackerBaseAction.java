@@ -34,7 +34,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.apache.struts.Globals;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionErrors;
@@ -48,15 +47,12 @@ import org.itracker.model.User;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ITrackerServices;
 import org.itracker.services.util.UserUtilities;
-import org.itracker.web.actions.user.LoginAction;
 import org.itracker.web.filters.ExecuteAlwaysFilter;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
 import org.itracker.web.util.SessionManager;
-
-import com.sun.java_cup.internal.production;
 
 /**
  * 
@@ -422,9 +418,8 @@ public abstract class ItrackerBaseAction extends Action {
 					session.removeAttribute(Constants.USER_KEY);
 					session.removeAttribute(Constants.PERMISSIONS_KEY);
 					user = null;
-					LoginAction action = new LoginAction();
 					String newLogin = SessionManager.checkRenamedLogin(login);
-					user = action.setupSession((newLogin == null ? login
+					user = LoginUtilities.setupSession((newLogin == null ? login
 							: newLogin), request, response);
 					SessionManager.removeRenamedLogin(login);
 					if (user == null

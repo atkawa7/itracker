@@ -20,20 +20,30 @@ package org.itracker.web.util;
 
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.PermissionType;
 import org.itracker.model.User;
+import org.itracker.model.UserPreferences;
+import org.itracker.services.ITrackerServices;
+import org.itracker.services.UserService;
+import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.util.AuthenticationConstants;
+import org.jfree.util.Log;
 
 public class LoginUtilities {
 
 	private static final Logger logger = Logger.getLogger(LoginUtilities.class);
+	private static final int DEFAULT_SESSION_TIMEOUT = 30;
 
 	public static boolean checkAutoLogin(HttpServletRequest request,
 			boolean allowSaveLogin) {
@@ -69,13 +79,15 @@ public class LoginUtilities {
 					for (int i = 0; i < cookies.length; i++) {
 						if (Constants.COOKIE_NAME.equals(cookies[i].getName())) {
 							int seperator = cookies[i].getValue().indexOf('~');
+							final String login;
 							if (seperator > 0) {
+								login = cookies[i].getValue()
+								.substring(0,
+										seperator);
 								if (logger.isDebugEnabled()) {
 									logger
 											.debug("Attempting autologin for user "
-													+ cookies[i].getValue()
-															.substring(0,
-																	seperator)
+													+ login
 													+ ".");
 								}
 
@@ -90,8 +102,8 @@ public class LoginUtilities {
 										cookies[i].getValue().substring(0,
 												seperator));
 								request.setAttribute(Constants.AUTH_TYPE_KEY,
-
 								AuthenticationConstants.AUTH_TYPE_PASSWORD_ENC);
+								
 								request.setAttribute(Constants.AUTH_VALUE_KEY,
 										cookies[i].getValue().substring(
 												seperator + 1));
@@ -106,20 +118,6 @@ public class LoginUtilities {
 				}
 			}
 
-			/*
-			 * // If we haven't found any explicit type, try doing a login with
-			 * an unknown type, just in case // This will allow authenticators
-			 * to check whatever they want for an auto login if(! foundLogin) {
-			 * String redirectURL =
-			 * request.getRequestURI().substring(request.getContextPath
-			 * ().length()) + (request.getQueryString() != null ? "?" +
-			 * request.getQueryString() : "");
-			 * request.setAttribute(Constants.AUTH_TYPE_KEY, new
-			 * Integer(AuthenticationConstants.AUTH_TYPE_UNKNOWN));
-			 * request.setAttribute(Constants.AUTH_REDIRECT_KEY, redirectURL);
-			 * request.setAttribute("processLogin", "true"); foundLogin = true;
-			 * }
-			 */
 		}
 
 		return foundLogin;
@@ -282,6 +280,184 @@ public class LoginUtilities {
 		if (null == currUser) {
 			currUser = (User) request.getSession().getAttribute("currUser");
 		}
+		
+
+		
+//		try {
+//			ITrackerServices iTrackerServices = ServletContextUtils.getItrackerServices();
+//			// autologin
+//			if (null == currUser && 
+//					checkAutoLogin(request, iTrackerServices.getConfigurationService().getBooleanProperty(
+//					"allow_save_login", true))) {			
+//				if (Boolean.valueOf(String.valueOf(request.getAttribute("processLogin")))) {
+//					currUser = LoginUtilities.processAutoLogin(request, iTrackerServices);
+//				}
+//			}
+//		} catch (Exception e) {
+//			currUser = null;
+//			if (logger.isInfoEnabled()) {
+//				logger.info("getCurrentUser: could not authenticate from request.");
+//				if (logger.isDebugEnabled()) {
+//					logger.debug("getCurrentUser: exception caught", e);
+//				}
+//			}
+//		}
 		return currUser;
+	}
+//	public static final User processAutoLogin(HttpServletRequest request, ITrackerServices iTrackerServices) {
+//		
+//		UserService userService = iTrackerServices.getUserService();
+//		final int authType = LoginUtilities.getRequestAuthType(request);
+//		final User user;
+//		final String login;
+//		if (authType == AuthenticationConstants.AUTH_TYPE_PASSWORD_ENC) {
+//			login = (String) request
+//					.getAttribute(Constants.AUTH_LOGIN_KEY);
+//			String authenticator = (String) request
+//					.getAttribute(Constants.AUTH_VALUE_KEY);
+//
+//			logger
+//					.debug("Attempting login with encrypted password for user "
+//							+ login);
+//			user = userService.checkLogin(login, authenticator,
+//					AuthenticationConstants.AUTH_TYPE_PASSWORD_ENC,
+//					AuthenticationConstants.REQ_SOURCE_WEB);
+//			if (user != null) {
+//				return user;
+//			}
+//		}
+//
+//		throw new AuthenticatorException(
+//				AuthenticatorException.UNKNOWN_USER);
+//		
+//	}
+	public static final Boolean allowSaveLogin(HttpServletRequest request) {
+		return Boolean.valueOf((String)request.getAttribute("allowSaveLogin"));
+	}
+	
+	public static User setupSession(String login, HttpServletRequest request,
+			HttpServletResponse response) {
+		if (null == login) {
+			logger.warn("setupSession: null login", (logger.isDebugEnabled()? new RuntimeException(): null));
+			throw new IllegalArgumentException("null login");
+		}
+		UserService userService = ServletContextUtils.getItrackerServices().getUserService();
+		User user = userService.getUserByLogin(login);
+		if (user != null) {
+			String encPassword = null;
+			Cookie[] cookies = request.getCookies();
+			if (cookies != null) {
+				for (int i = 0; i < cookies.length; i++) {
+					if (Constants.COOKIE_NAME.equals(cookies[i].getName())) {
+						int seperator = cookies[i].getValue().indexOf('~');
+						if (seperator > 0) {
+							encPassword = cookies[i].getValue().substring(
+									seperator + 1);
+						}
+					}
+				}
+			}
+			if (logger.isDebugEnabled()) {
+				logger.debug("setupSession: calling setupSession(" + user + "," + encPassword);
+			}
+
+			return setupSession(user, encPassword, request, response);
+		}
+		return null;
+	}
+
+	public static User setupSession(User user, String encPassword,
+			HttpServletRequest request, HttpServletResponse response) {
+		if (user == null) {
+			logger.warn("setupSession: null user", (logger.isDebugEnabled()? new RuntimeException(): null));
+			throw new IllegalArgumentException("null user");
+		}
+
+		UserService userService = ServletContextUtils.getItrackerServices().getUserService();
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Creating new session");
+		}
+		HttpSession session = request.getSession(true);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Setting session timeout to "
+					+ getConfiguredSessionTimeout() + " minutes");
+		}
+		session.setMaxInactiveInterval(getConfiguredSessionTimeout() * 60);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Setting session tracker");
+		}
+		session.setAttribute(Constants.SESSION_TRACKER_KEY, new SessionTracker(
+				user.getLogin(), session.getId()));
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Setting user information");
+		}
+		session.setAttribute(Constants.USER_KEY, user);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Setting preferences for user " + user.getLogin());
+		}
+		UserPreferences userPrefs = user.getPreferences();
+		// TODO : this is a hack, remove when possible
+		if (userPrefs == null) {
+			userPrefs = new UserPreferences();
+		}
+		session.setAttribute(Constants.PREFERENCES_KEY, userPrefs);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Setting user locale to "
+					+ ITrackerResources.getLocale(userPrefs.getUserLocale()));
+		}
+		session.setAttribute(Constants.LOCALE_KEY, ITrackerResources
+				.getLocale(userPrefs.getUserLocale()));
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Setting autologin cookie for user " + user.getLogin());
+		}
+		Cookie cookie = new Cookie(Constants.COOKIE_NAME, "");
+		cookie.setPath(request.getContextPath());
+		if (userPrefs.getSaveLogin()) {
+			if (encPassword != null) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("User allows autologin");
+				}
+				cookie.setComment("ITracker autologin cookie");
+				cookie.setValue(user.getLogin() + "~" + encPassword);
+				cookie.setMaxAge(30 * 24 * 60 * 60);
+			}
+		} else {
+			if (logger.isDebugEnabled()) {
+				logger.debug("User does not allow autologin");
+			}
+			cookie.setValue("");
+			cookie.setMaxAge(0);
+		}
+		response.addCookie(cookie);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Setting permissions for user " + user.getLogin());
+		}
+		Map<Integer, Set<PermissionType>> usersMapOfProjectIdsAndSetOfPermissionTypes = userService
+				.getUsersMapOfProjectIdsAndSetOfPermissionTypes(user,
+						AuthenticationConstants.REQ_SOURCE_WEB);
+		session.setAttribute(Constants.PERMISSIONS_KEY,
+				usersMapOfProjectIdsAndSetOfPermissionTypes);
+
+		// Reset some session forms
+		session.setAttribute(Constants.SEARCH_QUERY_KEY, null);
+
+		SessionManager.clearSessionNeedsReset(user.getLogin());
+		if (logger.isDebugEnabled()) {
+			logger.debug("User session data updated.");
+		}
+		return user;
+	}
+
+	public static int getConfiguredSessionTimeout() {
+		return (ServletContextUtils.getItrackerServices().getConfigurationService()
+				.getIntegerProperty("web_session_timeout", DEFAULT_SESSION_TIMEOUT));
 	}
 }
