@@ -174,6 +174,7 @@ public class UserUtilities implements AuthenticationConstants {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(password.getBytes("UTF-8"));
                 byte raw[] = md.digest();
+                // TODO: must we realy use this BASE64Encoder()? it seems to be not support by jrockit rt.jar 
                 hash = (new BASE64Encoder()).encode(raw);
             } catch(NoSuchAlgorithmException nsae) {
                 throw new PasswordException(PasswordException.SYSTEM_ERROR);
