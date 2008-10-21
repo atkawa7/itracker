@@ -203,6 +203,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 					}
 
 					// FIXME this is absolutely complex, unreadable code. why do it, what does it do, can we keep it simple?
+					// it seems to set issueCustomField (issueFields), you might be able to refactor this into its own method (hiding in a method ;) )
 					List<IssueField> issueFields = new ArrayList<IssueField>();
 					Map<String, String> customFields = issueForm.getCustomFields();
 
