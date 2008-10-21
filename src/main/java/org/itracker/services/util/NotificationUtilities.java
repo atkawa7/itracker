@@ -19,11 +19,19 @@
 package org.itracker.services.util;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Notification;
+import org.itracker.model.User;
 import org.itracker.model.Notification.Role;
+import org.jfree.util.Log;
 
 public class NotificationUtilities {
 /*
@@ -219,6 +227,28 @@ public class NotificationUtilities {
 	public static String getTypeName(int value, Locale locale) {
 		return ITrackerResources.getString("itracker.notification.type."
 				+ value, locale);
+	}
+	
+	public static final Map<User, Set<Notification.Role>> mappedRoles(List<Notification> notifications) {
+		
+		Map<User, Set<Role>>  mapping = new Hashtable<User, Set<Role>>();
+		Iterator<Notification> notificationIt = notifications.iterator();
+		while (notificationIt.hasNext()) {
+			Notification notification = (Notification) notificationIt.next();
+			Set<Role> roles;
+			if (mapping.keySet().contains(notification.getUser())) {
+				roles = mapping.get(notification.getUser());
+				roles.add(notification.getRole());
+			} else {
+				roles = new HashSet<Role>();
+				roles.add(notification.getRole());
+				mapping.put(notification.getUser(), roles);
+			}
+		}
+		
+		
+		
+		return mapping;
 	}
 
 }
