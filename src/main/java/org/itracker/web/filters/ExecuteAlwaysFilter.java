@@ -27,6 +27,7 @@ import org.itracker.services.ITrackerServices;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
+import org.itracker.web.util.SessionManager;
 
 /**
  * Configurations:
@@ -84,7 +85,6 @@ public class ExecuteAlwaysFilter implements Filter {
 		}
 
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
-		HttpSession session = request.getSession(true);
 
 		String path = request.getRequestURI().substring(
 				request.getContextPath().length());
@@ -112,21 +112,23 @@ public class ExecuteAlwaysFilter implements Filter {
 			log.debug("doFilter: protecting '" + path + "': " + protect);
 		}
 
-		// pasted from page_init (which is now empty, since we are moving logic
-		// into actions):
-
-		// TODO: think about this: are permissions put into the request? or into
-		// the session? Markys knowledge: permissions are being set, when login
-		// happens... do we really need the following line then?
-		// removed:
-		// Map<Integer, Set<PermissionType>> permissions =
-		// getUserPermissions(request
-		// .getSession());
-		// Locale currLocale = LoginUtilities.getCurrentLocale(request);
-		// request.setAttribute("currLocale", currLocale);
 		
 		
 		User currUser = LoginUtilities.getCurrentUser(request);
+
+		if (null == currUser && protect) {
+//			check for autologin
+			if (LoginUtilities.checkAutoLogin(request, configurationService.getBooleanProperty(
+					"allow_save_login", true))) {
+//				currUser = LoginUtilities.processAutoLogin(request, iTrackerServices);
+
+				String login = String.valueOf(request.getAttribute(Constants.AUTH_LOGIN_KEY));
+				currUser = LoginUtilities.setupSession(login, request, (HttpServletResponse)response);
+				SessionManager.createSession(login);
+				
+			}
+		}
+		
 		if (null != currUser) {
 			if (log.isDebugEnabled()) {
 				log.debug("doFilter: found user in session");
@@ -137,7 +139,7 @@ public class ExecuteAlwaysFilter implements Filter {
 			// request.setAttribute("permissions", permissions);
 			// TODO: itracker.web.generic.unknown for unknown user?
 			request.setAttribute("currLogin", ITrackerResources
-					.getString("itracker.web.generic.unknown"));
+					.getString("itracker.web.header.guest"));
 		} else {
 			// unauthenticated.. forward to login
 			log.info("doFilter: forwarding to login");
@@ -177,6 +179,7 @@ public class ExecuteAlwaysFilter implements Filter {
 		}
 	}
 
+
 	private static final void setupCommonReqAttributes(
 			HttpServletRequest request,
 			ConfigurationService configurationService) {
@@ -198,9 +201,13 @@ public class ExecuteAlwaysFilter implements Filter {
 		// TODO: this should be configured per-instance. Request server-name
 		// should only be used for exception and logged (configuration not
 		// found!)
-		String baseURL = request.getScheme() + "://" + request.getServerName()
+		
+		String baseURL = configurationService.getSystemBaseURL();
+		if (null == baseURL) {
+			baseURL = request.getScheme() + "://" + request.getServerName()
 				+ ":" + request.getServerPort() + request.getContextPath();
-
+			log.warn("setupCommonReqAttributes: not found system_base_url configuration, setting from request: " + baseURL);
+		}
 		request.setAttribute("allowForgotPassword", Boolean
 				.valueOf(allowForgotPassword));
 		request.setAttribute("allowSelfRegister", Boolean
@@ -213,6 +220,8 @@ public class ExecuteAlwaysFilter implements Filter {
 		request.setAttribute(Constants.LOCALE_KEY, currLocale);
 	}
 
+	
+	
 	private static final boolean isProtected(String path, Set<Pattern> patterns) {
 		if (null == path) {
 			path = "";
@@ -240,6 +249,8 @@ public class ExecuteAlwaysFilter implements Filter {
 		}
 		return true;
 	}
+	
+
 
 	/**
 	 * 
