@@ -242,13 +242,12 @@ public class EmailService {
 
 	public void sendEmail(Set<InternetAddress> receipients, String subject,
 			String message) {
+		
+		InternetAddress[] receipientsArray = new ArrayList<InternetAddress>(receipients).toArray(new InternetAddress[]{}); 
 
-		Iterator<InternetAddress> addrIt = receipients.iterator();
-		InternetAddress[] receipientsArray = new InternetAddress[] {};
-		while (addrIt.hasNext()) {
-			receipientsArray[receipientsArray.length] = addrIt.next();
+		if (receipientsArray.length > 0) {
+			this.sendEmail(receipientsArray, subject, message);
 		}
-		this.sendEmail(receipientsArray, subject, message);
 
 	}
 
