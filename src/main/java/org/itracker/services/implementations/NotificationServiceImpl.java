@@ -22,11 +22,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import javax.mail.internet.InternetAddress;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Component;
@@ -422,6 +428,348 @@ public class NotificationServiceImpl implements NotificationService {
 		}
 	}
 
+
+	/**
+	 * Method for internal sending of a notification of specific type.
+	 * 
+	 * TODO: final debugging/integration/implementation
+	 * 
+	 * @param notificationMsg
+	 * @param type
+	 * @param url
+	 */
+	private void handleLocalizedIssueNotification(final Issue issue, final Type type, final String url,
+			final InternetAddress[] receipients, Integer lastModifiedDays) {
+		try {
+			
+			if (logger.isDebugEnabled()) {
+				logger
+						.debug("handleIssueNotificationhandleIssueNotification: running as thread, called with issue: "
+								+ issue
+								+ ", type: "
+								+ type
+								+ "url: "
+								+ url
+								+ ", receipients: "
+								+ (null == receipients ? "<null>" : String
+										.valueOf(Arrays.asList(receipients)))
+								+ ", lastModifiedDays: " + lastModifiedDays);
+			}
+			
+			final Integer notModifiedSince;
+			
+			if (lastModifiedDays == null || lastModifiedDays.intValue() < 0) {
+				notModifiedSince = Integer
+						.valueOf(org.itracker.web.scheduler.tasks.ReminderNotification.DEFAULT_ISSUE_AGE);
+			} else {
+				notModifiedSince = lastModifiedDays;
+			}
+
+					try {
+						if (logger.isDebugEnabled()) {
+							logger
+									.debug("handleIssueNotificationhandleIssueNotification.run: running as thread, called with issue: "
+											+ issue
+											+ ", type: "
+											+ type
+											+ "url: "
+											+ url
+											+ ", receipients: "
+											+ (null == receipients ? "<null>" : String
+													.valueOf(Arrays.asList(receipients)))
+											+ ", notModifiedSince: " + notModifiedSince);
+						}
+						final List<Notification> notifications;
+						if (issue == null) {
+							logger
+									.warn("handleIssueNotification: issue was null. Notification will not be handled");
+							return;
+						}
+						Map<InternetAddress, Locale> localeMapping = null;
+			
+						if (receipients == null) {
+							
+							
+							notifications = this.getIssueNotifications(issue);
+							
+							localeMapping = new Hashtable<InternetAddress, Locale>(notifications.size());
+							Iterator<Notification> it = notifications.iterator();
+							User currentUser;
+							while (it.hasNext()) {
+								currentUser = it.next().getUser();
+								if (null != currentUser
+										&& null != currentUser.getEmailAddress()
+										&& null != currentUser.getEmail()
+										&& (!localeMapping.keySet()
+												.contains(currentUser.getEmailAddress()))) {
+									
+									try {
+										localeMapping.put(currentUser.getEmailAddress(), ITrackerResources.getLocale(currentUser.getPreferences().getUserLocale()));
+									} catch (RuntimeException re) {
+										localeMapping.put(currentUser.getEmailAddress(), ITrackerResources.getLocale());
+									}
+								}
+							}
+						} else {
+							localeMapping = new Hashtable<InternetAddress, Locale>(1);
+							Locale locale = ITrackerResources.getLocale();
+							Iterator<InternetAddress> it = Arrays.asList(receipients).iterator();
+							while (it.hasNext()) {
+								InternetAddress internetAddress = (InternetAddress) it
+										.next();
+								localeMapping.put(internetAddress, locale);
+							}
+						}
+			
+						this.handleNotification(issue, type, notModifiedSince, localeMapping, url);
+					} catch (Exception e) {
+						logger.error("run: failed to process notification", e);
+					}	
+
+		} catch (Exception e) {
+			logger
+					.error(
+							"handleIssueNotification: unexpected exception caught, throwing runtime exception",
+							e);
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Send notifications to mapped addresses by locale.
+	 * @param issue
+	 * @param type
+	 * @param notModifiedSince
+	 * @param recipientsLocales
+	 * @param url
+	 */
+	private void handleNotification(Issue issue, Type type, Integer notModifiedSince, Map<InternetAddress, Locale> recipientsLocales, final String url) {
+		Set<InternetAddress> recipients = recipientsLocales.keySet();
+		Map<Locale, Set<InternetAddress>> localeRecipients = new Hashtable<Locale, Set<InternetAddress>>();
+
+		List<Component> components = issue.getComponents();
+		List<Version> versions = issue.getVersions();
+		
+		List<IssueActivity> activity = getIssueService().getIssueActivity(
+				issue.getId(), false);
+		issue.getActivities();
+		List<IssueHistory> histories = issue.getHistory();
+		Iterator<IssueHistory> it = histories.iterator();
+		IssueHistory history = null, currentHistory;
+		history = getIssueService().getLastIssueHistory(issue.getId());
+
+		Integer historyId = 0;
+		// find history with greatest id
+		while (it.hasNext()) {
+			currentHistory = (IssueHistory) it.next();
+			if (logger.isDebugEnabled()) {
+				logger.debug("handleIssueNotification: found history: "
+						+ currentHistory.getDescription() + " (time: "
+						+ currentHistory.getCreateDate());
+			}
+			if (currentHistory.getId() > historyId) {
+				historyId = currentHistory.getId();
+				history = currentHistory;
+			}
+		}
+		if (logger.isDebugEnabled() && null != history) {
+			logger
+					.debug("handleIssueNotification: got most recent history: "
+							+ history
+							+ " ("
+							+ history.getDescription()
+							+ ")");
+		}
+		
+		Iterator<InternetAddress> iaIt = recipientsLocales.keySet().iterator();
+		while (iaIt.hasNext()) {
+			InternetAddress internetAddress = (InternetAddress) iaIt.next();
+			if (localeRecipients.keySet().contains(recipientsLocales.get(internetAddress))) {
+				localeRecipients.get(recipientsLocales.get(internetAddress)).add(internetAddress);
+			} else {
+				Set<InternetAddress> addresses = new HashSet<InternetAddress>();
+				localeRecipients.put(recipientsLocales.get(internetAddress), addresses);
+			}
+		}
+		
+		Iterator<Locale> localesIt = localeRecipients.keySet().iterator();
+		try {
+			while (localesIt.hasNext()) {
+				Locale currentLocale = (Locale) localesIt.next();
+				recipients = localeRecipients.get(currentLocale);
+				
+				
+				if (recipients.size() > 0) {
+					String subject = "";
+					if (type == Type.CREATED) {
+						subject = ITrackerResources.getString(
+								"itracker.email.issue.subject.created",
+								currentLocale,
+								new Object[] { issue.getId(),
+										issue.getProject().getName(),
+										notModifiedSince });
+					} else if (type == Type.ASSIGNED) {
+						subject = ITrackerResources.getString(
+								"itracker.email.issue.subject.assigned",
+								currentLocale,
+								new Object[] { issue.getId(),
+										issue.getProject().getName(),
+										notModifiedSince });
+					} else if (type == Type.CLOSED) {
+						subject = ITrackerResources.getString(
+								"itracker.email.issue.subject.closed",
+								currentLocale,
+								new Object[] { issue.getId(),
+										issue.getProject().getName(),
+										notModifiedSince });
+					} else if (type == Type.ISSUE_REMINDER) {
+						subject = ITrackerResources.getString(
+								"itracker.email.issue.subject.reminder",
+								currentLocale,
+								new Object[] { issue.getId(),
+										issue.getProject().getName(),
+										notModifiedSince });
+					} else {
+						subject = ITrackerResources.getString(
+								"itracker.email.issue.subject.updated",
+								currentLocale,
+								new Object[] { issue.getId(),
+										issue.getProject().getName(),
+										notModifiedSince });
+					}
+	
+					String activityString;
+					String componentString = "";
+					String versionString = "";
+					StringBuffer sb = new StringBuffer();
+					for (int i = 0; i < activity.size(); i++) {
+						sb.append(
+								IssueUtilities.getActivityName(activity.get(i)
+										.getActivityType(), currentLocale)).append(": ").append(
+								activity.get(i).getDescription()).append("\n");
+	
+					}
+					
+					activityString = sb.toString();
+					// TODO localize..
+					for (int i = 0; i < components.size(); i++) {
+						componentString += (i != 0 ? ", " : "")
+								+ components.get(i).getName();
+					}
+					for (int i = 0; i < versions.size(); i++) {
+						versionString += (i != 0 ? ", " : "")
+								+ versions.get(i).getNumber();
+					}
+	
+					String msgText = "";
+					if (type == Type.ISSUE_REMINDER) {
+						msgText = ITrackerResources
+								.getString(
+										"itracker.email.issue.body.reminder",
+										currentLocale,
+										new Object[] {
+												url
+														+ "/module-projects/view_issue.do?id="
+														+ issue.getId(),
+												issue.getProject().getName(),
+												issue.getDescription(),
+												IssueUtilities.getStatusName(issue
+														.getStatus()),
+												IssueUtilities
+														.getSeverityName(issue
+																.getSeverity()),
+												(issue.getOwner().getFirstName() != null ? issue
+														.getOwner().getFirstName()
+														: "")
+														+ " "
+														+ (issue.getOwner()
+																.getLastName() != null ? issue
+																.getOwner()
+																.getLastName()
+																: ""),
+												componentString,
+												(history == null ? "" : history
+														.getUser().getFirstName()
+														+ " "
+														+ history.getUser()
+																.getLastName()),
+												(history == null ? ""
+														: HTMLUtilities
+																.removeMarkup(history
+																		.getDescription())),
+																		notModifiedSince, activityString });
+					} else {
+						String resolution = (issue.getResolution() == null ? ""
+								: issue.getResolution());
+						if (!resolution.equals("")
+								&& ProjectUtilities
+										.hasOption(
+												ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS,
+												issue.getProject().getOptions())) {
+							resolution = IssueUtilities.getResolutionName(
+									resolution, ITrackerResources.getLocale());
+						}
+	
+						msgText = ITrackerResources
+								.getString(
+										"itracker.email.issue.body.standard",
+										currentLocale,
+										new Object[] {
+												new StringBuffer(url).append("/module-projects/view_issue.do?id=").append(issue.getId()).toString(),
+												issue.getProject().getName(),
+												issue.getDescription(),
+												IssueUtilities.getStatusName(issue
+														.getStatus()),
+												resolution,
+												IssueUtilities
+														.getSeverityName(issue
+																.getSeverity()),
+												(null != issue.getOwner() && null != issue.getOwner().getFirstName() ? issue
+														.getOwner().getFirstName()
+														: "")
+														+ " "
+														+ (null != issue.getOwner() && null != issue.getOwner()
+																.getLastName() ? issue
+																.getOwner()
+																.getLastName()
+																: ""),
+												componentString,
+												(history == null ? "" : history
+														.getUser().getFirstName()
+														+ " "
+														+ history.getUser()
+																.getLastName()),
+												(history == null ? ""
+														: HTMLUtilities
+																.removeMarkup(history
+																		.getDescription())),
+												activityString });
+					}
+					
+					if (logger.isInfoEnabled()) {
+						logger.info(new StringBuilder("handleNotification: sending notification for ").append(issue).append(" (").append(type).append(") to ").append(currentLocale).append("-users (").append(recipients + ")").toString());
+						
+					}
+					
+					emailService.sendEmail(recipients, subject, msgText);
+	
+					if (logger.isDebugEnabled()) {
+						logger.debug("handleNotification: sent notification for " + issue);
+					}
+				}
+	
+				updateIssueActivityNotification(issue, true);
+				if (logger.isDebugEnabled()) {
+					logger.debug("handleNotification: sent notification for locales " + localeRecipients.keySet() + " recipients: " + localeRecipients.values());
+				}
+			}
+		} catch (RuntimeException e) {
+			logger.error("handleNotification: failed to notify: " + issue + " (locales: " + localeRecipients.keySet() + ")", e);
+		
+		}
+		
+		
+	}
 	private IssueService getIssueService() {
 		return ServletContextUtils.getItrackerServices().getIssueService();
 	}
@@ -451,22 +799,27 @@ public class NotificationServiceImpl implements NotificationService {
 					+ notification);
 		}
 		Issue issue = notification.getIssue();
-		if (notification.getCreateDate() == null) {
-			notification.setCreateDate(new Date());
+		if (!issue.getNotifications().contains(notification)) {
+			if (notification.getCreateDate() == null) {
+				notification.setCreateDate(new Date());
+			}
+			if (notification.getLastModifiedDate() == null) {
+				notification.setLastModifiedDate(new Date());
+			}
+	//		List<Notification> notifications = new ArrayList<Notification>();
+			// TODO: check these 3 lines - do we need them?:
+	//		notifications.addAll(issue.getNotifications());
+	//		notifications.add(notification);
+	//		issue.setNotifications(notifications);
+			getNotificationDao().save(notification);
+			// TODO: is it needed to update issue too?
+			issue.getNotifications().add(notification);
+			getIssueDao().saveOrUpdate(issue);
+			
+			return true;
 		}
-		if (notification.getLastModifiedDate() == null) {
-			notification.setLastModifiedDate(new Date());
-		}
-//		List<Notification> notifications = new ArrayList<Notification>();
-		// TODO: check these 3 lines - do we need them?:
-//		notifications.addAll(issue.getNotifications());
-//		notifications.add(notification);
-//		issue.setNotifications(notifications);
-
-		issue.getNotifications().add(notification);
-		
-		getIssueDao().saveOrUpdate(issue);
-		return true;
+		logger.debug("addIssueNotification: attempted to add duplicate notification " + notification + " for issue: " + issue);
+		return false;
 	}
 
 	/**
@@ -479,11 +832,10 @@ public class NotificationServiceImpl implements NotificationService {
 					+ ", primaryOnly: " + primaryOnly + ", activeOnly: "
 					+ activeOnly);
 		}
-		// TODO Auto-generated method stub
 		List<Notification> issueNotifications = new ArrayList<Notification>();
 
 		if (!primaryOnly) {
-			List<Notification> notifications = getNotificationDAO()
+			List<Notification> notifications = getNotificationDao()
 					.findByIssueId(issue.getId());
 
 			for (Iterator<Notification> iterator = notifications.iterator(); iterator
@@ -604,9 +956,9 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	public boolean removeIssueNotification(Integer notificationId) {
-		Notification notification = this.getNotificationDAO().findById(
+		Notification notification = this.getNotificationDao().findById(
 				notificationId);
-		getNotificationDAO().delete(notification);
+		getNotificationDao().delete(notification);
 		return true;
 	}
 
@@ -617,9 +969,7 @@ public class NotificationServiceImpl implements NotificationService {
 
 	}
 
-	public NotificationDAO getNotificationDAO() {
-		return this.notificationDao;
-	}
+
 
 	/**
 	 * @return the emailService
