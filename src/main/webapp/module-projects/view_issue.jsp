@@ -7,6 +7,8 @@
 <%@ page import="org.itracker.services.IssueService" %>
 <%@ page import="org.itracker.core.resources.*" %>
 <%@ page import="org.itracker.web.util.RequestHelper" %>
+<%@ page import="org.itracker.model.Notification.Role"%>
+<%@ page import="org.itracker.web.util.LoginUtilities"%>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -444,23 +446,70 @@ User um = RequestHelper.getCurrentUser(session);
                 <td><it:message key="itracker.web.attr.email"/></td>
                 <td><it:message key="itracker.web.attr.role"/></td>
               </tr>
-
+              
+			<c:forEach items="${notifiedUsers}" var="user" varStatus="status">
+                <tr class="${status.count % 2 == 0?'listRowShaded' : 'listRowUnshaded'}">
+                    <td class="listRowSmall">${user.firstName}&nbsp;${user.lastName}</td>
+                    <td class="listRowSmall">
+                        <a href="mailto:${user.email}"
+                           class="mailto">${user.email}</a>
+                    </td>
+                    <td class="listRowSmall"><ul>
+                    	<c:forEach items="${notificationMap[user]}" var="role">
+                    	<li><it:message key="itracker.notification.role.${role.code}"></it:message></li>
+                    	</c:forEach>
+						</ul>
+                    
+                    </td>
+                </tr>
+			</c:forEach>
+			
+<%--
               <%
                 List<Notification> notifications = ih.getIssueNotifications(issueId);
 
                 Collections.sort(notifications, Notification.USER_COMPARATOR);
+                
+                Map<User, Set<Notification.Role>> notificationsByUser = NotificationUtilities.mappedRoles(notifications);
+				Iterator<User> usersIt = notificationsByUser.keySet().iterator();
+				Iterator<Role> rolesIt;
+				User user;
+				Role role;
+				Integer i = 0;
+				while (usersIt.hasNext()) {
+					user = usersIt.next();
+					rolesIt = notificationsByUser.get(user).iterator();
 
-                for(int i = 0; i < notifications.size(); i++) {
+			          %>
+		                  <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>" >
+		                    <td class="listRowSmall"><%= user.getFirstName() + " " + user.getLastName() %></td>
+		                    <td class="listRowSmall"><a href="mailto:<%= user.getEmail() %>" class="mailto"><%= user.getEmail() %></a></td>
+		                    <td class="listRowSmall"><ul>
+		                    
+		                    <%
+							
+							while (rolesIt.hasNext()) {
+								role = rolesIt.next();
+		                    %>
+		                    	<li>
+		                    <%= NotificationUtilities.getRoleName(role, LoginUtilities.getCurrentLocale(request)) %>
+		                    	</li>
+		                    <% } %>
+		                    </ul></td>
+		                  </tr>
+		              <% 
+		              i++;
+						
+					}
+				
+
               %>
-                  <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>" >
-                    <td class="listRowSmall"><%= notifications.get(i).getUser().getFirstName() + " " + notifications.get(i).getUser().getLastName() %></td>
-                    <td class="listRowSmall"><a href="mailto:<%= notifications.get(i).getUser().getEmail() %>" class="mailto"><%= notifications.get(i).getUser().getEmail() %></a></td>
-                    <td class="listRowSmall"><%= NotificationUtilities.getRoleName(notifications.get(i).getNotificationRole(), (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>
-                  </tr>
-              <% } %>
+              --%>
             </table>
 
-            <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
+        <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/>
+    </body>
+</html>
              
 <%
           }

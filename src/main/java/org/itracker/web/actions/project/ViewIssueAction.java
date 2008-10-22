@@ -30,6 +30,8 @@ public class ViewIssueAction extends ItrackerBaseAction {
 			request.setAttribute("pageTitleKey",pageTitleKey); 
 			request.setAttribute("pageTitleArg",pageTitleArg); 
 			
+			EditIssueFormAction.setupNotificationsInRequest(request, issueService.getIssue(Integer.valueOf(request.getParameter("id"))), getITrackerServices().getNotificationService());
+			
 			log.info("ViewIssueAction: Forward: viewissue");			
 			return mapping.findForward("viewissue");
 	 

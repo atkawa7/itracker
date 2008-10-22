@@ -54,12 +54,15 @@ import org.itracker.model.ProjectScript;
 import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.Version;
+import org.itracker.model.Notification.Role;
 import org.itracker.services.IssueService;
+import org.itracker.services.NotificationService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.WorkflowException;
 import org.itracker.services.util.Convert;
 import org.itracker.services.util.HTMLUtilities;
 import org.itracker.services.util.IssueUtilities;
+import org.itracker.services.util.NotificationUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.services.util.WorkflowUtilities;
@@ -105,11 +108,9 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 				.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, issue
 						.getProject().getOptions()));
 
-		List<Notification> notifications = issueService
-				.getIssueNotifications(issue.getId());
-		Collections.sort(notifications, Notification.TYPE_COMPARATOR);
-
-		request.setAttribute("notifications", notifications);
+		setupNotificationsInRequest(request, issue, ServletContextUtils.getItrackerServices().getNotificationService());
+		
+		
 		// setup issue to request, as it's needed by the jsp.
 		request.setAttribute(Constants.ISSUE_KEY, issue);
 		request.setAttribute("issueForm", issueForm);
@@ -119,6 +120,17 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 		Collections.sort(issueHistory, IssueHistory.CREATE_DATE_COMPARATOR);
 		request.setAttribute("issueHistory", issueHistory);
 
+	}
+
+	public static final void setupNotificationsInRequest(HttpServletRequest request, Issue issue, NotificationService notificationService) {
+		List<Notification> notifications = notificationService
+		.getIssueNotifications(issue);
+		Collections.sort(notifications, Notification.TYPE_COMPARATOR);
+		
+		request.setAttribute("notifications", notifications);
+		Map<User, Set<Role>> notificationMap = NotificationUtilities.mappedRoles(notifications);
+		request.setAttribute("notificationMap", notificationMap);
+		request.setAttribute("notifiedUsers", notificationMap.keySet());
 	}
 
 	public static Map<Integer, List<NameValuePair>> getListOptions(

@@ -860,7 +860,24 @@
                 <td><it:message key="itracker.web.attr.role"/></td>
             </tr>
 
-            <c:forEach items="${notifications}" var="notification" varStatus="status">
+			<c:forEach items="${notifiedUsers}" var="user" varStatus="status">
+                <tr class="${status.count % 2 == 0?'listRowShaded' : 'listRowUnshaded'}">
+                    <td class="listRowSmall">${user.firstName}&nbsp;${user.lastName}</td>
+                    <td class="listRowSmall">
+                        <a href="mailto:${user.email}"
+                           class="mailto">${user.email}</a>
+                    </td>
+                    <td class="listRowSmall"><ul>
+                    	<c:forEach items="${notificationMap[user]}" var="role">
+                    	<li><it:message key="itracker.notification.role.${role.code}"></it:message></li>
+                    	</c:forEach>
+						</ul>
+                    
+                    </td>
+                </tr>
+			</c:forEach>
+
+            <%--<c:forEach items="${notifications}" var="notification" varStatus="status">
 
                 <c:choose>
                     <c:when test="${status.count % 2 == 0}">
@@ -882,7 +899,7 @@
                 </tr>
 
             </c:forEach>
-
+--%>
         </table>
     </td>
 </tr>
