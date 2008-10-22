@@ -18,6 +18,7 @@
 
 package org.itracker.services.util;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -213,12 +214,6 @@ public class NotificationUtilities {
 				roles.add(notification.getRole());
 				mapping.put(notification.getUser(), roles);
 			}
-		}
-		Iterator<Set<Role>> rolestIt = mapping.values().iterator();
-		while (rolestIt.hasNext()) {
-			Set<org.itracker.model.Notification.Role> set = (Set<org.itracker.model.Notification.Role>) rolestIt
-					.next();
-			
 		}
 		
 		
