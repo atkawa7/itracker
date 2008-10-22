@@ -18,58 +18,23 @@
 
 package org.itracker.services.util;
 
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Notification;
 import org.itracker.model.User;
 import org.itracker.model.Notification.Role;
-import org.jfree.util.Log;
 
 public class NotificationUtilities {
-/*
-	// replaced by org.itracker.model.Notification.Role
-	public static enum Role {
-
-		ANY(-1), CREATOR(1), OWNER(2), CONTRIBUTOR(3), QA(4), PM(5), PO(6), CO(
-				7), VO(8), IP(9);
-
-		private Integer numVal;
-
-		Role(Integer numVal) {
-			this.numVal = numVal;
-		}
-
-		public Integer numVal() {
-			return numVal;
-		}
-
-	}
-
-	// replaced by org.itracker.model.Notification.Type
-	public static enum Type {
-
-		CREATED(1), UPDATED(2), ASSIGNED(3), CLOSED(4), SELF_REGISTER(5), ISSUE_REMINDER(
-				6);
-
-		private Integer numVal;
-
-		Type(Integer numVal) {
-			this.numVal = numVal;
-		}
-
-		public Integer numVal() {
-			return numVal;
-		}
-
-	}
 
 	/**
 	 * @deprecated use enum NotificationUtilities.Role.ANY instead
@@ -240,12 +205,21 @@ public class NotificationUtilities {
 				roles = mapping.get(notification.getUser());
 				roles.add(notification.getRole());
 			} else {
-				roles = new HashSet<Role>();
+				roles = new TreeSet<Role>(new Comparator<Role>() {
+					public int compare(Role o1, Role o2) {
+						return new CompareToBuilder().append(o1.getCode(), o2.getCode()).toComparison();
+					}
+				});
 				roles.add(notification.getRole());
 				mapping.put(notification.getUser(), roles);
 			}
 		}
-		
+		Iterator<Set<Role>> rolestIt = mapping.values().iterator();
+		while (rolestIt.hasNext()) {
+			Set<org.itracker.model.Notification.Role> set = (Set<org.itracker.model.Notification.Role>) rolestIt
+					.next();
+			
+		}
 		
 		
 		return mapping;
