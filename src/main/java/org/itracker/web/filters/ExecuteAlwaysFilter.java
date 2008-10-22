@@ -99,7 +99,6 @@ public class ExecuteAlwaysFilter implements Filter {
 		}
 		ConfigurationService configurationService = getITrackerServices()
 				.getConfigurationService();
-		setupCommonReqAttributes(request, configurationService);
 
 		boolean protect = isProtected(path, this.unprotectedPaterns);
 
@@ -128,6 +127,8 @@ public class ExecuteAlwaysFilter implements Filter {
 				
 			}
 		}
+
+		setupCommonReqAttributes(request, configurationService);
 		
 		if (null != currUser) {
 			if (log.isDebugEnabled()) {
