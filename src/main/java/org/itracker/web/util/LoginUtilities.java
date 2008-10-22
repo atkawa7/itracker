@@ -400,13 +400,14 @@ public class LoginUtilities {
 		UserPreferences userPrefs = user.getPreferences();
 		// TODO : this is a hack, remove when possible
 		if (userPrefs == null) {
+			Log.warn("setupSession: got user with no preferences!: " + user + " (prefs: " + user.getPreferences() + ")");
 			userPrefs = new UserPreferences();
 		}
 		session.setAttribute(Constants.PREFERENCES_KEY, userPrefs);
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("Setting user locale to "
-					+ ITrackerResources.getLocale(userPrefs.getUserLocale()));
+			logger.debug("Setting user " + user + " locale to "+ ITrackerResources
+					.getLocale(userPrefs.getUserLocale()));
 		}
 		session.setAttribute(Constants.LOCALE_KEY, ITrackerResources
 				.getLocale(userPrefs.getUserLocale()));
