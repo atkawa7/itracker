@@ -42,7 +42,7 @@ import org.itracker.model.User;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.PasswordException;
 
-import sun.misc.BASE64Encoder;
+//import sun.misc.BASE64Encoder;
 
 public class UserUtilities implements AuthenticationConstants {
     protected static final char[] alphabet = new char[] {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
@@ -174,8 +174,10 @@ public class UserUtilities implements AuthenticationConstants {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(password.getBytes("UTF-8"));
                 byte raw[] = md.digest();
-                // TODO: must we realy use this BASE64Encoder()? it seems to be not support by jrockit rt.jar 
-                hash = (new BASE64Encoder()).encode(raw);
+                // TODO: must we really use this BASE64Encoder()? it seems to be not support by jrockit rt.jar 
+//                hash = Base64.encodeBytes(raw);
+                hash = String.valueOf(Base64Coder.encode(raw));
+//                hash = (new BASE64Encoder()).encode(raw);
             } catch(NoSuchAlgorithmException nsae) {
                 throw new PasswordException(PasswordException.SYSTEM_ERROR);
             } catch(UnsupportedEncodingException uee) {

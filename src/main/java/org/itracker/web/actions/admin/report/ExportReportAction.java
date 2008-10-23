@@ -34,7 +34,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.model.Report;
 import org.itracker.services.ReportService;
-import org.itracker.services.util.Base64;
+import org.itracker.services.util.Base64Coder;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
@@ -83,7 +83,9 @@ public class ExportReportAction extends ItrackerBaseAction {
                     if(report.getClassName() != null && ! report.getClassName().equals("")) {
                         out.println("className=" + report.getClassName());
                     }
-                    out.println("description=" + Base64.encodeObject(report.getDescription(), Base64.DONT_BREAK_LINES));
+                    out.println("description=" + Base64Coder.encodeString(report.getDescription()));
+//                    out.println("description=" + Base64.encodeObject(report.getDescription(), Base64.DONT_BREAK_LINES));
+                    
                     //out.println("definition=" + Base64.encodeBytes(report.getFileData(), Base64.DONT_BREAK_LINES));
                     out.flush();
                     out.close();
