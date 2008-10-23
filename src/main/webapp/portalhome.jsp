@@ -49,6 +49,14 @@
 	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
 	    <td style="text-align:right;" ><it:message key="itracker.web.attr.lastmodified"/></td>
 	</tr>
+	<c:if test="${empty ownedIssues}">
+        <tr class="listRowUnshaded">
+	    	<td ></td>
+	    	<td colspan="16">
+	    		<it:message key="itracker.web.error.noissues"></it:message>
+	    	</td>
+    	</tr>
+    </c:if>
 	
 	<c:forEach items="${ownedIssues}" var="ownedIssue" step="1" varStatus="i">
 	    
@@ -136,9 +144,16 @@
         <td></td>
         <td style="text-align:left; white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
     </tr>
-    <c:set var="i" value="0" />
-    <c:forEach items="${unassignedIssues}" var="unassignedIssue" step="1" varStatus="i">
+    <c:if test="${empty unassignedIssues}">
+        <tr class="listRowUnshaded">
+	    	<td ></td>
+	    	<td colspan="16">
+	    		<it:message key="itracker.web.error.noissues"></it:message>
+	    	</td>
+    	</tr>
+    </c:if>
 
+    <c:forEach items="${unassignedIssues}" var="unassignedIssue" step="1" varStatus="i">
 		<c:if test="${unassignedIssue.userCanViewIssue}">
 			<c:set var="iCount" value="${iCount +1}" />
 			<c:choose>
@@ -321,7 +336,14 @@ I change code to test for unassigned attribute instead of owner, since owner is 
         <td></td>
         <td style="text-align:right; white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
     </tr>
-
+    <c:if test="${empty createdIssues}">
+        <tr class="listRowUnshaded">
+	    	<td ></td>
+	    	<td colspan="16">
+	    		<it:message key="itracker.web.error.noissues"></it:message>
+	    	</td>
+    	</tr>
+    </c:if>
 	<c:forEach items="${createdIssues}" var="createdIssue" step="1"
 		varStatus="i">
 
@@ -431,7 +453,15 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 		<td style="text-align: right; white-space: nowrap"><it:message
 			key="itracker.web.attr.lastmodified" /></td>
 	</tr>
-
+    <c:if test="${empty watchedIssues}">
+        <tr class="listRowUnshaded">
+	    	<td ></td>
+	    	<td colspan="16">
+	    		<it:message key="itracker.web.error.noissues"></it:message>
+	    	</td>
+    	</tr>
+    </c:if>
+    
 	<c:forEach items="${watchedIssues}" var="watchedIssue" step="1"
 		varStatus="i">
 
