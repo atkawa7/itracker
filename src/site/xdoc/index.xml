@@ -31,10 +31,10 @@
 				to join.
 				<a href="https://sourceforge.net/tracker/?group_id=54141&amp;atid=472807">
 					<br />
-					THERE ARE STILL SOME BUGS TO GO (COME ON GUYS - OPEN SOURCE MEANS
+					THERE ARE STILL SOME (MINOR) BUGS TO GO (COME ON GUYS - OPEN SOURCE MEANS
 					EVERYONE WORKS ;-&gt;)
                 </a>
-                - please help.
+                - please help.	<br /> Please also help us to write further unit tests and remove scriptlets from the JSP's. 
             </p>
             <p>
                 If you need an issue management system now, you can go and get itracker 2.4.2 on SourceForge.
