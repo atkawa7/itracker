@@ -17,17 +17,16 @@
 				itracker is built using Java enterprise technology.
             </p>
 			<p>
-				itracker is a professional, easy to use, open, integrable, fast,
+				itracker is a professional, easy to use, open, integrateable, fast,
 				modular, customizable and scalable solution for all kind of projects.
             </p>
 			<p>
 				Currently there is a bunch of people rewriting itracker towards
 				a new Release 3.0, but it seems to take time. The refactoring is
-				based on Spring 2.0, Hibernate 3 and Struts.
+				based on Spring 2.0, Hibernate 3 and Struts 1.X.
 				<a href="https://sourceforge.net/tracker/?group_id=54141&amp;atid=472807"></a>
 				The Release 3.0 is not yet finished, and if you or your company can
-				give us a
-				hand you are more than welcome to contribute! If you are able to help
+				give us a hand you are more than welcome to contribute! If you are able to help
 				(by programming, documenting or testing...), then please feel free
 				to join.
 				<a href="https://sourceforge.net/tracker/?group_id=54141&amp;atid=472807">
@@ -40,6 +39,11 @@
             <p>
                 If you need an issue management system now, you can go and get itracker 2.4.2 on SourceForge.
                 It's a reliable solution, and you'll be able to upgrade to the coming Release 3.0.
+                
+            </p>
+                    <p>
+                You can also now start to testdrive our Release 3.0 from the trunk. It's quite stable.
+                
             </p>
         </section>
 
