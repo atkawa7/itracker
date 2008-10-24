@@ -435,15 +435,19 @@
     %>
 </tr>
 <tr>
+
     <% }
         String fieldValue = (fieldValues.get(String.valueOf(projectFields.get(i).getId())) == null ? "" : fieldValues.get(String.valueOf(projectFields.get(i).getId())));
     %>
-    <td class="editColumnTitle">
+   <%--  <td class="editColumnTitle">
         <%=CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId()) + ": "%>
     </td>
-    <td align="left" class="editColumnText">
+    <td colspan="2" align="left" class="editColumnText">--%>
         <% if (hasFullEdit) {
-
+%>
+            <it:formatCustomField field="<%= projectFields.get(i) %>" formName="<%= formName %>" />
+            
+            <%--
             String customFieldkey = "customFields(" + projectFields.get(i).getId() + ")";
         %>
         <c:set var="customFields" value="<%=customFieldkey%>"/>
@@ -485,13 +489,14 @@
         <html:text property="<%=customFieldkey%>" styleClass="editColumnText"/>
         <%= img %>
         <% }
+        --%><%
         } else {
             if (fieldValue != null) { %>
-        <%=(projectFields.get(i).getFieldType() == CustomField.Type.LIST ? projectFields.get(i).getOptionNameByValue(fieldValue) : fieldValue)%>
-        <% } %>
-        <% } %>
-    </td>
-    <% } %>
+        	<%=(projectFields.get(i).getFieldType() == CustomField.Type.LIST ? projectFields.get(i).getOptionNameByValue(fieldValue) : fieldValue)%>
+        	<% } 
+        } %>
+   <%--  </td>--%>
+   <% } %>
 </tr>
 <tr>
     <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td>
