@@ -460,18 +460,25 @@
             %>
         </html:select>
         <% } else {
-            String img = "";
+	        StringBuilder img = new StringBuilder();
 
             if (projectFields.get(i).getFieldType() == CustomField.Type.DATE) {
-                img = "<img onmouseup=\"toggleDatePicker('cf" + projectFields.get(i).getId() + "','" + formName + ".customFields(" + projectFields.get(i).getId() + ")')\"";
-                img += " id=cf" + projectFields.get(i).getId() + "Pos name=cf" + projectFields.get(i).getId() + "Pos width=19 height=19 src=\" ";
-                try {
-                    img += TagUtils.getInstance().computeURL(pageContext, null, null, "/images/calendar.gif", null, null, null, null, false);
-                } catch (Exception murle) {
-                    img += " images/calendar.gif";
-                }
-                img += "\" align=\"top\" border=\"0\"";
-                img += "<div id=\"cf" + projectFields.get(i).getId() + "\" style=\"position:absolute;\"></div>";
+
+                //img = "<img onmouseup=\"toggleDatePicker('cf" + projectFields.get(i).getId() + "','" + formName + ".customFields(" + projectFields.get(i).getId() + ")')\"";
+                img.append("<img onmouseup=\"toggleDatePicker('cf").append(projectFields.get(i).getId()).append("','").append(formName).append(".customFields(").append(projectFields.get(i).getId()).append(")')\"");
+                //img += " id=cf" + projectFields.get(i).getId() + "Pos name=cf" + projectFields.get(i).getId() + "Pos width=19 height=19 src=\" ";
+                img.append(" id=cf").append(projectFields.get(i).getId()).append("Pos name=cf").append(projectFields.get(i).getId()).append("Pos width=19 height=19 src=\" ");
+ //               try {
+//                    img += TagUtils.getInstance().computeURL(pageContext, null, null, request.getContextPath() + "/images/calendar.gif", null, null, null, null, false);
+			    img.append(request.getContextPath()).append("/themes/defaulttheme/images/calendar.gif");
+
+//                } catch (Exception murle) {
+//                    img += "../images/calendar.gif";
+//                }
+                //img += "\" align=\"top\" border=\"0\"";
+                img.append("\" align=\"top\" border=\"0\"");
+                //img += "<div id=\"cf" + projectFields.get(i).getId() + "\" style=\"position:absolute;\"></div>";
+                img.append("<div id=\"cf").append(projectFields.get(i).getId()).append("\" style=\"position:absolute;\"></div>");
             }
 
         %>
