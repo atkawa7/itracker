@@ -195,23 +195,24 @@ public class IssueField extends AbstractEntity {
 				}
 				return null;
 			}
-			SimpleDateFormat sdf = new SimpleDateFormat();
-			// Fall back to a default date format or make date format mandatory!
-			String dateFormat = (customField.getDateFormat()
-					.equalsIgnoreCase(CustomFieldUtilities.DATE_FORMAT_UNKNOWN)) ? CustomFieldUtilities.DATE_FORMAT_DATEONLY
-					: customField.getDateFormat();
+			SimpleDateFormat sdf = CustomField.DEFAULT_DATE_FORMAT;
+			// FIXME: Fall back to a default date format or make date format mandatory!
+//			String dateFormat = "dd/MM/yyyy"; 
+//				(customField.getDateFormat()
+//					.equalsIgnoreCase(CustomFieldUtilities.DATE_FORMAT_UNKNOWN)) ? CustomFieldUtilities.DATE_FORMAT_DATEONLY
+//					: customField.getDateFormat();
 
-			if (log.isDebugEnabled()) {
-				log.debug("getValue: " + dateFormat + " (original was "
-						+ customField.getDateFormat() + ")");
-			}
-			dateFormat = bundle.getString("itracker.dateformat." + dateFormat);
+//			if (log.isDebugEnabled()) {
+//				log.debug("getValue: " + dateFormat + " (original was "
+//						+ customField.getDateFormat() + ")");
+//			}
+//			dateFormat = bundle.getString("itracker.dateformat." + dateFormat);
 			if (log.isDebugEnabled()) {
 				log.debug("getValue: dateFormat from itracker configuration "
-						+ dateFormat);
+						+ sdf.toPattern());
 			}
 			try {
-				sdf = new SimpleDateFormat(dateFormat, locale);
+//				sdf = new SimpleDateFormat(dateFormat, locale);
 				String formattedDate = sdf.format(this.dateValue);
 				if (log.isDebugEnabled()) {
 					log.debug("getValue: formated date " + this.dateValue
@@ -255,10 +256,11 @@ public class IssueField extends AbstractEntity {
 	 */
 	public void setValue(String value, Locale locale, ResourceBundle bundle)
 			throws IssueException {
-		if (value != null) {
+		if (value != null && value.trim().length() > 0) {
 			switch (customField.getFieldType()) {
 		
 			case INTEGER:
+				setStringValue(value);
 				try {
 					setIntValue(Integer.parseInt(value));
 				} catch (NumberFormatException nfe) {
@@ -268,20 +270,29 @@ public class IssueField extends AbstractEntity {
 				break;
 
 			case DATE:
+				setStringValue(value);
 				try {
-					if (customField.getDateFormat() != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
-						SimpleDateFormat sdf = new SimpleDateFormat(bundle
-								.getString("itracker.dateformat."
-										+ customField.getDateFormat()), locale);
+//					if (customField.getDateFormat() != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
+						// FIXME: since the datepicker does not support different date format, always use the english date-only.
+						SimpleDateFormat sdf = CustomField.DEFAULT_DATE_FORMAT;
+//						new SimpleDateFormat(
+//								"dd/MM/yyyy",
+//								bundle
+//								.getString("itracker.dateformat."
+//										+ CustomFieldUtilities.DATE_FORMAT_DATEONLY),
+										//customField.getDateFormat()),
+//										Locale.ENGLISH);
 						Date dateValue = sdf.parse(value);
 						if (dateValue != null) {
 							setDateValue(dateValue);
 						} else {
+							log.error("setValue: caught exception for date " + value);
 							throw new IssueException("Invalid date.",
 									IssueException.TYPE_CF_PARSE_DATE);
 						}
-					}
+//					}
 				} catch (Exception ex) {
+					log.error("setValue: caught exception for date " + value, ex);
 					throw new IssueException("Invalid date format.",
 							IssueException.TYPE_CF_PARSE_DATE);
 				}
@@ -291,6 +302,11 @@ public class IssueField extends AbstractEntity {
 				setStringValue(value);
 			}
 
+		} else {
+//			reset value
+			setStringValue("");
+			setDateValue(null);
+			setIntValue(0);
 		}
 	}
 	/**

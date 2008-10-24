@@ -73,6 +73,10 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 
 	public static final Comparator<CustomField> NAME_COMPARATOR = new NameComparator();
 	/**
+	 * Dateformat able to parse datepicker generated date string (dd/MM/yyyy)
+	 */
+	public static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -336,9 +340,10 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 
 		case DATE:
 			if (this.dateFormat != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
-				SimpleDateFormat format = new SimpleDateFormat(bundle
-						.getString("itracker.dateformat." + this.dateFormat),
-						locale);
+				SimpleDateFormat format = DEFAULT_DATE_FORMAT;
+//					new SimpleDateFormat(bundle
+//						.getString("itracker.dateformat." + this.dateFormat),
+//						locale);
 
 				try {
 					format.parse(value);
