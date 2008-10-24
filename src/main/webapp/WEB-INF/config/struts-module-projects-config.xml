@@ -31,6 +31,7 @@
         <forward name="listprojects" path="/list_projects.jsp" module="/module-projects"/>
         <forward name="listissues" module="/module-projects" path="/list_issues.do"/>
         <forward name="viewissue" module="/module-projects" path="/view_issue.do"/>
+        <forward name="editissue" module="/module-projects" path="/editissueform.do"/>
         <forward name="moveissue" module="/module-projects" path="/moveissue.do"/>
         <forward name="error" module="/module-projects" path="/error.do"/>
         <forward name="help" module="/module-help" path="/show_help.do"/>

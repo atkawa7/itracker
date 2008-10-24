@@ -78,6 +78,7 @@
         <forward name="unauthorized" path="/unauthorized.do" module="/"/>
         <forward name="viewactivity" module="/module-projects" path="/view_issue_activity.do"/>
         <forward name="viewissue" module="/module-projects" path="/view_issue.do"/>
+        <forward name="editissue" module="/module-projects" path="/editissueform.do"/>
         <forward name="watchissue" module="/module-projects" path="/watchissue.do"/>
      
     </global-forwards>
@@ -136,9 +137,8 @@
     <controller>
         <set-property property="inputForward" value="false"/>
     </controller>
-    <!--
     <message-resources factory="web.resources.ITrackerMessageResourcesFactory" parameter="UNUSED" null="false" />
-    -->
+
     <message-resources factory="org.itracker.web.resources.ITrackerMessageResourcesFactory"
                        parameter="org.itracker.core.resources.ITracker" null="false"/>
 
