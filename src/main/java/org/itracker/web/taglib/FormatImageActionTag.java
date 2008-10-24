@@ -174,7 +174,7 @@ public final class FormatImageActionTag extends TagSupport {
         StringBuffer buf = new StringBuffer("<a href=\"");
         try {
           //  buf.append(RequestUtils.computeURL(pageContext, forward, null, null, action, null, null, false));
-            buf.append(TagUtils.getInstance().computeURL(pageContext, forward, null, null, action, getModule(), null, null, false));
+            buf.append(TagUtils.getInstance().computeURL(pageContext, forward, null, null, action, module, null, null, false));
         } catch(MalformedURLException murle) {
             buf.append(forward);
         }

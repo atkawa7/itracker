@@ -33,6 +33,7 @@ import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.model.NameValuePair;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.ServletContextUtils;
 
 
 public final class FormatCustomFieldTag extends TagSupport {
@@ -135,22 +136,26 @@ public final class FormatCustomFieldTag extends TagSupport {
                     }
                     buf.append("</select>\n");
                 } else if(field.getFieldType() == CustomField.Type.DATE) {
+                	
+
                     buf.append("<input type=\"text\" name=\"customFields(" + field.getId() +")\"");
                     buf.append((currentValue != null && ! currentValue.equals("") ?  " value=\"" + currentValue + "\"" : ""));
                     buf.append(" class=\"editColumnText\">&nbsp;");
-                    buf.append("<img onmouseup=\"toggleDatePicker('cf" + field.getId() + "','" + formName + ".customFields(" + field.getId() + ")')\" ");
-                    buf.append("id=cf" + field.getId() + "Pos name=cf" + field.getId() + "Pos width=19 height=19 src=\"");
-                    try {
+                    buf.append("<img onmouseup=\"toggleDatePicker('cf").append(field.getId()).append("','").append(formName).append(".customFields(").append(field.getId()).append(")')\" ");
+                    buf.append("id=cf").append(field.getId()).append("Pos name=cf").append(field.getId()).append("Pos width=19 height=19 src=\"");
+//                    try {
                         // buf.append(RequestUtils.computeURL(pageContext, null, null, "/images/calendar.gif", null, null, null, false));
-                        buf.append(TagUtils.getInstance().computeURL(pageContext, null, null, "/images/calendar.gif", null, null, null, null, false));
+                    	buf.append(ServletContextUtils.getItrackerServices().getConfigurationService().getSystemBaseURL());
+                    	buf.append("/themes/defaulttheme/images/calendar.gif");
+//                        buf.append(TagUtils.getInstance().computeURL(pageContext, null, null, "/images/calendar.gif", null, null, null, null, false));
                         
-                    } catch(MalformedURLException murle) {
-                        buf.append("images/calendar.gif");
-                    }
+//                    } catch(MalformedURLException murle) {
+//                        buf.append("images/calendar.gif");
+//                    }
                     buf.append("\" align=\"top\" border=\"0\">");
-                    buf.append("<div id=\"cf" + field.getId() + "\" style=\"position:absolute;\"></div>");
+                    buf.append("<div id=\"cf").append(field.getId()).append("\" style=\"position:absolute;\"></div>");
                 } else {
-                    buf.append("<input type=\"text\" name=\"customFields(" + field.getId() +")\"");
+                    buf.append("<input type=\"text\" name=\"customFields(").append(field.getId()).append(")\"");
                     buf.append((currentValue != null && ! currentValue.equals("") ?  " value=\"" + currentValue + "\"" : ""));
                     buf.append(" class=\"editColumnText\">");
                 }
