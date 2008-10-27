@@ -18,6 +18,7 @@
 
 package org.itracker.model;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
@@ -31,6 +32,10 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class Permission extends AbstractEntity {
 
+	/**
+	 * Comparator for comparing the main properties type, user, project
+	 */
+	public static final PermissionPropertiesComparator PERMISSION_PROPERTIES_COMPARATOR = new PermissionPropertiesComparator();
 	/**
 	 * 
 	 */
@@ -126,4 +131,10 @@ public class Permission extends AbstractEntity {
 				.append("user", getUser()).append("project", getProject()).toString();
 	}
 
+	
+	public static final class PermissionPropertiesComparator implements java.util.Comparator<Permission> {
+		public int compare(Permission lhs, Permission rhs) {
+			return new CompareToBuilder().append(lhs.type, rhs.type).append(lhs.user, rhs.user).append(lhs.project, rhs.project).toComparison();
+	    }
+	}
 }
