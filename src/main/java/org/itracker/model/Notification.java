@@ -108,7 +108,11 @@ public class Notification extends AbstractEntity implements Comparable<Entity> {
 	 * @return
 	 */
 	public int getNotificationRole() {
-		return getRole().code;
+		Role r = getRole();
+		if (null == r) {
+			r = Role.ANY;
+		}
+		return r.code;
 	}
 
 	/**
@@ -116,8 +120,11 @@ public class Notification extends AbstractEntity implements Comparable<Entity> {
 	 * @param role
 	 */
 	public void setNotificationRole(int role) {
-
-		this.setRole(getRoleForCode(role));
+		Role r = getRoleForCode(role);
+		if (null == r) {
+			r = Role.ANY;
+		}
+		this.setRole(r);
 	}
 
 	private Role getRoleForCode(int code) {
