@@ -50,7 +50,7 @@
         <br>
       </logic:messagesPresent>
 
-      <html:form action="/edituser">
+      <html:form action="/edituser" method="post" acceptCharset="UTF-8">
         <html:hidden property="action"/>
         <html:hidden property="id"/>
 
