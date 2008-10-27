@@ -86,14 +86,17 @@ public class EditUserAction extends ItrackerBaseAction {
             // if userForm.getID returns -1, then this is a new user.. 
             if( userForm.getId() != -1 ) {
                 editUser.setId(userForm.getId());
+            } else {
+            	editUser = userService.getUser(userForm.getId());
             }
+
+            String previousLogin = editUser.getLogin();
 
             editUser.setLogin(userForm.getLogin());
             editUser.setFirstName(userForm.getFirstName());
             editUser.setLastName(userForm.getLastName());
             editUser.setEmail(userForm.getEmail());
             editUser.setSuperUser(userForm.isSuperUser());
-            String previousLogin = editUser.getLogin();
 
             try {
                 if("create".equals(userForm.getAction())) {
@@ -118,47 +121,47 @@ public class EditUserAction extends ItrackerBaseAction {
                     }
                     editUser = userService.createUser(editUser);
                 } else if ("update".equals(userForm.getAction())) {
-                    User existingUser = userService.getUser(editUser.getId());
+                    User existingUser = editUser;//userService.getUser(editUser.getId());
+                    if (log.isDebugEnabled()) {
+                    	log.debug("execute: updating existingUser " + existingUser);
+                    }
                     if(existingUser != null) {
                         previousLogin = existingUser.getLogin();
-                        boolean performUpdate = false;
                         if(! userService.allowProfileUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
                             editUser = existingUser;
 //                            itracker.web.error.noprofileupdates
 	                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprofileupdates"));
 	                        saveMessages(request, errors);
 	                        return mapping.findForward("error");
-                        } else {
+                        }
+                        
 
 //                            log.debug("updating " + editUser);
-	                        if (null != userForm.getPassword() && !userForm.getPassword().equals("")) {
-		                        if(userService.allowPasswordUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
+                        if (null != userForm.getPassword() && !userForm.getPassword().equals("")) {
+	                        if(userService.allowPasswordUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
 
-	                                editUser.setPassword(UserUtilities.encryptPassword(userForm.getPassword()));
+                                editUser.setPassword(UserUtilities.encryptPassword(userForm.getPassword()));
 //	                                if (log.isDebugEnabled()) {
 //	                                	log.debug("execute: setting password: " + userForm.getPassword() + " encrypted: " + editUser.getPassword());
 //	                                }
-	                                performUpdate = true;
-		                            
-		                        } else {
-			                    	// Passwort was attempted to set, but authenticator is not able to. Exception
-		                            editUser = existingUser;
+	                            
+	                        } else {
+		                    	// Passwort was attempted to set, but authenticator is not able to. Exception
+	                            editUser = existingUser;
 //		                            itracker.web.error.nopasswordupdates
-			                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
-			                        saveMessages(request, errors);
-			                        return mapping.findForward("error");
-		                        }
+		                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
+		                        saveMessages(request, errors);
+		                        return mapping.findForward("error");
 	                        }
                         }
-                        if(performUpdate) {
-                        	if (log.isDebugEnabled()) {
-                        		log.debug("execute: applying updates on user " + editUser);
-                        	}
-                            editUser = userService.updateUser(editUser);
-                        	if (log.isDebugEnabled()) {
-                        		log.debug("execute: applied updates on user " + editUser);
-                        	}
-                        }
+                        
+                    	if (log.isDebugEnabled()) {
+                    		log.debug("execute: applying updates on user " + editUser);
+                    	}
+                        editUser = userService.updateUser(editUser);
+                    	if (log.isDebugEnabled()) {
+                    		log.debug("execute: applied updates on user " + editUser);
+                    	}
                     } else {
                     	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invaliduser"));
                     }
@@ -170,13 +173,15 @@ public class EditUserAction extends ItrackerBaseAction {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.existinglogin"));
                 saveMessages(request, errors);
                 saveToken(request);
-                return mapping.getInputForward();
+                mapping.findForward("error");
             }
 
             if(errors.isEmpty() && userService.allowPermissionUpdates(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
                 Map<String,String> permissionsMap = userForm.getPermissions();
                 List<Permission> newPermissions = new ArrayList<Permission>();
-                for(Iterator<String> iter = permissionsMap.keySet().iterator(); iter.hasNext(); ) {
+                
+                
+                for (Iterator<String> iter = permissionsMap.keySet().iterator(); iter.hasNext(); ) {
                     String paramName = iter.next();
                     Integer projectIntValue =  new Integer(paramName.substring(paramName.lastIndexOf('j') + 1));
                     Project project = projectService.getProject(projectIntValue);
@@ -231,7 +236,7 @@ public class EditUserAction extends ItrackerBaseAction {
         if(! errors.isEmpty()) {
             saveMessages(request, errors);
             saveToken(request);
-            return mapping.getInputForward();
+            return mapping.findForward("error");
         }
         session.removeAttribute(Constants.EDIT_USER_KEY);
         return mapping.findForward("error");
