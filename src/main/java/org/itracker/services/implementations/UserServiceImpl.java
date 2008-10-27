@@ -18,9 +18,9 @@
 
 package org.itracker.services.implementations;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -297,11 +297,11 @@ public class UserServiceImpl implements UserService {
 //        existinguser.setLastModifiedDate(new Timestamp(new Date().getTime()));
 
 //        // Only set the password if it is a new value...
-//        if (user.getPassword() != null && (!user.getPassword().equals(""))
+        if (user.getPassword() != null && (!user.getPassword().equals(""))) {
 //                && (!user.getPassword().equals(user.getPassword()))) {
         	Log.info("updateUser: setting new password for " + user.getLogin());
             existinguser.setPassword(user.getPassword());
-//        }
+        }
 
         userDAO.saveOrUpdate(existinguser);
         
@@ -514,7 +514,23 @@ public class UserServiceImpl implements UserService {
 
         return successful;
     }
-
+    
+    /**
+     * private util for collection searching (contains)
+     */
+    private static final Permission find(Collection<Permission> permissions, Permission permission) {
+    	
+    	Iterator<Permission> permssionsIt = permissions.iterator();
+    	while (permssionsIt.hasNext()) {
+			Permission permission2 = (Permission) permssionsIt.next();
+			if (Permission.PERMISSION_PROPERTIES_COMPARATOR.compare(permission, permission2) == 0) {
+				// found in list, return the found object
+				return permission2;
+			}
+		}
+    	return null;
+    }
+    
     public boolean setUserPermissions(Integer userId, List<Permission> newPermissions) {
         boolean successful = true;
         List<Permission> delPermissions = new ArrayList<Permission>();
@@ -528,13 +544,13 @@ public class UserServiceImpl implements UserService {
             if (!setPermissions.isEmpty() && !newPermissions.isEmpty()) {
                 for (Iterator<Permission> setPerms = setPermissions.iterator(); setPerms.hasNext();) {
                     Permission permission = setPerms.next();
-                    if (!newPermissions.contains(permission)) {
-                        delPermissions.add(permission);
+                    if (null == find(newPermissions, permission)) {
+                        delPermissions.add(permission);                    	
                     }
                 }
                 for (Iterator<Permission> newPerms = newPermissions.iterator(); newPerms.hasNext();) {
                     Permission permission = newPerms.next();
-                    if (!setPermissions.contains(permission)) {
+                    if (null == find(setPermissions, permission)) {
                         addPermissions.add(permission);
                     }
                 }
@@ -546,7 +562,9 @@ public class UserServiceImpl implements UserService {
             } else {
                 for (Iterator<Permission> newPerms = newPermissions.iterator(); newPerms.hasNext();) {
                     Permission addpermission = newPerms.next();
-                    addPermissions.add(addpermission);
+                    if (null == find(setPermissions, addpermission)) {
+                    	addPermissions.add(addpermission);
+                    }
                 }
             }
 
@@ -554,12 +572,14 @@ public class UserServiceImpl implements UserService {
             if (!delPermissions.isEmpty()) {
                 for (Iterator<Permission> iterator = delPermissions.iterator(); iterator.hasNext();) {
                     Permission permission = (Permission) iterator.next();
+//                    usermodel.getPermissions().remove(permission);
                     permissionDAO.delete(permission);
                 }
             }
             if (!addPermissions.isEmpty()) {
                 for (Iterator<Permission> iterator = addPermissions.iterator(); iterator.hasNext();) {
                     Permission permission = (Permission) iterator.next();
+//                    usermodel.getPermissions().add(permission);
                     permissionDAO.saveOrUpdate(permission);
                 }
             }
