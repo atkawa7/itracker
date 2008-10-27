@@ -20,6 +20,7 @@ package org.itracker.web.actions.project;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,6 +47,7 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 import org.apache.struts.validator.ValidatorForm;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.Component;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueAttachment;
@@ -88,13 +90,15 @@ public class EditIssueAction extends ItrackerBaseAction {
 			log.debug("execute: Invalid request token while editing issue.");
 			ProjectService projectService = getITrackerServices()
 					.getProjectService();
-			request.setAttribute("projects", projectService.getAllProjects());
-			request.setAttribute("ph", projectService);
+//			request.setAttribute("projects", projectService.getAllProjects());
+//			request.setAttribute("ph", projectService);
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.transaction"));
 			saveMessages(request, errors);
-			log.info("execute: EditIssueAction: Forward: listprojects");
-			return mapping.findForward("listprojects");
+			log.info("execute: return to edit-issue");
+			saveToken(request);
+			return null;
+//			return mapping.getInputForward();
 		}
 
 		resetToken(request);
@@ -180,22 +184,22 @@ public class EditIssueAction extends ItrackerBaseAction {
 			sendNotification(issue.getId(), previousStatus,
 					getBaseURL(request), notificationService);
 			logTimeMillies("execute: sent notification", logDate, log, Level.DEBUG);
-			session.removeAttribute(Constants.ISSUE_KEY);
+//			session.removeAttribute(Constants.ISSUE_KEY);
 
 			WorkflowUtilities.processFieldScripts(scripts,
 					WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, null, errors,
 					(ValidatorForm) form);
 			logTimeMillies("execute: processed field scripts EVENT_FIELD_ONPOSTSUBMIT", logDate, log, Level.DEBUG);
 
-			ProjectService projectService = getITrackerServices()
-					.getProjectService();
-			request.setAttribute("projects", projectService.getAllProjects());
-			request.setAttribute("ph", projectService);
+//			ProjectService projectService = getITrackerServices()
+//					.getProjectService();
+//			request.setAttribute("projects", projectService.getAllProjects());
+//			request.setAttribute("ph", projectService);
 
 			return getReturnForward(issue, project, issueForm, mapping);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			log.error("execute: Exception processing form data", e);
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.system"));
@@ -220,26 +224,41 @@ public class EditIssueAction extends ItrackerBaseAction {
 			IssueForm form, IssueService issueService) throws Exception {
 
 		int previousStatus = issue.getStatus();
-
+		
+		boolean needReloadIssue = false;
+		
+		needReloadIssue = issueService.setIssueVersions(issue.getId(), 
+				new HashSet<Integer>(Arrays.asList(form.getVersions())), 
+				user.getId());
+				
+		needReloadIssue = needReloadIssue | issueService.setIssueComponents(issue.getId(), 
+				new HashSet<Integer>(Arrays.asList(form.getComponents())), 
+				user.getId());
+		// reload issue for further updates
+		if (needReloadIssue) {
+			issue = issueService.getIssue(issue.getId());
+		}
+		
 		Integer targetVersion = form.getTargetVersion();
-
 		if (targetVersion != null && targetVersion != -1) {
-
 			ProjectService projectService = getITrackerServices()
 					.getProjectService();
 			Version version = projectService.getProjectVersion(targetVersion);
-
 			if (version == null) {
 				throw new RuntimeException("No version with Id "
 						+ targetVersion);
 			}
-
 			issue.setTargetVersion(version);
 
 		}
 
 
 
+		issue.setResolution(form.getResolution());
+		issue.setSeverity(form.getSeverity());
+		
+		applyLimitedFields(issue, project, user, userPermissions, locale, form, issueService);
+		
 		// TODO not so nice code. what means -1?
 		if (previousStatus != -1) {
 			// Reopened the issue. Reset the resolution field.
@@ -280,47 +299,6 @@ public class EditIssueAction extends ItrackerBaseAction {
 				issue.setStatus(IssueUtilities.STATUS_CLOSED);
 			}
 		}
-
-
-		setIssueFields(issue, user, locale, form, issueService);
-		setOwner(issue, user, userPermissions, form, issueService);
-		
-		issue = addHistoryEntry(issue, user, form, issueService);
-
-		HashSet<Integer> components = new HashSet<Integer>();
-
-		Integer[] componentIds = form.getComponents();
-
-		if (componentIds != null) {
-			for (int i = 0; i < componentIds.length; i++) {
-				components.add(componentIds[i]);
-			}
-
-			issueService.setIssueComponents(issue.getId(), components, user
-					.getId());
-		}
-
-		HashSet<Integer> versions = new HashSet<Integer>();
-
-		Integer[] versionIds = form.getVersions();
-
-		if (versionIds != null) {
-			for (int i = 0; i < versionIds.length; i++) {
-				versions.add(versionIds[i]);
-			}
-
-			issueService
-					.setIssueVersions(issue.getId(), versions, user.getId());
-		}
-
-		addAttachment(issue, project, user, form, issueService);
-		
-		issue.setDescription(form.getDescription());
-		issue.setResolution(form.getResolution());
-		issue.setSeverity(form.getSeverity());
-		if (form.getStatus() != null) {
-			issue.setStatus(form.getStatus());
-		}
 		
 		return issueService.updateIssue(issue, user.getId());
 
@@ -333,7 +311,20 @@ public class EditIssueAction extends ItrackerBaseAction {
 			Locale locale, IssueForm form, IssueService issueService)
 			throws Exception {
 
+		applyLimitedFields(issue, project, user, userPermissionsMap, locale, form, issueService);
+		return issueService.updateIssue(issue, user.getId());
+		
+	}
+	
+	private void applyLimitedFields(Issue issue, Project project,
+			User user, Map<Integer, Set<PermissionType>> userPermissionsMap,
+			Locale locale, IssueForm form, IssueService issueService) throws Exception {
+		
 
+		// save attachment and reload updated issue
+		addAttachment(issue, project, user, form, issueService);
+		issue = issueService.getIssue(issue.getId());
+		
 		issue.setDescription(form.getDescription());
 
 		Integer formStatus = form.getStatus();
@@ -353,22 +344,25 @@ public class EditIssueAction extends ItrackerBaseAction {
 		setIssueFields(issue, user, locale, form, issueService);
 		setOwner(issue, user, userPermissionsMap, form, issueService);
 		addHistoryEntry(issue, user, form, issueService);
-		addAttachment(issue, project, user, form, issueService);
 
-		return issueService.updateIssue(issue, user.getId());
-		
 	}
 
 	private void setOwner(Issue issue, User user,
 			Map<Integer, Set<PermissionType>> userPermissionsMap,
 			IssueForm form, IssueService issueService) throws Exception {
 
+		if (log.isDebugEnabled()) {
+			log.debug("setOwner: called to " + form.getOwnerId());
+		}
 		Integer currentOwner = (issue.getOwner() == null) ? null : issue
 				.getOwner().getId();
 
 		Integer ownerId = form.getOwnerId();
 
 		if (ownerId == null || ownerId.equals(currentOwner)) {
+			if (log.isDebugEnabled()) {
+				log.debug("setOwner: returning, existing owner is the same: " + issue.getOwner());
+			}
 			return;
 		}
 
@@ -381,7 +375,12 @@ public class EditIssueAction extends ItrackerBaseAction {
 						UserUtilities.PERMISSION_UNASSIGN_SELF)
 						&& user.getId().equals(currentOwner) && ownerId
 						.intValue() == -1)) {
-			issueService.assignIssue(issue.getId(), ownerId, user.getId());
+			User newOwner = getITrackerServices().getUserService().getUser(ownerId);
+			if (log.isDebugEnabled()) {
+				log.debug("setOwner: setting new owner " + newOwner + " to " + issue);
+			}
+			issue.setOwner(newOwner);
+//			issueService.assignIssue(issue.getId(), ownerId, user.getId());
 		}
 
 	}
@@ -444,23 +443,33 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 				}
 			}
-			issueService.setIssueFields(issue.getId(), issueFieldsList);
+			
+			// set new issue fields for later saving
+			issue.setFields(issueFieldsList);
+			
+//			issueService.setIssueFields(issue.getId(), issueFieldsList);
 		} catch (Exception e) {
 			log.error("setIssueFields: failed to process custom fields", e);
 			throw e;
 		}
 	}
 
-	private Issue addHistoryEntry(Issue issue, User user, IssueForm form,
+	private void addHistoryEntry(Issue issue, User user, IssueForm form,
 			IssueService issueService) throws Exception {
 
+
 			try {
-			String history = form.getHistory();
+				String history = form.getHistory();
 	
 			if (history == null || history.equals("")) {
-				return issue;
+				if (log.isDebugEnabled()) {
+					log.debug("addHistoryEntry: skip history to " + issue);
+				}
+				return;
 			}
-
+			if (log.isDebugEnabled()) {
+				log.debug("addHistoryEntry: adding history to " + issue);
+			}
 			IssueHistory issueHistory = new IssueHistory(issue, user, history,
 				IssueUtilities.HISTORY_STATUS_AVAILABLE);
 
@@ -471,13 +480,15 @@ public class EditIssueAction extends ItrackerBaseAction {
 			issue.getHistory().add(issueHistory);
 
 //  TODO why do we need to updateIssue here, and can not later?
-		return issueService.updateIssue(issue, user.getId());
+//			issueService.updateIssue(issue, user.getId());
 		} catch (Exception e) {
 			log.error("addHistoryEntry: failed to add", e);
 			throw e;
 		}
 //		issueService.addIssueHistory(issueHistory);
-
+		if (log.isDebugEnabled()) {
+			log.debug("addHistoryEntry: added history for issue " + issue);
+		}
 	}
 
 	private void addAttachment(Issue issue, Project project, User user,
@@ -510,7 +521,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 		if (log.isDebugEnabled()) {
 			log.debug("addAttachment: adding file, name: " + origFileName
 					+ " of type " + file.getContentType() + ", description: "
-					+ form.getAttachmentDescription());
+					+ form.getAttachmentDescription() + ". filesize: " + fileSize);
 		}
 
 		if (AttachmentUtilities.checkFile(file, this.getITrackerServices())) {
@@ -523,7 +534,9 @@ public class EditIssueAction extends ItrackerBaseAction {
 			IssueAttachment attachmentModel = new IssueAttachment(issue,
 					origFileName, contentType, attachmentDescription, fileSize,
 					user);
-
+			
+			attachmentModel.setIssue(issue);
+//			issue.getAttachments().add(attachmentModel);
 			issueService
 					.addIssueAttachment(attachmentModel, file.getFileData());
 
@@ -565,6 +578,8 @@ public class EditIssueAction extends ItrackerBaseAction {
 					+ "?id=" + issue.getId());
 		} else {
 			log.info("EditIssueAction: Forward: listissues");
+			
+			
 			return new ActionForward(mapping.findForward("listissues")
 					.getPath()
 					+ "?projectId=" + project.getId());
