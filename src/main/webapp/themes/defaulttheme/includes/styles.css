@@ -139,9 +139,8 @@ a.headerLinks:visited {
 	color: white;
   	background-color: #555555;
 	text-decoration: none;
-	padding: 4px;
 }
-.listHeading td, .listHeading th {
+tr.listHeading td, tr.listHeading th {
 	padding: 3px 6px;	
 }
 .listHeading .editColumnText,
@@ -162,19 +161,11 @@ a.headerLinks:visited {
 	text-decoration: none;
 }
 
-a.listHeading:hover {
-	color: white;
-	text-decoration: none;
-}
-
-a.listHeading:visited {
-	color: black;
-	text-decoration: none;
-}
-
+a.listHeading:hover,
+a.listHeading:visited,
 a.listHeading:link {
-	color: white;
-	text-decoration: none;
+	color: #fff;
+	text-decoration: underline;
 }
 
 
