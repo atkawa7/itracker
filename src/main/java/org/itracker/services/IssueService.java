@@ -124,8 +124,21 @@ public interface IssueService {
      */
     Issue moveIssue(Issue issue, Integer projectId, Integer userId);
         
+    /**
+     * 
+     * @param issueId
+     * @param userId
+     * @return
+     */
     boolean assignIssue(Integer issueId, Integer userId);
     
+    /**
+     * 
+     * @param issueId
+     * @param userId
+     * @param assignedByUserId
+     * @return
+     */
     boolean assignIssue(Integer issueId, Integer userId, Integer assignedByUserId);
     
     /**
