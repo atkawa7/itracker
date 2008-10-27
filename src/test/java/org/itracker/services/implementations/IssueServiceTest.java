@@ -5,10 +5,8 @@ package org.itracker.services.implementations;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -17,7 +15,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.itracker.AbstractDependencyInjectionTest;
-import org.itracker.core.resources.ITrackerResourceBundle;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
@@ -318,7 +315,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 					.getHistory().size());
 
 		} catch (ProjectException e) {
-			e.printStackTrace();
+			logger.error("testUpdateIssue", e);
 			fail(e.getMessage());
 		}
 
