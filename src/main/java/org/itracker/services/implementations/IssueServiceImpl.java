@@ -1064,10 +1064,10 @@ public class IssueServiceImpl implements IssueService {
 		if (!user.equals(currOwner)) {
 			if (currOwner != null
 					&& !notificationService.hasIssueNotification(issue,
-							currOwner.getId(), Role.CONTRIBUTER)) {
+							currOwner.getId(), Role.IP)) {
 				// Notification notification = new Notification();
 				Notification notification = new Notification(currOwner, issue,
-						Role.CONTRIBUTER);
+						Role.IP);
 				if (save) {
 					notificationService.addIssueNotification(notification);
 				} else {

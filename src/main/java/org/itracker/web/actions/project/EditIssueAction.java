@@ -234,8 +234,14 @@ public class EditIssueAction extends ItrackerBaseAction {
 		needReloadIssue = needReloadIssue | issueService.setIssueComponents(issue.getId(), 
 				new HashSet<Integer>(Arrays.asList(form.getComponents())), 
 				user.getId());
+		// save attachment and reload updated issue
+		needReloadIssue = needReloadIssue | addAttachment(issue, project, user, form, issueService);
+
 		// reload issue for further updates
 		if (needReloadIssue) {
+			if (log.isDebugEnabled()) {
+				log.debug("processFullEdit: updating issue from session: " + issue);
+			}
 			issue = issueService.getIssue(issue.getId());
 		}
 		
@@ -259,74 +265,83 @@ public class EditIssueAction extends ItrackerBaseAction {
 		
 		applyLimitedFields(issue, project, user, userPermissions, locale, form, issueService);
 		
-		// TODO not so nice code. what means -1?
-		if (previousStatus != -1) {
-			// Reopened the issue. Reset the resolution field.
-			if ((issue.getStatus() >= IssueUtilities.STATUS_ASSIGNED && issue
-					.getStatus() < IssueUtilities.STATUS_RESOLVED)
-					&& (previousStatus >= IssueUtilities.STATUS_RESOLVED && previousStatus < IssueUtilities.STATUS_END)) {
-				issue.setResolution("");
+		Integer formStatus = form.getStatus();
+		issue.setStatus(formStatus);
+		if (formStatus != null) {
+			if (log.isDebugEnabled()) {
+				log.debug("processFullEdit: processing status: " + formStatus);
 			}
-
-			if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED
+			
+			if (previousStatus != -1) {
+				// Reopened the issue. Reset the resolution field.
+				if ((previousStatus >= IssueUtilities.STATUS_ASSIGNED && previousStatus < IssueUtilities.STATUS_RESOLVED)
+						&& (previousStatus >= IssueUtilities.STATUS_RESOLVED && previousStatus < IssueUtilities.STATUS_END)) {
+					issue.setResolution("");
+				}
+	
+				if (previousStatus >= IssueUtilities.STATUS_CLOSED
+						&& !UserUtilities.hasPermission(userPermissions, project
+								.getId(), UserUtilities.PERMISSION_CLOSE)) {
+					if (previousStatus < IssueUtilities.STATUS_CLOSED) {
+						issue.setStatus(previousStatus);
+					} else {
+						issue.setStatus(IssueUtilities.STATUS_RESOLVED);
+					}
+				}
+	
+				if (issue.getStatus() < IssueUtilities.STATUS_NEW
+						|| issue.getStatus() >= IssueUtilities.STATUS_END) {
+					issue.setStatus(previousStatus);
+				}
+	
+			} else if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED
 					&& !UserUtilities.hasPermission(userPermissions, project
 							.getId(), UserUtilities.PERMISSION_CLOSE)) {
-				if (previousStatus < IssueUtilities.STATUS_CLOSED) {
-					issue.setStatus(previousStatus);
-				} else {
-					issue.setStatus(IssueUtilities.STATUS_RESOLVED);
-				}
+				issue.setStatus(IssueUtilities.STATUS_RESOLVED);
 			}
-
-			if (issue.getStatus() < IssueUtilities.STATUS_NEW
-					|| issue.getStatus() >= IssueUtilities.STATUS_END) {
-				issue.setStatus(previousStatus);
-			}
-
-		} else if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED
-				&& !UserUtilities.hasPermission(userPermissions, project
-						.getId(), UserUtilities.PERMISSION_CLOSE)) {
-			issue.setStatus(IssueUtilities.STATUS_RESOLVED);
 		}
 
 		if (issue.getStatus() < IssueUtilities.STATUS_NEW) {
+			if (log.isDebugEnabled()) {
+				log.debug("processFullEdit: status < STATUS_NEW: " + issue.getStatus());
+			}
 			issue.setStatus(IssueUtilities.STATUS_NEW);
+			if (log.isDebugEnabled()) {
+				log.debug("processFullEdit: updated to: " + issue.getStatus());
+			}
 		} else if (issue.getStatus() >= IssueUtilities.STATUS_END) {
+			if (log.isDebugEnabled()) {
+				log.debug("processFullEdit: status >= STATUS_END: " + issue.getStatus());
+			}
 			if (!UserUtilities.hasPermission(userPermissions, project.getId(),
 					UserUtilities.PERMISSION_CLOSE)) {
 				issue.setStatus(IssueUtilities.STATUS_RESOLVED);
 			} else {
 				issue.setStatus(IssueUtilities.STATUS_CLOSED);
 			}
+			if (log.isDebugEnabled()) {
+				log.debug("processFullEdit: status updated to: " + issue.getStatus());
+			}
 		}
-		
+		if (log.isDebugEnabled()) {
+			log.debug("processFullEdit: updating issue " + issue);
+		}
 		return issueService.updateIssue(issue, user.getId());
 
 	}
 
 
 
-	private Issue processLimitedEdit(final Issue issue, Project project,
+	private Issue processLimitedEdit(Issue issue, Project project,
 			User user, Map<Integer, Set<PermissionType>> userPermissionsMap,
 			Locale locale, IssueForm form, IssueService issueService)
 			throws Exception {
 
-		applyLimitedFields(issue, project, user, userPermissionsMap, locale, form, issueService);
-		return issueService.updateIssue(issue, user.getId());
-		
-	}
-	
-	private void applyLimitedFields(Issue issue, Project project,
-			User user, Map<Integer, Set<PermissionType>> userPermissionsMap,
-			Locale locale, IssueForm form, IssueService issueService) throws Exception {
-		
 
-		// save attachment and reload updated issue
-		addAttachment(issue, project, user, form, issueService);
-		issue = issueService.getIssue(issue.getId());
+		if (addAttachment(issue, project, user, form, issueService)) {
+			issue = issueService.getIssue(issue.getId());
+		}
 		
-		issue.setDescription(form.getDescription());
-
 		Integer formStatus = form.getStatus();
 
 		if (formStatus != null) {
@@ -340,6 +355,21 @@ public class EditIssueAction extends ItrackerBaseAction {
 			}
 
 		}
+		
+		applyLimitedFields(issue, project, user, userPermissionsMap, locale, form, issueService);
+		return issueService.updateIssue(issue, user.getId());
+		
+	}
+	
+	private void applyLimitedFields(Issue issue, Project project,
+			User user, Map<Integer, Set<PermissionType>> userPermissionsMap,
+			Locale locale, IssueForm form, IssueService issueService) throws Exception {
+		
+
+
+		
+		issue.setDescription(form.getDescription());
+
 
 		setIssueFields(issue, user, locale, form, issueService);
 		setOwner(issue, user, userPermissionsMap, form, issueService);
@@ -491,19 +521,19 @@ public class EditIssueAction extends ItrackerBaseAction {
 		}
 	}
 
-	private void addAttachment(Issue issue, Project project, User user,
+	private boolean addAttachment(Issue issue, Project project, User user,
 			IssueForm form, IssueService issueService) throws Exception {
 
 		if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS,
 				project.getOptions())) {
-			return;
+			return false;
 		}
 
 		FormFile file = form.getAttachment();
 
 		if (file == null || file.getFileName().trim().length() < 1) {
 			log.info("addAttachment: skipping file " + file);
-			return;
+			return false;
 		}
 
 		String origFileName = file.getFileName();
@@ -537,11 +567,11 @@ public class EditIssueAction extends ItrackerBaseAction {
 			
 			attachmentModel.setIssue(issue);
 //			issue.getAttachments().add(attachmentModel);
-			issueService
+			return issueService
 					.addIssueAttachment(attachmentModel, file.getFileData());
 
 		}
-
+		return false;
 	}
 
 	private void sendNotification(Integer issueId, int previousStatus,
