@@ -1,4 +1,4 @@
-body {
+smallbody {
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	background: #fff;
@@ -132,13 +132,24 @@ a.headerLinks:visited {
 }
 
 .listHeading {
-	font-weight: normal;
+	font-weight: bold;
 	text-align: left;
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	color: white;
-  background-color: #555555;
+  	background-color: #555555;
 	text-decoration: none;
+	padding: 4px;
+}
+.listHeading td, .listHeading th {
+	padding: 3px 6px;	
+}
+.listHeading .editColumnText,
+.listHeading .editColumnText a ,
+.listHeading .editColumnText span {
+	background: transparent;
+	font-weight: bold;
+	color: white
 }
 
 .listSubHeading {
@@ -198,6 +209,11 @@ a.listHeading:link {
 	font-size: 10px;
 }
 
+.listRowSmall ul, .listRowSmall li {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
 a.listRow:hover {
 	color: black;
 	text-decoration: none;
@@ -243,6 +259,7 @@ a.listRow:link {
   background-color: white;
 	text-decoration: none;
 }
+
 
 .formError {
 	font-weight: normal;
