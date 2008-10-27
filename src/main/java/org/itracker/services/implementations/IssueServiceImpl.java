@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.event.SaveOrUpdateEvent;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Component;
 import org.itracker.model.CustomField;
@@ -63,6 +64,7 @@ import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.Version;
 import org.itracker.model.Notification.Role;
+import org.itracker.model.Notification.Type;
 import org.itracker.persistence.dao.ComponentDAO;
 import org.itracker.persistence.dao.CustomFieldDAO;
 import org.itracker.persistence.dao.IssueActivityDAO;
@@ -79,6 +81,8 @@ import org.itracker.services.exceptions.IssueSearchException;
 import org.itracker.services.exceptions.ProjectException;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.IssueUtilities;
+import org.itracker.web.util.ServletContextUtils;
+import org.jfree.util.Log;
 
 /**
  * Issue related service layer. A bit "fat" at this time, because of being a
@@ -386,15 +390,17 @@ public class IssueServiceImpl implements IssueService {
 
 			Notification watchModel = new Notification();
 
-			watchModel.setUser(creator);
+			watchModel.setUser(createdBy);
 
 			watchModel.setIssue(issue);
 
-			watchModel.setRole(Notification.Role.IP);
+			watchModel.setRole(Notification.Role.CONTRIBUTER);
 
 			addIssueNotification(watchModel);
 
 		}
+		
+		
 
 		List<IssueActivity> activities = new ArrayList<IssueActivity>();
 		activities.add(activity);
@@ -423,22 +429,31 @@ public class IssueServiceImpl implements IssueService {
 	 *            the user-id of the changer
 	 * 
 	 */
-	public Issue updateIssue(Issue issueDirty, Integer userId)
+	public Issue updateIssue(final Issue issueDirty, final Integer userId)
 			throws ProjectException {
-		if (logger.isDebugEnabled()) {
-			logger.debug("updateIssue: updating issue " + issueDirty);
-		}
+		
 		String existingTargetVersion = null;
 
+
+//		List<Component> newComponents = new ArrayList<Component>(issueDirty.getComponents());
+//		List<Version> newVersions = new ArrayList<Version>(issueDirty.getVersions());
+//		List<IssueField> newFields = new ArrayList<IssueField>(issueDirty.getFields());
+//
+//		issueDirty.setComponents(newComponents);
+//		issueDirty.setVersions(newVersions);
+		
 		// detach the modified Issue form the Hibernate Session
 		getIssueDAO().detach(issueDirty);
 		// Retrieve the Issue from Hibernate Session and refresh it from
 		// Hibernate Session to previous state.
 		Issue persistedIssue = getIssueDAO().findByPrimaryKey(
 				issueDirty.getId());
-		
-		getIssueDAO().refresh(persistedIssue);
 
+		getIssueDAO().refresh(persistedIssue);
+		if (logger.isDebugEnabled()) {
+			logger.debug("updateIssue: updating issue " + issueDirty + "\n(from " + persistedIssue + ")");
+		}
+		
 		User user = getUserDAO().findByPrimaryKey(userId);
 
 		if (persistedIssue.getProject().getStatus() != Status.ACTIVE) {
@@ -446,8 +461,8 @@ public class IssueServiceImpl implements IssueService {
 					+ persistedIssue.getProject().getName() + " is not active.");
 		}
 
-		if (persistedIssue.getDescription() != null
-				&& !persistedIssue.getDescription().equalsIgnoreCase(
+
+		if (!persistedIssue.getDescription().equalsIgnoreCase(
 						issueDirty.getDescription())) {
 
 			if (logger.isDebugEnabled()) {
@@ -536,12 +551,45 @@ public class IssueServiceImpl implements IssueService {
 			issueDirty.getActivities().add(activity);
 		}
 	
+
+		// (re-)assign issue
+		User newOwner = issueDirty.getOwner();
+		issueDirty.setOwner(persistedIssue.getOwner());
+		if (logger.isDebugEnabled()) {
+			logger.debug("updateIssue: assigning from " + issueDirty.getOwner() + " to " + newOwner);
+		}
+		assignIssue(issueDirty, newOwner, user, false);
+		if (logger.isDebugEnabled()) {
+			logger.debug("updateIssue: updated assignment: " + issueDirty);
+		}
+		
+		
 		if (logger.isDebugEnabled()) {
 			logger.debug("updateIssue: merging issue " + issueDirty + " to " + persistedIssue);
 		}
 		
 		persistedIssue = getIssueDAO().merge(issueDirty);
+		
+		// do the issue-fields (custom fields of project)
+//		if (newFields != persistedIssue.getFields()) {
+//			if (logger.isDebugEnabled()) {
+//				logger.debug("updateIssue: fields differ: " + newFields + "/" + persistedIssue.getFields());
+//			}
+//			if (null == persistedIssue.getFields()) {
+//				persistedIssue.setFields(new ArrayList<IssueField>());
+//			}
+//			issueDirty.setFields(persistedIssue.getFields());
+//			setIssueFields(persistedIssue, newFields, false);
+//		}
+		
 
+		// now the re-attached issue can be populated with components, versions, custom fields
+		// process components
+//		setIssueComponents(persistedIssue, newComponents, false);
+		
+		// process versions
+//		setIssueVersions(persistedIssue, newVersions, false);
+		
 		if (logger.isDebugEnabled()) {
 			logger.debug("updateIssue: merged issue for saving: " + persistedIssue);
 		}
@@ -642,29 +690,15 @@ public class IssueServiceImpl implements IssueService {
 	 */
 	public boolean setIssueFields(Integer issueId, List<IssueField> fields) {
 		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
+
+		setIssueFields(issue, fields, true);
+		
+		return true;
+	}
+	private boolean setIssueFields(Issue issue, List<IssueField> fields, boolean save) { 
+
 		List<IssueField> issueFields = issue.getFields();
-
-		// for (Iterator<IssueField> iter = issueFields.iterator();
-		// iter.hasNext();) {
-		// TODO: clean this code
-		// try {
-
-		// IssueField field = (IssueField) iter.next();
-
-		// iter.remove();
-
-		// field.remove();
-
-		// } catch(RemoveException re) {
-
-		// logger.info("Unable to remove issue field value. Manual
-
-		// database cleanup may be necessary.");
-
-		// }
-
-		// }
-
+		
 		if (fields.size() > 0) {
 			for (int i = 0; i < fields.size(); i++) {
 				
@@ -685,179 +719,142 @@ public class IssueServiceImpl implements IssueService {
 			}
 		}
 		issue.setFields(issueFields);
-
-		getIssueDAO().saveOrUpdate(issue);
+		
+		if (save) {
+			logger.debug("setIssueFields: save was true");
+			getIssueDAO().saveOrUpdate(issue);
+		}
 		return true;
 	}
 
+	
 	public boolean setIssueComponents(Integer issueId,
 			HashSet<Integer> componentIds, Integer userId) {
 
-		boolean wasChanged = false;
-
-		StringBuffer changesBuf = new StringBuffer();
-
 		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
-
-		List<Component> components = issue.getComponents();
-
-		if (components != null) {
-
-			if (componentIds.isEmpty() && !components.isEmpty()) {
-
-				wasChanged = true;
-
-				changesBuf.append(ITrackerResources
-						.getString("itracker.web.generic.all")
-						+ " "
-
-						+ ITrackerResources
-								.getString("itracker.web.generic.removed"));
-
-				components.clear();
-
-			} else {
-
-				for (Iterator<Component> iterator = components.iterator(); iterator
-						.hasNext();) {
-
-					Component component = (Component) iterator.next();
-
-					if (componentIds.contains(component.getId())) {
-
-						componentIds.remove(component.getId());
-
-					} else {
-
-						wasChanged = true;
-
-						changesBuf.append(ITrackerResources
-								.getString("itracker.web.generic.removed")
-								+ ": "
-
-								+ component.getName() + "; ");
-
-						iterator.remove();
-
-					}
-
-				}
-
-				for (Iterator<Integer> iterator = componentIds.iterator(); iterator
-						.hasNext();) {
-
-					Integer componentId = iterator.next();
-
-					Component component = getComponentDAO().findById(
-							componentId);
-
-					wasChanged = true;
-
-					changesBuf.append(ITrackerResources
-							.getString("itracker.web.generic.added")
-							+ ": "
-
-							+ component.getName() + "; ");
-
-					components.add(component);
-
-				}
-
-			}
-		} else {
-			logger.debug("components was null!");
+		List<Component> components = new ArrayList<Component>(componentIds.size());
+		
+		Iterator<Integer> idIt = componentIds.iterator();
+		while (idIt.hasNext()) {
+			Integer id = (Integer) idIt.next();
+			Component c = getComponentDAO().findById(id);
+			components.add(c);
 		}
+		
+		setIssueComponents(issue, components, true);
+		return true;
+	}
+
+	private boolean setIssueComponents(Issue issue,
+			List<Component> components, boolean save) {
+
+		boolean wasChanged = false;
+		StringBuffer changesBuf = new StringBuffer();
+		List<Component> componentsOld = issue.getComponents();
+
+		if (components.isEmpty() && !componentsOld.isEmpty()) {
+			wasChanged = true;
+			changesBuf.append(ITrackerResources
+					.getString("itracker.web.generic.all")
+					+ " "
+					+ ITrackerResources
+							.getString("itracker.web.generic.removed"));
+			componentsOld.clear();
+		} else {
+			for (Iterator<Component> iterator = componentsOld.iterator(); iterator
+					.hasNext();) {
+				Component component = (Component) iterator.next();
+				if (components.contains(component.getId())) {
+					components.remove(component.getId());
+				} else {
+					wasChanged = true;
+					changesBuf.append(ITrackerResources
+							.getString("itracker.web.generic.removed")
+							+ ": "
+							+ component.getName() + "; ");
+					iterator.remove();
+				}
+			}
+			for (Iterator<Component> iterator = components.iterator(); iterator
+					.hasNext();) {
+
+				Component component = iterator.next();
+				wasChanged = true;
+				changesBuf.append(ITrackerResources
+						.getString("itracker.web.generic.added")
+						+ ": "
+						+ component.getName() + "; ");
+				componentsOld.add(component);
+			}
+		}
+
 
 		if (wasChanged) {
 
 			IssueActivity activity = new IssueActivity();
-			activity
-					.setActivityType(org.itracker.model.IssueActivityType.COMPONENTS_MODIFIED);
+			activity.setActivityType(org.itracker.model.IssueActivityType.COMPONENTS_MODIFIED);
 			activity.setDescription(changesBuf.toString());
 			activity.setIssue(issue);
 			issue.getActivities().add(activity);
-			getIssueDAO().saveOrUpdate(issue);
+			if (save) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("setIssueComponents: save was true");
+				}
+				getIssueDAO().saveOrUpdate(issue);
+			}
 		}
 
 		return true;
 
 	}
-
-	public boolean setIssueVersions(Integer issueId,
-			HashSet<Integer> versionIds, Integer userId) {
-
+	
+	private boolean setIssueVersions(Issue issue,
+			List<Version> versions, boolean save) {
 		boolean wasChanged = false;
-
 		StringBuffer changesBuf = new StringBuffer();
-
-		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
-
-		List<Version> versions = issue.getVersions();
-
-		if (versions != null) {
-
-			if (versionIds.isEmpty() && !versions.isEmpty()) {
-
+		List<Version> oldVersions = issue.getVersions();
+		if (oldVersions != null) {
+			if (versions.isEmpty() && !oldVersions.isEmpty()) {
 				wasChanged = true;
-
 				changesBuf.append(ITrackerResources
 						.getString("itracker.web.generic.all")
 						+ " "
-
 						+ ITrackerResources
 								.getString("itracker.web.generic.removed"));
-
-				versions.clear();
-
+				oldVersions.clear();
 			} else {
-
-				for (Iterator<Version> iterator = versions.iterator(); iterator
+				for (Iterator<Version> iterator = oldVersions.iterator(); iterator
 						.hasNext();) {
 
-					Version version = (Version) iterator.next();
-
-					if (versionIds.contains(version.getId())) {
-
-						versionIds.remove(version.getId());
+					Version version = iterator.next();
+					if (versions.contains(version.getId())) {
+						versions.remove(version.getId());
 
 					} else {
-
 						wasChanged = true;
-
 						changesBuf.append(ITrackerResources
 								.getString("itracker.web.generic.removed")
 								+ ": "
 
 								+ version.getNumber() + "; ");
-
 						iterator.remove();
-
 					}
-
 				}
 
-				for (Iterator<Integer> iterator = versionIds.iterator(); iterator
+				for (Iterator<Version> iterator = versions.iterator(); iterator
 						.hasNext();) {
 
-					Integer versionId = (Integer) iterator.next();
 
-					Version version = getVersionDAO().findByPrimaryKey(
-							versionId);
-
+					Version version = iterator.next();
 					wasChanged = true;
 
 					changesBuf.append(ITrackerResources
 							.getString("itracker.web.generic.added")
 							+ ": "
-
 							+ version.getNumber() + "; ");
-
-					versions.add(version);
-
+					oldVersions.add(version);
 				}
-
 			}
-
 		} else {
 			logger.debug("Versions were null!");
 		}
@@ -870,11 +867,27 @@ public class IssueServiceImpl implements IssueService {
 			activity.setDescription(changesBuf.toString());
 			activity.setIssue(issue);
 			issue.getActivities().add(activity);
-			getIssueDAO().saveOrUpdate(issue);
+			if (save) {
+				getIssueDAO().saveOrUpdate(issue);
+			}
 		}
-
 		return true;
+	}
 
+	public boolean setIssueVersions(Integer issueId,
+			HashSet<Integer> versionIds, Integer userId) {
+
+		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
+		
+		// load versions from ids
+		ArrayList<Version> versions = new ArrayList<Version>(versionIds.size());
+		Iterator<Integer> versionsIdIt = versionIds.iterator();
+		while (versionsIdIt.hasNext()) {
+			Integer id = versionsIdIt.next() ;
+			versions.add(getVersionDAO().findByPrimaryKey(id));
+		}
+		
+		return setIssueVersions(issue, versions, true);
 	}
 
 	public IssueRelation getIssueRelation(Integer relationId) {
@@ -1005,33 +1018,61 @@ public class IssueServiceImpl implements IssueService {
 		return assignIssue(issueId, userId, userId);
 	}
 
+	/**
+	 * only use for updating issue from actions..
+	 */
 	public boolean assignIssue(Integer issueId, Integer userId,
 			Integer assignedByUserId) {
-		if (userId.intValue() == -1) {
-			return unassignIssue(issueId, assignedByUserId);
+	
+		
+		return assignIssue(getIssueDAO().findByPrimaryKey(issueId), getUserDAO().findByPrimaryKey(userId), getUserDAO().findByPrimaryKey(assignedByUserId), true);
+	}
+	/**
+	 * Only for use
+	 * @param issueId
+	 * @param userId
+	 * @param assignedByUserId
+	 * @param save save issue and send notification
+	 * @return
+	 */
+	private boolean assignIssue(Issue issue, User user,
+			User assignedByUser, boolean save) {
+
+		if (issue.getOwner() == user || (null != issue.getOwner() && issue.getOwner().equals(user))) {
+			// nothing to do.
+			if (logger.isDebugEnabled()) {
+				logger.debug("assignIssue: attempted to reassign " + issue + " to current owner " + user);
+			}
+			return false;
+		}
+		
+		if (null == user) {
+			if (logger.isInfoEnabled()){
+				logger.info("assignIssue: call to unasign " + issue);
+			}
+				
+			return unassignIssue(issue, assignedByUser, save);
 		}
 
-		User assignedByUser;
-		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
-		User user = getUserDAO().findByPrimaryKey(userId);
-
-		if (assignedByUserId.equals(userId)) {
-			assignedByUser = user;
-		} else {
-			assignedByUser = getUserDAO().findByPrimaryKey(assignedByUserId);
+		if (logger.isInfoEnabled()) {
+			logger.info("assignIssue: assigning " + issue + " to " + user);
 		}
+
 
 		User currOwner = issue.getOwner();
 
-		if (currOwner == null || !currOwner.getId().equals(user.getId())) {
+		if (!user.equals(currOwner)) {
 			if (currOwner != null
 					&& !notificationService.hasIssueNotification(issue,
 							currOwner.getId(), Role.CONTRIBUTER)) {
 				// Notification notification = new Notification();
 				Notification notification = new Notification(currOwner, issue,
 						Role.CONTRIBUTER);
-				// TODO check implementation
-				addIssueNotification(notification);
+				if (save) {
+					notificationService.addIssueNotification(notification);
+				} else {
+					issue.getNotifications().add(notification);
+				}
 			}
 
 			IssueActivity activity = new IssueActivity();
@@ -1050,28 +1091,51 @@ public class IssueServiceImpl implements IssueService {
 
 			issue.setOwner(user);
 
+			if (logger.isDebugEnabled()) {
+				logger.debug("assignIssue: current status: " + issue.getStatus());
+			}
 			if (issue.getStatus() < IssueUtilities.STATUS_ASSIGNED) {
 				issue.setStatus(IssueUtilities.STATUS_ASSIGNED);
+				if (logger.isDebugEnabled()) {
+					logger.debug("assignIssue: new status set to " + issue.getStatus());
+				}
+			}
+			
+
+			// send assignment notification
+			// TODO: configurationService should be set from context
+			if (save) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("assignIssue: saving re-assigned issue");
+				}
+				getIssueDAO().saveOrUpdate(issue);
+				notificationService.sendNotification(issue, Type.ASSIGNED,
+					ServletContextUtils.getItrackerServices()
+							.getConfigurationService().getSystemBaseURL());
+				
 			}
 		}
-		// send assignment notification
-		// TODO: configurationService should be set from context
-		// This is not good, when an issue is updated and reassigned, 
-		// there is two notifications sent (first assigned-notification, 
-		// but old history, then the updated-notification)
-//		notificationService.sendNotification(issue, Type.ASSIGNED,
-//				ServletContextUtils.getItrackerServices()
-//						.getConfigurationService().getSystemBaseURL());
-		
 		return true;
 
 	}
 
-	public boolean unassignIssue(Integer issueId, Integer assignedByUserId) {
-		User assignedByUser = getUserDAO().findByPrimaryKey(assignedByUserId);
-		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
+
+	/**
+	 * 
+	 * @param issue
+	 * @param unassignedByUser
+	 * @param save save issue and send notification
+	 * @return
+	 */
+	private boolean unassignIssue(Issue issue, User unassignedByUser, boolean save) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("unassignIssue: " + issue);
+		}
 		if (issue.getOwner() != null) {
 
+			if (logger.isDebugEnabled()) {
+				logger.debug("unassignIssue: unassigning from " + issue.getOwner());
+			} 
 			if (!notificationService.hasIssueNotification(issue, issue
 					.getOwner().getId(), Role.CONTRIBUTER)) {
 				// Notification notification = new Notification();
@@ -1080,14 +1144,10 @@ public class IssueServiceImpl implements IssueService {
 				// TODO check implementation
 				addIssueNotification(notification);
 			}
-			IssueActivity activity = new IssueActivity(issue, assignedByUser,
+			IssueActivity activity = new IssueActivity(issue, unassignedByUser,
 					IssueActivityType.OWNER_CHANGE);
 			activity
-					.setDescription((issue.getOwner() == null ? "["
-							+ ITrackerResources
-									.getString("itracker.web.generic.unassigned")
-							+ "]"
-							: issue.getOwner().getLogin())
+					.setDescription(issue.getOwner().getLogin()
 							+ " "
 							+ ITrackerResources
 									.getString("itracker.web.generic.to")
@@ -1101,8 +1161,62 @@ public class IssueServiceImpl implements IssueService {
 			if (issue.getStatus() >= IssueUtilities.STATUS_ASSIGNED) {
 				issue.setStatus(IssueUtilities.STATUS_UNASSIGNED);
 			}
+			if (save) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("unassignIssue: saving unassigned issue..");
+				}
+				getIssueDAO().saveOrUpdate(issue);
+				notificationService.sendNotification(issue, Type.ASSIGNED, ServletContextUtils.getItrackerServices().getConfigurationService().getSystemBaseURL());
+			}
 		}
+		
 		return true;
+	}
+	/**
+	 * @deprecated do we need this? it's not on the interface..
+	 * @param issueId
+	 * @param assignedByUserId
+	 * @return
+	 */
+	private boolean unassignIssue(Integer issueId, Integer assignedByUserId) {
+		User assignedByUser = getUserDAO().findByPrimaryKey(assignedByUserId);
+		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
+		
+		return unassignIssue(issue, assignedByUser, true);
+		
+//		if (issue.getOwner() != null) {
+//
+//			if (!notificationService.hasIssueNotification(issue, issue
+//					.getOwner().getId(), Role.CONTRIBUTER)) {
+//				// Notification notification = new Notification();
+//				Notification notification = new Notification(issue.getOwner(),
+//						issue, Role.CONTRIBUTER);
+//				// TODO check implementation
+//				addIssueNotification(notification);
+//			}
+//			IssueActivity activity = new IssueActivity(issue, assignedByUser,
+//					IssueActivityType.OWNER_CHANGE);
+//			activity
+//					.setDescription((issue.getOwner() == null ? "["
+//							+ ITrackerResources
+//									.getString("itracker.web.generic.unassigned")
+//							+ "]"
+//							: issue.getOwner().getLogin())
+//							+ " "
+//							+ ITrackerResources
+//									.getString("itracker.web.generic.to")
+//							+ " ["
+//							+ ITrackerResources
+//									.getString("itracker.web.generic.unassigned")
+//							+ "]");
+//
+//			issue.setOwner(null);
+//
+//			if (issue.getStatus() >= IssueUtilities.STATUS_ASSIGNED) {
+//				issue.setStatus(IssueUtilities.STATUS_UNASSIGNED);
+//			}
+//		}
+//		return true;
 	}
 
 	/**
@@ -1200,14 +1314,14 @@ public class IssueServiceImpl implements IssueService {
 	 */
 	public boolean addIssueAttachment(IssueAttachment attachment, byte[] data) {
 		Issue issue = attachment.getIssue();
-		User user = attachment.getUser();
+//		User user = attachment.getUser();
 
 		attachment.setFileName("attachment_issue_" + issue.getId() + "_"
 				+ attachment.getOriginalFileName());
 		attachment.setFileData((data == null ? new byte[0] : data));
 
-		attachment.setIssue(issue);
-		attachment.setUser(user);
+//		attachment.setIssue(issue);
+//		attachment.setUser(user);
 
 		// TODO: activity for adding attachment?
 		// IssueActivity activityAdd = new IssueActivity(attachment.getIssue(),
