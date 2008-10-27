@@ -221,7 +221,7 @@
 
         <% } else { %>
 
-        <%= currentIssue.getResolution() %>
+        <%= null == currentIssue.getResolution() ? "": currentIssue.getResolution() %>
 
         <% } %>
 
@@ -649,7 +649,7 @@
                                     ${attachment.type}
                             </td>
                             <td class="listRowText" style="text-align: left;">
-                                    ${attachment.size / 1024}
+                              <fmt:formatNumber pattern="0.##" value="${attachment.size / 1024}" type="number" />
                             </td>
                             <td class="listRowText" style="text-align: left;">
                                     ${attachment.user.firstName}&nbsp;${attachment.user.lastName}

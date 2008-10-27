@@ -354,6 +354,7 @@ User um = RequestHelper.getCurrentUser(session);
 
                     for(int i = 0; i < attachments.size(); i++) {
                   %>
+                  	<c:set value="<%=attachments.get(i)%>" var="attachment"> </c:set>
                       <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>" >
                         <td class="listRowText" style="text-align: left;">
                             <it:formatImageAction forward="downloadAttachment.do"
@@ -368,7 +369,7 @@ User um = RequestHelper.getCurrentUser(session);
                         <td class="listRowText" style="text-align: left;"><%= attachments.get(i).getOriginalFileName() %></td>
                         <td class="listRowText" style="text-align: left;"><it:formatDescription><%= attachments.get(i).getDescription() %></it:formatDescription></td>
                         <td class="listRowText" style="text-align: left;"><%= attachments.get(i).getType() %></td>
-                        <td class="listRowText" style="text-align: left;"><%= attachments.get(i).getSize() / 1024 %></td>
+                        <td class="listRowText" style="text-align: left;"><fmt:formatNumber pattern="0.##" value="${attachment.size / 1024}" type="number" /></td>
                         <td class="listRowText" style="text-align: left;"><%= attachments.get(i).getUser().getFirstName() + " " + attachments.get(i).getUser().getLastName() %></td>
                         <td class="listRowText" style="text-align: right;"><it:formatDate date="<%= attachments.get(i).getLastModifiedDate() %>"/></td>
                       </tr>
