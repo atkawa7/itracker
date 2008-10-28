@@ -21,6 +21,7 @@ package org.itracker.web.actions.user;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -31,6 +32,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.model.User;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.Constants;
 import org.itracker.web.util.SessionManager;
 
 
@@ -49,6 +51,8 @@ public class LogoffAction extends ItrackerBaseAction {
             User user = (User) session.getAttribute("user");
             String login = (user != null ? user.getLogin() : "UNKNOWN");
             
+
+            
             if(clearSession(login, request, response)) {
                 log.info("User " + login + " logged out successfully.");
             }
@@ -56,6 +60,8 @@ public class LogoffAction extends ItrackerBaseAction {
         	if (log.isDebugEnabled())
         		log.debug("execute: Error logging out user. " + e.getMessage());
         }
+        
+        
         
         String pageTitleKey = "itracker.web.login.title";
         String pageTitleArg = "";
@@ -67,6 +73,17 @@ public class LogoffAction extends ItrackerBaseAction {
     
     public boolean clearSession(String login, HttpServletRequest request, HttpServletResponse response) {
         try {
+        	
+    		Cookie cookie = new Cookie(Constants.COOKIE_NAME, "");
+    		cookie.setPath(request.getContextPath());
+			if (log.isDebugEnabled()) {
+				log.debug("clearSession: remove autologin cookie");
+			}
+			cookie.setValue("");
+			cookie.setMaxAge(0);
+		
+			response.addCookie(cookie);
+        	
             HttpSession session = request.getSession(true);
             session.invalidate();
             
