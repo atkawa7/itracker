@@ -25,33 +25,40 @@
 
 <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
   <tr>
-    <td class="editColumnTitle" colspan="6"><it:message key="itracker.web.attr.projects"/>:</td>
+    <td class="editColumnTitle" colspan="5"><it:message key="itracker.web.attr.projects"/>:</td>
     <c:if test="${ isSuperUser }">
          <td align="right">
          	<c:choose>
          		<c:when test="${ showAll }">
-         			<html:link module="/module-admin" action="/listprojectsadmin?showAll=false"><it:message key="itracker.web.listprojects.locked.hide"/></html:link>
+         			<html:link module="/module-admin" action="/listprojectsadmin?showAll=false"><it:message key="itracker.web.listprojects.locked.hide"/></html:link>--%>
+         			<%-- TODO: better icon for show/hide closed projects
+         			<it:formatImageAction action="/listprojectsadmin?showAll=false" src="/themes/defaulttheme/images/unwatch.gif" altKey="itracker.web.listprojects.locked.hide" textActionKey="itracker.web.listprojects.locked.hide"/>--%>
          		</c:when>
          		<c:otherwise>
          			<html:link module="/module-admin" action="/listprojectsadmin?showAll=true"><it:message key="itracker.web.listprojects.locked.show"/></html:link>
+         			<%-- <it:formatImageAction action="/listprojectsadmin?showAll=true" src="/themes/defaulttheme/images/watch.gif" altKey="itracker.web.listprojects.locked.show" textActionKey="itracker.web.listprojects.locked.show"/>--%>
+         			
          		</c:otherwise>
          	</c:choose>
+         	
            <it:formatImageAction action="editprojectform" targetAction="create" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.project.alt" textActionKey="itracker.web.image.create.texttag"/>
            <it:formatImageAction forward="listattachments" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.attachments.alt" textActionKey="itracker.web.image.view.texttag"/>
          </td>
     </c:if>
   </tr>
-  <tr align="left" class="listHeading">
+  
+  <c:choose>
+  <c:when test="${not empty projects}">
+  <tr style="text-align: left" class="listHeading">
     <td width="1"></td>
-    <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4"/></td>
-    <td><it:message key="itracker.web.attr.name"/></td>
-    <td><it:message key="itracker.web.attr.description"/></td>
-    <td><it:message key="itracker.web.attr.created"/></td>
-    <td><it:message key="itracker.web.attr.lastmodified"/></td>
-    <td align="left"><it:message key="itracker.web.attr.issues"/></td>
+    <td style="white-space: nowrap"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4"/></td>
+    <td style="white-space: nowrap"><it:message key="itracker.web.attr.name"/></td>
+    <td style="white-space: nowrap"><it:message key="itracker.web.attr.description"/></td>
+    <td  style="text-align: right; white-space: nowrap"><it:message key="itracker.web.attr.created"/></td>
+    <td style="text-align: right; white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
+   <%-- <td align="left"><it:message key="itracker.web.attr.issues"/></td> --%>
   </tr>
 
-	<c:set var="hasProjects" value="false" />
 	<c:forEach var="project" varStatus="i" items="${ projects }" step="1">
 
 		<tr
@@ -70,32 +77,30 @@
 			</td>
 			<td>${ project.name }</td>
 			<td>${ project.description }</td>
-			<td><it:formatDate date="${ project.createDate }" /></td>
-			<td><it:formatDate
+			<td style="text-align: right; white-space: nowrap"><it:formatDate date="${ project.createDate }" /></td>
+			<td style="text-align: right; white-space: nowrap"><it:formatDate
 				date="${ project.lastModifiedDate }" /></td>
-			<td align="left">${ project.totalNumberIssues }</td>
+			<%-- <td align="left">${ project.totalNumberIssues }</td> --%>
 		</tr>
-		<c:set var="hasProjects" value="true" />
 
 	</c:forEach>
 
-	<c:choose>
-		<c:when test="${ hasProjects }">
-			<tr>
-				
-			</tr>
-			<tr>
-				<td colspan="7"><html:img height="3"
-					src="../themes/defaulttheme/images/blank.gif" /></td>
-			</tr>
-  			<tr><td colspan="7" class="tableNote"><it:message key="itracker.web.admin.listprojects.note"/></td></tr>
-		</c:when>
-		<c:otherwise>
-			<tr align="left">
-				<td colspan="7" class="listRowUnshaded" style="text-align: center;"><strong><it:message
-					key="itracker.web.error.noprojects" /></strong></td>
-			</tr>
-		</c:otherwise>
+
+	<tr>
+		
+	</tr>
+	<tr>
+		<td colspan="6"><html:img height="3" src="../themes/defaulttheme/images/blank.gif" /></td>
+	</tr>
+	<tr><td colspan="6" class="tableNote"><it:message key="itracker.web.admin.listprojects.note"/></td></tr>
+
+	</c:when>
+	<c:otherwise>
+		<tr align="left">
+			<td colspan="6" class="listRowUnshaded" style="text-align: center;"><strong><it:message
+				key="itracker.web.error.noprojects" /></strong></td>
+		</tr>
+	</c:otherwise>
 	</c:choose>
 </table>
 
