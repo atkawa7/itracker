@@ -55,7 +55,8 @@
  --%>
         <tr class="listHeading">
           <td colspan="3"><it:message key="itracker.web.admin.index.projectadmin"/></td>
-          <td colspan="2" align="right"><it:link forward="listprojectsadmin" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link></td>
+          <td colspan="2" align="right"><it:link action="editprojectform" targetAction="create" styleClass="editColumnText">[<it:message key="itracker.web.attr.create"/>]</it:link>
+          <it:link forward="listprojectsadmin" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link></td>
         </tr>
         <tr class="listRowUnshaded">
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totalprojects"/>: </td>
@@ -72,8 +73,7 @@
  --%>
         <tr class="listHeading">
           <td colspan="3"><it:message key="itracker.web.admin.index.useradmin"/></td>
-          <td colspan="2" align="right"><it:link action="editprojectform" targetAction="create" styleClass="editColumnText">[<it:message key="itracker.web.attr.create"/>]</it:link>
-          <it:link forward="listusers" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link>
+          <td colspan="2" align="right"><it:link forward="listusers" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link>
           </td>
         </tr>
         <tr class="listRowUnshaded">
