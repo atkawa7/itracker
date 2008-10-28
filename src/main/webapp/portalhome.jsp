@@ -32,31 +32,33 @@
 	<tr id="ownedIssues">
 	    <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.assigned"/>:</td>
 	</tr>
-	<tr align="left" class="listHeading">
-	    <td style="width:50px;" ></td>
-	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-	    <td><it:message key="itracker.web.attr.id"/></td>
-	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-	    <td><it:message key="itracker.web.attr.project"/></td>
-	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-	    <td><it:message key="itracker.web.attr.status"/></td>
-	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-	    <td><it:message key="itracker.web.attr.severity"/></td>
-	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-	    <td ><it:message key="itracker.web.attr.description"/></td>
-	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-	    <td><it:message key="itracker.web.attr.owner"/></td>
-	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-	    <td style="text-align:right;" ><it:message key="itracker.web.attr.lastmodified"/></td>
-	</tr>
-	<c:if test="${empty ownedIssues}">
+	<c:choose>
+    <c:when test="${empty ownedIssues}">
         <tr class="listRowUnshaded">
 	    	<td ></td>
 	    	<td colspan="16">
 	    		<it:message key="itracker.web.error.noissues"></it:message>
 	    	</td>
     	</tr>
-    </c:if>
+    </c:when>
+    <c:otherwise>
+	<tr style="text-align: left" class="listHeading">
+	    <td style="width:50px;" ></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.id"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.project"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.status"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.severity"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.description"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.owner"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="text-align:right; white-space: nowrap" ><it:message key="itracker.web.attr.lastmodified"/></td>
+	</tr>
 	
 	<c:forEach items="${ownedIssues}" var="ownedIssue" step="1" varStatus="i">
 	    
@@ -114,6 +116,7 @@
 	    	</c:otherwise>
 	    </c:choose>
 	</c:forEach>
+	</c:otherwise></c:choose>
 	<tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>	
 <%-- END c:if UserUtilities_PREF_HIDE_ASSIGNED --%>
 </c:if>
@@ -127,32 +130,34 @@
     <tr id="unassignedIssues">
         <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.unassigned"/>:</td>
     </tr>
-    <tr align="left" class="listHeading">
-        <td></td>
-        <td></td>
-        <td><it:message key="itracker.web.attr.id"/></td>
-        <td></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.project"/></td>
-        <td></td>
-        <td><it:message key="itracker.web.attr.status"/></td>
-        <td></td>
-        <td><it:message key="itracker.web.attr.severity"/></td>
-        <td></td>
-        <td><it:message key="itracker.web.attr.description"/></td>
-        <td></td>
-        <td><it:message key="itracker.web.attr.owner"/></td>
-        <td></td>
-        <td style="text-align:left; white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
-    </tr>
-    <c:if test="${empty unassignedIssues}">
-        <tr class="listRowUnshaded">
-	    	<td ></td>
-	    	<td colspan="16">
-	    		<it:message key="itracker.web.error.noissues"></it:message>
-	    	</td>
-    	</tr>
-    </c:if>
-
+    <c:choose>
+   	<c:when test="${empty unassignedIssues}">
+       <tr class="listRowUnshaded">
+    	<td ></td>
+    	<td colspan="16">
+    		<it:message key="itracker.web.error.noissues"></it:message>
+    	</td>
+   	</tr>
+	</c:when>
+	<c:otherwise>
+	<tr style="text-align: left" class="listHeading">
+	    <td style="width:50px;" ></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.id"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.project"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.status"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.severity"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.description"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.owner"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="text-align:right; white-space: nowrap" ><it:message key="itracker.web.attr.lastmodified"/></td>
+	</tr>
+	
     <c:forEach items="${unassignedIssues}" var="unassignedIssue" step="1" varStatus="i">
 		<c:if test="${unassignedIssue.userCanViewIssue}">
 			<c:set var="iCount" value="${iCount +1}" />
@@ -308,6 +313,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 			</c:choose>
 		</c:if>
 	</c:forEach>
+	</c:otherwise></c:choose>
    	<tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
 </c:if>  
 
@@ -319,23 +325,33 @@ I change code to test for unassigned attribute instead of owner, since owner is 
     <tr id="createdIssues">
         <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.created"/>:</td>
     </tr>
-    <tr style="text-align:left;"  class="listHeading">
-        <td></td>
-        <td></td>
-        <td><it:message key="itracker.web.attr.id"/></td>
-        <td></td>
-        <td><it:message key="itracker.web.attr.project"/></td>
-        <td></td>
-        <td><it:message key="itracker.web.attr.status"/></td>
-        <td></td>
-        <td><it:message key="itracker.web.attr.severity"/></td>
-        <td></td>
-        <td><it:message key="itracker.web.attr.description"/></td>
-        <td></td>
-        <td><it:message key="itracker.web.attr.owner"/></td>
-        <td></td>
-        <td style="text-align:right; white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
-    </tr>
+    <c:choose>
+    <c:when test="${empty createdIssues}">
+        <tr class="listRowUnshaded">
+	    	<td ></td>
+	    	<td colspan="16">
+	    		<it:message key="itracker.web.error.noissues"></it:message>
+	    	</td>
+    	</tr>
+	</c:when>
+	<c:otherwise>
+	<tr style="text-align: left" class="listHeading">
+	    <td style="width:50px;" ></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.id"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.project"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.status"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.severity"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.description"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.owner"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="text-align:right; white-space: nowrap" ><it:message key="itracker.web.attr.lastmodified"/></td>
+	</tr>
     <c:if test="${empty createdIssues}">
         <tr class="listRowUnshaded">
 	    	<td ></td>
@@ -411,8 +427,9 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 				</c:if>
 			</c:otherwise>
 		</c:choose>
-
 	</c:forEach>
+	</c:otherwise>
+    </c:choose>
 	<tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
 </c:if>
 
@@ -434,33 +451,34 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 		<td class="editColumnTitle" colspan="15"><it:message
 			key="itracker.web.index.watched" />:</td>
 	</tr>
-	<tr style="text-align: left;" class="listHeading">
-		<td></td>
-		<td></td>
-		<td><it:message key="itracker.web.attr.id" /></td>
-		<td></td>
-		<td style="white-space: nowrap"><it:message
-			key="itracker.web.attr.project" /></td>
-		<td></td>
-		<td><it:message key="itracker.web.attr.status" /></td>
-		<td></td>
-		<td><it:message key="itracker.web.attr.severity" /></td>
-		<td></td>
-		<td><it:message key="itracker.web.attr.description" /></td>
-		<td></td>
-		<td><it:message key="itracker.web.attr.owner" /></td>
-		<td></td>
-		<td style="text-align: right; white-space: nowrap"><it:message
-			key="itracker.web.attr.lastmodified" /></td>
-	</tr>
-    <c:if test="${empty watchedIssues}">
+	<c:choose>
+    <c:when test="${empty watchedIssues}">
         <tr class="listRowUnshaded">
 	    	<td ></td>
 	    	<td colspan="16">
 	    		<it:message key="itracker.web.error.noissues"></it:message>
 	    	</td>
     	</tr>
-    </c:if>
+    </c:when>
+    <c:otherwise>
+	<tr style="text-align: left" class="listHeading">
+	    <td style="width:50px;" ></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.id"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.project"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.status"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.severity"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.description"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="white-space: nowrap"><it:message key="itracker.web.attr.owner"/></td>
+	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+	    <td style="text-align:right; white-space: nowrap" ><it:message key="itracker.web.attr.lastmodified"/></td>
+	</tr>
+
     
 	<c:forEach items="${watchedIssues}" var="watchedIssue" step="1"
 		varStatus="i">
@@ -499,9 +517,8 @@ I change code to test for unassigned attribute instead of owner, since owner is 
        								arg0="${watchedIssue.issue.id}" 
        								textActionKey="itracker.web.image.edit.texttag"/>
        						</c:if>
-						</c:if> <%-- %>	<c:if test="${watchedIssue.canEditIssue}">
-       	<it:formatImageAction action="/module-projects/editissueform" paramName="id" paramValue="${watchedIssue.issue.id}" caller="index" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="${watchedIssue.issue.id}" textActionKey="itracker.web.image.edit.texttag"/>
-       	</c:if> --%></td>
+						</c:if>
+					</td>
 					<td></td>
 					<td style="text-align: left;">${watchedIssue.issue.id}</td>
 					<td></td>
@@ -539,6 +556,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 		</c:choose>
 
 	</c:forEach>
+	</c:otherwise></c:choose>
 	<tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
 </c:if>
 
