@@ -99,11 +99,11 @@
 				    <td></td>
 				    <td>${ownedIssue.severityLocalizedString}</td>
 				    <td></td>
-				    <td><it:formatDescription><c:out value="${ownedIssue.issue.description}"/></it:formatDescription></td>
+				    <td style="white-space: nowrap;"><it:formatDescription truncateLength="80"><c:out value="${ownedIssue.issue.description}"/></it:formatDescription></td>
 				    <td></td>
-				    <td nowrap>${ownedIssue.issue.owner.firstName} ${ownedIssue.issue.owner.lastName}</td>
+				    <td style="white-space: nowrap;">${ownedIssue.issue.owner.firstName} ${ownedIssue.issue.owner.lastName}</td>
 				    <td></td>
-				    <td align="right" style="white-space: nowrap"><it:formatDate date="${ownedIssue.issue.lastModifiedDate}"/></td>
+				    <td style="text-align: right; white-space: nowrap"><it:formatDate date="${ownedIssue.issue.lastModifiedDate}"/></td>
 				</tr>
 	    	</c:when>
 	    	<c:otherwise>
@@ -208,7 +208,7 @@
 						<td><c:out
 							value="${unassignedIssue.severityLocalizedString}" /></td>
 						<td></td>
-						<td><it:formatDescription>${unassignedIssue.issue.description}</it:formatDescription></td>
+						<td style="white-space: nowrap;"><it:formatDescription truncateLength="80">${unassignedIssue.issue.description}</it:formatDescription></td>
 						<td></td>
 						<!-- Marky:  modified the code to place the two checks in the chooser statement so only one select list will
         be displayed. -->
@@ -269,7 +269,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 												value="${unassignedIssue.issue.project.id}" />
 
 											<%--!String styleClass2 = "(i % 2 == 1 ? \"listRowShaded\" : \"listRowUnshaded\")";--%>
-											<td><html:select property="userId"
+											<td style="white-space: nwrap;"><html:select property="userId"
 												styleClass="${listRowClass}"
 												onchange="this.form.submit();">
 												<c:choose>
@@ -397,13 +397,13 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 					<td></td>
 					<td style="text-align: left;">${createdIssue.issue.id}</td>
 					<td></td>
-					<td style="white-space: nowrap">${createdIssue.issue.project.name}</td>
+					<td style="white-space: nowrap; overflow: hidden">${createdIssue.issue.project.name}</td>
 					<td></td>
 					<td>${createdIssue.statusLocalizedString}</td>
 					<td></td>
 					<td>${createdIssue.severityLocalizedString}</td>
 					<td></td>
-					<td><it:formatDescription>${createdIssue.issue.description}</it:formatDescription></td>
+					<td style="white-space: nowrap;"><it:formatDescription truncateLength="80">${createdIssue.issue.description}</it:formatDescription></td>
 					<td></td>
 					<td style="white-space: nowrap"><c:choose>
 						<c:when test="${createdIssue.unassigned}">
@@ -528,12 +528,12 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 					<td></td>
 					<td>${watchedIssue.severityLocalizedString}</td>
 					<td></td>
-					<td><it:formatDescription>${watchedIssue.issue.description}</it:formatDescription></td>
+					<td style="white-space: nowrap;"><it:formatDescription truncateLength="80">${watchedIssue.issue.description}</it:formatDescription></td>
 					<td></td>
 					<td>
 						<c:choose>
 							<c:when test="${watchedIssue.unassigned}">
-				              unassigned
+				              <c:out value="${itracker_web_generic_unassigned}" />
 				          </c:when>
 						  <c:otherwise>
 				              ${watchedIssue.issue.owner.firstName} ${watchedIssue.issue.owner.lastName}

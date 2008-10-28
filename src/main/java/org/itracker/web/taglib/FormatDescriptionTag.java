@@ -18,14 +18,18 @@
 
 package org.itracker.web.taglib;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
+import org.itracker.core.resources.ITrackerResources;
+import org.itracker.web.util.LoginUtilities;
 
 
 /**
- * @deprecated
+ * Truncate a string if it's longer than truncateLength
+ * 
  * @author ranks@rosa.com
  *
  */
@@ -38,6 +42,7 @@ public class FormatDescriptionTag extends BodyTagSupport {
 	private String text = null;
 
     private String truncateKey = "itracker.web.generic.truncated";
+    private String truncateText = null;
     private int truncateLength = 40;
 
     public String getTruncateKey() {
@@ -71,22 +76,31 @@ public class FormatDescriptionTag extends BodyTagSupport {
         return SKIP_BODY;
     }
 
+    public String getTruncateText() {
+    	if (null == truncateText) {
+	    	if (pageContext.getRequest() instanceof HttpServletRequest) {
+	    		truncateText = ITrackerResources.getString(truncateKey, LoginUtilities.getCurrentLocale((HttpServletRequest)this.pageContext.getRequest()));
+	    	} else {
+	    		truncateText = ITrackerResources.getString(truncateKey);
+	    	}
+	    	if (null != truncateText) {
+	    		truncateText = truncateText.trim();
+	    	} else {
+	    		truncateText = "";
+	    	}
+    	}
+    	return truncateText;
+    }
     public int doEndTag() throws JspException {
         StringBuffer results = new StringBuffer();
-        if(text != null) {
-            // fixing bug https://sourceforge.net/tracker/index.php?func=detail&aid=1872304&group_id=54141&atid=472807
-           /* if(text.length() > truncateLength) {
-                String truncateValue = ITrackerResources.getString(truncateKey, locale);
-                if(truncateValue == null) {
-                    truncateValue = "";
-                }
-                results.append(text.substring(0, (truncateLength - truncateValue.length())));
-                results.append(truncateValue);
-            } else {*/
-                results.append(text);
-            //}
+        if(text != null && text.trim().length() > truncateLength - getTruncateText().length()) {
+        	results.append(text.trim().substring(0, truncateLength - getTruncateText().length()).trim());
+        	results.append(getTruncateText());
+        } else if (null == text) {
+			results.append("");
+		} else {
+        	results.append(text.trim());
         }
-        //ResponseUtils.write(pageContext, results.toString());
         TagUtils.getInstance().write(pageContext, results.toString());
         clearState();
         return (EVAL_PAGE);
@@ -101,5 +115,6 @@ public class FormatDescriptionTag extends BodyTagSupport {
         truncateKey = "itracker.web.generic.truncated";
         truncateLength = 40;
         text = null;
+        truncateText = null;
     }
 }
