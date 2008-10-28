@@ -45,7 +45,7 @@
       <c:out value="${msg}"/> 
    </html:messages> 
    
-      <html:form action="/editpreferences" onsubmit="return validatePreferencesForm(this);">
+      <html:form action="/editpreferences" onsubmit="return validatePreferencesForm(this);"  method="post" acceptCharset="UTF-8" enctype="multipart/form-data">
         <html:hidden property="action" value="preferences"/>
         <html:hidden property="login" value="${edituser.login}"/>
         <%
