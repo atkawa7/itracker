@@ -17,6 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueSearchQuery;
 import org.itracker.model.PermissionType;
+import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.services.util.IssueUtilities;
 
@@ -475,7 +476,6 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
     }
 
-    @SuppressWarnings("unchecked")
     public Date latestModificationDate(Integer projectId) {
 
         final Date lastModifiedDate;
@@ -497,6 +497,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
      * It doens't really make sense for this method to receive projectDAO, it's just a quick
      * fix for the fact that IssueSearchQuery handles ids and not objects
      */
+    @SuppressWarnings("unchecked")
     public List<Issue> query(
             IssueSearchQuery searchQuery,
             final User user,
@@ -505,7 +506,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         Criteria criteria = getSession().createCriteria(Issue.class);
 
         // projects
-        Collection projects = searchQuery.getProjectsObjects(projectDAO);
+        Collection<Project> projects = Collections.checkedCollection((Collection<Project>)searchQuery.getProjectsObjects(projectDAO), Project.class);
 
         if (projects.size() > 0) {
             criteria.add(Restrictions.in("project", projects));
@@ -565,34 +566,33 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
             criteria.add(Restrictions.eq("targetVersion", searchQuery.getTargetVersion()));
         }
 
-        Collection list = criteria.list();
+        List<Issue> list = Collections.checkedList(Criteria.DISTINCT_ROOT_ENTITY.transformList(criteria.list()), Issue.class);
 
         // filter for permission
-        list = CollectionUtils.select(list, new Predicate() {
+        list = new LinkedList<Issue>(Collections.checkedCollection(CollectionUtils.select(list, new Predicate() {
             public boolean evaluate(Object arg0) {
                 return IssueUtilities.canViewIssue((Issue) arg0, user, userPermissions);
             }
-        });
+        }), Issue.class));
 
-        List<Issue> sortedList = new LinkedList(list);
-
+        
         // sort
         String order = searchQuery.getOrderBy();
         if ("id".equals(order)) {
-            Collections.sort(sortedList, Issue.ID_COMPARATOR);
+            Collections.sort(list, Issue.ID_COMPARATOR);
         } else if ("sev".equals(order)) {
-            Collections.sort(sortedList, Issue.SEVERITY_COMPARATOR);
+            Collections.sort(list, Issue.SEVERITY_COMPARATOR);
         } else if ("proj".equals(order)) {
-            Collections.sort(sortedList, Issue.PROJECT_AND_STATUS_COMPARATOR);
+            Collections.sort(list, Issue.PROJECT_AND_STATUS_COMPARATOR);
         } else if ("owner".equals(order)) {
-            Collections.sort(sortedList, Issue.OWNER_AND_STATUS_COMPARATOR);
+            Collections.sort(list, Issue.OWNER_AND_STATUS_COMPARATOR);
         } else if ("lm".equals(order)) {
-            Collections.sort(sortedList, Collections.reverseOrder(Issue.LAST_MODIFIED_DATE_COMPARATOR));
+            Collections.sort(list, Collections.reverseOrder(Issue.LAST_MODIFIED_DATE_COMPARATOR));
         } else {
-            Collections.sort(sortedList, Issue.STATUS_COMPARATOR);
+            Collections.sort(list, Issue.STATUS_COMPARATOR);
         }
 
-        return sortedList;
+        return list;
 
     }
 
