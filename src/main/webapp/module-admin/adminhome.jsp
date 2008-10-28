@@ -19,7 +19,7 @@
 
 <% // TODO: move this redirect logic to the Action. 
 	final Map<Integer, Set<PermissionType>> permissions = RequestHelper.getUserPermissions(session);
-	ProjectService projectService = (ProjectService)request.getAttribute("ph");
+	ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
 
  if(! UserUtilities.hasPermission(permissions, UserUtilities.PERMISSION_USER_ADMIN)) { %>
       <logic:forward name="listprojectsadmin"/>
@@ -201,5 +201,6 @@
         </tr>--%>
       </table>
       <br>
-      <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
+      <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body>
+<%@page import="org.itracker.web.util.ServletContextUtils"%></html>
 <% } %>
