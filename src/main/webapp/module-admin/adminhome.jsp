@@ -50,13 +50,13 @@
           <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="1" width="15"/></td>
         </tr>
 
+<%--
+	PROJECTS
+ --%>
         <tr class="listHeading">
           <td colspan="3"><it:message key="itracker.web.admin.index.projectadmin"/></td>
           <td colspan="2" align="right"><it:link forward="listprojectsadmin" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link></td>
         </tr>
-       <!--  <tr class="listHeading"><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
-        <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3" width="1"/></td></tr>
- -->
         <tr class="listRowUnshaded">
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totalprojects"/>: </td>
           <td class="editColumnText"><fmt:formatNumber value="<%= projectService.getAllProjects().size() %>"/></td>
@@ -66,12 +66,16 @@
         </tr>
         <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15" width="1"/></td></tr>
 
+
+<%--
+	USERS
+ --%>
         <tr class="listHeading">
           <td colspan="3"><it:message key="itracker.web.admin.index.useradmin"/></td>
-          <td colspan="2" align="right"><it:link forward="listusers" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link></td>
+          <td colspan="2" align="right"><it:link action="editprojectform" targetAction="create" styleClass="editColumnText">[<it:message key="itracker.web.attr.create"/>]</it:link>
+          <it:link forward="listusers" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link>
+          </td>
         </tr>
-<!--         <tr class="listHeading"><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
-        <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3" width="1"/></td></tr> -->
         <tr class="listRowUnshaded">
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totalactive"/>: </td>
           <td class="editColumnText"><fmt:formatNumber value="${numberofActiveSesssions}"/></td>
@@ -81,18 +85,23 @@
         </tr>
         <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15" width="1"/></td></tr>
 
+
+<%--
+	REPORTS
+ --%>
         <tr class="listHeading">
           <td colspan="3"><it:message key="itracker.web.admin.index.reportadmin"/></td>
           <td colspan="2" align="right"><it:link forward="listreportsadmin" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link></td>
         </tr>
-<!-- 		<tr class="listHeading"><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
-        <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3" width="1"/></td></tr> -->
         <tr class="listRowUnshaded">
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totalnumber"/>: </td>
           <td class="editColumnText"><fmt:formatNumber value="${rh.numberReports}"/></td>
         </tr>
         <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15" width="1"/></td></tr>
 
+<%--
+	CONFIG
+ --%>
         <tr class="listHeading">
           <td colspan="3" ><it:message key="itracker.web.admin.index.configadmin"/></td>
           <td colspan="2" align="right">
@@ -102,8 +111,6 @@
              <it:link forward="listconfiguration" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link>
           </td>
         </tr>
-<!--         <tr class="listHeading"><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
-        <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3" width="1"/></td></tr> -->
         <tr class="listRowUnshaded">
           <td class="editColumnTitle"><it:message key="itracker.web.attr.statuses"/>: </td>
           <td class="editColumnText"><fmt:formatNumber value="${numberOfStatuses}"/></td>
@@ -120,15 +127,16 @@
         </tr>
         <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15" width="1"/></td></tr>
 
+<%--
+	WORKFLOW
+ --%>
         <tr class="listHeading">
           <td colspan="3" ><it:message key="itracker.web.admin.index.workflowadmin"/></td>
           <td colspan="2" align="right">
              <it:link forward="listworkflow" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link>
           </td>
         </tr>
-        <!-- <tr class="listHeading"><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
-        <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3" width="1"/></td></tr> -->
-        <tr class="listRowUnshaded">
+		<tr class="listRowUnshaded">
           <td class="editColumnTitle"><it:message key="itracker.web.attr.workflowscripts"/>: </td>
           <td class="editColumnText">
            <fmt:formatNumber value="${numberOfWorkflowScripts}"/>
@@ -136,6 +144,9 @@
         </tr>
         <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15" width="1"/></td></tr>
 
+<%--
+	LANGUAGE
+ --%>
         <tr class="listHeading">
           <td colspan="3" ><it:message key="itracker.web.admin.index.languageadmin"/></td>
           <td colspan="2" align="right">
@@ -143,8 +154,6 @@
             <it:link forward="listlanguages" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link>
           </td>
         </tr>
-<!--          <tr class="listHeading"><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
-        <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3" width="1"/></td></tr>-->
         <tr class="listRowUnshaded">
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totallanguages"/>: </td>
           <td class="editColumnText"><fmt:formatNumber value="${sc.numberAvailableLanguages}"/></td>
@@ -154,14 +163,14 @@
         </tr>
         <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15" width="1"/></td></tr>
 
+<%--
+	ATTACHMENTS
+ --%>
         <tr class="listHeading">
           <td colspan="3"><it:message key="itracker.web.admin.index.attachmentadmin"/></td>
           <td colspan="2" align="right"><it:link forward="listattachments" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link></td>
         </tr>
-<!--         <tr class="listHeading"><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
- 			<tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3" width="1"/></td></tr>
-  -->
-        
+
        
         <tr class="listRowUnshaded">
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totalnumber"/>: </td>
@@ -174,6 +183,9 @@
      
         <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15" width="1"/></td></tr>
 
+<%--
+	SCHEDULER
+ --%>
        <%--  <tr>
           <td colspan="3" class="editColumnTitle"><it:message key="itracker.web.admin.index.scheduleradmin"/></td>
           <td colspan="2" align="right"><it:link forward="listtasks" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link></td>
