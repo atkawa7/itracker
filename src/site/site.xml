@@ -80,7 +80,7 @@
 			<item name="Eclipse Plugin" />
 		</menu>
  -->
-		<menu name="Getting Involved" href="/getting-started.html">
+		<menu name="Getting Involved">
 		<!-- 
 		TODO
 			<item name="Contribute" />
@@ -88,10 +88,11 @@
 			<item name="SCM guidelinies" />
 			
 			 -->
-			<item name="WIKI" href="http://itracker.wiki.sourceforge.net/" />
+			<item name="Getting Started" href="/getting-started.html" />
 			<item name="Development Environment Setup"
 				href="/development_environment_setup.html" />
 			<item name="Coding guidelines" href="/coding-guidelines.html"/>
+			<item name="WIKI" href="http://itracker.wiki.sourceforge.net/" />
 
 		</menu>
 <!--
