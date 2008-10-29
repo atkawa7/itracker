@@ -22,7 +22,7 @@ Coding Guidelines
   
 *Site
   
-  Introduction on {{{/site.html}how-to create new apt}} (almost plain text) document and integrate it.
+  Introduction on {{{site.html}how-to create new apt}} (almost plain text) document and integrate it.
 
 *Testing
 
