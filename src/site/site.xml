@@ -66,8 +66,9 @@
 			<item name="Installation 3.0 development"
 				href="/release-notes/index.html" >
 			</item>
-			<item name="FAQ" />
 			-->
+
+			<item name="FAQ" href="/FAQ.html"/>
 			<item name="Release-Notes 3.0" href="/release-notes/itracker-3.0-rc1.html" />
 
 			<item name="Screenshots" href="/screenshots/screenshots.html"/>
@@ -79,16 +80,19 @@
 			<item name="Eclipse Plugin" />
 		</menu>
  -->
-		<menu name="Getting Involved">
+		<menu name="Getting Involved" href="/getting-started.html">
 		<!-- 
 		TODO
 			<item name="Contribute" />
 			<item name="Development Procedure" />
-			<item name="Coding guidelinies" />
 			<item name="SCM guidelinies" />
+			
 			 -->
+			<item name="WIKI" href="http://itracker.wiki.sourceforge.net/" />
 			<item name="Development Environment Setup"
 				href="/development_environment_setup.html" />
+			<item name="Coding guidelines" href="/coding-guidelines.html"/>
+
 		</menu>
 <!--
 	TODO 

@@ -1,6 +1,10 @@
 
 
 
-.screenshots dd {
-	border: solid black 2px;
+/**
+ * for screenshots. could not set a class with xdoc format
+ */
+dl dd img {
+	border: solid black 1px;
+	padding: 4px;
 }
