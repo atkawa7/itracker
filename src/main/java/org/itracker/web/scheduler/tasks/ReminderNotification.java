@@ -20,9 +20,7 @@ package org.itracker.web.scheduler.tasks;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
@@ -38,7 +36,6 @@ import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
 import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.NotificationUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 /**

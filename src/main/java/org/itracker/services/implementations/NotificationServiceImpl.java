@@ -32,7 +32,6 @@ import java.util.Set;
 
 import javax.mail.internet.InternetAddress;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Component;

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Expression;
-import org.itracker.model.Component;
 import org.itracker.model.Project;
 import org.itracker.model.Version;
 

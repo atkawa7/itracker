@@ -20,15 +20,9 @@ package org.itracker.web.actions.user;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
-import java.util.Set;
-
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
@@ -37,10 +31,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.PermissionType;
 import org.itracker.model.User;
-import org.itracker.model.UserPreferences;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.exceptions.PasswordException;
@@ -52,7 +43,6 @@ import org.itracker.web.forms.LoginForm;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.SessionManager;
-import org.itracker.web.util.SessionTracker;
 
 public class LoginAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(LoginAction.class);

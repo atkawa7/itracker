@@ -47,7 +47,6 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 import org.apache.struts.validator.ValidatorForm;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.Component;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueAttachment;

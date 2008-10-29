@@ -45,7 +45,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.event.SaveOrUpdateEvent;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Component;
 import org.itracker.model.CustomField;
@@ -82,7 +81,6 @@ import org.itracker.services.exceptions.ProjectException;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.web.util.ServletContextUtils;
-import org.jfree.util.Log;
 
 /**
  * Issue related service layer. A bit "fat" at this time, because of being a

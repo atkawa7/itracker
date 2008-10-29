@@ -34,9 +34,7 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
-import org.itracker.services.ITrackerServices;
 import org.itracker.services.UserService;
-import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.util.AuthenticationConstants;
 import org.jfree.util.Log;
 
