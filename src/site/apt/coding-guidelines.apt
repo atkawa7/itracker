@@ -22,7 +22,8 @@ Coding Guidelines
   
 *Site
   
-  Introduction on {{{how-to create new apt}/site.html}} (almost plain text) document and integrate it.
+  Introduction on {{{/site.html}how-to create new apt}} (almost plain text) document and integrate it.
 
 *Testing
+
   {{{http://itracker.wiki.sourceforge.net/Testing}Testing}} is described in the ITracker WIKI
