@@ -19,11 +19,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.struts.Globals;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.User;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ITrackerServices;
+import org.itracker.services.util.UserUtilities;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
@@ -135,6 +140,37 @@ public class ExecuteAlwaysFilter implements Filter {
 				log.debug("doFilter: found user in session");
 			}
 			String currLogin = currUser.getLogin();
+			
+			log.info("Login found...: " + currLogin);
+			if (SessionManager.getSessionNeedsReset(currLogin)) {
+				// RESET THE SESSION STUFF
+				HttpSession session = request.getSession();
+				log.info("Resetting the Session stuff...");
+				session.removeAttribute(Constants.USER_KEY);
+				session.removeAttribute(Constants.PERMISSIONS_KEY);
+				currUser = null;
+				String newLogin = SessionManager.checkRenamedLogin(currLogin);
+				if (response instanceof HttpServletResponse) {
+					currUser = LoginUtilities.setupSession((newLogin == null ? currLogin
+							: newLogin), request, (HttpServletResponse)response);
+				}
+				SessionManager.removeRenamedLogin(currLogin);
+				if (currUser == null
+						|| currUser.getStatus() != UserUtilities.STATUS_ACTIVE) {
+					ActionErrors errors = new ActionErrors();
+					errors.add(ActionMessages.GLOBAL_MESSAGE,
+							new ActionMessage(
+									"itracker.web.error.login.inactive"));
+					request.setAttribute(Globals.ERROR_KEY, errors);
+					
+					log.info("doFilter: forwarding to login");
+					forwardToLogin(path
+							+ (request.getQueryString() != null ? "?"
+									+ request.getQueryString() : ""), request,
+							(HttpServletResponse) response);
+				}
+			}
+			
 			request.setAttribute("currLogin", currLogin);
 		} else if (!protect) {
 			// request.setAttribute("permissions", permissions);
