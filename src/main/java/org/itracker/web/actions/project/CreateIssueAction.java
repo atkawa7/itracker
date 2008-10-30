@@ -82,11 +82,9 @@ public class CreateIssueAction extends ItrackerBaseAction {
 
 		if (!isTokenValid(request)) {
 			log.info("Invalid request token while creating issue.");
-			ProjectService projectService = getITrackerServices()
-					.getProjectService();
-			request.setAttribute("projects", projectService.getAllProjects());
-			request.setAttribute("ph", projectService);
-			return mapping.findForward("listprojects");
+//			project PTOs must be set in request for listprojects-forward to work
+			// return mapping.findForward("listprojects");
+			return null; 
 		} 
 		resetToken(request);
 
@@ -320,16 +318,8 @@ public class CreateIssueAction extends ItrackerBaseAction {
 				WorkflowUtilities.processFieldScripts(scripts,
 						WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, null,
 						errors, issueForm);
-
-				request.setAttribute("projects", projectService
-						.getAllProjects());
-				request.setAttribute("ph", projectService);
-
-				String uri = mapping.findForward("listissues").getPath()
-						+ "?projectId=" + projectId;
-				return new ActionForward(uri);
-
-				// return mapping.findForward("listissues");
+				
+				return getReturnForward(issue, project, issueForm, mapping);
 			}
 		} catch (RuntimeException e) {
 			log.error("Exception processing form data", e);
@@ -349,6 +339,15 @@ public class CreateIssueAction extends ItrackerBaseAction {
 			saveMessages(request, errors);
 		}
 		return mapping.findForward("error");
+	}
+	
+	private ActionForward getReturnForward(Issue issue, Project project,
+			IssueForm issueForm, ActionMapping mapping) {
+		log.info("getReturnForward: listissues");
+		
+		return new ActionForward(mapping.findForward("listissues")
+				.getPath()
+				+ "?projectId=" + project.getId());
 	}
 
 }
