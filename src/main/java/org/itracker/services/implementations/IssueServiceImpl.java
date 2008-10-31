@@ -746,29 +746,23 @@ public class IssueServiceImpl implements IssueService {
 	private boolean setIssueComponents(Issue issue,
 			List<Component> components, User user, boolean save) {
 
-		boolean wasChanged = false;
-		StringBuffer changesBuf = new StringBuffer();
-		List<Component> componentsOld = issue.getComponents();
-		if (components.isEmpty() && !componentsOld.isEmpty()) {
-			wasChanged = true;
-			changesBuf.append(ITrackerResources
-					.getString("itracker.web.generic.all")
+		if (components.isEmpty() && !issue.getComponents().isEmpty()) {
+			AddComponentsModifiedActivity(issue, user, 
+					ITrackerResources.getString("itracker.web.generic.all")
 					+ " "
-					+ ITrackerResources
-							.getString("itracker.web.generic.removed"));
-			componentsOld.clear();
+					+ ITrackerResources.getString("itracker.web.generic.removed"));
+			issue.getComponents().clear();
 		} else {
-			for (Iterator<Component> iterator = componentsOld.iterator(); iterator
+			for (Iterator<Component> iterator = issue.getComponents().iterator(); iterator
 					.hasNext();) {
 				Component component = (Component) iterator.next();
-				if (components.contains(component.getId())) {
-					components.remove(component.getId());
+				if (components.contains(component)) {
+					components.remove(component);
 				} else {
-					wasChanged = true;
-					changesBuf.append(ITrackerResources
+					AddComponentsModifiedActivity(issue, user, ITrackerResources
 							.getString("itracker.web.generic.removed")
 							+ ": "
-							+ component.getName() + "; ");
+							+ component.getName());
 					iterator.remove();
 				}
 			}
@@ -776,34 +770,39 @@ public class IssueServiceImpl implements IssueService {
 					.hasNext();) {
 
 				Component component = iterator.next();
-				wasChanged = true;
-				changesBuf.append(ITrackerResources
-						.getString("itracker.web.generic.added")
-						+ ": "
-						+ component.getName() + "; ");
-				componentsOld.add(component);
-			}
-		}
-
-
-		if (wasChanged) {
-
-			IssueActivity activity = new IssueActivity();
-			activity.setActivityType(org.itracker.model.IssueActivityType.COMPONENTS_MODIFIED);
-			activity.setDescription(changesBuf.toString());
-			activity.setIssue(issue);
-			activity.setUser(user);
-			issue.getActivities().add(activity);
-			if (save) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("setIssueComponents: save was true");
+				if (!issue.getComponents().contains(component)) {
+					AddComponentsModifiedActivity(issue, user, ITrackerResources
+							.getString("itracker.web.generic.added")
+							+ ": "
+							+ component.getName());
+					issue.getComponents().add(component);
 				}
-				getIssueDAO().saveOrUpdate(issue);
 			}
 		}
 
+		if (save) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("setIssueComponents: save was true");
+			}
+			getIssueDAO().saveOrUpdate(issue);
+		}
 		return true;
 
+	}
+	
+	/**
+	 * used by setIssueComponents for adding change activities
+	 * @param issue
+	 * @param user
+	 * @param description
+	 */
+	private void AddComponentsModifiedActivity(Issue issue, User user, String description) {
+		IssueActivity activity = new IssueActivity();
+		activity.setActivityType(org.itracker.model.IssueActivityType.COMPONENTS_MODIFIED);
+		activity.setDescription(description);
+		activity.setIssue(issue);
+		activity.setUser(user);
+		issue.getActivities().add(activity);
 	}
 	
 	private boolean setIssueVersions(Issue issue,
