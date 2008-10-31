@@ -51,8 +51,8 @@
 			<!-- TODO
 			<item name="Installation 2.4 production" href="/download.html" />
 			<item name="Installation 3.0 development" href="/release-notes.html" />
-			 -->
-			<item name="License" href="/license.html" />
+
+			<item name="License" href="/license.html" />			 -->
 		</menu>
 
 		<menu name="Documentation">
