@@ -1,0 +1,25 @@
+<dataset>
+
+    <table name="configurationbean">
+
+        <column>id</column>
+        <column>item_type</column>
+        <column>item_value</column>
+        <column>item_version</column>
+        <column>item_order</column>
+        <column>create_date</column>
+        <column>last_modified</column>
+
+        <row>
+            <value>2000</value>
+            <value>1</value>
+            <value>Test Value</value>
+            <value>Version 1.0</value>
+            <value>1</value>
+            <value>2008-01-01</value>
+            <value>2008-01-01</value>
+        </row>
+
+    </table>
+
+</dataset>

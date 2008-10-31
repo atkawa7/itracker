@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    ITracker web application context.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+    
+    <import resource="persistence-context.xml"/>
+    <import resource="services-context.xml"/>
+
+    <!-- Initialize ITracker Resources -->
+    <bean id="itrackerservicesservletcontextutilsinit"
+        class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="org.itracker.web.util.ServletContextUtils.setITrackerServices"/>
+        <property name="arguments" ref="itrackerServices" />
+    </bean>
+
+    <!-- please comment this: -->
+    <bean id="applicationInitialization" class="org.itracker.core.ApplicationInitialization">        
+        <constructor-arg ref="userService" />        
+        <constructor-arg ref="configurationService" />
+        <constructor-arg ref="reportService" />
+    </bean>       
+
+    <!-- please comment this: -->
+    <!-- bean id="schedulerController"
+        class="org.itracker.web.servlets.SchedulerController"
+        autowire="autodetect">
+        <constructor-arg ref="schedulerService" />
+    </bean -->
+
+    <!-- Initialize ITracker Resources -->
+    <bean id="resourcesinit"
+        class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="org.itracker.core.resources.ITrackerResources.setConfigurationService"/>
+        <property name="arguments" ref="configurationService" />
+    </bean>
+
+    <!-- Override properties specified in this file with properties from a properties file -->
+    <!-- Usefull for db passwords, etc.. -->
+    <bean id="applicationOverride"
+        class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
+        <property name="location" value="classpath:application.properties"/>
+    </bean>
+
+</beans>

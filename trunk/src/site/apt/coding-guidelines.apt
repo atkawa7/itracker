@@ -1,0 +1,29 @@
+ ------
+ Coding Guidelines
+ ------
+ Marco Glur, ranks@rosa.com
+ ------
+ 7 October 2008
+ ------
+
+Coding Guidelines
+
+*Java
+
+  This guidelines describe major Java code requirements.
+ 
+  Basic Java Styleguide applies to this projects: {{http://geosoft.no/development/javastyle.html}}
+
+  Java source-files are encoded in Unicode (UTF-8).
+  
+*JSP
+
+  How-to started in {{{http://itracker.wiki.sourceforge.net/Table+of+all+itracker+Pages}ITracker WIKI}}
+  
+*Site
+  
+  Introduction on {{{site.html}how-to create new apt}} (almost plain text) document and integrate it.
+
+*Testing
+
+  {{{http://itracker.wiki.sourceforge.net/Testing}Testing}} is described in the ITracker WIKI
