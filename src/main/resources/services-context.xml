@@ -117,7 +117,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </bean>
 
 	<!--  Notification service -->
-	<bean id="notificationService"
+	<bean id="notificationServiceTarget"
 		class="org.itracker.services.implementations.NotificationServiceImpl">
 		<property name="emailService" ref="emailService" />
 		<property name="notificationDao" ref="notificationDAO" />
@@ -125,8 +125,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 		<property name="issueActivityDao" ref="issueActivityDAO" />
 		<property name="issueDao" ref="issueDAO" />
 	</bean>
-	    <!-- Issue Service -->
-    <!-- TODO make a  proxy
+
     <bean id="notificationService" 
         class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager" />
@@ -135,12 +134,11 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
                 <prop key="*">PROPAGATION_REQUIRED</prop>
             </props>
         </property>
-        <property name="target" ref="issueServiceTarget" />
+        <property name="target" ref="notificationServiceTarget" />
         <property name="proxyInterfaces">
             <value>org.itracker.services.NotificationService</value>
         </property>
     </bean>
-     -->
     <!-- Project service -->
     <bean id="projectService" 
         class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
@@ -226,11 +224,26 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     <!-- bean id="schedulerServiceTarget"
         class="org.itracker.services.implementations.SchedulerServiceImpl">
         <constructor-arg ref="scheduledTaskDAO" />
-    </bean -->
+    </bean 
     
+    <bean id="Scheduler" scope="singleton" lazy-init="false"></bean>
+    -->
     <bean id="emailService" init-method="init"
         class="org.itracker.services.util.EmailService">
         <property name="configurationService" ref="configurationService" />
     </bean>
-    
+    <!--  TODO: make regular service for email-service
+    <bean id="emailService" 
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+        <property name="target" ref="emailServiceTarget" />
+        <property name="proxyInterfaces">
+            <value>org.itracker.services.NotificationService</value>
+        </property>
+    </bean>-->
 </beans>
