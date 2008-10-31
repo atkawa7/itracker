@@ -12,7 +12,7 @@
   </properties>
   <issueManagement>
     <system>SourceForge</system>
-    <url>http://sourceforge.net/tracker/?group_id=54141</url>
+    <url>http://sourceforge.net/tracker2/?group_id=54141</url>
   </issueManagement>
   <inceptionYear>2002</inceptionYear>
   <mailingLists>
@@ -535,7 +535,7 @@
   <distributionManagement>
     <site>
       <id>itracker.website</id>
-      <url>scp://web.sourceforge.net//home/groups/i/it/itracker/htdocs/newsite</url>
+      <url>scp://web.sourceforge.net/home/groups/i/it/itracker/htdocs/newsite</url>
     </site>
   </distributionManagement>
 </project>
