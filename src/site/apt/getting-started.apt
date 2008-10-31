@@ -8,7 +8,7 @@
  
 How to get up and running developing for itracker 3.0 
 
-  [[1]] {{{Setup your Developement Environment}/development_environment_setup.html}} (recommended: Tomcat 6.x, Eclipse 3.3+ with Maven Integration-/SVN-Plugin)
+  [[1]] {{{/development_environment_setup.html}Setup your Developement Environment}} (recommended: Tomcat 6.x, Eclipse 3.3+ with Maven Integration-/SVN-Plugin)
   
   [[2]] Setup a local MySQL with a development database "itrackerdev" (configured in <<<applicatoin.properties>>>)
   
@@ -16,7 +16,7 @@ How to get up and running developing for itracker 3.0
   
   [[4]] Check all Eclipse settings (Runtime Environment, Server-Configuration, Maven Dependency Management etc).
   
-  [[5]] Set the <<<\<!-- Datasource configuration -->>>> in <<<applicationContext.xml>>> (eventually create a {{{META-INF/context.xml}/examples/context.xml}})
+  [[5]] Set the <<<\<!-- Datasource configuration -->>>> in <<<applicationContext.xml>>> (eventually create a {{{/examples/context.xml}META-INF/context.xml}})
   
   [[6]] Run the application (debug or start) on Tomcat
   
@@ -41,7 +41,7 @@ Please stick to the following rules:
   *Register bugs you see. 
 
   *Currently please help to close bugs:
-  {{http://sourceforge.net/tracker/?group_id=54141&atid=472807}}
+  {{http://sourceforge.net/tracker2/?group_id=54141&atid=472807}}
 
   *Whatever you do, please make this visible on SourceForge, so we know who is working on which part.
 
