@@ -45,7 +45,7 @@
       <c:out value="${msg}"/> 
    </html:messages> 
    
-      <html:form action="/editpreferences" onsubmit="return validatePreferencesForm(this);"  method="post" acceptCharset="UTF-8" enctype="multipart/form-data">
+      <html:form action="/editpreferences" onsubmit="return validatePreferencesForm(this);" acceptCharset="UTF-8" enctype="multipart/form-data">
         <html:hidden property="action" value="preferences"/>
         <html:hidden property="login" value="${edituser.login}"/>
         <%
@@ -204,26 +204,10 @@
           		   <td class="editColumnText">
                   <html:select property="userLocale" styleClass="editColumnText">
                     <html:option value="" styleClass="editColumnText"></html:option>
-                    <%
-                    if  ( languages != null ) {
-                        for(java.util.Iterator<String> iter = languages.keySet().iterator(); iter.hasNext(); ) {
-                            String language = iter.next();
-                            List<String> locales = (List<String>) languages.get(language);
-                        %>
-                            <html:option value="<%=language%>" styleClass="editColumnText"><%= ITrackerResources.getString("itracker.locale.name", language) %></html:option>
-                        <%  for(int i = 0; i < locales.size(); i++) {
-                                String languageListItem = (String) locales.get(i);
-                        %>
-                                <html:option value="<%=languageListItem%>" styleClass="editColumnText"><%= ITrackerResources.getString("itracker.locale.name", languageListItem) %></html:option>
-                        <%  } 
-                        }
-                    } else {
-
-                        String name = ITrackerResources.getString("itracker.locale.name", "en_US");
-                        %>
-
-                      <html:option key="<%= name %>" value="en_US" styleClass="editColumnText"><%= name %></html:option>
-                 <% } %>
+                    
+                    <c:forEach var="lang" items="${languagesList}">
+                    	<html:option value="${lang.key}"  styleClass="editColumnText">${lang.value}</html:option>
+                    </c:forEach>
                   </html:select><!-- $ {languageCodeName} -->
                 </td>
           		</c:when>
@@ -381,27 +365,8 @@
                 </td>
           		</c:when>
           		<c:otherwise>
-          		   <%  String hiddenSectionsString = null;
-          		 UserPreferences userPrefs = (UserPreferences) session.getAttribute("edituserprefs");
-                    Integer[] hiddenSections = UserUtilities.getHiddenIndexSections(userPrefs.getHiddenIndexSections());
-                    for(int i = 0; i < hiddenSections.length; i++) {
-                        int sectionNumber = (hiddenSections[i] != null ? hiddenSections[i].intValue() : -1);
-                        if(sectionNumber == UserUtilities.PREF_HIDE_ASSIGNED) {
-                            hiddenSectionsString += (hiddenSectionsString == null ? "" : ", ");
-                            hiddenSectionsString += ", " + ITrackerResources.getString("itracker.web.editprefs.section.assigned", (java.util.Locale)pageContext.getAttribute("currLocale"));
-                        } else if(sectionNumber == UserUtilities.PREF_HIDE_UNASSIGNED) {
-                            hiddenSectionsString += (hiddenSectionsString == null ? "" : ", ");
-                            hiddenSectionsString += ", " + ITrackerResources.getString("itracker.web.editprefs.section.unassigned", (java.util.Locale)pageContext.getAttribute("currLocale"));
-                        } else if(sectionNumber == UserUtilities.PREF_HIDE_CREATED) {
-                            hiddenSectionsString += (hiddenSectionsString == null ? "" : ", ");
-                            hiddenSectionsString += ", " + ITrackerResources.getString("itracker.web.editprefs.section.created", (java.util.Locale)pageContext.getAttribute("currLocale"));
-                        } else if(sectionNumber == UserUtilities.PREF_HIDE_WATCHED) {
-                            hiddenSectionsString += (hiddenSectionsString == null ? "" : ", ");
-                            hiddenSectionsString += ", " + ITrackerResources.getString("itracker.web.editprefs.section.watched", (java.util.Locale)pageContext.getAttribute("currLocale"));
-                        }
-                    }
-                 %>
-                 <td class="editColumnText"><%= (hiddenSectionsString == null ? "" : hiddenSectionsString) %></td>
+          		   
+                 <td class="editColumnText">${hiddenSectionsString}</td>
           		</c:otherwise>
           	</c:choose>
           
