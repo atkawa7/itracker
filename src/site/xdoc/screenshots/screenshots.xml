@@ -8,7 +8,6 @@
 
 	<body>
 		<section name="3.0 Screenshots">
-		
 		<dl name="screenshots" >
 			<dt>Login-screen</dt>
 			<dd><img src="../images/screenshots/login.png" alt="login-screen" /></dd>
@@ -18,6 +17,8 @@
 			<dd><img src="../images/screenshots/myPreferences.png" alt="my preferences" /></dd>
 			<dt>Project issues</dt>
 			<dd><img src="../images/screenshots/project-issues.png" alt="project" /></dd>
+			<dt>Create issue</dt>
+			<dd><img src="../images/screenshots/create-issue.png" alt="create issue" /></dd>
 			<dt>View issue</dt>
 			<dd><img src="../images/screenshots/view-issue.png" alt="view issue" /></dd>
 			<dt>Edit issue</dt>
@@ -25,7 +26,14 @@
 			<dt>Issue search</dt>
 			<dd><img src="../images/screenshots/issue-search.png" alt="search issues" /></dd>
 		</dl>
-		
+		</section>
+		<section name="Notifications">
+		<dl name="screenshots" >
+			<dt>Assign issue</dt>
+			<dd><img src="../images/screenshots/assigned-notification.png" alt="assign notification" /></dd>
+			<dt>Update issue</dt>
+			<dd><img src="../images/screenshots/update-notification.png" alt="update notification" /></dd>
+		</dl>
 		</section>
 	</body>
 </document>
