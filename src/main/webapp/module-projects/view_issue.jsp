@@ -185,8 +185,10 @@ User um = RequestHelper.getCurrentUser(session);
                                               altKey="itracker.web.image.issuelist.issue.alt"
                                               textActionKey="itracker.web.image.issuelist.texttag"/>&nbsp;<%= issue.getProject().getName() %>
                 </td>
-                <% if(project.getVersions().size() > 0) { %>
-                    <td class="editColumnTitle" style="white-space: nowrap;" nowrap><it:message key="itracker.web.attr.target"/>:</td>
+                <% if(project.getVersions().size() > 0) { 
+                	Collections.sort(project.getVersions(), Version.VERSION_COMPARATOR);
+                %>
+                    <td class="editColumnTitle" style="white-space: nowrap;" ><it:message key="itracker.web.attr.target"/>:</td>
                     <td class="editColumnText"><%= (issue.getTargetVersion() == null) ? "" : issue.getTargetVersion().getNumber() %></td>
                 <% } %>
               </tr>
@@ -194,13 +196,11 @@ User um = RequestHelper.getCurrentUser(session);
                 <% if(project.getComponents().size() > 0) { %>
                       <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.components"/>: </td>
                       <td valign="top" class="editColumnText">
-                        <% List<Component> components = issue.getComponents();
+                        <%  Collections.sort(issue.getComponents(), Component.NAME_COMPARATOR);
 
-                            Collections.sort(components);
-
-                            for(int i = 0; i < components.size(); i++) {
+                            for(int i = 0; i < issue.getComponents().size(); i++) {
                         %>
-                            <%= components.get(i).getName() %><br/>
+                            <%= issue.getComponents().get(i).getName() %><br/>
                         <% } %>
                       </td>
                 <%  } else { %>
