@@ -746,8 +746,14 @@ public class IssueServiceImpl implements IssueService {
 	private boolean setIssueComponents(Issue issue,
 			List<Component> components, User user, boolean save) {
 
+		if (issue.getComponents() == null) {
+			if (logger.isInfoEnabled()) {
+				logger.info("setIssueComponents: components was null");
+			}
+			issue.setComponents(new ArrayList<Component>(components.size()));
+		}
 		if (components.isEmpty() && !issue.getComponents().isEmpty()) {
-			AddComponentsModifiedActivity(issue, user, 
+			addComponentsModifiedActivity(issue, user, 
 					ITrackerResources.getString("itracker.web.generic.all")
 					+ " "
 					+ ITrackerResources.getString("itracker.web.generic.removed"));
@@ -759,7 +765,7 @@ public class IssueServiceImpl implements IssueService {
 				if (components.contains(component)) {
 					components.remove(component);
 				} else {
-					AddComponentsModifiedActivity(issue, user, ITrackerResources
+					addComponentsModifiedActivity(issue, user, ITrackerResources
 							.getString("itracker.web.generic.removed")
 							+ ": "
 							+ component.getName());
@@ -771,7 +777,7 @@ public class IssueServiceImpl implements IssueService {
 
 				Component component = iterator.next();
 				if (!issue.getComponents().contains(component)) {
-					AddComponentsModifiedActivity(issue, user, ITrackerResources
+					addComponentsModifiedActivity(issue, user, ITrackerResources
 							.getString("itracker.web.generic.added")
 							+ ": "
 							+ component.getName());
@@ -796,7 +802,7 @@ public class IssueServiceImpl implements IssueService {
 	 * @param user
 	 * @param description
 	 */
-	private void AddComponentsModifiedActivity(Issue issue, User user, String description) {
+	private void addComponentsModifiedActivity(Issue issue, User user, String description) {
 		IssueActivity activity = new IssueActivity();
 		activity.setActivityType(org.itracker.model.IssueActivityType.COMPONENTS_MODIFIED);
 		activity.setDescription(description);
@@ -806,76 +812,91 @@ public class IssueServiceImpl implements IssueService {
 	}
 	
 	private boolean setIssueVersions(Issue issue,
-			List<Version> versions, boolean save) {
-		boolean wasChanged = false;
-		StringBuffer changesBuf = new StringBuffer();
-		List<Version> oldVersions = issue.getVersions();
-		if (oldVersions != null) {
-			if (versions.isEmpty() && !oldVersions.isEmpty()) {
-				wasChanged = true;
-				changesBuf.append(ITrackerResources
-						.getString("itracker.web.generic.all")
-						+ " "
-						+ ITrackerResources
-								.getString("itracker.web.generic.removed"));
-				oldVersions.clear();
-			} else {
-				for (Iterator<Version> iterator = oldVersions.iterator(); iterator
-						.hasNext();) {
-
-					Version version = iterator.next();
-					if (versions.contains(version.getId())) {
-						versions.remove(version.getId());
-
-					} else {
-						wasChanged = true;
-						changesBuf.append(ITrackerResources
-								.getString("itracker.web.generic.removed")
-								+ ": "
-
-								+ version.getNumber() + "; ");
-						iterator.remove();
-					}
-				}
-
-				for (Iterator<Version> iterator = versions.iterator(); iterator
-						.hasNext();) {
-
-
-					Version version = iterator.next();
-					wasChanged = true;
-
-					changesBuf.append(ITrackerResources
-							.getString("itracker.web.generic.added")
-							+ ": "
-							+ version.getNumber() + "; ");
-					oldVersions.add(version);
-				}
+			List<Version> versions, User user, boolean save) {
+		
+		if (issue.getVersions() == null) {
+			if (logger.isInfoEnabled()) {
+				logger.info("setIssueVersions: versions were null!");
 			}
+			issue.setVersions(new ArrayList<Version>());
+		}
+		
+		if (versions.isEmpty() && !issue.getVersions().isEmpty()) {
+
+			addVersionsModifiedActivity(issue, user, ITrackerResources
+					.getString("itracker.web.generic.all")
+					+ " "
+					+ ITrackerResources
+							.getString("itracker.web.generic.removed"));
+			issue.getVersions().clear();
 		} else {
-			logger.debug("Versions were null!");
-		}
+			StringBuilder changesBuf = new StringBuilder();
+			for (Iterator<Version> iterator = issue.getVersions().iterator(); iterator
+					.hasNext();) {
 
-		if (wasChanged) {
+				Version version = iterator.next();
+				if (versions.contains(version)) {
+					versions.remove(version);
 
-			IssueActivity activity = new IssueActivity();
-			activity
-					.setActivityType(org.itracker.model.IssueActivityType.TARGETVERSION_CHANGE);
-			activity.setDescription(changesBuf.toString());
-			activity.setIssue(issue);
-			issue.getActivities().add(activity);
-			if (save) {
-				getIssueDAO().saveOrUpdate(issue);
+				} else {
+					changesBuf.append(version.getNumber() + (changesBuf.length() > 0 ? "; " : ""));
+					iterator.remove();
+				}
+			}
+			
+			if (changesBuf.toString().length() > 0) {
+				addVersionsModifiedActivity(issue, user, ITrackerResources
+							.getString("itracker.web.generic.removed")
+							+ ": " + changesBuf.toString());
+			}
+			
+			changesBuf = new StringBuilder();
+			for (Iterator<Version> iterator = versions.iterator(); iterator
+					.hasNext();) {
+
+
+				Version version = iterator.next();
+
+				changesBuf.append(version.getNumber() + (changesBuf.length() > 0 ? "; " : ""));
+				issue.getVersions().add(version);
+			}
+			if (changesBuf.toString().length() > 0) {
+				addVersionsModifiedActivity(issue, user, ITrackerResources
+						.getString("itracker.web.generic.added")
+							+ ": " + changesBuf.toString());
 			}
 		}
+		if (save) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("setIssueVersions: updating issue: " + issue);
+			}
+			getIssueDAO().saveOrUpdate(issue);
+		}
+
 		return true;
 	}
 
+	/**
+	 * used by setIssueComponents for adding change activities
+	 * @param issue
+	 * @param user
+	 * @param description
+	 */
+	private void addVersionsModifiedActivity(Issue issue, User user, String description) {
+		IssueActivity activity = new IssueActivity();
+		activity
+				.setActivityType(org.itracker.model.IssueActivityType.TARGETVERSION_CHANGE);
+		activity.setDescription(description);
+		activity.setIssue(issue);
+		activity.setUser(user);
+		issue.getActivities().add(activity);
+	}
+	
 	public boolean setIssueVersions(Integer issueId,
 			HashSet<Integer> versionIds, Integer userId) {
 
 		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
-		
+		User user = userDAO.findByPrimaryKey(userId);
 		// load versions from ids
 		ArrayList<Version> versions = new ArrayList<Version>(versionIds.size());
 		Iterator<Integer> versionsIdIt = versionIds.iterator();
@@ -884,7 +905,7 @@ public class IssueServiceImpl implements IssueService {
 			versions.add(getVersionDAO().findByPrimaryKey(id));
 		}
 		
-		return setIssueVersions(issue, versions, true);
+		return setIssueVersions(issue, versions, user, true);
 	}
 
 	public IssueRelation getIssueRelation(Integer relationId) {
