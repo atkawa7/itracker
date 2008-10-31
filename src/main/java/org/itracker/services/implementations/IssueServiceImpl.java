@@ -731,7 +731,7 @@ public class IssueServiceImpl implements IssueService {
 
 		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
 		List<Component> components = new ArrayList<Component>(componentIds.size());
-		
+		User user = userDAO.findByPrimaryKey(userId);
 		Iterator<Integer> idIt = componentIds.iterator();
 		while (idIt.hasNext()) {
 			Integer id = (Integer) idIt.next();
@@ -739,17 +739,16 @@ public class IssueServiceImpl implements IssueService {
 			components.add(c);
 		}
 		
-		setIssueComponents(issue, components, true);
+		setIssueComponents(issue, components, user, true);
 		return true;
 	}
 
 	private boolean setIssueComponents(Issue issue,
-			List<Component> components, boolean save) {
+			List<Component> components, User user, boolean save) {
 
 		boolean wasChanged = false;
 		StringBuffer changesBuf = new StringBuffer();
 		List<Component> componentsOld = issue.getComponents();
-
 		if (components.isEmpty() && !componentsOld.isEmpty()) {
 			wasChanged = true;
 			changesBuf.append(ITrackerResources
@@ -793,6 +792,7 @@ public class IssueServiceImpl implements IssueService {
 			activity.setActivityType(org.itracker.model.IssueActivityType.COMPONENTS_MODIFIED);
 			activity.setDescription(changesBuf.toString());
 			activity.setIssue(issue);
+			activity.setUser(user);
 			issue.getActivities().add(activity);
 			if (save) {
 				if (logger.isDebugEnabled()) {
