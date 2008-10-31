@@ -99,7 +99,7 @@
 				    <td></td>
 				    <td>${ownedIssue.severityLocalizedString}</td>
 				    <td></td>
-				    <td style="white-space: nowrap;"><it:formatDescription truncateLength="80"><c:out value="${ownedIssue.issue.description}"/></it:formatDescription></td>
+				    <td style="white-space: nowrap;"><it:formatDescription><c:out value="${ownedIssue.issue.description}"/></it:formatDescription></td>
 				    <td></td>
 				    <td style="white-space: nowrap;">${ownedIssue.issue.owner.firstName} ${ownedIssue.issue.owner.lastName}</td>
 				    <td></td>
@@ -208,7 +208,7 @@
 						<td><c:out
 							value="${unassignedIssue.severityLocalizedString}" /></td>
 						<td></td>
-						<td style="white-space: nowrap;"><it:formatDescription truncateLength="80">${unassignedIssue.issue.description}</it:formatDescription></td>
+						<td style="white-space: nowrap;"><it:formatDescription>${unassignedIssue.issue.description}</it:formatDescription></td>
 						<td></td>
 						<!-- Marky:  modified the code to place the two checks in the chooser statement so only one select list will
         be displayed. -->
@@ -403,7 +403,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 					<td></td>
 					<td>${createdIssue.severityLocalizedString}</td>
 					<td></td>
-					<td style="white-space: nowrap;"><it:formatDescription truncateLength="80">${createdIssue.issue.description}</it:formatDescription></td>
+					<td style="white-space: nowrap;"><it:formatDescription>${createdIssue.issue.description}</it:formatDescription></td>
 					<td></td>
 					<td style="white-space: nowrap"><c:choose>
 						<c:when test="${createdIssue.unassigned}">
@@ -528,7 +528,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 					<td></td>
 					<td>${watchedIssue.severityLocalizedString}</td>
 					<td></td>
-					<td style="white-space: nowrap;"><it:formatDescription truncateLength="80">${watchedIssue.issue.description}</it:formatDescription></td>
+					<td style="white-space: nowrap;"><it:formatDescription>${watchedIssue.issue.description}</it:formatDescription></td>
 					<td></td>
 					<td>
 						<c:choose>
