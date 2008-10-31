@@ -37,6 +37,7 @@ package org.itracker.services.implementations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -754,33 +755,37 @@ public class IssueServiceImpl implements IssueService {
 		}
 		if (components.isEmpty() && !issue.getComponents().isEmpty()) {
 			addComponentsModifiedActivity(issue, user, 
-					ITrackerResources.getString("itracker.web.generic.all")
-					+ " "
-					+ ITrackerResources.getString("itracker.web.generic.removed"));
+					new StringBuilder(ITrackerResources.getString("itracker.web.generic.all"))
+					.append(" ")
+					.append(ITrackerResources.getString("itracker.web.generic.removed"))
+					.toString());
 			issue.getComponents().clear();
 		} else {
+			Collections.sort(issue.getComponents(), Component.NAME_COMPARATOR);
+			
 			for (Iterator<Component> iterator = issue.getComponents().iterator(); iterator
 					.hasNext();) {
 				Component component = (Component) iterator.next();
 				if (components.contains(component)) {
 					components.remove(component);
 				} else {
-					addComponentsModifiedActivity(issue, user, ITrackerResources
-							.getString("itracker.web.generic.removed")
-							+ ": "
-							+ component.getName());
+					addComponentsModifiedActivity(issue, user, 
+							new StringBuilder(ITrackerResources.getString("itracker.web.generic.removed"))
+							.append(": ")
+							.append(component.getName()).toString());
 					iterator.remove();
 				}
 			}
+			Collections.sort(components, Component.NAME_COMPARATOR);
 			for (Iterator<Component> iterator = components.iterator(); iterator
 					.hasNext();) {
 
 				Component component = iterator.next();
 				if (!issue.getComponents().contains(component)) {
-					addComponentsModifiedActivity(issue, user, ITrackerResources
-							.getString("itracker.web.generic.added")
-							+ ": "
-							+ component.getName());
+					addComponentsModifiedActivity(issue, user, 
+							new StringBuilder(ITrackerResources.getString("itracker.web.generic.added"))
+								.append(": ")
+								.append(component.getName()).toString());
 					issue.getComponents().add(component);
 				}
 			}
@@ -823,13 +828,16 @@ public class IssueServiceImpl implements IssueService {
 		
 		if (versions.isEmpty() && !issue.getVersions().isEmpty()) {
 
-			addVersionsModifiedActivity(issue, user, ITrackerResources
-					.getString("itracker.web.generic.all")
-					+ " "
-					+ ITrackerResources
-							.getString("itracker.web.generic.removed"));
+			addVersionsModifiedActivity(issue, user, 
+					new StringBuilder(ITrackerResources.getString("itracker.web.generic.all"))
+						.append(" ")
+						.append(ITrackerResources.getString("itracker.web.generic.removed"))
+						.toString());
 			issue.getVersions().clear();
 		} else {
+
+			Collections.sort(issue.getVersions(), Version.VERSION_COMPARATOR);
+			
 			StringBuilder changesBuf = new StringBuilder();
 			for (Iterator<Version> iterator = issue.getVersions().iterator(); iterator
 					.hasNext();) {
@@ -837,33 +845,43 @@ public class IssueServiceImpl implements IssueService {
 				Version version = iterator.next();
 				if (versions.contains(version)) {
 					versions.remove(version);
-
 				} else {
-					changesBuf.append(version.getNumber() + (changesBuf.length() > 0 ? "; " : ""));
+					if (changesBuf.length() > 0) {
+						changesBuf.append(", ");
+					}
+					changesBuf.append(version.getNumber());
 					iterator.remove();
 				}
 			}
 			
-			if (changesBuf.toString().length() > 0) {
-				addVersionsModifiedActivity(issue, user, ITrackerResources
-							.getString("itracker.web.generic.removed")
-							+ ": " + changesBuf.toString());
+			if (changesBuf.length() > 0) {
+				addVersionsModifiedActivity(issue, user, 
+						new StringBuilder(ITrackerResources.getString("itracker.web.generic.removed"))
+							.append(": ")
+							.append(changesBuf)
+							.toString());
 			}
 			
 			changesBuf = new StringBuilder();
+			
+			Collections.sort(versions, Version.VERSION_COMPARATOR);
 			for (Iterator<Version> iterator = versions.iterator(); iterator
 					.hasNext();) {
 
 
 				Version version = iterator.next();
-
-				changesBuf.append(version.getNumber() + (changesBuf.length() > 0 ? "; " : ""));
+				if (changesBuf.length() > 0) {
+					changesBuf.append(", ");
+				}
+				changesBuf.append(version.getNumber());
 				issue.getVersions().add(version);
 			}
-			if (changesBuf.toString().length() > 0) {
-				addVersionsModifiedActivity(issue, user, ITrackerResources
-						.getString("itracker.web.generic.added")
-							+ ": " + changesBuf.toString());
+			if (changesBuf.length() > 0) {
+				addVersionsModifiedActivity(issue, user, 
+						new StringBuilder(ITrackerResources.getString("itracker.web.generic.added"))
+							.append(": ")
+							.append(changesBuf)
+							.toString());
 			}
 		}
 		if (save) {
