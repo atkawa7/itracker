@@ -69,7 +69,7 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
         List<User> users = userDAO.findAll();
 
         assertNotNull(users);
-        assertEquals(6, users.size());
+        assertEquals(5, users.size());
     }
 
     @Test
