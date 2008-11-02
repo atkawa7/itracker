@@ -15,13 +15,19 @@
 				</tr>
 				<tr>
 					<td>
-						<a href="itracker-3.0-rc1.html" title="Release-notes to itracker 3.0-rc1">itracker-3.0-rc1
+                        <a href="itracker-3.0-rc1.html" title="Release-notes to itracker 3.0-rc1">itracker-3.0-rc1
 						</a>
 					</td>
 					<td>2008-09-26
 					</td>
 				</tr>
-			</table>
+                <tr>
+                    <td>
+                        <a href="itracker-3.0-rc2.html" title="Release notes to itracker 3.0-rc2">itracker-3.0-rc2</a>
+                    </td>
+                    <td>2008-11-01</td>
+                </tr>
+            </table>
 		</section>
 	</body>
 
