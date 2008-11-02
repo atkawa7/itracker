@@ -1,0 +1,31 @@
+<assembly>
+    <id>bin</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <fileSets>
+        <fileSet>
+            <directory>src/site</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>GPL.txt</include>
+                <include>LGPL.txt</include>
+                <include>INSTALL.txt</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>target</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>*.war</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>target/generated-sources/schema</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>*.sql</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>
