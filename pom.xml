@@ -33,7 +33,10 @@
     <developer>
       <id>clim1219</id>
       <name>Chris Lim</name>
-      <timezone>GMT +8</timezone>
+        <roles>
+            <role>Developer</role>
+        </roles>
+      <timezone>8</timezone>
     </developer>
     <developer>
       <id>ranks</id>
@@ -252,6 +255,22 @@
           </additionalBuildcommands>
         </configuration>
       </plugin>
+        <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+                <descriptors>
+                    <descriptor>src/main/assembly/assembly-src.xml</descriptor>
+                    <descriptor>src/main/assembly/assembly-bin.xml</descriptor>
+                </descriptors>
+            </configuration>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>attached</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
     </plugins>
   </build>
   <repositories>
@@ -535,7 +554,7 @@
   <distributionManagement>
     <site>
       <id>itracker.website</id>
-      <url>scp://web.sourceforge.net/home/groups/i/it/itracker/htdocs/newsite</url>
+      <url>scp://web.sourceforge.net/home/groups/i/it/itracker/htdocs</url>
     </site>
   </distributionManagement>
 </project>

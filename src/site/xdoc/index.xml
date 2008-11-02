@@ -50,6 +50,10 @@
         <section name="News">
             <table border="1">
                 <tr>
+                    <td>2008-11-01</td>
+                    <td>Version 3.0 Release Candidate 2 is available for <a href="/downloads.html">download.</a></td>
+                </tr>
+                <tr>
                     <td>2008-09-29</td>
                     <td>First release candidate for version 3.0 is available for <a href="/downloads.html">download</a>. Release-notes: <a href="/release-notes/itracker-3.0-rc1.html">itracker-3.0-rc1</a></td>
                 </tr>
