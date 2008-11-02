@@ -33,7 +33,10 @@
     <developer>
       <id>clim1219</id>
       <name>Chris Lim</name>
-      <timezone>GMT +8</timezone>
+        <roles>
+            <role>Developer</role>
+        </roles>
+      <timezone>8</timezone>
     </developer>
     <developer>
       <id>ranks</id>
