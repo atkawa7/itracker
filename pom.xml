@@ -252,6 +252,22 @@
           </additionalBuildcommands>
         </configuration>
       </plugin>
+        <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+                <descriptors>
+                    <descriptor>src/main/assembly/assembly-src.xml</descriptor>
+                    <descriptor>src/main/assembly/assembly-bin.xml</descriptor>
+                </descriptors>
+            </configuration>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>attached</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
     </plugins>
   </build>
   <repositories>
