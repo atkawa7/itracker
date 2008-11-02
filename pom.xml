@@ -4,7 +4,7 @@
   <artifactId>itracker</artifactId>
   <packaging>war</packaging>
   <name>itracker</name>
-  <version>3.1</version>
+  <version>3.0-rc3</version>
   <url>http://itracker.sourceforge.net/</url>
   <properties>
   	<clover.maven.charset>UTF-8</clover.maven.charset>
