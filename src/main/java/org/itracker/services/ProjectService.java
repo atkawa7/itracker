@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.itracker.model.Component;
 import org.itracker.model.CustomField;
+import org.itracker.model.Issue;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.User;
@@ -112,6 +113,18 @@ public interface ProjectService {
     public Long[] getProjectStats(Integer projectId);
     
     public Date getLatestIssueUpdatedDateByProjectId(Integer projectId);
+    
+    /**
+     * Creates a new issue in a project.
+     * @param model an Issue representing the new issue information
+     * @param projectId the projectId the issue belongs to
+     * @param userId the id of registered creator of the new issue
+     * @param createdById the id of the actual creator of the issue.  This would normally be the same as the userId.
+     * @return an Issue containing the newly created issue, or null if the create failed
+     */
+    Project createProject(Project project, Integer userId);
+    
+    Project updateProject(Project project, Integer userId);
     
     /**
      * @deprecated the service should 'encapsulate' the DAO and must not expose it!

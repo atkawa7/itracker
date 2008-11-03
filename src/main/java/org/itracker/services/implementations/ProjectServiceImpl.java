@@ -18,6 +18,7 @@
 
 package org.itracker.services.implementations;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -352,9 +353,22 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	
 	public Date getLatestIssueUpdatedDateByProjectId(Integer projectId) {
-		return issueDAO.latestModificationDate(projectId);
+		return issueDAO.latestModificationDate(projectId);	
+	}
+	
+	public Project createProject(Project project, Integer userId) {
+		User user = getUserDAO().findByPrimaryKey(userId);
+		project.setOwners(Arrays.asList(new User[]{user}));
+		getProjectDAO().save(project);
 		
+		return project;
+	}
+	public Project updateProject(Project project, Integer userId) {
+		User user = getUserDAO().findByPrimaryKey(userId);
+		project.setOwners(Arrays.asList(new User[]{user}));		
+		getProjectDAO().saveOrUpdate(project);
 		
+		return project;
 	}
 
 }
