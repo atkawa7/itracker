@@ -181,26 +181,23 @@
               </tr>
               <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td></tr>
 
-              
               <c:if test="${not empty projectFieldsMap}">
                      <tr><td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.customfields"/>:</td></tr>
                      <tr class="listHeading"><td colspan="4"><html:img height="2" width="1" src="/themes/defaulttheme/images/blank.gif"/></td></tr>
                      <tr><td colspan="4"><html:img height="3" width="1" src="/themes/defaulttheme/images/blank.gif"/></td></tr>
-                     <tr>
-                     <c:forEach var="projectField" varStatus="i" items="${projectFieldsMap} ">
-              
-              			<c:if test="${i.count % 2 == 0}">
-                             </tr>
-                             <tr>
-                        </c:if>
-              
-                         <it:formatCustomField field="${projectField.key}" currentValue="${projectField.value}" displayType="view"/>
-
-              		</c:forEach>
-                     </tr>
-                     <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td></tr>
-             
+	                     
+                     <c:forEach var="projectField" varStatus="i" items="${ projectFieldsMap }" step="2">
+	                     <tr>
+		                     <it:formatCustomField field="${projectField.key}" currentValue="${projectField.value}" displayType="view"/>
+	                     	 <c:forEach begin="${i.index + 1}" end="${i.index + 1}" var="projectField" items="${ projectFieldsMap }">
+	                     	 	<it:formatCustomField field="${projectField.key}" currentValue="${projectField.value}" displayType="view"/>
+	                     	 </c:forEach>
+	                     </tr>
+              	     </c:forEach>
+              		 <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td></tr>
               </c:if>
+              
+              
             </table>
             <br />
             <%-- TODO reinsert this once issue relation has been implemented correctly 
