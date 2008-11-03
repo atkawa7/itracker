@@ -37,7 +37,6 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
 
-
 public class InitializeLanguagesAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(InitializeLanguagesAction.class);
 	

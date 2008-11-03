@@ -44,15 +44,12 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 public class CreateLanguageKeyAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(CreateLanguageKeyAction.class);
 	
-    public CreateLanguageKeyAction() {
-    }
 
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @SuppressWarnings("unchecked")
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
+
+        
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while creating language key.");
             return mapping.findForward("listlanguages");
@@ -81,8 +78,7 @@ public class CreateLanguageKeyAction extends ItrackerBaseAction {
                     }
                 }
                 String baseValue = (String) items.get(ITrackerResources.BASE_LOCALE);
-                //if(baseValue == null || baseValue.equals("")) {
-                //errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.required", ));
+
                 configurationService.updateLanguageItem(new Language(ITrackerResources.BASE_LOCALE, key, baseValue));
                 ITrackerResources.clearKeyFromBundles(key, true);
             }
