@@ -1,11 +1,13 @@
 package org.itracker.web.actions.admin.attachment;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -16,6 +18,8 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 public class ListAttachmentsAction extends ItrackerBaseAction {
 
+	private static final Logger log = Logger.getLogger(ListAttachmentsAction.class);
+	
     public ActionForward execute(ActionMapping mapping,
                                  ActionForm form,
                                  HttpServletRequest request,
@@ -25,24 +29,21 @@ public class ListAttachmentsAction extends ItrackerBaseAction {
         boolean hasAttachments = false;
         long sizeOfAllAttachments = 0;
 
-//        super.executeAlways(mapping, form, request, response);
-
         IssueService issueService = this.getITrackerServices().getIssueService();
 
         List<IssueAttachment> attachments = new ArrayList<IssueAttachment>();
         try {
             attachments = issueService.getAllIssueAttachments();
         } catch (Exception e) {
-            // TODO: Do we just drown the exception?
-            e.printStackTrace();
+        	log.error("execute: failed to get all attachments", e);
+        	throw e;
         }
 
         if( attachments.size() > 0 ) {
 
             hasAttachments = true;
-            // TODO: Temporarily disabled sorting as it causes an NPE.
-            // Some issue status are null
-//                Collections.sort(attachments);
+            
+            Collections.sort(attachments, IssueAttachment.ID_COMPARATOR);
 
             for (IssueAttachment issueAttachment : attachments) {
                 sizeOfAllAttachments += issueAttachment.getSize();
