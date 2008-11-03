@@ -66,16 +66,10 @@ import org.itracker.web.util.Constants;
 
 public class ImportDataProcessAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(ImportDataProcessAction.class);
-	
-    public ImportDataProcessAction () {
-    }
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
+
 
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
@@ -91,17 +85,20 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
             }
 
             ImportDataModel model = (ImportDataModel) session.getAttribute(Constants.IMPORT_DATA_KEY);
-            // TODO: it looks like the following line can be removed. Commented and Task added
-            // AbstractBean[] importData = model.getData();
-            log.debug("Importing configuration data.");
+            if (log.isDebugEnabled())
+            	log.debug("Importing configuration data.");
             createConfig(model, importer, ic);
-            log.debug("Importing user data.");
+            if (log.isDebugEnabled())
+            	log.debug("Importing user data.");
             createUsers(model, importer, ic);
-            log.debug("Importing project data.");
+            if (log.isDebugEnabled())
+            	log.debug("Importing project data.");
             createProjects(model, importer, ic);
-            log.debug("Importing issue data.");
+            if (log.isDebugEnabled())
+            	log.debug("Importing issue data.");
             createIssues(model, importer, ic);
-            log.debug("Import complete.");
+            if (log.isDebugEnabled())
+            	log.debug("Import complete.");
 
         } catch(Exception e) {
             log.error("Exception while importing data.", e);
@@ -197,7 +194,8 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
             for(int i = 0; i < importData.length; i++) {
                 if(importData[i] instanceof Project && ! model.getExistingModel(i)) {
                     Project project = (Project) importData[i];
-                    projectService.getProjectDAO().save(project);
+                    project = projectService.createProject(project, importer.getId());
+//                    projectService.getProjectDAO().save(project);
 
                     HashSet<Integer> setOfOwnerIDs = new HashSet<Integer>();
                     for(int j = 0; j < project.getOwners().size(); j++) {
