@@ -1,14 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
- 
-<%@ page import="java.util.*" %>
-<%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.services.util.*" %>
-<%@ page import="org.itracker.services.*" %>
-<%@ page import="org.itracker.services.IssueService" %>
-<%@ page import="org.itracker.core.resources.*" %>
-<%@ page import="org.itracker.web.util.RequestHelper" %>
-<%@ page import="org.itracker.model.Notification.Role"%>
-<%@ page import="org.itracker.web.util.LoginUtilities"%>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -153,7 +143,8 @@
                       <td valign="top" class="editColumnText">
 
                         	<c:forEach var="component" items="${issue.components}">
-                             ${component.name} <br/>
+                             ${component.name}
+                             <br/>
 	                        </c:forEach>
                       </td>
                    </c:when>
@@ -183,9 +174,8 @@
 
               <c:if test="${not empty projectFieldsMap}">
                      <tr><td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.customfields"/>:</td></tr>
-                     <tr class="listHeading"><td colspan="4"><html:img height="2" width="1" src="/themes/defaulttheme/images/blank.gif"/></td></tr>
-                     <tr><td colspan="4"><html:img height="3" width="1" src="/themes/defaulttheme/images/blank.gif"/></td></tr>
-	                     
+                     <tr class="listHeading"><td><it:message key="itracker.web.attr.field" /></td><td><it:message key="itracker.web.attr.value" /></td><td><it:message key="itracker.web.attr.field" /></td><td><it:message key="itracker.web.attr.value" /></td></tr>
+ 
                      <c:forEach var="projectField" varStatus="i" items="${ projectFieldsMap }" step="2">
 	                     <tr>
 		                     <it:formatCustomField field="${projectField.key}" currentValue="${projectField.value}" displayType="view"/>
@@ -196,8 +186,6 @@
               	     </c:forEach>
               		 <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td></tr>
               </c:if>
-              
-              
             </table>
             <br />
             <%-- TODO reinsert this once issue relation has been implemented correctly 
@@ -274,7 +262,7 @@
                   --%>
    
         
-            <c:if test="${hasAttachmentOption}">
+            <c:if test="${hasAttachmentOption && not empty attachments}">
                 <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
                   <tr>
                     <td class="editColumnTitle" colspan="4"><it:message key="itracker.web.attr.attachments"/>:</td>
