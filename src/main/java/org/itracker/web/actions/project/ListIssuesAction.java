@@ -29,6 +29,7 @@ import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.IssuePTO;
+import org.itracker.web.util.RequestHelper;
 
 public class ListIssuesAction extends ItrackerBaseAction {
 
@@ -225,7 +226,13 @@ public class ListIssuesAction extends ItrackerBaseAction {
         String pageTitleArg = project.getName();
         request.setAttribute(ATT_NAME_PAGE_TITLE_KEY, LIST_ISSUES_PAGE_TITLE_KEY);
         request.setAttribute(ATT_NAME_PAGE_TITLE_ARG, pageTitleArg);
-        
+        final Map<Integer, Set<PermissionType>> permissions = RequestHelper.getUserPermissions(session);
+        boolean canCreateIssue = false;
+        if(project.getStatus() == Status.ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT)) {
+        	canCreateIssue = true;
+        }
+        request.setAttribute("canCreateIssue", canCreateIssue);
+
         log.info("execute: Forward was: " + FWD_LIST_ISSUES);
         return mapping.findForward(FWD_LIST_ISSUES);
     }

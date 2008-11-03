@@ -18,55 +18,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<% // TODO : move redirect logic to the Action class. 
-final Map<Integer, Set<PermissionType>> permissions = 
-    RequestHelper.getUserPermissions(session);
-User um = RequestHelper.getCurrentUser(session);
-
-  IssueService ih = (IssueService)request.getAttribute("ih");
-  
-  Integer issueId = null;
-  Issue issue = null; 
-
-  Integer currUserId = um.getId();
-
-  try {
-      issueId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
-      issue = ih.getIssue(issueId);
-  } catch (Exception ex) {
-      issue = null;
-  }
-
-  if(issue == null) {
-%>
-      <it:addError key="itracker.web.error.noissue"/>
-      <logic:forward name="error"/>
-<%
-  } else {
-      Project project = issue.getProject();
-      if(project.getStatus() != Status.ACTIVE && project.getStatus() != Status.VIEWABLE) {
-%>
-          <it:addError key="itracker.web.error.projectlocked"/>
-          <logic:forward name="error"/>
-<%
-      } else {
-
-          User owner = issue.getOwner();
-          User creator = issue.getCreator();
-          boolean canViewIssue = IssueUtilities.canViewIssue(issue, currUserId, permissions);
-
-          if(project == null || ! canViewIssue) {
-%>
-              <logic:forward name="unauthorized" />
-<%
-          } else {
-              if(issue == null) {
-                  issue = new Issue();
-              }
-%>
-
 <bean:define id="pageTitleKey" value="itracker.web.viewissue.title"/>
-<bean:define id="pageTitleArg" value="<%= issue.getId().toString() %>"/>
+<bean:define id="pageTitleArg" value="${issue.id}"/>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
@@ -80,7 +33,7 @@ User um = RequestHelper.getCurrentUser(session);
               </tr>
               <tr>
                 <td class="editColumnTitle" valign="top"><it:message key="itracker.web.attr.description"/>: </td>
-                <td class="editColumnText"><%= issue.getDescription() %></td>
+                <td class="editColumnText">${issue.description}</td>
                 <td class="editColumnTitle" valign="top"><it:message key="itracker.web.attr.actions"/>: </td>
                 
                 <td class="editColumnText" valign="top">
@@ -91,59 +44,59 @@ User um = RequestHelper.getCurrentUser(session);
                         <it:formatImageAction forward="listissues"
                                               module="/module-projects"
                                               paramName="projectId"
-                                              paramValue="<%= project.getId() %>"
+                                              paramValue="${project.id}"
                                               caller="viewissue"
                                               src="/themes/defaulttheme/images/list.gif"
                                               altKey="itracker.web.image.issuelist.issue.alt"
                                               textActionKey="itracker.web.image.issuelist.texttag"/>
 
-                        <% if(! ih.hasIssueNotification(issue.getId(), currUserId)) { %>
+                        <c:if test="${hasIssueNotification}">
                              <it:formatImageAction forward="watchissue"
                                               module="/module-projects"
                                                    paramName="id"
-                                                   paramValue="<%= issue.getId() %>"
+                                                   paramValue="${issue.id}"
                                                    caller="viewissue"
                                                    src="/themes/defaulttheme/images/watch.gif"
                                                    altKey="itracker.web.image.watch.issue.alt"
-                                                   arg0="<%= issue.getId() %>"
+                                                   arg0="${issue.id}"
                                                    textActionKey="itracker.web.image.watch.texttag"/>
-                        <% } %>
-                        <% if(IssueUtilities.canEditIssue(issue, currUserId, permissions)) { %>
+                        </c:if>
+                        <c:if test="${canEditIssue}">
 
                              <it:formatImageAction action="editissueform"
                                                    module="/module-projects"
                                                    paramName="id"
-                                                   paramValue="<%= issue.getId() %>"
+                                                   paramValue="${issue.id}"
                                                    caller="viewissue"
                                                    src="/themes/defaulttheme/images/edit.gif"
                                                    altKey="itracker.web.image.edit.issue.alt"
-                                                   arg0="<%= issue.getId() %>"
+                                                   arg0="${issue.id}"
                                                    textActionKey="itracker.web.image.edit.texttag"/>
 
                              <it:formatImageAction action="moveissueform"
                                                    module="/module-projects"
                                                    paramName="id"
-                                                   paramValue="<%= issue.getId() %>"
+                                                   paramValue="${issue.id}"
                                                    caller="viewissue"
                                                    src="/themes/defaulttheme/images/move.gif"
                                                    altKey="itracker.web.image.move.issue.alt"
-                                                   arg0="<%= issue.getId() %>"
+                                                   arg0="${issue.id}"
                                                    textActionKey="itracker.web.image.move.texttag"/>
 
                              <%-- TODO reinstate this when relate issues works correctly
-                             <it:formatImageAction forward="relateissue" paramName="id" paramValue="<%= issue.getId() %>" caller="viewissue" src="/images/link.gif" altKey="itracker.web.image.link.issue.alt" textActionKey="itracker.web.image.link.texttag"/>
+                             <it:formatImageAction forward="relateissue" paramName="id" paramValue="${issue.id}" caller="viewissue" src="/images/link.gif" altKey="itracker.web.image.link.issue.alt" textActionKey="itracker.web.image.link.texttag"/>
                              --%>
-                        <% } %>
-                        <% if(project.getStatus() == Status.ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_CREATE)) { %>
+                        </c:if>
+                        <c:if test="${canCreateIssue}">
                             <it:formatImageAction forward="createissue"
                                                   module="/module-projects"
                                                   paramName="projectId"
-                                                  paramValue="<%= project.getId() %>"
+                                                  paramValue="${project.id}"
                                                   src="/themes/defaulttheme/images/create.gif"
                                                   altKey="itracker.web.image.create.issue.alt"
-                                                  arg0="<%= project.getName() %>"
+                                                  arg0="${project.name}"
                                                   textActionKey="itracker.web.image.create.texttag"/>
-                        <% } %>
+                        </c:if>
                       </td>
                     </tr>
                   </table>
@@ -151,25 +104,25 @@ User um = RequestHelper.getCurrentUser(session);
               </tr>
               <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="8"/></td></tr>
               <tr>
-                <td class="editColumnTitle"><it:message key="itracker.web.attr.status"/>: </td>
-                <td class="editColumnText"><%= IssueUtilities.getStatusName(issue.getStatus(), (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>
+                <td class="editColumnTitle"><it:message  key="itracker.web.attr.status"/>: </td>
+                <td class="editColumnText">${issueStatusName}</td>
                 <td class="editColumnTitle"><it:message key="itracker.web.attr.created"/>: </td>
                 <td class="editColumnText">
-                  <it:formatDate date="<%= issue.getCreateDate() %>"/>
-                  (<%= creator.getFirstName() + " " + creator.getLastName() %>)
+                  <it:formatDate date="${issue.createDate}"/>
+                  (${issue.creator.firstName}&nbsp;${issue.creator.lastName})
                 </td>
               </tr>
               <tr>
                 <td class="editColumnTitle"><it:message key="itracker.web.attr.resolution"/>: </td>
-                <td class="editColumnText"><it:formatResolution projectOptions="<%= project.getOptions() %>"><%= issue.getResolution() %></it:formatResolution></td>
+                <td class="editColumnText"><it:formatResolution projectOptions="${project.options}">${issue.resolution}</it:formatResolution></td>
                 <td class="editColumnTitle"><it:message key="itracker.web.attr.lastmodified"/>: </td>
-                <td class="editColumnText"><it:formatDate date="<%= issue.getLastModifiedDate() %>"/></td>
+                <td class="editColumnText"><it:formatDate date="${issue.lastModifiedDate}"/></td>
               </tr>
               <tr>
                 <td class="editColumnTitle"><it:message key="itracker.web.attr.severity"/>: </td>
-                <td class="editColumnText"><%= IssueUtilities.getSeverityName(issue.getSeverity(), (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>
+                <td class="editColumnText">${issueSeverityName}</td>
                 <td class="editColumnTitle"><it:message key="itracker.web.attr.owner"/>: </td>
-                <td class="editColumnText"><%= (owner == null ? ITrackerResources.getString("itracker.web.generic.unassigned", (java.util.Locale)pageContext.getAttribute("currLocale")) : owner.getFirstName() + " " + owner.getLastName()) %></td>
+                <td class="editColumnText">${issueOwnerName}</td>
               </tr>
               <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
               <tr>
@@ -179,82 +132,75 @@ User um = RequestHelper.getCurrentUser(session);
                         <it:formatImageAction forward="listissues"
                                               module="/module-projects"
                                               paramName="projectId"
-                                              paramValue="<%= issue.getProject().getId() %>"
+                                              paramValue="${issue.project.id}"
                                               caller="viewissue"
                                               src="/themes/defaulttheme/images/list.gif"
                                               altKey="itracker.web.image.issuelist.issue.alt"
-                                              textActionKey="itracker.web.image.issuelist.texttag"/>&nbsp;<%= issue.getProject().getName() %>
+                                              textActionKey="itracker.web.image.issuelist.texttag"/> &nbsp; ${issue.project.name}
                 </td>
-                <% if(project.getVersions().size() > 0) { 
-                	Collections.sort(project.getVersions(), Version.VERSION_COMPARATOR);
-                %>
+                
+                <c:if test="${not empty project.versions}">
                     <td class="editColumnTitle" style="white-space: nowrap;" ><it:message key="itracker.web.attr.target"/>:</td>
-                    <td class="editColumnText"><%= (issue.getTargetVersion() == null) ? "" : issue.getTargetVersion().getNumber() %></td>
-                <% } %>
+                    <td class="editColumnText">${issue.targetVersion == null ? '' : issue.targetVersion.number}</td>
+                </c:if>
+                
               </tr>
               <tr>
-                <% if(project.getComponents().size() > 0) { %>
+                
+                <c:choose>
+                   <c:when test="${not empty project.components}">
                       <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.components"/>: </td>
                       <td valign="top" class="editColumnText">
-                        <%  Collections.sort(issue.getComponents(), Component.NAME_COMPARATOR);
 
-                            for(int i = 0; i < issue.getComponents().size(); i++) {
-                        %>
-                            <%= issue.getComponents().get(i).getName() %><br/>
-                        <% } %>
+                        	<c:forEach var="component" items="${issue.components}">
+                             ${component.name} <br/>
+	                        </c:forEach>
                       </td>
-                <%  } else { %>
-                      <td></td>
-                      <td></td>
-                <%  } %>
-
-                <% if(project.getVersions().size() > 0) { %>
+                   </c:when>
+                  <c:otherwise>
+                    <td></td>
+                    <td></td>
+                  </c:otherwise>
+           		</c:choose>
+               
+                <c:choose>
+                <c:when test="${not empty project.versions}">
                       <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.versions"/>: </td>
                       <td valign="top" class="editColumnText">
-                        <%  List<Version> versions = issue.getVersions();
-
-                            Collections.sort(versions, new Version.VersionComparator());
-
-                            for(int i = 0; i < versions.size(); i++) {
-                        %>
-                            <%= versions.get(i).getNumber() %><br/>
-                        <% } %>
+	                  	<c:forEach var="version" items="${project.versions}">
+                            ${version.number} <br/>
+                         </c:forEach>
+                        
                       </td>
-                <%  } else { %>
+                 </c:when>
+                 <c:otherwise>
                       <td></td>
                       <td></td>
-                <%  } %>
+                 </c:otherwise>
+               </c:choose>
               </tr>
               <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td></tr>
 
-              <%
-                 List<CustomField> projectFields = project.getCustomFields();
-                 if(projectFields != null && projectFields.size() > 0) {
-                     Collections.sort(projectFields, CustomField.ID_COMPARATOR);
-                     List<IssueField> issueFields = issue.getFields();
-                     HashMap<Integer,String> fieldValues = new HashMap<Integer,String>();
-                     for(int i = 0; i < issueFields.size(); i++) {
-                        fieldValues.put(issueFields.get(i).getCustomField().getId(), issueFields.get(i).getValue((java.util.Locale)pageContext.getAttribute("currLocale")));
-                     }
-              %>
+              
+              <c:if test="${not empty projectFieldsMap}">
                      <tr><td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.customfields"/>:</td></tr>
                      <tr class="listHeading"><td colspan="4"><html:img height="2" width="1" src="/themes/defaulttheme/images/blank.gif"/></td></tr>
                      <tr><td colspan="4"><html:img height="3" width="1" src="/themes/defaulttheme/images/blank.gif"/></td></tr>
                      <tr>
-              <%
-                     for(int i = 0; i < projectFields.size(); i++) {
-                         if(i % 2 == 0) {
-              %>
+                     <c:forEach var="projectField" varStatus="i" items="${projectFieldsMap} ">
+              
+              			<c:if test="${i.count % 2 == 0}">
                              </tr>
                              <tr>
-              <%         }
-                         String fieldValue = (String) fieldValues.get(projectFields.get(i).getId());
-              %>
-                         <it:formatCustomField field="<%= projectFields.get(i) %>" currentValue="<%= fieldValue %>" displayType="view"/>
-              <%     } %>
+                        </c:if>
+              
+                         <it:formatCustomField field="${projectField.key}" currentValue="${projectField.value}" displayType="view"/>
+
+              		</c:forEach>
                      </tr>
                      <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td></tr>
-              <% } %>
+             
+              </c:if>
             </table>
             <br />
             <%-- TODO reinsert this once issue relation has been implemented correctly 
@@ -331,7 +277,7 @@ User um = RequestHelper.getCurrentUser(session);
                   --%>
    
         
-            <% if(! ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, project.getOptions())) { %>
+            <c:if test="${hasAttachmentOption}">
                 <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
                   <tr>
                     <td class="editColumnTitle" colspan="4"><it:message key="itracker.web.attr.attachments"/>:</td>
@@ -347,42 +293,36 @@ User um = RequestHelper.getCurrentUser(session);
                     <td style="text-align: right;"><it:message key="itracker.web.attr.lastupdated"/></td>
                   </tr>
 
-                  <%
-                    List<IssueAttachment> attachments = issue.getAttachments();
-
-                    Collections.sort(attachments, IssueAttachment.CREATE_DATE_COMPARATOR);
-
-                    for(int i = 0; i < attachments.size(); i++) {
-                  %>
-                  	<c:set value="<%=attachments.get(i)%>" var="attachment"> </c:set>
-                      <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>" >
+                  <c:forEach  var="attachment" items="${attachments}" varStatus="i">
+                  	
+                      <tr class="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}" >
                         <td class="listRowText" style="text-align: left;">
                             <it:formatImageAction forward="downloadAttachment.do"
                                                   paramName="id"
-                                                  paramValue="<%= attachments.get(i).getId() %>"
+                                                  paramValue="${attachment.id}"
                                                   target="_blank"
                                                   src="/themes/defaulttheme/images/download.png"
                                                   altKey="itracker.web.image.download.attachment.alt"
                                                   textActionKey="itracker.web.image.download.texttag"/>
                         </td>
                         <td></td>
-                        <td class="listRowText" style="text-align: left;"><%= attachments.get(i).getOriginalFileName() %></td>
-                        <td class="listRowText" style="text-align: left;"><it:formatDescription><%= attachments.get(i).getDescription() %></it:formatDescription></td>
-                        <td class="listRowText" style="text-align: left;"><%= attachments.get(i).getType() %></td>
+                        <td class="listRowText" style="text-align: left;">${attachment.originalFileName}</td>
+                        <td class="listRowText" style="text-align: left;"><it:formatDescription>${attachment.description}</it:formatDescription></td>
+                        <td class="listRowText" style="text-align: left;">${attachment.type}</td>
                         <td class="listRowText" style="text-align: left;"><fmt:formatNumber pattern="0.##" value="${attachment.size / 1024}" type="number" /></td>
-                        <td class="listRowText" style="text-align: left;"><%= attachments.get(i).getUser().getFirstName() + " " + attachments.get(i).getUser().getLastName() %></td>
-                        <td class="listRowText" style="text-align: right;"><it:formatDate date="<%= attachments.get(i).getLastModifiedDate() %>"/></td>
+                        <td class="listRowText" style="text-align: left;">${attachment.user.firstName}&nbsp;${attachment.user.lastName}</td>
+                        <td class="listRowText" style="text-align: right;"><it:formatDate date="${attachment.lastModifiedDate}"/></td>
                       </tr>
-                 <% } %>
+                 </c:forEach>
                   <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td></tr>
                 </table>
                 <br>
-            <% } %>
+            </c:if>
 
             <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
               <tr>
                 <td class="editColumnTitle" colspan="3"><it:message key="itracker.web.attr.history"/>:</td>
-                <td style="text-align: right;"><it:formatImageAction forward="view_issue_activity.do" paramName="id" paramValue="<%= issueId %>" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.activity.alt" textActionKey="itracker.web.image.view.texttag"/></td>
+                <td style="text-align: right;"><it:formatImageAction forward="view_issue_activity.do" paramName="id" paramValue="${issueId}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.activity.alt" textActionKey="itracker.web.image.view.texttag"/></td>
               </tr>
               <tr style="text-align: left;" class="listHeading">
                 <td width="15"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
@@ -390,54 +330,40 @@ User um = RequestHelper.getCurrentUser(session);
                 <td><it:message key="itracker.web.attr.updator"/></td>
                 <td style="text-align: right;"><it:message key="itracker.web.attr.updated"/></td>
               </tr>
-              <%
-                List<IssueHistory> history = issue.getHistory();
-
-                Collections.sort(history, IssueHistory.CREATE_DATE_COMPARATOR);
-
-                int count = 0;
-                for(int i = 0; i < history.size(); i++) {
-                  if(history.get(i).getStatus() == IssueUtilities.HISTORY_STATUS_AVAILABLE) {
-                    count++;
-              %>
-                    <tr class="<%= (count % 2 == 0 ? "listRowShaded" : "listRowUnshaded") %>" >
-                      <td style="text-align: right;" class="historyName"><%= i + 1 %>)</td>
+              <c:forEach var="history" items="${histories}" varStatus="i">
+                    <tr class="${i.count % 2 == 0 ? 'listRowShaded' : 'listRowUnshaded'}" >
+                      <td style="text-align: right;" class="historyName">${i.count})</td>
                       <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="8" height="1"/></td>
                       <td class="historyName">
-                        <%= history.get(i).getUser().getFirstName() + " " + history.get(i).getUser().getLastName() %>
-                        (<a href="mailto:<%= history.get(i).getUser().getEmail() %>" class="mailto"><%= history.get(i).getUser().getEmail() %></a>)
+                        ${history.user.firstName}&nbsp;${history.user.lastName}
+                        (<a href="mailto:${history.user.email}" class="mailto">${history.user.email}</a>)
                       </td>
-                      <td style="text-align: right;" class="historyName"><it:formatDate date="<%= history.get(i).getCreateDate() %>"/></td>
+                      <td style="text-align: right;" class="historyName"><it:formatDate date="${history.createDate}"/></td>
                     </tr>
-                    <tr class="<%= (count % 2 == 0 ? "listRowShaded" : "listRowUnshaded") %>" >
+                    <tr class="${i.count % 2 == 0 ? 'listRowShaded' : 'listRowUnshaded'}" >
                       <td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="3"/></td>
                     </tr>
-                    <tr class="<%= (count % 2 == 0 ? "listRowShaded" : "listRowUnshaded") %>" >
+                    <tr class="${i.count % 2 == 0 ? 'listRowShaded' : 'listRowUnshaded'}" >
                       <td colspan="2"></td>
                       <td colspan="3">
                         <table style="border: none; padding: 1px; border-spacing: 0;">
-                          <tr class="<%= (count % 2 == 0 ? "listRowShaded" : "listRowUnshaded") %>" >
+                          <tr class="${i.count % 2 == 0 ? 'listRowShaded' : 'listRowUnshaded'}" >
                             <td style="text-align: left;"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="10" height="1"/></td>
                             <td style="text-align: left;" >
 	                            <div style="white-space: normal; overflow: auto; width: 900px">
-	                              <it:formatHistoryEntry projectOptions="<%= project.getOptions() %>"><%= history.get(i).getDescription() %></it:formatHistoryEntry>
+	                              <it:formatHistoryEntry projectOptions="${project.options}">${history.description}</it:formatHistoryEntry>
 	                            </div>
                             </td>
                           </tr>
                         </table>
                       </td>
                     </tr>
-                    <tr class="listRowUnshaded">
-                      <td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="8"/></td>
-                    </tr>
-             <%
-                  }
-                }
-             %>
+                </c:forEach>
+                <tr class="listRowUnshaded">
+                  <td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="8"/></td>
+                </tr>
             </table>
-
             <br/><br/>
-
             <table style="border: none; padding: 1px; border-spacing: 0; width: 100%;">
               <tr>
                 <td class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.notifications"/>:</td>
@@ -448,72 +374,25 @@ User um = RequestHelper.getCurrentUser(session);
                 <td><it:message key="itracker.web.attr.role"/></td>
               </tr>
               
-			<c:forEach items="${notifiedUsers}" var="user" varStatus="status">
-                <tr class="${status.count % 2 == 0?'listRowShaded' : 'listRowUnshaded'}">
-                    <td class="listRowSmall">${user.firstName}&nbsp;${user.lastName}</td>
-                    <td class="listRowSmall">
-                        <a href="mailto:${user.email}"
-                           class="mailto">${user.email}</a>
-                    </td>
-                    <td class="listRowSmall"><ul>
-                    	<c:forEach items="${notificationMap[user]}" var="role">
-                    	<li><it:message key="itracker.notification.role.${role.code}"></it:message></li>
-                    	</c:forEach>
-						</ul>
-                    
-                    </td>
-                </tr>
-			</c:forEach>
-			
-<%--
-              <%
-                List<Notification> notifications = ih.getIssueNotifications(issueId);
-
-                Collections.sort(notifications, Notification.USER_COMPARATOR);
-                
-                Map<User, Set<Notification.Role>> notificationsByUser = NotificationUtilities.mappedRoles(notifications);
-				Iterator<User> usersIt = notificationsByUser.keySet().iterator();
-				Iterator<Role> rolesIt;
-				User user;
-				Role role;
-				Integer i = 0;
-				while (usersIt.hasNext()) {
-					user = usersIt.next();
-					rolesIt = notificationsByUser.get(user).iterator();
-
-			          %>
-		                  <tr class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded") %>" >
-		                    <td class="listRowSmall"><%= user.getFirstName() + " " + user.getLastName() %></td>
-		                    <td class="listRowSmall"><a href="mailto:<%= user.getEmail() %>" class="mailto"><%= user.getEmail() %></a></td>
-		                    <td class="listRowSmall"><ul>
-		                    
-		                    <%
-							
-							while (rolesIt.hasNext()) {
-								role = rolesIt.next();
-		                    %>
-		                    	<li>
-		                    <%= NotificationUtilities.getRoleName(role, LoginUtilities.getCurrentLocale(request)) %>
-		                    	</li>
-		                    <% } %>
-		                    </ul></td>
-		                  </tr>
-		              <% 
-		              i++;
-						
-					}
-				
-
-              %>
-              --%>
+				<c:forEach items="${notifiedUsers}" var="user" varStatus="status">
+	                <tr class="${status.count % 2 == 0?'listRowShaded' : 'listRowUnshaded'}">
+	                    <td class="listRowSmall">${user.firstName}&nbsp;${user.lastName}</td>
+	                    <td class="listRowSmall">
+	                        <a href="mailto:${user.email}"
+	                           class="mailto">${user.email}</a>
+	                    </td>
+	                    <td class="listRowSmall"><ul>
+	                    	<c:forEach items="${notificationMap[user]}" var="role">
+	                    	<li><it:message key="itracker.notification.role.${role.code}"></it:message></li>
+	                    	</c:forEach>
+							</ul>
+	                    
+	                    </td>
+	                </tr>
+				</c:forEach>
             </table>
-
         <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/>
     </body>
 </html>
              
-<%
-          }
-      }
-  }
-%>
+
