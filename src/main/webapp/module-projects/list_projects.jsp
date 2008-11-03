@@ -1,14 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
  
-<%@ page import="java.util.Date" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.services.util.*" %>
-<%@ page import="org.itracker.services.*" %>
-<%@ page import="org.itracker.web.util.RequestHelper" %>
-
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
@@ -89,7 +80,6 @@
 			<tr class="listRowUnshaded listProjectsTotals">
 				<td colspan="2"></td>
 				<td align="right"><strong><it:message key="itracker.web.attr.total" />:&nbsp;<%-- ${ totalNumberProjects }--%></strong></td>
-
 				<td align="left"><strong>${ totalOpenIssues }</strong></td>
 				<td align="left"><strong>${ totalResolvedIssues }</strong></td>
 				<td align="left"><strong>${ totalOpenIssues + totalResolvedIssues }</strong></td>
