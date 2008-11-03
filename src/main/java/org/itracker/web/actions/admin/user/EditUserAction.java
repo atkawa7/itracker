@@ -81,16 +81,18 @@ public class EditUserAction extends ItrackerBaseAction {
         try {
             UserService userService = getITrackerServices().getUserService();
             ProjectService projectService = getITrackerServices().getProjectService();
-            
-            User editUser = new User();
+
+            String previousLogin = userForm.getLogin();
+            User editUser;
             // if userForm.getID returns -1, then this is a new user.. 
             if( userForm.getId() != -1 ) {
-                editUser.setId(userForm.getId());
-            } else {
+//                editUser.setId(userForm.getId());
             	editUser = userService.getUser(userForm.getId());
+                previousLogin = editUser.getLogin();
+            } else {
+            	editUser = new User();
             }
 
-            String previousLogin = editUser.getLogin();
 
             editUser.setLogin(userForm.getLogin());
             editUser.setFirstName(userForm.getFirstName());
