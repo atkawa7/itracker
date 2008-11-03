@@ -46,15 +46,9 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 public class OrderConfigurationItemAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(OrderConfigurationItemAction.class);
 	
-    public OrderConfigurationItemAction() {
-    }
-    
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
+
         
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");

@@ -50,17 +50,11 @@ import org.itracker.web.util.Constants;
 
 public class EditCustomFieldValueAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(EditCustomFieldValueAction.class);
-	
-    public EditCustomFieldValueAction() {
-    }
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
-//        log.info("Kimba Went To Action");
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
+
+
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while editing configuration.");
             return mapping.findForward("listconfiguration");
@@ -86,8 +80,6 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             CustomFieldValue customFieldValue = null;
             
             if ("create".equals(action)) {
-                // TODO: the following line can be removed, we guess - that's why we comment it now. 
-            	// Integer id = (Integer) PropertyUtils.getSimpleProperty(form, "id");
                 List<CustomFieldValue> currOptions = customField.getOptions();
                 int highestSortOrder = (currOptions.size() == 0 ? 1 : currOptions.get(currOptions.size() - 1).getSortOrder());
                 customFieldValue = new CustomFieldValue();

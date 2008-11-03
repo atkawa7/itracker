@@ -49,22 +49,17 @@ import org.itracker.web.forms.CustomFieldForm;
 public class EditCustomFieldAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(EditCustomFieldAction.class);
 	
-    public EditCustomFieldAction() {
-    }
 
     @SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
+
+
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while editing configuration.");
             return mapping.findForward("listconfiguration");
         }
         resetToken(request);
-        // HttpSession session = request.getSession(true);
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
             String action = (String) PropertyUtils.getSimpleProperty(form, "action");
@@ -94,8 +89,6 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
                 customField.setRequired(("true".equals((String) PropertyUtils.getSimpleProperty(form, "required")) ? true : false));
                 customField.setSortOptionsByName(("true".equals((String) PropertyUtils.getSimpleProperty(form, "sortOptionsByName")) ? true : false));
                 customField.setDateFormat((String) PropertyUtils.getSimpleProperty(form, "dateFormat"));
-                // Set options to null so they don't get updated.
-//                customField.setOptions(null);
                 customField.setOptions(customFieldValues);
                 customField = configurationService.updateCustomField(customField);
             } else {
@@ -133,9 +126,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             }
             request.setAttribute("pageTitleKey",pageTitleKey); 
             request.setAttribute("pageTitleArg",pageTitleArg);      
-//            session.removeAttribute(Constants.CUSTOMFIELD_KEY);
             saveToken(request);
-            //String forwardAction = "listconfiguration";
 
             if(customField.getFieldType() == CustomField.Type.LIST && "create".equals(action) ) { 
                 return new ActionForward(mapping.findForward("editcustomfield").getPath() + "?id=" + customField.getId() + "&action=update");

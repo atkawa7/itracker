@@ -76,15 +76,9 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
     private static final int UPDATE_SEVERITY = 2;
     private static final int UPDATE_RESOLUTION = 3;
 
-    public ImportDataVerifyAction () {
-    }
-
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
+
 
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
