@@ -59,14 +59,10 @@ public class EditVersionFormAction extends ItrackerBaseAction {
             throws ServletException, IOException {
         
         ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
-//        
+
         String pageTitleKey = "";
         String pageTitleArg = "";
         
-//        if (!isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
         
         try {
             ProjectService projectService = getITrackerServices().getProjectService();
@@ -85,8 +81,9 @@ public class EditVersionFormAction extends ItrackerBaseAction {
                 versionForm = new VersionForm();
             }
 
+            Integer projectId = (Integer) PropertyUtils.getSimpleProperty(form, "projectId");
+            
             if ("create".equals(action)) {
-                Integer projectId = (Integer) PropertyUtils.getSimpleProperty(form, "projectId");
                 
                 if(action != null && action.equals("create")) {
                 	 pageTitleKey = "itracker.web.admin.editversion.title.create";
@@ -128,7 +125,7 @@ public class EditVersionFormAction extends ItrackerBaseAction {
                     } else {
                         versionForm.setAction("update");
                         versionForm.setId(version.getId());
-                        versionForm.setProjectId(project.getId());
+                        versionForm.setProjectId(projectId);
                         versionForm.setNumber(version.getNumber());
                         versionForm.setDescription(version.getDescription());
                     }

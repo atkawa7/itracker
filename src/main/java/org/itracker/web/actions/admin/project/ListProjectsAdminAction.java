@@ -30,7 +30,7 @@ public class ListProjectsAdminAction extends ListProjectsAction {
 			throws Exception {
 				
 		final Map<Integer, Set<PermissionType>> permissions = 
-		    RequestHelper.getUserPermissions(request.getSession());
+			RequestHelper.getUserPermissions(request.getSession());
 		Boolean isSuperUser = UserUtilities.isSuperUser(permissions);
 		Boolean showAll = Boolean.valueOf(request.getParameter("showAll"));
 		

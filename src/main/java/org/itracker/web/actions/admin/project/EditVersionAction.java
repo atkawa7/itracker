@@ -55,19 +55,13 @@ public class EditVersionAction extends ItrackerBaseAction {
 	public EditVersionAction() {
 	}
 
-	@SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		ActionErrors errors = new ActionErrors();
-		//        
-		// super.executeAlways(mapping,form,request,response);
-		//        
-		// if (!isLoggedIn(request, response)) {
-		// return mapping.findForward("login");
-		// }
 
+		
 		if (!isTokenValid(request)) {
 			log.debug("Invalid request token while editing version.");
 			return mapping.findForward("listprojectsadmin");

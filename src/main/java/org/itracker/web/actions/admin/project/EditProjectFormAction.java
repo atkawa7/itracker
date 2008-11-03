@@ -55,7 +55,6 @@ public class EditProjectFormAction extends ItrackerBaseAction {
     private static final Logger log = Logger.getLogger(EditProjectFormAction.class);
 
 
-    @SuppressWarnings("unchecked")
     public ActionForward execute(ActionMapping mapping,
                                  ActionForm form,
                                  HttpServletRequest request,
@@ -64,11 +63,6 @@ public class EditProjectFormAction extends ItrackerBaseAction {
 
         ActionErrors errors = new ActionErrors();
 
-//        super.executeAlways(mapping, form, request, response);
-//
-//        if (!isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
 
         try {
             ProjectService projectService = getITrackerServices().getProjectService();

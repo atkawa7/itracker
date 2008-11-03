@@ -103,13 +103,11 @@ public class EditComponentAction extends ItrackerBaseAction {
 									.getName());
 							component.setDescription(componentForm
 									.getDescription());
-//							component.setCreateDate(new Date());
 							component = projectService.addProjectComponent(
 									project.getId(), component);
 						} else if ("update".equals(action)) {
 							component = projectService
 									.getProjectComponent(componentForm.getId());
-//							component.setLastModifiedDate(new Date());
 							component.setName(componentForm.getName());
 							component.setDescription(componentForm
 									.getDescription());

@@ -57,14 +57,10 @@ public class EditComponentFormAction extends ItrackerBaseAction {
             throws ServletException, IOException {
         
         ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
         
         String pageTitleKey = ""; 
         String pageTitleArg = "";
         
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
 
         try {
             ProjectService projectService = getITrackerServices().getProjectService();
