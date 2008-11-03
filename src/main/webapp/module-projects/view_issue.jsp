@@ -14,7 +14,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
-            <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
+         <table class="maincontent">
               <tr>
                 <td width="15%"></td>
                 <td width="35%"></td>
@@ -42,14 +42,14 @@
 
                         <c:if test="${hasIssueNotification}">
                              <it:formatImageAction forward="watchissue"
-                                              module="/module-projects"
-                                                   paramName="id"
-                                                   paramValue="${issue.id}"
-                                                   caller="viewissue"
-                                                   src="/themes/defaulttheme/images/watch.gif"
-                                                   altKey="itracker.web.image.watch.issue.alt"
-                                                   arg0="${issue.id}"
-                                                   textActionKey="itracker.web.image.watch.texttag"/>
+	                                               module="/module-projects"
+	                                               paramName="id"
+	                                               paramValue="${issue.id}"
+	                                               caller="viewissue"
+	                                               src="/themes/defaulttheme/images/watch.gif"
+	                                               altKey="itracker.web.image.watch.issue.alt"
+	                                               arg0="${issue.id}"
+	                                               textActionKey="itracker.web.image.watch.texttag"/>
                         </c:if>
                         <c:if test="${canEditIssue}">
 

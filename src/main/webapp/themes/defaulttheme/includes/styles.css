@@ -1,3 +1,7 @@
+body {
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	background: #fff;
+}
 smallbody {
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10px;
@@ -227,7 +231,7 @@ a.listRow:link {
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	color: black;
-  background-color: white;
+	background-color: white;
 	text-decoration: none;
 }
 
@@ -237,7 +241,7 @@ a.listRow:link {
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	color: black;
-  background-color: white;
+	background-color: white;
 	text-decoration: none;
 }
 
@@ -247,7 +251,7 @@ a.listRow:link {
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	color: black;
-  background-color: white;
+	background-color: white;
 	text-decoration: none;
 }
 
@@ -258,11 +262,12 @@ a.listRow:link {
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	color: red;
-  background-color: white;
+	background-color: white;
 	text-decoration: none;
 }
 
-.portalhomeMain {
+table.maincontent,
+table.portalhomeMain {
 	width: 100%; 
 	border-spacing: 0; 
 	padding: 1px; 
