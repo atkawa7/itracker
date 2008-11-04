@@ -25,7 +25,6 @@ import java.util.Set;
 
 import org.itracker.model.Component;
 import org.itracker.model.CustomField;
-import org.itracker.model.Issue;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.User;
