@@ -16,6 +16,8 @@
  */
 package org.itracker.web.util;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
@@ -102,7 +104,7 @@ public class AttachmentUtilities {
      * @throws Exception
      */
 	public static Issue addAttachment(Issue issue, Project project, User user,
-			IssueForm form, ITrackerServices services, ActionMessages messages) throws Exception {
+			IssueForm form, ITrackerServices services, ActionMessages messages)  {
 
 		if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS,
 				project.getOptions())) {
@@ -149,10 +151,19 @@ public class AttachmentUtilities {
 			
 			attachmentModel.setIssue(issue);
 //			issue.getAttachments().add(attachmentModel);
+			byte[] fileData;
+			try {
+				fileData = file.getFileData();
+			} catch (IOException e) {
+				logger.error("addAttachment: failed to get file data", e);
+				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+				return issue;
+			}
 			if(services.getIssueService()
-					.addIssueAttachment(attachmentModel, file.getFileData())) {
+					.addIssueAttachment(attachmentModel, fileData)) {
 				return services.getIssueService().getIssue(issue.getId());
 			}
+			
 
 		} else {
 			if (logger.isDebugEnabled()) {
