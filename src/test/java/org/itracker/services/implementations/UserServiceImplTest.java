@@ -213,14 +213,14 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
         User user = userService.getUser(2);
         UserPreferences userPrefs = user.getPreferences();
         
+//        test the last-modified date for plausability (automatically set by DAO)
         Long date = System.currentTimeMillis();
-//        userPrefs.setLastModifiedDate(date);
+        
         user.setPreferences(userPrefs);
         updatedUserPreferences = userService.updateUserPreferences(userPrefs);
         assertNotNull(updatedUserPreferences);
         assertTrue("lastModifiedDate >= now", updatedUserPreferences.getLastModifiedDate().getTime() <= System.currentTimeMillis());
         assertTrue("lastModifiedDate <= date", updatedUserPreferences.getLastModifiedDate().getTime() >= date);
-//        assertEquals(date.getTime(), updatedUserPreferences.getLastModifiedDate().getTime());
 
     }
 
