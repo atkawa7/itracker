@@ -199,16 +199,25 @@ public class ExecuteAlwaysFilter implements Filter {
 			log.error(
 					"doFilter: failed to execute chain with runtime exception: "
 							+ e.getMessage(), e);
-			throw e;
+			if (response instanceof HttpServletResponse)
+				handleError(e, request, (HttpServletResponse)response);
+			else
+				throw e;
 		} catch (IOException ioe) {
 			log.error("doFilter: failed to execute chain with i/o exception: "
 					+ ioe.getMessage(), ioe);
-			throw ioe;
+			if (response instanceof HttpServletResponse)
+				handleError(ioe, request, (HttpServletResponse)response);
+			else
+				throw ioe;
 		} catch (ServletException se) {
 			log.error(
 					"doFilter: failed to execute chain with servlet exception: "
 							+ se.getMessage(), se);
-			throw se;
+			if (response instanceof HttpServletResponse)
+				handleError(se, request, (HttpServletResponse)response);
+			else
+				throw se;
 		} catch (Error err) {
 			log.fatal("doFilter: caught fatal error executing filter chain",
 					err);
@@ -216,7 +225,52 @@ public class ExecuteAlwaysFilter implements Filter {
 		}
 	}
 
+	private final void handleError(Throwable error, HttpServletRequest request, HttpServletResponse response) {
 
+		ActionMessages errors = new ActionMessages();
+		errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system.message",
+				new Object[]{error.getLocalizedMessage() == null ? error.getMessage() : error.getLocalizedMessage(),
+						error.getClass().getCanonicalName()}));
+		
+		saveErrors(request, errors);
+		try {
+//			response.sendError(500, "Internal Server Error");
+			response.sendRedirect(request.getContextPath() + "/error.do");
+		} catch (IOException e) {
+			log.fatal("handleError: failed to redirect to error-page");
+			return;
+		}
+	}
+
+    /**
+     * <p>Save the specified error messages keys into the appropriate request
+     * attribute for use by the &lt;html:errors&gt; tag, if any messages
+     * are required. Otherwise, ensure that the request attribute is not
+     * created.</p>
+     *
+     * @param request The servlet request we are processing
+     * @param errors Error messages object
+     * @since Struts 1.2
+     */
+    protected void saveErrors(HttpServletRequest request, ActionMessages errors) {
+
+        // Remove any error messages attribute if none are required
+        if ((errors == null) || errors.isEmpty()) {
+            request.removeAttribute(Globals.ERROR_KEY);
+            request.getSession().removeAttribute(Globals.ERROR_KEY);
+            return;
+        }
+
+        if (log.isInfoEnabled()) {
+        	log.info("saveErrors: saved errors: " + errors);
+        }
+        // Save the error messages we need
+        request.setAttribute(Globals.ERROR_KEY, errors);
+
+        request.getSession().setAttribute(Globals.ERROR_KEY, errors);
+    }
+
+	
 	private static final void setupCommonReqAttributes(
 			HttpServletRequest request,
 			ConfigurationService configurationService) {
