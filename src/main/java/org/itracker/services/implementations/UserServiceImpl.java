@@ -506,6 +506,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             setUserPermissions(userId, newPermissions);
+            successful = true;
         } catch (AuthenticatorException ae) {
             logger.warn("Error setting user (" + userId + ") permissions.  AuthenticatorException.", ae);
             successful = false;
@@ -591,6 +592,7 @@ public class UserServiceImpl implements UserService {
         return successful;
     }
 
+    // FIXME: always returns false
     public boolean removeUserPermissions(Integer userId, List<Permission> newPermissions) {
         boolean successful = false;
         if (newPermissions == null || newPermissions.size() == 0) {
@@ -600,6 +602,7 @@ public class UserServiceImpl implements UserService {
         try {
             // TODO: I commented the next line, because it is not used.
             // User user = userDAO.findByPrimaryKey(userId);
+        	// FIXME: remove permissions from user, do not delete them from DB
             for (Iterator<Permission> delIterator = newPermissions.iterator(); delIterator.hasNext();) {
                 Permission permission = (Permission) delIterator.next();
                 permissionDAO.delete(permission);

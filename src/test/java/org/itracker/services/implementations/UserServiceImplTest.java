@@ -15,8 +15,11 @@ import org.itracker.persistence.dao.ProjectDAO;
 import org.itracker.persistence.dao.UserDAO;
 import org.itracker.persistence.dao.UserPreferencesDAO;
 import org.itracker.services.UserService;
+import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.exceptions.UserException;
+import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.UserUtilities;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class UserServiceImplTest extends AbstractDependencyInjectionTest {
@@ -37,6 +40,8 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
         assertEquals(1, users.size());
 
     }
+
+    
 
     @Test
     public void testGetPermissionsByUserId() {
@@ -80,6 +85,11 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 
         assertEquals(assertedPermissions.get(2).getUser().getEmail(),
                 currentPermissions.get(2).getUser().getEmail());
+        
+        
+        currentPermissions = userService.getPermissionsByUserId(-1);
+        assertNotNull(currentPermissions);
+        assertTrue("empty permissions list", currentPermissions.isEmpty());
     }
 
     @Test
@@ -198,22 +208,290 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 
         assertNotNull(updatedUserPreferences);
         assertFalse(updatedUserPreferences.getSaveLogin());
+        
+        
+        User user = userService.getUser(2);
+        UserPreferences userPrefs = user.getPreferences();
+        
+        Date date = new Date();
+        userPrefs.setLastModifiedDate(date);
+        user.setPreferences(userPrefs);
+        updatedUserPreferences = userService.updateUserPreferences(userPrefs);
+        assertNotNull(updatedUserPreferences);
+        assertEquals(date.getTime(), updatedUserPreferences.getLastModifiedDate().getTime());
 
     }
 
+    
+    
     @Test 
     public void testGetUserByLogin() {
     	
     	try {
-    	User user = userService.getUserByLogin("admin_test1");
-    	
-    	assertNotNull("admin_test1", user);
-    	
+    		User user = userService.getUserByLogin("admin_test1");
+    		
+    		assertNotNull("admin_test1", user);
+    		
     	} catch (Exception e) {
     		logger.error("testGetUserByLogin: failed to lookup user", e);
     		fail(e.getMessage());
     	}
     }
+    
+    @Test 
+    public void testGetUserPasswordByLogin() {
+    	String password = userService.getUserPasswordByLogin("admin_test1");
+    	assertNotNull("password", password);
+    	assertEquals("admin_test1", password);
+    }
+    
+    @Test 
+    public void testGetAllUsers() {
+    	List<User> users = userService.getAllUsers();
+    	assertNotNull(users);
+    	for (User user : users) {
+    		assertNotNull(user);
+    	}
+    	assertEquals("total 5 users", 5, users.size());
+    }
+    
+    @Test 
+    public void testGetNumberUsers() {
+    	assertEquals("total 5 users", 5, userService.getNumberUsers());
+    }
+    
+    @Test 
+    public void testGetActiveUsers() {
+    	List<User> users = userService.getActiveUsers();
+    	assertNotNull(users);
+    	assertEquals("total 4 active users", 4, users.size());
+    	for (User user : users) {
+    		assertEquals("user is active", UserUtilities.STATUS_ACTIVE, user.getStatus());
+    	}
+    }
+    
+    @Test 
+    public void testGenerateUserPassword() {
+    	User user = new User(); 
+    	String password;
+    	try {
+    		password = userService.generateUserPassword(user);
+    		assertNotNull(password);
+    		assertNotNull(user.getPassword());
+    	} catch (PasswordException e) {
+    		fail(e.getMessage());
+    	}
+    	
+    }
+    
+    @Test 
+    public void testClearOwnedProjects() {
+    	User user = new User("user","password","User","User","user@user.com",false);
+//    	user.setPassword("password");
+    	List<Project> projects = new ArrayList<Project>(1);
+    	projects.add(new Project("project"));
+		user.setProjects(projects);
+		userService.clearOwnedProjects(user);
+		assertNotNull(user.getProjects());
+		assertTrue("empty projects list", user.getProjects().isEmpty());
+    	
+    }
+    
+    @Test
+    public void testUpdateAuthenticator() {
+    	try {
+    		User user = userService.getUser(2);
+    		boolean updated = userService.updateAuthenticator(2, user.getPermissions());
+    		assertTrue(updated);
+    	} catch (Exception e) {
+    		fail(e.getMessage());
+    	}
+    }
+    
+    @Test
+    public void testAddUserPermissions() {
+    	
+    	boolean added = userService.addUserPermissions(2, null);
+    	assertFalse(added);
+    	
+    	added = userService.addUserPermissions(2, new ArrayList<Permission>());
+    	assertFalse(added);
+    	
+    	List<Permission> permissions = new ArrayList<Permission>();
+    	Permission p1 = new Permission();
+    	Permission p2 = new Permission();
+    	permissions.add( p1 );
+    	permissions.add( p2 );
+    	
+    	User user = userService.getUser(2);
+		p1.setUser(user);
+    	p2.setUser(user);
+    	
+    	added = userService.addUserPermissions(2, permissions);
+    	assertTrue(added);
+    	
+    	List<Permission> updatedPermissions = userService.getPermissionsByUserId(2);
+    	assertTrue(updatedPermissions.contains(p1));
+    	assertTrue(updatedPermissions.contains(p2));
+    	
+    	
+    }
+    
+
+    /**
+     * Fix {@link UserServiceImpl#removeUserPermissions(Integer, List)} first
+     */
+    @Test
+    @Ignore
+    public void testRemoveUserPermissions() {
+    	
+    	int userId = 2;
+    	
+    	List<Permission> oldPermissions = userService.getPermissionsByUserId(userId);
+    	
+    	boolean removed = userService.removeUserPermissions(userId, null);
+    	assertFalse(removed);
+    	
+    	removed = userService.removeUserPermissions(2, new ArrayList<Permission>());
+    	assertFalse(removed);
+    	
+    	List<Permission> permissions = new ArrayList<Permission>();
+    	Permission p1 = new Permission();
+    	Permission p2 = new Permission();
+    	permissions.add( p1 );
+    	permissions.add( p2 );
+    	
+    	removed = userService.removeUserPermissions(2, permissions);
+    	assertTrue(removed);
+    	
+    	List<Permission> updatedPermissions = userService.getPermissionsByUserId(userId);
+    	assertNotNull(updatedPermissions);
+    	assertEquals(oldPermissions.size(), updatedPermissions.size());
+    	for (int j=0; j<oldPermissions.size(); j++) {
+    		assertSame(oldPermissions.get(j), updatedPermissions.get(j));
+    	}
+//    	Collections.
+    	
+    	
+    	
+    }
+    
+    @Test
+    public void testGetUsersWithAnyProjectPermission() {
+    	
+    	List<User> users = userService.getUsersWithAnyProjectPermission(2, new int[] {1});
+    	assertNotNull(users);
+    	assertEquals("user 2,3", 2, users.size());
+    	assertTrue("user 2,3", users.get(0).getId() == 2 || users.get(0).getId() == 3);
+    	assertTrue("user 2,3", users.get(1).getId() == 2 || users.get(1).getId() == 3);
+    	
+    }
+    
+    @Test
+    public void testAllowRegistration() {
+    	
+    	try {
+    		userService.allowRegistration(
+    				new User(), 
+    				"password", 
+    				AuthenticationConstants.AUTH_TYPE_PASSWORD_PLAIN, 
+    				AuthenticationConstants.REQ_SOURCE_WEB);
+    		
+    	} catch (Exception e) {
+    		fail(e.getMessage());
+    	}
+    	
+    	
+    }
+    
+    @Test
+    public void testAllowProfileCreation() {
+    	
+    	try {
+    		userService.allowProfileCreation(
+    				new User(), 
+    				"password", 
+    				AuthenticationConstants.AUTH_TYPE_PASSWORD_PLAIN, 
+    				AuthenticationConstants.REQ_SOURCE_WEB);
+    		
+    	} catch (Exception e) {
+    		fail(e.getMessage());
+    	}
+    	
+    	
+    }
+    
+    @Test
+    public void testAllowPasswordUpdates() {
+    	
+    	try {
+    		userService.allowPasswordUpdates(
+    				new User(), 
+    				"password", 
+    				AuthenticationConstants.AUTH_TYPE_PASSWORD_PLAIN, 
+    				AuthenticationConstants.REQ_SOURCE_WEB);
+    		
+    	} catch (Exception e) {
+    		fail(e.getMessage());
+    	}
+    	
+    	
+    }
+    
+    @Test
+    public void testAllowPermissionUpdates() {
+    	
+    	try {
+    		userService.allowPermissionUpdates(
+    				new User(), 
+    				"password", 
+    				AuthenticationConstants.AUTH_TYPE_PASSWORD_PLAIN, 
+    				AuthenticationConstants.REQ_SOURCE_WEB);
+    		
+    	} catch (Exception e) {
+    		fail(e.getMessage());
+    	}
+    	
+    	
+    }
+    
+//    @Test
+//    public void testCheckLogin() {
+//    	
+//    	try {
+//    		userService.checkLogin(
+//    				"admin_test1", 
+//    				"admin_test1", 
+//    				AuthenticationConstants.AUTH_TYPE_UNKNOWN, 
+//    				AuthenticationConstants.REQ_SOURCE_UNKNOWN);
+//    		
+//    	} catch (Exception e) {
+//    		fail(e.getMessage());
+//    	}
+//    	
+//    	
+//    }
+    
+    @Test
+    public void testAllowPreferenceUpdates() {
+    	
+    	try {
+    		userService.allowPreferenceUpdates(
+    				new User(), 
+    				"password", 
+    				AuthenticationConstants.AUTH_TYPE_PASSWORD_PLAIN, 
+    				AuthenticationConstants.REQ_SOURCE_WEB);
+    		
+    	} catch (Exception e) {
+    		fail(e.getMessage());
+    	}
+    	
+   		
+    }
+    
+    
+    
+    
     @Test
     public void testAllowProfileUpdates() {
 

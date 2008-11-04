@@ -1651,7 +1651,7 @@ public class IssueServiceImpl implements IssueService {
 	 * 
 	 * found
 	 */
-
+	// FIXME: always returns null
 	public IssueHistory getLastIssueHistory(Integer issueId) {
 
 		IssueHistory model = null;
