@@ -67,9 +67,9 @@
 			<td></td>
 			<td><it:formatDescription truncateLength="60">${report.description}</it:formatDescription></td>
 			<td></td>
-			<td >${report.reportTypeString}</td>
+			<td ><it:message key="itracker.report.reporttype.${report.reportType}"></it:message></td>
 			<td></td>
-			<td >${report.dataTypeString}</td>
+			<td ><it:message key="itracker.report.datatype.${report.dataType}"></it:message></td>
 			<td></td>
 			<td style="text-align: right"><it:formatDate date="${report.lastModifiedDate}"/></td>
     
