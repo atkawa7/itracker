@@ -29,6 +29,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.ValidatorForm;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.NameValuePair;
@@ -97,7 +98,7 @@ public class WorkflowUtilities  {
         return options;
     }
     
-    public static void processFieldScripts(List<ProjectScript> projectScriptModels, int event, Map<Integer, List<NameValuePair>> currentValues, ActionErrors currentErrors, ValidatorForm form) throws WorkflowException {
+    public static void processFieldScripts(List<ProjectScript> projectScriptModels, int event, Map<Integer, List<NameValuePair>> currentValues, ActionMessages currentErrors, ValidatorForm form) throws WorkflowException {
         if(projectScriptModels == null || projectScriptModels.size() == 0) {
             return;
         }
@@ -172,7 +173,7 @@ public class WorkflowUtilities  {
     }
     
     @SuppressWarnings("unchecked")
-    public static List<NameValuePair> processFieldScript(ProjectScript projectScript, int event, Integer fieldId, List<NameValuePair> currentValue, ActionErrors currentErrors, ValidatorForm form) throws WorkflowException {
+    public static List<NameValuePair> processFieldScript(ProjectScript projectScript, int event, Integer fieldId, List<NameValuePair> currentValue, ActionMessages currentErrors, ValidatorForm form) throws WorkflowException {
         if(projectScript == null) {
             throw new WorkflowException("ProjectScript was null.", WorkflowException.INVALID_ARGS);
         }
