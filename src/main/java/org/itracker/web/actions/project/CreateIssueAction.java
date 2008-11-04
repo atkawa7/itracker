@@ -36,7 +36,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -78,13 +77,20 @@ public class CreateIssueAction extends ItrackerBaseAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		ActionErrors errors = new ActionErrors();
+		ActionMessages errors = new ActionMessages();
 
 		if (!isTokenValid(request)) {
-			log.info("Invalid request token while creating issue.");
+			log.info("execute: Invalid request token while creating issue.");
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+			"itracker.web.error.transaction"));
+			saveErrors(request, errors);
+			log.info("execute: return to edit-issue");
+			saveToken(request);
+		//	return mapping.findForward("error");
+			return mapping.getInputForward();
 //			project PTOs must be set in request for listprojects-forward to work
 			// return mapping.findForward("listprojects");
-			return null; 
+//			return null; 
 		} 
 		resetToken(request);
 
@@ -153,39 +159,75 @@ public class CreateIssueAction extends ItrackerBaseAction {
 					}
 				}
 				// create the issue in the database
+				ActionMessages msg = AttachmentUtilities.validate(issueForm.getAttachment(), getITrackerServices());
+				
+				if (!msg.isEmpty()) {
+					log.info("execute: tried to create issue with invalid attachemnt: " + msg);
+					errors.add(msg);
+					saveErrors(request, errors);
+					return mapping.getInputForward();
+				}
+				
+				if (log.isDebugEnabled()) {
+					log.debug("execute: creating new issue..");
+				}
+				
 				issue = issueService.createIssue(issue, projectId,
 						 creator, currUserId);
 
-				if (!ProjectUtilities.hasOption(
-						ProjectUtilities.OPTION_NO_ATTACHMENTS, project
-								.getOptions())) {
-					FormFile file = issueForm.getAttachment();
-
-					if (file != null && !"".equals(file.getFileName())) {
-						String origFileName = file.getFileName();
-
-						if (AttachmentUtilities.checkFile(file, this
-								.getITrackerServices())) {
-							int lastSlash = Math.max(origFileName
-									.lastIndexOf('/'), origFileName
-									.lastIndexOf('\\'));
-
-							if (lastSlash > -1) {
-								origFileName = origFileName
-										.substring(lastSlash + 1);
-							}
-
-							IssueAttachment attachmentModel = new IssueAttachment(
-									issue, origFileName, file.getContentType(),
-									issueForm.getAttachmentDescription(), file
-											.getFileSize(), currUser);
-							issueService.addIssueAttachment(attachmentModel,
-									file.getFileData());
-						}
-					}
+				if (log.isDebugEnabled()) {
+					log.debug("execute: issue created: " + issue);
 				}
-
+				
 				if (issue != null) {
+					if (!ProjectUtilities.hasOption(
+							ProjectUtilities.OPTION_NO_ATTACHMENTS, project
+									.getOptions())) {
+//						FormFile file = issueForm.getAttachment();
+						msg = new ActionMessages();
+						issue = AttachmentUtilities.addAttachment(issue, project, currUser, issueForm, getITrackerServices(), msg);
+						
+						if (!msg.isEmpty()) {
+							// Validation of attachment failed
+							errors.add(msg);
+						}
+						
+						
+						
+	//					if (file != null && !"".equals(file.getFileName())) {
+	//						String origFileName = file.getFileName();
+	//
+	//						ActionMessages msg = AttachmentUtilities.validate(file, this
+	//								.getITrackerServices());
+	//						if (msg.isEmpty()) {
+	//							int lastSlash = Math.max(origFileName
+	//									.lastIndexOf('/'), origFileName
+	//									.lastIndexOf('\\'));
+	//
+	//							if (lastSlash > -1) {
+	//								origFileName = origFileName
+	//										.substring(lastSlash + 1);
+	//							}
+	//
+	//							IssueAttachment attachmentModel = new IssueAttachment(
+	//									issue, origFileName, file.getContentType(),
+	//									issueForm.getAttachmentDescription(), file
+	//											.getFileSize(), currUser);
+	//							
+	//							
+	//							AttachmentUtilities.addAttachment(issue, project, currUser, issueForm, getITrackerServices(), errors);
+	////							issueService.addIssueAttachment(attachmentModel,
+	////									file.getFileData());
+	//						}
+	//						else {
+	//							errors.add(msg);
+	//							saveErrors(request, errors);
+	//							return mapping.getInputForward();
+	//						}
+	//					}
+					}
+
+				
 					Integer newOwner = issueForm.getOwnerId();
 
 					if (newOwner != null && newOwner.intValue() >= 0) {
@@ -308,18 +350,30 @@ public class CreateIssueAction extends ItrackerBaseAction {
 										e);
 						errors.add(ActionMessages.GLOBAL_MESSAGE,
 								new ActionMessage("itracker.web.error.system"));
+						saveErrors(request, errors);
+						return mapping.getInputForward();
 					}
 
 					notificationService.sendNotification(issue, Type.CREATED,
 							getBaseURL(request));
+				} else {
+
+					errors.add(ActionMessages.GLOBAL_MESSAGE,
+							new ActionMessage("itracker.web.error.system"));
+					saveErrors(request, errors);
+					return mapping.findForward("error");
 				}
 				session.removeAttribute(Constants.PROJECT_KEY);
 
 				WorkflowUtilities.processFieldScripts(scripts,
 						WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, null,
 						errors, issueForm);
+				if (errors.isEmpty()) {
+					return getReturnForward(issue, project, issueForm, mapping);
+				}
+				saveErrors(request, errors);
+				return mapping.getInputForward();
 				
-				return getReturnForward(issue, project, issueForm, mapping);
 			}
 		} catch (RuntimeException e) {
 			log.error("Exception processing form data", e);
@@ -336,7 +390,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 		}
 
 		if (!errors.isEmpty()) {
-			saveMessages(request, errors);
+			saveErrors(request, errors);
 		}
 		return mapping.findForward("error");
 	}

@@ -79,6 +79,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 	private static final Logger log = Logger
 			.getLogger(EditIssueFormAction.class);
 
+	
 	/**
 	 * method needed to prepare request for edit_issue.jsp
 	 * 
@@ -88,7 +89,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 			IssueForm issueForm, HttpServletRequest request, Issue issue,
 			IssueService issueService, UserService userService,
 			Map<Integer, Set<PermissionType>> userPermissions,
-			Map<Integer, List<NameValuePair>> listOptions, ActionErrors errors)
+			Map<Integer, List<NameValuePair>> listOptions, ActionMessages errors)
 			throws ServletException, IOException, WorkflowException {
 
 		String pageTitleKey = "itracker.web.editissue.title";
@@ -172,6 +173,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 				}
 			} else {
 				// Can't change
+				// FIXME: forward to unauthorized?
 			}
 
 		} else {
@@ -269,7 +271,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 
 	public static final void setupIssueForm(IssueForm issueForm, Issue issue,
 			Map<Integer, List<NameValuePair>> listOptions,
-			HttpServletRequest request, ActionErrors errors)
+			HttpServletRequest request, ActionMessages errors)
 			throws WorkflowException {
 		HttpSession session = request.getSession(true);
 
@@ -347,7 +349,6 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -357,14 +358,8 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 					+ form + ", request: " + request + ", response: "
 					+ response);
 		}
-		ActionErrors errors = new ActionErrors();
-//		super.executeAlways(mapping, form, request, response);
-//
-//		if (!isLoggedIn(request, response)) {
-//			// should be moved out of single actions. Filter, or better
-//			// Formbased Login (see servlet specs)
-//			return mapping.findForward("login");
-//		}
+		ActionMessages errors = new ActionMessages();
+
 
 		try {
 			IssueService issueService = getITrackerServices().getIssueService();
@@ -381,8 +376,8 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 			if (issue == null) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"itracker.web.error.invalidissue"));
-				// TODO: we must forward to another page since issue is not in
-				// request!
+				saveErrors(request, errors);				
+				return mapping.findForward("error");
 			} else if (project == null) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"itracker.web.error.invalidproject"));
@@ -428,14 +423,14 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 						+ issue.getId());
 
 				// TODO: Sort attachments
-				// Collections.sort(attachments,
-				// IssueAttachment.CREATE_DATE_COMPARATOR);
+//				 Collections.sort(attachments,
+//				 IssueAttachment.CREATE_DATE_COMPARATOR);
 
 				saveToken(request);
 
 				if (errors.isEmpty()) {
 					log.info("EditIssueFormAction: Forward: InputForward");
-
+					saveErrors(request, errors);
 					return mapping.getInputForward();
 				}
 
@@ -448,7 +443,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 		}
 
 		if (!errors.isEmpty()) {
-			saveMessages(request, errors);
+			saveErrors(request, errors);
 		}
 
 		log.info("EditIssueFormAction: Forward: Error");

@@ -38,18 +38,15 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.apache.struts.upload.FormFile;
 import org.apache.struts.validator.ValidatorForm;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
-import org.itracker.model.IssueAttachment;
 import org.itracker.model.IssueField;
 import org.itracker.model.IssueHistory;
 import org.itracker.model.PermissionType;
@@ -63,7 +60,6 @@ import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
@@ -80,24 +76,21 @@ public class EditIssueAction extends ItrackerBaseAction {
 			throws ServletException, IOException {
 
 		log.info("execute: called");
-		ActionErrors errors = new ActionErrors();
+		ActionMessages errors = new ActionMessages();
 		Date logDate = new Date();
 		Date startDate = new Date();
 		logTimeMillies("execute: called", logDate, log, Level.DEBUG);
 		// TODO: can we make this token optional (configurable) and probably by form, not over the whole app..
 		if (!isTokenValid(request)) {
 			log.debug("execute: Invalid request token while editing issue.");
-			ProjectService projectService = getITrackerServices()
-					.getProjectService();
-//			request.setAttribute("projects", projectService.getAllProjects());
-//			request.setAttribute("ph", projectService);
+
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.transaction"));
-			saveMessages(request, errors);
+			saveErrors(request, errors);
 			log.info("execute: return to edit-issue");
 			saveToken(request);
-			return null;
-//			return mapping.getInputForward();
+//			return mapping.findForward("error");
+			return mapping.getInputForward();
 		}
 
 		resetToken(request);
@@ -157,48 +150,46 @@ public class EditIssueAction extends ItrackerBaseAction {
 					(ValidatorForm) form);
 			logTimeMillies("execute: processed field scripts EVENT_FIELD_ONPRESUBMIT", logDate, log, Level.DEBUG);
 
-			previousStatus = issue.getStatus();
-			if (UserUtilities.hasPermission(userPermissions, project.getId(),
-					UserUtilities.PERMISSION_EDIT_FULL)) {
-				if (log.isDebugEnabled()) {
-					log.debug("execute: process full, " + issue);
+			if (errors.isEmpty()) {
+				previousStatus = issue.getStatus();
+				if (UserUtilities.hasPermission(userPermissions, project.getId(),
+						UserUtilities.PERMISSION_EDIT_FULL)) {
+					if (log.isDebugEnabled()) {
+						log.debug("execute: process full, " + issue);
+					}
+					issue = processFullEdit(issue, project, currUser, userPermissions,
+							getLocale(request), issueForm, issueService, errors);
+					logTimeMillies("execute: processed fulledit", logDate, log, Level.DEBUG);
+				} else {				
+					if (log.isDebugEnabled()) {
+						log.debug("execute: process limited, " + issue);
+					}
+					issue = processLimitedEdit(issue, project, currUser, userPermissions,
+							getLocale(request), issueForm, issueService, errors);
+					logTimeMillies("execute: processed limited edit", logDate, log, Level.DEBUG);
 				}
-				issue = processFullEdit(issue, project, currUser, userPermissions,
-						getLocale(request), issueForm, issueService);
-				logTimeMillies("execute: processed fulledit", logDate, log, Level.DEBUG);
-			} else {				
-				if (log.isDebugEnabled()) {
-					log.debug("execute: process limited, " + issue);
-				}
-				issue = processLimitedEdit(issue, project, currUser, userPermissions,
-						getLocale(request), issueForm, issueService);
-				logTimeMillies("execute: processed limited edit", logDate, log, Level.DEBUG);
 			}
 
-			if (log.isDebugEnabled()) {
-				log.debug("execute: sending notification for issue: " + issue
-						+ " (HOSTORIES: " + issueService.getIssueHistory(issue.getId()) + ")");
+
+			if (errors.isEmpty()) {		
+				if (log.isDebugEnabled()) {
+					log.debug("execute: sending notification for issue: " + issue
+							+ " (HOSTORIES: " + issueService.getIssueHistory(issue.getId()) + ")");
+				}
+				sendNotification(issue.getId(), previousStatus,
+						getBaseURL(request), notificationService);
+				logTimeMillies("execute: sent notification", logDate, log, Level.DEBUG);
+
+				WorkflowUtilities.processFieldScripts(scripts,
+						WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, null, errors,
+						(ValidatorForm) form);
+				logTimeMillies("execute: processed field scripts EVENT_FIELD_ONPOSTSUBMIT", logDate, log, Level.DEBUG);
+				
+				return getReturnForward(issue, project, issueForm, mapping);
 			}
 
-			sendNotification(issue.getId(), previousStatus,
-					getBaseURL(request), notificationService);
-			logTimeMillies("execute: sent notification", logDate, log, Level.DEBUG);
-//			session.removeAttribute(Constants.ISSUE_KEY);
-
-			WorkflowUtilities.processFieldScripts(scripts,
-					WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, null, errors,
-					(ValidatorForm) form);
-			logTimeMillies("execute: processed field scripts EVENT_FIELD_ONPOSTSUBMIT", logDate, log, Level.DEBUG);
-
-//			ProjectService projectService = getITrackerServices()
-//					.getProjectService();
-//			request.setAttribute("projects", projectService.getAllProjects());
-//			request.setAttribute("ph", projectService);
-
-			return getReturnForward(issue, project, issueForm, mapping);
 
 		} catch (Exception e) {
-			//e.printStackTrace();
 			log.error("execute: Exception processing form data", e);
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.system"));
@@ -208,8 +199,11 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 		if (!errors.isEmpty()) {
 			saveMessages(request, errors);
+			saveErrors(request, errors);
 			saveToken(request);
-			return mapping.findForward("editissueform");
+			
+			return mapping.getInputForward();
+//			return null;//mapping.findForward("editissueform");
 		}
 
 		log.info("execute: Forward: Error");
@@ -220,11 +214,20 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 	private Issue processFullEdit(Issue issue, Project project, User user,
 			Map<Integer, Set<PermissionType>> userPermissions, Locale locale,
-			IssueForm form, IssueService issueService) throws Exception {
+			IssueForm form, IssueService issueService, ActionMessages errors) throws Exception {
 
 		int previousStatus = issue.getStatus();
 		
 		boolean needReloadIssue = false;
+		
+		ActionMessages msg = new ActionMessages();
+		issue = AttachmentUtilities.addAttachment(issue, project, user, form, getITrackerServices(), msg);
+		
+		if (!msg.isEmpty()) {
+			// Validation of attachment failed
+			errors.add(msg);
+			return issue;
+		}
 		
 		needReloadIssue = issueService.setIssueVersions(issue.getId(), 
 				new HashSet<Integer>(Arrays.asList(form.getVersions())), 
@@ -234,7 +237,8 @@ public class EditIssueAction extends ItrackerBaseAction {
 				new HashSet<Integer>(Arrays.asList(form.getComponents())), 
 				user.getId());
 		// save attachment and reload updated issue
-		needReloadIssue = needReloadIssue | addAttachment(issue, project, user, form, issueService);
+
+//		needReloadIssue = needReloadIssue | addAttachment(issue, project, user, form, issueService, errors);
 
 		// reload issue for further updates
 		if (needReloadIssue) {
@@ -333,12 +337,16 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 	private Issue processLimitedEdit(Issue issue, Project project,
 			User user, Map<Integer, Set<PermissionType>> userPermissionsMap,
-			Locale locale, IssueForm form, IssueService issueService)
+			Locale locale, IssueForm form, IssueService issueService, ActionMessages messages)
 			throws Exception {
 
+		ActionMessages msg = new ActionMessages();
+		issue = AttachmentUtilities.addAttachment(issue, project, user, form, getITrackerServices(), msg);
+		
 
-		if (addAttachment(issue, project, user, form, issueService)) {
-			issue = issueService.getIssue(issue.getId());
+		if (!msg.isEmpty()) {
+			messages.add(msg);
+			return issue;
 		}
 		
 		Integer formStatus = form.getStatus();
@@ -520,58 +528,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 		}
 	}
 
-	private boolean addAttachment(Issue issue, Project project, User user,
-			IssueForm form, IssueService issueService) throws Exception {
 
-		if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS,
-				project.getOptions())) {
-			return false;
-		}
-
-		FormFile file = form.getAttachment();
-
-		if (file == null || file.getFileName().trim().length() < 1) {
-			log.info("addAttachment: skipping file " + file);
-			return false;
-		}
-
-		String origFileName = file.getFileName();
-		String contentType = file.getContentType();
-		int fileSize = file.getFileSize();
-
-		String attachmentDescription = form.getAttachmentDescription();
-
-		if (null == contentType || 0 >= contentType.length()) {
-			log
-					.info("addAttachment: got no mime-type, using default plain-text");
-			contentType = "text/plain";
-		}
-
-		if (log.isDebugEnabled()) {
-			log.debug("addAttachment: adding file, name: " + origFileName
-					+ " of type " + file.getContentType() + ", description: "
-					+ form.getAttachmentDescription() + ". filesize: " + fileSize);
-		}
-
-		if (AttachmentUtilities.checkFile(file, this.getITrackerServices())) {
-			int lastSlash = Math.max(origFileName.lastIndexOf('/'),
-					origFileName.lastIndexOf('\\'));
-			if (lastSlash > -1) {
-				origFileName = origFileName.substring(lastSlash + 1);
-			}
-
-			IssueAttachment attachmentModel = new IssueAttachment(issue,
-					origFileName, contentType, attachmentDescription, fileSize,
-					user);
-			
-			attachmentModel.setIssue(issue);
-//			issue.getAttachments().add(attachmentModel);
-			return issueService
-					.addIssueAttachment(attachmentModel, file.getFileData());
-
-		}
-		return false;
-	}
 
 	private void sendNotification(Integer issueId, int previousStatus,
 			String baseURL, NotificationService notificationService) {
