@@ -32,7 +32,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -54,7 +53,7 @@ public class SearchIssuesAction extends ItrackerBaseAction {
 	
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         
         String pageTitleKey = "itracker.web.search.title";
         String pageTitleArg = "";
@@ -102,13 +101,13 @@ public class SearchIssuesAction extends ItrackerBaseAction {
         }
         
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+        	saveErrors(request, errors);
         }
         
         return mapping.getInputForward();
     }
     
-    private IssueSearchQuery processQueryParameters(IssueSearchQuery isqm, ValidatorForm form, ActionErrors errors) {
+    private IssueSearchQuery processQueryParameters(IssueSearchQuery isqm, ValidatorForm form, ActionMessages errors) {
         if(isqm == null) {
             isqm = new IssueSearchQuery();
         }
