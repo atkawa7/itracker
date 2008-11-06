@@ -65,6 +65,9 @@ public class EditPreferencesAction extends ItrackerBaseAction {
         
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while editing user preferences.");
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+			"itracker.web.error.transaction"));
+			saveErrors(request, errors);
             return mapping.findForward("index");
         }
         resetToken(request);

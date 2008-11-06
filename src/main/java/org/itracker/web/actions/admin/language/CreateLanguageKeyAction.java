@@ -52,6 +52,9 @@ public class CreateLanguageKeyAction extends ItrackerBaseAction {
         
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while creating language key.");
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+			"itracker.web.error.transaction"));
+			saveErrors(request, errors);
             return mapping.findForward("listlanguages");
         }
         resetToken(request);

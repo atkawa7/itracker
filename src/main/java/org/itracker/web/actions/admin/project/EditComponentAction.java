@@ -60,6 +60,9 @@ public class EditComponentAction extends ItrackerBaseAction {
     	
 		if (!isTokenValid(request)) {
 			log.debug("Invalid request token while editing component.");
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+			"itracker.web.error.transaction"));
+			saveErrors(request, errors);
 			return mapping.findForward("listprojectsadmin");
 		}
 		resetToken(request);
