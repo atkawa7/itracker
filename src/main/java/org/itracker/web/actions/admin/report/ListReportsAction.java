@@ -19,7 +19,6 @@ public class ListReportsAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-//        super.executeAlways(mapping,form,request,response);
         
         ProjectService projectService = this.getITrackerServices().getProjectService();
         ReportService reportService = this.getITrackerServices().getReportService();
@@ -34,7 +33,6 @@ public class ListReportsAction extends ItrackerBaseAction {
         List<Report> reports = reportService.getAllReports();
         request.setAttribute("reports",reports);
 
-        
         return mapping.findForward("listreportsadmin");
     }
     

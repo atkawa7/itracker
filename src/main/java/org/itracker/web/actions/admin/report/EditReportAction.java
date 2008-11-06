@@ -54,13 +54,10 @@ public class EditReportAction extends ItrackerBaseAction {
     public EditReportAction() {
     }
 
-    @SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
+
+		ActionMessages errors = new ActionMessages();
+		
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while editing report.");
             return mapping.findForward("listreports");
@@ -141,7 +138,7 @@ public class EditReportAction extends ItrackerBaseAction {
         }
 
         if(! errors.isEmpty()) {
-      	    saveMessages(request, errors);
+        	saveErrors(request, errors);
             saveToken(request);
             return mapping.getInputForward();
         }
