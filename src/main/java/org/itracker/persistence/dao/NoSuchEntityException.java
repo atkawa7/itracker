@@ -4,7 +4,12 @@ import org.springframework.dao.DataAccessException;
 
 public class NoSuchEntityException extends DataAccessException {
     
-    public NoSuchEntityException(String msg) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public NoSuchEntityException(String msg) {
         super(msg);
     }
 
