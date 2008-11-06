@@ -12,15 +12,11 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 public class ListUsersAction extends ItrackerBaseAction {
 
-	public ListUsersAction() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-//			super.executeAlways(mapping,form,request,response);
+		
 			UserService userService = this.getITrackerServices().getUserService();
 			request.setAttribute("uh",userService);
 			 
