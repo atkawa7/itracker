@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -52,12 +51,15 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
 
     @SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
+    	ActionMessages errors = new ActionMessages();
 
 
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while editing configuration.");
-            return mapping.findForward("listconfiguration");
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+			"itracker.web.error.transaction"));
+			saveErrors(request, errors);
+			return mapping.getInputForward();
         }
         resetToken(request);
         try {
@@ -140,8 +142,10 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
-        if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+        if(! errors.isEmpty()) {			
+        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+				"itracker.web.error.transaction"));
+			saveErrors(request, errors);
             saveToken(request);
             return mapping.getInputForward();
         }

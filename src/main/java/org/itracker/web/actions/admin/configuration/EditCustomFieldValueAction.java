@@ -30,7 +30,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -52,11 +51,15 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(EditCustomFieldValueAction.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
 
 
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while editing configuration.");
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+				"itracker.web.error.transaction"));
+			saveErrors(request, errors);
+//			return mapping.getInputForward();
             return mapping.findForward("listconfiguration");
         }
         resetToken(request);
@@ -148,7 +151,7 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
         }
 
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+            saveErrors(request, errors);
             saveToken(request);
             request.setAttribute("customFieldValueForm", form);
             return mapping.getInputForward();

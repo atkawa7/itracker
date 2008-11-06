@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +31,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -56,12 +56,16 @@ public class EditConfigurationAction extends ItrackerBaseAction {
 
     @SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
 
         
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while editing configuration.");
-            return mapping.findForward("listconfiguration");
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+			"itracker.web.error.transaction"));
+			saveErrors(request, errors);
+			return mapping.getInputForward();
+//            return mapping.findForward("listconfiguration");
         }
         resetToken(request);
         HttpSession session = request.getSession(true);
@@ -265,7 +269,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
         }
 
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+            saveErrors(request, errors);
             saveToken(request);
             return mapping.getInputForward();
         }

@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -49,7 +48,7 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
 	
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
 
 
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
@@ -110,7 +109,8 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
         }
 
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+            saveErrors(request, errors);
+            return mapping.getInputForward();
         }
 
         return mapping.findForward("error");
