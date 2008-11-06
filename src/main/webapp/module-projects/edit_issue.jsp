@@ -10,7 +10,7 @@
 <%@ page import="org.itracker.core.resources.*" %>
 <%@ page import="org.itracker.web.util.RequestHelper" %>
 <%@ page import="org.apache.struts.taglib.TagUtils" %>
-
+<%--@ page import="org.apache.log4j.Logger"--%>
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
@@ -20,9 +20,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%
-	Logger log = Logger.getLogger(this.getClass());
-	log.debug("_jspService: got request: ih: " +request.getAttribute("ih") + ", currUser: " + request.getSession().getAttribute("currUser")
-			+ ", issue: " + request.getAttribute(Constants.ISSUE_KEY));
+//	Logger log = Logger.getLogger(this.getClass());
+//	log.debug("_jspService: got request: ih: " +request.getAttribute("ih") + ", currUser: " + request.getSession().getAttribute("currUser")
+//			+ ", issue: " + request.getAttribute(Constants.ISSUE_KEY));
 // TODO here we stuck, e.g. when validation had an error
     IssueService ih = (IssueService) request.getAttribute("ih");
     User um = (User) request.getSession().getAttribute("currUser");
@@ -39,11 +39,11 @@
     Map<Integer, List<NameValuePair>> listOptions =
             RequestHelper.getListOptions(session);
     
-    log.debug("_jspService: listOptions: " + listOptions);
+//    log.debug("_jspService: listOptions: " + listOptions);
     final Map<Integer, Set<PermissionType>> permissions =
             RequestHelper.getUserPermissions(session);
 
-    log.debug("_jspService: permissions: " + permissions);
+//    log.debug("_jspService: permissions: " + permissions);
     Project project = currentIssue.getProject();
 	
     
@@ -60,8 +60,19 @@
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 <html:javascript formName="issueForm"/>
+<%--    <center>
+          <span class="formError">
+				<html:messages id="err" message="false"> 
+				 <bean:write name="err" />
+				 <br>
+				</html:messages>
+				
+           </span>
+           </center>
+           
+<html:errors name="XXX" />--%>
 
-<logic:messagesPresent>
+<logic:messagesPresent >
     <center>
           <span class="formError">
            <html:messages id="error">
@@ -931,5 +942,6 @@
 </table>
 
 </html:form>
-<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body><%@page import="org.apache.log4j.Logger"%>
+<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body>
+
 </html>
