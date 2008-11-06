@@ -40,19 +40,14 @@ import org.itracker.web.util.SessionManager;
 public class LogoffAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(LogoffAction.class);
 	
-    public LogoffAction() {
-    }
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        super.executeAlways(mapping,form,request,response);
         try {
             
             HttpSession session = request.getSession(true);
             User user = (User) session.getAttribute("user");
             String login = (user != null ? user.getLogin() : "UNKNOWN");
-            
 
-            
             if(clearSession(login, request, response)) {
                 log.info("User " + login + " logged out successfully.");
             }
@@ -60,8 +55,6 @@ public class LogoffAction extends ItrackerBaseAction {
         	if (log.isDebugEnabled())
         		log.debug("execute: Error logging out user. " + e.getMessage());
         }
-        
-        
         
         String pageTitleKey = "itracker.web.login.title";
         String pageTitleArg = "";

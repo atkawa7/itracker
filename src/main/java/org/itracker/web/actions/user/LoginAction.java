@@ -20,12 +20,13 @@ package org.itracker.web.actions.user;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -53,8 +54,8 @@ public class LoginAction extends ItrackerBaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		ActionErrors errors = new ActionErrors();
-		// super.executeAlways(mapping, form, request, response);
+    	ActionMessages errors = new ActionMessages();
+    	
 		ActionForward errorMapping = null;
 		String login = null;
 		
@@ -73,7 +74,7 @@ public class LoginAction extends ItrackerBaseAction {
 		 */
 		if (skipLogin) {
 			log.debug("execute: forwarded, skip login.");
-			saveMessages(request, null);
+			saveErrors(request, null);
 			saveErrors(request, new ActionMessages());
 			return mapping.getInputForward();
 		} else {
@@ -296,7 +297,7 @@ public class LoginAction extends ItrackerBaseAction {
 				if (!errors.isEmpty()) {
 					LogoffAction logoff = new LogoffAction();
 					logoff.clearSession(login, request, response);
-					saveMessages(request, errors);
+					saveErrors(request, errors);
 				}
 			}
 		}

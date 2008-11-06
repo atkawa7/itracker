@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -42,13 +41,11 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 public class ForgotPasswordAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(ForgotPasswordAction.class);
-	
-    public ForgotPasswordAction() {
-    }
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
+
+    	ActionMessages errors = new ActionMessages();
+    	
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
             UserService userService = getITrackerServices().getUserService();
@@ -115,12 +112,12 @@ public class ForgotPasswordAction extends ItrackerBaseAction {
         }
 
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+        	saveErrors(request, errors);
             return (mapping.getInputForward());
         }
 
         errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.message.forgotpass"));
-        saveMessages(request, errors);
+        saveErrors(request, errors);
         return mapping.findForward("login");
     }
 
