@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -30,11 +29,11 @@ public class DownloadAttachmentAction extends ItrackerBaseAction {
 		IssueAttachment attachment = issueService.getIssueAttachment(attachmentID);
 
 		if (attachment.getFileData() == null) {
-			ActionErrors errors = new ActionErrors();
+			ActionMessages errors = new ActionMessages();
 
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingattachmentdata"));
 
-			saveMessages(request, errors);
+			saveErrors(request, errors);
 
 			return actionMapping.findForward("error_page");
 		}
