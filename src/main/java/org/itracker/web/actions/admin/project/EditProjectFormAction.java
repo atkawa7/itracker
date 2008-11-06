@@ -30,7 +30,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -61,9 +60,8 @@ public class EditProjectFormAction extends ItrackerBaseAction {
                                  HttpServletResponse response)
             throws ServletException, IOException {
 
-        ActionErrors errors = new ActionErrors();
-
-
+    	ActionMessages errors = new ActionMessages();
+    	
         try {
             ProjectService projectService = getITrackerServices().getProjectService();
             UserService userService = getITrackerServices().getUserService();
@@ -167,7 +165,7 @@ public class EditProjectFormAction extends ItrackerBaseAction {
         }
 
         if (!errors.isEmpty()) {
-            saveMessages(request, errors);
+        	saveErrors(request, errors);
         }
 
         return mapping.findForward("error");

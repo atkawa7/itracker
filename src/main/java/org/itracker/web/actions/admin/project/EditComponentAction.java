@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -57,9 +56,8 @@ public class EditComponentAction extends ItrackerBaseAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		ActionErrors errors = new ActionErrors();
-
+    	ActionMessages errors = new ActionMessages();
+    	
 		if (!isTokenValid(request)) {
 			log.debug("Invalid request token while editing component.");
 			return mapping.findForward("listprojectsadmin");
@@ -130,7 +128,7 @@ public class EditComponentAction extends ItrackerBaseAction {
 		}
 
 		if (!errors.isEmpty()) {
-			saveMessages(request, errors);
+			saveErrors(request, errors);
 		}
 		return mapping.findForward("error");
 	}

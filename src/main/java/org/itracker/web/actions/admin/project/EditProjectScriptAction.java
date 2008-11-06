@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -55,8 +54,9 @@ public class EditProjectScriptAction extends ItrackerBaseAction {
     }
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
-        
+
+    	ActionMessages errors = new ActionMessages();
+    	
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
@@ -121,7 +121,7 @@ public class EditProjectScriptAction extends ItrackerBaseAction {
         } catch(ParseException pe) {
             log.debug("Error parseing script.  Redisplaying form for correction.", pe);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidscriptdata", pe.getMessage()));
-            saveMessages(request, errors);
+            saveErrors(request, errors);
             saveToken(request);
             return mapping.getInputForward();
         } catch(Exception e) {
@@ -130,7 +130,7 @@ public class EditProjectScriptAction extends ItrackerBaseAction {
         }
         
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+        	saveErrors(request, errors);
         }
         return mapping.findForward("error");
     }

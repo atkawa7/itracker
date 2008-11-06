@@ -29,7 +29,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -57,8 +56,8 @@ public class EditVersionFormAction extends ItrackerBaseAction {
             HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
-        
-        ActionErrors errors = new ActionErrors();
+
+    	ActionMessages errors = new ActionMessages();
 
         String pageTitleKey = "";
         String pageTitleArg = "";
@@ -154,7 +153,7 @@ public class EditVersionFormAction extends ItrackerBaseAction {
         }
 
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+        	saveErrors(request, errors);
                 
             return mapping.findForward("error");
         }
