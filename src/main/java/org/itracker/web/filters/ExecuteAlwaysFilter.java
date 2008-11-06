@@ -157,11 +157,12 @@ public class ExecuteAlwaysFilter implements Filter {
 				SessionManager.removeRenamedLogin(currLogin);
 				if (currUser == null
 						|| currUser.getStatus() != UserUtilities.STATUS_ACTIVE) {
-					ActionErrors errors = new ActionErrors();
+					ActionMessages errors = new ActionMessages();
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
 							new ActionMessage(
 									"itracker.web.error.login.inactive"));
-					request.setAttribute(Globals.ERROR_KEY, errors);
+					saveErrors(request, errors);
+//					request.setAttribute(Globals.ERROR_KEY, errors);
 					
 					log.info("doFilter: forwarding to login");
 					forwardToLogin(path
