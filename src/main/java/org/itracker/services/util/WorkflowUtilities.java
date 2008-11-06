@@ -61,8 +61,16 @@ public class WorkflowUtilities  {
     public WorkflowUtilities() {
     }
     
+    /**
+     * Returns a title of workflow event, according to selected locale.
+     * @param value is an identifier of incoming event.
+     * @param locale is a selected locale.
+     * @return a name of event or something like "MISSING KEY: <resourceBundleKey>".
+     */
     public static String getEventName(int value, Locale locale) {
-        return getEventName(Integer.toString(value), locale);
+        final String eventName = getEventName(Integer.toString(value), locale);
+//        assert null != eventName : "event name should never be null.";
+        return eventName;
     }
     
     public static String getEventName(String value, Locale locale) {
@@ -179,7 +187,7 @@ public class WorkflowUtilities  {
         }
         
         if(currentErrors == null) {
-            currentErrors = new ActionErrors();
+            currentErrors = new ActionMessages();
         }
         
         try {
