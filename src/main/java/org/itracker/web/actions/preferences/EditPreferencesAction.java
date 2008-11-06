@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -62,12 +61,8 @@ public class EditPreferencesAction extends ItrackerBaseAction {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("Starting pref mod");
-        ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
-//        
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
+        ActionMessages errors = new ActionMessages();
+        
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while editing user preferences.");
             return mapping.findForward("index");
@@ -139,7 +134,7 @@ public class EditPreferencesAction extends ItrackerBaseAction {
 //                  itracker.web.error.noprofileupdates
                 	log.info("execute: passwords can not be changed in preferences due to incapable authenticator");
                 	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
-                    saveMessages(request, errors);
+                	saveErrors(request, errors);
                     return mapping.findForward("error");
                 }
 
@@ -154,7 +149,7 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                 } else {
                 	log.error("execute: profile updates are not allowed for " + existingUser);
                 	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprofileupdates"));
-                    saveMessages(request, errors);
+                	saveErrors(request, errors);
                     return mapping.findForward("error");
                 }
             } else {
@@ -229,7 +224,7 @@ public class EditPreferencesAction extends ItrackerBaseAction {
         		log.info("execute: got actions errors: " + errors);
         	}
             
-      	    saveMessages(request, errors);
+        	saveErrors(request, errors);
             saveToken(request);
       	}
   		

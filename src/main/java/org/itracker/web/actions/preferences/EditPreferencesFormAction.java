@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -57,7 +56,7 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		ActionErrors errors = new ActionErrors();
+		ActionMessages errors = new ActionMessages();
 
 		try {
 			UserService userService = getITrackerServices().getUserService();
@@ -173,8 +172,6 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
 			session.setAttribute(Constants.EDIT_USER_PREFS_KEY, userPrefs);
 			saveToken(request);
 
-			// UserPreferences editUserPrefs = (UserPreferences)
-			// session.getAttribute(Constants.EDIT_USER_PREFS_KEY);
 			Boolean allowPreferenceUpdate = false;
 			Boolean allowProfileUpdate = false;
 			Boolean allowPasswordUpdate = false;
