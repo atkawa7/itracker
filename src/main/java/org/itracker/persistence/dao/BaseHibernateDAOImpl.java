@@ -29,6 +29,9 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
      * @param entity - detached entity object
      */
     public void save(T entity) {
+    	if (null == entity) {
+    		throw new NullPointerException("entity must not be null");
+    	}
         try {
         	Date createDate = new Date();
         	entity.setCreateDate(createDate);
@@ -46,6 +49,10 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
      * @param entity - entity object to be inserted or updated
      */
     public void saveOrUpdate(T entity) {
+    	if (null == entity) {
+    		throw new NullPointerException("entity must not be null");
+    	}
+
         try {
         	if (null == entity.getCreateDate()){
         		entity.setCreateDate(new Date());
@@ -60,6 +67,9 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
     }
 
     public void delete(T entity) {
+        if (null == entity) {
+    		throw new NullPointerException("entity must not be null");
+    	}
         try {
             getSession().delete(entity);
         } catch (HibernateException ex) {
@@ -81,17 +91,28 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
         }
     }
     
-    public void detach(T o) {
-    	getSession().evict(o);
+    public void detach(T entity) {
+    	if (null == entity) {
+    		throw new NullPointerException("entity must not be null");
+    	}
+
+    	getSession().evict(entity);
     }
     
-    public void refresh(T o) {
-    	getSession().refresh(o);
+    public void refresh(T entity) {
+    	if (null == entity) {
+    		throw new NullPointerException("entity must not be null");
+    	}
+
+    	getSession().refresh(entity);
     }
     
     @SuppressWarnings("unchecked")
 	public T merge(T entity) {
-    	
+    	if (null == entity) {
+    		throw new NullPointerException("entity must not be null");
+    	}
+
     	return (T)getSession().merge(entity);
     	
     }
