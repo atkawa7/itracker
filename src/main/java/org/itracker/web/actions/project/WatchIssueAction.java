@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -54,22 +53,16 @@ public class WatchIssueAction extends ItrackerBaseAction {
 
 	private static final Logger log = Logger.getLogger(WatchIssueAction.class);
 
-    @SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
+
+    	ActionMessages errors = new ActionMessages();
 
         try {
             IssueService issueService = getITrackerServices().getIssueService();
-            
             Integer issueId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
-
             Issue issue = issueService.getIssue(issueId);
-            
             Project project = issueService.getIssueProject(issueId);
+            
             if(project == null) {
                 return mapping.findForward("unauthorized");
             }
@@ -77,9 +70,6 @@ public class WatchIssueAction extends ItrackerBaseAction {
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
             Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
-            
-            // TODO: never used line, therefore commented, task added:
-            //Integer currUserId = currUser.getId();
 
             if(! UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_VIEW_ALL)) {
                 return mapping.findForward("unauthorized");
@@ -124,7 +114,7 @@ public class WatchIssueAction extends ItrackerBaseAction {
             log.error("System Error.", e);
         }
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+        	saveErrors(request, errors);
         }
         return mapping.findForward("error");
     }

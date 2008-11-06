@@ -51,16 +51,10 @@ import org.itracker.web.util.Constants;
 public class AddIssueRelationAction extends ItrackerBaseAction {
 
 	private static final Logger log = Logger.getLogger(AddIssueRelationAction.class);
-    public AddIssueRelationAction() {
-    }
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
-//        
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
+
+    	ActionMessages errors = new ActionMessages();
 
         Integer issueId = null;
         String caller = "index";
@@ -117,7 +111,7 @@ public class AddIssueRelationAction extends ItrackerBaseAction {
 		}
 
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+        	saveErrors(request, errors);
         }
 
         return new ActionForward(mapping.findForward(caller).getPath() + (issueId != null ? "?id=" + issueId : ""));

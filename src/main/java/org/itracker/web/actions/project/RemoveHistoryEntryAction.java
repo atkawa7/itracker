@@ -27,7 +27,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -44,12 +43,8 @@ public class RemoveHistoryEntryAction extends ItrackerBaseAction {
 
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
-//        
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
+
+    	ActionMessages errors = new ActionMessages();
 
         try {
             IssueService issueService = getITrackerServices().getIssueService();
@@ -73,7 +68,7 @@ public class RemoveHistoryEntryAction extends ItrackerBaseAction {
             log.error("System Error.", e);
         }
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+        	saveErrors(request, errors);
         }
         return mapping.findForward("error");
     }

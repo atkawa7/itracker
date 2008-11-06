@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -53,21 +52,18 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
 	public MoveIssueFormAction() {
 	}
 
-	@SuppressWarnings("unchecked")
+
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		ActionErrors errors = new ActionErrors();
-		// super.executeAlways(mapping,form,request,response);
+
+    	ActionMessages errors = new ActionMessages();
 
 		String pageTitleKey = "itracker.web.moveissue.title";
 		String pageTitleArg = request.getParameter("id");
 		request.setAttribute("pageTitleKey", pageTitleKey);
 		request.setAttribute("pageTitleArg", pageTitleArg);
 
-		// if(! isLoggedIn(request, response)) {
-		// return mapping.findForward("login");
-		// }
 
 		try {
 			IssueService issueService = getITrackerServices().getIssueService();
@@ -155,7 +151,7 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
 		}
 
 		if (!errors.isEmpty()) {
-			saveMessages(request, errors);
+			saveErrors(request, errors);
 		}
 		return mapping.findForward("error");
 	}

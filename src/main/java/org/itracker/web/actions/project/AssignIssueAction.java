@@ -54,8 +54,8 @@ public class AssignIssueAction extends ItrackerBaseAction {
 
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
 
+    	ActionMessages errors = new ActionMessages();
 
         try {
             IssueService issueService = getITrackerServices().getIssueService();
@@ -103,7 +103,7 @@ public class AssignIssueAction extends ItrackerBaseAction {
 		}
 
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+            saveErrors(request, errors);
             saveToken(request);
         }
         return mapping.findForward("index");

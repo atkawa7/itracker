@@ -69,14 +69,13 @@ import org.itracker.web.util.Constants;
 public class CreateIssueAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(CreateIssueAction.class);
 
-	public CreateIssueAction() {
-	}
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		ActionMessages errors = new ActionMessages();
 
+    	ActionMessages errors = new ActionMessages();
+    	
 		if (!isTokenValid(request)) {
 			log.info("execute: Invalid request token while creating issue.");
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(

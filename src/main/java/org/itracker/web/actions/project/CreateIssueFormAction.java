@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -64,19 +63,10 @@ import org.itracker.web.util.LoginUtilities;
 
 public class CreateIssueFormAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(CreateIssueFormAction.class);
-	
-    public CreateIssueFormAction() {
-    }
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
-//        
-//        
-//        
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
+
+    	ActionMessages errors = new ActionMessages();
 
         try {
             ProjectService projectService = getITrackerServices().getProjectService();
@@ -190,7 +180,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
 		}
 
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+        	saveErrors(request, errors);
         }
         return mapping.findForward("error");
     }
