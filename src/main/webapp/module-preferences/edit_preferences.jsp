@@ -41,9 +41,9 @@
         <br>
       </logic:messagesPresent>
       
-<html:messages name="warnings" id="msg"> 
+<%--<html:messages name="warnings" id="msg"> 
       <c:out value="${msg}"/> 
-   </html:messages> 
+   </html:messages>--%> 
    
       <html:form action="/editpreferences" onsubmit="return validatePreferencesForm(this);" acceptCharset="UTF-8" enctype="multipart/form-data">
         <html:hidden property="action" value="preferences"/>
