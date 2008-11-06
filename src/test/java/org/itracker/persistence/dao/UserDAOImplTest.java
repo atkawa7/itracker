@@ -2,8 +2,11 @@ package org.itracker.persistence.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.itracker.AbstractDependencyInjectionTest;
+import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 import org.itracker.services.util.UserUtilities;
 import org.junit.Ignore;
@@ -110,9 +113,13 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    @Ignore
     public void testGetUsersMapOfProjectsAndPermissionTypes() {
-        // todo: need to implement test case...
+    	Map<Integer, Set<PermissionType>> map =
+			userDAO.getUsersMapOfProjectsAndPermissionTypes(userDAO.findByPrimaryKey(2), 1);
+    	
+    	assertNotNull( map );
+    	// all permissions connected with user 2 have only project 2 in relation
+    	assertEquals( "projects", 1, map.size() );
     }
 
     private void assertContainsUser(User user, List<User> users) {

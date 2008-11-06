@@ -20,6 +20,7 @@ public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
     private UserDAO userDAO;
     private UserService userService;
 
+    @Test
     public void testCountByProjectAndLowerStatus() {
 
         Long issueCount = issueDAO.countByProjectAndLowerStatus(2, 3);
@@ -87,22 +88,73 @@ public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
 
     @Test
     public void testQuery() {
-
-        IssueSearchQuery searchQuery = new IssueSearchQuery();
-
-        List<Integer> projectsIDs = new ArrayList<Integer>();
-        projectsIDs.add(2);
-
-        searchQuery.setProjects(projectsIDs);
-
-        User user = userDAO.findByPrimaryKey(2);
-        Map<Integer, Set<PermissionType>> permissions = userService.getUsersMapOfProjectIdsAndSetOfPermissionTypes(user, AuthenticationConstants.REQ_SOURCE_WEB);
-
-        List<Issue> issues = issueDAO.query(searchQuery, user, permissions);
-
-        assertEquals(4, issues.size());
+    	
+    	IssueSearchQuery searchQuery = new IssueSearchQuery();
+    	
+    	List<Integer> projectsIDs = new ArrayList<Integer>();
+    	projectsIDs.add(2);
+    	
+    	searchQuery.setProjects(projectsIDs);
+    	
+    	User user = userDAO.findByPrimaryKey(2);
+    	Map<Integer, Set<PermissionType>> permissions = userService.getUsersMapOfProjectIdsAndSetOfPermissionTypes(user, AuthenticationConstants.REQ_SOURCE_WEB);
+    	
+    	List<Issue> issues = issueDAO.query(searchQuery, user, permissions);
+    	
+    	assertEquals(4, issues.size());
+    	
+    }
+    
+    @Test
+    public void testFindUnassignedIssues() {
+    	
+    	List<Issue> issues = issueDAO.findUnassignedIssues(100);
+    	assertNotNull( issues );
+    	// all issues are assigned (have owner)
+    	assertEquals( "total unassigned issues, status < 100", 0, issues.size() );
+    	
+    }
+    
+    @Test
+    public void testFindByComponent() {
+    	
+    	List<Issue> issues = issueDAO.findByComponent(1);
+    	assertNotNull( issues );
+    	assertEquals( "total issues for component#1", 3, issues.size() );
+    	
+    	issues = issueDAO.findByComponent(2);
+    	assertNotNull( issues );
+    	assertEquals( "total issues for component#2", 0, issues.size() );
+    	
+    }
+    
+    @Test
+    public void testCountByComponent() {
+    	
+    	assertEquals( "total issues for component#1", new Long(3), issueDAO.countByComponent(1) );
+    	assertEquals( "total issues for component#2", new Long(0), issueDAO.countByComponent(2) );
+    	
+    }
+    
+    @Test
+    public void testFindByVersion() {
+    	List<Issue> issues = issueDAO.findByVersion(1);
+    	assertNotNull( issues );
+    	assertEquals( "total issues for version#1", 3, issues.size() );
+    	
+    	issues = issueDAO.findByVersion(2);
+    	assertNotNull( issues );
+    	assertEquals( "total issues for version#2", 0, issues.size() );
+    	
+    }
+    
+    @Test
+    public void testCountByVersion() {
+    	assertEquals( "total issues for version#1", new Long(3), issueDAO.countByVersion(1) );
+    	assertEquals( "total issues for version#2", new Long(0), issueDAO.countByVersion(2) );
 
     }
+    
 
     private void assertContainsIssue(Issue issue, List<Issue> issues) {
 
@@ -139,7 +191,10 @@ public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
                 "dataset/projectbean_dataset.xml",
                 "dataset/versionbean_dataset.xml",
                 "dataset/issuebean_dataset.xml",
-                "dataset/issueactivitybean_dataset.xml"
+                "dataset/issueactivitybean_dataset.xml",
+                "dataset/componentbean_dataset.xml",
+                "dataset/issue_component_rel_dataset.xml",
+                "dataset/issue_version_rel_dataset.xml",
         };
     }
 
