@@ -53,8 +53,7 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(EditLanguageFormAction.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
-
+    	ActionMessages errors = new ActionMessages();
 
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
@@ -186,7 +185,7 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
 		}
 
         if(! errors.isEmpty()) {
-        	saveMessages(request, errors);
+            saveErrors(request, errors);
         }
 
         return mapping.findForward("error");

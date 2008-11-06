@@ -54,7 +54,7 @@ public class EditLanguageAction extends ItrackerBaseAction {
     
     @SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
+    	ActionMessages errors = new ActionMessages();
 
         
         if(! isTokenValid(request)) {
@@ -161,7 +161,7 @@ public class EditLanguageAction extends ItrackerBaseAction {
         }
         
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+            saveErrors(request, errors);
             saveToken(request);
             return mapping.getInputForward();
         }

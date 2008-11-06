@@ -48,7 +48,7 @@ public class ExportLanguageAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(ExportLanguageAction.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
+    	ActionMessages errors = new ActionMessages();
 
 
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
@@ -91,7 +91,7 @@ public class ExportLanguageAction extends ItrackerBaseAction {
 		}
 
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+            saveErrors(request, errors);
         }
 
         return mapping.findForward("error");

@@ -15,7 +15,7 @@ public class ListLanguagesAction extends ItrackerBaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		
-		ConfigurationService configurationService = this.getITrackerServices()
+		ConfigurationService configurationService = getITrackerServices()
 				.getConfigurationService();
 		request.setAttribute("sc", configurationService);
 		return mapping.findForward("listlanguages");
