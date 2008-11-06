@@ -52,7 +52,7 @@ public class SessionTracker implements Serializable {
 
 	protected void finalize() throws Throwable {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Invalidating SessionManager info for " + this.login);
+			logger.debug("finalize: Invalidating SessionManager info for " + this.login);
 		}
 		SessionManager.invalidateSession(this.login);
 	}

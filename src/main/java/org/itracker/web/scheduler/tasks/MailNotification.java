@@ -12,6 +12,7 @@ import javax.mail.Store;
 import javax.mail.search.FlagTerm;
 
 import org.apache.log4j.Logger;
+import org.itracker.services.NotificationService;
 
 /**
  * @author rui (rui.silva@emation.pt)
@@ -19,17 +20,24 @@ import org.apache.log4j.Logger;
  */
 public class MailNotification extends BaseJob {
 
-    private final Logger logger;
+    private static final Logger logger = Logger.getLogger(MailNotification.class);
     private String projectId;
     private String mailHost;
     private String user;
     private String password;
     private String folderName;
     private String protocol;
+    private NotificationService notificationService;
 
     public MailNotification() {
-        this.logger = Logger.getLogger(getClass());
     }
+    
+    public void setNotificationService(NotificationService notificationService) {
+		this.notificationService = notificationService;
+	}
+    public NotificationService getNotificationService() {
+		return notificationService;
+	}
     
     /**
      *  
@@ -62,9 +70,9 @@ public class MailNotification extends BaseJob {
         try {
             process();
         } catch (MessagingException ex) {            
-            logger.error(ex);
+            logger.error("performTask: failed with messaging exception", ex);
         } catch (NotificationException ex) {
-            logger.error(ex);
+            logger.error("performTask: failed with notification exception", ex);
         }
     }
 
