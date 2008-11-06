@@ -66,13 +66,8 @@ public class DisplayReportAction extends ItrackerBaseAction {
     public DisplayReportAction() {
     }
 
-    @SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
-//        super.executeAlways(mapping,form,request,response);
-//        if(! isLoggedIn(request, response)) {
-//            return mapping.findForward("login");
-//        }
+        ActionMessages errors = new ActionMessages();
 
         try {
             HttpSession session = request.getSession(false);
@@ -205,7 +200,7 @@ public class DisplayReportAction extends ItrackerBaseAction {
         }
 
         if(! errors.isEmpty()) {
-            saveMessages(request, errors);
+            saveErrors(request, errors);
         }
 
         return mapping.findForward("error");
