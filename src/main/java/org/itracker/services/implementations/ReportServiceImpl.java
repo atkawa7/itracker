@@ -107,6 +107,8 @@ public class ReportServiceImpl implements ReportService {
 	/**
 	 * break this into stuff that belongs here and stuff that belongs in the web
 	 * layer
+	 * 
+	 * @deprecated needs to be moved to static method in a new web-report-utility class
 	 */
 	public void outputPDF(List<Issue> reportDataArray, Report report,
 			Locale userLocale, String reportOutput, HttpSession session,
@@ -162,6 +164,13 @@ public class ReportServiceImpl implements ReportService {
 		}
 	}
 
+	/**
+	 * @deprecated needs to be moved to static method in a new web-report-utility class
+	 * @param request
+	 * @param response
+	 * @param mapping
+	 * @throws ReportException
+	 */
 	public void outputCSV(HttpServletRequest request,
 			HttpServletResponse response, ActionMapping mapping)
 			throws ReportException {
@@ -195,6 +204,7 @@ public class ReportServiceImpl implements ReportService {
 	 * 
 	 * @param out
 	 *            the OutputStream to send the XLS to.
+	 * @deprecated needs to be moved to static method in a new web-report-utility class
 	 */
 	public void outputXLS(HttpServletRequest request,
 			HttpServletResponse response, ActionMapping mapping)
@@ -230,6 +240,7 @@ public class ReportServiceImpl implements ReportService {
 	 * 
 	 * @param out
 	 *            the OutputStream to send the HTML to.
+	 * @deprecated needs to be moved to static method in a new web-report-utility class
 	 */
 	public void outputHTML(HttpServletRequest request,
 			HttpServletResponse response, ActionMapping mapping)

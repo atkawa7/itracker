@@ -40,6 +40,18 @@ public interface ReportService {
     
     public ReportDAO getReportDAO();
 
+    /**
+     * @deprecated needs to be moved to static method in a new web-report-utility class
+     * 
+     * @param reportDataArray
+     * @param reportModel
+     * @param userLocale
+     * @param reportOutput
+     * @param session
+     * @param request
+     * @param response
+     * @param mapping
+     */
 	public void outputPDF(List<Issue> reportDataArray, Report reportModel,
 			Locale userLocale, String reportOutput, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response,

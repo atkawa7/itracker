@@ -10,20 +10,11 @@ import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Report;
 import org.itracker.persistence.dao.ReportDAO;
 import org.itracker.services.ReportService;
-import org.itracker.web.struts.mock.MockActionMapping;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.dao.DataAccessException;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 
 public class ReportServiceImplTest extends AbstractDependencyInjectionTest {
 
 	private static final Logger log = Logger.getLogger(ReportServiceImplTest.class);
-	
-    private MockHttpServletRequest request;
-    private MockHttpServletResponse response;
-    private MockActionMapping actionMapping;
 
 	private ReportDAO reportDAO;
 
@@ -112,24 +103,7 @@ public class ReportServiceImplTest extends AbstractDependencyInjectionTest {
 		}
 		
 	}
-	
-//	@Test
-//	@Ignore
-//	public void testOutputHTML(){		
-//		response.setHeader("Content-Disposition","inline; filename=\"itrackerreport.html\"");
-//		response.setHeader("Content-Type", "text/html; charset=UTF-8");		
-//		try {
-//			Class[] argClasses = {HttpServletRequest.class, HttpServletResponse.class, ActionMapping.class};
-//			Object[] argObjects = {request, response, actionMapping};
-//			Method method = reportService.getClass().getDeclaredMethod("outputHTML",
-//			        argClasses);
-//			method.invoke(null, argObjects);
-//		} catch (Exception e) {
-//			log.error("testOutputHTML: failed using reflect to call method outputHTML in ReportService",e);
-//			fail("failed using reflect to call method outputHTML: " + e.getMessage());
-//		} 		
-//		assertNotNull("response", response.getOutputStream());
-//	}
+
 	
 
 	@Override
@@ -137,9 +111,7 @@ public class ReportServiceImplTest extends AbstractDependencyInjectionTest {
 		super.onSetUp();		
 		reportService = (ReportService) applicationContext.getBean("reportService");		
 		this.reportDAO = (ReportDAO) applicationContext.getBean("reportDAO");
-        request = new MockHttpServletRequest();
-        response = new MockHttpServletResponse();
-        actionMapping = new MockActionMapping();
+
 	}
 
 	protected String[] getDataSetFiles() {
