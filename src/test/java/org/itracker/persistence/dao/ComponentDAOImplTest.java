@@ -17,7 +17,7 @@ public class ComponentDAOImplTest extends AbstractDependencyInjectionTest {
 
         assertNotNull(component);
 
-        assertEquals(1, component.getProject().getId().intValue());
+        assertEquals(2, component.getProject().getId().intValue());
         assertEquals("Test Name", component.getName());
         assertEquals("Test Description", component.getDescription());
         assertEquals(Status.ACTIVE, component.getStatus());
@@ -27,7 +27,7 @@ public class ComponentDAOImplTest extends AbstractDependencyInjectionTest {
     public void testFindByProject() {
         List<Component> components = componentDAO.findByProject(2);
 
-        assertEquals(1, components.size());
+        assertEquals(2, components.size());
 
         Component component = components.get(0);
 
