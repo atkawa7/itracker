@@ -17,7 +17,7 @@ public class ComponentDAOImplTest extends AbstractDependencyInjectionTest {
 
         assertNotNull(component);
 
-        assertEquals(2, component.getProject().getId().intValue());
+        assertEquals(1, component.getProject().getId().intValue());
         assertEquals("Test Name", component.getName());
         assertEquals("Test Description", component.getDescription());
         assertEquals(Status.ACTIVE, component.getStatus());
