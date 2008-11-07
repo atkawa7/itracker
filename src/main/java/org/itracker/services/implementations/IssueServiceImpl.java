@@ -942,6 +942,12 @@ public class IssueServiceImpl implements IssueService {
 	public boolean addIssueRelation(Integer issueId, Integer relatedIssueId,
 			int relationType, Integer userId) {
 
+		User user = getUserDAO().findByPrimaryKey(userId);
+		
+		if (null == user) {
+			throw new IllegalArgumentException("Invalid user-id: " + userId);
+		}
+		
 		if (issueId != null && relatedIssueId != null) {
 
 			int matchingRelationType = IssueUtilities
@@ -989,15 +995,15 @@ public class IssueServiceImpl implements IssueService {
 			activity
 					.setActivityType(org.itracker.model.IssueActivityType.RELATION_ADDED);
 			activity.setDescription(ITrackerResources
-					.getString("itracker.activity.relation.add"));
-			// probably add this to description
-			// new Object[] {IssueUtilities.getRelationName(relationType),
-			// relatedIssueId };
+					.getString("itracker.activity.relation.add", 
+							new Object[] {IssueUtilities.getRelationName(relationType), relatedIssueId }));
+
 			activity.setIssue(issue);
 			issue.getActivities().add(activity);
-			getIssueDAO().saveOrUpdate(issue);
-			// need to set user here... userId);
+			// need to set user here
+			activity.setUser(user);
 			// need to save here
+			getIssueDAO().saveOrUpdate(issue);
 
 			activity = new IssueActivity();
 			activity
@@ -1005,7 +1011,7 @@ public class IssueServiceImpl implements IssueService {
 			activity.setDescription(ITrackerResources.getString(
 					"itracker.activity.relation.add",
 					new Object[] { IssueUtilities
-							.getRelationName(matchingRelationType) }));
+							.getRelationName(matchingRelationType), issueId }));
 			activity.setIssue(relatedIssue);
 			relatedIssue.getActivities().add(activity);
 			getIssueDAO().saveOrUpdate(relatedIssue);
