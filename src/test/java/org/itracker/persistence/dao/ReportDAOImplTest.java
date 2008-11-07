@@ -4,21 +4,19 @@ import java.util.List;
 
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Report;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ReportDAOImplTest extends AbstractDependencyInjectionTest {
 	
 	private ReportDAO reportDAO;
 
-	@Ignore
 	@Test
 	public void testFindByPrimaryKey() {
-		Report report = reportDAO.findByPrimaryKey(1);
+		Report report = reportDAO.findByPrimaryKey(1000);
 		assertNotNull("report", report);
 		assertNotNull("report.id", report.getId());
-		assertEquals("report.id", new Integer(1), report.getId());
-		assertEquals("report.name", "Report 1", report.getName());
+		assertEquals("report.id", new Integer(1000), report.getId());
+		assertEquals("report.name", "DailayReport Report", report.getName());
 	}
 	
 	@Test
