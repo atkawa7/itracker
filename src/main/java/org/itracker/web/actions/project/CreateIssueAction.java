@@ -63,6 +63,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
+import org.itracker.web.ptos.CreateIssuePTO;
 import org.itracker.web.util.AttachmentUtilities;
 import org.itracker.web.util.Constants;
 
@@ -73,9 +74,8 @@ public class CreateIssueAction extends ItrackerBaseAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-    	ActionMessages errors = new ActionMessages();
-    	
+		ActionMessages errors = new ActionMessages();
+		
 		if (!isTokenValid(request)) {
 			log.info("execute: Invalid request token while creating issue.");
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -84,6 +84,8 @@ public class CreateIssueAction extends ItrackerBaseAction {
 			log.info("execute: return to edit-issue");
 			saveToken(request);
 		//	return mapping.findForward("error");
+			
+			CreateIssuePTO.setupCreateIssue(request);
 			return mapping.getInputForward();
 //			project PTOs must be set in request for listprojects-forward to work
 			// return mapping.findForward("listprojects");
@@ -162,6 +164,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 					log.info("execute: tried to create issue with invalid attachemnt: " + msg);
 					errors.add(msg);
 					saveErrors(request, errors);
+					CreateIssuePTO.setupCreateIssue(request);
 					return mapping.getInputForward();
 				}
 				
@@ -348,6 +351,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 						errors.add(ActionMessages.GLOBAL_MESSAGE,
 								new ActionMessage("itracker.web.error.system"));
 						saveErrors(request, errors);
+						CreateIssuePTO.setupCreateIssue(request);
 						return mapping.getInputForward();
 					}
 
@@ -369,6 +373,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 					return getReturnForward(issue, project, issueForm, mapping);
 				}
 				saveErrors(request, errors);
+				CreateIssuePTO.setupCreateIssue(request);
 				return mapping.getInputForward();
 				
 			}

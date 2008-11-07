@@ -56,133 +56,190 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
+import org.itracker.web.ptos.CreateIssuePTO;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 
-
-
 public class CreateIssueFormAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(CreateIssueFormAction.class);
+	private static final Logger log = Logger
+			.getLogger(CreateIssueFormAction.class);
 
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public CreateIssueFormAction() {
+	}
 
-    	ActionMessages errors = new ActionMessages();
+	public ActionForward execute(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		ActionMessages errors = new ActionMessages();
 
-        try {
-            ProjectService projectService = getITrackerServices().getProjectService();
-            UserService userService = getITrackerServices().getUserService();
+		try {
+			ProjectService projectService = getITrackerServices()
+					.getProjectService();
+			UserService userService = getITrackerServices().getUserService();
 
-            Integer projectId = new Integer((request.getParameter("projectId") == null ? "-1" : (request.getParameter("projectId"))));
+			Integer projectId = new Integer(
+					(request.getParameter("projectId") == null ? "-1"
+							: (request.getParameter("projectId"))));
 
-            HttpSession session = request.getSession(true);
-            User currUser = (User) session.getAttribute(Constants.USER_KEY);
-            Map<Integer, Set<PermissionType>> Permissions = getUserPermissions(session);
-            Locale locale = LoginUtilities.getCurrentLocale(request);
+			HttpSession session = request.getSession(true);
+			User currUser = (User) session.getAttribute(Constants.USER_KEY);
+			Map<Integer, Set<PermissionType>> Permissions = getUserPermissions(session);
+			Locale locale = LoginUtilities.getCurrentLocale(request);
 
-            if(! UserUtilities.hasPermission(Permissions, projectId, UserUtilities.PERMISSION_CREATE)) {
-                log.debug("Unauthorized user requested access to create issue for project " + projectId);
-                return mapping.findForward("unauthorized");
-            }
+			if (!UserUtilities.hasPermission(Permissions, projectId,
+					UserUtilities.PERMISSION_CREATE)) {
+				log
+						.debug("Unauthorized user requested access to create issue for project "
+								+ projectId);
+				return mapping.findForward("unauthorized");
+			}
 
-            Project project = projectService.getProject(projectId);
-            log.debug("Received request for project " + projectId + "(" + project.getName() + ")");
+			Project project = projectService.getProject(projectId);
+			log.debug("Received request for project " + projectId + "("
+					+ project.getName() + ")");
 
-            if(project == null) {
-            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-            } else if(project.getStatus() != Status.ACTIVE) {
-            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
-            }
+			if (project == null) {
+				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+						"itracker.web.error.invalidproject"));
+			} else if (project.getStatus() != Status.ACTIVE) {
+				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+						"itracker.web.error.projectlocked"));
+			}
 
-            if(errors.isEmpty()) {
-                Map<Integer,List<NameValuePair>> listOptions = new HashMap<Integer,List<NameValuePair>>();
-                if(UserUtilities.hasPermission(Permissions, project.getId(), UserUtilities.PERMISSION_ASSIGN_OTHERS)) {
-                    List<User> possibleOwners = userService.getPossibleOwners(null, project.getId(), currUser.getId());
-                    Collections.sort(possibleOwners, User.NAME_COMPARATOR);
-                    listOptions.put(IssueUtilities.FIELD_OWNER, Convert.usersToNameValuePairs(possibleOwners));
-                } else if(UserUtilities.hasPermission(Permissions, project.getId(), UserUtilities.PERMISSION_ASSIGN_SELF)) {
-                	NameValuePair myNameValuePair = new NameValuePair(currUser.getFirstName() + " " + currUser.getLastName(), currUser.getId().toString());
-                	List<NameValuePair> myNameValuePairList =  new ArrayList<NameValuePair>();
-                	myNameValuePairList.add(myNameValuePair);
-                    listOptions.put(IssueUtilities.FIELD_OWNER,myNameValuePairList);
-                }
+			if (errors.isEmpty()) {
+				Map<Integer, List<NameValuePair>> listOptions = new HashMap<Integer, List<NameValuePair>>();
+				if (UserUtilities.hasPermission(Permissions, project.getId(),
+						UserUtilities.PERMISSION_ASSIGN_OTHERS)) {
+					List<User> possibleOwners = userService.getPossibleOwners(
+							null, project.getId(), currUser.getId());
+					Collections.sort(possibleOwners, User.NAME_COMPARATOR);
+					listOptions.put(IssueUtilities.FIELD_OWNER, Convert
+							.usersToNameValuePairs(possibleOwners));
+				} else if (UserUtilities.hasPermission(Permissions, project
+						.getId(), UserUtilities.PERMISSION_ASSIGN_SELF)) {
+					NameValuePair myNameValuePair = new NameValuePair(currUser
+							.getFirstName()
+							+ " " + currUser.getLastName(), currUser.getId()
+							.toString());
+					List<NameValuePair> myNameValuePairList = new ArrayList<NameValuePair>();
+					myNameValuePairList.add(myNameValuePair);
+					listOptions.put(IssueUtilities.FIELD_OWNER,
+							myNameValuePairList);
+				}
 
-                if(UserUtilities.hasPermission(Permissions, project.getId(), UserUtilities.PERMISSION_CREATE_OTHERS)) {
-                    List<User> possibleCreators = userService.getUsersWithAnyProjectPermission(project.getId(), new int[] {UserUtilities.PERMISSION_VIEW_ALL, UserUtilities.PERMISSION_VIEW_USERS});
-                    Collections.sort(possibleCreators, User.NAME_COMPARATOR);
-                    listOptions.put(IssueUtilities.FIELD_CREATOR, Convert.usersToNameValuePairs(possibleCreators));
-                }
+				if (UserUtilities.hasPermission(Permissions, project.getId(),
+						UserUtilities.PERMISSION_CREATE_OTHERS)) {
+					List<User> possibleCreators = userService
+							.getUsersWithAnyProjectPermission(
+									project.getId(),
+									new int[] {
+											UserUtilities.PERMISSION_VIEW_ALL,
+											UserUtilities.PERMISSION_VIEW_USERS });
+					Collections.sort(possibleCreators, User.NAME_COMPARATOR);
+					listOptions.put(IssueUtilities.FIELD_CREATOR, Convert
+							.usersToNameValuePairs(possibleCreators));
+				}
 
-                List<NameValuePair> severities = IssueUtilities.getSeverities(locale);
-        		// sort by severity code so it will be ascending output.
-        		Collections.sort(severities, NameValuePair.VALUE_COMPARATOR);
-                listOptions.put(IssueUtilities.FIELD_SEVERITY, severities);
+				List<NameValuePair> severities = IssueUtilities
+						.getSeverities(locale);
+				// sort by severity code so it will be ascending output.
+				Collections.sort(severities, NameValuePair.VALUE_COMPARATOR);
+				listOptions.put(IssueUtilities.FIELD_SEVERITY, severities);
 
-                List<Component> components = project.getComponents();
-                Collections.sort(components, Component.NAME_COMPARATOR);
-                listOptions.put(IssueUtilities.FIELD_COMPONENTS, Convert.componentsToNameValuePairs(components));
-                List<Version> versions = project.getVersions();
-                Collections.sort(versions, new Version.VersionComparator());
-                listOptions.put(IssueUtilities.FIELD_VERSIONS, Convert.versionsToNameValuePairs(versions));
+				List<Component> components = project.getComponents();
+				Collections.sort(components, Component.NAME_COMPARATOR);
+				listOptions.put(IssueUtilities.FIELD_COMPONENTS, Convert
+						.componentsToNameValuePairs(components));
+				List<Version> versions = project.getVersions();
+				Collections.sort(versions, new Version.VersionComparator());
+				listOptions.put(IssueUtilities.FIELD_VERSIONS, Convert
+						.versionsToNameValuePairs(versions));
 
+				List<CustomField> projectFields = project.getCustomFields();
+				for (int i = 0; i < projectFields.size(); i++) {
+					if (projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
+						projectFields.get(i).setLabels(locale);
+						listOptions
+								.put(
+										projectFields.get(i).getId(),
+										Convert
+												.customFieldOptionsToNameValuePairs(projectFields
+														.get(i).getOptions()));
+					}
+				}
 
-                List<CustomField> projectFields = project.getCustomFields();
-                for(int i = 0; i < projectFields.size(); i++) {
-                    if(projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
-                        projectFields.get(i).setLabels(locale);
-                        listOptions.put(projectFields.get(i).getId(), Convert.customFieldOptionsToNameValuePairs(projectFields.get(i).getOptions()));
-                    }
-                }
+				IssueForm issueForm = (IssueForm) form;
+				if (issueForm == null) {
+					issueForm = new IssueForm();
+				}
+				issueForm.setCreatorId(currUser.getId());
+				if (severities.size() > 0) {
+					try {
+						// this sets the selected severity to a medium level
+						// (middleSeverity). It was argued that this is not
+						// simple to understand and therefore needs
+						// simplification or refactoring
+						int middleSeverity = (severities.size() / 2);
+						issueForm.setSeverity(Integer.valueOf(severities.get(
+								middleSeverity).getValue()));
+					} catch (NumberFormatException nfe) {
+						log
+								.debug(
+										"Invalid status number found while preparing create issue form.",
+										nfe);
+					}
+				}
 
-                IssueForm issueForm = (IssueForm) form;
-                if(issueForm == null) {
-                    issueForm = new IssueForm();
-                }
-                issueForm.setCreatorId(currUser.getId());
-                if(severities.size() > 0) {
-                    try {
-                       	// this sets the selected severity to a medium level (middleSeverity). It was argued that this is not simple to understand and therefore needs simplification or refactoring
-                        int middleSeverity = (severities.size() / 2);
-                        issueForm.setSeverity(Integer.valueOf(severities.get(middleSeverity).getValue()));
-                    } catch(NumberFormatException nfe) {
-                        log.debug("Invalid status number found while preparing create issue form.", nfe);
-                    }
-                }
+				if (versions.size() > 0) {
+					issueForm.setVersions(new Integer[] { versions.get(0)
+							.getId() });
+				}
 
-                if(versions.size() > 0) {
-                    issueForm.setVersions(new Integer[] { versions.get(0).getId() } );
-                }
-                
-                String pageTitleKey = "itracker.web.createissue.title"; 
-      		    String pageTitleArg = project.getName();
-      		    request.setAttribute("pageTitleKey",pageTitleKey); 
-      		    request.setAttribute("pageTitleArg",pageTitleArg); 
+				String pageTitleKey = "itracker.web.createissue.title";
+				String pageTitleArg = project.getName();
+				request.setAttribute("pageTitleKey", pageTitleKey);
+				request.setAttribute("pageTitleArg", pageTitleArg);
 
-                List<ProjectScript> scripts = project.getScripts();
-                WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors, issueForm);
-                WorkflowUtilities.processFieldScripts(scripts, WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, null, errors, issueForm);
+				List<ProjectScript> scripts = project.getScripts();
+				WorkflowUtilities.processFieldScripts(scripts,
+						WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions,
+						errors, issueForm);
+				WorkflowUtilities.processFieldScripts(scripts,
+						WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, null,
+						errors, issueForm);
 
-                if(errors == null || errors.isEmpty()) {
-                    log.debug("Forwarding to create issue form for project " + project.getId());
-                    request.setAttribute("issueForm", issueForm);
-                    session.setAttribute(Constants.PROJECT_KEY, project);
-                    session.setAttribute(Constants.LIST_OPTIONS_KEY,listOptions);
-                    saveToken(request);
-                    return mapping.getInputForward();
-                }
-            }
-        } catch(RuntimeException e) {
-            log.error("Exception while creating create issue form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        } catch (WorkflowException e) {
+				if (errors == null || errors.isEmpty()) {
+					log.debug("Forwarding to create issue form for project "
+							+ project.getId());
+					request.setAttribute("issueForm", issueForm);
+					session.setAttribute(Constants.PROJECT_KEY, project);
+					session.setAttribute(Constants.LIST_OPTIONS_KEY,
+							listOptions);
+					saveToken(request);
+
+					if (project == null) {
+						return mapping.findForward("unauthorized");
+
+					} else {
+						CreateIssuePTO.setupCreateIssue(request);
+						return mapping.getInputForward();
+					}
+				}
+			}
+		} catch (RuntimeException e) {
+			log.error("Exception while creating create issue form.", e);
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"itracker.web.error.system"));
+		} catch (WorkflowException e) {
 			// TODO Auto-generated catch block
-            log.error("Exception while creating create issue form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+			log.error("Exception while creating create issue form.", e);
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"itracker.web.error.system"));
 		}
 
-        if(! errors.isEmpty()) {
-        	saveErrors(request, errors);
-        }
-        return mapping.findForward("error");
-    }
+		if (!errors.isEmpty()) {
+			saveErrors(request, errors);
+		}
+		return mapping.findForward("error");
+	}
 }
-  
