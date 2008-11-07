@@ -71,15 +71,9 @@ public class UserServiceImpl implements UserService {
     private boolean allowSelfRegister = false;
 
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
-//    @SuppressWarnings("unused")
-//    private InitialContext initialContext = null;
-//    @SuppressWarnings("unused")
-//    private NotificationDAO notificationDAO = null;
+
     private PermissionDAO permissionDAO = null;
-//    @SuppressWarnings("unused")
-//    private ProjectDAO projectDAO = null;
-//    @SuppressWarnings("unused")
-//    private ReportDAO reportDAO = null;
+
     private UserDAO userDAO = null;
     private UserPreferencesDAO userPreferencesDAO = null;
     private ProjectService projectService;
@@ -339,7 +333,6 @@ public class UserServiceImpl implements UserService {
             newUserPrefs.setUseTextActions(userPrefs.getUseTextActions());
 
             newUserPrefs.setUser(user);
-//            NewUserPrefs.setLastModifiedDate(new Date());
 
             if (userPrefs.getId() == null) {
                 newUserPrefs.setCreateDate(new Date());
