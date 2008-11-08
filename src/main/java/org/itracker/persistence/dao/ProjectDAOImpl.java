@@ -65,6 +65,7 @@ public class ProjectDAOImpl extends BaseHibernateDAOImpl<Project>
         return projects;
     }
     
+    @SuppressWarnings("unchecked") 
     public Date getLastIssueUpdateDate(Integer projectId) {
     	Query q = getSession().getNamedQuery("ProjectsLastModifiedIssueDate");
     	q.setParameter("projectId", projectId);
