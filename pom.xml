@@ -248,6 +248,8 @@
             </configuration>
             <executions>
                 <execution>
+                    <id>make-assembly</id>
+                    <phase>deploy</phase>
                     <goals>
                         <goal>attached</goal>
                     </goals>
