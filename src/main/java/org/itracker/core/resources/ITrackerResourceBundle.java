@@ -94,10 +94,11 @@ public class ITrackerResourceBundle extends ResourceBundle {
     }
 
     public boolean isDirty(String key) {
-        Object value = handleGetObject(key);
-        if(value != null && value instanceof DirtyKey) {
-            return true;
-        }
+    	try {
+    		handleGetObject(key);
+    	} catch (ITrackerDirtyResourceException exception) {
+    		return true;
+    	}
         return false;
     }
     
