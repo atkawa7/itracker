@@ -17,9 +17,7 @@
             <value>test_key</value>
             <value>test_value</value>
         </row>
-    </table>
 
-</dataset>
         <row>
             <value>999998</value>
             <value>2006-01-01</value>
