@@ -182,6 +182,9 @@ public class Version extends AbstractEntity implements Comparable<Entity> {
 	public void setVersionInfo(String versionInfo) {
 		setNumber(versionInfo);
 
+		if (null == versionInfo) {
+			throw new IllegalArgumentException("version info must not be null.");
+		}
 		String versionNumber = this.number.trim();
 		int firstDot = versionNumber.indexOf('.');
 		String major = "0";
