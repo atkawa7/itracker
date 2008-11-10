@@ -44,5 +44,23 @@
             <value>itracker.user.permission.-1</value>
             <value>test_value</value>
         </row>   
+        <row>
+            <value>22222</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>en</value>
+            <value>en_key</value>
+            <value>en_value</value>
+        </row>
+        
+        <row>
+            <value>5555555555555555</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>en</value>
+            <value>itracker.customfield.4444.label</value>
+            <value>hi</value>
+        </row>
+        
        </table>
 </dataset>
