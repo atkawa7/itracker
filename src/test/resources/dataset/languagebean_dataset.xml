@@ -20,3 +20,29 @@
     </table>
 
 </dataset>
+        <row>
+            <value>999998</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>test</value>
+            <value>itracker.workflow.field.event.1</value>
+            <value>test_value</value>
+        </row>
+        
+        <row>
+            <value>999997</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>test</value>
+            <value>itracker.user.status.-1</value>
+            <value>test_value</value>
+        </row>
+        
+        <row>
+            <value>999996</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>test</value>
+            <value>itracker.user.permission.-1</value>
+            <value>test_value</value>
+        </row>   </table>
