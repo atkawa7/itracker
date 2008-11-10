@@ -209,9 +209,9 @@ public abstract class AbstractEntity implements Entity {
 			return false;
 		}
 
-		if (getClass() == obj.getClass()) {
+		if (getClass().equals(obj.getClass())) {
 			Entity o = (Entity) obj;
-			return new EqualsBuilder().append(getClass(), obj.getClass())
+			return new EqualsBuilder()
 					.append(getId(), o.getId()).isEquals();
 
 		}

@@ -21,8 +21,6 @@ package org.itracker.model;
 import java.io.Serializable;
 import java.util.Comparator;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
@@ -30,7 +28,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * of some type, like a status number, and the value is a localized name for
  * that key.
  */
-public class NameValuePair implements Serializable, Comparable<NameValuePair> {
+public class NameValuePair extends AbstractEntity {
 
 	/**
 	 * 
@@ -99,7 +97,7 @@ public class NameValuePair implements Serializable, Comparable<NameValuePair> {
 		this.value = value;
 	}
 
-	public int compareTo(NameValuePair other) {
+	public int compareKeyTo(NameValuePair other) {
 		return KEY_COMPARATOR.compare(this, other);
 	}
 
@@ -107,26 +105,28 @@ public class NameValuePair implements Serializable, Comparable<NameValuePair> {
 		return VALUE_COMPARATOR.compare(this, other);
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
 
-		if (obj instanceof NameValuePair) {
-			final NameValuePair other = (NameValuePair) obj;
-			return new EqualsBuilder().append(name, other.name).append(value,
-					other.value).isEquals();
-
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(this.name).append(this.value)
-				.toHashCode();
-	}
+//
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (this == obj) {
+//			return true;
+//		}
+//
+//		if (obj instanceof NameValuePair) {
+//			final NameValuePair other = (NameValuePair) obj;
+//			return new EqualsBuilder().append(name, other.name).append(value,
+//					other.value).isEquals();
+//
+//		}
+//		return false;
+//	}
+//
+//	@Override
+//	public int hashCode() {
+//		return new HashCodeBuilder().append(this.name).append(this.value)
+//				.toHashCode();
+//	}
 
 	@Override
 	public String toString() {

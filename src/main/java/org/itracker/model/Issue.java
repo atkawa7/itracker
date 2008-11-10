@@ -265,7 +265,7 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
         this.severity = severity;
     }
     
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
     

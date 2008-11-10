@@ -76,7 +76,8 @@ public class AbstractEntityTest extends TestCase {
 		assertEquals(-1, ae.compareTo(aeCopy));
 		try {
 			ae.compareTo(null);
-		} catch (IllegalArgumentException e) {
+			fail("did not throw NullPointerException");
+		} catch (NullPointerException e) {
 			assertTrue(true);
 		}
 	}
