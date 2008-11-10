@@ -358,7 +358,7 @@ public class ConfigurationServiceImplTest extends
 	public void testGetWorkflowScripts() {
 		List<WorkflowScript> workflowScripts = configurationService.getWorkflowScripts();
 		assertNotNull( workflowScripts );
-		assertEquals( "total worflow scripts", 1, workflowScripts.size() );
+		assertEquals( "total worflow scripts", 2, workflowScripts.size() );
 	}
 	
 	@Test

@@ -1,29 +1,63 @@
 package org.itracker.services.implementations;
 
+import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.Assert;
 
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Component;
+import org.itracker.model.CustomField;
 import org.itracker.model.Project;
+import org.itracker.model.ProjectScript;
+import org.itracker.model.Version;
+import org.itracker.model.WorkflowScript;
+import org.itracker.persistence.dao.ComponentDAO;
+import org.itracker.persistence.dao.ProjectDAO;
+import org.itracker.persistence.dao.ProjectScriptDAO;
+import org.itracker.persistence.dao.VersionDAO;
+import org.itracker.persistence.dao.WorkflowScriptDAO;
 import org.itracker.services.ProjectService;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.dao.DataIntegrityViolationException;
 
 public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 
-
+	private ProjectDAO projectDAO;
 	private ProjectService projectService;
+	private ComponentDAO componentDAO;
+	private VersionDAO versionDAO;
+	private ProjectScriptDAO projectScriptDAO;
+	private WorkflowScriptDAO workflowScriptDAO;
 
 	@Override
 	protected String[] getDataSetFiles() {
-		return new String[] { "dataset/userpreferencesbean_dataset.xml",
+		return new String[] {
+
+		"dataset/userpreferencesbean_dataset.xml",
 				"dataset/userbean_dataset.xml",
+				"dataset/customfieldbean_dataset.xml",
+				"dataset/customfieldvaluebean_dataset.xml",
 				"dataset/projectbean_dataset.xml",
+				"dataset/project_owner_rel_dataset.xml",
+				"dataset/projectbean_field_rel_dataset.xml",
+				"dataset/workflowscriptbean_dataset.xml",
+				"dataset/projectscriptbean_dataset.xml",
 				"dataset/componentbean_dataset.xml",
-				"dataset/permissionbean_dataset.xml" };
+				"dataset/versionbean_dataset.xml",
+				"dataset/permissionbean_dataset.xml",
+				"dataset/issuebean_dataset.xml",
+				"dataset/issuefieldbean_dataset.xml",
+				"dataset/issueattachmentbean_dataset.xml",
+				"dataset/issueactivitybean_dataset.xml",
+				"dataset/issuehistorybean_dataset.xml",
+				"dataset/notificationbean_dataset.xml" };
+
 	}
 
 	@Override
@@ -35,10 +69,25 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 	public void onSetUp() throws Exception {
 
 		super.onSetUp();
-
 		projectService = (ProjectService) applicationContext
 				.getBean("projectService");
+		projectDAO = (ProjectDAO) applicationContext.getBean("projectDAO");
+		componentDAO = (ComponentDAO) applicationContext
+				.getBean("componentDAO");
+		versionDAO = (VersionDAO) applicationContext.getBean("versionDAO");
+		projectScriptDAO = (ProjectScriptDAO) applicationContext
+				.getBean("projectScriptDAO");
+		workflowScriptDAO = (WorkflowScriptDAO) applicationContext
+				.getBean("workflowScriptDAO");
 
+		// userService = (UserService)
+		// applicationContext.getBean("userService");
+		// userPreferencesDAO = (UserPreferencesDAO) applicationContext
+		// .getBean("userPreferencesDAO");
+		// projectDAO = (ProjectDAO) applicationContext.getBean("projectDAO");
+		// userDAO = (UserDAO) applicationContext.getBean("userDAO");
+		// permissionDAO = (PermissionDAO) applicationContext
+		// .getBean("permissionDAO");
 
 	}
 
@@ -131,9 +180,9 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		assertFalse("date created", updatedComponent.getCreateDate()
 				.after(then));
 
-		// projectDAO.detach(project);
-		// componentDAO.detach(component);
-		//
+		projectDAO.detach(project);
+		componentDAO.detach(component);
+
 		// // delete
 		// projectService.removeProjectComponent(project.getId(), savedComponent
 		// .getId());
@@ -144,7 +193,7 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 	public void testProjectComponentRemove() {
 
 		Project project = projectService.getProject(2);
-		Assert.assertNull("project not found", project.getId());
+		Assert.assertNotNull("project not found", project.getId());
 
 		// component exists but fails to delete
 		assertTrue(projectService.removeProjectComponent(project.getId(), 2));
@@ -155,10 +204,236 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 	public void testTryRemoveInvalidComponent() {
 
 		Project project = projectService.getProject(2);
-		Assert.assertNull("project not found", project.getId());
+		Assert.assertNotNull("project not found", project.getId());
 
 		// Invalid component Id, so it should fail and it does but why throws an
 		// exception
 		assertFalse(projectService.removeProjectComponent(project.getId(), 89));
 	}
+
+	@Test
+	public void testProjectVersions() {
+
+		Version version = projectService.getProjectVersion(1);
+		assertNotNull("version not found", version);
+
+		Project project = projectService.getProject(2);
+		Assert.assertNotNull("project not found", project.getId());
+
+		assertTrue("versions don't match", project.getVersions().size() == 1);
+
+		version = new Version(project, "2.0");
+
+		// FIXME: looks like version description is required, it should be
+		// included in one of the constructors.
+		version.setDescription("");
+		projectService.addProjectVersion(project.getId(), version);
+
+		project = projectService.getProject(2);
+		assertTrue("versions dont' match", project.getVersions().size() == 2);
+
+		versionDAO.detach(version);
+		version.setMinor(2);
+		projectService.updateProjectVersion(version);
+
+		version = projectService.getProjectVersion(version.getId());
+		assertEquals("version not updated", version.getMinor(), 2);
+	}
+
+	@Test
+	@Ignore
+	public void removeProjectVersion() {
+
+		Version version = projectService.getProjectVersion(1);
+		assertNotNull("version not found", version);
+
+		Project project = projectService.getProject(2);
+		Assert.assertNotNull("project not found", project.getId());
+
+		projectService.removeProjectVersion(project.getId(), version.getId());
+		assertNull("version not removed", projectService
+				.getProjectVersion(version.getId()));
+
+	}
+
+	@Test
+	public void tryInsertDuplicateVersion() {
+
+		Project project = projectService.getProject(2);
+		Assert.assertNotNull("project not found", project.getId());
+
+		assertTrue("versions don't match", project.getVersions().size() == 1);
+		Version version = project.getVersions().get(0);
+		versionDAO.detach(version);
+		version.setId(null);
+		try {
+			projectService.addProjectVersion(project.getId(), version);
+			fail();
+		} catch (DataIntegrityViolationException e) {
+			// FIXME: Isn't a more specific exception like
+			// VersionAlreadyExists
+			// more appropriate?
+
+		}
+	}
+
+	@Test
+	public void testProjectOwner() {
+		Project project = projectService.getProject(2);
+		Assert.assertNotNull("project not found", project.getId());
+
+		assertEquals(projectService.getProjectOwners(project.getId()).size(),
+				project.getOwners().size());
+
+		Set<Integer> newOwners = new HashSet<Integer>();
+		newOwners.add(1);
+		projectService.setProjectOwners(project, newOwners);
+
+		assertEquals(1, projectService.getProjectOwners(project.getId()).size());
+
+		// projectService.setProjectOwners(project, new HashSet<Integer>());
+
+	}
+
+	@Test
+	public void testGetTotalNumberIssuesByProject() {
+		Long issuesByProject = projectService.getTotalNumberIssuesByProject(2);
+		assertEquals(Long.valueOf(4), issuesByProject);
+	}
+
+	@Test
+	public void testCountIssuesByVersion() {
+		Long issuesByVersion = projectService.countIssuesByVersion(2);
+		assertEquals(Long.valueOf(0), issuesByVersion);
+
+	}
+
+	@Test
+	public void testCountIssuesByComponent() {
+		Long issuesByComponent = projectService.countIssuesByComponent(2);
+		assertEquals(Long.valueOf(0), issuesByComponent);
+	}
+
+	@Test
+	public void testGetTotalNumberOpenIssuesByProject() {
+		Long issues = projectService.countIssuesByComponent(2);
+		assertEquals(Long.valueOf(0), issues);
+	}
+
+	@Test
+	public void testGetTotalNumberResolvedIssuesByProject() {
+		Long number = projectService.getTotalNumberResolvedIssuesByProject(2);
+		assertEquals(Long.valueOf(0), number);
+	}
+
+	@Test
+	public void getgetTotalNumberOpenIssuesByProject() {
+		Long number = projectService.getTotalNumberOpenIssuesByProject(2);
+		assertEquals(Long.valueOf(4), number);
+	}
+
+	@Test
+	public void getLatestIssueUpdatedDateByProjectId() throws ParseException {
+		Date date = projectService.getLatestIssueUpdatedDateByProjectId(2);
+		assertNotNull(date);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		assertEquals(2008, cal.get(Calendar.YEAR));
+		assertEquals(0, cal.get(Calendar.MONTH));
+		assertEquals(1, cal.get(Calendar.DAY_OF_MONTH));
+	}
+
+//	@Test
+//	public void verifyDAOFields() {
+//		assertNotNull("DAO null", projectService.getProjectDAO());
+//	}
+
+	@Test
+	public void testProjectScripts() {
+		ProjectScript projectScript = projectService.getProjectScript(1);
+		assertNotNull("project script not found", projectScript);
+
+		Project project = projectService.getProject(2);
+		Assert.assertNotNull("project not found", project);
+
+		assertEquals("versions don't match", 1, project.getScripts().size());
+		assertEquals("versions don't match", 1, projectService
+				.getProjectScripts().size());
+
+		projectScript = new ProjectScript();
+		projectScript.setProject(project);
+		projectScript.setPriority(1);
+		projectScript.setFieldId(2);
+
+		WorkflowScript script = workflowScriptDAO.findByPrimaryKey(2);
+		assertNotNull("workflow script not found", script);
+		projectScript.setScript(script);
+
+		projectScript = projectService.addProjectScript(project.getId(),
+				projectScript);
+
+		projectDAO.refresh(project);
+		assertEquals("project scripts don't match", 2, project.getScripts()
+				.size());
+
+		projectDAO.detach(project);
+		projectScriptDAO.detach(projectScript);
+		projectScript.setPriority(2);
+		projectService.updateProjectScript(projectScript);
+
+		projectScript = projectService.getProjectScript(projectScript.getId());
+		assertEquals("version not updated", projectScript.getPriority(), 2);
+
+		projectService.removeProjectScript(project.getId(), projectScript
+				.getId());
+
+		project = projectService.getProject(2);
+		assertEquals("project scripts don't match", 1, project.getScripts()
+				.size());
+		assertNull("project script not removed", projectService
+				.getProjectScript(projectScript.getId()));
+
+	}
+
+	@Test
+	public void testProjectCustomFields() {
+
+		Project project = projectService.getProject(2);
+		Assert.assertNotNull("project not found", project);
+
+		List<CustomField> fields = projectService.getProjectFields(project
+				.getId());
+		assertEquals("custom field count", 2, fields.size());
+
+		Set<Integer> Ids = new HashSet<Integer>(2);
+		projectService.setProjectFields(project, Ids);
+
+		assertEquals("custom field count", 0, projectService.getProjectFields(
+				project.getId()).size());
+		Ids.add(1);
+		Ids.add(2);
+		projectService.setProjectFields(project, Ids);
+
+		assertEquals("custom field count", 2, projectService.getProjectFields(
+				project.getId()).size());
+
+	}
+
+//	@Test
+//	public void testProjectStats() {
+//		Long[] projectStats = projectService.getProjectStats(2);
+//		assertNotNull(projectStats);
+//		assertEquals(2, projectStats.length);
+//	}
+
+	@Ignore
+	public void testGetListOfProjectFields() {
+		fail("not implemented");
+	}
+
+	@Ignore
+	public void getListOfProjectOwners() {
+		fail("not implemented");
+	}
+
 }

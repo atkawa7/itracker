@@ -25,7 +25,7 @@ public class WorkflowScriptDAOImplTest extends AbstractDependencyInjectionTest {
 	public void testFindAll() {
 		List<WorkflowScript> workflowScripts = workflowScriptDAO.findAll();
 		assertNotNull( workflowScripts );
-		assertEquals( "total workflow scripts", 1, workflowScripts.size() );
+		assertEquals( "total workflow scripts", 2, workflowScripts.size() );
 	}
 	
 	@Override
