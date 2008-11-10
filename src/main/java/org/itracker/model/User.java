@@ -246,7 +246,7 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 	}
 
 	public String getFirstInitial() {
-		return (getFirstName().length() > 0 ? getFirstName().substring(0, 1)
+		return (null != getFirstName() && getFirstName().length() > 0 ? getFirstName().substring(0, 1)
 				.toUpperCase()
 				+ "." : "");
 	}
