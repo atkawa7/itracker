@@ -1,21 +1,19 @@
 package org.itracker.web.actions.project;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.itracker.model.AbstractEntity;
 import org.itracker.model.IssueActivity;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
@@ -24,65 +22,135 @@ import org.itracker.services.IssueService;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.RequestHelper;
 
+/**
+ * 
+ * @author ranks
+ *
+ */
 public class ViewIssueActivityAction extends ItrackerBaseAction {
 	private static final Logger log = Logger
 			.getLogger(ViewIssueActivityAction.class);
 
+	/**
+	 * executes this struts-actions processing
+	 */
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		// super.executeAlways(mapping,form,request,response);
+		if (log.isDebugEnabled()) {
+			log.debug("execute: called");
+		}
+		
 		IssueService issueService = this.getITrackerServices()
 				.getIssueService();
 
-		request.setAttribute("ih", issueService);
-
-		HttpSession session = request.getSession();
-		final Map<Integer, Set<PermissionType>> permissions = RequestHelper
-				.getUserPermissions(session);
-		User um = RequestHelper.getCurrentUser(session);
-		IssueService ih = (IssueService) request.getAttribute("ih");
-
-		Integer issueId = new Integer(
-				(request.getParameter("id") == null ? "-1" : (request
-						.getParameter("id"))));
-		Integer currUserId = um.getId();
-
-		List<IssueActivity> activity = ih.getIssueActivity(issueId);
-		Map<IssueActivity,String> activities  = new HashMap<IssueActivity, String>();
-		for (int i = 0; i < activity.size(); i++) {
-			IssueActivity ia = activity.get(i);
-			activities.put(ia,IssueUtilities.getActivityName(ia.getActivityType(),
-					(java.util.Locale) session.getAttribute("currLocale")));
+		ActionForward ret = checkPermission(request, issueService, mapping);
+		if (null != ret) {
+			if (log.isDebugEnabled()) {
+				log.debug("checkPermission: user has no permission, forwarding to " + ret);
+			}
+			return ret;
 		}
-		Project project = ih.getIssueProject(issueId);
-		User owner = ih.getIssueOwner(issueId);
-		User creator = ih.getIssueCreator(issueId);
-
-		boolean hasPerm = (project == null || (!UserUtilities
-				.hasPermission(permissions, project.getId(),
-						UserUtilities.PERMISSION_VIEW_ALL) && !(UserUtilities
-				.hasPermission(permissions, project.getId(),
-						UserUtilities.PERMISSION_VIEW_USERS) && ((owner != null && owner
-				.getId().equals(currUserId)) || (creator != null && creator
-				.getId().equals(currUserId))))));
-
 		
-
-		/*
-		 * Set the objects in request that are required for ui render
-		 */
-		request.setAttribute("hasPerm", hasPerm);
-		request.setAttribute("issueId", issueId);
-		request.setAttribute("activities", activities);
-		if(hasPerm){
-			return mapping.findForward("unauthorized");
-		}else{
-			return mapping.findForward("viewissueactivity");
+		Map<IssueActivity, String> activities = prepareActivitiesMap(issueService, request);
+		if (log.isDebugEnabled()) {
+			log.debug("execute: preparing with activities: " + activities);
 		}
+		setupJspEnv(request, activities);
 
+		if (log.isDebugEnabled()) {
+			log.debug("execute: forwarding to " + mapping.findForward("viewissueactivity"));
+		}
+		
+		return mapping.findForward("viewissueactivity");
+	}
+	
+	/**
+	 * check if user can view the issue-activites for the requested issue
+	 * 
+	 * @param request
+	 * @param issueService
+	 * @param mapping
+	 * @return ActionForward: not-null if access is denied, null if user is granted to see issue activities
+	 */
+	private ActionForward checkPermission(HttpServletRequest request, IssueService issueService, ActionMapping mapping) {
+		final Map<Integer, Set<PermissionType>> permissions = RequestHelper
+		.getUserPermissions(request.getSession());
+
+		User user = RequestHelper.getCurrentUser(request.getSession());
+		Integer issueId = getIssueId(request);
+		
+		Project project = issueService.getIssueProject(issueId);
+		User owner = issueService.getIssueOwner(issueId);
+		User creator = issueService.getIssueCreator(issueId);
+		
+		if ((project == null || 
+			    (!UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_VIEW_ALL)
+			    	&& !(UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_VIEW_USERS)
+			    	&& ((owner != null && owner.getId().equals(user.getId())) || (creator != null && creator.getId().equals(user.getId())))
+			)))) {
+
+			return mapping.findForward("unauthorized");
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * read issue id from request
+	 * @param request
+	 * @return Integer - issue id or -1 if not in request
+	 */
+	private static Integer getIssueId(HttpServletRequest request) {
+		try {
+			return Integer.valueOf(request.getParameter("id"));
+		} catch (RuntimeException re) {
+			if (log.isDebugEnabled()) {
+				log.debug("getIssueId: no issue-id in request, caught", re);
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * 
+	 * Set the objects in request that are required for ui render
+	 * 
+	 * @param request
+	 * @param issueId
+	 * @param activities
+	 */
+	private static final void setupJspEnv(HttpServletRequest request, Map<IssueActivity, String> activities) {
+
+		Integer issueId = getIssueId(request);
+		request.setAttribute("activities", activities);
+		request.setAttribute("issueId", issueId);
+	}
+	
+	/**
+	 * 
+	 * @param issueId
+	 * @param issueService
+	 * @param request
+	 * @return
+	 */
+	private static final Map<IssueActivity, String> prepareActivitiesMap(IssueService issueService, HttpServletRequest request) {
+		SortedMap<IssueActivity, String> activities = new TreeMap<IssueActivity, String>(AbstractEntity.ID_COMPARATOR);
+
+		Integer issueId = getIssueId(request);
+		Iterator<IssueActivity> activityIt = issueService.getIssueActivity(issueId).iterator();
+		IssueActivity issueActivity;
+		while (activityIt.hasNext()) {
+			issueActivity = (IssueActivity) activityIt.next();
+			activities.put(issueActivity,IssueUtilities.getActivityName(issueActivity.getActivityType(),
+					LoginUtilities.getCurrentLocale(request)));
+		}
+		
+		return activities;
+		
 	}
 
 }
