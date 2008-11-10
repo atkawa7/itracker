@@ -39,7 +39,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 999, "MISSING KEY: itracker.user.status.999");
 
         // "Deleted"
-        doTestGetStatusName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetStatusName(ITrackerResources.getLocale(),
                 UserUtilities.STATUS_DELETED, "Deleted");
         doTestGetStatusName(null,
                 UserUtilities.STATUS_DELETED, "Deleted");
@@ -47,7 +47,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 UserUtilities.STATUS_DELETED, "test_value");
 
         // "Active"
-        doTestGetStatusName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetStatusName(ITrackerResources.getLocale(),
                 UserUtilities.STATUS_ACTIVE, "Active");
         doTestGetStatusName(null,
                 UserUtilities.STATUS_ACTIVE, "Active");
@@ -55,7 +55,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 UserUtilities.STATUS_ACTIVE, "Active");
 
         // "Locked"
-        doTestGetStatusName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetStatusName(ITrackerResources.getLocale(),
                 UserUtilities.STATUS_LOCKED, "Locked");
         doTestGetStatusName(null,
                 UserUtilities.STATUS_LOCKED, "Locked");
@@ -113,7 +113,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                     new NameValuePair("1", "Active"),
                     new NameValuePair("2", "Locked")
                 });
-        doTestGetStatusNames(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetStatusNames(ITrackerResources.getLocale(),
                 new NameValuePair[]{
                     new NameValuePair("-1", "Deleted"),
                     new NameValuePair("1", "Active"),
@@ -178,7 +178,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 999, "MISSING KEY: itracker.user.permission.999");
 
         // "USER ADMIN"
-        doTestGetPermissionName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionName(ITrackerResources.getLocale(),
                 UserUtilities.PERMISSION_USER_ADMIN, "User Admin");
         doTestGetPermissionName(null,
                 UserUtilities.PERMISSION_USER_ADMIN, "User Admin");
@@ -186,7 +186,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 UserUtilities.PERMISSION_USER_ADMIN, "test_value");
 
         // "PRODUCT_ADMIN"
-        doTestGetPermissionName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionName(ITrackerResources.getLocale(),
                 UserUtilities.PERMISSION_PRODUCT_ADMIN, "Project Admin");
         doTestGetPermissionName(null,
                 UserUtilities.PERMISSION_PRODUCT_ADMIN, "Project Admin");
@@ -194,7 +194,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 UserUtilities.PERMISSION_PRODUCT_ADMIN, "Project Admin");
 
         // "CREATE"
-        doTestGetPermissionName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionName(ITrackerResources.getLocale(),
                 UserUtilities.PERMISSION_CREATE, "Create Issues");
         doTestGetPermissionName(null,
                 UserUtilities.PERMISSION_CREATE, "Create Issues");
@@ -202,7 +202,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 UserUtilities.PERMISSION_CREATE, "Create Issues");
 
         // "EDIT"
-        doTestGetPermissionName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionName(ITrackerResources.getLocale(),
                 UserUtilities.PERMISSION_EDIT, "Edit All Issues");
         doTestGetPermissionName(null,
                 UserUtilities.PERMISSION_EDIT, "Edit All Issues");
@@ -210,7 +210,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 UserUtilities.PERMISSION_EDIT, "Edit All Issues");
 
         // "CLOSE"
-        doTestGetPermissionName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionName(ITrackerResources.getLocale(),
                 UserUtilities.PERMISSION_CLOSE, "Close Issues");
         doTestGetPermissionName(null,
                 UserUtilities.PERMISSION_CLOSE, "Close Issues");
@@ -218,7 +218,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 UserUtilities.PERMISSION_CLOSE, "Close Issues");
 
         // "ASSIGN_SELF"
-        doTestGetPermissionName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionName(ITrackerResources.getLocale(),
                 UserUtilities.PERMISSION_ASSIGN_SELF,
                 "Assign Issues to Self");
         doTestGetPermissionName(null,
@@ -229,7 +229,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 "Assign Issues to Self");
 
         // "ASSIGN_OTHERS"
-        doTestGetPermissionName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionName(ITrackerResources.getLocale(),
                 UserUtilities.PERMISSION_ASSIGN_OTHERS,
                 "Assign Issues to Others");
         doTestGetPermissionName(null,
@@ -240,7 +240,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 "Assign Issues to Others");
 
         // "VIEW ALL"
-        doTestGetPermissionName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionName(ITrackerResources.getLocale(),
                 UserUtilities.PERMISSION_VIEW_ALL, "View All Issues");
         doTestGetPermissionName(null,
                 UserUtilities.PERMISSION_VIEW_ALL, "View All Issues");
@@ -248,7 +248,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 UserUtilities.PERMISSION_VIEW_ALL, "View All Issues");
 
         // "VIEW USERS"
-        doTestGetPermissionName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionName(ITrackerResources.getLocale(),
                 UserUtilities.PERMISSION_VIEW_USERS, "View User's Own Issues");
         doTestGetPermissionName(null,
                 UserUtilities.PERMISSION_VIEW_USERS, "View User's Own Issues");
@@ -256,7 +256,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 UserUtilities.PERMISSION_VIEW_USERS, "View User's Own Issues");
 
         // "EDIT USERS"
-        doTestGetPermissionName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionName(ITrackerResources.getLocale(),
                 UserUtilities.PERMISSION_EDIT_USERS, "Edit User's Own Issues");
         doTestGetPermissionName(null,
                 UserUtilities.PERMISSION_EDIT_USERS, "Edit User's Own Issues");
@@ -264,7 +264,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 UserUtilities.PERMISSION_EDIT_USERS, "Edit User's Own Issues");
 
         // "UNASSIGN SLEF"
-        doTestGetPermissionName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionName(ITrackerResources.getLocale(),
                 UserUtilities.PERMISSION_UNASSIGN_SELF,
                 "Unassign Issues from Self");
         doTestGetPermissionName(null,
@@ -275,7 +275,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 "Unassign Issues from Self");
 
         // "ASSIGNABLE"
-        doTestGetPermissionName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionName(ITrackerResources.getLocale(),
                 UserUtilities.PERMISSION_ASSIGNABLE,
                 "Can Be Assigned Any Issue");
         doTestGetPermissionName(null,
@@ -286,7 +286,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 "Can Be Assigned Any Issue");
 
         // "CREATE OTHERS"
-        doTestGetPermissionName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionName(ITrackerResources.getLocale(),
                 UserUtilities.PERMISSION_CREATE_OTHERS,
                 "Create Issues for Others");
         doTestGetPermissionName(null,
@@ -297,7 +297,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 "Create Issues for Others");
 
         // "EDIT FULL"
-        doTestGetPermissionName(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionName(ITrackerResources.getLocale(),
                 UserUtilities.PERMISSION_EDIT_FULL, "Full Issue Edit");
         doTestGetPermissionName(null,
                 UserUtilities.PERMISSION_EDIT_FULL, "Full Issue Edit");
@@ -356,7 +356,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                     new NameValuePair("Full Issue Edit",
                     Integer.toString(UserUtilities.PERMISSION_EDIT_FULL))
                 });
-        doTestGetPermissionNames(new Locale(ITrackerResources.BASE_LOCALE),
+        doTestGetPermissionNames(ITrackerResources.getLocale(),
                 new NameValuePair[]{
                     new NameValuePair("Project Admin",
                     Integer.toString(UserUtilities.PERMISSION_PRODUCT_ADMIN)),
