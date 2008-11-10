@@ -30,6 +30,7 @@ import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.Version;
 import org.itracker.services.IssueService;
+import org.itracker.services.NotificationService;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
@@ -61,8 +62,7 @@ public class ViewIssueAction extends ItrackerBaseAction {
 				.getUserPermissions(session);
 		User um = RequestHelper.getCurrentUser(session);
 
-		IssueService ih = (IssueService) request.getAttribute("ih");
-
+		NotificationService notificationService = getITrackerServices().getNotificationService();
 		Integer issueId = null;
 		Issue issue = null;
 
@@ -71,7 +71,7 @@ public class ViewIssueAction extends ItrackerBaseAction {
 		try {
 			issueId = new Integer((request.getParameter("id") == null ? "-1"
 					: (request.getParameter("id"))));
-			issue = ih.getIssue(issueId);
+			issue = issueService.getIssue(issueId);
 		} catch (Exception ex) {
 			issue = null;
 		}
@@ -161,8 +161,8 @@ public class ViewIssueAction extends ItrackerBaseAction {
 						.getOptions()));
 		request.setAttribute("histories", histories);
 		request.setAttribute("project", project);
-		request.setAttribute("hasIssueNotification", !ih.hasIssueNotification(
-				issue.getId(), currUserId));
+		request.setAttribute("hasIssueNotification", !notificationService.hasIssueNotification(
+				issue, currUserId));
 		request.setAttribute("canEditIssue", IssueUtilities.canEditIssue(issue,
 				currUserId, permissions));
 		request.setAttribute("canCreateIssue",

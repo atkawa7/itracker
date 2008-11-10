@@ -42,6 +42,7 @@ import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.model.Notification.Role;
 import org.itracker.services.IssueService;
+import org.itracker.services.NotificationService;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
@@ -59,6 +60,7 @@ public class WatchIssueAction extends ItrackerBaseAction {
 
         try {
             IssueService issueService = getITrackerServices().getIssueService();
+            NotificationService notificationService = getITrackerServices().getNotificationService();
             Integer issueId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
             Issue issue = issueService.getIssue(issueId);
             Project project = issueService.getIssueProject(issueId);
@@ -94,9 +96,9 @@ public class WatchIssueAction extends ItrackerBaseAction {
             }
             if ( UserHasIssueNotification ) {
                 issue.setNotifications(notifications);
-                issueService.removeIssueNotification(notification.getId());
+                notificationService.removeIssueNotification(notification.getId());
             } else {
-                issueService.addIssueNotification(notification);
+            	notificationService.addIssueNotification(notification);
             }
             String caller = request.getParameter("caller");
             if("editissue".equals(caller)) {

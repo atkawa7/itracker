@@ -281,14 +281,14 @@ public class IssueForm extends ITrackerForm {
 										.getSession()));
 
 				EditIssueFormAction.setupJspEnv(mapping, this, request, issue,
-						getITrackerServices().getIssueService(),
-						getITrackerServices().getUserService(), RequestHelper
-								.getUserPermissions(request.getSession()),
+						getITrackerServices().getIssueService(), 
+						getITrackerServices().getNotificationService(),
+						getITrackerServices().getUserService(), 
+						RequestHelper.getUserPermissions(request.getSession()),
 						EditIssueFormAction.getListOptions(request, issue,
-								ownersList, RequestHelper
-										.getUserPermissions(request
-												.getSession()), issue
-										.getProject(), currUser), errors);
+								ownersList, RequestHelper.getUserPermissions(request
+												.getSession()), 
+												issue.getProject(), currUser), errors);
 
 				if (errors.isEmpty() && issue.getProject() == null) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
