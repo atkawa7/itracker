@@ -1,16 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="org.itracker.web.util.*" %>
-<%@ page import="java.util.*" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.services.util.*" %>
-<%@ page import="org.itracker.services.IssueService" %>
-<%@ page import="org.itracker.core.resources.*" %>
-<%@ page import="org.itracker.web.util.RequestHelper" %>
-<%@ page import="org.apache.struts.taglib.TagUtils" %>
-<%--@ page import="org.apache.log4j.Logger"--%>
+
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
@@ -18,40 +8,6 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
-<%
-//	Logger log = Logger.getLogger(this.getClass());
-//	log.debug("_jspService: got request: ih: " +request.getAttribute("ih") + ", currUser: " + request.getSession().getAttribute("currUser")
-//			+ ", issue: " + request.getAttribute(Constants.ISSUE_KEY));
-// TODO here we stuck, e.g. when validation had an error
-    IssueService ih = (IssueService) request.getAttribute("ih");
-    User um = (User) request.getSession().getAttribute("currUser");
-
-    Issue currentIssue = (Issue) request.getAttribute(Constants.ISSUE_KEY);
-    if (null == currentIssue) {
-    	
-    	%>
-    	
-    	<logic:forward name="error"  />
-    	<%
-    }
-
-    Map<Integer, List<NameValuePair>> listOptions =
-            RequestHelper.getListOptions(session);
-    
-//    log.debug("_jspService: listOptions: " + listOptions);
-    final Map<Integer, Set<PermissionType>> permissions =
-            RequestHelper.getUserPermissions(session);
-
-//    log.debug("_jspService: permissions: " + permissions);
-    Project project = currentIssue.getProject();
-	
-    
-    
-    Integer currUserId = um.getId();
-    boolean hasFullEdit = UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT_FULL);
-    String formName = "issueForm";
-%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <bean:define id="pageTitleKey" value="itracker.web.editissue.title"/>
@@ -117,7 +73,8 @@
                                           altKey="itracker.web.image.issuelist.issue.alt"
                                           textActionKey="itracker.web.image.issuelist.texttag"/>
 
-                    <% if (!ih.hasIssueNotification(currentIssue.getId(), currUserId)) { %>
+                   
+                    <c:if test="${hasIssueNotification}">
 
                     <it:formatImageAction forward="watchissue"
                                           module="/module-projects"
@@ -129,10 +86,10 @@
                                           arg0="${issue.id}"
                                           textActionKey="itracker.web.image.watch.texttag"/>
 
-                    <% } %>
+                    </c:if>
 
-                    <% if (UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT)) { %>
-
+                   
+					<c:if test="${hasEditIssuePermission}">
                     <it:formatImageAction action="moveissueform"
                                           module="/module-projects"
                                           paramName="id"
@@ -144,13 +101,13 @@
                                           textActionKey="itracker.web.image.move.texttag"/>
 
                         <%-- TODO re-include this once relate issue correctly works
-                          <it:formatImageAction forward="relateissue" paramName="id" paramValue="<%= issue.getId() %>" caller="editissue" src="/themes/defaulttheme/images/link.gif" altKey="itracker.web.image.link.issue.alt" textActionKey="itracker.web.image.link.texttag"/>
+                          <it:formatImageAction forward="relateissue" paramName="id" paramValue="${issue.id}" caller="editissue" src="/themes/defaulttheme/images/link.gif" altKey="itracker.web.image.link.issue.alt" textActionKey="itracker.web.image.link.texttag"/>
                         --%>
+					</c:if>
+                   
 
-                    <% } %>
-
-                    <% if (project.getStatus() == Status.ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_CREATE)) { %>
-
+                    
+					<c:if test="${canCreateIssue}">
                     <it:formatImageAction forward="createissue"
                                           module="/module-projects"
                                           paramName="projectId"
@@ -160,7 +117,8 @@
                                           arg0="${issue.project.name}"
                                           textActionKey="itracker.web.image.create.texttag"/>
 
-                    <% } %>
+
+                    </c:if>
 
                 </td>
             </tr>
@@ -171,28 +129,24 @@
     <td class="editColumnTitle"><it:message key="itracker.web.attr.status"/>:</td>
     <td class="editColumnText">
 
-        <%
-            List<NameValuePair> statuses = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_STATUS);
-            if (statuses.size() > 0) {
-        %>
-
-        <html:select property="status" styleClass="editColumnText">
-
-            <% for (int i = 0; i < statuses.size(); i++) { %>
-
-            <html:option styleClass="editColumnText"
-                         value="<%= statuses.get(i).getValue() %>"><%= statuses.get(i).getName() %>
-            </html:option>
-
-            <% } %>
-
-        </html:select>
-
-        <% } else { %>
+       
+		<c:choose>
+		<c:when test="${not empty statuses}">
+    	    <html:select property="status" styleClass="editColumnText">
+        	   <c:forEach var="status" items="${statuses}">
+	            <html:option styleClass="editColumnText"
+                         value="${status.value}">${status.name}
+    	        </html:option>
+	           </c:forEach>
+	    	</html:select>
+        </c:when>
+        <c:otherwise>
 		<html:hidden property="status"/>
-        <%= IssueUtilities.getStatusName(currentIssue.getStatus(), (java.util.Locale) pageContext.getAttribute("currLocale")) %>
+        	${statusName}
 
-        <% } %>
+        </c:otherwise>
+        </c:choose>
+        
 
     </td>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.creator"/>:</td>
@@ -204,37 +158,31 @@
 <tr>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.resolution"/>:</td>
     <td class="editColumnText">
-        <% if (um.isSuperUser() || (hasFullEdit && (currentIssue.getStatus() >= IssueUtilities.STATUS_ASSIGNED && currentIssue.getStatus() < IssueUtilities.STATUS_CLOSED))) { %>
+       
+        <c:choose>
+        <c:when test="${currUser.superUser || (hasFullEdit && (issue.status >= 300) && (issue.status < 500))}">
 
-        <% if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS, project.getOptions())) { %>
-
+        
+		<c:choose>
+		<c:when test="${hasPredefinedResolutionsOption}">
         <html:select property="resolution" styleClass="editColumnText">
             <option value=""></option>
-
-            <%
-                List<NameValuePair> possResolutions = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_RESOLUTION);
-                for (int i = 0; i < possResolutions.size(); i++) {
-            %>
-
-            <html:option styleClass="editColumnText"
-                         value="<%= possResolutions.get(i).getValue() %>"><%= possResolutions.get(i).getName() %>
-            </html:option>
-
-            <% } %>
-
-        </html:select>
-
-        <% } else { %>
-
-        <html:text size="20" property="resolution" styleClass="editColumnText"/>
-
-        <% } %>
-
-        <% } else { %>
-
-        <%= null == currentIssue.getResolution() ? "": currentIssue.getResolution() %>
-
-        <% } %>
+			<c:forEach var="resolution" items="${resolutions}">
+           		 <html:option styleClass="editColumnText"
+                         value="${resolution.value}">${resolution.name}
+           		 </html:option>
+			</c:forEach>
+	    </html:select>
+		</c:when>
+		<c:otherwise>
+             <html:text size="20" property="resolution" styleClass="editColumnText"/>
+        </c:otherwise>
+		</c:choose>
+        </c:when>
+        <c:otherwise>
+			${issue.resolution == null ? '' : issue.resolution }
+        </c:otherwise>
+        </c:choose>
 
     </td>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.lastmodified"/>:</td>
@@ -246,58 +194,51 @@
     <td class="editColumnTitle"><it:message key="itracker.web.attr.severity"/>:</td>
     <td class="editColumnText">
 
-        <% if (hasFullEdit) { %>
-
+        
+        <c:choose>
+		<c:when test="${hasFullEdit}">
         <html:select property="severity" styleClass="editColumnText">
             <c:forEach items="${fieldSeverity}" var="severity" varStatus="status">
                 <html:option value="${severity.value}"styleClass="editColumnText">${severity.name}</html:option>
             </c:forEach>
         </html:select>
-
-        <% } else { %>
-
-        <%= IssueUtilities.getSeverityName(currentIssue.getSeverity(), (java.util.Locale) pageContext.getAttribute("currLocale")) %>
-
-        <% } %>
+		</c:when>
+		<c:otherwise>
+			${severityName}
+        </c:otherwise>
+        </c:choose>
 
     </td>
     <td class="editColumnTitle"><it:message key="itracker.web.attr.owner"/>:</td>
 
-    <% if (currentIssue.getStatus() >= IssueUtilities.STATUS_RESOLVED) { %>
-
-    <td class="editColumnText">
-        <%= (currentIssue.getOwner() == null ? ITrackerResources.getString("itracker.web.generic.unassigned", (java.util.Locale) pageContext.getAttribute("currLocale")) : currentIssue.getOwner().getFirstName() + " " + currentIssue.getOwner().getLastName()) %>
-    </td>
-
-    <% } else { %>
-
-    <input type="hidden"
+    
+    <c:choose>
+     <c:when test="${isStatusResolved}">
+	  	<td class="editColumnText">
+       		${issueOwnerName}
+    	</td>
+	</c:when>
+	<c:otherwise>
+	    <input type="hidden"
            name="currentOwner"
-           value="<%= (currentIssue.getOwner() == null ? new Integer(-1) : currentIssue.getOwner().getId()) %>">
-
-    <%
-        List<NameValuePair> possibleOwners = (List<NameValuePair>) request.getAttribute("possibleOwners");
-        if (possibleOwners.size() > 0) {
-    %>
-
-    <td>
-        <html:select property="ownerId" styleClass="editColumnText">
-            <c:forEach items="${possibleOwners}" var="possibleOwner" varStatus="status">
-                <html:option value="${possibleOwner.value}">${possibleOwner.name}</html:option>
-            </c:forEach>
-        </html:select>
-    </td>
-
-    <% } else { %>
-
-    <td class="editColumnText"><%= (currentIssue.getOwner() == null ? ITrackerResources.getString("itracker.web.generic.unassigned", (java.util.Locale) pageContext.getAttribute("currLocale")) : currentIssue.getOwner().getFirstName() + " " + currentIssue.getOwner().getLastName()) %>
-
-    </td>
-
-    <% } %>
-
-    <% } %>
-
+           value="${issue.owner == null ? -1 : issue.owner.id}">
+	    <c:choose>
+			<c:when test="${not empty possibleOwners}">
+    			<td>
+        			<html:select property="ownerId" styleClass="editColumnText">
+            			<c:forEach items="${possibleOwners}" var="possibleOwner" varStatus="status">
+                			<html:option value="${possibleOwner.value}">${possibleOwner.name}</html:option>
+        				</c:forEach>
+        			</html:select>
+    			</td>
+			</c:when>
+			<c:otherwise>
+    			 <td class="editColumnText">${issueOwnerName}
+	 			</td>
+    		</c:otherwise>
+    	</c:choose>
+	</c:otherwise>
+	</c:choose>
 </tr>
 <tr>
     <td colspan="4">
@@ -320,116 +261,120 @@
 		                       textActionKey="itracker.web.image.issuelist.texttag"/>&nbsp;${issue.project.name}
 		</td>
 
-    <%
-        List<NameValuePair> components = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_COMPONENTS);
-        List<NameValuePair> versions = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_VERSIONS);
-        List<NameValuePair> targetVersion = WorkflowUtilities.getListOptions(listOptions, IssueUtilities.FIELD_TARGET_VERSION);
-    %>
-
-    <% if (targetVersion.size() > 0) { %>
-
-    <td valign="top" class="editColumnTitle" style="white-space: nowrap;" nowrap>
+    <c:if test="${not empty targetVersions}">
+     <td valign="top" class="editColumnTitle" style="white-space: nowrap;" nowrap>
         <it:message key="itracker.web.attr.target"/>:&nbsp;</td>
-    <td valign="top" class="editColumnText">
+ 	   <td valign="top" class="editColumnText">
 
-        <% if (hasFullEdit) { %>
-
+        
+		<c:choose>
+			<c:when test="${hasFullEdit}">
         <html:select property="targetVersion" styleClass="editColumnText">
             <html:option value="-1">&nbsp;</html:option>
+			<c:forEach var="targetVersion" items="${targetVersions}">
+	            <html:option value="${targetVersion.value}"
+                         styleClass="editColumnText">${targetVersion.name}
+    	        </html:option>
 
-            <% for (int i = 0; i < targetVersion.size(); i++) { %>
-
-            <html:option value="<%= targetVersion.get(i).getValue() %>"
-                         styleClass="editColumnText"><%= targetVersion.get(i).getName() %>
-            </html:option>
-
-            <% } %>
+            </c:forEach>
 
         </html:select>
-
-        <% } else { %>
+			</c:when>
+			<c:otherwise>
+        
 
         <c:if test="${not empty issue.targetVersion}">
             ${issue.targetVersion.number}
         </c:if>
 
-        <% } %>
+        
+        </c:otherwise>
+        </c:choose>
 
     </td>
 
-    <% } %>
+    
+    </c:if>
 
 </tr>
 <tr>
-    <% if (components.size() > 0) { %>
+    <c:choose>
+    <c:when test="${not empty components }">
     <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.components"/>:</td>
     <td valign="top" class="editColumnText">
-        <% if (hasFullEdit) { %>
+    	<c:choose>
+    	<c:when test="${hasFullEdit}">    	
+        
         <html:select property="components" size="5" multiple="true" styleClass="editColumnText">
-            <% for (int i = 0; i < components.size(); i++) { %>
-            <html:option value="<%= components.get(i).getValue() %>"
-                         styleClass="editColumnText"><%= components.get(i).getName() %>
+            
+            <c:forEach var="component" items="${components }">
+            <html:option value="${component.value}"
+                         styleClass="editColumnText">${component.name}
             </html:option>
-            <% } %>
+            
+            </c:forEach>
         </html:select>
-        <% } else { %>
-        <%
-            List<Component> issueComponents = currentIssue.getComponents();
-            Collections.sort(issueComponents);
-            for (int i = 0; i < issueComponents.size(); i++) {
-        %>
-        <%= issueComponents.get(i).getName() %><br/>
-        <% } %>
-        <% } %>
+        </c:when>
+        <c:otherwise>
+	        <c:forEach var="issueComponent" items="${issueComponents}">
+    		    ${issueComponent.name}
+        		<br/>
+        	</c:forEach>
+        </c:otherwise>
+        </c:choose>
     </td>
-    <% } else { %>
+    </c:when>
+    <c:otherwise>
     <td></td>
     <td></td>
-    <% } %>
-    <% if (versions.size() > 0) { %>
+    </c:otherwise>
+    </c:choose>
+    
+    <c:choose>
+    <c:when test="${not empty versions}">
     <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.versions"/>:</td>
     <td valign="top" class="editColumnText">
-        <% if (hasFullEdit) { %>
+        
+        <c:choose>
+        <c:when test="${hasFullEdit}">
         <html:select property="versions" size="5" multiple="true" styleClass="editColumnText">
-            <% for (int i = 0; i < versions.size(); i++) { %>
-            <html:option value="<%= versions.get(i).getValue() %>"
-                         styleClass="editColumnText"><%= versions.get(i).getName() %>
+            
+            <c:forEach var="version" items="${versions}">
+            <html:option value="${version.value}"
+                         styleClass="editColumnText">${version.name}
             </html:option>
-            <% } %>
+            
+            </c:forEach>
         </html:select>
-        <% } else { %>
-        <%
-            List<Version> issueVersions = currentIssue.getVersions();
-            Collections.sort(issueVersions, new Version.VersionComparator());
-            for (int i = 0; i < issueVersions.size(); i++) {
-        %>
-        <%= issueVersions.get(i).getNumber() %><br/>
-        <% } %>
-        <% } %>
+        </c:when>
+        <c:otherwise>
+        
+        
+        <c:forEach var="issueVersion" items="${issueVersions}">
+        	${issueVersion.number}
+        <br/>
+        </c:forEach>
+        
+       
+        </c:otherwise>
+        </c:choose>
     </td>
-    <% } else { %>
+    </c:when>
+    <c:otherwise>
+    
     <td></td>
     <td></td>
-    <% } %>
+   
+    </c:otherwise>
+    </c:choose>
 </tr>
 <tr>
     <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td>
 </tr>
 
-<%
-    List<CustomField> projectFields = project.getCustomFields();
 
-    if (projectFields != null && projectFields.size() > 0) {
-        Collections.sort(projectFields, CustomField.ID_COMPARATOR);
-        List<IssueField> issueFields = currentIssue.getFields();
-        HashMap<String, String> fieldValues = new HashMap<String, String>();
-        for (int j = 0; j < issueFields.size(); j++) {
-            if (issueFields.get(j).getCustomField() != null && issueFields.get(j).getCustomField().getId() > 0) {
-                Locale currLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
-                fieldValues.put(issueFields.get(j).getCustomField().getId().toString(), issueFields.get(j).getValue(currLocale));
-            }
-        }
-%>
+
+<c:if test="${not empty issue.project.customFields}">
 <tr>
     <td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.customfields"/>:</td>
 </tr>
@@ -440,23 +385,22 @@
     <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3" width="1"/></td>
 </tr>
 <tr>
-    <%
-        for (int i = 0; i < projectFields.size(); i++) {
-            if (i % 2 == 0) {
-    %>
-</tr>
-<tr>
+    
+    <c:forEach var="issueField" items="${issueFieldMap}" varStatus="i">
+    <c:if test="${i.count % 2 == 0}">
+		</tr>
+		<tr>
+	</c:if>
 
-    <% }
-        String fieldValue = (fieldValues.get(String.valueOf(projectFields.get(i).getId())) == null ? "" : fieldValues.get(String.valueOf(projectFields.get(i).getId())));
-    %>
+    
    <%--  <td class="editColumnTitle">
         <%=CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId()) + ": "%>
     </td>
     <td colspan="2" align="left" class="editColumnText">--%>
-        <% if (hasFullEdit) {
-%>
-            <it:formatCustomField field="<%= projectFields.get(i) %>" formName="<%= formName %>" />
+        
+		<c:choose>
+		<c:when test="${hasFullEdit }">
+            <it:formatCustomField field="${issueField.key}" formName="issueForm" />
             
             <%--
             String customFieldkey = "customFields(" + projectFields.get(i).getId() + ")";
@@ -500,19 +444,23 @@
         <html:text property="<%=customFieldkey%>" styleClass="editColumnText"/>
         <%= img %>
         <% }
-        --%><%
-        } else {
-            if (fieldValue != null) { %>
-        	<%=(projectFields.get(i).getFieldType() == CustomField.Type.LIST ? projectFields.get(i).getOptionNameByValue(fieldValue) : fieldValue)%>
-        	<% } 
-        } %>
+        --%>
+        </c:when>
+        <c:otherwise>
+        
+            ${issueField.value}
+        
+        </c:otherwise>
+        </c:choose>
    <%--  </td>--%>
-   <% } %>
+   
+   </c:forEach>
 </tr>
 <tr>
     <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td>
 </tr>
-<% } %>
+
+</c:if>
 <tr>
     <td>
         <html:submit styleClass="button" altKey="itracker.web.button.update.alt"
@@ -733,16 +681,18 @@
             </tr>
             <tr style="text-align: left" class="listHeading">
 
-                <% if (um.isSuperUser()) { %>
-
+                
+				<c:choose>
+				<c:when test="${currUser.superUser}">
                 <td width="30">
                     <html:img module="/"
                               page="/themes/defaulttheme/images/blank.gif"
                               width="30"
                               height="1"/>
                 </td>
-
-                <% } else { %>
+				</c:when>
+				<c:otherwise>
+                
 
                 <td width="15">
                     <html:img module="/"
@@ -751,7 +701,9 @@
                               height="1"/>
                 </td>
 
-                <% } %>
+                
+                </c:otherwise>
+				</c:choose>	
 
                 <td width="3">
                     <html:img module="/"
@@ -777,7 +729,8 @@
                 <tr class="${rowShading}">
                     <td align="right" valign="bottom">
 
-                        <% if (um.isSuperUser()) { %>
+                       
+                        <c:if test="${currUser.superUser}">
 
                         <it:formatImageAction action="removehistory"
                                               paramName="historyId"
@@ -787,7 +740,8 @@
                                               altKey="itracker.web.image.delete.history.alt"
                                               textActionKey="itracker.web.image.delete.texttag"/>
 
-                        <% } %>
+                       
+                        </c:if>
 
                         ${status.count})
 
@@ -823,7 +777,7 @@
                                 <td style="text-align: left; white-space: normal;">
                                 <div style="white-space: normal; overflow: auto; width: 900px">
                                     <it:formatHistoryEntry>${historyEntry.description}</it:formatHistoryEntry>
-
+								</div>
                                 </td>
                             </tr>
                         </table>
@@ -843,16 +797,10 @@
             <tr>
                 <td valign="top" align="right" class="historyName"></td>
                 <td></td>
-                <%
-                    String wrap = "soft";
-                    if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML, project.getOptions()) ||
-                            ProjectUtilities.hasOption(ProjectUtilities.OPTION_LITERAL_HISTORY_HTML, project.getOptions())) {
-                        wrap = "hard";
-                    }
-                %>
+               
                 <td colspan="3" class="editColumnText">
                     <textarea name="history"
-                              wrap="<%= wrap %>"
+                              wrap="${wrap}"
                               cols="110"
                               rows="6"
                               class="editColumnText"><bean:write name="issueForm" property="history"/></textarea>

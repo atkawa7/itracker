@@ -1,14 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="org.itracker.services.util.UserUtilities" %>
-<%@ page import="org.itracker.services.util.ReportUtilities" %>
-<%@ page import="org.itracker.web.scheduler.*" %>
-<%@ page import="org.itracker.model.PermissionType" %>
-<%@ page import="org.itracker.services.*" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="org.itracker.web.util.RequestHelper" %>
-
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
@@ -17,13 +8,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<% // TODO: move this redirect logic to the Action. 
-	final Map<Integer, Set<PermissionType>> permissions = RequestHelper.getUserPermissions(session);
-	ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
-
- if(! UserUtilities.hasPermission(permissions, UserUtilities.PERMISSION_USER_ADMIN)) { %>
-      <logic:forward name="listprojectsadmin"/>
-<% } else { %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <bean:define id="pageTitleKey" value="itracker.web.admin.index.title"/>
 <bean:define id="pageTitleArg" value=""/>
@@ -60,7 +44,7 @@
         </tr>
         <tr class="listRowUnshaded">
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totalprojects"/>: </td>
-          <td class="editColumnText"><fmt:formatNumber value="<%= projectService.getAllProjects().size() %>"/></td>
+          <td class="editColumnText"><fmt:formatNumber value="${sizeps}"/></td>
           <td></td>
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totalissues"/>: </td>
           <td class="editColumnText"><fmt:formatNumber value="${ih.numberIssues}"/></td>
@@ -105,9 +89,9 @@
         <tr class="listHeading">
           <td colspan="3" ><it:message key="itracker.web.admin.index.configadmin"/></td>
           <td colspan="2" align="right">
-             <% String exportReport = "type=all&reportOutput=XML&reportId=" + ReportUtilities.REPORT_EXPORT_XML; %> 
+             
              <it:link action="importdata" titleKey="itracker.web.admin.index.config.import.alt" styleClass="editColumnText">[<it:message key="itracker.web.attr.import"/>]</it:link>
-             <it:link action="displayreport" target="_blank" queryString="<%= exportReport %>" titleKey="itracker.web.admin.index.config.export.alt" styleClass="editColumnText">[<it:message key="itracker.web.attr.export"/>]</it:link>
+             <it:link action="displayreport" target="_blank" queryString="${exportReport}" titleKey="itracker.web.admin.index.config.export.alt" styleClass="editColumnText">[<it:message key="itracker.web.attr.export"/>]</it:link>
              <it:link forward="listconfiguration" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link>
           </td>
         </tr>
@@ -202,5 +186,5 @@
       </table>
       <br>
       <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body>
-<%@page import="org.itracker.web.util.ServletContextUtils"%></html>
-<% } %>
+</html>
+
