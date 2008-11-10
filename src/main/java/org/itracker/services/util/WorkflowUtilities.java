@@ -77,6 +77,12 @@ public class WorkflowUtilities  {
         return ITrackerResources.getString(ITrackerResources.KEY_BASE_WORKFLOW_EVENT + value, locale);
     }
     
+    /**
+     * Returns an array of pairs (eventName, eventId), where eventName
+     * is an event title, according to selected locale.
+     * @param locale is a selected locale.
+     * @return an array of pairs (eventName, eventId), which is never null.
+     */
     public static NameValuePair[] getEvents(Locale locale) {
         NameValuePair[] eventNames = new NameValuePair[6];
         eventNames[0] = new NameValuePair(getEventName(EVENT_FIELD_ONPOPULATE, locale), Integer.toString(EVENT_FIELD_ONPOPULATE));
@@ -88,10 +94,26 @@ public class WorkflowUtilities  {
         return eventNames;
     }
     
+    /**
+     * Select a list of NameValuePair objects from provided map object according
+     * to fieldId selector. Typesafe version of #getListOptions(Map, Integer)
+     * @param listOptions is a map, with stored NameValuePair objects lists
+     * associated with specific integer id.
+     * @param fieldId is a selector from map.
+     * @return a list of objects, which may be empty, but never null.
+     */
     public static List<NameValuePair> getListOptions(Map<Integer, List<NameValuePair>> listOptions, int fieldId) {
         return getListOptions(listOptions, Integer.valueOf(fieldId));
     }
     
+    /**
+     * Select a list of NameValuePair objects from provided map object according
+     * to fieldId selector.
+     * @param listOptions is a map, with stored NameValuePair objects lists
+     * associated with specific integer id.
+     * @param fieldId is a selector from map.
+     * @return a list of objects, which may be empty, but never null.
+     */
     @SuppressWarnings("unchecked")
     public static List<NameValuePair> getListOptions(Map listOptions, Integer fieldId) {
         List<NameValuePair> options = new ArrayList<NameValuePair>();
@@ -106,6 +128,18 @@ public class WorkflowUtilities  {
         return options;
     }
     
+    /**
+     * The most general way to run scripts. All matching of event and fields
+     * are embedded within. As a result, currentValues parameter will
+     * contain updated values and form will contain new default values
+     * if appropriate.
+     * @param projectScriptModels is a list of scripts.
+     * @param event is an event type.
+     * @param currentValues is a map of current values to fields.
+     * @param currentErrors is a container for errors.
+     * @param form contains default values of fields.
+     * @throws org.itracker.services.exceptions.WorkflowException
+     */
     public static void processFieldScripts(List<ProjectScript> projectScriptModels, int event, Map<Integer, List<NameValuePair>> currentValues, ActionMessages currentErrors, ValidatorForm form) throws WorkflowException {
         if(projectScriptModels == null || projectScriptModels.size() == 0) {
             return;
@@ -147,6 +181,18 @@ public class WorkflowUtilities  {
         }
     }
     
+    /**
+     * Run appropriate script, selecting it from provided list by matching
+     * event and field.
+     * @param projectScripts is a list of provided scripts.
+     * @param event is an event type.
+     * @param fieldId is a field, associated with event.
+     * @param currentValue is a set of current values.
+     * @param currentErrors is a container for errors.
+     * @param form is a form, holder of default values.
+     * @return new set of values.
+     * @throws org.itracker.services.exceptions.WorkflowException
+     */
     public static List<NameValuePair> processFieldScripts(List<ProjectScript> projectScripts, int event, Integer fieldId, List<NameValuePair> currentValue, ActionErrors currentErrors, ValidatorForm form) throws WorkflowException {
         if(projectScripts == null || projectScripts.size() == 0 || fieldId == null) {
             return null;
@@ -180,6 +226,20 @@ public class WorkflowUtilities  {
         return currentValue;
     }
     
+    /**
+     * Run provided script against form instance, taking into account
+     * incoming event type, field raised an event and current values.
+     * As a result, a set of new current values is returned and if
+     * appropriate, default values are changed in form.
+     * @param projectScript is a script to run.
+     * @param event is an event type.
+     * @param fieldId is a field id associated with event.
+     * @param currentValue is a set of current values.
+     * @param currentErrors is a container for occured errors.
+     * @param form is a form instance, holding values.
+     * @return new current values.
+     * @throws org.itracker.services.exceptions.WorkflowException
+     */
     @SuppressWarnings("unchecked")
     public static List<NameValuePair> processFieldScript(ProjectScript projectScript, int event, Integer fieldId, List<NameValuePair> currentValue, ActionMessages currentErrors, ValidatorForm form) throws WorkflowException {
         if(projectScript == null) {
