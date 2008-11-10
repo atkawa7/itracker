@@ -137,17 +137,6 @@ public class IssueServiceImpl implements IssueService {
 		this.notificationService = notificationService;
 	}
 
-	public void setNotificationService(NotificationService notificationService) {
-		if (null == notificationService) {
-			throw new IllegalArgumentException(
-					"notification service must not be null");
-		}
-		if (null != this.notificationService) {
-			throw new IllegalStateException(
-					"notification service has already been set");
-		}
-		this.notificationService = notificationService;
-	}
 
 	public Issue getIssue(Integer issueId) {
 		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
@@ -373,15 +362,12 @@ public class IssueServiceImpl implements IssueService {
 
 		IssueActivity activity = new IssueActivity(issue, creator,
 				IssueActivityType.ISSUE_CREATED);
-		// activity.setActivityType(org.itracker.model.IssueActivity.Type.ISSUE_CREATED);
 		activity.setDescription(ITrackerResources
 				.getString("itracker.activity.system.createdfor")
 				+ " " + creator.getFirstName() + " " + creator.getLastName());
 
 		activity.setIssue(issue);
-		// activity.setCreateDate(new Date());
-		// activity.setLastModifiedDate(new Date());
-
+		
 		if (!(createdById == null || createdById.equals(userId))) {
 
 			User createdBy = getUserDAO().findByPrimaryKey(createdById);
@@ -395,7 +381,7 @@ public class IssueServiceImpl implements IssueService {
 
 			watchModel.setRole(Notification.Role.CONTRIBUTER);
 
-			addIssueNotification(watchModel);
+			notificationService.addIssueNotification(watchModel);
 
 		}
 		
@@ -410,10 +396,6 @@ public class IssueServiceImpl implements IssueService {
 		issue.setCreator(creator);
 
 		// save
-		// TODO: The filter should automatically take care of the
-		// following two timestamps, removed them
-		// issue.setCreateDate(new Timestamp(new Date().getTime()));
-		// issue.setLastModifiedDate(issue.getCreateDate());
 		getIssueDAO().save(issue);
 
 		return issue;
@@ -433,14 +415,6 @@ public class IssueServiceImpl implements IssueService {
 		
 		String existingTargetVersion = null;
 
-
-//		List<Component> newComponents = new ArrayList<Component>(issueDirty.getComponents());
-//		List<Version> newVersions = new ArrayList<Version>(issueDirty.getVersions());
-//		List<IssueField> newFields = new ArrayList<IssueField>(issueDirty.getFields());
-//
-//		issueDirty.setComponents(newComponents);
-//		issueDirty.setVersions(newVersions);
-		
 		// detach the modified Issue form the Hibernate Session
 		getIssueDAO().detach(issueDirty);
 		// Retrieve the Issue from Hibernate Session and refresh it from
@@ -514,11 +488,10 @@ public class IssueServiceImpl implements IssueService {
 			IssueActivity activity = new IssueActivity();
 			activity.setActivityType(IssueActivityType.SEVERITY_CHANGE);
 			// FIXME why does it state Critical to Critical when it should Major to Critical!?
-			activity.setDescription(/*IssueUtilities
-					.getSeverityName(persistedIssue.getSeverity())
+			activity.setDescription(
+					IssueUtilities.getSeverityName(persistedIssue.getSeverity())
 					+ " "
-					+ */
-					ITrackerResources.getString("itracker.web.generic.to")
+					+ ITrackerResources.getString("itracker.web.generic.to")
 					+ " "
 					+ IssueUtilities.getSeverityName(issueDirty.getSeverity()));
 
@@ -535,8 +508,6 @@ public class IssueServiceImpl implements IssueService {
 					.getNumber();
 			Version version = this.getVersionDAO().findByPrimaryKey(
 					issueDirty.getTargetVersion().getId());
-
-			// persistedIssue.setTargetVersion(version);
 
 			IssueActivity activity = new IssueActivity();
 			activity.setActivityType(IssueActivityType.TARGETVERSION_CHANGE);
@@ -568,26 +539,6 @@ public class IssueServiceImpl implements IssueService {
 		}
 		
 		persistedIssue = getIssueDAO().merge(issueDirty);
-		
-		// do the issue-fields (custom fields of project)
-//		if (newFields != persistedIssue.getFields()) {
-//			if (logger.isDebugEnabled()) {
-//				logger.debug("updateIssue: fields differ: " + newFields + "/" + persistedIssue.getFields());
-//			}
-//			if (null == persistedIssue.getFields()) {
-//				persistedIssue.setFields(new ArrayList<IssueField>());
-//			}
-//			issueDirty.setFields(persistedIssue.getFields());
-//			setIssueFields(persistedIssue, newFields, false);
-//		}
-		
-
-		// now the re-attached issue can be populated with components, versions, custom fields
-		// process components
-//		setIssueComponents(persistedIssue, newComponents, false);
-		
-		// process versions
-//		setIssueVersions(persistedIssue, newVersions, false);
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug("updateIssue: merged issue for saving: " + persistedIssue);
@@ -642,17 +593,6 @@ public class IssueServiceImpl implements IssueService {
 		activity.setUser(user);
 		activity.setIssue(issue);
 		issue.setProject(project);
-		
-		
-		// The versions and components are per project so we need to delete
-		// these
-
-// TODO: ranks, removed following lines due to failing issue-save. is it really necessary? how can it be done?
-//		setIssueComponents(issue.getId(), new HashSet<Integer>(), userId);
-//
-//		setIssueVersions(issue.getId(), new HashSet<Integer>(), userId);
-//
-//		setIssueFields(issue.getId(), new ArrayList<IssueField>());
 		
 		issue.getActivities().add(activity);
 		
@@ -1038,7 +978,7 @@ public class IssueServiceImpl implements IssueService {
 					.setActivityType(org.itracker.model.IssueActivityType.RELATION_REMOVED);
 			activity.setDescription(ITrackerResources.getString(
 					"itracker.activity.relation.removed", issueId.toString()));
-			// need to fix the commented code and save
+			// FIXME need to fix the commented code and save
 			// activity.setIssue(relatedIssueId);
 			// activity.setUser(userId);
 			// IssueRelationDAO.remove(matchingRelationId);
@@ -1184,7 +1124,7 @@ public class IssueServiceImpl implements IssueService {
 				Notification notification = new Notification(issue.getOwner(),
 						issue, Role.CONTRIBUTER);
 				// TODO check implementation
-				addIssueNotification(notification);
+				notificationService.addIssueNotification(notification);
 			}
 			IssueActivity activity = new IssueActivity(issue, unassignedByUser,
 					IssueActivityType.OWNER_CHANGE);
@@ -1226,39 +1166,6 @@ public class IssueServiceImpl implements IssueService {
 		
 		return unassignIssue(issue, assignedByUser, true);
 		
-//		if (issue.getOwner() != null) {
-//
-//			if (!notificationService.hasIssueNotification(issue, issue
-//					.getOwner().getId(), Role.CONTRIBUTER)) {
-//				// Notification notification = new Notification();
-//				Notification notification = new Notification(issue.getOwner(),
-//						issue, Role.CONTRIBUTER);
-//				// TODO check implementation
-//				addIssueNotification(notification);
-//			}
-//			IssueActivity activity = new IssueActivity(issue, assignedByUser,
-//					IssueActivityType.OWNER_CHANGE);
-//			activity
-//					.setDescription((issue.getOwner() == null ? "["
-//							+ ITrackerResources
-//									.getString("itracker.web.generic.unassigned")
-//							+ "]"
-//							: issue.getOwner().getLogin())
-//							+ " "
-//							+ ITrackerResources
-//									.getString("itracker.web.generic.to")
-//							+ " ["
-//							+ ITrackerResources
-//									.getString("itracker.web.generic.unassigned")
-//							+ "]");
-//
-//			issue.setOwner(null);
-//
-//			if (issue.getStatus() >= IssueUtilities.STATUS_ASSIGNED) {
-//				issue.setStatus(IssueUtilities.STATUS_UNASSIGNED);
-//			}
-//		}
-//		return true;
 	}
 
 	/**
@@ -1553,18 +1460,6 @@ public class IssueServiceImpl implements IssueService {
 
 	}
 
-	/**
-	 * @deprecated use getAllIssuesAttachmentCount() instead.
-	 */
-	public Long countSystemIssuesAttachments() {
-		logger.warn("countSystemIssuesAttachments: use of deprecated API");
-		if (logger.isDebugEnabled()) {
-			logger.debug("countSystemIssuesAttachments: stacktrace was",
-					new RuntimeException());
-		}
-
-		return getIssueAttachmentDAO().countAll();
-	}
 
 	public Long getAllIssueAttachmentCount() {
 		return getIssueAttachmentDAO().countAll().longValue();
@@ -1586,27 +1481,6 @@ public class IssueServiceImpl implements IssueService {
 		return attachments;
 	}
 
-	/**
-	 * Count total issues size and count from database
-	 * 
-	 * @deprecated use seperate issues size and count methods instead
-	 */
-	public long[] getAllIssueAttachmentsSizeAndCount() {
-		logger
-				.warn("getAllIssueAttachmentsSizeAndCount: use of deprecated API");
-		if (logger.isDebugEnabled()) {
-			logger.debug("getAllIssueAttachmentsSizeAndCount: stacktrace was",
-					new RuntimeException());
-		}
-
-		long[] sizeAndCount = new long[2];
-
-		sizeAndCount[0] = getAllIssueAttachmentSize();
-		sizeAndCount[1] = getAllIssueAttachmentCount();
-
-		return sizeAndCount;
-
-	}
 
 	public IssueAttachment getIssueAttachment(Integer attachmentId) {
 		IssueAttachment attachment = getIssueAttachmentDAO().findByPrimaryKey(
@@ -1654,7 +1528,6 @@ public class IssueServiceImpl implements IssueService {
 	 * the id of the issue to return the history entry for.
 	 * 
 	 * @return the latest IssueHistory, or null if no entries could be
-	 * 
 	 * found
 	 */
 	// FIXME: always returns null
@@ -1706,147 +1579,7 @@ public class IssueServiceImpl implements IssueService {
 
 	}
 
-	/**
-	 * 
-	 * Retrieves the primary issue notifications. Primary notifications are
-	 * 
-	 * defined as the issue owner (or creator if not assigned), and any project
-	 * 
-	 * owners. This should encompass the list of people that should be notified
-	 * 
-	 * so that action can be taken on an issue that needs immediate attention.
-	 * 
-	 * TODO move to {@link NotificationService}
-	 * 
-	 * @param issueId
-	 * 
-	 * the id of the issue to find notifications for
-	 * 
-	 * @returns an array of NotificationModels
-	 * @deprecated moved to {@link NotificationService}
-	 */
 
-	public List<Notification> getPrimaryIssueNotifications(Integer issueId) {
-		Issue issue = getIssue(issueId);
-		return notificationService.getIssueNotifications(issue, true, false);
-
-	}
-
-	/**
-	 * 
-	 * Retrieves all notifications for an issue where the notification's user is
-	 * 
-	 * also active.
-	 * 
-	 * TODO move to {@link NotificationService}
-	 * 
-	 * @param issueId
-	 * 
-	 * the id of the issue to find notifications for
-	 * @returns an array of NotificationModels
-	 */
-
-	public List<Notification> getIssueNotifications(Integer issueId) {
-		Issue issue = getIssue(issueId);
-		return notificationService.getIssueNotifications(issue, false, true);
-
-	}
-
-	/**
-	 * Retrieves an array of issue notifications. The notifications by default
-	 * is the creator and owner of the issue, all project admins for the issue's
-	 * project, and anyone else that has a notfication on file. TODO move to
-	 * {@link NotificationService}
-	 * 
-	 * @deprecated moved to {@link NotificationService}
-	 * 
-	 * @param issueId
-	 *            the id of the issue to find notifications for
-	 * @param primaryOnly
-	 *            only include the primary notifications
-	 * @param activeOnly
-	 *            only include the notification if the user is currently active
-	 *            (not locked or deleted)
-	 * @returns an array of NotificationModels
-	 * @see IssueServiceImpl#getPrimaryIssueNotifications
-	 */
-	public List<Notification> getIssueNotifications(Integer issueId,
-			boolean primaryOnly, boolean activeOnly) {
-
-		logger.warn("getIssueNotifications: use of deprecated API");
-		if (logger.isDebugEnabled()) {
-			logger.debug("getIssueNotifications: stacktrace was",
-					new RuntimeException());
-		}
-
-		return notificationService.getIssueNotifications(getIssue(issueId),
-				primaryOnly, activeOnly);
-
-	}
-
-	/**
-	 * TODO Move to {@link NotificationService}
-	 * 
-	 * @deprecated moved to {@link NotificationService}
-	 */
-	public boolean removeIssueNotification(Integer notificationId) {
-		logger.warn("removeIssueNotification: use of deprecated API");
-		if (logger.isDebugEnabled()) {
-			logger.debug("removeIssueNotification: stacktrace was",
-					new RuntimeException());
-		}
-
-		return notificationService.removeIssueNotification(notificationId);
-	}
-
-	/**
-	 * 
-	 * @deprecated moved to {@link NotificationService}
-	 */
-	public boolean addIssueNotification(Notification notification) {		
-		logger.warn("addIssueNotification: use of deprecated API");
-		if (logger.isDebugEnabled()) {
-			logger.debug("addIssueNotification: stacktrace was",
-					new RuntimeException());
-		}
-		return notificationService.addIssueNotification(notification);
-//		User user = thisnotification.getUser();
-//
-//		Issue issue = thisnotification.getIssue();
-//		if (thisnotification.getCreateDate() == null) {
-//			thisnotification.setCreateDate(new Date());
-//		}
-//		if (thisnotification.getLastModifiedDate() == null) {
-//			thisnotification.setLastModifiedDate(new Date());
-//		}
-//		List<Notification> notifications = new ArrayList<Notification>();
-//		notifications.add(thisnotification);
-//		issue.setNotifications(notifications);
-//		// TODO: check these 3 lines - do we need them?:
-//		Notification notification = new Notification();
-//		notification.setIssue(issue);
-//		notification.setUser(user);
-//
-//		getIssueDAO().saveOrUpdate(issue);
-//		return true;
-	}
-
-	/**
-	 * TODO move to notification service
-	 * 
-	 * @deprecated
-	 */
-	public boolean hasIssueNotification(Integer issueId, Integer userId) {
-		logger.warn("hasIssueNotification: use of deprecated API");
-		if (logger.isDebugEnabled()) {
-			logger.debug("hasIssueNotification: stacktrace was",
-					new RuntimeException());
-		}
-		Issue issue = getIssue(issueId);
-
-		return notificationService.hasIssueNotification(issue, userId);
-
-	}
 
 	public int getOpenIssueCountByProjectId(Integer projectId) {
 
@@ -1957,58 +1690,6 @@ public class IssueServiceImpl implements IssueService {
 			Map<Integer, Set<PermissionType>> userPermissions)
 			throws IssueSearchException {
 		return getIssueDAO().query(queryModel, user, userPermissions);
-	}
-
-
-
-	/**
-	 * @deprecated no more factory is used
-	 */
-	public static String getNotificationFactoryName() {
-		logger.warn("getNotificationFactoryName: use of deprecated API");
-		if (logger.isDebugEnabled()) {
-			logger.debug("getNotificationFactoryName: stacktrace was",
-					new RuntimeException());
-		}
-
-		return null;
-	}
-
-	/**
-	 * @deprecated no more factory is used
-	 * @param notificationFactoryName
-	 */
-	public static void setNotificationFactoryName(String notificationFactoryName) {
-		logger.warn("setNotificationFactoryName: use of deprecated API");
-		if (logger.isDebugEnabled()) {
-			logger.debug("setNotificationFactoryName: stacktrace was",
-					new RuntimeException());
-		}
-	}
-
-	/**
-	 * @deprecated no more queue for notifications
-	 * @return
-	 */
-	public static String getNotificationQueueName() {
-		logger.warn("getNotificationQueueName: use of deprecated API");
-		if (logger.isDebugEnabled()) {
-			logger.debug("getNotificationQueueName: stacktrace was",
-					new RuntimeException());
-		}
-		return null;
-	}
-
-	/**
-	 * @deprecated no more queue for notifications
-	 * @param notificationQueueName
-	 */
-	public static void setNotificationQueueName(String notificationQueueName) {
-		logger.warn("setNotificationQueueName: use of deprecated API");
-		if (logger.isDebugEnabled()) {
-			logger.debug("setNotificationQueueName: stacktrace was",
-					new RuntimeException());
-		}
 	}
 
 	public Long totalSystemIssuesAttachmentSize() {
