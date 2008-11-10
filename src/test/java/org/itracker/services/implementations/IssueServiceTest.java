@@ -967,13 +967,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		assertEquals("total attachments", new Long(4), issueService.getAllIssueAttachmentSize()); 
 	}
 	
-	@SuppressWarnings("deprecation")
-	@Test
-	public void testGetAllIssueAttachmentsSizeAndCount() {
-		long[] sizeAndCount = issueService.getAllIssueAttachmentsSizeAndCount();
-		assertNotNull(sizeAndCount);
-		assertEquals("size and count", 2, sizeAndCount.length); 
-	}
+
 
 	/**
 	 * Test method for
