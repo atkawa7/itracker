@@ -1,6 +1,8 @@
 package org.itracker.services.implementations;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -14,6 +16,7 @@ import org.itracker.model.Component;
 import org.itracker.model.CustomField;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
+import org.itracker.model.Status;
 import org.itracker.model.Version;
 import org.itracker.model.WorkflowScript;
 import org.itracker.persistence.dao.ComponentDAO;
@@ -343,10 +346,10 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		assertEquals(1, cal.get(Calendar.DAY_OF_MONTH));
 	}
 
-//	@Test
-//	public void verifyDAOFields() {
-//		assertNotNull("DAO null", projectService.getProjectDAO());
-//	}
+	// @Test
+	// public void verifyDAOFields() {
+	// assertNotNull("DAO null", projectService.getProjectDAO());
+	// }
 
 	@Test
 	public void testProjectScripts() {
@@ -419,12 +422,12 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 
 	}
 
-//	@Test
-//	public void testProjectStats() {
-//		Long[] projectStats = projectService.getProjectStats(2);
-//		assertNotNull(projectStats);
-//		assertEquals(2, projectStats.length);
-//	}
+	// @Test
+	// public void testProjectStats() {
+	// Long[] projectStats = projectService.getProjectStats(2);
+	// assertNotNull(projectStats);
+	// assertEquals(2, projectStats.length);
+	// }
 
 	@Ignore
 	public void testGetListOfProjectFields() {
@@ -436,4 +439,47 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		fail("not implemented");
 	}
 
+	@Test
+	public void testProjectCreateUpdate() {
+		Project project = new Project("New Project");
+		project.setDescription("desc");
+
+		Project createProject = projectService.createProject(project, 1);
+		assertNotNull(createProject);
+		project = projectService.getProject(createProject.getId());
+		assertNotNull(project);
+
+		project = new Project("New Project2");
+		project.setDescription("desc");
+		List<Component> components = new ArrayList<Component>();
+		Component component = new Component(project, "comp");
+		component.setDescription("comp desc");
+		components.add(component);
+		project.setComponents(components);
+		createProject = projectService.createProject(project, 1);
+		assertNotNull(createProject);
+		project = projectService.getProject(createProject.getId());
+		assertNotNull(project);
+
+		// FIXME: updateProject fails if the following line is enabled, which
+		// means it assumes the project attached to current hibernate session;
+		// while this may work it shouldn't be a precondition for a service
+		// class (by definition those are meant to be stateless). I guess this
+		// can be fixed by replacing saveOrUpdate() with a merge() call over
+		// project in the impl.
+		// projectDAO.detach(project);
+
+		Version version = new Version();
+		version.setProject(project);
+		version.setVersionInfo("2.0");
+		version.setDescription("version one");
+		version.setStatus(Status.ACTIVE);
+		project.setVersions(Arrays.asList(version));
+		projectService.updateProject(project, 1);
+
+		project = projectService.getProject(project.getId());
+		assertNotNull(project);
+		assertEquals("version not updated", 1, project.getVersions().size());
+
+	}
 }
