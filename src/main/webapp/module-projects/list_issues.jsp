@@ -1,12 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.services.util.UserUtilities" %>
-<%@ page import="org.itracker.services.util.ProjectUtilities" %>
-<%@ page import="org.itracker.web.util.RequestHelper" %>
-
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
