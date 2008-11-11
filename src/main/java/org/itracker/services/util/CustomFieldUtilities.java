@@ -31,6 +31,7 @@ public class CustomFieldUtilities {
     public static final String DATE_FORMAT_DATEONLY = "dateonly";
     public static final String DATE_FORMAT_TIMEONLY = "timeonly";
 
+    
     /**
       * Returns the string representation of a field type.
       * @param type the type to translate
@@ -40,6 +41,16 @@ public class CustomFieldUtilities {
         return getTypeString(type, ITrackerResources.getLocale());
     }
 
+    /**
+     * Returns the string representation of a field type
+     * @param code type code to translate
+     * @param locale the locale to translate the type into
+     * @return a string representation of the field type translated to the default locale
+     */
+    public static String getTypeString(int code, Locale locale) {
+    	return getTypeString(CustomField.Type.valueOf(code), locale);
+    }
+    
     /**
       * Returns the string representation of a field type.
       * @param type the type to translate
