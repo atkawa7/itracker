@@ -1,4 +1,5 @@
 package org.itracker.model;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -29,6 +30,21 @@ public class IssueAttachmentTest {
 		} catch (IllegalArgumentException e){
 			assertTrue(true);
 		}
+	}
+	
+	@Test
+	public void testGetFileExtension(){
+		iss.setOriginalFileName("abc.txt");
+		assertEquals("FileExtension is txt", ".txt", iss.getFileExtension());
+		
+		iss.setOriginalFileName("abc.txt.c");
+		assertEquals("FileExtension is c", ".c", iss.getFileExtension());
+		
+		iss.setOriginalFileName(".c");
+		assertEquals("FileExtension is empty", "", iss.getFileExtension());
+		
+		iss.setOriginalFileName("abc");
+		assertEquals("FileExtension is empty", "", iss.getFileExtension());
 	}
 	
 	@Test

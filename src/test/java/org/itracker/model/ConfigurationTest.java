@@ -23,7 +23,7 @@ public class ConfigurationTest {
 	@Test
 	public void testSetVersion(){		
 		try{
-			conf.setValue(null);
+			conf.setVersion(null);
 			fail("did not throw IllegalArgumentException");
 		}catch(IllegalArgumentException e){
 			assertTrue(true);

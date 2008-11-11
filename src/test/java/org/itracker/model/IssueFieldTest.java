@@ -1,4 +1,6 @@
 package org.itracker.model;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -53,51 +55,104 @@ public class IssueFieldTest extends AbstractDependencyInjectionTest{
 	
 	@Test
 	public void testGetValue(){
+		Locale en = new Locale("en");
 		CustomField cust = new CustomField();
 		cust.setFieldType(CustomField.Type.INTEGER);
 		iss.setCustomField(cust);
-		iss.setIntValue(23);
-		assertTrue("23".equals(iss.getValue(new Locale("en"))));
+		iss.setIntValue(23);		
+		assertEquals("int value 23", "23", iss.getValue(en));
 		
 		cust.setFieldType(CustomField.Type.DATE);
 		Date date = new Date(10000);
 		iss.setDateValue(date);
-		assertEquals("date value","01/01/1970", iss.getValue(new Locale("en")));
+		assertEquals("date value","01/01/1970", iss.getValue(en));
 		
 		cust.setRequired(false);
 		iss.setDateValue(null);
-		assertNull("date value is null", iss.getValue(new Locale("en")));
+		assertNull("date value is null", iss.getValue(en));
 		
 		cust.setRequired(true);
 		iss.setDateValue(null);
-		assertNotNull("date value is not null", iss.getValue(new Locale("en")));
+		assertNotNull("date value is not null", iss.getValue(en));
 
 	}
 	
 	@Test
 	public void testGetStringValue(){
+		Locale en = new Locale("en");
 		CustomField cust = new CustomField();
 		iss.setCustomField(cust);
 		iss.setStringValue(null);
 		cust.setFieldType(CustomField.Type.STRING);
-		assertEquals("", iss.getValue(new Locale("en")));
+		assertEquals("", iss.getValue(en));
 		
-//		cust = new CustomField();
-//		cust.setFieldType(null);
 		cust.setFieldType(CustomField.Type.STRING);
 		iss.setCustomField(cust);
 		iss.setStringValue("value");		
-		assertEquals("value", iss.getValue(new Locale("en")));
+		assertEquals("value", iss.getValue(en));
 	}
 	
 	@Test
-	public void testSetValue() throws IssueException{
+	public void testSetValue() {
+		//test type is integer
 		Locale en = new Locale("en");
 		CustomField cust = new CustomField();
 		cust.setFieldType(CustomField.Type.INTEGER);
 		iss.setCustomField(cust);
-		iss.setValue("23",ITrackerResources.getBundle(en));
+		try {
+			iss.setValue("23",ITrackerResources.getBundle(en));
+		} catch (IssueException e) {
+			fail("throw IssueException" + e);
+		}
 		assertTrue("23".equals(iss.getValue(en)));
+		
+		//test wrong number
+		try {
+			iss.setValue("ww",ITrackerResources.getBundle(en));
+		} catch (IssueException e) {
+			assertTrue(true);
+		}
+		
+		//test type is date
+		cust.setFieldType(CustomField.Type.DATE);		
+		try {
+			iss.setValue("01/01/1970",ITrackerResources.getBundle(en));
+		} catch (IssueException e) {
+			fail("throw IssueException" + e);
+		}		
+		SimpleDateFormat sdf = CustomField.DEFAULT_DATE_FORMAT;
+		try {
+			assertEquals("date value",sdf.parseObject("01/01/1970"), iss.getDateValue());
+		} catch (ParseException e) {
+			fail("throw ParseException" + e);
+		}
+		//test wrong date
+		try {
+			iss.setValue("xxxx01/01/1970",ITrackerResources.getBundle(en));
+		} catch (Exception e) {
+			assertTrue(true);
+		}
+		
+		
+		//test value is null
+		try {
+			iss.setValue(null,ITrackerResources.getBundle(en));
+			assertEquals("", iss.getStringValue());
+			assertNull(iss.getDateValue());
+			assertEquals(0, iss.getIntValue());
+		} catch (IssueException e) {
+			fail("throw IssueException" + e);
+		}
+		
+		//test value is empty
+		try {
+			iss.setValue(null,ITrackerResources.getBundle(en));
+			assertEquals("", iss.getStringValue());
+			assertNull(iss.getDateValue());
+			assertEquals(0, iss.getIntValue());
+		} catch (IssueException e) {
+			fail("throw IssueException" + e);
+		}
 	}
 	
 	@Test
