@@ -27,7 +27,6 @@ import org.itracker.model.Permission;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
-import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.exceptions.UserException;

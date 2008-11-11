@@ -1,13 +1,9 @@
 package org.itracker.model;
-import static org.junit.Assert.*;
-
 import java.util.Locale;
 
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.exceptions.IssueException;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 public class CustomFieldTest extends AbstractDependencyInjectionTest{

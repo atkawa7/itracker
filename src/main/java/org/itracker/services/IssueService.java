@@ -32,7 +32,6 @@ import org.itracker.model.IssueField;
 import org.itracker.model.IssueHistory;
 import org.itracker.model.IssueRelation;
 import org.itracker.model.IssueSearchQuery;
-import org.itracker.model.Notification;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
