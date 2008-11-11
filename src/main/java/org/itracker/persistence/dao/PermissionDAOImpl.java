@@ -5,6 +5,8 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.itracker.model.Permission;
+import org.itracker.model.Project;
+import org.itracker.model.User;
 
 public class PermissionDAOImpl extends BaseHibernateDAOImpl<Permission> 
         implements PermissionDAO {
@@ -12,6 +14,10 @@ public class PermissionDAOImpl extends BaseHibernateDAOImpl<Permission>
     @SuppressWarnings("unchecked")
     public List<Permission> findByUserId(Integer userId) {
         List<Permission> permissions;
+        
+        if (getSession().get(User.class, userId) == null) {
+            throw new NoSuchEntityException("User " + userId + " not found.");
+        }
         
         try {
             Query query = getSession().getNamedQuery(
@@ -28,6 +34,10 @@ public class PermissionDAOImpl extends BaseHibernateDAOImpl<Permission>
     public List<Permission> findByProjectIdAndPermission(Integer projectId, 
             int permissionType) {
         List<Permission> permissions;
+        
+        if (getSession().get(Project.class, projectId) == null) {
+            throw new NoSuchEntityException("Project " + projectId + " not found.");
+        }
         
         try {
             Query query = getSession().getNamedQuery(

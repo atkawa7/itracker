@@ -18,22 +18,18 @@ public class PermissionDAOImplTest extends AbstractDependencyInjectionTest {
 	private ProjectDAO projectDAO;
 	private PermissionDAO permissionDAO;
 
-	@Ignore
+	@Test
 	public void testFindByUserId() {
 
 		List<Permission> permissions = permissionDAO.findByUserId(2);
 
-		assertNotNull(permissions);
+		assertNotNull("permissions", permissions);
 		assertEquals(3, permissions.size());
-
-		permissions = permissionDAO.findByUserId(-1);
-
-		assertNull(permissions);
 
 	}
 
 // TODO: fix implementation or test
-	@Ignore
+	@Test
 	public void testFailedFindByUserId() {
 
 		try {

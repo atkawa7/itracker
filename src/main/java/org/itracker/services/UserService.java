@@ -36,7 +36,7 @@ public interface UserService {
     
     public User getUser(Integer userId);
     
-    public User getUserByLogin(String login) throws NoSuchEntityException;
+    public User getUserByLogin(String login);
     
     public String getUserPasswordByLogin(String login);
     
