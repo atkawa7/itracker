@@ -285,16 +285,19 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		Project project = projectService.getProject(2);
 		Assert.assertNotNull("project not found", project.getId());
 
+		assertEquals(0,
+				project.getOwners().size());
 		assertEquals(projectService.getProjectOwners(project.getId()).size(),
 				project.getOwners().size());
 
 		Set<Integer> newOwners = new HashSet<Integer>();
 		newOwners.add(1);
 		projectService.setProjectOwners(project, newOwners);
-
 		assertEquals(1, projectService.getProjectOwners(project.getId()).size());
+		
 
-		// projectService.setProjectOwners(project, new HashSet<Integer>());
+		projectService.setProjectOwners(project, new HashSet<Integer>());
+		assertEquals(0, projectService.getProjectOwners(project.getId()).size());
 
 	}
 
