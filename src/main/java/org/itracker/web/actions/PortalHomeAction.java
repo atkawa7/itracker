@@ -44,11 +44,10 @@ public class PortalHomeAction extends ItrackerBaseAction {
         LOGGER.info("Stepping up into the loginRouter method");
         
         // mayb wrong the next line... setting a default forward...
-        ActionForward thisactionforward=mapping.findForward("portalhome");
-        ActionForward forward = super.loginRouter(mapping,form,request,response, thisactionforward);
+        ActionForward forward=mapping.findForward("portalhome");
         
         if (forward==null) {
-            return forward;
+            return null;
         } else {
             
             LOGGER.info("Found forward, let's go and check if this forward is portalhome...");
