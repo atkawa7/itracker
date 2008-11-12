@@ -200,6 +200,7 @@ public class EditUserAction extends ItrackerBaseAction {
                         }
                         owners.add(editUser.getId());
                         projectService.setProjectOwners(project,owners);
+                        projectService.updateProject(project, editUser.getId());
                     }
                 }
                 
