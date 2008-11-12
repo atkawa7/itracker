@@ -3,17 +3,22 @@
  */
 package org.itracker.services.util;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
+
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.Language;
 import org.itracker.model.NameValuePair;
 import org.itracker.model.PermissionType;
-import org.junit.Ignore;
+import org.itracker.model.util.PropertiesFileHandler;
+import org.itracker.persistence.dao.LanguageDAO;
 import org.junit.Test;
 
 /**
@@ -34,7 +39,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verifies UserUtilities.getStatusName
      */
     @Test
-    @Ignore
+//    @Ignore
     // fails when running with other tests
     public void testGetStatusName() {
         // testing a case of missing key
@@ -77,7 +82,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verifies UserUtilities#getStatusName(int)
      */
     @Test
-    @Ignore
+//    @Ignore
     // fails when running with other tests
     public void testGetStatusNameDefault() {
         doTestGetStatusName(999, "MISSING KEY: itracker.user.status.999");
@@ -112,7 +117,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verifies UserUtilities#getStatusNames(Locale)
      */
     @Test
-    @Ignore
+//    @Ignore
     // fails when running with other tests
     public void testGetStatusNames() {
         doTestGetStatusNames(null, new NameValuePair[]{
@@ -159,7 +164,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verifies UserUtilities#getStatusNames()
      */
     @Test
-    @Ignore
+//    @Ignore
     // fails when running with other tests
     public void testGetStatusNamesDefault() {
         doTestGetStatusNamesDefault(new NameValuePair[]{
@@ -181,7 +186,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verifies UserUtilities.getPermissionName
      */
     @Test
-    @Ignore
+//    @Ignore
     // fails when running with other tests
     public void testGetPermissionName() {
         // testing a case of missing key
@@ -338,7 +343,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    @Ignore
+//    @Ignore
     // fails when running with other tests
     public void testGetPermissionNames() {
         doTestGetPermissionNames(null, new NameValuePair[]{
@@ -453,7 +458,7 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verified UserUtilities#getPermissionNames()
      */
     @Test
-    @Ignore
+//    @Ignore
     // fails when running with other tests
     public void testGetPermissionNamesDefault() {
         doTestGetPermissionNamesDefault(new NameValuePair[]{
@@ -578,6 +583,26 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
                 UserUtilities.PERMISSION_ASSIGNABLE));
     }
 
+    @Override
+    public void onSetUp() throws Exception {
+    	super.onSetUp();
+    	
+    	// need to initialize translations from ITracker.properties explicitly
+    	LanguageDAO languageDAO = (LanguageDAO) applicationContext.getBean("languageDAO"); 
+                            
+    	Properties localeProperties = new PropertiesFileHandler(
+        	"/org/itracker/core/resources/ITracker.properties").getProperties();
+        for (Enumeration<?> propertiesEnumeration = localeProperties.propertyNames(); propertiesEnumeration.hasMoreElements();) {
+            String key = (String) propertiesEnumeration.nextElement();
+            String value = localeProperties.getProperty(key);
+            languageDAO.saveOrUpdate(new Language(ITrackerResources.BASE_LOCALE, key, value));
+        }
+        
+		ITrackerResources.clearBundles();
+    	
+    }
+    
+    
     /**
      * Defines a set of datafiles to be uploaded into database.
      * @return an array with datafiles.
