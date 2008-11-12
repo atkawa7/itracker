@@ -162,7 +162,7 @@ public class IssueFieldTest extends AbstractDependencyInjectionTest{
 		CustomField cust = new CustomField();
 		cust.setFieldType(CustomField.Type.INTEGER);
 		iss.setCustomField(cust);
-		iss.setValue("23", en,ITrackerResources.getBundle(en));
+		iss.setValue("23", ITrackerResources.getBundle(en));
 		assertTrue("23".equals(iss.getValue(en)));
 	}
 	

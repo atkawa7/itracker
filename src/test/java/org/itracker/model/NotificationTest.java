@@ -31,6 +31,10 @@ public class NotificationTest {
 		}
 	}
 	
+	/**
+	 * TODO remove method from Notification
+	 */
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testSetNotificationRole(){
 		not.setNotificationRole(1);
