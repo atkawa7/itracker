@@ -18,14 +18,17 @@
 
 package org.itracker.services.implementations;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.itracker.model.Component;
 import org.itracker.model.CustomField;
 import org.itracker.model.Project;
@@ -44,6 +47,8 @@ import org.itracker.services.util.IssueUtilities;
 
 public class ProjectServiceImpl implements ProjectService {
 
+	private static final Logger logger = Logger.getLogger(ProjectService.class);
+	
 	private ComponentDAO componentDAO;
 	private CustomFieldDAO customFieldDAO;
 	private ProjectDAO projectDAO;
@@ -171,17 +176,26 @@ public class ProjectServiceImpl implements ProjectService {
 
 	public boolean setProjectOwners(Project project,
 			Set<Integer> setOfNewOwnerIds) {
-		List<User> owners = project.getOwners();
-		owners.clear();
-		if (setOfNewOwnerIds != null && !setOfNewOwnerIds.isEmpty()) {
+		if (null == project) {
+			logger.warn("setProjectOwners, project was null");
+			throw new IllegalArgumentException("Project must not be null.");
+		}
+		if (null == setOfNewOwnerIds) {
+			setOfNewOwnerIds = new HashSet<Integer>(0);
+		}
+		
+		List<User> owners = new ArrayList<User>(setOfNewOwnerIds.size());
+		if (!setOfNewOwnerIds.isEmpty()) {
+
 			for (Iterator<Integer> iterator = setOfNewOwnerIds.iterator(); iterator
 					.hasNext();) {
 				Integer ownerId = iterator.next();
 				User owner = userDAO.findByPrimaryKey(ownerId);
 				owners.add(owner);
 			}
-
 		}
+		project.setOwners(owners);
+		
 		return true;
 	}
 
