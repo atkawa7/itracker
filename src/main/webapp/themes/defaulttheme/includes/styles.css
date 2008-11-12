@@ -255,6 +255,9 @@ a.listRow:link {
 	text-decoration: none;
 }
 
+div.errors {
+	text-align: center;
+}
 
 .formError {
 	font-weight: normal;
