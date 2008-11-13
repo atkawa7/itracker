@@ -554,6 +554,9 @@
                         <configuration>
                             <licenseLocation>${itracker.clover.license}</licenseLocation>
                             <jdk>1.5</jdk>
+							<excludes>
+								<exclude>**/web/**/*Action.java</exclude>
+							</excludes>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -566,6 +569,9 @@
                         <artifactId>maven-clover-plugin</artifactId>
                         <version>3.6</version>
                         <configuration>
+							<excludes>
+								<exclude>**/web/**/*Action.java</exclude>
+							</excludes>
                             <licenseLocation>${itracker.clover.license}</licenseLocation>
                             <jdk>1.5</jdk>
                         </configuration>
