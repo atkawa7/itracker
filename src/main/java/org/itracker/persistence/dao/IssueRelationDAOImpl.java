@@ -2,15 +2,15 @@ package org.itracker.persistence.dao;
 
 import java.util.List;
 
+import org.itracker.model.IssueRelation;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.itracker.model.IssueRelation;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * 
  */
-public class IssueRelationDAOImpl extends HibernateDaoSupport 
+public class IssueRelationDAOImpl extends BaseHibernateDAOImpl<IssueRelation> 
         implements IssueRelationDAO {
 
     public IssueRelation findByPrimaryKey(Integer relationId) {

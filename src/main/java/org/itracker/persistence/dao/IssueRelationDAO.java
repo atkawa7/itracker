@@ -7,7 +7,7 @@ import org.itracker.model.IssueRelation;
 /**
  * 
  */
-public interface IssueRelationDAO {
+public interface IssueRelationDAO extends BaseDAO<IssueRelation> {
     
     IssueRelation findByPrimaryKey(Integer relationId);
     
