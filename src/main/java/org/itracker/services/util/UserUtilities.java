@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -87,6 +88,28 @@ public class UserUtilities implements AuthenticationConstants {
      * be limited to editing only the description, attachments, custom fields, and history of an issue. */
     public static final int PERMISSION_EDIT_FULL = 13;
     
+    
+    private static final Integer[] ALL_PERMISSIONS = new Integer[] {
+		    PERMISSION_PRODUCT_ADMIN,
+		    PERMISSION_CREATE,
+		    PERMISSION_EDIT,
+		    PERMISSION_CLOSE,
+		    PERMISSION_ASSIGN_SELF,
+		    PERMISSION_ASSIGN_OTHERS,
+		    PERMISSION_VIEW_ALL,
+		    PERMISSION_VIEW_USERS,
+		    PERMISSION_EDIT_USERS,
+		    PERMISSION_UNASSIGN_SELF,
+		    PERMISSION_ASSIGNABLE,
+		    PERMISSION_CREATE_OTHERS,
+		    PERMISSION_EDIT_FULL,
+	
+	};
+    public static final Set<Integer> ALL_PERMISSIONS_SET = Collections.unmodifiableSet(getAllPermissionsSet());
+    
+    private static final Set<Integer> getAllPermissionsSet() {
+    	return new HashSet<Integer>(Arrays.asList(ALL_PERMISSIONS));
+    }
     public static final int REGISTRATION_TYPE_ADMIN = 1;
     public static final int REGISTRATION_TYPE_SELF = 2;
     public static final int REGISTRATION_TYPE_IMPORT = 3;
