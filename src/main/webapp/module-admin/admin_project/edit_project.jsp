@@ -81,8 +81,9 @@
     <td class="editColumnText"><it:formatDate date="<%= project.getCreateDate() %>"/></td>
 </tr>
 
-<% List<User> owners = uh.getUsersWithProjectPermission(project.getId(), UserUtilities.PERMISSION_VIEW_ALL);
-    Collections.sort(owners, User.NAME_COMPARATOR);
+<% Set<User> owners = new TreeSet<User>(User.NAME_COMPARATOR);
+	owners.addAll(uh.getUsersWithProjectPermission(project.getId(), UserUtilities.PERMISSION_VIEW_ALL));
+    owners.addAll(project.getOwners());
 %>
 
 <tr>
@@ -91,11 +92,14 @@
         <html:select property="owners" size="5" multiple="true" styleClass="editColumnText">
 
             <%
-                for (int i = 0; i < owners.size(); i++) {
+            Iterator<User> ownersIt = owners.iterator();
+            User user;
+            while (ownersIt.hasNext()) {
+              user = ownersIt.next();
             %>
 
             <html:option
-                    value="<%= owners.get(i).getId().toString() %>"><%= owners.get(i).getFirstName() + " " + owners.get(i).getLastName() %>
+                    value="<%= user.getId().toString() %>"><%= user.getFirstName() + " " + user.getLastName() %>
             </html:option>
 
             <% } %>
