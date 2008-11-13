@@ -320,31 +320,31 @@ public class ProjectServiceImpl implements ProjectService {
 		return issueStats;
 	}
 
-	public IssueDAO getIssueDAO() {
+	private IssueDAO getIssueDAO() {
 		return issueDAO;
 	}
 
-	public ProjectDAO getProjectDAO() {
+	private ProjectDAO getProjectDAO() {
 		return projectDAO;
 	}
 
-	public ComponentDAO getComponentDAO() {
+	private ComponentDAO getComponentDAO() {
 		return componentDAO;
 	}
 
-	public CustomFieldDAO getCustomFieldDAO() {
+	private CustomFieldDAO getCustomFieldDAO() {
 		return this.customFieldDAO;
 	}
 
-	public ProjectScriptDAO getProjectScriptDAO() {
+	private ProjectScriptDAO getProjectScriptDAO() {
 		return this.projectScriptDAO;
 	}
 
-	public VersionDAO getVersionDAO() {
+	private VersionDAO getVersionDAO() {
 		return this.versionDAO;
 	}
 
-	public UserDAO getUserDAO() {
+	private UserDAO getUserDAO() {
 		return this.userDAO;
 	}
 
@@ -379,7 +379,12 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	public Project updateProject(Project project, Integer userId) {
 		User user = getUserDAO().findByPrimaryKey(userId);
-		project.setOwners(Arrays.asList(new User[]{user}));		
+
+		if (null == project.getOwners()) {
+			project.setOwners(Arrays.asList(new User[]{user}));
+		} else if (!project.getOwners().contains(user)) {
+			project.getOwners().add(user);
+		}
 		getProjectDAO().saveOrUpdate(project);
 		
 		return project;
