@@ -19,6 +19,7 @@
 package org.itracker.web.actions.admin.configuration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.model.Language;
+import org.itracker.model.NameValuePair;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.CustomFieldUtilities;
@@ -44,75 +48,120 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.CustomFieldValueForm;
 import org.itracker.web.util.Constants;
 
-
 public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(EditCustomFieldValueFormAction.class);
+	private static final Logger log = Logger
+			.getLogger(EditCustomFieldValueFormAction.class);
 
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionMessages errors = new ActionMessages();
+	public ActionForward execute(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		ActionMessages errors = new ActionMessages();
 
+		if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request,
+				response)) {
+			return mapping.findForward("unauthorized");
+		}
+		ConfigurationService configurationService = getITrackerServices()
+		.getConfigurationService();
 
-        if (! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
-            return mapping.findForward("unauthorized");
-        }
+		try {
+			
+			// TODO: it looks like to following 3 lines can be removed, we
+			// comment them and add a task.
+			HttpSession session = request.getSession(true);
+			Map<String, List<String>> languages = configurationService
+					.getAvailableLanguages();
 
-        try {
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+			CustomFieldValueForm customFieldValueForm = (CustomFieldValueForm) form;
 
-            // TODO: it looks like to following 3 lines can be removed, we comment them and add a task.
-            HttpSession session = request.getSession(true);
-            Map<String, List<String>> languages = configurationService.getAvailableLanguages();
-            
-            CustomFieldValueForm customFieldValueForm = (CustomFieldValueForm) form;
-            
-            if (customFieldValueForm == null) {
-                customFieldValueForm = new CustomFieldValueForm();
-            }
+			if (customFieldValueForm == null) {
+				customFieldValueForm = new CustomFieldValueForm();
+			}
 
-            CustomFieldValue customFieldValue = new CustomFieldValue();
-            
-            String action = customFieldValueForm.getAction();
-            
-            if ("update".equals(action)) {
-                Integer id = customFieldValueForm.getId();
-                customFieldValue = configurationService.getCustomFieldValue(id);
-                if(customFieldValue == null) {
-                    throw new SystemConfigurationException("Invalid custom field value id " + id);
-                }
-                String name = CustomFieldUtilities.getCustomFieldOptionName(customFieldValue.getCustomField().getId(), id);
-                customFieldValue.setName(name);
-                
-                customFieldValueForm.setId(id);
-                customFieldValueForm.setValue(customFieldValue.getValue());
+			CustomFieldValue customFieldValue = new CustomFieldValue();
 
-                HashMap<String, String> translations = new HashMap<String, String>();
-                List<Language> languageItems = configurationService.getLanguageItemsByKey(CustomFieldUtilities.getCustomFieldOptionLabelKey(customFieldValue.getCustomField().getId(), customFieldValue.getId()));
-                
-                for (int i = 0; i < languageItems.size(); i++) {
-                    translations.put(languageItems.get(i).getLocale(), languageItems.get(i).getResourceValue());
-                }
-                customFieldValueForm.setTranslations(translations);
-            }
+			String action = customFieldValueForm.getAction();
 
-            request.setAttribute("languages", languages);
-            request.setAttribute("customFieldValueForm", customFieldValueForm);
-            request.setAttribute("action",action);
-            session.setAttribute(Constants.CUSTOMFIELDVALUE_KEY, customFieldValue);
-            saveToken(request);
-            return mapping.getInputForward();
-        } catch(SystemConfigurationException sce) {
-        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidcustomfieldvalue"));
-        } catch(Exception e) {
-            log.error("Exception while creating edit custom field value form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        }
-        if(! errors.isEmpty()) {
+			if ("update".equals(action)) {
+				Integer id = customFieldValueForm.getId();
+				customFieldValue = configurationService.getCustomFieldValue(id);
+				if (customFieldValue == null) {
+					throw new SystemConfigurationException(
+							"Invalid custom field value id " + id);
+				}
+				String name = CustomFieldUtilities.getCustomFieldOptionName(
+						customFieldValue.getCustomField().getId(), id);
+				customFieldValue.setName(name);
+
+				customFieldValueForm.setId(id);
+				customFieldValueForm.setValue(customFieldValue.getValue());
+
+				HashMap<String, String> translations = new HashMap<String, String>();
+				List<Language> languageItems = configurationService
+						.getLanguageItemsByKey(CustomFieldUtilities
+								.getCustomFieldOptionLabelKey(customFieldValue
+										.getCustomField().getId(),
+										customFieldValue.getId()));
+
+				for (int i = 0; i < languageItems.size(); i++) {
+					translations.put(languageItems.get(i).getLocale(),
+							languageItems.get(i).getResourceValue());
+				}
+				customFieldValueForm.setTranslations(translations);
+			}
+			CustomField field = (CustomField) session
+					.getAttribute(Constants.CUSTOMFIELD_KEY);
+			if (field == null) {
+				return mapping.findForward("unauthorized");
+
+			} else {
+				request.setAttribute("languages", languages);
+				request.setAttribute("customFieldValueForm", customFieldValueForm);
+				request.setAttribute("action", action);
+				session.setAttribute(Constants.CUSTOMFIELDVALUE_KEY,
+						customFieldValue);
+				session.setAttribute("field", field);
+				saveToken(request);
+				setRequestEnvironment(request,configurationService);
+				return mapping.getInputForward();
+			}
+
+			
+		} catch (SystemConfigurationException sce) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"itracker.web.error.invalidcustomfieldvalue"));
+		} catch (Exception e) {
+			log.error("Exception while creating edit custom field value form.",
+					e);
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"itracker.web.error.system"));
+		}
+		if (!errors.isEmpty()) {
 			saveErrors(request, errors);
+			setRequestEnvironment(request,configurationService);
 			return mapping.getInputForward();
-        }
+		}
 
-        return mapping.findForward("error");
-    }
+		return mapping.findForward("error");
+	}
+	public static void setRequestEnvironment(HttpServletRequest request,ConfigurationService configurationService){
+		Map<String, List<String>> languages = configurationService.getAvailableLanguages();
+		Map<NameValuePair,List<NameValuePair>> languagesNameValuePair = new HashMap<NameValuePair, List<NameValuePair>>();
+		for (Map.Entry<String, List<String>> entry : languages.entrySet()) {
+			String language = entry.getKey();
+			List<String> locales = entry.getValue();
+			System.out.println(language);
+			System.out.println(locales);
+			List<NameValuePair> localesNameValuePair = new ArrayList<NameValuePair>();
+			for (String locale : locales) {
+				NameValuePair localeNameValuePair = new NameValuePair(locale,ITrackerResources.getString("itracker.locale.name", locale));
+				localesNameValuePair.add(localeNameValuePair);
+			}
+			NameValuePair languageNameValuePair = new NameValuePair(language,ITrackerResources.getString("itracker.locale.name", language));
+			languagesNameValuePair.put(languageNameValuePair, localesNameValuePair);
+		}
+		request.setAttribute("languagesNameValuePair", languagesNameValuePair);
+		request.setAttribute("baseLocale",ITrackerResources.BASE_LOCALE);
+	}
 
 }
-  

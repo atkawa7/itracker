@@ -114,7 +114,7 @@
                                 </td>
                                 
                                 <td colspan="2" valign="top">
-                                    <html:textarea rows="2" cols="60" property="translations(${language.key.name})"  styleClass="editColumnText"/>
+                                    <html:textarea rows="2" cols="60" property="translations(${languageNameValue.key.name})"  styleClass="editColumnText"/>
                                 </td>
                             </tr>
                            
@@ -165,7 +165,7 @@
                                         </td>
                                     
                                     <td align="right" colspan="2" class="editColumnText">
-                                    	${i.name}
+                                    	${i.key}
                                     </td>
                                 </tr>
                                 

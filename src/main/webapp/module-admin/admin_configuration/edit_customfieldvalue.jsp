@@ -1,12 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.services.*" %>
-<%@ page import="org.itracker.core.resources.*" %>
-<%@ page import="org.itracker.web.util.*" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Map" %>
-
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
@@ -15,12 +8,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> 
 
-<% // TODO: move redirect logic to Action class.
-CustomField field = (CustomField) session.getAttribute(Constants.CUSTOMFIELD_KEY);
-if(field == null) {
-%>
-<logic:forward name="unauthorized"/>
-<%  } else { %>
+
 
 <%-- <nitrox:var name="action" type="java.lang.String"/> --%>
 <!-- bean:define id="action" name="action" type="java.lang.String" scope="request"/ -->
@@ -46,10 +34,7 @@ if(field == null) {
     <html:hidden property="action"/>
     <html:hidden property="id"/>
     <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
-        <%
-        Map<String, List<String>> languages =
-                (Map<String, List<String>>) request.getAttribute("languages");
-        %>
+        
         <tr>
             <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
             <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
@@ -69,44 +54,36 @@ if(field == null) {
                 <it:message key="itracker.web.attr.baselocale"/>
             </td>
             <td>
-                <% String baseKey = "translations(" + ITrackerResources.BASE_LOCALE + ")"; %>
-            <html:text property="<%= baseKey %>" styleClass="editColumnText"/></td>
+               
+            <html:text property="translations(${baseLocale})" styleClass="editColumnText"/></td>
             
         </tr>
-        <%
-        for(java.util.Iterator<String> iter = languages.keySet().iterator(); iter.hasNext(); ) {
-            String language = iter.next();
-            String languageKey = "translations(" + language + ")";
-            List<String> locales = languages.get(language);
-        %>
-            <c:set var="languageKey" value="<%=languageKey%>"/>
+       
+        <c:forEach var="languageNameValue" items="${languagesNameValuePair}">
             <tr class="listRowUnshaded">
                 <td></td>
                 <td colspan="2">
-                    <%= ITrackerResources.getString("itracker.locale.name", language) %>
+                	${languageNameValue.key.value}
                 </td>
                 <td>
-                <html:text property="<%= languageKey %>" styleClass="editColumnText"/></td>
+                <html:text property="translations(${languageNameValue.key.name })" styleClass="editColumnText"/></td>
 
             </tr>
-            <%
-            for(int i = 0; i < locales.size(); i++) {
-                String localeKey = "translations(" + locales.get(i) + ")";
-            %>
-                <c:set var="localeKey" value="<%=localeKey%>"/>
-                <tr class="listRowUnshaded">
+            
+            <c:forEach var="locale" items="${languageNameValue.value}">
+                  <tr class="listRowUnshaded">
                     <td></td>
                     <td></td>
                     <td>
-                        <%= ITrackerResources.getString("itracker.locale.name", (String) locales.get(i)) %>
+                        ${locale.value }
                     </td>
                     <td>
-                    <html:text property="<%= localeKey %>" styleClass="editColumnText"/></td>
+                    <html:text property="translations(${locale.name})" styleClass="editColumnText"/></td>
 
                 </tr>
-          <%}
-        }
-        %>
+        
+        </c:forEach>
+        </c:forEach>
         <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
         <%-- <nitrox:var name="isUpdate" type="java.lang.Boolean"/> --%>
         <c:choose>
@@ -123,4 +100,4 @@ if(field == null) {
 </html:form>
 
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
-<%  } %>
+
