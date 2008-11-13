@@ -44,7 +44,6 @@ import org.itracker.services.exceptions.ProjectException;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.web.util.ServletContextUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import org.apache.log4j.Logger;
@@ -229,7 +228,7 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 * .
 	 */
 	@Test
-	public void testGetIssuesWatchedByUserInteger() {
+	public void testGetIssuesWatchedByUser() {
 		Collection<Issue> issues = issueService.getIssuesWatchedByUser(2);
 		assertNotNull(issues);
 		assertEquals("issues watched by#2", 1, issues.size());
@@ -237,24 +236,6 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		issues = issueService.getIssuesWatchedByUser(2, false);
 		assertNotNull(issues);
 		assertEquals("issues watched by#2 regardless of project status", 1, issues.size());
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.itracker.services.IssueService#getIssuesWatchedByUser(java.lang.Integer, boolean)}
-	 * .
-	 */
-	@Test
-	@Ignore
-	public void testGetIssuesWatchedByUserIntegerBoolean() {
-		fail("Not yet implemented");
-		// TODO test function for unavailable projects
-		// currently failing..?
-		// Collection<Issue> issues = issueService.getIssuesWatchedByUser(2,
-		// true);
-		// assertEquals("issues watched by#2", 4, issues.size());
-		// issues = issueService.getIssuesWatchedByUser(2, false);
-		// assertEquals("issues watched by#2", 4, issues.size());
 	}
 
 	/**
@@ -278,16 +259,6 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		// TODO: test getUnassignedIssues(true)
 		
 	}
-
-//	/**
-//	 * Test method for
-//	 * {@link org.itracker.services.IssueService#getUnassignedIssues(boolean)}.
-//	 */
-//	@Test
-//	@Ignore
-//	public void testGetUnassignedIssuesBoolean() {
-//		fail("Not yet implemented");
-//	}
 
 	/**
 	 * Test method for
@@ -675,7 +646,6 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 * .
 	 */
 	@Test
-	@Ignore // need to set User on IssueActivity entity
 	public void testSetIssueComponents() {
 		HashSet<Integer> componentIds = new HashSet<Integer>();
 		componentIds.add(1);
@@ -691,7 +661,6 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 * .
 	 */
 	@Test
-	@Ignore // need to set User on IssueActivity entity
 	public void testSetIssueVersions() {
 		HashSet<Integer> versionIds = new HashSet<Integer>();
 		versionIds.add(1);
@@ -725,14 +694,20 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 * .
 	 */
 	@Test
-	@Ignore // need to set User on IssueActivity entity
 	public void testAddIssueRelation() {
-		// connect issues 1,2
-		boolean added = issueService.addIssueRelation(1,2,IssueUtilities.RELATION_TYPE_DUPLICATE_C,2);
+		// connect issues 2,3
+		boolean added = issueService.addIssueRelation(2,3,IssueUtilities.RELATION_TYPE_DUPLICATE_C,2);
 		assertTrue(added);
 		
-		// TODO: test relations are saved to db, fix the 
-		// org.itracker.services.IssueService#addIssueRelation first
+		// find all issue relations involving issue 2
+		List<IssueRelation> issueRelations = issueRelationDAO.findByIssue(2);
+		assertNotNull(issueRelations);
+		assertEquals("issueRelations.size()", 1, issueRelations.size());
+		IssueRelation issueRelation = issueRelations.get(0);
+		assertNotNull( issueRelation );
+		assertNotNull( "issueRelation.id", issueRelation.getId() );
+		assertEquals( "issueRelation.relatedIssue.id", new Integer(3), issueRelation.getRelatedIssue().getId() );
+		assertEquals( "issueRelation.relationType", IssueUtilities.RELATION_TYPE_DUPLICATE_C, issueRelation.getRelationType() );
 				
 	}
 
@@ -778,17 +753,6 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		
 	}
 
-//	/**
-//	 * Test method for
-//	 * {@link org.itracker.services.IssueService#addIssueNotification(org.itracker.model.Notification)}
-//	 * 
-//	 */
-//	@Test
-//	@Ignore
-//	public void testAddIssueNotification() {
-//		fail("Not yet implemented");
-//	}
-
 	/**
 	 * Test method for
 	 * {@link org.itracker.services.IssueService#removeIssueAttachment(java.lang.Integer)}
@@ -822,12 +786,10 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 * .
 	 */
 	@Test
-	@Ignore // FIXME: issue relation isn't actually being removed from db
 	public void testRemoveIssueRelation() {
 		IssueRelation issueRelation = issueRelationDAO.findByPrimaryKey(1); // issue 1-2 connection
 		assertNotNull("issueRelation", issueRelation);
 		
-		// FIXME: what's the purpose of passing userId to removeIssueRelation?
 		issueService.removeIssueRelation(1, 2);
 		
 		issueRelation = issueRelationDAO.findByPrimaryKey(1); // issue 1-2 connection
@@ -975,8 +937,6 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 * .
 	 */
 	@Test
-	@Ignore
-	// FIXME: fix getLastIssueHistory() method first, it always returns null
 	public void testGetLastIssueHistory() {
 		IssueHistory issueHistory = issueService.getLastIssueHistory(2);
 		assertNotNull( "issueHistory", issueHistory );
@@ -989,7 +949,6 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 * .
 	 */
 	@Test
-	@Ignore // FIXME: first test fails however user 2 is an owner and creator of issue#1
 	public void testCanViewIssue() {
 		
 		Issue issue1 = issueDAO.findByPrimaryKey(1);
@@ -1152,7 +1111,6 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	
 	
 	@Test
-	@Ignore // need to set User on IssueActivity entity
 	public void testSystemUpdateIssue() {
 		Issue issue = issueDAO.findByPrimaryKey(1);
 		try {
