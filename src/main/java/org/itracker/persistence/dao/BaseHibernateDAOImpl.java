@@ -1,6 +1,5 @@
 package org.itracker.persistence.dao;
 
-import java.sql.Connection;
 import java.util.Date;
 
 import org.hibernate.HibernateException;
@@ -77,34 +76,26 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
         }    
     }
 
-    /**
-     * return the a <code>Connection</code>
-     *
-     * @deprecated don't use connection directly
-     * @return a database <code>Connection</code> 
-     */
-    public Connection getConnection() {
-        try {
-            return getSession().connection();
-        } catch (HibernateException ex) {
-            throw convertHibernateAccessException(ex);
-        }
-    }
-    
     public void detach(T entity) {
     	if (null == entity) {
     		throw new NullPointerException("entity must not be null");
     	}
-
-    	getSession().evict(entity);
+    	try {
+    		getSession().evict(entity);
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }    
     }
     
     public void refresh(T entity) {
     	if (null == entity) {
     		throw new NullPointerException("entity must not be null");
     	}
-
-    	getSession().refresh(entity);
+    	try {
+    		getSession().refresh(entity);
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }    
     }
     
     @SuppressWarnings("unchecked")
@@ -112,8 +103,10 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
     	if (null == entity) {
     		throw new NullPointerException("entity must not be null");
     	}
-
-    	return (T)getSession().merge(entity);
-    	
+    	try {
+    		return (T)getSession().merge(entity);
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }    
     }
 }
