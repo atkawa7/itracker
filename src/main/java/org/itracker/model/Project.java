@@ -237,7 +237,7 @@ public class Project extends AbstractEntity implements Comparable<Entity> {
 	public String toString() {
 
 		return new ToStringBuilder(this).append("id", this.getId()).append("name",
-				this.getName()).append("description", getDescription()).toString();
+				this.getName()).append("description", getDescription()).append("owners", getOwners()).toString();
 	}
 
 	/**
