@@ -26,7 +26,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.Filter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,71 +70,6 @@ public abstract class ItrackerBaseAction extends Action {
 		super();
 	}
 
-	/**
-	 * TODO: This method will not be executed always if it is not called by
-	 * execute-implementor (inheriting ancester).
-	 * 
-	 * @deprecated use servlet-filter {@link Filter}:
-	 *             {@link ExecuteAlwaysFilter}
-	 * 
-	 */
-	public void executeAlways(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		if (log.isDebugEnabled()) {
-			log.debug("Executing Action : " + getClass().getName());
-		}
-		// skipt this due to invalid pattern
-		if (true)
-			return;
-
-		log
-				.info("pageInit: setting the common request attributes, (coming from the former header.jsp)");
-		boolean allowForgotPassword = true;
-		boolean allowSelfRegister = false;
-		boolean allowSaveLogin = true;
-		String alternateLogo = null;
-
-		ConfigurationService configurationService = getITrackerServices()
-				.getConfigurationService();
-		allowForgotPassword = configurationService.getBooleanProperty(
-				"allow_forgot_password", true);
-		allowSelfRegister = configurationService.getBooleanProperty(
-				"allow_self_register", false);
-		allowSaveLogin = configurationService.getBooleanProperty(
-				"allow_save_login", true);
-		alternateLogo = configurationService
-				.getProperty("alternate_logo", null);
-
-		request.setAttribute("allowForgotPassword", Boolean
-				.valueOf(allowForgotPassword));
-		request.setAttribute("allowSelfRegister", Boolean
-				.valueOf(allowSelfRegister));
-		request.setAttribute("allowSaveLogin", Boolean.valueOf(allowSaveLogin));
-		request.setAttribute("alternateLogo", alternateLogo);
-
-		// pasted from page_init (which is now empty, since we are moving logic
-		// into actions):
-		String baseURL = request.getScheme() + "://" + request.getServerName()
-				+ ":" + request.getServerPort() + request.getContextPath();
-		User currUser = (User) request.getSession().getAttribute("currUser");
-
-		// TODO: think about this: are permissions put into the request? or into
-		// the session? Markys knowledge: permissions are being set, when login
-		// happens... do we really need the following line then?
-		Map<Integer, Set<PermissionType>> permissions = getUserPermissions(request
-				.getSession());
-		Locale locale = LoginUtilities.getCurrentLocale(request);
-		String currLogin = (currUser == null ? null : currUser.getLogin());
-		// now these are put into the request scope... (new).
-		request.setAttribute("baseURL", baseURL);
-		request.getSession().setAttribute("currUser", currUser);
-		request.setAttribute("permissions", permissions);
-		request.setAttribute("currLocale", locale);
-		request.setAttribute("currLogin", currLogin);
-
-	}
 
 	protected Map<Integer, Set<PermissionType>> getUserPermissions(
 			HttpSession session) {
@@ -570,6 +504,12 @@ public abstract class ItrackerBaseAction extends Action {
 			// reset the timestamp for next log
 			startTime.setTime(System.currentTimeMillis());
 		}
+	}
+	
+	protected void handleException(Throwable t, ActionMessages messages, HttpServletRequest httpServletRequest) {
+		Object[] params = new Object[]{};
+		ActionMessage msg = new ActionMessage("itracker.web.error.system.message");
+
 	}
 
 }
