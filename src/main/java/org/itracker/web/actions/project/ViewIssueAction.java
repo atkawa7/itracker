@@ -52,9 +52,16 @@ public class ViewIssueAction extends ItrackerBaseAction {
 		String pageTitleArg = request.getParameter("id");
 		request.setAttribute("pageTitleKey", pageTitleKey);
 		request.setAttribute("pageTitleArg", pageTitleArg);
-
+		Integer issueId;
+		try {
+			issueId = Integer.valueOf(request.getParameter("id"));
+		} catch (RuntimeException re) {
+			getErrors(request).add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noissue"));
+			saveErrors(request, getErrors(request));
+			return mapping.findForward("index");
+		}
 		EditIssueFormAction.setupNotificationsInRequest(request, issueService
-				.getIssue(Integer.valueOf(request.getParameter("id"))),
+				.getIssue(issueId),
 				getITrackerServices().getNotificationService());
 
 		HttpSession session = request.getSession();
@@ -63,11 +70,11 @@ public class ViewIssueAction extends ItrackerBaseAction {
 		User um = RequestHelper.getCurrentUser(session);
 
 		NotificationService notificationService = getITrackerServices().getNotificationService();
-		Integer issueId = null;
+
 		Issue issue = null;
 
 		Integer currUserId = um.getId();
-
+//		TODO verify this code.
 		try {
 			issueId = new Integer((request.getParameter("id") == null ? "-1"
 					: (request.getParameter("id"))));
