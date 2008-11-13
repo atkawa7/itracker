@@ -282,7 +282,6 @@ public class IssueForm extends ITrackerForm {
 
 				EditIssueFormAction.setupJspEnv(mapping, this, request, issue,
 						getITrackerServices().getIssueService(), 
-						getITrackerServices().getNotificationService(),
 						getITrackerServices().getUserService(), 
 						RequestHelper.getUserPermissions(request.getSession()),
 						EditIssueFormAction.getListOptions(request, issue,

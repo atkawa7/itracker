@@ -69,6 +69,7 @@ import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 /**
@@ -86,25 +87,26 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 	 */
 	public static final void setupJspEnv(ActionMapping mapping,
 			IssueForm issueForm, HttpServletRequest request, Issue issue,
-			IssueService issueService, NotificationService notificationService, UserService userService,
+			IssueService issueService, UserService userService,
 			Map<Integer, Set<PermissionType>> userPermissions,
 			Map<Integer, List<NameValuePair>> listOptions, ActionMessages errors)
 			throws ServletException, IOException, WorkflowException {
 		HttpSession session = request.getSession();
+		NotificationService notificationService = ServletContextUtils
+		.getItrackerServices().getNotificationService();
 		String pageTitleKey = "itracker.web.editissue.title";
 		String pageTitleArg = request.getParameter("id");
-		User um = (User) request.getSession().getAttribute("currUser");
+		Locale locale = LoginUtilities.getCurrentLocale(request);
+		User um = LoginUtilities.getCurrentUser(request);
 		List<NameValuePair> statuses = WorkflowUtilities.getListOptions(
 				listOptions, IssueUtilities.FIELD_STATUS);
-		String statusName = IssueUtilities.getStatusName(issue.getStatus(),
-				(java.util.Locale) session.getAttribute("currLocale"));
+		String statusName = IssueUtilities.getStatusName(issue.getStatus(),locale);
 		boolean hasFullEdit = UserUtilities.hasPermission(userPermissions,
 				issue.getProject().getId(), UserUtilities.PERMISSION_EDIT_FULL);
 		List<NameValuePair> resolutions = WorkflowUtilities.getListOptions(
 				listOptions, IssueUtilities.FIELD_RESOLUTION);
 		String severityName = IssueUtilities.getSeverityName(issue
-				.getSeverity(), (java.util.Locale) session
-				.getAttribute("currLocale"));
+				.getSeverity(),locale);
 		List<NameValuePair> components = WorkflowUtilities.getListOptions(
 				listOptions, IssueUtilities.FIELD_COMPONENTS);
 		List<NameValuePair> versions = WorkflowUtilities.getListOptions(
@@ -153,7 +155,6 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 
 		request.setAttribute("pageTitleKey", pageTitleKey);
 		request.setAttribute("pageTitleArg", pageTitleArg);
-		request.setAttribute("ih", issueService);
 		request.setAttribute("wrap", wrap);
 		request.getSession().setAttribute(Constants.LIST_OPTIONS_KEY,
 				listOptions);
@@ -184,26 +185,12 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 						issue.getProject().getOptions()));
 		request.setAttribute("issueOwnerName",
 				(issue.getOwner() == null ? ITrackerResources.getString(
-						"itracker.web.generic.unassigned",
-						(java.util.Locale) session.getAttribute("currLocale"))
+						"itracker.web.generic.unassigned",locale)
 						: issue.getOwner().getFirstName() + " "
 								+ issue.getOwner().getLastName()));
 		request.setAttribute("isStatusResolved",
 				issue.getStatus() >= IssueUtilities.STATUS_RESOLVED);
-		if (um.isSuperUser()
-				|| (hasFullEdit && (issue.getStatus() >= IssueUtilities.STATUS_ASSIGNED && issue
-						.getStatus() < IssueUtilities.STATUS_CLOSED))) {
-
-			if (ProjectUtilities.hasOption(
-					ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS, issue
-							.getProject().getOptions())) {
-
-			} else {
-
-			}
-		} else {
-
-		}
+		
 
 		request.setAttribute("fieldSeverity", WorkflowUtilities.getListOptions(
 				listOptions, IssueUtilities.FIELD_SEVERITY));
@@ -213,8 +200,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 				.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, issue
 						.getProject().getOptions()));
 
-		setupNotificationsInRequest(request, issue, ServletContextUtils
-				.getItrackerServices().getNotificationService());
+		setupNotificationsInRequest(request, issue, notificationService);
 
 		// setup issue to request, as it's needed by the jsp.
 		request.setAttribute(Constants.ISSUE_KEY, issue);
@@ -469,7 +455,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 			IssueService issueService = getITrackerServices().getIssueService();
 
 			UserService userService = getITrackerServices().getUserService();
-			NotificationService notificationService = getITrackerServices().getNotificationService();
+
 			Integer issueId = new Integer(
 					(request.getParameter("id") == null ? "-1" : (request
 							.getParameter("id"))));
@@ -520,7 +506,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 				setupIssueForm(issueForm, issue, listOptions, request, errors);
 
 				EditIssueFormAction.setupJspEnv(mapping, issueForm, request,
-						issue, issueService, notificationService, userService, userPermissions,
+						issue, issueService, userService, userPermissions,
 						listOptions, errors);
 
 				log.debug("Forwarding to edit issue form for issue "

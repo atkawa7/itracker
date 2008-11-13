@@ -1,12 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="org.itracker.core.resources.ITrackerResources" %>
-<%@ page import="org.itracker.model.CustomField" %>
-<%@ page import="org.itracker.services.*" %>
-<%@ page import="org.itracker.services.util.CustomFieldUtilities" %>
-<%@ page import="org.itracker.web.util.*" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Map" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -23,16 +16,7 @@
 
 <bean:define id="pageTitleKey" value="itracker.web.admin.editcustomfield.title.create"/>
 <bean:define id="pageTitleArg" value=""/>
-
-<bean:define id="field" name="<%=Constants.CUSTOMFIELD_KEY%>" type="org.itracker.model.CustomField"/>
-
-<%-- TODO : move redirect logic to Action --%>
-<c:choose>
-    <c:when test="${field == null}">
-        <logic:forward name="unauthorized"/>
-    </c:when>
-    <c:otherwise>
-        
+<%--   redirect logic moved to Action --%>
         <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
         <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
         
@@ -52,10 +36,7 @@
             <html:hidden property="action"/>
             <html:hidden property="id"/>
             
-            <%
-            ConfigurationService sc = (ConfigurationService)request.getAttribute("sc");
-            Map<String,List<String>> languages = sc.getAvailableLanguages();
-            %>
+            
             <table border="0" cellspacing="0" cellspacing="1" width="800px">
                 <tr>
                     <td colspan="2" width="48%"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
@@ -72,10 +53,10 @@
                     <td class="editColumnTitle"><it:message key="itracker.web.attr.fieldtype"/>:</td>
                     <td>
                         <html:select property="fieldType" styleClass="editColumnText">
-                            <html:option value="<%= Integer.toString(CustomField.Type.STRING.getCode()) %>" styleClass="editColumnText"><it:message key="itracker.web.generic.string"/></html:option>
-                            <html:option value="<%= Integer.toString(CustomField.Type.INTEGER.getCode()) %>" styleClass="editColumnText"><it:message key="itracker.web.generic.integer"/></html:option>
-                            <html:option value="<%= Integer.toString(CustomField.Type.DATE.getCode()) %>" styleClass="editColumnText"><it:message key="itracker.web.generic.date"/></html:option>
-                            <html:option value="<%= Integer.toString(CustomField.Type.LIST.getCode()) %>" styleClass="editColumnText"><it:message key="itracker.web.generic.list"/></html:option>
+                            <html:option value="${fieldTypeString}" styleClass="editColumnText"><it:message key="itracker.web.generic.string"/></html:option>
+                            <html:option value="${fieldTypeInteger}" styleClass="editColumnText"><it:message key="itracker.web.generic.integer"/></html:option>
+                            <html:option value="${fieldTypeDate}" styleClass="editColumnText"><it:message key="itracker.web.generic.date"/></html:option>
+                            <html:option value="${fieldTypeList}" styleClass="editColumnText"><it:message key="itracker.web.generic.list"/></html:option>
                         </html:select>
                     </td>
                     <td></td>
@@ -106,9 +87,9 @@
                     <td class="editColumnTitle"><it:message key="itracker.web.attr.dateformat"/>:</td>
                     <td>
                         <html:select property="dateFormat" styleClass="editColumnText">
-                            <html:option value="<%= CustomFieldUtilities.DATE_FORMAT_DATEONLY %>" styleClass="editColumnText"><it:message key="itracker.web.attr.date.dateonly"/> (<it:message key="itracker.dateformat.dateonly"/>)</html:option>
-                            <html:option value="<%= CustomFieldUtilities.DATE_FORMAT_TIMEONLY %>" styleClass="editColumnText"><it:message key="itracker.web.attr.date.timeonly"/> (<it:message key="itracker.dateformat.timeonly"/>)</html:option>
-                            <html:option value="<%= CustomFieldUtilities.DATE_FORMAT_FULL %>" styleClass="editColumnText"><it:message key="itracker.web.attr.date.full"/> (<it:message key="itracker.dateformat.full"/>)</html:option>
+                            <html:option value="${dateFormatDateOnly}" styleClass="editColumnText"><it:message key="itracker.web.attr.date.dateonly"/> (<it:message key="itracker.dateformat.dateonly"/>)</html:option>
+                            <html:option value="${dateFormatTimeonly}" styleClass="editColumnText"><it:message key="itracker.web.attr.date.timeonly"/> (<it:message key="itracker.dateformat.timeonly"/>)</html:option>
+                            <html:option value="${dateFormatFull}" styleClass="editColumnText"><it:message key="itracker.web.attr.date.full"/> (<it:message key="itracker.dateformat.full"/>)</html:option>
                         </html:select>
                     </td>
                 </tr>
@@ -121,47 +102,39 @@
                             <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="4"/></td></tr>
                             <tr class="listRowUnshaded">
                                 <td colspan="2" valign="top"><it:message key="itracker.web.attr.baselocale"/></td>
-                                <% String localeKey = "translations(" + ITrackerResources.BASE_LOCALE + ")"; %>
                                 <td colspan="2" valign="top">
-                                    <html:textarea rows="2" cols="60" property="<%=localeKey%>" styleClass="editColumnText"/>
+                                    <html:textarea rows="2" cols="60" property="${baseLocaleKey}" styleClass="editColumnText"/>
                                 </td>
                             </tr>
-                            <%
-                            for(java.util.Iterator<String> iter = languages.keySet().iterator(); iter.hasNext(); ) {
-                            String language = iter.next();
-                            List<String> locales = (List<String>) languages.get(language);
-                            %>
+                           
+                            <c:forEach var="languageNameValue" items="${languagesNameValuePair}">
                             <tr class="listRowUnshaded">
-                                <td colspan="2" valign="top">
-                                    <%= ITrackerResources.getString("itracker.locale.name", language) %>
+                            	<td colspan="2" valign="top">
+                                	${languageNameValue.key.value}
                                 </td>
-                                <% localeKey = "translations(" + language + ")"; %>
-                                <c:set var="localeKey" value="<%=localeKey%>"/>
+                                
                                 <td colspan="2" valign="top">
-                                    <html:textarea rows="2" cols="60" property="<%=localeKey%>"  styleClass="editColumnText"/>
+                                    <html:textarea rows="2" cols="60" property="translations(${language.key.name})"  styleClass="editColumnText"/>
                                 </td>
                             </tr>
-                            <%      for(int i = 0; i < locales.size(); i++) { %>
+                           
+                            <c:forEach var="locale" items="${languageNameValue.value }">
                             <tr class="listRowUnshaded">
-                                <td colspan="2" valign="top"><%= ITrackerResources.getString("itracker.locale.name", (String) locales.get(i)) %></td>
-                                <% localeKey = "translations(" + (String) locales.get(i) + ")"; %>
-                                <c:set var="localeKey" value="<%=localeKey%>"/>
+                                <td colspan="2" valign="top">${locale.value}</td>
                                 <td colspan="2" valign="top">
-                                    <html:textarea rows="2" cols="60" property="<%=localeKey%>" styleClass="editColumnText"/>
+                                    <html:textarea rows="2" cols="60" property="translations(${locale.name})" styleClass="editColumnText"/>
                                 </td>
                             </tr>
-                            <%      }
-                            }
-                            %>
+                            
+                            	</c:forEach>
+                            </c:forEach>
                         </table>
                     </td>
                     <td></td>
                     <!-- To Kimba from Marky: I see problems when you try to assign a Primitve such as boolean or int
  	to the pageContext.setAttribute("String",Object) method because this method only takes Objects, but no Primitives. 
  	 -->
-                    <%
-                    pageContext.setAttribute("CustomFieldType_List", Integer.toString(CustomField.Type.LIST.getCode()));
-                    %>
+                    
                 <c:if test="${field.fieldType.code == CustomFieldType_List}">
                     <td colspan="2" valign="top">
                         <table cellspacing="0" cellspacing="1" border="0">
@@ -171,19 +144,12 @@
                             </tr>
                             <tr class="listHeading"><td colspan="3"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
                             <tr><td colspan="3"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="4"/></td></tr>
-                            
-                            <c:set var="f_id" value="${field.id}"/>
-                            <c:set var="opt_len" value="0"/>
-                            <c:set var="idx" value="1"/>
-                            <c:forEach items="${field.options}" var="i">
-                                <c:set var="opt_len" value="${opt_len + 1}"/>
-                            </c:forEach>
-                            <c:forEach items="${field.options}" var="i">
-                                <c:set var="o_id" value="${i.id}"/>
+                            <c:forEach items="${optionsMap}" var="i">
+                                
                                 <tr>
                                     <td class="listRowUnshaded" style="white-space: nowrap;" nowrap>
-                                        <it:link action="editcustomfieldvalueform" targetAction="update" paramName="id" paramValue="${i.id}" titleKey="itracker.web.admin.editcustomfield.option.edit.alt"><it:message key="itracker.web.admin.editcustomfield.option.edit"/></it:link>
-                                        <it:link action="removecustomfieldvalue" targetAction="delete" paramName="id" paramValue="${i.id}" titleKey="itracker.web.admin.editcustomfield.option.delete.alt"><it:message key="itracker.web.admin.editcustomfield.option.delete"/></it:link>
+                                        <it:link action="editcustomfieldvalueform" targetAction="update" paramName="id" paramValue="${i.value.id}" titleKey="itracker.web.admin.editcustomfield.option.edit.alt"><it:message key="itracker.web.admin.editcustomfield.option.edit"/></it:link>
+                                        <it:link action="removecustomfieldvalue" targetAction="delete" paramName="id" paramValue="${i.value.id}" titleKey="itracker.web.admin.editcustomfield.option.delete.alt"><it:message key="itracker.web.admin.editcustomfield.option.delete"/></it:link>
                                         <!-- c:if test="$ {idx != 1}" -->
                                             <!-- it:link action="ordercustomfieldvalue" targetAction="up" paramName="id" paramValue="$ {i.id}" titleKey="itracker.web.admin.editcustomfield.option.orderup.alt" -->
                                                 <!-- it:message key="itracker.web.admin.editcustomfield.option.orderup"/ -->
@@ -197,17 +163,12 @@
                                         
                                         <html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="5" height="1"/>
                                         </td>
-                                    <%
-                                    String field_id = pageContext.getAttribute("f_id").toString();
-                                    String option_id = pageContext.getAttribute("o_id").toString();
-                                    Integer fld_id = Integer.valueOf(field_id);
-                                    Integer opt_id = Integer.valueOf(option_id);
-                                    %>
+                                    
                                     <td align="right" colspan="2" class="editColumnText">
-                                        <%=CustomFieldUtilities.getCustomFieldOptionName(fld_id,opt_id)%>
+                                    	${i.name}
                                     </td>
                                 </tr>
-                                <c:set var="idx" value="${idx + 1}"/>
+                                
                             </c:forEach>
                         </table>
                     </td>
@@ -227,7 +188,6 @@
         
         
         <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
-    </c:otherwise>
-</c:choose>
+ 
 
 
