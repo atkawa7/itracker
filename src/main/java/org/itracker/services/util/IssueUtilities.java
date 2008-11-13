@@ -668,15 +668,9 @@ public class IssueUtilities {
 			return true;
 		}
 
-		if (!UserUtilities.hasPermission(permissions, issue.getProject()
-				.getId(), PermissionType.ISSUE_VIEW_USERS.getCode())) {
-			if (log.isInfoEnabled()) {
-				log.info("canViewIssue: issue: " + issue + ", user: " + userId
-						+ ", permission: " + PermissionType.ISSUE_VIEW_USERS);
-			}
-			return false;
-		}
-
+		// I think owner & creator should always be able to view the issue
+		// otherwise it makes no sense of creating the issue itself.
+		// So put these checks before checking permissions for the whole project.  
 		if (issue.getCreator().getId().equals(userId)) {
 			if (log.isInfoEnabled()) {
 				log.info("canViewIssue: issue: " + issue + ", user: " + userId
@@ -695,6 +689,17 @@ public class IssueUtilities {
 				return true;
 			}
 		}
+		
+		if (!UserUtilities.hasPermission(permissions, issue.getProject()
+				.getId(), PermissionType.ISSUE_VIEW_USERS.getCode())) {
+			if (log.isInfoEnabled()) {
+				log.info("canViewIssue: issue: " + issue + ", user: " + userId
+						+ ", permission: " + PermissionType.ISSUE_VIEW_USERS);
+			}
+			
+			return false;
+		}
+		
 		if (log.isInfoEnabled()) {
 			log.info("canViewIssue: issue: " + issue + ", user: " + userId
 					+ ", permission: none matched");
