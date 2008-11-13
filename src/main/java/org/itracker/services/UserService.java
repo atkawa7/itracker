@@ -18,6 +18,7 @@
 
 package org.itracker.services;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -219,7 +220,17 @@ public interface UserService {
      * @return an array of UserModels that represent the users that have the permission
      */
     public List<User> getUsersWithAnyProjectPermission(Integer projectId, int[] permissions);
-    
+
+    /**
+     * This method will return a list of users with any of the supplied permission, either explicitly, or
+     * by their role as a super user.  This list is obtained calling a method in the pluggable
+     * authenticator, so the actual source of the data may not
+     * be the local datastore.
+     * @param projectId the project to find the permission for
+     * @param permissions the permissions that are checked against
+     * @return an array of UserModels that represent the users that have the permission
+     */
+    public Collection<User> getUsersWithAnyProjectPermission(Integer projectId, Integer[] permissionTypes);
     /**
      * This method will return a list of users with any of the supplied permission, either explicitly, or
      * by their role as a super user.  This list is obtained calling a method in the pluggable

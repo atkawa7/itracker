@@ -19,6 +19,7 @@
 package org.itracker.services.implementations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -684,6 +685,15 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsersWithAnyProjectPermission(Integer projectId, int[] permissionTypes) {
         return getUsersWithAnyProjectPermission(projectId, permissionTypes, true);
     }
+    public Collection<User> getUsersWithAnyProjectPermission(Integer projectId, Integer[] permissionTypes) {
+    	int[] perm = new int[permissionTypes.length];
+    	
+    	for (int i = 0; i < permissionTypes.length; i++) {
+			perm[i] = permissionTypes[i];
+		}
+
+        return getUsersWithAnyProjectPermission(projectId, perm, true);
+    }
 
     public List<User> getUsersWithAnyProjectPermission(Integer projectId, int[] permissionTypes, boolean activeOnly) {
         return getUsersWithProjectPermission(projectId, permissionTypes, false, activeOnly);
@@ -705,6 +715,7 @@ public class UserServiceImpl implements UserService {
 
                 userList = authenticator.getUsersWithProjectPermission(projectId, permissionTypes, requireAll, activeOnly,
                         AuthenticationConstants.REQ_SOURCE_UNKNOWN);
+                
             }
 
             if (logger.isDebugEnabled()) {
