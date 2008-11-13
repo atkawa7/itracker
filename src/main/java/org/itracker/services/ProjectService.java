@@ -125,10 +125,4 @@ public interface ProjectService {
     
     Project updateProject(Project project, Integer userId);
     
-    /**
-     * @deprecated the service should 'encapsulate' the DAO and must not expose it!
-     * I think a service createProject() is needed that can replace projectService.getProjectDAO().save(project) in ImportDataProcessAct
-     * @return
-     */
-    public ProjectDAO getProjectDAO();
 }
