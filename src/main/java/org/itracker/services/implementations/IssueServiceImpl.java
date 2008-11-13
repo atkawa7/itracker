@@ -914,10 +914,16 @@ public class IssueServiceImpl implements IssueService {
 			relationA.setIssue(issue);
 
 			relationA.setRelatedIssue(relatedIssue);
+			
+			// set to 0 first, later reassign to relationB.id
+			relationA.setMatchingRelationId(0);
 
 			relationA.setLastModifiedDate(new java.sql.Timestamp(
 					new Date().getTime()));
 
+			
+			getIssueRelationDAO().saveOrUpdate(relationA);
+			
 			IssueRelation relationB = new IssueRelation();
 
 			relationB.setRelationType(matchingRelationType);
@@ -927,9 +933,16 @@ public class IssueServiceImpl implements IssueService {
 			relationB.setIssue(relatedIssue);
 
 			relationB.setRelatedIssue(issue);
+			
+			relationB.setMatchingRelationId(relationA.getId());
 
 			relationB.setLastModifiedDate(new java.sql.Timestamp(
 					new Date().getTime()));
+			
+			getIssueRelationDAO().saveOrUpdate(relationB);
+			
+			relationA.setMatchingRelationId(relationB.getId());
+			getIssueRelationDAO().saveOrUpdate(relationA);
 
 			IssueActivity activity = new IssueActivity();
 			activity
@@ -953,6 +966,7 @@ public class IssueServiceImpl implements IssueService {
 					new Object[] { IssueUtilities
 							.getRelationName(matchingRelationType), issueId }));
 			activity.setIssue(relatedIssue);
+			activity.setUser(user);
 			relatedIssue.getActivities().add(activity);
 			getIssueDAO().saveOrUpdate(relatedIssue);
 			return true;
@@ -994,6 +1008,8 @@ public class IssueServiceImpl implements IssueService {
 		// activity.setUser(userId);
 		// irHome.remove(relationId);
 		// need to save
+		
+		getIssueRelationDAO().delete(issueRelation);
 	}
 
 	public boolean assignIssue(Integer issueId, Integer userId) {
@@ -1181,6 +1197,7 @@ public class IssueServiceImpl implements IssueService {
 		ArrayList<IssueActivity> activities = new ArrayList<IssueActivity>();
 
 		activity.setIssue(updateissue);
+		activity.setUser(getUserDAO().findByPrimaryKey(userId));
 		updateissue.getActivities().add(activity);
 
 		Issue updated = updateIssue(updateissue, userId);
@@ -1533,8 +1550,6 @@ public class IssueServiceImpl implements IssueService {
 	// FIXME: always returns null
 	public IssueHistory getLastIssueHistory(Integer issueId) {
 
-		IssueHistory model = null;
-
 		IssueHistory lastEntry = null;
 
 		Collection<IssueHistory> history = getIssueHistoryDAO().findByIssueId(
@@ -1575,7 +1590,7 @@ public class IssueServiceImpl implements IssueService {
 
 		}
 
-		return model;
+		return lastEntry;
 
 	}
 
