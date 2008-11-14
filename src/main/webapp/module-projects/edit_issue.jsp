@@ -16,17 +16,7 @@
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 <html:javascript formName="issueForm"/>
-<%--    <center>
-          <span class="formError">
-				<html:messages id="err" message="false"> 
-				 <bean:write name="err" />
-				 <br>
-				</html:messages>
-				
-           </span>
-           </center>
-           
-<html:errors name="XXX" />--%>
+
 
 <logic:messagesPresent >
     <center>
@@ -100,9 +90,16 @@
                                           arg0="${issue.id}"
                                           textActionKey="itracker.web.image.move.texttag"/>
 
-                        <%-- TODO re-include this once relate issue correctly works
-                          <it:formatImageAction forward="relateissue" paramName="id" paramValue="${issue.id}" caller="editissue" src="/themes/defaulttheme/images/link.gif" altKey="itracker.web.image.link.issue.alt" textActionKey="itracker.web.image.link.texttag"/>
-                        --%>
+                        <%-- TODO re-include this once relate issue correctly works 
+                          <it:formatImageAction action="addissuerelation" 
+                          						module="/module-projects" 
+                          						paramName="id" 
+                          						paramValue="${issue.id}" 
+                          						caller="editissue" 
+                          						src="/themes/defaulttheme/images/link.gif" 
+                          						altKey="itracker.web.image.link.issue.alt" 
+                          						textActionKey="itracker.web.image.link.texttag"/>
+                   --%>
 					</c:if>
                    
 
@@ -196,15 +193,15 @@
 
         
         <c:choose>
-		<c:when test="${hasFullEdit}">
+		<c:when test="${ hasFullEdit }">
         <html:select property="severity" styleClass="editColumnText">
-            <c:forEach items="${fieldSeverity}" var="severity" varStatus="status">
-                <html:option value="${severity.value}"styleClass="editColumnText">${severity.name}</html:option>
+            <c:forEach items="${ fieldSeverity }" var="severity" varStatus="status">
+                <html:option value="${ severity.value }"styleClass="editColumnText">${ severity.name }</html:option>
             </c:forEach>
         </html:select>
 		</c:when>
 		<c:otherwise>
-			${severityName}
+			${ severityName }
         </c:otherwise>
         </c:choose>
 
@@ -213,7 +210,7 @@
 
     
     <c:choose>
-     <c:when test="${isStatusResolved}">
+     <c:when test="${ isStatusResolved }">
 	  	<td class="editColumnText">
        		${issueOwnerName}
     	</td>
@@ -374,94 +371,41 @@
 
 
 
-<c:if test="${not empty issue.project.customFields}">
-<tr>
-    <td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.customfields"/>:</td>
-</tr>
-<tr class="listHeading">
-    <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td>
-</tr>
-<tr>
-    <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3" width="1"/></td>
-</tr>
-<tr>
-    
-    <c:forEach var="issueField" items="${issueFieldMap}" varStatus="i">
-    <c:if test="${i.count % 2 == 0}">
-		</tr>
+		<c:if test="${ not empty projectFieldsMap }">
+			<tr>
+				<td colspan="4" class="editColumnTitle"><it:message
+					key="itracker.web.attr.customfields" />:</td>
+			</tr>
+			<tr class="listHeading">
+				<td><it:message key="itracker.web.attr.field" /></td>
+				<td><it:message key="itracker.web.attr.value" /></td>
+				<td><it:message key="itracker.web.attr.field" /></td>
+				<td><it:message key="itracker.web.attr.value" /></td>
+			</tr>
+			<c:forEach var="projectField" varStatus="i" items="${ projectFieldsMap }"
+				step="2">
+				<tr>
+					<it:formatCustomField field="${ projectField.key }"
+										  currentValue="${ projectField.value }" 
+										  displayType="${ hasFullEdit?'edit' : 'view' }" />
+					<c:forEach begin="${ i.index + 1 }" end="${ i.index + 1 }"
+						var="projectField" items="${ projectFieldsMap }">
+						<it:formatCustomField field="${ projectField.key }"
+											  currentValue="${ projectField.value }"
+											  displayType="${ hasFullEdit?'edit' : 'view' }" />
+					</c:forEach>
+				</tr>
+			</c:forEach>
+
+			</tr>
+			<tr>
+				<td colspan="4"><html:img module="/"
+					page="/themes/defaulttheme/images/blank.gif" width="1" height="18" /></td>
+			</tr>
+
+		</c:if>
+		
 		<tr>
-	</c:if>
-
-    
-   <%--  <td class="editColumnTitle">
-        <%=CustomFieldUtilities.getCustomFieldName(projectFields.get(i).getId()) + ": "%>
-    </td>
-    <td colspan="2" align="left" class="editColumnText">--%>
-        
-		<c:choose>
-		<c:when test="${hasFullEdit }">
-            <it:formatCustomField field="${issueField.key}" formName="issueForm" />
-            
-            <%--
-            String customFieldkey = "customFields(" + projectFields.get(i).getId() + ")";
-        %>
-        <c:set var="customFields" value="<%=customFieldkey%>"/>
-        <% if (projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
-            List<CustomFieldValue> options = projectFields.get(i).getOptions();
-        %>
-        <html:select property="<%=customFieldkey%>" styleClass="editColumnText">
-            <%
-                for (int l = 0; l < options.size(); l++) {
-            %>
-            <html:option value="<%=options.get(l).getValue()%>"><%=options.get(l).getName()%>
-            </html:option>
-            <% }
-            %>
-        </html:select>
-        <% } else {
-	        StringBuilder img = new StringBuilder();
-
-            if (projectFields.get(i).getFieldType() == CustomField.Type.DATE) {
-
-                //img = "<img onmouseup=\"toggleDatePicker('cf" + projectFields.get(i).getId() + "','" + formName + ".customFields(" + projectFields.get(i).getId() + ")')\"";
-                img.append("<img onmouseup=\"toggleDatePicker('cf").append(projectFields.get(i).getId()).append("','").append(formName).append(".customFields(").append(projectFields.get(i).getId()).append(")')\"");
-                //img += " id=cf" + projectFields.get(i).getId() + "Pos name=cf" + projectFields.get(i).getId() + "Pos width=19 height=19 src=\" ";
-                img.append(" id=cf").append(projectFields.get(i).getId()).append("Pos name=cf").append(projectFields.get(i).getId()).append("Pos width=19 height=19 src=\" ");
- //               try {
-//                    img += TagUtils.getInstance().computeURL(pageContext, null, null, request.getContextPath() + "/images/calendar.gif", null, null, null, null, false);
-			    img.append(request.getContextPath()).append("/themes/defaulttheme/images/calendar.gif");
-
-//                } catch (Exception murle) {
-//                    img += "../images/calendar.gif";
-//                }
-                //img += "\" align=\"top\" border=\"0\"";
-                img.append("\" align=\"top\" border=\"0\"");
-                //img += "<div id=\"cf" + projectFields.get(i).getId() + "\" style=\"position:absolute;\"></div>";
-                img.append("<div id=\"cf").append(projectFields.get(i).getId()).append("\" style=\"position:absolute;\"></div>");
-            }
-
-        %>
-        <html:text property="<%=customFieldkey%>" styleClass="editColumnText"/>
-        <%= img %>
-        <% }
-        --%>
-        </c:when>
-        <c:otherwise>
-        
-            ${issueField.value}
-        
-        </c:otherwise>
-        </c:choose>
-   <%--  </td>--%>
-   
-   </c:forEach>
-</tr>
-<tr>
-    <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td>
-</tr>
-
-</c:if>
-<tr>
     <td>
         <html:submit styleClass="button" altKey="itracker.web.button.update.alt"
                      titleKey="itracker.web.button.update.alt"><it:message
@@ -469,7 +413,47 @@
     </td>
 </tr>
     <%-- TODO reinclude this once related issues has been implemented corretly
-          <%
+    <c:if test="${ not empty issueRelations }">
+    	       <tr><td class="editColumnTitle" colspan="4"><it:message key="itracker.web.attr.relatedissues"/>:</td></tr>
+               <tr class="listHeading">
+               		<td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
+    				<td colspan="2" valign="top">
+                                <table width="100%" border="0" cellspacing="0" cellspacing="1" >
+                                  <tr>
+                                    <td class="listRowTextBold" align="left" colspan="5">
+                                    	<it:message key="itracker.issuerelation.${  }"></it:message>
+                                      <%--= ITrackerResources.getString(ITrackerResources.KEY_BASE_ISSUE_RELATION + i, currLocale) --:
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td width="10"><html:img page="/themes/defaulttheme/images/blank.gif" width="10" height="1"/></td>
+                                    <td width="15%"></td>
+                                    <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="5" height="1"/></td>
+                                    <td width="60%"></td>
+                                    <td width="25%"></td>
+                                  </tr>
+    	
+    	<c:forEach items="${ issueRelations }" var="relation" varStatus="status">
+    	<c:set var="relType" value="${ relation.relationType }" />
+    	<c:if test="${ relType < 3 }"><-- RELATION_TYPE_RELATED_P = 1; RELATION_TYPE_RELATED_C = 2 -->
+    	
+                        <tr>
+                            <td valign="top"><it:formatImageAction action="removerelation" paramName="relationId" paramValue="${ relation.id }" caller="editissue" src="/images/delete.gif" altKey="itracker.web.image.delete.relation.alt" textActionKey="itracker.web.image.delete.texttag"/></td>
+                            <td class="listRowText" align="right" valign="top" ><it:link forward="viewissue" styleClass="listRowText" paramName="id" paramValue="${ relation.relatedIssueId }">${ relation.relatedIssueId }</it:link></td>
+                            <td></td>
+                            <td class="listRowText" align="left" valign="top" ><it:formatDescription>${ relation.relatedIssueDescription }</it:formatDescription></td>
+                            <td class="listRowText" align="left" valign="top" ><it:message key="itracker.status.${ relation.relatedIssueStatus }"></it:message></td>
+                          </tr>
+    	
+    	</c:if>
+    	</c:forEach>
+    
+                     </table></td>
+                     </tr>
+		<tr><td colspan="4"><html:img page="/themes/defaulttheme/images/blank.gif" height="18" width="1"/></td></tr>
+    </c:if>
+    
+          %--
              IssueRelationModel[] relations = issue.getRelations();
              Arrays.sort(relations, new IssueRelationModel());
           %>
@@ -528,9 +512,11 @@
                  }
               %>
               <tr><td colspan="4"><html:img page="/themes/defaulttheme/images/blank.gif" height="18" width="1"/></td></tr>
+          %-- 
+          END Re-Integrated relation stuff
           --%>
 
-<c:if test="${not hasNoViewAttachmentOption}">
+<c:if test="${ not hasNoViewAttachmentOption} ">
 
 <tr>
     <td colspan="4">

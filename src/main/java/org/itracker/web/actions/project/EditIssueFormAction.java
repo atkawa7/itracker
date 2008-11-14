@@ -20,9 +20,11 @@ package org.itracker.web.actions.project;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -46,6 +48,7 @@ import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueField;
 import org.itracker.model.IssueHistory;
+import org.itracker.model.IssueRelation;
 import org.itracker.model.NameValuePair;
 import org.itracker.model.Notification;
 import org.itracker.model.PermissionType;
@@ -91,7 +94,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 			Map<Integer, Set<PermissionType>> userPermissions,
 			Map<Integer, List<NameValuePair>> listOptions, ActionMessages errors)
 			throws ServletException, IOException, WorkflowException {
-		HttpSession session = request.getSession();
+		
 		NotificationService notificationService = ServletContextUtils
 		.getItrackerServices().getNotificationService();
 		String pageTitleKey = "itracker.web.editissue.title";
@@ -118,35 +121,10 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 		List<Version> issueVersions = issue.getVersions();
 		Collections.sort(issueVersions, new Version.VersionComparator());
 		/* Get project fields and put name and value in map */
-		List<CustomField> projectFields = issue.getProject().getCustomFields();
-		Map<CustomField,String> issueFieldMap = new HashMap<CustomField, String>();
+		setupProjectFieldsMapJspEnv(issue.getProject().getCustomFields(), issue.getFields(), request);
 
-		if (projectFields != null && projectFields.size() > 0) {
-			Collections.sort(projectFields, CustomField.ID_COMPARATOR);
-			List<IssueField> issueFields = issue.getFields();
-			HashMap<String, String> fieldValues = new HashMap<String, String>();
-			for (int j = 0; j < issueFields.size(); j++) {
-				if (issueFields.get(j).getCustomField() != null
-						&& issueFields.get(j).getCustomField().getId() > 0) {
-					Locale currLocale = (Locale) session
-							.getAttribute(Constants.LOCALE_KEY);
-					fieldValues.put(issueFields.get(j).getCustomField().getId()
-							.toString(), issueFields.get(j)
-							.getValue(currLocale));
-				}
-			}
-			for (int i = 0; i < projectFields.size(); i++) {
-				String fieldValue = (fieldValues.get(String
-						.valueOf(projectFields.get(i).getId())) == null ? ""
-						: fieldValues.get(String.valueOf(projectFields.get(i)
-								.getId())));
-				if (fieldValue != null) { 
-	        	 fieldValue = (projectFields.get(i).getFieldType() == CustomField.Type.LIST ? projectFields.get(i).getOptionNameByValue(fieldValue) : fieldValue);
-	        	 } 
-				issueFieldMap.put(projectFields.get(i), fieldValue);
-				
-			}
-		}
+		setupRelationsRequestEnv(issue.getRelations(), request);
+		
 		String wrap = "soft";
         if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML, issue.getProject().getOptions()) ||
                 ProjectUtilities.hasOption(ProjectUtilities.OPTION_LITERAL_HISTORY_HTML, issue.getProject().getOptions())) {
@@ -211,8 +189,55 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 		Collections.sort(issueHistory, IssueHistory.CREATE_DATE_COMPARATOR);
 		request.setAttribute("issueHistory", issueHistory);
 
+
+	}
+	
+	/**
+	 *  Get project fields and put name and value in map 
+	 */
+	protected static final void setupProjectFieldsMapJspEnv(List<CustomField> projectFields, Collection<IssueField> issueFields, HttpServletRequest request) {
+		Map<CustomField,String> projectFieldsMap = new HashMap<CustomField, String>();
+
+		if (projectFields != null && projectFields.size() > 0) {
+			Collections.sort(projectFields, CustomField.ID_COMPARATOR);
+			
+			HashMap<String, String> fieldValues = new HashMap<String, String>();
+			Iterator<IssueField> issueFieldsIt = issueFields.iterator();
+			while (issueFieldsIt.hasNext()) {
+				IssueField issueField = (IssueField) issueFieldsIt.next();
+			
+				if (issueField.getCustomField() != null
+						&& issueField.getCustomField().getId() > 0) {
+					Locale currLocale = LoginUtilities.getCurrentLocale(request);
+					fieldValues.put(issueField.getCustomField().getId()
+							.toString(), issueField
+							.getValue(currLocale));
+				}
+			}
+			for (int i = 0; i < projectFields.size(); i++) {
+				String fieldValue = (fieldValues.get(String
+						.valueOf(projectFields.get(i).getId())) == null ? ""
+						: fieldValues.get(String.valueOf(projectFields.get(i)
+								.getId())));
+				if (fieldValue != null) { 
+	        	 fieldValue = (projectFields.get(i).getFieldType() == CustomField.Type.LIST ? projectFields.get(i).getOptionNameByValue(fieldValue) : fieldValue);
+	        	 } 
+				projectFieldsMap.put(projectFields.get(i), fieldValue);
+				
+			}
+			
+			request.setAttribute("projectFieldsMap", projectFieldsMap);
+		}
 	}
 
+	
+	protected static final void setupRelationsRequestEnv(List<IssueRelation> relations, HttpServletRequest request) {
+        Collections.sort(relations, IssueRelation.LAST_MODIFIED_DATE_COMPARATOR);
+        request.setAttribute("issueRelations", relations);
+
+	}
+	
+	
 	public static final void setupNotificationsInRequest(
 			HttpServletRequest request, Issue issue,
 			NotificationService notificationService) {
@@ -541,5 +566,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 		log.info("EditIssueFormAction: Forward: Error");
 		return mapping.findForward("error");
 	}
+	
+	
 
 }

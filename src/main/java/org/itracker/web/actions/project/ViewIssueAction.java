@@ -143,20 +143,8 @@ public class ViewIssueAction extends ItrackerBaseAction {
 		/*
 		 * Create Project field map
 		 */
-		List<CustomField> projectFields = project.getCustomFields();
-		Map<CustomField,String> projectFieldsMap = new HashMap<CustomField, String>();
-        if(projectFields != null && projectFields.size() > 0) {
-            Collections.sort(projectFields, CustomField.ID_COMPARATOR);
-            List<IssueField> issueFields = issue.getFields();
-            HashMap<Integer,String> fieldValues = new HashMap<Integer,String>();
-            for(int i = 0; i < issueFields.size(); i++) {
-               fieldValues.put(issueFields.get(i).getCustomField().getId(), issueFields.get(i).getValue((java.util.Locale)session.getAttribute("currLocale")));
-            }
-            for(CustomField projectField: projectFields) {
-            	String fieldValue = (String) fieldValues.get(projectField.getId());
-            	projectFieldsMap.put(projectField, fieldValue);
-            }
-        }
+		EditIssueFormAction.setupProjectFieldsMapJspEnv(project.getCustomFields(), issue.getFields(), request);
+
 		/*
 		 * Set the objects in request that are required for ui render
 		 */
@@ -179,7 +167,7 @@ public class ViewIssueAction extends ItrackerBaseAction {
 		request.setAttribute("issueStatusName",issueStatusName);
 		request.setAttribute("issueSeverityName",issueSeverityName);
 		request.setAttribute("issueOwnerName",(issue.getOwner() == null ? ITrackerResources.getString("itracker.web.generic.unassigned", (java.util.Locale)session.getAttribute("currLocale")) : issue.getOwner().getFirstName() + " " + issue.getOwner().getLastName()) );
-		request.setAttribute("projectFieldsMap", projectFieldsMap);
+
 		log.info("ViewIssueAction: Forward: viewissue");
 		return mapping.findForward("viewissue");
 
