@@ -197,7 +197,7 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public String getName() {
-		log.warn("getName: is deprecated", new RuntimeException());
+		log.warn("getName: is deprecated");
 		return null;
 	}
 
@@ -207,7 +207,7 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public void setName(String value) {
-		log.warn("setName: is deprecated", new RuntimeException());
+		log.warn("setName: is deprecated");
 		// name = value;
 	}
 
@@ -217,7 +217,7 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public String getPage() {
-		log.warn("getPage: is deprecated", new RuntimeException());
+		log.warn("getPage: is deprecated");
 		return null;
 	}
 
@@ -227,7 +227,7 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public void setPage(String value) {
-		log.warn("setPage: is deprecated", new RuntimeException());
+		log.warn("setPage: is deprecated");
 		// page = value;
 	}
 
@@ -237,7 +237,7 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public int getPermission() {
-		log.warn("getPermission: is deprecated", new RuntimeException());
+		log.warn("getPermission: is deprecated");
 		return -1;
 	}
 
@@ -247,7 +247,7 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @return
 	 */
 	public void setPermission(int value) {
-		log.warn("setPermission: is deprecated", new RuntimeException());
+		log.warn("setPermission: is deprecated");
 		// permission = value;
 	}
 
