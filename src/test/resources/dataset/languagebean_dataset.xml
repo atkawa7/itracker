@@ -35,6 +35,15 @@
             <value>itracker.user.status.-1</value>
             <value>test_value</value>
         </row>
+
+        <row>
+            <value>9999971</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>BASE</value>
+            <value>test_key</value>
+            <value>test_value</value>
+        </row>
         
         <row>
             <value>999996</value>
@@ -61,6 +70,16 @@
             <value>itracker.customfield.4444.label</value>
             <value>hi</value>
         </row>
+        
+        <row>
+            <value>999995</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>BASE</value>
+            <value>BASE_KEY</value>
+            <value>BASE_VALUE</value>
+        </row>
+        
         
        </table>
 </dataset>

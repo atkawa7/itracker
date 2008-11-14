@@ -194,20 +194,20 @@ public class ConfigurationServiceImplTest extends
 	public void testGetConfigurationItemsByType() {
 		List<Configuration> configs = configurationService.getConfigurationItemsByType(1);
 		assertNotNull(configs);
-		assertEquals("configs of type 1", 1, configs.size());
+		assertEquals("configs of type 1", 2, configs.size());
 		assertEquals("config type", 1, configs.get(0).getType());
 		
 		configs = configurationService.getConfigurationItemsByType(2);
 		assertNotNull(configs);
-		assertEquals("configs of type 2", 0, configs.size());
+		assertEquals("configs of type 2", 1, configs.size());
 		
 		configs = configurationService.getConfigurationItemsByType(1, Locale.UK);
 		assertNotNull(configs);
-		assertEquals("configs of type 1", 1, configs.size());
+		assertEquals("configs of type 1", 2, configs.size());
 		
 		configs = configurationService.getConfigurationItemsByType(2, Locale.UK);
 		assertNotNull(configs);
-		assertEquals("configs of type 1", 0, configs.size());
+		assertEquals("configs of type 1", 1, configs.size());
 		
 	}
 	
@@ -555,7 +555,7 @@ public class ConfigurationServiceImplTest extends
 	public void testGetLanguageItemsByKey() {
 		List<Language> languages = configurationService.getLanguageItemsByKey("test_key");
 		assertNotNull(languages);
-		assertEquals("total languaes with test_key key", 1, languages.size());
+		assertEquals("total languaes with test_key key", 2, languages.size());
 		
 		languages = configurationService.getLanguageItemsByKey("non_existent_key");
 		assertNotNull(languages);
@@ -604,7 +604,7 @@ public class ConfigurationServiceImplTest extends
 	public void testGetSortedKeys() {
 		String[] keys = configurationService.getSortedKeys();
 		assertNotNull( keys );
-		assertEquals( "total keys", 0, keys.length ); // search is done on a base locale
+		assertEquals( "total keys", 2, keys.length ); // search is done on a base locale
 	}
 	
 	@Test
@@ -684,11 +684,11 @@ public class ConfigurationServiceImplTest extends
 	public void testGetLanguage() {
 		List<Language> languages = configurationService.getLanguage( new Locale("test_locale") );
 		assertNotNull( languages );
-		assertEquals( "total languages with test_locale", 1, languages.size() );
+		assertEquals( "total languages with test_locale", 2, languages.size() );
 		
 		languages = configurationService.getLanguage( new Locale("undefined_locale") );
 		assertNotNull( languages );
-		assertEquals( "total languages with undefined_locale", 0, languages.size() );
+		assertEquals( "total languages with undefined_locale", 2, languages.size() );
 		
 	}
 

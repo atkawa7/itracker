@@ -1,5 +1,6 @@
 package org.itracker.persistence.dao;
 
+
 import java.util.List;
 
 import org.itracker.AbstractDependencyInjectionTest;
@@ -26,7 +27,7 @@ public class ConfigurationDAOImplTest extends AbstractDependencyInjectionTest {
     public void testFindByType() {
         List<Configuration> configurations = configurationDAO.findByType(1);
 
-        assertEquals(1, configurations.size());
+        assertEquals(2, configurations.size());
 
         Configuration configuration = configurations.get(0);
 

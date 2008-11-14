@@ -40,7 +40,7 @@ public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
 
         assertNotNull( languages );
 
-        assertEquals( 1, languages.size() );
+        assertEquals( 2, languages.size() );
 
         Language language = languages.get( 0 );
 
