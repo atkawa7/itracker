@@ -19,7 +19,6 @@
 package org.itracker.services.implementations;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -586,7 +585,6 @@ public class UserServiceImpl implements UserService {
         return successful;
     }
 
-    // FIXME: always returns false
     public boolean removeUserPermissions(Integer userId, List<Permission> newPermissions) {
         boolean successful = false;
         if (newPermissions == null || newPermissions.size() == 0) {
@@ -594,13 +592,13 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
-            // TODO: I commented the next line, because it is not used.
-            // User user = userDAO.findByPrimaryKey(userId);
-        	// FIXME: remove permissions from user, do not delete them from DB
             for (Iterator<Permission> delIterator = newPermissions.iterator(); delIterator.hasNext();) {
                 Permission permission = (Permission) delIterator.next();
                 permissionDAO.delete(permission);
             }
+            
+            successful = true;
+            
         } catch (AuthenticatorException ae) {
             logger.warn("Error setting user (" + userId + ") permissions.  AuthenticatorException.", ae);
             successful = false;
