@@ -201,6 +201,11 @@ public class ITrackerResources {
         if (locale != null && bundle != null) {
             synchronized (bundleLock) {
                 languages.put(locale, bundle);
+                String localeString = locale.toString();
+                if (localeString.length() == 5) {
+                	localeString = localeString.substring(0, 2) + "_" + localeString.substring(3).toUpperCase();
+                }
+                locales.put(localeString, locale);
             }
         }
     }
