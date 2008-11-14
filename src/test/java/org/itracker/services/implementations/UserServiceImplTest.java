@@ -19,7 +19,6 @@ import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.UserUtilities;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class UserServiceImplTest extends AbstractDependencyInjectionTest {
@@ -346,37 +345,25 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
      * Fix {@link UserServiceImpl#removeUserPermissions(Integer, List)} first
      */
     @Test
-    @Ignore
     public void testRemoveUserPermissions() {
     	
-    	int userId = 2;
+    	boolean removed = userService.removeUserPermissions(3, null);
+    	assertFalse( removed );
     	
-    	List<Permission> oldPermissions = userService.getPermissionsByUserId(userId);
-    	
-    	boolean removed = userService.removeUserPermissions(userId, null);
+    	removed = userService.removeUserPermissions(3, new ArrayList<Permission>());
     	assertFalse(removed);
     	
-    	removed = userService.removeUserPermissions(2, new ArrayList<Permission>());
-    	assertFalse(removed);
     	
-    	List<Permission> permissions = new ArrayList<Permission>();
-    	Permission p1 = new Permission();
-    	Permission p2 = new Permission();
-    	permissions.add( p1 );
-    	permissions.add( p2 );
+    	List<Permission> permissions = userService.getPermissionsByUserId(3);
+    	assertNotNull( permissions );
+    	assertTrue( "permission size for user#3", permissions.size() > 0 );
     	
-    	removed = userService.removeUserPermissions(2, permissions);
+    	removed = userService.removeUserPermissions(3, permissions);
     	assertTrue(removed);
     	
-    	List<Permission> updatedPermissions = userService.getPermissionsByUserId(userId);
-    	assertNotNull(updatedPermissions);
-    	assertEquals(oldPermissions.size(), updatedPermissions.size());
-    	for (int j=0; j<oldPermissions.size(); j++) {
-    		assertSame(oldPermissions.get(j), updatedPermissions.get(j));
-    	}
-//    	Collections.
-    	
-    	
+    	permissions = userService.getPermissionsByUserId(3);
+    	assertNotNull( permissions );
+    	assertEquals( "permission size for user#3", 0, permissions.size() );
     	
     }
     
