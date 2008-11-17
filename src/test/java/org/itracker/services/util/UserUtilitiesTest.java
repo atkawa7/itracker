@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Language;
@@ -26,6 +27,7 @@ import org.junit.Test;
  * @author Andrey Sergievskiy
  */
 public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
+    private static final Logger log = Logger.getLogger(UserUtilitiesTest.class);
 
     private void doTestGetStatusName(final Locale locale,
             final int statusId, final String expected) {
@@ -39,8 +41,6 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verifies UserUtilities.getStatusName
      */
     @Test
-//    @Ignore
-    // fails when running with other tests
     public void testGetStatusName() {
         // testing a case of missing key
         doTestGetStatusName(null,
@@ -82,8 +82,6 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verifies UserUtilities#getStatusName(int)
      */
     @Test
-//    @Ignore
-    // fails when running with other tests
     public void testGetStatusNameDefault() {
         doTestGetStatusName(999, "MISSING KEY: itracker.user.status.999");
         doTestGetStatusName(UserUtilities.STATUS_DELETED, "Deleted");
@@ -117,8 +115,6 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verifies UserUtilities#getStatusNames(Locale)
      */
     @Test
-//    @Ignore
-    // fails when running with other tests
     public void testGetStatusNames() {
         doTestGetStatusNames(null, new NameValuePair[]{
                     new NameValuePair("-1", "Deleted"),
@@ -164,8 +160,6 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verifies UserUtilities#getStatusNames()
      */
     @Test
-//    @Ignore
-    // fails when running with other tests
     public void testGetStatusNamesDefault() {
         doTestGetStatusNamesDefault(new NameValuePair[]{
                     new NameValuePair("-1", "Deleted"),
@@ -186,8 +180,6 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verifies UserUtilities.getPermissionName
      */
     @Test
-//    @Ignore
-    // fails when running with other tests
     public void testGetPermissionName() {
         // testing a case of missing key
         doTestGetPermissionName(null,
@@ -343,8 +335,6 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-//    @Ignore
-    // fails when running with other tests
     public void testGetPermissionNames() {
         doTestGetPermissionNames(null, new NameValuePair[]{
                     new NameValuePair("Project Admin",
@@ -458,8 +448,6 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verified UserUtilities#getPermissionNames()
      */
     @Test
-//    @Ignore
-    // fails when running with other tests
     public void testGetPermissionNamesDefault() {
         doTestGetPermissionNamesDefault(new NameValuePair[]{
                     new NameValuePair("Project Admin",
@@ -587,22 +575,24 @@ public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
     public void onSetUp() throws Exception {
     	super.onSetUp();
     	
-    	// need to initialize translations from ITracker.properties explicitly
-    	LanguageDAO languageDAO = (LanguageDAO) applicationContext.getBean("languageDAO"); 
-                            
-    	Properties localeProperties = new PropertiesFileHandler(
-        	"/org/itracker/core/resources/ITracker.properties").getProperties();
-        for (Enumeration<?> propertiesEnumeration = localeProperties.propertyNames(); propertiesEnumeration.hasMoreElements();) {
-            String key = (String) propertiesEnumeration.nextElement();
-            String value = localeProperties.getProperty(key);
-            languageDAO.saveOrUpdate(new Language(ITrackerResources.BASE_LOCALE, key, value));
+        try {
+	        // need to initialize translations from ITracker.properties explicitly
+	        LanguageDAO languageDAO = (LanguageDAO) applicationContext.getBean("languageDAO");
+	
+	        Properties localeProperties = new PropertiesFileHandler(
+	                "/org/itracker/core/resources/ITracker.properties").getProperties();
+	        for (Enumeration<?> propertiesEnumeration = localeProperties.propertyNames(); propertiesEnumeration.hasMoreElements();) {
+	            String key = (String) propertiesEnumeration.nextElement();
+	            String value = localeProperties.getProperty(key);
+	            languageDAO.saveOrUpdate(new Language(ITrackerResources.BASE_LOCALE, key, value));
+	        }
+	
+	        ITrackerResources.clearBundles();
+	        } catch (final Exception e) {
+	            log.warn(e);
+	        }
         }
         
-		ITrackerResources.clearBundles();
-    	
-    }
-    
-    
     /**
      * Defines a set of datafiles to be uploaded into database.
      * @return an array with datafiles.

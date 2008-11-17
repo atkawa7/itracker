@@ -9,11 +9,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessages;
+import org.apache.struts.validator.ValidatorForm;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.core.resources.ITrackerResources;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.itracker.model.NameValuePair;
+import org.itracker.model.Project;
+import org.itracker.model.ProjectScript;
+import org.itracker.model.WorkflowScript;
+import org.itracker.services.exceptions.WorkflowException;
 
 /**
  *
@@ -21,105 +27,100 @@ import org.itracker.model.NameValuePair;
  */
 public class WorkflowUtilitiesTest extends AbstractDependencyInjectionTest {
 
-
-
     /**
      * Verifies WorkflowUtilities.getEventName
      */
     @Test
-    @Ignore
     public void testGetEventName() {
         // testing a case of missing key
         doTestGetEventName(null,
                 999, "MISSING KEY: itracker.workflow.field.event.999");
         
         // "On Populate"
-        doTestGetEventName(new Locale(ITrackerResources.BASE_LOCALE),
-                WorkflowUtilities.EVENT_FIELD_ONPOPULATE, "On Populate");
-        doTestGetEventName(null,
-                WorkflowUtilities.EVENT_FIELD_ONPOPULATE, "On Populate");
-        doTestGetEventName(new Locale("test_locale"),
+//        doTestGetEventName(new Locale(ITrackerResources.BASE_LOCALE),
+//                WorkflowUtilities.EVENT_FIELD_ONPOPULATE, "On Populate");
+//        doTestGetEventName(null,
+//                WorkflowUtilities.EVENT_FIELD_ONPOPULATE, "On Populate");
+        doTestGetEventName(new Locale("test"),
                 WorkflowUtilities.EVENT_FIELD_ONPOPULATE, "test_value");
 
         // "On Sort"
-        doTestGetEventName(new Locale(ITrackerResources.BASE_LOCALE),
-                WorkflowUtilities.EVENT_FIELD_ONSORT, "On Sort");
-        doTestGetEventName(null,
-                WorkflowUtilities.EVENT_FIELD_ONSORT, "On Sort");
-        doTestGetEventName(new Locale("test_locale"),
+//        doTestGetEventName(new Locale(ITrackerResources.BASE_LOCALE),
+//                WorkflowUtilities.EVENT_FIELD_ONSORT, "On Sort");
+//        doTestGetEventName(null,
+//                WorkflowUtilities.EVENT_FIELD_ONSORT, "On Sort");
+        doTestGetEventName(new Locale("test"),
                 WorkflowUtilities.EVENT_FIELD_ONSORT, "On Sort");
 
         // "On SetDefault"
-        doTestGetEventName(new Locale(ITrackerResources.BASE_LOCALE),
-                WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, "On SetDefault");
-        doTestGetEventName(null,
-                WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, "On SetDefault");
-        doTestGetEventName(new Locale("test_locale"),
+//        doTestGetEventName(new Locale(ITrackerResources.BASE_LOCALE),
+//                WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, "On SetDefault");
+//        doTestGetEventName(null,
+//                WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, "On SetDefault");
+        doTestGetEventName(new Locale("test"),
                 WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, "On SetDefault");
 
         // "On Validate"
-        doTestGetEventName(new Locale(ITrackerResources.BASE_LOCALE),
-                WorkflowUtilities.EVENT_FIELD_ONVALIDATE, "On Validate");
-        doTestGetEventName(null,
-                WorkflowUtilities.EVENT_FIELD_ONVALIDATE, "On Validate");
-        doTestGetEventName(new Locale("test_locale"),
+//        doTestGetEventName(new Locale(ITrackerResources.BASE_LOCALE),
+//                WorkflowUtilities.EVENT_FIELD_ONVALIDATE, "On Validate");
+//        doTestGetEventName(null,
+//                WorkflowUtilities.EVENT_FIELD_ONVALIDATE, "On Validate");
+        doTestGetEventName(new Locale("test"),
                 WorkflowUtilities.EVENT_FIELD_ONVALIDATE, "On Validate");
 
         // "On PreSubmit"
-        doTestGetEventName(new Locale(ITrackerResources.BASE_LOCALE),
-                WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, "On PreSubmit");
-        doTestGetEventName(null,
-                WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, "On PreSubmit");
-        doTestGetEventName(new Locale("test_locale"),
+//        doTestGetEventName(new Locale(ITrackerResources.BASE_LOCALE),
+//                WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, "On PreSubmit");
+//        doTestGetEventName(null,
+//                WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, "On PreSubmit");
+        doTestGetEventName(new Locale("test"),
                 WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, "On PreSubmit");
 
         // "On PostSubmit"
-        doTestGetEventName(new Locale(ITrackerResources.BASE_LOCALE),
-                WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, "On PostSubmit");
-        doTestGetEventName(null,
-                WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, "On PostSubmit");
-        doTestGetEventName(new Locale("test_locale"),
+//        doTestGetEventName(new Locale(ITrackerResources.BASE_LOCALE),
+//                WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, "On PostSubmit");
+//        doTestGetEventName(null,
+//                WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, "On PostSubmit");
+        doTestGetEventName(new Locale("test"),
                 WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, "On PostSubmit");
     }
 
-   
     /**
      * Verifies WorkflowUtilities.getEvents
      */
     @Test
-    @Ignore
     public void testGetEvents() {
-        doTestGetEvents(null,
-                new NameValuePair[]{
-                    new NameValuePair("On Populate",
-                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPOPULATE)),
-                    new NameValuePair("On Sort",
-                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSORT)),
-                    new NameValuePair("On SetDefault",
-                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT)),
-                    new NameValuePair("On Validate",
-                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONVALIDATE)),
-                    new NameValuePair("On PreSubmit",
-                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT)),
-                    new NameValuePair("On PostSubmit",
-                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT))
-                });
-        doTestGetEvents(new Locale(ITrackerResources.BASE_LOCALE),
-                new NameValuePair[]{
-                    new NameValuePair("On Populate",
-                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPOPULATE)),
-                    new NameValuePair("On Sort",
-                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSORT)),
-                    new NameValuePair("On SetDefault",
-                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT)),
-                    new NameValuePair("On Validate",
-                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONVALIDATE)),
-                    new NameValuePair("On PreSubmit",
-                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT)),
-                    new NameValuePair("On PostSubmit",
-                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT))
-                });
-        doTestGetEvents(new Locale("test_locale"),
+//        doTestGetEvents(null,
+//                new NameValuePair[]{
+//                    new NameValuePair("On Populate",
+//                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPOPULATE)),
+//                    new NameValuePair("On Sort",
+//                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSORT)),
+//                    new NameValuePair("On SetDefault",
+//                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT)),
+//                    new NameValuePair("On Validate",
+//                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONVALIDATE)),
+//                    new NameValuePair("On PreSubmit",
+//                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT)),
+//                    new NameValuePair("On PostSubmit",
+//                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT))
+//                });
+//        doTestGetEvents(new Locale("en_US"),
+//                new NameValuePair[]{
+//                    new NameValuePair("On Populate",
+//                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPOPULATE)),
+//                    new NameValuePair("On Sort",
+//                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSORT)),
+//                    new NameValuePair("On SetDefault",
+//                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT)),
+//                    new NameValuePair("On Validate",
+//                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONVALIDATE)),
+//                    new NameValuePair("On PreSubmit",
+//                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT)),
+//                    new NameValuePair("On PostSubmit",
+//                    Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT))
+//                });
+        doTestGetEvents(new Locale("test"),
                 new NameValuePair[]{
                     new NameValuePair("test_value",
                     Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPOPULATE)),
@@ -162,12 +163,175 @@ public class WorkflowUtilitiesTest extends AbstractDependencyInjectionTest {
     }
 
     /**
-     * Verifies WorkflowUtilities.processFieldScripts
+     * Verifies WorkflowUtilities.processFieldScripts:
+     * 1. Verifies that no scripts are run when no matches with incoming event.
+     * 2. Verifies that no scripts are run when no matches with updated field.
+     * 3. Verifies that script is run when everything matches well and proper
+     * result is returned, but validatorForm is not updated since incoming
+     * event doesn't suppose this.
      */
     @Test
-    @Ignore
     public void testProcessFieldScripts() {
-        // @todo
+        final List<ProjectScript> projectScripts = new Vector<ProjectScript>();
+        final Project project = new Project("testProcessFieldScript");
+        {
+            final ProjectScript projectScript = new ProjectScript();
+            projectScript.setProject(project);
+            final WorkflowScript workflowScript = new WorkflowScript();
+            workflowScript.setEvent(WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT);
+            workflowScript.setScript(
+                    "import org.itracker.model.NameValuePair;\n" +
+                    "currentValue.add(" +
+                    "new NameValuePair(\"fieldDescription\", \"onPostSubmit\"));\n");
+            projectScript.setScript(workflowScript);
+            projectScript.setFieldId(IssueUtilities.FIELD_STATUS);
+            projectScript.setPriority(1);
+            projectScripts.add(projectScript);
+    }
+        {
+            final ProjectScript projectScript = new ProjectScript();
+            projectScript.setProject(project);
+            final WorkflowScript workflowScript = new WorkflowScript();
+            workflowScript.setEvent(WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT);
+            workflowScript.setScript(
+                    "import org.itracker.model.NameValuePair;\n" +
+                    "currentValue.add(" +
+                    "new NameValuePair(\"status\", \"onSetDefault\"));\n");
+            projectScript.setScript(workflowScript);
+            projectScript.setFieldId(IssueUtilities.FIELD_STATUS);
+            projectScript.setPriority(1);
+            projectScripts.add(projectScript);
+        }
+
+        class ValidatorFormAdhoc extends ValidatorForm {
+
+            public String status = "defaultStatus";
+            public String fieldDescription = "defaultDescription";
+        }
+
+        try {
+            final ValidatorFormAdhoc validatorForm = new ValidatorFormAdhoc();
+            final List<NameValuePair> result =
+                    WorkflowUtilities.processFieldScripts(projectScripts,
+                    WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT,
+                    IssueUtilities.FIELD_STATUS,
+                    new Vector<NameValuePair>() /* currentValue */,
+                    new ActionErrors() /* currentErrors */,
+                    validatorForm);
+            assertEquals("WorkflowUtilities.processFieldScripts(scripts, " +
+                    "EVENT_FIELD_ONPRESUBMIT, FIELD_STATUS, [], " +
+                    "actionErrors, validatorForm).length",
+                    0, result.size());
+            assertEquals("validatorForm.status",
+                    "defaultStatus", validatorForm.status);
+        } catch (final WorkflowException e) {
+            assertTrue(e.getMessage(), false);
+        }
+        try {
+            final ValidatorFormAdhoc validatorForm = new ValidatorFormAdhoc();
+            final List<NameValuePair> result =
+                    WorkflowUtilities.processFieldScripts(projectScripts,
+                    WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT,
+                    IssueUtilities.FIELD_OWNER,
+                    new Vector<NameValuePair>() /* currentValue */,
+                    new ActionErrors() /* currentErrors */,
+                    validatorForm);
+            assertEquals("WorkflowUtilities.processFieldScripts(scripts, " +
+                    "EVENT_FIELD_ONSETDEFAULT, FIELD_OWNER, [], " +
+                    "actionErrors, validatorForm).length",
+                    0, result.size());
+            assertEquals("validatorForm.status",
+                    "defaultStatus", validatorForm.status);
+        } catch (final WorkflowException e) {
+            assertTrue(e.getMessage(), false);
+        }
+        try {
+            final ValidatorFormAdhoc validatorForm = new ValidatorFormAdhoc();
+            final List<NameValuePair> result =
+                    WorkflowUtilities.processFieldScripts(projectScripts,
+                    WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT,
+                    IssueUtilities.FIELD_STATUS,
+                    new Vector<NameValuePair>() /* currentValue */,
+                    new ActionErrors() /* currentErrors */,
+                    validatorForm);
+            assertEquals("WorkflowUtilities.processFieldScripts(scripts, " +
+                    "EVENT_FIELD_ONPOSTSUBMIT, FIELD_STATUS, [], " +
+                    "actionErrors, validatorForm).length",
+                    1, result.size());
+            assertEquals("WorkflowUtilities.processFieldScripts(scripts, " +
+                    "EVENT_FIELD_ONPOSTSUBMIT, FIELD_STATUS, [], " +
+                    "actionErrors, validatorForm).get(0).getName()",
+                    "fieldDescription", result.get(0).getName());
+            assertEquals("WorkflowUtilities.processFieldScripts(scripts, " +
+                    "EVENT_FIELD_ONPOSTSUBMIT, FIELD_STATUS, [], " +
+                    "actionErrors, validatorForm).get(0).getValue()",
+                    "onPostSubmit", result.get(0).getValue());
+            assertEquals("validatorForm.fieldDescription",
+                    "defaultDescription", validatorForm.fieldDescription);
+            assertEquals("validatorForm.status",
+                    "defaultStatus", validatorForm.status);
+        } catch (final WorkflowException e) {
+            assertTrue(e.getMessage(), false);
+        }
+        try {
+            final ValidatorFormAdhoc validatorForm = new ValidatorFormAdhoc();
+            final Map<Integer, List<NameValuePair>> currentValues =
+                    new HashMap<Integer, List<NameValuePair>>();
+            currentValues.put(IssueUtilities.FIELD_STATUS,
+                    new Vector<NameValuePair>());
+            WorkflowUtilities.processFieldScripts(projectScripts,
+                    WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT,
+                    currentValues /* currentValue */,
+                    new ActionMessages() /* currentErrors */,
+                    validatorForm);
+            assertEquals(1,
+                    currentValues.get(IssueUtilities.FIELD_STATUS).size());
+            assertEquals("fieldDescription",
+                    currentValues.get(IssueUtilities.FIELD_STATUS).get(0).getName());
+            assertEquals("onPostSubmit",
+                    currentValues.get(IssueUtilities.FIELD_STATUS).get(0).getValue());
+            assertEquals("defaultDescription", validatorForm.fieldDescription);
+            assertEquals("defaultStatus", validatorForm.status);
+        } catch (final WorkflowException e) {
+            assertTrue(e.getMessage(), false);
+        }
+//        // There are problems with logic of WorkflowUtilities.setFormProperty
+//        try {
+//            final ValidatorFormAdhoc validatorForm = new ValidatorFormAdhoc();
+//            final List<NameValuePair> result =
+//                    WorkflowUtilities.processFieldScripts(projectScripts,
+//                    WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT,
+//                    IssueUtilities.FIELD_STATUS,
+//                    new Vector<NameValuePair>() /* currentValue */,
+//                    new ActionErrors() /* currentErrors */,
+//                    validatorForm);
+//            assertEquals(1, result.size());
+//            assertEquals("status", result.get(0).getName());
+//            assertEquals("onSetDefault", result.get(0).getValue());
+//            assertEquals("defaultDescription", validatorForm.defaultDescription);
+//            assertEquals("onSetDefault", validatorForm.status);
+//        } catch (final WorkflowException e) {
+//            //
+//        }
+//        // There are problems with logic of WorkflowUtilities.setFormProperty        
+//        try {
+//            final ValidatorFormAdhoc validatorForm = new ValidatorFormAdhoc();
+//            final List<NameValuePair> result =
+//                    WorkflowUtilities.processFieldScripts(projectScripts,
+//                    WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT,
+//                    1 /* custom field */,
+//                    new Vector<NameValuePair>() /* currentValue */,
+//                    new ActionErrors() /* currentErrors */,
+//                    validatorForm);
+//            assertEquals(1, result.size());
+//            assertEquals("status", result.get(0).getName());
+//            assertEquals("onSetDefault", result.get(0).getValue());
+//            assertEquals("defaultDescription", validatorForm.defaultDescription);
+//            assertEquals("onSetDefault", validatorForm.status);
+//        } catch (final WorkflowException e) {
+//            //
+//        }
+        
     }
 
     private void doTestGetEvents(final Locale locale,
@@ -176,36 +340,26 @@ public class WorkflowUtilitiesTest extends AbstractDependencyInjectionTest {
         for (final NameValuePair nvpExpected : expected) {
             boolean found = false;
             for (final NameValuePair nvpActual : actual) {
-                if (found = nvpActual.equals(nvpExpected)) {
-                    break;
+                found = nvpExpected.getName().equals(nvpActual.getName())
+                        && nvpExpected.getValue().equals(nvpActual.getValue());
+                if (found) break;
                 }
-            }
-            assertTrue("Pair of " +
-                    "(" + nvpExpected.getName() + "," +
-                    nvpExpected.getValue() + ") " +
-                    "is missing from actual results.",
+            assertTrue("WorkflowUtilities.getEvents(" + locale + ").contains(" +
+                    "new NameValuePair(" + nvpExpected.getName() + "," +
+                    nvpExpected.getValue() + "))",
                     found);
         }
-        assertTrue("Size of expected and actual results do not match.",
-                expected.length == actual.length);
+        assertEquals("WorkflowUtilities.getEvents(" + locale + ").length",
+                expected.length, actual.length);
     }
 
     private void doTestGetEventName(final Locale locale,
             final int eventId, final String expected) {
         final String actual =
                 WorkflowUtilities.getEventName(eventId, locale);
-//        junit.framework.AssertionFailedError: Actual (On Populate) and expected (test_value) eventNames should match for test_locale locale.
-
-        
-//        assertTrue("Actual (" + (null != actual ? actual : "null") + ") " +
-//                "and expected (" + (null != expected ? expected : "null") + ") " +
-//                "eventNames should match for " + locale + " locale.",
-//                (null == expected && null == actual) ||
-//                (null != expected && null != actual) && expected.equals(actual));
-    
-        assertEquals("WorkflowUtilities.getEventName(" + eventId + ", " + locale + ")", expected, actual);
+        assertEquals("WorkflowUtilities.getEventName(" + eventId + ", " +
+                locale + ")", expected, actual);
     }
-    
     
     /**
      * Defines a set of datafiles to be uploaded into database.
@@ -213,7 +367,8 @@ public class WorkflowUtilitiesTest extends AbstractDependencyInjectionTest {
      */
     protected String[] getDataSetFiles() {
         return new String[]{
-            "dataset/languagebean_dataset.xml"};
+                    "dataset/languagebean_dataset.xml"
+                };
     }
 
     /**
@@ -223,6 +378,4 @@ public class WorkflowUtilitiesTest extends AbstractDependencyInjectionTest {
     protected String[] getConfigLocations() {
         return new String[]{"application-context.xml"};
     }
-
-    
 }
