@@ -517,5 +517,96 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
+	
+	<function>
+		<description>
+			Returns a status name from resource bundle
+		</description>
+		<name>getStatusName</name>
+		<function-class>
+			org.itracker.services.util.IssueUtilities
+		</function-class>
+		<function-signature>
+			java.lang.String getStatusName(java.lang.String, java.util.Locale)
+		</function-signature>
+	</function>
+	
+	<function>
+		<description>
+			Returns resolution name from resource bundle
+		</description>
+		<name>getResolutionName</name>
+		<function-class>
+			org.itracker.services.util.IssueUtilities
+		</function-class>
+		<function-signature>
+			java.lang.String getResolutionName(java.lang.String, java.util.Locale)
+		</function-signature>
+	</function>
+	
+	<function>
+		<description>
+			Returns severity name from resource bundle
+		</description>
+		<name>getSeverityName</name>
+		<function-class>
+			org.itracker.services.util.IssueUtilities
+		</function-class>
+		<function-signature>
+			java.lang.String getSeverityName(java.lang.String, java.util.Locale)
+		</function-signature>
+	</function>
+	
+	<function>
+		<description>
+			Returns custom field name from resource bundle
+		</description>
+		<name>getCustomFieldName</name>
+		<function-class>
+			org.itracker.services.util.CustomFieldUtilities
+		</function-class>
+		<function-signature>
+			java.lang.String getCustomFieldName(java.lang.Integer, java.util.Locale)
+		</function-signature>
+	</function>
+	
+	<function>
+		<description>
+			Returns custom field type string from resource bundle
+		</description>
+		<name>getCustomFieldTypeString</name>
+		<function-class>
+			org.itracker.services.util.CustomFieldUtilities
+		</function-class>
+		<function-signature>
+			java.lang.String getTypeString(int, java.util.Locale)
+		</function-signature>
+	</function>
+	
+	<function>
+		<description>
+			Returns a locale-based string from resource bundle
+		</description>
+		<name>ITrackerResources_GetString</name>
+		<function-class>
+			org.itracker.core.resources.ITrackerResources
+		</function-class>
+		<function-signature>
+			java.lang.String getString(java.lang.String, java.lang.String)
+		</function-signature>
+	</function>
+
+	<function>
+		<description>
+			Returns true if param is a long string
+		</description>
+		<name>ITrackerResources_IsLongString</name>
+		<function-class>
+			org.itracker.core.resources.ITrackerResources
+		</function-class>
+		<function-signature>
+			boolean isLongString(java.lang.String)
+		</function-signature>
+	</function>
 </taglib>
 

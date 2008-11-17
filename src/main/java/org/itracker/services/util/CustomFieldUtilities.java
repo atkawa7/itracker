@@ -41,6 +41,7 @@ public class CustomFieldUtilities {
         return getTypeString(type, ITrackerResources.getLocale());
     }
 
+    
     /**
      * Returns the string representation of a field type
      * @param code type code to translate

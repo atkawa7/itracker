@@ -132,10 +132,11 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                     }
 
                     Map<String,String> formItems = new HashMap<String,String>();
-                    
+
                     for(Iterator<String> iter = items.keySet().iterator(); iter.hasNext(); ) {
                             String key = (String) iter.next();
-                            formItems.put(key.replace('.', '/'), (String) items.get(key));
+                            //formItems.put(key.replace('.', '/'), (String) items.get(key));
+                            formItems.put(key, (String) items.get(key));
                     }
                     languageForm.setItems(formItems);
                 } else {
@@ -149,7 +150,8 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                     
                     for (Iterator<String> iter = items.keySet().iterator(); iter.hasNext(); ) {
                         String key = (String) iter.next();
-                        formItems.put(key.replace('.', '/'), (String) langItems.get(key));
+                        //formItems.put(key.replace('.', '/'), (String) langItems.get(key));
+                        formItems.put(key, (String) items.get(key));
                     }
                     languageForm.setItems(formItems);
                     

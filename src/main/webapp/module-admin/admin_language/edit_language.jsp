@@ -1,9 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="org.itracker.core.resources.*" %>
-<%@ page import="org.itracker.services.util.*" %>
-<%@ page import="org.itracker.web.util.*" %>
-
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
@@ -11,26 +7,14 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %> 
 
-<% // TODO: move redirect logic to the Action class. 
-    Integer localeTypeInteger = (Integer) session.getAttribute(Constants.EDIT_LANGUAGE_TYPE_KEY);
-    if(localeTypeInteger == null || localeTypeInteger.intValue() < 1) {
-%>
-      <logic:forward name="unauthorized"/>
-<%
-    } else {
-      String[] keys = (String[]) session.getAttribute(Constants.EDIT_LANGUAGE_KEYS_KEY);
- %> 
- <%--    java.util.HashMap baseKeys = (java.util.HashMap) session.getAttribute(Constants.EDIT_LANGUAGE_BASE_KEY);
-      java.util.HashMap langKeys = (java.util.HashMap) session.getAttribute(Constants.EDIT_LANGUAGE_LANG_KEY);
-      java.util.HashMap locKeys = (java.util.HashMap) session.getAttribute(Constants.EDIT_LANGUAGE_LOC_KEY);
---%>
-  <%  boolean isUpdate = false;
-      int localeType = localeTypeInteger.intValue();
-%>
-      <bean:parameter id="action" name="action"/>
-      <bean:parameter id="locale" name="locale"/>
-      <bean:parameter id="parentLocale" name="parentLocale" value="BASE"/>
+<c:set var="isUpdate" value="false" />
+<c:set var="localeType" value="${editlangtype}" />
+
+<bean:parameter id="action" name="action"/>
+<bean:parameter id="locale" name="locale"/>
+<bean:parameter id="parentLocale" name="parentLocale" value="BASE"/>
    
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
      <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
@@ -49,85 +33,95 @@
       <html:form method="post" action="/editlanguage">
         <html:hidden property="action"/>
         <html:hidden property="parentLocale"/>
-        <% if ( "update".equals(action) )
-                isUpdate = true;
-           if(isUpdate) { %>
-            <html:hidden property="locale"/>
-        <% } %>
+        <c:if test="${ languageForm.action == 'update' }" >
+        	<html:hidden property="locale"/>
+        	<c:set var="isUpdate" value="true" />
+        </c:if>
 
        <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
-          <%  
-              String maxLength="2";
-              String maxSize = "2";   
-              String LocMsg = "itracker.web.attr.language";
-              String afterTd = "<td> </td>";
-              String beforeTd = "";
-              if(localeType == SystemConfigurationUtilities.LOCALE_TYPE_LOCALE) {
-                    afterTd="";
-                    beforeTd = "<td> </td>";
-                    LocMsg = "itracker.web.attr.locale";
-                    maxLength = "5";    
-                    maxSize = "5";     
-              }
-              boolean Readonly = false;
-              if( isUpdate) { 
-                 Readonly = true;
-              }
-          %>
-            
-             <tr>
-                <td colspan="2">
-                      <span class="editColumnTitle"><it:message key="itracker.web.attr.localeiso"/>: </span>
-                      <html:text readonly="<%=Readonly%>" property="locale" styleClass="editColumnText" maxlength="<%=maxLength%>" size="<%=maxSize%>"/>
-                </td>
-                <td colspan="2">
-                      <span class="editColumnTitle"><it:message key="itracker.web.attr.language"/>: </span>
-                      <html:text property="localeTitle" styleClass="editColumnText" maxlength="20" size="20"/>
-                </td>
-             </tr>
+          <c:set var="maxLength" value="2" />
+          <c:set var="maxSize" value="2" />
+          <c:set var="locMsg" value="itracker.web.attr.language" />
+          <c:set var="afterTd" value="<td> </td>" />
+          <c:set var="beforeTd" value="" />
+          <c:set var="readOnly" value="false" />
+          <c:if test="${ isUpdate == 'true'}" >
+            <c:set var="readOnly" value="true" />
+          </c:if>
+          
+          <!-- if localeType == SystemConfigurationUtilities.LOCALE_TYPE_LOCALE -->
+          <c:if test="${ localeType == 3}" >
+            <c:set var="afterTd" value="" />
+            <c:set var="beforeTd" value="<td> </td>" />
+            <c:set var="locMsg" value="itracker.web.attr.locale" />
+            <c:set var="maxLength" value="5" />
+            <c:set var="maxSize" value="5" />
+          </c:if>
+
+          <tr>
+	          <td colspan="2">
+	              <span class="editColumnTitle"><it:message key="itracker.web.attr.localeiso"/>: </span>
+	              <html:text readonly="${ readOnly }" property="locale" styleClass="editColumnText" maxlength="${ maxLength }" size="${ maxSize }"/>
+	          </td>
+	          <td colspan="2">
+	              <span class="editColumnTitle"><it:message key="itracker.web.attr.language"/>: </span>
+	              <html:text property="localeTitle" styleClass="editColumnText" maxlength="20" size="20"/>
+	          </td>
+          </tr>
           <tr align="left" class="listHeading">
             <td><it:message key="itracker.web.attr.key"/></td>
             <td><it:message key="itracker.web.attr.baselocale"/></td>
-            <%=beforeTd%>
-            <td><it:message key="<%=LocMsg%>"/></td>
-            <%=afterTd%>
+            ${ beforeTd }
+            <td><it:message key="${ locMsg }"/></td>
+            ${ afterTd }
           </tr>
-          <% int i = 0; %>
+          
+          <c:set var="i" value="0" />
+          
           <logic:iterate id="itemlangs" name="languageForm" property="items">
                <bean:define name="itemlangs" property="key" id="key" type="java.lang.String"/>
                <bean:define name="itemlangs" property="value" id="value" type="java.lang.String"/>
-          <% /* Added replaces to fix bug in beanutils with periods in key names */
-//             for(int i = 0; i < keys.length; i++) {
-                String propertyKey = "items("+key+")" ;
-                String Skey = key.replace('/', '.');
-                String styleClass = (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded" );
-                i++;
-                if ( ! Skey.equals("itracker.locales") && ! Skey.equals("itracker.locale.name")) {
-          %>
-                <tr class="<%= styleClass %>">
-                  <td valign="top"><%= Skey %></td>
-                  <% if(localeType != SystemConfigurationUtilities.LOCALE_TYPE_BASE) { %>
-                          <td valign="top"><it:message key="<%= Skey %>" locale="<%= ITrackerResources.BASE_LOCALE %>"/></td>
-                  <% } %>
-                  <% if(localeType != SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE) { %>
-                           <td valign="top"><it:message key="<%= Skey %>" locale="<%= parentLocale %>"/></td>
-                  <% }  %>
-                  <% if(ITrackerResources.isLongString(Skey)) { %>
-                         <td valign="top"><html:textarea indexed="false" name="languageForm"  rows="4" cols="40" property="<%= propertyKey %>" value="<%=value%>" styleClass="<%= styleClass %>"/></td>
-                  <% } else { %>
-                          <td valign="top"><html:text indexed="false" name="languageForm" property="<%= propertyKey %>" value="<%=value%>" size="40" styleClass="<%= styleClass %>"/></td>
-                  <% } %>
-                  <%=afterTd%>
+               
+               <c:set var="propertyKey" value="items(${ key })" />
+               <c:set var="styleClass" value="${ (i % 2 == 1) ? 'listRowShaded' : 'listRowUnshaded' }" />
+               <c:set var="i" value="${ i + 1 }" />
+               
+               <c:if test="${ (key != 'itracker.locales') &&  (key != 'itracker.locale.name') }" >
+                 <tr class="${ styleClass }">
+                  <td valign="top">${ key }</td>
+                  <!-- localeType != SystemConfigurationUtilities.LOCALE_TYPE_BASE -->
+                  <c:if test="${ localeType != 1 }" >
+                  	<td valign="top"><it:message key="${ key }" locale="BASE"/></td>
+                  </c:if>
+                  <!-- localeType != SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE -->
+                  <c:if test="${ localeType != 2 }" >
+                  	<td valign="top"><it:message key="${ key }" locale="${languageForm.parentLocale}"/></td>
+                  </c:if>
+                  <c:choose>
+		          	<c:when test="${ it:ITrackerResources_IsLongString(key) }" >
+                    	<td valign="top"><html:textarea indexed="false" name="languageForm"  rows="4" cols="40" property="${ propertyKey }" value="${ value }" styleClass="${ styleClass }"/></td>
+		          	</c:when>
+		          	<c:otherwise>
+                    	<td valign="top"><html:text indexed="false" name="languageForm" property="${ propertyKey }" value="${ value }" size="40" styleClass="${ styleClass }"/></td>
+		          	</c:otherwise>
+          		   </c:choose>
+          		   ${ afterTd } 
                 </tr>
-          <%   } %>
+               
+               </c:if>
           </logic:iterate>
+          
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="12" width="1"/></td></tr>
-          <% if ( isUpdate ) { %>
-       		  <tr><td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.update.alt" titleKey="itracker.web.button.update.alt"><it:message key="itracker.web.button.update"/></html:submit></td></tr>
-          <% } else { %>
-       		  <tr><td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.create.alt" titleKey="itracker.web.button.create.alt"><it:message key="itracker.web.button.create"/></html:submit></td></tr>
-          <% } %>
+          <c:choose>
+          	<c:when test="${ isUpdate == 'true' }" >
+          	  <tr><td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.update.alt" titleKey="itracker.web.button.update.alt"><it:message key="itracker.web.button.update"/></html:submit></td></tr>
+          	</c:when>
+          	<c:otherwise>
+       		  <tr><td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.create.alt" titleKey="itracker.web.button.create.alt"><it:message key="itracker.web.button.create"/></html:submit></td></tr>         	
+          	</c:otherwise>
+          </c:choose>
+        
         </table>
       </html:form>
       <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
-<%  } %>
+
