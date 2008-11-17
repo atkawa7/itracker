@@ -19,9 +19,10 @@
 
 <html:form action="/login" focus="login" onsubmit="return validateLoginForm(this);">
   <input type="hidden" name="<%= Constants.AUTH_TYPE_KEY %>" value="<%= AuthenticationConstants.AUTH_TYPE_PASSWORD_PLAIN %>">
-  <% if(request.getAttribute(Constants.AUTH_REDIRECT_KEY) != null && ! "".equals(request.getAttribute(Constants.AUTH_REDIRECT_KEY))) { %>
+  <%-- TODO is this AUTH_REDIRECT_KEY still needed? --%>
+  <logic:notEmpty name="<%=Constants.AUTH_REDIRECT_KEY %>" scope="request">
       <input type="hidden" name="<%= Constants.AUTH_REDIRECT_KEY %>" value="<%= request.getAttribute(Constants.AUTH_REDIRECT_KEY) %>">
-  <% } %>
+  </logic:notEmpty>
 
   <html:javascript formName="loginForm"/>
 
