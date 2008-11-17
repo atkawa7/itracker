@@ -15,7 +15,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
 package org.itracker.web.actions.base;
 
 import java.io.IOException;
@@ -129,7 +128,7 @@ public abstract class ItrackerBaseAction extends Action {
 
 	/**
 	 * 
-	 * @deprecated move to {@link org.itracker.web.util.LoginUtilities}
+	 * @deprecated move to {@link org.itracker.web.util.LoginUtilities} - no need for actions to check for user being logged in.
 	 * 
 	 * @param request
 	 * @param response
@@ -139,15 +138,16 @@ public abstract class ItrackerBaseAction extends Action {
 	 */
 	protected boolean isLoggedIn(HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException {
-		HttpSession session = request.getSession(false);
-		User user = (session == null ? null : (User) session
-				.getAttribute(Constants.USER_KEY));
-		String login = (user == null ? null : user.getLogin());
-
-		if (login == null || "".equals(login)) {
-			LoginUtilities.checkAutoLogin(request, getAllowSaveLogin());
-			return false;
-		}
+//		
+//		HttpSession session = request.getSession(false);
+//		User user = (session == null ? null : (User) session
+//				.getAttribute(Constants.USER_KEY));
+//		String login = (user == null ? null : user.getLogin());
+//
+//		if (login == null || "".equals(login)) {
+//			LoginUtilities.checkAutoLogin(request, getAllowSaveLogin());
+//			return false;
+//		}
 		return true;
 	}
 
