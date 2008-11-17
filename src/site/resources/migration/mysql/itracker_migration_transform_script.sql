@@ -87,7 +87,7 @@ alter table customfieldvaluebean change id id INT NOT NULL AUTO_INCREMENT;
 
 alter table customfieldbean change id id INT NOT NULL AUTO_INCREMENT;
 
-alter table componentbean change id id INT NOT NULL AUTO_INCREM
+alter table componentbean change id id INT NOT NULL AUTO_INCREMENT;
 UPDATE componentbean SET status = 1 WHERE status IS NULL;
 alter table componentbean change status status INT NOT NULL;
 
