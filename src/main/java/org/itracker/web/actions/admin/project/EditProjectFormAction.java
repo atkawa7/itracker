@@ -45,6 +45,7 @@ import org.itracker.services.UserService;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.actions.project.EditProjectFormActionUtil;
 import org.itracker.web.forms.ProjectForm;
 import org.itracker.web.util.Constants;
 
@@ -61,12 +62,10 @@ public class EditProjectFormAction extends ItrackerBaseAction {
             throws ServletException, IOException {
 
     	ActionMessages errors = new ActionMessages();
-    	
+   	
         try {
             ProjectService projectService = getITrackerServices().getProjectService();
             UserService userService = getITrackerServices().getUserService();
-            request.setAttribute("ph", projectService);
-            request.setAttribute("uh", userService);
             HttpSession session = request.getSession(true);
             String action = (String) request.getParameter("action");
 
@@ -156,7 +155,9 @@ public class EditProjectFormAction extends ItrackerBaseAction {
                 request.setAttribute("projectForm", projectForm);
                 session.setAttribute(Constants.PROJECT_KEY, project);
                 saveToken(request);
-                return mapping.getInputForward();
+        		ActionForward af = new EditProjectFormActionUtil().init(mapping, request);
+        		if (af != null) return af;
+               return mapping.getInputForward();
             }
 
         } catch (Exception e) {
