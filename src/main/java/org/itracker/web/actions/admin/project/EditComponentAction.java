@@ -98,26 +98,50 @@ public class EditComponentAction extends ItrackerBaseAction {
 						return mapping.findForward("unauthorized");
 					} else {
 						String action = (String) request.getParameter("action");
+						if (log.isDebugEnabled()) {
+							log.debug("execute: action was " + action);
+						}
 
 						if ("create".equals(action)) {
+							if (log.isDebugEnabled()) {
+								log.debug("execute: create new component for " + project);
+							}
 							component = new Component(project, componentForm
 									.getName());
 							component.setDescription(componentForm
 									.getDescription());
+							if (log.isDebugEnabled()) {
+								log.debug("execute: adding " + component);
+							}
 							component = projectService.addProjectComponent(
 									project.getId(), component);
+
+							if (log.isDebugEnabled()) {
+								log.debug("execute: added new component " + component);
+							}
 						} else if ("update".equals(action)) {
+							
 							component = projectService
 									.getProjectComponent(componentForm.getId());
+							if (log.isDebugEnabled()) {
+								log.debug("execute: update component " + component);
+							}
+							
 							component.setName(componentForm.getName());
 							component.setDescription(componentForm
 									.getDescription());
 							component.setProject(project);
+							
+							if (log.isDebugEnabled()) {
+								log.debug("execute: updating to " + component);
+							}
 							component = projectService
 									.updateProjectComponent(component);
+							
+							
 						}
 						session.removeAttribute(Constants.COMPONENT_KEY);
-
+						
 						return new ActionForward(mapping.findForward(
 								"editproject").getPath()
 								+ "?id=" + project.getId() + "&action=update");
