@@ -28,7 +28,6 @@ import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
@@ -46,11 +45,12 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.MoveIssueForm;
 
 public class MoveIssueFormAction extends ItrackerBaseAction {
-	private static final Logger log = Logger
-			.getLogger(MoveIssueFormAction.class);
-
-	public MoveIssueFormAction() {
-	}
+	
+	private static final Logger log = Logger.getLogger(MoveIssueFormAction.class);
+	
+    private static final String UNAUTHORIZED_PAGE = "unauthorized";
+	private static final String PAGE_TITLE_KEY = "itracker.web.moveissue.title";
+	
 
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
@@ -58,12 +58,8 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
 			throws ServletException, IOException {
 
     	ActionMessages errors = new ActionMessages();
-
-		String pageTitleKey = "itracker.web.moveissue.title";
-		String pageTitleArg = request.getParameter("id");
-		request.setAttribute("pageTitleKey", pageTitleKey);
-		request.setAttribute("pageTitleArg", pageTitleArg);
-
+		request.setAttribute("pageTitleKey", PAGE_TITLE_KEY);
+		request.setAttribute("pageTitleArg", "itracker.web.generic.unknown");
 
 		try {
 			IssueService issueService = getITrackerServices().getIssueService();
@@ -78,69 +74,28 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"itracker.web.error.invalidissue"));
 			} else {
-
+				request.setAttribute("pageTitleArg", issue.getId());
+				
 				if (errors.isEmpty()) {
-					HttpSession session = request.getSession(true);
-					Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
-
-					if (!UserUtilities.hasPermission(userPermissions, issue
-							.getProject().getId(),
-							UserUtilities.PERMISSION_EDIT)) {
-						log
-								.debug("Unauthorized user requested access to move issue for issue "
-										+ issueId);
-						return mapping.findForward("unauthorized");
-					}
-
-					List<Project> availableProjects = new ArrayList<Project>();
-					List<Project> projects = projectService
-							.getAllAvailableProjects();
-					for (int i = 0; i < projects.size(); i++) {
-						if (projects.get(i).getId() != null
-								&& !projects.get(i).equals(issue.getProject())) {
-							if (UserUtilities.hasPermission(userPermissions,
-									projects.get(i).getId(), new int[] {
-											UserUtilities.PERMISSION_EDIT,
-											UserUtilities.PERMISSION_CREATE })) {
-								availableProjects.add(projects.get(i));
-							}
-						}
-					}
-					if (availableProjects.size() == 0) {
-						errors.add(ActionMessages.GLOBAL_MESSAGE,
-								new ActionMessage(
-										"itracker.web.error.noprojects"));
+					if (!isPermissionGranted(request, issue)) {
+						return mapping.findForward(UNAUTHORIZED_PAGE);
 					}
 					
-					Collections.sort(availableProjects, new Project.ProjectComparator());
-
+					List<Project> projects = projectService.getAllAvailableProjects();	
+					if (projects.size() == 0) {
+						return mapping.findForward(UNAUTHORIZED_PAGE);
+					}					
+					
+					List<Project> availableProjects = getAvailableProjects(request,
+							projects, issue);
+					if (availableProjects.size() == 0) {
+						errors.add(ActionMessages.GLOBAL_MESSAGE,
+								new ActionMessage("itracker.web.error.noprojects"));
+					}
+					
 					if (errors.isEmpty()) {
-						MoveIssueForm moveIssueForm = (MoveIssueForm) form;
-						if (moveIssueForm == null) {
-							moveIssueForm = new MoveIssueForm();
-						}
-						moveIssueForm.setIssueId(issueId);
-						moveIssueForm.setCaller(request.getParameter("caller"));
-
-						List<Project> availableProjectsList = availableProjects;
-						if (projects.size() == 0) {
-							return mapping.findForward("unauthorized");
-						} else {
-
-							request
-									.setAttribute("moveIssueForm",
-											moveIssueForm);
-							// session.setAttribute(Constants.PROJECTS_KEY,
-							// availableProjectsList);
-							request.setAttribute("projects",
-									availableProjectsList);
-							// session.setAttribute(Constants.ISSUE_KEY, issue);
-							request.setAttribute("issue", issue);
-							saveToken(request);
-							log
-									.info("No errors while moving issue. Forwarding to move issue form.");
-							return mapping.getInputForward();
-						}
+						setupMoveIssueForm(request, form, issue, availableProjects);
+						return mapping.getInputForward();
 					}
 				}
 			}
@@ -149,11 +104,76 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.system"));
 		}
-
 		if (!errors.isEmpty()) {
 			saveErrors(request, errors);
 		}
 		return mapping.findForward("error");
 	}
 
+	/**
+	 * Sets request attributes and fills MoveIssueForm.
+	 * 
+	 * @param request HttpServletRequest.
+	 * @param form ActionForm.
+	 * @param issue issue.
+	 * @param availableProjects list of available projects.
+	 */
+	private void setupMoveIssueForm(HttpServletRequest request, ActionForm form, Issue issue, List<Project> availableProjects){
+		MoveIssueForm moveIssueForm = (MoveIssueForm) form;
+		if (moveIssueForm == null) {
+			moveIssueForm = new MoveIssueForm();
+		}
+		moveIssueForm.setIssueId(issue.getId());
+		moveIssueForm.setCaller(request.getParameter("caller"));
+
+		request.setAttribute("moveIssueForm", moveIssueForm);
+		request.setAttribute("projects", availableProjects);
+		request.setAttribute("issue", issue);
+		saveToken(request);
+		log.info("No errors while moving issue. Forwarding to move issue form.");	
+	}
+	
+	/**
+	 * Returns list of available projects.
+	 * 
+	 * @param request HttpServletRequest.
+	 * @param projects list of all projects.
+	 * @param issue operated issue.
+	 * @return list of available projects.
+	 */
+	private List<Project> getAvailableProjects(HttpServletRequest request, List<Project> projects,
+			Issue issue) {
+		Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(request.getSession());
+		List<Project> availableProjects = new ArrayList<Project>();
+		for (int i = 0; i < projects.size(); i++) {
+			if (projects.get(i).getId() != null
+					&& !projects.get(i).equals(issue.getProject())) {
+				if (UserUtilities.hasPermission(userPermissions,
+						projects.get(i).getId(), new int[] {
+								UserUtilities.PERMISSION_EDIT,
+								UserUtilities.PERMISSION_CREATE })) {
+					availableProjects.add(projects.get(i));
+				}
+			}
+		}
+		Collections.sort(availableProjects, new Project.ProjectComparator());
+		return availableProjects;
+	}
+    /**
+     * Checks permissions.
+     * 
+     * @param request HttpServletRequest.
+     * @param issue issue.
+     * @return true if permission is granted.
+     */
+    private boolean isPermissionGranted(HttpServletRequest request, Issue issue) {
+        Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(request.getSession());
+
+		if (!UserUtilities.hasPermission(userPermissions, issue.getProject().getId(),UserUtilities.PERMISSION_EDIT)) {
+			log.debug("Unauthorized user requested access to move issue for issue "
+							+  issue.getId());
+            return false;
+		}
+        return true;
+    }
 }
