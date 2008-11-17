@@ -1,13 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="java.util.Collections" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="org.itracker.services.util.*" %>
-<%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.services.*" %>
-<%@ page import="org.itracker.web.util.RequestHelper" %>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -85,10 +77,6 @@
 
 	</c:forEach>
 
-
-	<tr>
-		
-	</tr>
 	<tr>
 		<td colspan="6"><html:img height="3" src="../themes/defaulttheme/images/blank.gif" /></td>
 	</tr>
