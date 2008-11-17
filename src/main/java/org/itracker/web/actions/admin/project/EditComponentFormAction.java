@@ -139,6 +139,8 @@ public class EditComponentFormAction extends ItrackerBaseAction {
                 saveToken(request);
                 request.setAttribute("pageTitleKey",pageTitleKey); 
                 request.setAttribute("pageTitleArg",pageTitleArg); 
+            		ActionForward af = new EditComponentFormActionUtil().init(mapping, request);
+            		if (af != null) return af;
                 return mapping.getInputForward();
             }
         } catch(Exception e) {
