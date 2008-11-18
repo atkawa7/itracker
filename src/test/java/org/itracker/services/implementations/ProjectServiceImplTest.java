@@ -19,7 +19,6 @@ import org.itracker.model.ProjectScript;
 import org.itracker.model.Status;
 import org.itracker.model.Version;
 import org.itracker.model.WorkflowScript;
-import org.itracker.persistence.dao.ComponentDAO;
 import org.itracker.persistence.dao.ProjectDAO;
 import org.itracker.persistence.dao.ProjectScriptDAO;
 import org.itracker.persistence.dao.VersionDAO;
@@ -27,41 +26,16 @@ import org.itracker.persistence.dao.WorkflowScriptDAO;
 import org.itracker.services.ProjectService;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DataAccessException;
 
 public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 
 	private ProjectDAO projectDAO;
 	private ProjectService projectService;
-	private ComponentDAO componentDAO;
 	private VersionDAO versionDAO;
 	private ProjectScriptDAO projectScriptDAO;
 	private WorkflowScriptDAO workflowScriptDAO;
 
-	@Override
-	protected String[] getDataSetFiles() {
-		return new String[] {
-
-		"dataset/userpreferencesbean_dataset.xml",
-				"dataset/userbean_dataset.xml",
-				"dataset/customfieldbean_dataset.xml",
-				"dataset/customfieldvaluebean_dataset.xml",
-				"dataset/projectbean_dataset.xml",
-				"dataset/project_owner_rel_dataset.xml",
-				"dataset/projectbean_field_rel_dataset.xml",
-				"dataset/workflowscriptbean_dataset.xml",
-				"dataset/projectscriptbean_dataset.xml",
-				"dataset/componentbean_dataset.xml",
-				"dataset/versionbean_dataset.xml",
-				"dataset/permissionbean_dataset.xml",
-				"dataset/issuebean_dataset.xml",
-				"dataset/issuefieldbean_dataset.xml",
-				"dataset/issueattachmentbean_dataset.xml",
-				"dataset/issueactivitybean_dataset.xml",
-				"dataset/issuehistorybean_dataset.xml",
-				"dataset/notificationbean_dataset.xml" };
-
-	}
 
 	@Override
 	protected String[] getConfigLocations() {
@@ -75,22 +49,12 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		projectService = (ProjectService) applicationContext
 				.getBean("projectService");
 		projectDAO = (ProjectDAO) applicationContext.getBean("projectDAO");
-		componentDAO = (ComponentDAO) applicationContext
-				.getBean("componentDAO");
+
 		versionDAO = (VersionDAO) applicationContext.getBean("versionDAO");
 		projectScriptDAO = (ProjectScriptDAO) applicationContext
 				.getBean("projectScriptDAO");
 		workflowScriptDAO = (WorkflowScriptDAO) applicationContext
 				.getBean("workflowScriptDAO");
-
-		// userService = (UserService)
-		// applicationContext.getBean("userService");
-		// userPreferencesDAO = (UserPreferencesDAO) applicationContext
-		// .getBean("userPreferencesDAO");
-		// projectDAO = (ProjectDAO) applicationContext.getBean("projectDAO");
-		// userDAO = (UserDAO) applicationContext.getBean("userDAO");
-		// permissionDAO = (PermissionDAO) applicationContext
-		// .getBean("permissionDAO");
 
 	}
 
@@ -145,10 +109,7 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		assertEquals("component size", numberOfComponents + 1, project
 				.getComponents().size());
 
-		// FIXME: since a component is just added to the project, shouldn't this
-		// hold?
-		// assertTrue("date modified",
-		// project.getLastModifiedDate().after(then));
+
 		assertFalse("date created", project.getCreateDate().after(then));
 
 		// refresh saved component
@@ -160,11 +121,9 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		Assert.assertEquals("addProjectComponent", savedComponent
 				.getDescription(), component.getDescription());
 
-		// FIXME: the component is just created, shouldn't this hold?
-		// assertTrue("date modified",
-		// savedComponent.getLastModifiedDate().after(then));
-		// assertTrue("date created",
-		// savedComponent.getCreateDate().after(then));
+		assertTrue("date modified", savedComponent.getLastModifiedDate().after(
+				then));
+		assertTrue("date created", savedComponent.getCreateDate().after(then));
 		assertEquals("parent project", project, savedComponent.getProject());
 
 		then = new Date();
@@ -176,29 +135,25 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		assertEquals(savedComponent.getName(), updatedComponent.getName());
 		assertEquals(savedComponent.getDescription(), updatedComponent
 				.getDescription());
-		// FIXME: I just updated the component??
-		// assertTrue("date modified", updatedComponent.getLastModifiedDate()
-		// .after(then));
+		
+		 assertTrue("date modified", updatedComponent.getLastModifiedDate()
+		 .after(then));
 
 		assertFalse("date created", updatedComponent.getCreateDate()
 				.after(then));
 
-		projectDAO.detach(project);
-		componentDAO.detach(component);
 
-		// // delete
-		// projectService.removeProjectComponent(project.getId(), savedComponent
-		// .getId());
+
 	}
-
+	
 	@Test
 	@Ignore
-	public void testProjectComponentRemove() {
+	public void testRemoveProjectComponent() {
 
 		Project project = projectService.getProject(2);
 		Assert.assertNotNull("project not found", project.getId());
 
-		// component exists but fails to delete
+		// FIXME component exists but fails to delete
 		assertTrue(projectService.removeProjectComponent(project.getId(), 2));
 	}
 
@@ -209,7 +164,7 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		Project project = projectService.getProject(2);
 		Assert.assertNotNull("project not found", project.getId());
 
-		// Invalid component Id, so it should fail and it does but why throws an
+		// FIXME Invalid component Id, so it should fail and it does but why throws an
 		// exception
 		assertFalse(projectService.removeProjectComponent(project.getId(), 89));
 	}
@@ -227,8 +182,7 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 
 		version = new Version(project, "2.0");
 
-		// FIXME: looks like version description is required, it should be
-		// included in one of the constructors.
+
 		version.setDescription("");
 		projectService.addProjectVersion(project.getId(), version);
 
@@ -272,10 +226,8 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		try {
 			projectService.addProjectVersion(project.getId(), version);
 			fail();
-		} catch (DataIntegrityViolationException e) {
-			// FIXME: Isn't a more specific exception like
-			// VersionAlreadyExists
-			// more appropriate?
+		} catch (DataAccessException e) {
+			// ok
 
 		}
 	}
@@ -349,11 +301,6 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		assertEquals(1, cal.get(Calendar.DAY_OF_MONTH));
 	}
 
-	// @Test
-	// public void verifyDAOFields() {
-	// assertNotNull("DAO null", projectService.getProjectDAO());
-	// }
-
 	@Test
 	public void testProjectScripts() {
 		ProjectScript projectScript = projectService.getProjectScript(1);
@@ -425,12 +372,6 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 
 	}
 
-	// @Test
-	// public void testProjectStats() {
-	// Long[] projectStats = projectService.getProjectStats(2);
-	// assertNotNull(projectStats);
-	// assertEquals(2, projectStats.length);
-	// }
 
 	@Ignore
 	public void testGetListOfProjectFields() {
@@ -485,4 +426,30 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		assertEquals("version not updated", 1, project.getVersions().size());
 
 	}
+	
+	@Override
+	protected String[] getDataSetFiles() {
+		return new String[] {
+
+		"dataset/userpreferencesbean_dataset.xml",
+				"dataset/userbean_dataset.xml",
+				"dataset/customfieldbean_dataset.xml",
+				"dataset/customfieldvaluebean_dataset.xml",
+				"dataset/projectbean_dataset.xml",
+				"dataset/project_owner_rel_dataset.xml",
+				"dataset/projectbean_field_rel_dataset.xml",
+				"dataset/workflowscriptbean_dataset.xml",
+				"dataset/projectscriptbean_dataset.xml",
+				"dataset/componentbean_dataset.xml",
+				"dataset/versionbean_dataset.xml",
+				"dataset/permissionbean_dataset.xml",
+				"dataset/issuebean_dataset.xml",
+				"dataset/issuefieldbean_dataset.xml",
+				"dataset/issueattachmentbean_dataset.xml",
+				"dataset/issueactivitybean_dataset.xml",
+				"dataset/issuehistorybean_dataset.xml",
+				"dataset/notificationbean_dataset.xml" };
+
+	}
+
 }
