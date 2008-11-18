@@ -14,7 +14,7 @@
             <generator class="native"/>
         </id>
         
-        <many-to-one not-null="true" name="issue" class="Issue" cascade="refresh" insert="true" update="true">
+        <many-to-one not-null="true" name="issue" class="Issue" cascade="none" insert="true" update="true">
             <column name="issue_id" not-null="true"/>
         </many-to-one>
         
