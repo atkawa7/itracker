@@ -41,6 +41,10 @@ public class ForgotPasswordForm extends ValidatorForm {
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		login = null;
 		lastName = null;
+		String pageTitleKey = "itracker.web.forgotpass.title";
+		String pageTitleArg = "";
+		request.setAttribute("pageTitleKey", pageTitleKey);
+		request.setAttribute("pageTitleArg", pageTitleArg);
 
 	}
 

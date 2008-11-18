@@ -42,84 +42,83 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 public class ForgotPasswordAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(ForgotPasswordAction.class);
 
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    	ActionMessages errors = new ActionMessages();
-    	
-        try {
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
-            UserService userService = getITrackerServices().getUserService();
-            
-            if(! configurationService.getBooleanProperty("allow_forgot_password", true)) {
-                throw new PasswordException(PasswordException.FEATURE_DISABLED);
-            }
+		ActionMessages errors = new ActionMessages();
 
-            String login = (String) PropertyUtils.getSimpleProperty(form, "login");
-            String lastName = (String) PropertyUtils.getSimpleProperty(form, "lastName");
+		try {
+			ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+			UserService userService = getITrackerServices().getUserService();
 
-            if(login != null && lastName != null && ! login.equals("") && ! lastName.equals("")) {
-                User user = null;
-                try {
-                    user = userService.getUserByLogin(login);
-                    if(user == null) {
-                        throw new PasswordException(PasswordException.UNKNOWN_USER);
-                    }
-                    if(user.getLastName() == null || ! user.getLastName().equalsIgnoreCase(lastName)) {
-                        throw new PasswordException(PasswordException.INVALID_NAME);
-                    }
-                    if(user.getEmail() == null || user.getEmail().equals("")) {
-                        throw new PasswordException(PasswordException.INVALID_EMAIL);
-                    }
-                    if(user.getStatus() != UserUtilities.STATUS_ACTIVE) {
-                        throw new PasswordException(PasswordException.INACTIVE_ACCOUNT);
-                    }
+			if(! configurationService.getBooleanProperty("allow_forgot_password", true)) {
+				throw new PasswordException(PasswordException.FEATURE_DISABLED);
+			}
 
-                    if(log.isDebugEnabled()) {
-                        log.debug("ForgotPasswordHandler found matching user: " + user.getFirstName() + " " + user.getLastName() + "(" + user.getLogin() + ")");
-                    }
+			String login = (String) PropertyUtils.getSimpleProperty(form, "login");
+			String lastName = (String) PropertyUtils.getSimpleProperty(form, "lastName");
 
-                    String subject = ITrackerResources.getString("itracker.email.forgotpass.subject");
-                    StringBuffer msgText = new StringBuffer();
-                    msgText.append(ITrackerResources.getString("itracker.email.forgotpass.body"));
-                    String newPass = userService.generateUserPassword(user);
-//                    user.setPassword(newPass);
-                    userService.updateUser(user);
-                    msgText.append(ITrackerResources.getString("itracker.web.attr.password") + ": " + newPass);
-                    
-                    getITrackerServices().getEmailService()
-                        .sendEmail(user.getEmail(), subject, msgText.toString());
-                } catch(PasswordException pe) {
-                    if(log.isDebugEnabled()) {
-                        log.debug("Password Exception for user " + login + ". Type = " + pe.getType());
-                    }
-                    if(pe.getType() == PasswordException.INVALID_NAME) {
-                        errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.forgotpass.lastname"));
-                    } else if(pe.getType() == PasswordException.INVALID_EMAIL) {
-                        errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.forgotpass.invalidemail"));
-                    } else if(pe.getType() == PasswordException.INACTIVE_ACCOUNT) {
-                        errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.forgotpass.inactive"));
-                    } else if(pe.getType() == PasswordException.UNKNOWN_USER) {
-                        errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.forgotpass.unknown"));
-                    }
-                }
-            }
-        } catch(PasswordException pe) {
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.notenabled"));
-            log.error("Forgot Password function has been disabled.", pe);
-        } catch(Exception e) {
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.forgotpass.system"));
-            log.error("Error during password retrieval.", e);
-        }
+			if(login != null && lastName != null && ! login.equals("") && ! lastName.equals("")) {
+				User user = null;
+				try {
+					user = userService.getUserByLogin(login);
+					if(user == null) {
+						throw new PasswordException(PasswordException.UNKNOWN_USER);
+					}
+					if(user.getLastName() == null || ! user.getLastName().equalsIgnoreCase(lastName)) {
+						throw new PasswordException(PasswordException.INVALID_NAME);
+					}
+					if(user.getEmail() == null || user.getEmail().equals("")) {
+						throw new PasswordException(PasswordException.INVALID_EMAIL);
+					}
+					if(user.getStatus() != UserUtilities.STATUS_ACTIVE) {
+						throw new PasswordException(PasswordException.INACTIVE_ACCOUNT);
+					}
 
-        if(! errors.isEmpty()) {
-        	saveErrors(request, errors);
-            return (mapping.getInputForward());
-        }
+					if(log.isDebugEnabled()) {
+						log.debug("ForgotPasswordHandler found matching user: " + user.getFirstName() + " " + user.getLastName() + "(" + user.getLogin() + ")");
+					}
 
-        errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.message.forgotpass"));
-        saveErrors(request, errors);
-        return mapping.findForward("login");
-    }
+					String subject = ITrackerResources.getString("itracker.email.forgotpass.subject");
+					StringBuffer msgText = new StringBuffer();
+					msgText.append(ITrackerResources.getString("itracker.email.forgotpass.body"));
+					String newPass = userService.generateUserPassword(user);
+					//user.setPassword(newPass);
+					userService.updateUser(user);
+					msgText.append(ITrackerResources.getString("itracker.web.attr.password") + ": " + newPass);
+
+					getITrackerServices().getEmailService()
+					.sendEmail(user.getEmail(), subject, msgText.toString());
+				} catch(PasswordException pe) {
+					if(log.isDebugEnabled()) {
+						log.debug("Password Exception for user " + login + ". Type = " + pe.getType());
+					}
+					if(pe.getType() == PasswordException.INVALID_NAME) {
+						errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.forgotpass.lastname"));
+					} else if(pe.getType() == PasswordException.INVALID_EMAIL) {
+						errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.forgotpass.invalidemail"));
+					} else if(pe.getType() == PasswordException.INACTIVE_ACCOUNT) {
+						errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.forgotpass.inactive"));
+					} else if(pe.getType() == PasswordException.UNKNOWN_USER) {
+						errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.forgotpass.unknown"));
+					}
+				}
+			}
+		} catch(PasswordException pe) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.notenabled"));
+			log.error("Forgot Password function has been disabled.", pe);
+		} catch(Exception e) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.forgotpass.system"));
+			log.error("Error during password retrieval.", e);
+		}
+
+		if(! errors.isEmpty()) {
+			saveErrors(request, errors);
+			return (mapping.findForward("forgotpassword"));
+		}
+
+		errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.message.forgotpass"));
+		saveErrors(request, errors);
+		return mapping.findForward("success");
+	}
 
 }
-  
