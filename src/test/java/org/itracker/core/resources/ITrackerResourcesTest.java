@@ -6,7 +6,6 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.itracker.AbstractDependencyInjectionTest;
-import org.itracker.services.exceptions.ITrackerDirtyResourceException;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -81,9 +80,6 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 	}
 	
 	@Test
-	@Ignore // TODO: fails with:
-//	testGetEditBundleNullLocale(org.itracker.core.resources.ITrackerResourcesTest)  Time elapsed: 0.006 sec  <<< ERROR!
-//	java.util.MissingResourceException: Can't find resource for bundle org.itracker.core.resources.ITrackerResourceBundle, key test_key
 	public void testGetBundleNullLocale() {
 		ResourceBundle resourceBundle = ITrackerResources.getBundle((Locale) null);
 		assertNotNull(resourceBundle);
@@ -91,6 +87,9 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 	}
 	
 	@Test
+	@Ignore // TODO: fails with:
+//	testGetEditBundleNullLocale(org.itracker.core.resources.ITrackerResourcesTest)  Time elapsed: 0.006 sec  <<< ERROR!
+//	java.util.MissingResourceException: Can't find resource for bundle org.itracker.core.resources.ITrackerResourceBundle, key test_key
 	public void testGetEditBundleNullLocale() {
 		//TODO: set languageDAO of ConfigurationService
 		ResourceBundle resourceBundle = ITrackerResources.getEditBundle(null);
