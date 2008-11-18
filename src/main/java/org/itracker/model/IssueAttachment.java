@@ -198,45 +198,52 @@ public class IssueAttachment extends AbstractEntity implements
 		this.user = user;
 	}
 
-
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", getId())
-				.append("issue", getIssue()).append("originalfileName",
-						getOriginalFileName()).toString();
+		return new ToStringBuilder(this).append("id", getId()).append("issue",
+				getIssue()).append("originalfileName", getOriginalFileName())
+				.toString();
 	}
 
 	/**
 	 * Compares 2 attachments by file size.
 	 */
-	public static class SizeComparator implements Comparator<IssueAttachment>, Serializable {
+	public static class SizeComparator implements Comparator<IssueAttachment>,
+			Serializable {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		public int compare(IssueAttachment a, IssueAttachment b) {
-			return new CompareToBuilder().append(a.getSize(), b.getSize()).append(a.getOriginalFileName(), b.getOriginalFileName()).append(a.getCreateDate(), b.getCreateDate()).toComparison();
+			return new CompareToBuilder().append(a.getSize(), b.getSize())
+					.append(a.getOriginalFileName(), b.getOriginalFileName())
+					.append(a.getCreateDate(), b.getCreateDate())
+					.toComparison();
 		}
 
 	}
+
 	/**
 	 * Compares 2 attachments by original filename
+	 * 
 	 * @author ranks
-	 *
+	 * 
 	 */
-	public static final class OriginalFilenameComparator implements Comparator<IssueAttachment>, Serializable {
+	public static final class OriginalFilenameComparator implements
+			Comparator<IssueAttachment>, Serializable {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		public int compare(IssueAttachment o1, IssueAttachment o2) {
-				return new CompareToBuilder().append(o1.getIssue(), o2.getIssue()).append(
-						o1.getOriginalFileName(), o1.getOriginalFileName()).toComparison();
-			
+			return new CompareToBuilder().append(o1.getIssue(), o2.getIssue())
+					.append(o1.getOriginalFileName(), o1.getOriginalFileName())
+					.toComparison();
+
 		}
-		
+
 	}
 
 }
