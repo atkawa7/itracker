@@ -6,6 +6,7 @@ import org.apache.struts.action.ActionForward;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.IssueAttachment;
 import org.itracker.persistence.dao.IssueAttachmentDAO;
+import org.itracker.web.ptos.ListAttachmentsPTO;
 import org.itracker.web.struts.mock.MockActionMapping;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -37,18 +38,11 @@ public class ListAttachmentsActionTest extends AbstractDependencyInjectionTest {
 
         assertEquals("itracker.web.admin.listattachments.title", request.getAttribute("pageTitleKey"));
         assertEquals("", request.getAttribute("pageTitleArg"));
-
-        // TODO: Rename attribute key
-        Long sizeOfAllAttachments = (Long) request.getAttribute("sizeOfAllAttachments");
-        assertEquals(8L, sizeOfAllAttachments.longValue());
-
-        // TODO: Rename attribute key
-        assertTrue((Boolean) request.getAttribute("hasAttachments"));
-
-        List<?> attachments = (List<?>) request.getAttribute("attachments");
-
-        assertEquals(4, attachments.size());
-
+        ListAttachmentsPTO pto = (ListAttachmentsPTO) request.getAttribute("pto");
+        assert(pto != null);
+        assert(pto.getAttachments() != null);
+        assertTrue(pto.isHasAttachments());
+        assertEquals(pto.getAttachments().size(),4);
     }
 
     @SuppressWarnings("unchecked")
@@ -57,8 +51,8 @@ public class ListAttachmentsActionTest extends AbstractDependencyInjectionTest {
 
         ListAttachmentsAction listAttachmentsAction = new ListAttachmentsAction();
         listAttachmentsAction.execute(actionMapping, null, request, response);
-//        Object attList = request.getAttribute("attachments");
-        List<IssueAttachment> attachments = (List<IssueAttachment>) request.getAttribute("attachments");
+        ListAttachmentsPTO pto = (ListAttachmentsPTO) request.getAttribute("pto");
+        List<IssueAttachment> attachments = (List<IssueAttachment>) pto.getAttachments();
 
         assertContainsAttachment(issueAttachmentDAO.findByPrimaryKey(1), attachments);
         assertContainsAttachment(issueAttachmentDAO.findByPrimaryKey(2), attachments);
