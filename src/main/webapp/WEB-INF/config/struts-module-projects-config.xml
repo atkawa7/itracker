@@ -28,7 +28,7 @@
 
     <!-- ==================================== Global Forwards    -->
     <global-forwards>
-        <forward name="listprojects" path="/list_projects.jsp" module="/module-projects"/>
+        <forward name="listprojects" module="/module-projects" path="/list_projects.do"/>
         <forward name="listissues" module="/module-projects" path="/list_issues.do"/>
         <forward name="viewissue" module="/module-projects" path="/view_issue.do"/>
         <forward name="editissue" module="/module-projects" path="/editissueform.do"/>

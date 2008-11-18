@@ -126,7 +126,7 @@ public class ListProjectsAction extends ItrackerBaseAction {
 		request.setAttribute("pageTitleArg", pageTitleArg);
 
 		log.info("ListProjectsAction: Forward: listprojects");
-		return mapping.findForward("listprojects");
+		return mapping.findForward("list_projects");
 	}
 
 //	private static final void setupNumberOfIssues(ProjectPTO pto,
