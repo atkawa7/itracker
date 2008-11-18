@@ -47,6 +47,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.AbstractEntity;
 import org.itracker.model.Component;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
@@ -1549,47 +1550,17 @@ public class IssueServiceImpl implements IssueService {
 	 */
 	public IssueHistory getLastIssueHistory(Integer issueId) {
 
-		IssueHistory lastEntry = null;
-
-		Collection<IssueHistory> history = getIssueHistoryDAO().findByIssueId(
+		List<IssueHistory> history = getIssueHistoryDAO().findByIssueId(
 				issueId);
 
-		Iterator<IssueHistory> iterator = history.iterator();
-
-		while (iterator.hasNext()) {
-
-			IssueHistory nextEntry = (IssueHistory) iterator.next();
-
-			if (nextEntry != null) {
-
-				if (lastEntry == null
-						&& nextEntry.getLastModifiedDate() != null) {
-
-					lastEntry = nextEntry;
-
-				} else if (nextEntry.getLastModifiedDate() != null
-
-						&& nextEntry.getLastModifiedDate().equals(
-								lastEntry.getLastModifiedDate())
-
-						&& nextEntry.getId().compareTo(lastEntry.getId()) > 0) {
-
-					lastEntry = nextEntry;
-
-				} else if (nextEntry.getLastModifiedDate() != null
-
-						&& nextEntry.getLastModifiedDate().after(
-								lastEntry.getLastModifiedDate())) {
-
-					lastEntry = nextEntry;
-
-				}
-
-			}
-
+		if (null != history && history.size() > 0) {
+//			sort ascending by id
+			Collections.sort(history, AbstractEntity.ID_COMPARATOR);
+//			return last entry in list
+			return history.get(history.size() -1);
 		}
-
-		return lastEntry;
+		
+		return null;
 
 	}
 
