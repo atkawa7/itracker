@@ -1547,7 +1547,6 @@ public class IssueServiceImpl implements IssueService {
 	 * @return the latest IssueHistory, or null if no entries could be
 	 * found
 	 */
-	// FIXME: always returns null
 	public IssueHistory getLastIssueHistory(Integer issueId) {
 
 		IssueHistory lastEntry = null;
