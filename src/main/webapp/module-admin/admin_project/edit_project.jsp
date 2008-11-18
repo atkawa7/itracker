@@ -84,7 +84,7 @@
 										property="users" size="5" multiple="true"
 										styleClass="editColumnText">
 										<c:forEach var="user" items="${users}">
-											<html:option value="${user.id}">${user.firstName}&nbp;${user.lastName}
+											<html:option value="${user.id}">${user.firstName}&nbsp;${user.lastName}
               </html:option>
 
 										</c:forEach>
