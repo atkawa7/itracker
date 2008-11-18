@@ -59,7 +59,7 @@
 
         <forward name="editreport" module="/module-admin" path="/editreportform.do"/>
         <forward name="editversion" module="/module-admin" path="/editversionform.do"/>
-        <forward name="forgotpassword" path="/forgotpassword.do"/>
+        <forward name="forgotpassword" path="/forgotpasswordform.do"/>
         <forward name="index" path="/portalhome.do" module="/"/>
         <forward name="logoff" path="/logoff.do"/>
         <forward name="login" path="/login.jsp"/>
@@ -108,14 +108,18 @@
                 name="loginForm" scope="request" input="/login.jsp">
             <forward name="index" module="/" path="/index.jsp" redirect="true"/>
         </action>
-
+        
+       <action path="/forgotpasswordform" type="org.itracker.web.actions.user.ForgotPasswordFormAction"
+       		name="forgotPasswordForm" scope="request" input="/forgot_password.jsp" validate="false"/>
+                
         <action path="/forgotpassword" type="org.itracker.web.actions.user.ForgotPasswordAction"
-                name="forgotPasswordForm" scope="request" input="/forgot_password.jsp"
-                validate="true"/>
-
+                name="forgotPasswordForm" scope="request" input="/forgot_password.jsp" validate="true" >
+			<forward name="forgotpassword" module="/" path="/forgotpasswordform.do"/>
+			<forward name="success" module="/" path="/portalhome.do" redirect="true"/>
+		</action>
+		
         <action path="/logoff" type="org.itracker.web.actions.user.LogoffAction"/>
-
-       
+      
         <action path="/listprojects" type="org.itracker.web.actions.ListProjectsAction">
             <forward name="listprojects" path="/module-projects/list_projects.jsp"/>
         </action>
