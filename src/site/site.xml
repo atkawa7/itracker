@@ -22,17 +22,11 @@
 
 	<version position="right" />
 
-<!--
 	<skin>
 		<groupId>org.itracker.site</groupId>
 		<artifactId>skin-itracker</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</skin>
--->
-    <skin>
-        <groupId>org.apache.maven.skins</groupId>
-        <artifactId>maven-classic-skin</artifactId>
-    </skin>
 
 	<body>
 		<breadcrumbs>
