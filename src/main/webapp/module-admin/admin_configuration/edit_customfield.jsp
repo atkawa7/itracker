@@ -131,9 +131,7 @@
                         </table>
                     </td>
                     <td></td>
-                    <!-- To Kimba from Marky: I see problems when you try to assign a Primitve such as boolean or int
- 	to the pageContext.setAttribute("String",Object) method because this method only takes Objects, but no Primitives. 
- 	 -->
+          
                     
                 <c:if test="${field.fieldType.code == CustomFieldType_List}">
                     <td colspan="2" valign="top">
