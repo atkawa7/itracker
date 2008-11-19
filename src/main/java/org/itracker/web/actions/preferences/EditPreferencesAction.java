@@ -62,7 +62,8 @@ public class EditPreferencesAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("Starting pref mod");
         ActionMessages errors = new ActionMessages();
-        
+		//  TODO: Action Cleanup
+
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while editing user preferences.");
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
