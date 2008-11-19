@@ -49,8 +49,7 @@ public abstract class WindowsSSONAuthenticator extends DefaultAuthenticator {
             UserService userService = getUserService();
             // validate we're really using jcifs, and we
             // have a valid authentication object
-            // TODO
-            // get user from jcifs
+            // TODO: get user from jcifs
             String theLogin = ((HttpServletRequest) authentication).getRemoteUser();
 
             if (theLogin == null) {
