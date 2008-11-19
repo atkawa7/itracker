@@ -56,6 +56,7 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ActionMessages errors = new ActionMessages();
+		//  TODO: Action Cleanup
 
 		if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request,
 				response)) {
