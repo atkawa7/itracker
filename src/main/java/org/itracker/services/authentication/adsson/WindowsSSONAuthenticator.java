@@ -63,7 +63,7 @@ public abstract class WindowsSSONAuthenticator extends DefaultAuthenticator {
             	theLogin = theLogin.substring(theLogin.indexOf("\\") + 1);
             }
             if (!theLogin.equals(login)) {
-            	// FIXME: should an exception be thrown here?
+            	// should an exception be thrown here?
             	AuthenticatorException ex = new AuthenticatorException("User obtained from authenticator does not match, got " + theLogin + ", expected " + login + ".",
                         AuthenticatorException.CUSTOM_ERROR); 
             	logger.warn("checkLogin: checking login for " + login + " but got " + theLogin + " in authentication " + authentication, ex);
