@@ -232,7 +232,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.system"));
 		} catch (WorkflowException e) {
-			// TODO Auto-generated catch block
+			 
 			log.error("Exception while creating create issue form.", e);
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.system"));
