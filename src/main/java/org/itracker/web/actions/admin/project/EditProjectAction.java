@@ -52,6 +52,8 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 
+//  TODO: Action Cleanup
+
 public class EditProjectAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(EditProjectAction.class);
 
