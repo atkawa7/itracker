@@ -87,7 +87,9 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 	}
 	
 	@Test
-	@Ignore // TODO: fails with:
+	@Ignore 
+	//TODO: Activate skipped, ignored Test (when implementation is done correctly)
+	// TODO: fails with:
 //	testGetEditBundleNullLocale(org.itracker.core.resources.ITrackerResourcesTest)  Time elapsed: 0.006 sec  <<< ERROR!
 //	java.util.MissingResourceException: Can't find resource for bundle org.itracker.core.resources.ITrackerResourceBundle, key test_key
 	public void testGetEditBundleNullLocale() {
