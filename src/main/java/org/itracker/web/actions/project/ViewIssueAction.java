@@ -2,7 +2,6 @@ package org.itracker.web.actions.project;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,10 +18,8 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Component;
-import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueAttachment;
-import org.itracker.model.IssueField;
 import org.itracker.model.IssueHistory;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
@@ -43,7 +40,8 @@ public class ViewIssueAction extends ItrackerBaseAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		
+		//  TODO: Action Cleanup
+
 		IssueService issueService = this.getITrackerServices()
 				.getIssueService();
 		request.setAttribute("ih", issueService);
@@ -96,8 +94,8 @@ public class ViewIssueAction extends ItrackerBaseAction {
 			log.info("ViewIssueAction: Forward: error");
 			return mapping.findForward("error");
 		} else {
-			User owner = issue.getOwner();
-			User creator = issue.getCreator();
+			//User owner = issue.getOwner();
+			//User creator = issue.getCreator();
 			boolean canViewIssue = IssueUtilities.canViewIssue(issue,
 					currUserId, permissions);
 
