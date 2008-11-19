@@ -1,6 +1,8 @@
 package org.itracker.web.actions;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +14,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 
@@ -32,6 +35,7 @@ public class ShowHelpAction extends ItrackerBaseAction {
         if("ct".equals(helpParam)) {
             helpPage = ITrackerResources.getString("itracker.web.helppage.commontasks", locale);
         } else if("ab".equals(helpParam)) {
+        	setupHelpAboutPageAttributes(request);
             helpPage = "help_about.jsp";
         } else {
             helpPage = "help_index_" + locale + ".jsp";
@@ -53,6 +57,23 @@ public class ShowHelpAction extends ItrackerBaseAction {
     public ShowHelpAction() {
         super();
         // TODO Auto-generated constructor stub
+    }
+
+    
+    /**
+     * This method will prepare the request attribute for the help about jsp .
+     */
+    private void setupHelpAboutPageAttributes(HttpServletRequest request)
+    {
+    	ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+    	long startTimeMillis = Long.parseLong(configurationService.getProperty("start_time_millis", ""));
+        SimpleDateFormat dateFormat = new SimpleDateFormat(ITrackerResources.getString("itracker.dateformat.full"));
+    	String startTime = dateFormat.format(new Date(startTimeMillis));
+    	String versionNumber = configurationService.getProperty("version", "Unknown");
+    	request.setAttribute("starttime", startTime);
+    	request.setAttribute("version", versionNumber);
+    	request.setAttribute("javaVersion", System.getProperty("java.version"));
+    	request.setAttribute("javaVendor", System.getProperty("java.vendor"));
     }
     
 }

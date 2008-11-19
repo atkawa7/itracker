@@ -1,9 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="java.text.*" %>
-<%@ page import="java.util.*" %>
-<%@ page import="org.itracker.services.*" %>
- 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
@@ -12,28 +8,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<%! SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss"); %>
 
-<%
-    String versionNumber = "";
-    long startTimeMillis = 0;
-
-    ConfigurationService sc = (ConfigurationService)request.getAttribute("sc");
-
-    versionNumber = sc.getProperty("version", "Unknown");
-    startTimeMillis = Long.parseLong(sc.getProperty("start_time_millis", ""));
- %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <center><span class="pageHeader"><u><it:message key="itracker.web.helpabout.title"/></u></span></center>
 <br/>
 <br/>
 <p class="help">
-  <b><it:message key="itracker.web.helpabout.itrackerversion"/>:</b> <%= versionNumber %><br/>
-  <b><it:message key="itracker.web.helpabout.starttime"/>:</b> <%= sdf.format(new Date(startTimeMillis)) %><br/>
+  <b><it:message key="itracker.web.helpabout.itrackerversion"/>:</b> <bean:write name="version"/><br/>
+  <b><it:message key="itracker.web.helpabout.starttime"/>:</b> <bean:write name="starttime"/><br/>
   <b><it:message key="itracker.web.helpabout.defaultlocale"/>:</b> <it:message key="itracker.locale.name"/><br/>
   <br/>
 
-  <b><it:message key="itracker.web.helpabout.javaversion"/>:</b> <%= System.getProperty("java.version") + ", " + System.getProperty("java.vendor") %><br/>
+  <b><it:message key="itracker.web.helpabout.javaversion"/>:</b> <bean:write name="javaVersion" scope="request"/>, <bean:write name="javaVendor" scope="request"/><br/>
   <br/>
 </p>
 
