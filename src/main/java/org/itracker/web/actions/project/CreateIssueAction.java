@@ -67,6 +67,13 @@ import org.itracker.web.ptos.CreateIssuePTO;
 import org.itracker.web.util.AttachmentUtilities;
 import org.itracker.web.util.Constants;
 
+/**
+ * This action handles the actual creation of a new issue.
+ * 
+ * FIXME: There are validation issues, the createissue-form becomes invalid, missing inputs, missing options. 
+ * @author ranks
+ *
+ */
 public class CreateIssueAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(CreateIssueAction.class);
 
@@ -86,7 +93,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 		//	return mapping.findForward("error");
 			
 			CreateIssuePTO.setupCreateIssue(request);
-			return mapping.getInputForward();
+			return mapping.findForward("createissue");
 //			project PTOs must be set in request for listprojects-forward to work
 			// return mapping.findForward("listprojects");
 //			return null; 
@@ -165,7 +172,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 					errors.add(msg);
 					saveErrors(request, errors);
 					CreateIssuePTO.setupCreateIssue(request);
-					return mapping.getInputForward();
+					return mapping.findForward("createissue");
 				}
 				
 				if (log.isDebugEnabled()) {
@@ -352,7 +359,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 								new ActionMessage("itracker.web.error.system"));
 						saveErrors(request, errors);
 						CreateIssuePTO.setupCreateIssue(request);
-						return mapping.getInputForward();
+						return mapping.findForward("createissue");
 					}
 
 					notificationService.sendNotification(issue, Type.CREATED,
@@ -362,7 +369,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
 							new ActionMessage("itracker.web.error.system"));
 					saveErrors(request, errors);
-					return mapping.findForward("error");
+					return mapping.findForward("createissue");
 				}
 				session.removeAttribute(Constants.PROJECT_KEY);
 
@@ -374,7 +381,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 				}
 				saveErrors(request, errors);
 				CreateIssuePTO.setupCreateIssue(request);
-				return mapping.getInputForward();
+				return mapping.findForward("createissue");
 				
 			}
 		} catch (RuntimeException e) {
@@ -394,7 +401,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
 		if (!errors.isEmpty()) {
 			saveErrors(request, errors);
 		}
-		return mapping.findForward("error");
+		return mapping.findForward("createissue");
 	}
 	
 	private ActionForward getReturnForward(Issue issue, Project project,
