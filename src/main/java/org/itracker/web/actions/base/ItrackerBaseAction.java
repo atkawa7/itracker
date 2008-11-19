@@ -52,6 +52,8 @@ import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
 import org.itracker.web.util.SessionManager;
 
+//TODO: Action Cleanup
+
 /**
  * 
  * This seems to be an action that is called always, checking for Permissions,
