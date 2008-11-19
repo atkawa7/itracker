@@ -467,9 +467,7 @@ public class IssueServiceImpl implements IssueService {
 			issueDirty.getActivities().add(activity);
 		}
 
-		if (persistedIssue.getStatus() != issueDirty.getStatus()
-				&& issueDirty.getStatus() != -1) {
-
+		if (null == persistedIssue.getStatus() || !persistedIssue.getStatus().equals(issueDirty.getStatus())) {
 			IssueActivity activity = new IssueActivity();
 			activity.setActivityType(IssueActivityType.STATUS_CHANGE);
 			activity.setDescription(IssueUtilities.getStatusName(persistedIssue
@@ -1605,8 +1603,7 @@ public class IssueServiceImpl implements IssueService {
 		Issue issue = getIssue(issueId);
 
 		Map<Integer, Set<PermissionType>> permissions = getUserDAO()
-				.getUsersMapOfProjectsAndPermissionTypes(user,
-						AuthenticationConstants.REQ_SOURCE_WEB);
+				.getUsersMapOfProjectsAndPermissionTypes(user);
 
 		return IssueUtilities.canViewIssue(issue, user.getId(), permissions);
 
@@ -1615,8 +1612,7 @@ public class IssueServiceImpl implements IssueService {
 	public boolean canViewIssue(Issue issue, User user) {
 
 		Map<Integer, Set<PermissionType>> permissions = getUserDAO()
-				.getUsersMapOfProjectsAndPermissionTypes(user,
-						AuthenticationConstants.REQ_SOURCE_WEB);
+				.getUsersMapOfProjectsAndPermissionTypes(user);
 
 		return IssueUtilities.canViewIssue(issue, user.getId(), permissions);
 
