@@ -28,7 +28,7 @@ public class UnauthorizedAction extends ItrackerBaseAction {
 
 	public UnauthorizedAction() {
 		super();
-		// TODO Auto-generated constructor stub
+	 
 	}
 
 }
