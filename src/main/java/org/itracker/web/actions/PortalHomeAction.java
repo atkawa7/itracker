@@ -33,6 +33,8 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.IssuePTO;
 
+//  TODO: Action Cleanup
+
 public class PortalHomeAction extends ItrackerBaseAction {
     
     static final Logger LOGGER = Logger.getLogger("org.itracker.PortalHomeAction");
@@ -43,7 +45,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
             throws Exception {
         LOGGER.info("Stepping up into the loginRouter method");
         
-        // mayb wrong the next line... setting a default forward...
+        // maybe wrong the next line... setting a default forward...
         ActionForward forward=mapping.findForward("portalhome");
         
         if (forward==null) {
