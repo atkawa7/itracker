@@ -46,7 +46,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 
-
+//TODO: Action Cleanup
 public class RemoveConfigurationItemAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(RemoveConfigurationItemAction.class);
 	
