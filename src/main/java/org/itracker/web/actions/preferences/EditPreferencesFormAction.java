@@ -57,6 +57,7 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ActionMessages errors = new ActionMessages();
+		//  TODO: Action Cleanup
 
 		try {
 			UserService userService = getITrackerServices().getUserService();
