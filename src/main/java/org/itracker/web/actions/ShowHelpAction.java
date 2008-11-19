@@ -57,7 +57,7 @@ public class ShowHelpAction extends ItrackerBaseAction {
     
     public ShowHelpAction() {
         super();
-        // TODO Auto-generated constructor stub
+        
     }
 
     
