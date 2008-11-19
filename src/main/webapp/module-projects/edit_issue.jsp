@@ -515,9 +515,7 @@
           %-- 
           END Re-Integrated relation stuff
           --%>
-
-<c:if test="${ not hasNoViewAttachmentOption} ">
-
+<c:if test="${ not hasNoViewAttachmentOption }">
 <tr>
     <td colspan="4">
         <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
