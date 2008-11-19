@@ -13,7 +13,6 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.ValidatorForm;
 import org.itracker.AbstractDependencyInjectionTest;
-import org.itracker.core.resources.ITrackerResources;
 import org.junit.Test;
 import org.itracker.model.NameValuePair;
 import org.itracker.model.Project;
