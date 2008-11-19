@@ -1,14 +1,14 @@
 package org.itracker.persistence.dao;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Project;
 import org.itracker.model.Status;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
 
@@ -47,8 +47,8 @@ public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
         Date date = projectDAO.getLastIssueUpdateDate(2);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         // FIXME: there are 4 issues connected with project 2, why we got null here?
-        assertNotNull( "null date", date );
-        assertEquals("last issue update date", "2008-01-01", df.format(date));
+        assertNotNull( "projectDAO.getLastIssueUpdateDate(2).date", date );
+        assertEquals("projectDAO.getLastIssueUpdateDate(2). date", "2008-01-01", df.format(date));
     }
 
     @Override

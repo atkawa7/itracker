@@ -115,7 +115,7 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
     @Test
     public void testGetUsersMapOfProjectsAndPermissionTypes() {
     	Map<Integer, Set<PermissionType>> map =
-			userDAO.getUsersMapOfProjectsAndPermissionTypes(userDAO.findByPrimaryKey(2), 1);
+			userDAO.getUsersMapOfProjectsAndPermissionTypes(userDAO.findByPrimaryKey(2));
     	
     	assertNotNull( map );
     	// all permissions connected with user 2 have only project 2 in relation
