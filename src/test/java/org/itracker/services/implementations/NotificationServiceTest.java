@@ -109,6 +109,7 @@ public class NotificationServiceTest extends AbstractDependencyInjectionTest {
 	
 	@Test
 	@Ignore
+	//TODO: Activate skipped, ignored Test (when implementation is done correctly)
 	public void testPrimaryIssueNotifications() {
 		List<Notification> notifications = 
 			notificationService.getPrimaryIssueNotifications(issueDAO.findByPrimaryKey(1));
