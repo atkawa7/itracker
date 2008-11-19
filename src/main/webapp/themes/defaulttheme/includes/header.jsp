@@ -1,11 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="java.util.Map"
-    import="java.util.Set"
-    import="org.itracker.model.PermissionType"
-    import="org.itracker.services.util.*" 
-    import="org.itracker.web.util.RequestHelper" %>
-
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
@@ -14,23 +8,17 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>    
 
-<%-- <nitrox:var name="pageTitleKey" type="java.lang.String"/> --%>
-<%-- <nitrox:var name="pageTitleArg" type="java.lang.String"/> --%>
-<%
-	final Map<Integer, Set<PermissionType>> permissions = RequestHelper
-			.getUserPermissions(session);
-%>
 <html>
   <head>
     <title><it:message key="itracker.web.generic.itracker"/>: <it:message key="${pageTitleKey}" arg0="${pageTitleArg}"/>
    </title>
-    <link rel="STYLESHEET" type="text/css" href="<%=request.getContextPath()%>/themes/defaulttheme/includes/styles.css"/>
+    <link rel="STYLESHEET" type="text/css" href="${contextPath}/themes/defaulttheme/includes/styles.css"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT"/> 
      <meta http-equiv="Pragma" content="no-cache"/>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/themes/defaulttheme/includes/calendar.js"></script>
+    <script type="text/javascript" src="${contextPath}/themes/defaulttheme/includes/calendar.js"></script>
 
-    <script type="text/javascript" src="<%=request.getContextPath()%>/themes/defaulttheme/includes/scripts.js"></script>
+    <script type="text/javascript" src="${contextPath}/themes/defaulttheme/includes/scripts.js"></script>
   </head>
 
   <body>
@@ -97,8 +85,7 @@
 				</c:if>
 				--%>
 				<c:if
-					test="<%=UserUtilities.hasPermission(permissions,
-										UserUtilities.PERMISSION_USER_ADMIN)%>">
+					test="${hasPermissionUserAdmin}">
 	                      |
 	                      <html:link styleClass="headerLinks"
 						titleKey="itracker.web.header.menu.admin.alt"
@@ -107,8 +94,7 @@
 					</html:link>
 				</c:if>
 				<c:if
-					test="<%=UserUtilities.hasPermission(permissions,
-										UserUtilities.PERMISSION_PRODUCT_ADMIN)%>">
+					test="${hasPermissionProductAdmin}">
 	               | <html:link styleClass="headerLinks"
 						titleKey="itracker.web.header.menu.projectadmin.alt"
 						module="/module-admin" action="/listprojectsadmin">

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
@@ -24,12 +25,14 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ITrackerServices;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
 import org.itracker.web.util.SessionManager;
 
@@ -186,6 +189,7 @@ public class ExecuteAlwaysFilter implements Filter {
 					(HttpServletResponse) response);
 			return;
 		}
+		setupCommonReqAttributesEx(request);
 		try {
 			if (log.isDebugEnabled()) {
 				log.info("doFilter: executing chain..");
@@ -309,9 +313,22 @@ public class ExecuteAlwaysFilter implements Filter {
 		// TODO: remove deprecated currLocale attribute
 		request.setAttribute("currLocale", currLocale);
 		request.setAttribute(Constants.LOCALE_KEY, currLocale);
+		
+		
 	}
 
-	
+	private static final void setupCommonReqAttributesEx(HttpServletRequest request) {
+		final Map<Integer, Set<PermissionType>> permissions = RequestHelper
+		.getUserPermissions(request.getSession());
+		request.setAttribute("hasPermissionUserAdmin", UserUtilities.hasPermission(permissions,
+				UserUtilities.PERMISSION_USER_ADMIN));
+		request.setAttribute("hasPermissionProductAdmin", UserUtilities.hasPermission(permissions,
+				UserUtilities.PERMISSION_PRODUCT_ADMIN));
+		request.setAttribute("contextPath", request.getContextPath());
+
+		request.setAttribute("currentDate", new java.util.Date());
+	}
+
 	
 	private static final boolean isProtected(String path, Set<Pattern> patterns) {
 		if (null == path) {

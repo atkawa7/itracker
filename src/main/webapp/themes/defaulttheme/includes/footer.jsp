@@ -14,8 +14,8 @@
         	2005 by <a href="http://www.itracker.org" target="_blank">itracker.org</a> Version
         	3.0, licensed under LGPL. </td>
         <td align="right" width="50%" style="text-align: right;" valign="top">
-          <% java.util.Date currentDate = new java.util.Date(); %>
-          <it:message key="itracker.web.attr.gendate"/>: <it:formatDate date="<%= currentDate %>"/>
+          ${currentDate}
+          <it:message key="itracker.web.attr.gendate"/>: <it:formatDate date="${currentDate}"/>
         </td>
       </tr>
     </table>
