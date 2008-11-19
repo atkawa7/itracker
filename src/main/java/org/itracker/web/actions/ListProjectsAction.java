@@ -25,7 +25,7 @@ public class ListProjectsAction extends ItrackerBaseAction {
 
 	public ListProjectsAction() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 
