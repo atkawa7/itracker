@@ -43,6 +43,7 @@ public class ProjectUtilitiesTest extends AbstractDependencyInjectionTest {
      */
     @Test
     @Ignore
+  //TODO: Activate skipped, ignored Test (when implementation is done correctly)
     public void testGetStatusName() {
 
         // "Deleted"
