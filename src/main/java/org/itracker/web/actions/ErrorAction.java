@@ -23,7 +23,7 @@ public class ErrorAction extends ItrackerBaseAction {
 
 	public ErrorAction() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 }
