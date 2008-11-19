@@ -98,7 +98,7 @@ public class EditPreferencesAction extends ItrackerBaseAction {
             }
 
             if (log.isInfoEnabled()) {
-            	log.info("execute: ");
+            	log.info("execute: found user " + user);
             }
             errors = form.validate(mapping, request);
 
@@ -167,6 +167,8 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                 user = userService.updateUser(existingUser);
 
                 UserPreferences userPrefs = user.getPreferences();
+                if (userPrefs == null) userPrefs = new UserPreferences();
+                
                 if(userService.allowPreferenceUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
                     userPrefs.setUser(existingUser);
 
@@ -204,6 +206,11 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                 session.setAttribute(Constants.USER_KEY, existingUser);
                 session.setAttribute(Constants.PREFERENCES_KEY, userPrefs);
                 session.setAttribute(Constants.LOCALE_KEY, ITrackerResources.getLocale(userPrefs.getUserLocale()));
+
+        		// TODO: remove deprecated currLocale attribute
+        		request.setAttribute("currLocale", ITrackerResources.getLocale(userPrefs.getUserLocale()));
+        		request.setAttribute(Constants.LOCALE_KEY, ITrackerResources.getLocale(userPrefs.getUserLocale()));
+        		
                 session.removeAttribute(Constants.EDIT_USER_KEY);
                 session.removeAttribute(Constants.EDIT_USER_PREFS_KEY);
             } else {

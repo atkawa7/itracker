@@ -102,6 +102,8 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
 			// of this hack
 			if (userPrefs == null) {
 				userPrefs = new UserPreferences();
+				user.setPreferences(userPrefs);
+				userPrefs.setUser(user);
 			}
 
 			UserForm userForm = (UserForm) form;
@@ -247,7 +249,12 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
 					.setAttribute("pageTitleKey",
 							"itracker.web.editprefs.title");
 			request.setAttribute("pageTitleArg", "");
-
+						
+			request.setAttribute("PREF_HIDE_ASSIGNED", UserUtilities.PREF_HIDE_ASSIGNED);
+			request.setAttribute("PREF_HIDE_UNASSIGNED", UserUtilities.PREF_HIDE_UNASSIGNED);
+			request.setAttribute("PREF_HIDE_CREATED", UserUtilities.PREF_HIDE_CREATED);
+			request.setAttribute("PREF_HIDE_WATCHED", UserUtilities.PREF_HIDE_WATCHED);
+			
 			return mapping.findForward("editpreferencesform");
 
 		} catch (Exception e) {
