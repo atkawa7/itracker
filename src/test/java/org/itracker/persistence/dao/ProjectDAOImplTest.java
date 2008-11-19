@@ -43,6 +43,7 @@ public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
     
     @Test
     @Ignore
+    //TODO: Activate skipped, ignored Test (when implementation is done correctly)
     public void testGetLastIssueUpdateDate() {
         Date date = projectDAO.getLastIssueUpdateDate(2);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
