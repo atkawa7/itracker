@@ -80,7 +80,6 @@ import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
 import org.itracker.services.exceptions.IssueSearchException;
 import org.itracker.services.exceptions.ProjectException;
-import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
