@@ -9,11 +9,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<!-- Marky: check the NitroX types here. Are they right? -->
-<%-- <nitrox:var name="action" type="java.lang.String"/> --%>
-<%-- <nitrox:var name="languages" type="java.lang.String"/> --%>
-<%-- <nitrox:var name="CustomFieldType_List" type="java.lang.String"/> --%>
-
 <bean:define id="pageTitleKey" value="itracker.web.admin.editcustomfield.title.create"/>
 <bean:define id="pageTitleArg" value=""/>
 <%--   redirect logic moved to Action --%>
