@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import org.itracker.AbstractDependencyInjectionTest;
-import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Component;
 import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
