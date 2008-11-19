@@ -26,7 +26,8 @@ public class ShowHelpAction extends ItrackerBaseAction {
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 //        super.executeAlways(mapping,form,request,response);
-        
+		//  TODO: Action Cleanup
+
         String helpPage = "";
         String helpParam = request.getParameter("page");
         HttpSession session = request.getSession(true);
