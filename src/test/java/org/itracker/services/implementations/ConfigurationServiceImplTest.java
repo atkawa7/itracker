@@ -533,6 +533,7 @@ public class ConfigurationServiceImplTest extends
 	
 	@Test
 	@Ignore
+	//TODO: Activate skipped, ignored Test (when implementation is done correctly)
 	// FIXME: probably getLanguageItemByKey() should search for the provided locale first and
 	// only then for the BASE locale, not vice versa
 	public void testGetLanguageItemByKey() {
