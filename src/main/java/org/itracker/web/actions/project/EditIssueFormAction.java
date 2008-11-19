@@ -95,6 +95,10 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 			Map<Integer, List<NameValuePair>> listOptions, ActionMessages errors)
 			throws ServletException, IOException, WorkflowException {
 		
+		if (log.isDebugEnabled()) {
+			log.debug("setupJspEnv: for issue " + issue);
+		}
+		
 		NotificationService notificationService = ServletContextUtils
 		.getItrackerServices().getNotificationService();
 		String pageTitleKey = "itracker.web.editissue.title";
@@ -174,10 +178,15 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 				listOptions, IssueUtilities.FIELD_SEVERITY));
 		request.setAttribute("possibleOwners", WorkflowUtilities
 				.getListOptions(listOptions, IssueUtilities.FIELD_OWNER));
+
 		request.setAttribute("hasNoViewAttachmentOption", ProjectUtilities
 				.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, issue
 						.getProject().getOptions()));
-
+		
+		if (log.isDebugEnabled()) {
+			log.debug("setupJspEnv: options " + issue.getProject().getOptions() + ", hasNoViewAttachmentOption: " + request.getAttribute("hasNoViewAttachmentOption"));
+		}
+		
 		setupNotificationsInRequest(request, issue, notificationService);
 
 		// setup issue to request, as it's needed by the jsp.
@@ -291,7 +300,6 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 				}
 			} else {
 				// Can't change
-				// FIXME: forward to unauthorized?
 			}
 
 		} else {
