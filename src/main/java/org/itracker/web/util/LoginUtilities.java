@@ -160,6 +160,7 @@ public class LoginUtilities {
 	 * @param request
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static Locale getCurrentLocale(HttpServletRequest request) {
 		Locale requestLocale = null;
 		HttpSession session = request.getSession(true);
@@ -217,8 +218,7 @@ public class LoginUtilities {
 			// installation?
 
 			if (null == requestLocale) {
-				Enumeration<Locale> locales = (Enumeration<Locale>) request
-						.getLocales();
+				Enumeration<Locale> locales = (Enumeration<Locale>) request.getLocales();
 				ResourceBundle bundle;
 				Locale locale;
 				while (locales.hasMoreElements()) {
