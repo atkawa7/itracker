@@ -20,11 +20,13 @@ import javax.naming.directory.SearchResult;
 import org.apache.log4j.Logger;
 import org.itracker.model.User;
 
+//TODO: Add Javadocs here
+
 /**
  * 
  * @author ricardo
  */
-public class GetUserModelFromADPrivilegedAction implements PrivilegedAction {
+public class GetUserModelFromADPrivilegedAction implements PrivilegedAction<Object> {
 
     private static String ITRACKER_SUPER_USERS_GROUP = "ITracker Super Users";
     
@@ -66,7 +68,7 @@ public class GetUserModelFromADPrivilegedAction implements PrivilegedAction {
         sc.setCountLimit(1);
         sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
         String filter = "(&(objectclass=user)(sAMAccountName=" + login + "))";
-        NamingEnumeration answer = ctx.search(baseBranch, filter, sc);
+        NamingEnumeration<?> answer = ctx.search(baseBranch, filter, sc);
 
         if (!answer.hasMoreElements()) {
             logger.error("A.D. had no info on " + login);
@@ -120,7 +122,7 @@ public class GetUserModelFromADPrivilegedAction implements PrivilegedAction {
         logger.info("About to check if user " + login + " is a super user");
         logger.debug("User attributes for user " + login + " " + attributes);
         if (attributes.get("memberOf") != null) {
-            for (Enumeration groups = attributes.get("memberOf").getAll(); groups.hasMoreElements();) {
+            for (Enumeration<?> groups = attributes.get("memberOf").getAll(); groups.hasMoreElements();) {
                 String group = (String) groups.nextElement();
                 logger.info(login + " belongs to NT Group " + group);
                 if (group.indexOf(ITRACKER_SUPER_USERS_GROUP) > 0) {
