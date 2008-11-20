@@ -165,7 +165,8 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
         return permissionsByProjectId;
     }
 
-    public List<User> findUsersForProjectByAllPermissionTypeList(Integer projectID, Integer[] permissionTypes) {
+    @SuppressWarnings("unchecked")
+	public List<User> findUsersForProjectByAllPermissionTypeList(Integer projectID, Integer[] permissionTypes) {
 
         List<User> users = new ArrayList<User>();
 
