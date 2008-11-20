@@ -49,8 +49,8 @@ public class EnumCodeUserType extends AbstractEnumUserType {
         try {
         	return rs.wasNull() ? null : this.enumValues[0].fromCode(code);
         } catch (Exception e) {
-        	log.info("nullSafeGet: failed to get default code enum, trying DEFAULT-code " + this.enumValues[0].DEFAULT_CODE, e);
-        	return this.enumValues[0].fromCode(this.enumValues[0].DEFAULT_CODE);
+        	log.info("nullSafeGet: failed to get default code enum, trying DEFAULT-code " + IntCodeEnum.DEFAULT_CODE, e);
+        	return this.enumValues[0].fromCode(IntCodeEnum.DEFAULT_CODE);
         }
     }
 
