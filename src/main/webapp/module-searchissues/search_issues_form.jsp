@@ -267,8 +267,8 @@
               <tr align="right" class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ) %>">
                 <td style="white-space: nowrap">
 
-                  <it:formatImageAction action="viewissue"
-                                        module="/module-searchissues"
+                  <it:formatImageAction forward="viewissue"
+                                        module="/module-projects"
                                         paramName="id"
                                         paramValue="<%= issues.get(i).getId() %>"
                                         src="/themes/defaulttheme/images/view.gif"
@@ -277,8 +277,8 @@
                                         textActionKey="itracker.web.image.view.texttag"/>
 
                   <% if(UserUtilities.hasPermission(permissions, issues.get(i).getProject().getId(), UserUtilities.PERMISSION_EDIT)) { %>
-                        <it:formatImageAction forward="editissueform"
-                                              module="/module-searchissues"
+                        <it:formatImageAction forward="editissue"
+                                              module="/module-projects"
                                               paramName="id"
                                               paramValue="<%= issues.get(i).getId() %>"
                                               caller="index"

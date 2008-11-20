@@ -572,7 +572,8 @@
 
                         <tr class="${rowShading}">
                             <td class="listRowText" style="text-align: left;" >
-                                <it:formatImageAction forward="downloadAttachment.do"
+                                <it:formatImageAction forward="downloadAttachment"
+                                				      module="/module-projects"
                                                       paramName="id"
                                                       paramValue="${attachment.id}"
                                                       target="_blank"

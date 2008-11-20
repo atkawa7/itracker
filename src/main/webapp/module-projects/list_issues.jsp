@@ -53,9 +53,9 @@
            	
             <tr align="right" class="${i.count % 2 == 1 ? 'listRowShaded':'listRowUnshaded'}">
             <td style="white-space: nowrap">
-              <it:formatImageAction forward="viewissue" paramName="id" paramValue="${issuePTO.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${issuePTO.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
+              <it:formatImageAction forward="viewissue" module="/module-projects" paramName="id" paramValue="${issuePTO.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${issuePTO.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
             	<c:if test="${issuePTO.userCanEdit}">
-            		    <it:formatImageAction action="editissueform" paramName="id" paramValue="${issuePTO.issue.id}" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="${issuePTO.issue.id}" textActionKey="itracker.web.image.edit.texttag"/>
+            		    <it:formatImageAction action="editissueform"  module="/module-projects" paramName="id" paramValue="${issuePTO.issue.id}" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="${issuePTO.issue.id}" textActionKey="itracker.web.image.edit.texttag"/>
             	</c:if>
                       
             	<c:if test="${issuePTO.userHasIssueNotification}">
