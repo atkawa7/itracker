@@ -10,6 +10,8 @@ import javax.naming.NamingException;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.junit.Test;
 
+// TODO: Add Javadocs here: what is the purpose of this class?
+
 /**
  *
  * @author seas
