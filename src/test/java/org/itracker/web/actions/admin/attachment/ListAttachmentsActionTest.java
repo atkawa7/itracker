@@ -45,7 +45,6 @@ public class ListAttachmentsActionTest extends AbstractDependencyInjectionTest {
         assertEquals(pto.getAttachments().size(),4);
     }
 
-    @SuppressWarnings("unchecked")
 	@Test
     public void testAttachmentDetails() throws Exception {
 
