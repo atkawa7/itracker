@@ -30,7 +30,7 @@ public class IssueAttachmentUtilities  {
 
 class MimeType {
     private String mimeType;
-    private HashSet suffixes;
+    private HashSet<?> suffixes;
     private String imageName;
 
     public MimeType(String mimeType, String imageName) {
@@ -54,11 +54,11 @@ class MimeType {
         imageName = value;
     }
 
-	public HashSet getSuffixes() {
+	public HashSet<?> getSuffixes() {
 		return suffixes;
 	}
 
-	public void setSuffixes(HashSet suffixes) {
+	public void setSuffixes(HashSet<?> suffixes) {
 		this.suffixes = suffixes;
 	}
 }
