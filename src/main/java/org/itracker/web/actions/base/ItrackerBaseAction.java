@@ -52,7 +52,7 @@ import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
 import org.itracker.web.util.SessionManager;
 
-//TODO: Action Cleanup
+//TODO: Action Cleanup 
 
 /**
  * 
@@ -424,10 +424,11 @@ public abstract class ItrackerBaseAction extends Action {
 		return forward;
 	}
 
-	private boolean getAllowSaveLogin() {
-		return (getITrackerServices().getConfigurationService()
-				.getBooleanProperty("allow_save_login", true));
-	}
+	//TODO: remove this unnecessary code because it's not used and its named ugly
+//	private boolean getAllowSaveLogin() {
+//		return (getITrackerServices().getConfigurationService()
+//				.getBooleanProperty("allow_save_login", true));
+//	}
 
 	/**
 	 * @deprecated no state information is allowed in actions. use a correct
@@ -507,11 +508,19 @@ public abstract class ItrackerBaseAction extends Action {
 			startTime.setTime(System.currentTimeMillis());
 		}
 	}
-	
+	/**
+	 * 
+	 * @TODO: Add Javadocs here: who uses this handleException method? It seems to be called by nobody... please document or clean up.
+	 *  
+	 * @param t
+	 * @param messages
+	 * @param httpServletRequest
+	 */
 	protected void handleException(Throwable t, ActionMessages messages, HttpServletRequest httpServletRequest) {
 		Object[] params = new Object[]{};
 		ActionMessage msg = new ActionMessage("itracker.web.error.system.message");
-
+		log.debug("An expection has happened in the ItrackerBaseAction with " +msg.getValues()+params.length+" parameters");	
+		
 	}
 
 }
