@@ -1168,19 +1168,6 @@ public class IssueServiceImpl implements IssueService {
 		
 		return true;
 	}
-	/**
-	 * @deprecated do we need this? it's not on the interface..
-	 * @param issueId
-	 * @param assignedByUserId
-	 * @return
-	 */
-	private boolean unassignIssue(Integer issueId, Integer assignedByUserId) {
-		User assignedByUser = getUserDAO().findByPrimaryKey(assignedByUserId);
-		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
-		
-		return unassignIssue(issue, assignedByUser, true);
-		
-	}
 
 	/**
 	 * System-Update an issue, adds the action to the issue and updates the issue
