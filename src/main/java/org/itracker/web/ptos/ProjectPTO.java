@@ -152,6 +152,8 @@ public class ProjectPTO {
 	}
 
 	//TODO: Code Cleanup: this method is not used and I don't like the name (what does setup stand for?)
+	//TODO: Decide if this code is really needed and document for what
+	@SuppressWarnings("unused")
 	private static final void setupNumberOfIssues(ProjectPTO pto,
 			ProjectService service) {
 		pto.setTotalNumberIssues(service.getTotalNumberIssuesByProject(pto
