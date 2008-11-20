@@ -115,7 +115,7 @@ public class SearchIssuesAction extends ItrackerBaseAction {
         try {
             Integer creatorValue = (Integer) PropertyUtils.getSimpleProperty(form, "creator");
             if(creatorValue != null && creatorValue.intValue() != -1) {
-                isqm.setCreator(creatorValue);
+                isqm.setCreator(getITrackerServices().getUserService().getUser(creatorValue));
             } else {
                 isqm.setCreator(null);
             }
@@ -129,7 +129,7 @@ public class SearchIssuesAction extends ItrackerBaseAction {
             
             Integer ownerValue = (Integer) PropertyUtils.getSimpleProperty(form, "owner");
             if(ownerValue != null && ownerValue.intValue() != -1) {
-                isqm.setOwner(ownerValue);
+                isqm.setOwner(getITrackerServices().getUserService().getUser(ownerValue));
             } else {
                 isqm.setOwner(null);
             }

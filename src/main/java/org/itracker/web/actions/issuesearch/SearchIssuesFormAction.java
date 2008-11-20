@@ -196,7 +196,8 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
                     searchForm.setComponents(componentsArray);
 
                     searchForm.setContributor(query.getContributor());
-                    searchForm.setCreator(query.getCreator());
+                    searchForm.setCreator(query.getCreator().getId());
+                    searchForm.setOwner(query.getOwner().getId());
                     searchForm.setOrderBy(query.getOrderBy());
                     searchForm.setProject(query.getProjectId());
 

@@ -45,8 +45,8 @@ public class IssueSearchQuery implements Serializable {
 	private List<Integer> components = new ArrayList<Integer>();
 	private List<Integer> versions = new ArrayList<Integer>();
 	private Integer targetVersion = null;
-	private Integer owner = null;
-	private Integer creator = null;
+	private User owner = null;
+	private User creator = null;
 	private Integer contributor = null;
 	private String text = null;
 	private String resolution = null;
@@ -154,19 +154,19 @@ public class IssueSearchQuery implements Serializable {
 		targetVersion = value;
 	}
 
-	public Integer getOwner() {
+	public User getOwner() {
 		return owner;
 	}
 
-	public void setOwner(Integer value) {
+	public void setOwner(User value) {
 		owner = value;
 	}
 
-	public Integer getCreator() {
+	public User getCreator() {
 		return creator;
 	}
 
-	public void setCreator(Integer value) {
+	public void setCreator(User value) {
 		creator = value;
 	}
 
