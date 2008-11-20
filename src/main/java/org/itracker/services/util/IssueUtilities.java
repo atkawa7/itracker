@@ -18,18 +18,17 @@
 
 package org.itracker.services.util;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Set;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
@@ -42,6 +41,7 @@ import org.itracker.model.Notification;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
+import org.itracker.web.util.ServletContextUtils;
 
 /**
  * Contains utilities used when displaying and processing issues.
@@ -875,62 +875,48 @@ public class IssueUtilities {
 		return hasIssueNotification(issue, issue.getProject(), userId);
 	}
 
+	/**
+	 * Evaluate if a certain user is notified on issue change.
+	 * 
+	 * FIXME: Does not work for admin of unassigned-issue-projects owner, see portalhome.do 
+	 * @param issue
+	 * @param project
+	 * @param userId
+	 * @return
+	 */
 	public static boolean hasIssueNotification(Issue issue, Project project,
 			Integer userId) {
 		if (issue == null || userId == null) {
 			return false;
 		}
 
-		if ((issue.getOwner() != null && issue.getOwner().getId()
-				.equals(userId))
+		
+		if ((issue.getOwner() != null && issue.getOwner().getId().equals(userId))
 				|| issue.getCreator().getId().equals(userId)) {
 			return true;
 		}
 
-		if (project != null && project.getOwners() != null) {
-			List<User> owners = project.getOwners();
-			for (int i = 0; i < owners.size(); i++) {
-				if (owners.get(i) != null
-						&& owners.get(i).getId().equals(userId)) {
+		if (project != null && project.getOwners() != null && !project.getOwners().isEmpty()) {
+			Iterator<User> owners = project.getOwners().iterator();
+			while (owners.hasNext()) {
+				if (owners.next().getId().equals(userId)) {
 					return true;
 				}
 			}
 		}
 
-		List<Notification> notifications = issue.getNotifications();
-		for (int i = 0; i < notifications.size(); i++) {
-			if (notifications.get(i).getUser().getId().equals(userId)) {
-				return true;
-			}
+		Collection<Notification> notifications = ServletContextUtils.getItrackerServices().getNotificationService().getIssueNotifications(issue);
+		if (notifications != null && !notifications.isEmpty()) {
+			Iterator<Notification> notificationsIt = notifications.iterator();
+			while (notificationsIt.hasNext()) {
+				if (notificationsIt.next().getUser().getId().equals(userId)) {
+					return true;
+				}
+			}	
 		}
-
+		
 		return false;
 	}
 }
 
-class StatusComparator implements Comparator<String>, Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	public int compare(String a, String b) {
-		Integer iA, iB = 0;
-		try {
-			iA = Integer.valueOf(a);
-
-		} catch (NumberFormatException nfe) {
-			iA = null;
-		}
-		try {
-			iB = Integer.valueOf(b);
-
-		} catch (NumberFormatException nfe) {
-			iB = null;
-		}
-		return new CompareToBuilder().append(iA, iB).append(a, b)
-				.toComparison();
-
-	}
-}
