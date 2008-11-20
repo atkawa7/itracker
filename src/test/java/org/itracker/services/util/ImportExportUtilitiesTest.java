@@ -62,9 +62,11 @@ public class ImportExportUtilitiesTest extends AbstractDependencyInjectionTest {
                             found = true;
                         }
                     } else if (aeExpected instanceof SystemConfiguration && aeActual instanceof SystemConfiguration) {
-                        final SystemConfiguration configExpected =
+                        @SuppressWarnings("unused")
+						final SystemConfiguration configExpected =
                                 (SystemConfiguration) aeExpected;
-                        final SystemConfiguration configActual =
+                        @SuppressWarnings("unused")
+						final SystemConfiguration configActual =
                                 (SystemConfiguration) aeActual;
                         found = true;
                     }
