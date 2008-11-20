@@ -48,7 +48,7 @@ public abstract class AbstractPluggableAuthenticator
       * This method is called after creating a new instance of the Authenticator.  It supplies
       * some default EJB objects that the authenticator can use.
       */
-    public void initialize(Map values) {
+    public void initialize(Map<?, ?> values) {
         if(values != null) {
             Object userService = values.get("userService");
             Object configurationService = values.get("configurationService");
