@@ -253,7 +253,7 @@ public class ReportServiceImpl implements ReportService {
 
 			JRHtmlExporter exporter = new JRHtmlExporter();
 
-			Map imagesMap = new HashMap();
+			Map<Object, Object> imagesMap = new HashMap<Object, Object>();
 			HttpSession session = request.getSession(true);
 			session.setAttribute(Constants.REPORT_IMAGEMAP_KEY, imagesMap);
 
