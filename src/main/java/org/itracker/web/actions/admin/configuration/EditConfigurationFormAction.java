@@ -19,8 +19,10 @@
 package org.itracker.web.actions.admin.configuration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -32,8 +34,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
 import org.itracker.model.Language;
+import org.itracker.model.NameValuePair;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.SystemConfigurationUtilities;
@@ -41,80 +45,106 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ConfigurationForm;
 
-
-
 public class EditConfigurationFormAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(EditConfigurationFormAction.class);
-	
+	private static final Logger log = Logger
+			.getLogger(EditConfigurationFormAction.class);
 
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionMessages errors = new ActionMessages();
+	public ActionForward execute(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		ActionMessages errors = new ActionMessages();
 
+		if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request,
+				response)) {
+			return mapping.findForward("unauthorized");
+		}
 
-        if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
-            return mapping.findForward("unauthorized");
-        }
+		try {
+			ConfigurationService configurationService = getITrackerServices()
+					.getConfigurationService();
 
-        try {
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+			ConfigurationForm configurationForm = (ConfigurationForm) form;
+			if (configurationForm == null) {
+				configurationForm = new ConfigurationForm();
+			}
 
-            ConfigurationForm configurationForm = (ConfigurationForm) form;
-            if(configurationForm == null) {
-                configurationForm = new ConfigurationForm();
-            }
+			String action = configurationForm.getAction();
 
-            String action = configurationForm.getAction();
-            
-            String formValue = configurationForm.getValue();
-            
-            if ("update".equals(action)) {
-                Integer id = configurationForm.getId();
-                formValue = String.valueOf(id);
-                Configuration configItem = configurationService.getConfigurationItem(id);
-                
-                if (configItem == null) {
-                    throw new SystemConfigurationException("Invalid configuration item id " + id);
-                }
-                configurationForm.setId(id);
+			String formValue = configurationForm.getValue();
 
-                if(configItem.getType() == SystemConfigurationUtilities.TYPE_STATUS) {
-                    configurationForm.setValue(configItem.getValue());
-                }
+			if ("update".equals(action)) {
+				Integer id = configurationForm.getId();
+				formValue = String.valueOf(id);
+				Configuration configItem = configurationService
+						.getConfigurationItem(id);
 
-                HashMap<String,String> translations = new HashMap<String,String>();
-                List<Language> languageItems = configurationService.getLanguageItemsByKey(
-                        SystemConfigurationUtilities.getLanguageKey(configItem));
-                
-                for (int i = 0; i < languageItems.size(); i++) {
-                    translations.put(languageItems.get(i).getLocale(), 
-                            languageItems.get(i).getResourceValue());
-                }
-                configurationForm.setTranslations(translations);
-            }
+				if (configItem == null) {
+					throw new SystemConfigurationException(
+							"Invalid configuration item id " + id);
+				}
+				configurationForm.setId(id);
 
-            request.setAttribute("sc", configurationService);
-            request.setAttribute("configurationForm", configurationForm);
-            request.setAttribute("action",action);
-            request.setAttribute("value",formValue);
-            saveToken(request);
-            
-            return mapping.getInputForward();
-        } catch(SystemConfigurationException sce) {
-        	errors.add(ActionMessages.GLOBAL_MESSAGE, 
-                        new ActionMessage("itracker.web.error.invalidconfiguration"));
-        } catch(Exception e) {
-            log.error("Exception while creating edit configuration form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, 
-                    new ActionMessage("itracker.web.error.system"));
-        }
+				if (configItem.getType() == SystemConfigurationUtilities.TYPE_STATUS) {
+					configurationForm.setValue(configItem.getValue());
+				}
 
-        if(! errors.isEmpty()) {
-            saveErrors(request, errors);
-            return mapping.getInputForward();
-        }
+				HashMap<String, String> translations = new HashMap<String, String>();
+				List<Language> languageItems = configurationService
+						.getLanguageItemsByKey(SystemConfigurationUtilities
+								.getLanguageKey(configItem));
 
-        return mapping.findForward("error");
-    }
+				for (int i = 0; i < languageItems.size(); i++) {
+					translations.put(languageItems.get(i).getLocale(),
+							languageItems.get(i).getResourceValue());
+				}
+				configurationForm.setTranslations(translations);
+			}
+			Map<String, List<String>> languages = configurationService
+					.getAvailableLanguages();
+			Map<NameValuePair, List<NameValuePair>> languagesNameValuePair = new HashMap<NameValuePair, List<NameValuePair>>();
+			for (Map.Entry<String, List<String>> entry : languages.entrySet()) {
+				String language = entry.getKey();
+				List<String> locales = entry.getValue();
+				List<NameValuePair> localesNameValuePair = new ArrayList<NameValuePair>();
+				for (String locale : locales) {
+					NameValuePair localeNameValuePair = new NameValuePair(
+							locale, ITrackerResources.getString(
+									"itracker.locale.name", locale));
+					localesNameValuePair.add(localeNameValuePair);
+				}
+				NameValuePair languageNameValuePair = new NameValuePair(
+						language, ITrackerResources.getString(
+								"itracker.locale.name", language));
+				languagesNameValuePair.put(languageNameValuePair,
+						localesNameValuePair);
+			}
+			String baseLocaleKey = "translations("
+					+ ITrackerResources.BASE_LOCALE + ")";
+			request.setAttribute("languagesNameValuePair",
+					languagesNameValuePair);
+			request.setAttribute("sc", configurationService);
+			request.setAttribute("configurationForm", configurationForm);
+			request.setAttribute("action", action);
+			request.setAttribute("value", formValue);
+			request.setAttribute("baseLocaleKey", baseLocaleKey);
+			saveToken(request);
+
+			return mapping.getInputForward();
+		} catch (SystemConfigurationException sce) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"itracker.web.error.invalidconfiguration"));
+		} catch (Exception e) {
+			log.error("Exception while creating edit configuration form.", e);
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"itracker.web.error.system"));
+		}
+
+		if (!errors.isEmpty()) {
+			saveErrors(request, errors);
+			return mapping.getInputForward();
+		}
+
+		return mapping.findForward("error");
+	}
 
 }
-  
