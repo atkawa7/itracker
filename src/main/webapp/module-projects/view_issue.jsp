@@ -1,148 +1,143 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 
-<%@ taglib uri="/tags/itracker" prefix="it" %>
-<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
-<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
-<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
-<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="/tags/itracker" prefix="it"%>
+<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
+<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
+<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
+<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<bean:define id="pageTitleKey" value="itracker.web.viewissue.title"/>
-<bean:define id="pageTitleArg" value="${issue.id}"/>
+<bean:define id="pageTitleKey" value="itracker.web.viewissue.title" />
+<bean:define id="pageTitleArg" value="${issue.id}" />
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
+<tiles:insert page="/themes/defaulttheme/includes/header.jsp" />
 
-         <table class="maincontent">
-              <tr>
-                <td width="15%"></td>
-                <td width="35%"></td>
-                <td width="15%"></td>
-                <td width="35%"></td>
-              </tr>
-              <tr>
-                <td class="editColumnTitle" valign="top"><it:message key="itracker.web.attr.description"/>: </td>
-                <td class="editColumnText">${issue.description}</td>
-                <td class="editColumnTitle" valign="top"><it:message key="itracker.web.attr.actions"/>: </td>
-                
-                <td class="editColumnText" valign="top">
-                  <table style="border: none; padding: 1px; border-spacing: 0; text-align: left;">
-                    <tr>
-                      <td style="text-align: right; vertical-align: top;"  class="editColumnText" style="white-space: nowrap;" nowrap>
+<table class="maincontent">
+	<tr>
+		<td width="15%"></td>
+		<td width="35%"></td>
+		<td width="15%"></td>
+		<td width="35%"></td>
+	</tr>
+	<tr>
+		<td class="editColumnTitle" valign="top"><it:message
+			key="itracker.web.attr.description" />:</td>
+		<td class="editColumnText">${issue.description}</td>
+		<td class="editColumnTitle" valign="top"><it:message
+			key="itracker.web.attr.actions" />:</td>
 
-                        <it:formatImageAction forward="listissues"
-                                              module="/module-projects"
-                                              paramName="projectId"
-                                              paramValue="${project.id}"
-                                              caller="viewissue"
-                                              src="/themes/defaulttheme/images/list.gif"
-                                              altKey="itracker.web.image.issuelist.issue.alt"
-                                              textActionKey="itracker.web.image.issuelist.texttag"/>
+		<td class="editColumnText" valign="top">
+		<table
+			style="border: none; padding: 1px; border-spacing: 0; text-align: left;">
+			<tr>
+				<td style="text-align: right; vertical-align: top;"
+					class="editColumnText" style="white-space: nowrap;" nowrap><it:formatImageAction
+					forward="listissues" module="/module-projects"
+					paramName="projectId" paramValue="${project.id}" caller="viewissue"
+					src="/themes/defaulttheme/images/list.gif"
+					altKey="itracker.web.image.issuelist.issue.alt"
+					textActionKey="itracker.web.image.issuelist.texttag" /> <c:if
+					test="${hasIssueNotification}">
+					<it:formatImageAction forward="watchissue"
+						module="/module-projects" paramName="id" paramValue="${issue.id}"
+						caller="viewissue" src="/themes/defaulttheme/images/watch.gif"
+						altKey="itracker.web.image.watch.issue.alt" arg0="${issue.id}"
+						textActionKey="itracker.web.image.watch.texttag" />
+				</c:if> <c:if test="${canEditIssue}">
 
-                        <c:if test="${hasIssueNotification}">
-                             <it:formatImageAction forward="watchissue"
-	                                               module="/module-projects"
-	                                               paramName="id"
-	                                               paramValue="${issue.id}"
-	                                               caller="viewissue"
-	                                               src="/themes/defaulttheme/images/watch.gif"
-	                                               altKey="itracker.web.image.watch.issue.alt"
-	                                               arg0="${issue.id}"
-	                                               textActionKey="itracker.web.image.watch.texttag"/>
-                        </c:if>
-                        <c:if test="${canEditIssue}">
+					<it:formatImageAction action="editissueform"
+						module="/module-projects" paramName="id" paramValue="${issue.id}"
+						caller="viewissue" src="/themes/defaulttheme/images/edit.gif"
+						altKey="itracker.web.image.edit.issue.alt" arg0="${issue.id}"
+						textActionKey="itracker.web.image.edit.texttag" />
 
-                             <it:formatImageAction action="editissueform"
-                                                   module="/module-projects"
-                                                   paramName="id"
-                                                   paramValue="${issue.id}"
-                                                   caller="viewissue"
-                                                   src="/themes/defaulttheme/images/edit.gif"
-                                                   altKey="itracker.web.image.edit.issue.alt"
-                                                   arg0="${issue.id}"
-                                                   textActionKey="itracker.web.image.edit.texttag"/>
+					<it:formatImageAction action="moveissueform"
+						module="/module-projects" paramName="id" paramValue="${issue.id}"
+						caller="viewissue" src="/themes/defaulttheme/images/move.gif"
+						altKey="itracker.web.image.move.issue.alt" arg0="${issue.id}"
+						textActionKey="itracker.web.image.move.texttag" />
 
-                             <it:formatImageAction action="moveissueform"
-                                                   module="/module-projects"
-                                                   paramName="id"
-                                                   paramValue="${issue.id}"
-                                                   caller="viewissue"
-                                                   src="/themes/defaulttheme/images/move.gif"
-                                                   altKey="itracker.web.image.move.issue.alt"
-                                                   arg0="${issue.id}"
-                                                   textActionKey="itracker.web.image.move.texttag"/>
-
-                             <%-- TODO reinstate this when relate issues works correctly
+					<%-- TODO reinstate this when relate issues works correctly
                              <it:formatImageAction forward="relateissue" paramName="id" paramValue="${issue.id}" caller="viewissue" src="/images/link.gif" altKey="itracker.web.image.link.issue.alt" textActionKey="itracker.web.image.link.texttag"/>
                              --%>
-                        </c:if>
-                        <c:if test="${canCreateIssue}">
-                            <it:formatImageAction forward="createissue"
-                                                  module="/module-projects"
-                                                  paramName="projectId"
-                                                  paramValue="${project.id}"
-                                                  src="/themes/defaulttheme/images/create.gif"
-                                                  altKey="itracker.web.image.create.issue.alt"
-                                                  arg0="${project.name}"
-                                                  textActionKey="itracker.web.image.create.texttag"/>
-                        </c:if>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-              <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="8"/></td></tr>
-              <tr>
-                <td class="editColumnTitle"><it:message  key="itracker.web.attr.status"/>: </td>
-                <td class="editColumnText">${issueStatusName}</td>
-                <td class="editColumnTitle"><it:message key="itracker.web.attr.created"/>: </td>
-                <td class="editColumnText">
-                  <it:formatDate date="${issue.createDate}"/>
-                  (${issue.creator.firstName}&nbsp;${issue.creator.lastName})
-                </td>
-              </tr>
-              <tr>
-                <td class="editColumnTitle"><it:message key="itracker.web.attr.resolution"/>: </td>
-                <td class="editColumnText"><it:formatResolution projectOptions="${project.options}">${issue.resolution}</it:formatResolution></td>
-                <td class="editColumnTitle"><it:message key="itracker.web.attr.lastmodified"/>: </td>
-                <td class="editColumnText"><it:formatDate date="${issue.lastModifiedDate}"/></td>
-              </tr>
-              <tr>
-                <td class="editColumnTitle"><it:message key="itracker.web.attr.severity"/>: </td>
-                <td class="editColumnText">${issueSeverityName}</td>
-                <td class="editColumnTitle"><it:message key="itracker.web.attr.owner"/>: </td>
-                <td class="editColumnText">${issueOwnerName}</td>
-              </tr>
-              <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
-              <tr>
-                <td class="editColumnTitle"><it:message key="itracker.web.attr.project"/>: </td>
-                <td class="editColumnText">
-                                          
-                        <it:formatImageAction forward="listissues"
-                                              module="/module-projects"
-                                              paramName="projectId"
-                                              paramValue="${issue.project.id}"
-                                              caller="viewissue"
-                                              src="/themes/defaulttheme/images/list.gif"
-                                              altKey="itracker.web.image.issuelist.issue.alt"
-                                              textActionKey="itracker.web.image.issuelist.texttag"/> &nbsp; ${issue.project.name}
-                </td>
-                
-                <c:if test="${not empty project.versions}">
-                    <td class="editColumnTitle" style="white-space: nowrap;" ><it:message key="itracker.web.attr.target"/>:</td>
-                    <td class="editColumnText">${issue.targetVersion == null ? '' : issue.targetVersion.number}</td>
-                </c:if>
-                
-              </tr>
-              <tr>
-                
-                <c:choose>
-                   <c:when test="${not empty project.components}">
-                      <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.components"/>: </td>
-                      <td valign="top" class="editColumnText">
+				</c:if> <c:if test="${canCreateIssue}">
+					<it:formatImageAction forward="createissue"
+						module="/module-projects" paramName="projectId"
+						paramValue="${project.id}"
+						src="/themes/defaulttheme/images/create.gif"
+						altKey="itracker.web.image.create.issue.alt"
+						arg0="${project.name}"
+						textActionKey="itracker.web.image.create.texttag" />
+				</c:if></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4"><html:img module="/"
+			page="/themes/defaulttheme/images/blank.gif" width="1" height="8" /></td>
+	</tr>
+	<tr>
+		<td class="editColumnTitle"><it:message
+			key="itracker.web.attr.status" />:</td>
+		<td class="editColumnText">${issueStatusName}</td>
+		<td class="editColumnTitle"><it:message
+			key="itracker.web.attr.created" />:</td>
+		<td class="editColumnText"><it:formatDate
+			date="${issue.createDate}" />
+		(${issue.creator.firstName}&nbsp;${issue.creator.lastName})</td>
+	</tr>
+	<tr>
+		<td class="editColumnTitle"><it:message
+			key="itracker.web.attr.resolution" />:</td>
+		<td class="editColumnText"><it:formatResolution
+			projectOptions="${project.options}">${issue.resolution}</it:formatResolution></td>
+		<td class="editColumnTitle"><it:message
+			key="itracker.web.attr.lastmodified" />:</td>
+		<td class="editColumnText"><it:formatDate
+			date="${issue.lastModifiedDate}" /></td>
+	</tr>
+	<tr>
+		<td class="editColumnTitle"><it:message
+			key="itracker.web.attr.severity" />:</td>
+		<td class="editColumnText">${issueSeverityName}</td>
+		<td class="editColumnTitle"><it:message
+			key="itracker.web.attr.owner" />:</td>
+		<td class="editColumnText">${issueOwnerName}</td>
+	</tr>
+	<tr>
+		<td colspan="4"><html:img module="/"
+			page="/themes/defaulttheme/images/blank.gif" width="1" height="12" /></td>
+	</tr>
+	<tr>
+		<td class="editColumnTitle"><it:message
+			key="itracker.web.attr.project" />:</td>
+		<td class="editColumnText"><it:formatImageAction
+			forward="listissues" module="/module-projects" paramName="projectId"
+			paramValue="${issue.project.id}" caller="viewissue"
+			src="/themes/defaulttheme/images/list.gif"
+			altKey="itracker.web.image.issuelist.issue.alt"
+			textActionKey="itracker.web.image.issuelist.texttag" /> &nbsp;
+		${issue.project.name}</td>
 
-                        	<c:forEach var="component" items="${issue.components}">
+		<c:if test="${not empty project.versions}">
+			<td class="editColumnTitle" style="white-space: nowrap;"><it:message
+				key="itracker.web.attr.target" />:</td>
+			<td class="editColumnText">${issue.targetVersion == null ? '' :
+			issue.targetVersion.number}</td>
+		</c:if>
+
+	</tr>
+	<tr>
+
+		<c:choose>
+			<c:when test="${not empty project.components}">
+				<td valign="top" class="editColumnTitle"><it:message
+					key="itracker.web.attr.components" />:</td>
+				<td valign="top" class="editColumnText"><c:forEach
+					var="component" items="${issue.components}">
                              ${component.name}
                              <br/>
 	                        </c:forEach>
@@ -159,36 +154,52 @@
                       <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.versions"/>: </td>
                       <td valign="top" class="editColumnText">
 	                  	<c:forEach var="version" items="${project.versions}">
-                            ${version.number} <br/>
-                         </c:forEach>
-                        
-                      </td>
-                 </c:when>
-                 <c:otherwise>
-                      <td></td>
-                      <td></td>
-                 </c:otherwise>
-               </c:choose>
-              </tr>
-              <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td></tr>
+                            ${version.number} <br />
+				</c:forEach></td>
+			</c:when>
+			<c:otherwise>
+				<td></td>
+				<td></td>
+			</c:otherwise>
+		</c:choose>
+	</tr>
+	<tr>
+		<td colspan="4"><html:img module="/"
+			page="/themes/defaulttheme/images/blank.gif" height="10" width="1" /></td>
+	</tr>
 
-              <c:if test="${not empty projectFieldsMap}">
-                     <tr><td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.customfields"/>:</td></tr>
-                     <tr class="listHeading"><td><it:message key="itracker.web.attr.field" /></td><td><it:message key="itracker.web.attr.value" /></td><td><it:message key="itracker.web.attr.field" /></td><td><it:message key="itracker.web.attr.value" /></td></tr>
- 
-                     <c:forEach var="projectField" varStatus="i" items="${ projectFieldsMap }" step="2">
-	                     <tr>
-		                     <it:formatCustomField field="${projectField.key}" currentValue="${projectField.value}" displayType="view"/>
-	                     	 <c:forEach begin="${i.index + 1}" end="${i.index + 1}" var="projectField" items="${ projectFieldsMap }">
-	                     	 	<it:formatCustomField field="${projectField.key}" currentValue="${projectField.value}" displayType="view"/>
-	                     	 </c:forEach>
-	                     </tr>
-              	     </c:forEach>
-              		 <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td></tr>
-              </c:if>
-            </table>
-            <br />
-            <%-- TODO reinsert this once issue relation has been implemented correctly 
+	<c:if test="${not empty projectFieldsMap}">
+		<tr>
+			<td colspan="4" class="editColumnTitle"><it:message
+				key="itracker.web.attr.customfields" />:</td>
+		</tr>
+		<tr class="listHeading">
+			<td><it:message key="itracker.web.attr.field" /></td>
+			<td><it:message key="itracker.web.attr.value" /></td>
+			<td><it:message key="itracker.web.attr.field" /></td>
+			<td><it:message key="itracker.web.attr.value" /></td>
+		</tr>
+
+		<c:forEach var="projectField" varStatus="i"
+			items="${ projectFieldsMap }" step="2">
+			<tr>
+				<it:formatCustomField field="${projectField.key}"
+					currentValue="${projectField.value}" displayType="view" />
+				<c:forEach begin="${i.index + 1}" end="${i.index + 1}"
+					var="projectField" items="${ projectFieldsMap }">
+					<it:formatCustomField field="${projectField.key}"
+						currentValue="${projectField.value}" displayType="view" />
+				</c:forEach>
+			</tr>
+		</c:forEach>
+		<tr>
+			<td colspan="4"><html:img module="/"
+				page="/themes/defaulttheme/images/blank.gif" width="1" height="18" /></td>
+		</tr>
+	</c:if>
+</table>
+<br />
+<%-- TODO reinsert this once issue relation has been implemented correctly 
             <%
                IssueRelationModel[] relations = issue.getRelations();
                Arrays.sort(relations, new IssueRelationModel());
@@ -260,125 +271,154 @@
             <% } %>
                
                   --%>
-   
-        
-            <c:if test="${hasAttachmentOption && not empty attachments}">
-                <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
-                  <tr>
-                    <td class="editColumnTitle" colspan="4"><it:message key="itracker.web.attr.attachments"/>:</td>
-                  </tr>
-                  <tr style="text-align: left;" class="listHeading">
-                    <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
-                    <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="8" height="1"/></td>
-                    <td style="text-align: left;"><it:message key="itracker.web.attr.filename"/></td>
-                    <td style="text-align: left;"><it:message key="itracker.web.attr.description"/></td>
-                    <td style="text-align: left;"><it:message key="itracker.web.attr.filetype"/></td>
-                    <td style="text-align: left;"><it:message key="itracker.web.attr.filesize"/></td>
-                    <td style="text-align: left;"><it:message key="itracker.web.attr.submittor"/></td>
-                    <td style="text-align: right;"><it:message key="itracker.web.attr.lastupdated"/></td>
-                  </tr>
 
-                  <c:forEach  var="attachment" items="${attachments}" varStatus="i">
-                  	
-                      <tr class="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}" >
-                        <td class="listRowText" style="text-align: left;">
-                            <it:formatImageAction action="downloadAttachment.do"
-                                				  module="/module-projects"
-                                                  paramName="id"
-                                                  paramValue="${attachment.id}"
-                                                  target="_blank"
-                                                  src="/themes/defaulttheme/images/download.png"
-                                                  altKey="itracker.web.image.download.attachment.alt"
-                                                  textActionKey="itracker.web.image.download.texttag"/>
-                        </td>
-                        <td></td>
-                        <td class="listRowText" style="text-align: left;">${attachment.originalFileName}</td>
-                        <td class="listRowText" style="text-align: left;"><it:formatDescription>${attachment.description}</it:formatDescription></td>
-                        <td class="listRowText" style="text-align: left;">${attachment.type}</td>
-                        <td class="listRowText" style="text-align: left;"><fmt:formatNumber pattern="0.##" value="${attachment.size / 1024}" type="number" /></td>
-                        <td class="listRowText" style="text-align: left;">${attachment.user.firstName}&nbsp;${attachment.user.lastName}</td>
-                        <td class="listRowText" style="text-align: right;"><it:formatDate date="${attachment.lastModifiedDate}"/></td>
-                      </tr>
-                 </c:forEach>
-                  <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td></tr>
-                </table>
-                <br>
-            </c:if>
 
-            <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
-              <tr>
-                <td class="editColumnTitle" colspan="3"><it:message key="itracker.web.attr.history"/>:</td>
-                <td style="text-align: right;"><it:formatImageAction forward="view_issue_activity.do" paramName="id" paramValue="${issueId}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.activity.alt" textActionKey="itracker.web.image.view.texttag"/></td>
-              </tr>
-              <tr style="text-align: left;" class="listHeading">
-                <td width="15"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
-                <td width="8"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="8" height="1"/></td>
-                <td><it:message key="itracker.web.attr.updator"/></td>
-                <td style="text-align: right;"><it:message key="itracker.web.attr.updated"/></td>
-              </tr>
-              <c:forEach var="history" items="${histories}" varStatus="i">
-                    <tr class="${i.count % 2 == 0 ? 'listRowShaded' : 'listRowUnshaded'}" >
-                      <td style="text-align: right;" class="historyName">${i.count})</td>
-                      <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="8" height="1"/></td>
-                      <td class="historyName">
-                        ${history.user.firstName}&nbsp;${history.user.lastName}
-                        (<a href="mailto:${history.user.email}" class="mailto">${history.user.email}</a>)
-                      </td>
-                      <td style="text-align: right;" class="historyName"><it:formatDate date="${history.createDate}"/></td>
-                    </tr>
-                    <tr class="${i.count % 2 == 0 ? 'listRowShaded' : 'listRowUnshaded'}" >
-                      <td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="3"/></td>
-                    </tr>
-                    <tr class="${i.count % 2 == 0 ? 'listRowShaded' : 'listRowUnshaded'}" >
-                      <td colspan="2"></td>
-                      <td colspan="3">
-                        <table style="border: none; padding: 1px; border-spacing: 0;">
-                          <tr class="${i.count % 2 == 0 ? 'listRowShaded' : 'listRowUnshaded'}" >
-                            <td style="text-align: left;"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="10" height="1"/></td>
-                            <td style="text-align: left;" >
-	                            <div style="white-space: normal; overflow: auto; width: 900px">
-	                              <it:formatHistoryEntry projectOptions="${project.options}">${history.description}</it:formatHistoryEntry>
-	                            </div>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                </c:forEach>
-                <tr class="listRowUnshaded">
-                  <td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="8"/></td>
-                </tr>
-            </table>
-            <br/><br/>
-            <table style="border: none; padding: 1px; border-spacing: 0; width: 100%;">
-              <tr>
-                <td class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.notifications"/>:</td>
-              </tr>
-              <tr style="text-align: left;" class="listHeading">
-                <td><it:message key="itracker.web.attr.name"/></td>
-                <td><it:message key="itracker.web.attr.email"/></td>
-                <td><it:message key="itracker.web.attr.role"/></td>
-              </tr>
-              
-				<c:forEach items="${notifiedUsers}" var="user" varStatus="status">
-	                <tr class="${status.count % 2 == 0?'listRowShaded' : 'listRowUnshaded'}">
-	                    <td class="listRowSmall">${user.firstName}&nbsp;${user.lastName}</td>
-	                    <td class="listRowSmall">
-	                        <a href="mailto:${user.email}"
-	                           class="mailto">${user.email}</a>
-	                    </td>
-	                    <td class="listRowSmall"><ul>
-	                    	<c:forEach items="${notificationMap[user]}" var="role">
-	                    	<li><it:message key="itracker.notification.role.${role.code}"></it:message></li>
-	                    	</c:forEach>
-							</ul>
-	                    
-	                    </td>
-	                </tr>
+<c:if test="${hasAttachmentOption &amp;&amp; not empty attachments}">
+	<table
+		style="border: none; padding: 1px; border-spacing: 0; width: 100%">
+		<tr>
+			<td class="editColumnTitle" colspan="4"><it:message
+				key="itracker.web.attr.attachments" />:</td>
+		</tr>
+		<tr style="text-align: left;" class="listHeading">
+			<td><html:img module="/"
+				page="/themes/defaulttheme/images/blank.gif" width="15" height="1" /></td>
+			<td><html:img module="/"
+				page="/themes/defaulttheme/images/blank.gif" width="8" height="1" /></td>
+			<td style="text-align: left;"><it:message
+				key="itracker.web.attr.filename" /></td>
+			<td style="text-align: left;"><it:message
+				key="itracker.web.attr.description" /></td>
+			<td style="text-align: left;"><it:message
+				key="itracker.web.attr.filetype" /></td>
+			<td style="text-align: left;"><it:message
+				key="itracker.web.attr.filesize" /></td>
+			<td style="text-align: left;"><it:message
+				key="itracker.web.attr.submittor" /></td>
+			<td style="text-align: right;"><it:message
+				key="itracker.web.attr.lastupdated" /></td>
+		</tr>
+
+		<c:forEach var="attachment" items="${attachments}" varStatus="i">
+
+			<tr class="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}">
+				<td class="listRowText" style="text-align: left;"><it:formatImageAction
+					action="downloadAttachment.do" module="/module-projects"
+					paramName="id" paramValue="${attachment.id}" target="_blank"
+					src="/themes/defaulttheme/images/download.png"
+					altKey="itracker.web.image.download.attachment.alt"
+					textActionKey="itracker.web.image.download.texttag" /></td>
+				<td></td>
+				<td class="listRowText" style="text-align: left;">${attachment.originalFileName}</td>
+				<td class="listRowText" style="text-align: left;"><it:formatDescription>${attachment.description}</it:formatDescription></td>
+				<td class="listRowText" style="text-align: left;">${attachment.type}</td>
+				<td class="listRowText" style="text-align: left;"><fmt:formatNumber
+					pattern="0.##" value="${attachment.size / 1024}" type="number" /></td>
+				<td class="listRowText" style="text-align: left;">${attachment.user.firstName}&nbsp;${attachment.user.lastName}</td>
+				<td class="listRowText" style="text-align: right;"><it:formatDate
+					date="${attachment.lastModifiedDate}" /></td>
+			</tr>
+		</c:forEach>
+		<tr>
+			<td colspan="4"><html:img module="/"
+				page="/themes/defaulttheme/images/blank.gif" height="10" width="1" /></td>
+		</tr>
+	</table>
+	<br>
+</c:if>
+
+<table
+	style="border: none; padding: 1px; border-spacing: 0; width: 100%">
+	<tr>
+		<td class="editColumnTitle" colspan="3"><it:message
+			key="itracker.web.attr.history" />:</td>
+		<td style="text-align: right;"><it:formatImageAction
+			forward="view_issue_activity.do" paramName="id"
+			paramValue="${issueId}" src="/themes/defaulttheme/images/view.gif"
+			altKey="itracker.web.image.view.activity.alt"
+			textActionKey="itracker.web.image.view.texttag" /></td>
+	</tr>
+	<tr style="text-align: left;" class="listHeading">
+		<td width="15"><html:img module="/"
+			page="/themes/defaulttheme/images/blank.gif" width="15" height="1" /></td>
+		<td width="8"><html:img module="/"
+			page="/themes/defaulttheme/images/blank.gif" width="8" height="1" /></td>
+		<td><it:message key="itracker.web.attr.updator" /></td>
+		<td style="text-align: right;"><it:message
+			key="itracker.web.attr.updated" /></td>
+	</tr>
+	<c:forEach var="history" items="${histories}" varStatus="i">
+		<tr class="${i.count % 2 == 0 ? 'listRowShaded' : 'listRowUnshaded'}">
+			<td style="text-align: right;" class="historyName">${i.count})</td>
+			<td><html:img module="/"
+				page="/themes/defaulttheme/images/blank.gif" width="8" height="1" /></td>
+			<td class="historyName">
+			${history.user.firstName}&nbsp;${history.user.lastName} (<a
+				href="mailto:${history.user.email}" class="mailto">${history.user.email}</a>)
+			</td>
+			<td style="text-align: right;" class="historyName"><it:formatDate
+				date="${history.createDate}" /></td>
+		</tr>
+		<tr class="${i.count % 2 == 0 ? 'listRowShaded' : 'listRowUnshaded'}">
+			<td colspan="5"><html:img module="/"
+				page="/themes/defaulttheme/images/blank.gif" width="1" height="3" /></td>
+		</tr>
+		<tr class="${i.count % 2 == 0 ? 'listRowShaded' : 'listRowUnshaded'}">
+			<td colspan="2"></td>
+			<td colspan="3">
+			<table style="border: none; padding: 1px; border-spacing: 0;">
+				<tr
+					class="${i.count % 2 == 0 ? 'listRowShaded' : 'listRowUnshaded'}">
+					<td style="text-align: left;"><html:img module="/"
+						page="/themes/defaulttheme/images/blank.gif" width="10" height="1" /></td>
+					<td style="text-align: left;">
+					<div style="white-space: normal; overflow: auto; width: 900px">
+					<it:formatHistoryEntry projectOptions="${project.options}">${history.description}</it:formatHistoryEntry>
+					</div>
+					</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</c:forEach>
+	<tr class="listRowUnshaded">
+		<td colspan="5"><html:img module="/"
+			page="/themes/defaulttheme/images/blank.gif" width="1" height="8" /></td>
+	</tr>
+</table>
+<br />
+<br />
+<table
+	style="border: none; padding: 1px; border-spacing: 0; width: 100%;">
+	<tr>
+		<td class="editColumnTitle" colspan="7"><it:message
+			key="itracker.web.attr.notifications" />:</td>
+	</tr>
+	<tr style="text-align: left;" class="listHeading">
+		<td><it:message key="itracker.web.attr.name" /></td>
+		<td><it:message key="itracker.web.attr.email" /></td>
+		<td><it:message key="itracker.web.attr.role" /></td>
+	</tr>
+
+	<c:forEach items="${notifiedUsers}" var="user" varStatus="status">
+		<tr
+			class="${status.count % 2 == 0?'listRowShaded' : 'listRowUnshaded'}">
+			<td class="listRowSmall">${user.firstName}&nbsp;${user.lastName}</td>
+			<td class="listRowSmall"><a href="mailto:${user.email}"
+				class="mailto">${user.email}</a></td>
+			<td class="listRowSmall">
+			<ul>
+				<c:forEach items="${notificationMap[user]}" var="role">
+					<li><it:message key="itracker.notification.role.${role.code}"></it:message></li>
 				</c:forEach>
-            </table>
-        <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/>
-    </body>
-</html>
-             
+			</ul>
+
+			</td>
+		</tr>
+	</c:forEach>
+</table>
+<tiles:insert page="/themes/defaulttheme/includes/footer.jsp" />
+<body></body>
+<html></html>
+
 
