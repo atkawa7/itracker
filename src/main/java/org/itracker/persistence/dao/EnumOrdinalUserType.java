@@ -22,7 +22,8 @@ public final class EnumOrdinalUserType extends AbstractEnumUserType {
     private static final int[] SQL_TYPES = { Types.SMALLINT };
     
     /** Enum members, in the order they where declared. */
-    private Enum[] enumValues;
+    @SuppressWarnings("unchecked")
+	private Enum[] enumValues;
     
     /** 
      * Default constructor, required by Hibernate. 
@@ -47,7 +48,7 @@ public final class EnumOrdinalUserType extends AbstractEnumUserType {
         if (value == null) {
             stmt.setNull(index, Types.INTEGER);
         } else {
-            stmt.setInt(index, ((Enum) value).ordinal());
+            stmt.setInt(index, ((Enum<?>) value).ordinal());
         }
     }
 
@@ -56,7 +57,7 @@ public final class EnumOrdinalUserType extends AbstractEnumUserType {
     }
 
     public String objectToSQLString(Object value) {
-        return Integer.toString(((Enum) value).ordinal());
+        return Integer.toString(((Enum<?>) value).ordinal());
     }
     
     public String toXMLString(Object value) {

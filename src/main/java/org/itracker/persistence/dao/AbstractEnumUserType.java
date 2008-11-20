@@ -42,7 +42,8 @@ import org.hibernate.usertype.ParameterizedType;
 public abstract class AbstractEnumUserType 
         implements EnhancedUserType, ParameterizedType {
     
-    protected Class<? extends Enum> enumClass;
+    @SuppressWarnings("unchecked")
+	protected Class<? extends Enum> enumClass;
     
     public AbstractEnumUserType() {
     }
@@ -67,7 +68,7 @@ public abstract class AbstractEnumUserType
     }
 
     public Serializable disassemble(Object value) throws HibernateException {
-        return (Enum) value;
+        return (Enum<?>) value;
     }
 
     public boolean equals(Object x, Object y) throws HibernateException {
@@ -87,7 +88,7 @@ public abstract class AbstractEnumUserType
         return original;
     }
 
-    public Class returnedClass() {
+    public Class<?> returnedClass() {
         return this.enumClass;
     }
     

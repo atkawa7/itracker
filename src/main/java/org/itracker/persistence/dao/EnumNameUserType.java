@@ -39,7 +39,7 @@ public class EnumNameUserType extends AbstractEnumUserType {
         if (value == null) {
             st.setNull(index, Types.VARCHAR);
         } else {
-            st.setString(index, ((Enum) value).name()); 
+            st.setString(index, ((Enum<?>) value).name()); 
         }
     }
 
@@ -48,11 +48,11 @@ public class EnumNameUserType extends AbstractEnumUserType {
     }
 
     public String objectToSQLString(Object value) {
-        return '\'' + ((Enum) value).name() + '\'';
+        return '\'' + ((Enum<?>) value).name() + '\'';
     }
 
     public String toXMLString(Object value) {
-        return ((Enum) value).name();
+        return ((Enum<?>) value).name();
     }
     
     @SuppressWarnings("unchecked")

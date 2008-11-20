@@ -24,7 +24,8 @@ public class EnumCodeUserType extends AbstractEnumUserType {
     private static final int[] SQL_TYPES = { Types.SMALLINT };
     private static final Logger log = Logger.getLogger(EnumCodeUserType.class);
     /** Enum members, in the order they where declared. */
-    private IntCodeEnum[] enumValues;
+    @SuppressWarnings("unchecked")
+	private IntCodeEnum[] enumValues;
     
     /** 
      * Default constructor, required by Hibernate. 
@@ -59,7 +60,7 @@ public class EnumCodeUserType extends AbstractEnumUserType {
         if (value == null) {
             stmt.setNull(index, Types.INTEGER);
         } else {
-            stmt.setInt(index, ((IntCodeEnum) value).getCode());
+            stmt.setInt(index, ((IntCodeEnum<?>) value).getCode());
         }
     }
 
@@ -68,7 +69,7 @@ public class EnumCodeUserType extends AbstractEnumUserType {
     }
 
     public String objectToSQLString(Object value) {
-        return Integer.toString(((IntCodeEnum) value).getCode());
+        return Integer.toString(((IntCodeEnum<?>) value).getCode());
     }
     
     public String toXMLString(Object value) {
