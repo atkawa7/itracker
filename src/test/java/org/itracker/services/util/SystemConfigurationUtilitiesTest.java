@@ -47,7 +47,8 @@ public class SystemConfigurationUtilitiesTest
                     languageKey);
         }
         {
-            final Configuration configuration =
+            @SuppressWarnings("unused")
+			final Configuration configuration =
                     new Configuration(SystemConfigurationUtilities.TYPE_STATUS,
                     "value");
             final String languageKey =
@@ -89,7 +90,8 @@ public class SystemConfigurationUtilitiesTest
             assertEquals(3002001, versionNumber);
         }
         try {
-            final long versionNumber =
+            @SuppressWarnings("unused")
+			final long versionNumber =
                     SystemConfigurationUtilities.getVersionAsLong("1.2.3.4");
             assertTrue(false);
         } catch (final IllegalArgumentException e) {
