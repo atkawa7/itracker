@@ -270,12 +270,13 @@ public class NotificationServiceImpl implements NotificationService {
 								+ ")");
 			}
 
-			List<Component> components = // issueService
+			List<Component> components = issue.getComponents();
+			// issueService
 			// .getIssueComponents(issue.getId());
-			issue.getComponents();
-			List<Version> versions = // issueService.getIssueVersions(issue.getId());
-			issue.getVersions();
-
+			
+			List<Version> versions = issue.getVersions();
+			// issueService.getIssueVersions(issue.getId());
+			
 			if (receipients.length > 0) {
 				String subject = "";
 				if (type == Type.CREATED) {
@@ -432,11 +433,13 @@ public class NotificationServiceImpl implements NotificationService {
 	 * Method for internal sending of a notification of specific type.
 	 * 
 	 * TODO: final debugging/integration/implementation
+	 * TODO: Decide if this code is really needed and document for what
 	 * 
 	 * @param notificationMsg
 	 * @param type
 	 * @param url
 	 */
+	@SuppressWarnings("unused")
 	private void handleLocalizedIssueNotification(final Issue issue, final Type type, final String url,
 			final InternetAddress[] receipients, Integer lastModifiedDays) {
 		try {
