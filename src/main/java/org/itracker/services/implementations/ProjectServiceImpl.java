@@ -47,6 +47,8 @@ import org.itracker.services.util.IssueUtilities;
 
 public class ProjectServiceImpl implements ProjectService {
 
+	//TODO: Add Javadocs here: document this whole class.
+	
 	private static final Logger logger = Logger.getLogger(ProjectService.class);
 	
 	private ComponentDAO componentDAO;
@@ -320,6 +322,8 @@ public class ProjectServiceImpl implements ProjectService {
 		return issueStats;
 	}
 
+	//TODO: Decide if this code is really needed and document for what
+	@SuppressWarnings("unused")
 	private IssueDAO getIssueDAO() {
 		return issueDAO;
 	}
@@ -328,18 +332,26 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectDAO;
 	}
 
+	//TODO: Decide if this code is really needed and document for what
+	@SuppressWarnings("unused")
 	private ComponentDAO getComponentDAO() {
 		return componentDAO;
 	}
 
+	//TODO: Decide if this code is really needed and document for what
+	@SuppressWarnings("unused")
 	private CustomFieldDAO getCustomFieldDAO() {
 		return this.customFieldDAO;
 	}
-
+	
+	//TODO: Decide if this code is really needed and document for what
+	@SuppressWarnings("unused")
 	private ProjectScriptDAO getProjectScriptDAO() {
 		return this.projectScriptDAO;
 	}
-
+	
+	//TODO: Decide if this code is really needed and document for what
+	@SuppressWarnings("unused")
 	private VersionDAO getVersionDAO() {
 		return this.versionDAO;
 	}
