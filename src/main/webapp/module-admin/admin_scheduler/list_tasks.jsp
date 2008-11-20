@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
  
-<%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.core.resources.*" %>
-<%@ page import="org.itracker.web.scheduler.*" %>
+<%-- page import="org.itracker.model.*" --%>
+<%-- page import="org.itracker.core.resources.*" --%>
+<%-- page import="org.itracker.web.scheduler.*" --%>
 
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -29,7 +29,7 @@
   <br>
 </logic:messagesPresent>
 
-<table border="0" cellspacing="0"  cellspacing="1"  width="100%">
+<table border="0" cellspacing="0" cellspacing="1" width="100%">
   <tr>
     <td class="editColumnTitle" colspan="8"><it:message key="itracker.web.attr.tasks"/>: <span class="listRowText">(<it:message key="itracker.web.admin.listtasks.lastran"/> <%--<it:formatDate date="<%= Scheduler.getLastRun() %>" format="full"/>)--%></span></td>
     <td align="right">
@@ -71,8 +71,8 @@
       <tr class="listRowUnshaded">
 <%--  } --%>
       <td>
-        <%--<it:formatImageAction action="removetask" paramName="id" paramValue="<%= tasks[i].getId() %>--%>" src="/themes/defaulttheme/images/delete.gif" altKey="itracker.web.image.delete.task.alt" textActionKey="itracker.web.image.delete.texttag"/>
-        <%--<it:formatImageAction action="edittaskform" paramName="id" paramValue="<%= tasks[i].getId() %>--%>" targetAction="update" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.task.alt" textActionKey="itracker.web.image.edit.texttag"/>
+        <%--<it:formatImageAction action="removetask" paramName="id" paramValue="<%= tasks[i].getId() %>" src="/themes/defaulttheme/images/delete.gif" altKey="itracker.web.image.delete.task.alt" textActionKey="itracker.web.image.delete.texttag"/>--%>
+        <%--<it:formatImageAction action="edittaskform" paramName="id" paramValue="<%= tasks[i].getId() %>" targetAction="update" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.task.alt" textActionKey="itracker.web.image.edit.texttag"/>--%>
       </td>
       <td></td>
       <td align="left"><%-- = taskName --%></td>
