@@ -57,7 +57,7 @@ public interface PluggableAuthenticator {
     List<Permission> getUserPermissions(User user, int reqSource) throws AuthenticatorException;
 
     /**
-     * This method should return an array of users that have certian permissions in the
+     * This method should return an array of users that have certain permissions in the
      * authentication system.  This list must always include all super users, even if they
      * do not explicitly have the required permission.
      *
@@ -182,7 +182,7 @@ public interface PluggableAuthenticator {
       * system to support a new user.  Any updates needed to the data supplied should be made in the supplied
       * User.  The system will then update the information in the ITracker datastore.  Only changes to the
       * core profile information and password are made here.  Any permission information for the new user
-      * whould be done through an updateProfile call.
+      * would be done through an updateProfile call.
       * @param user a User object that contains the newly created profile
       * @param authentication the user's authentication information, if known
       * @param authType the type of authentication information being provided
@@ -216,6 +216,6 @@ public interface PluggableAuthenticator {
       *               pass a UserService bean as userService, and an ConfigurationService
       *               bean as configurationService
       */
-    void initialize(Map value);
+    void initialize(Map<?, ?> value);
     
 }
