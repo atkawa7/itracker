@@ -13,16 +13,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <% // TODO : move redirect logic to the Action class. 
-    ScheduledTask task = (ScheduledTask) session.getAttribute(Constants.TASK_KEY);
-    if(task == null) {
+  //  ScheduledTask task = (ScheduledTask) session.getAttribute(Constants.TASK_KEY);
+   // if(task == null) {
 %>
       <logic:forward name="unauthorized"/>
 <%
-    } else {
+  //  } else {
       boolean isUpdate = false;
-      if(task.getId().intValue() > 0) {
-          isUpdate = true;
-      }
+   //   if(task.getId().intValue() > 0) {
+   //       isUpdate = true;
+  //    }
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -49,23 +49,23 @@
               <html:select property="className" styleClass="editColumnText">
                 <option value=""></option>
                 <%
-                   java.util.HashMap<String,String> classes = SchedulerUtilities.getDefinedTasks();
-                   for(java.util.Iterator<String> iter = classes.keySet().iterator(); iter.hasNext(); ) {
-                      String className = iter.next();
-                      String classNameKey = classes.get(className);
+    //               java.util.HashMap<String,String> classes = SchedulerUtilities.getDefinedTasks();
+       //            for(java.util.Iterator<String> iter = classes.keySet().iterator(); iter.hasNext(); ) {
+        //              String className = iter.next();
+      //                String classNameKey = classes.get(className);
                 %>
-                      <html:option value="<%= className %>" styleClass="editColumnText"><it:message key="<%= classNameKey %>"/></html:option>
+                      <html:option value="<%-- = className %>" styleClass="editColumnText"><%--<it:message key="<%= classNameKey %>--%>"/>--%></html:option>
                 <% } %>
               </html:select>
             </td>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.created"/>:</td>
-            <td class="editColumnText"><it:formatDate date="<%= task.getCreateDate() %>"/></td>
+            <td class="editColumnText"><%--<it:formatDate date="<%= task.getCreateDate() %>"/>--%></td>
           </tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.class"/>:</td>
             <td><html:text property="classNameText" styleClass="editColumnText"/></td>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.lastmodified"/>:</td>
-            <td class="editColumnText"><it:formatDate date="<%= task.getLastModifiedDate() %>"/></td>
+            <td class="editColumnText"><%--<it:formatDate date="<%= task.getLastModifiedDate() %>"/>--%></td>
           </tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.arguments"/>:</td>
@@ -93,8 +93,9 @@
             <tr><td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.update.alt" titleKey="itracker.web.button.update.alt"><it:message key="itracker.web.button.update"/></html:submit></td></tr>
           <% } else { %>
             <tr><td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.create.alt" titleKey="itracker.web.button.create.alt"><it:message key="itracker.web.button.create"/></html:submit></td></tr>
-          <% } %>
+          <%-- } --%>
         </table>
       </html:form>
       <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
-<%  } %>
+<%-- // } // 
+--%>
