@@ -64,7 +64,7 @@ public final class IntBooleanType implements UserType {
         return SQL_TYPES;
     }
     
-    public Class returnedClass() {
+    public Class<Boolean> returnedClass() {
         return Boolean.class;
     }
     
