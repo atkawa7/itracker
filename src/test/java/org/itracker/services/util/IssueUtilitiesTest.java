@@ -13,11 +13,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Component;
 import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
-import org.itracker.model.CustomField.Type;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueActivityType;
 import org.itracker.model.IssueHistory;
@@ -27,9 +27,12 @@ import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.model.Version;
+import org.itracker.model.CustomField.Type;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
+ * TODO: make tests using the database where appropriat (setup testdata from datasets)
  *
  * @author seas at andreysergievskiy.com
  */
@@ -684,6 +687,7 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
+    @Ignore
     public void testHasIssueNotification() {
         final Project project = new Project("project");
         project.setId(1);
