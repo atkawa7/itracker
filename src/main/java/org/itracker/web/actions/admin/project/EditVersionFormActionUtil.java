@@ -24,8 +24,8 @@ public class EditVersionFormActionUtil {
 		}
 		final boolean isNew = version.isNew();
 		if (log.isDebugEnabled()) {
-			log.debug("init: Putting the isNew=" + isNew + ", component :"
-					+ version.getDescription()
+			log.debug("init: Putting the isNew=" + isNew + ", version: "
+					+ version
 					+ " and isNew attribute back into the request");
 		}
 		request.setAttribute("version", version);
