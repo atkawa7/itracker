@@ -980,7 +980,7 @@ public class NotificationServiceImpl implements NotificationService {
 	/**
 	 * @return the notificationDao
 	 */
-	public NotificationDAO getNotificationDao() {
+	private NotificationDAO getNotificationDao() {
 		return notificationDao;
 	}
 
