@@ -67,60 +67,70 @@ public class EditProjectFormAction extends ItrackerBaseAction {
             ProjectService projectService = getITrackerServices().getProjectService();
             UserService userService = getITrackerServices().getUserService();
             HttpSession session = request.getSession(true);
-            String action = (String) request.getParameter("action");
+            
 
             Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
             User user = (User) session.getAttribute(Constants.USER_KEY);
 
             String pageTitleKey = "";
             String pageTitleArg = "";
-            Project project = (Project) session.getAttribute(Constants.PROJECT_KEY);
-            if (action != null && action.equals("update")) {
-                pageTitleKey = "itracker.web.admin.editproject.title.update";
-                // there was a problem with project.getName(); temp. commmented.
-                //pageTitleArg = project.getName();
+
+            ProjectForm projectForm = (ProjectForm) form;
+
+            if (projectForm == null) {
+            	// this should not be
+                projectForm = new ProjectForm();
+            }
+
+            Project project;
+            if (projectForm.getAction() != null && projectForm.getAction().equals("update")) {
+				project = null;
+            	if (null == projectForm.getId()) {
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
+            	} else {
+            		pageTitleKey = "itracker.web.admin.editproject.title.update";
+            		project = projectService.getProject(projectForm.getId());
+            		if (null == project) {
+            			// does not exist.
+	                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
+            		} else {
+	                	pageTitleArg = project.getName();
+	                }
+            	}
 
             } else {
+                project = new Project();
                 pageTitleKey = "itracker.web.admin.editproject.title.create";
                 //     pageTitleArg = ITrackerResources.getString("itracker.locale.name", parentLocale);
                 pageTitleArg = ITrackerResources.getString("itracker.locale.name", getLocale(request));
+                projectForm.setAction("create");
 
             }
 
             request.setAttribute("pageTitleKey", pageTitleKey);
             request.setAttribute("pageTitleArg", pageTitleArg);
 
-            project = null;
-            ProjectForm projectForm = (ProjectForm) form;
-            if (projectForm == null) {
-                projectForm = new ProjectForm();
-            }
 
 
-            if ("create".equals(action)) {
+            if ("create".equals(projectForm.getAction())) {
                 if (!user.isSuperUser()) {
                     return mapping.findForward("unauthorized");
                 }
                 boolean allowPermissionUpdate = userService.allowPermissionUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
                 request.setAttribute("allowPermissionUpdate", allowPermissionUpdate);
-                project = new Project();
+ 
                 project.setId(-1);
                 projectForm.setAction("create");
                 projectForm.setId(project.getId());
-            } else if ("update".equals(action)) {
+            } else if ("update".equals(projectForm.getAction())) {
 
-                Integer projectId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
 
-                if (projectId == null) {
-                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-                } else {
-                    project = projectService.getProject(projectId);
+                if (errors.isEmpty()) {
+                    
 
-                    if (project == null) {
-                        errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-                    } else if (!UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
+                    if (!UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
                         return mapping.findForward("unauthorized");
-                    } else {
+                    } else if (errors.isEmpty()) {
                         projectForm.setAction("update");
                         projectForm.setId(project.getId());
                         projectForm.setName(project.getName());
