@@ -168,8 +168,7 @@
 						value="${iCount % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}" />
 					<tr class="${listRowClass}">
 						<td style="white-space: nowrap">
-							<c:if
-								test="${unassignedIssue.userHasIssueNotification}">
+							<c:if test="${not unassignedIssue.userHasIssueNotification}">
 								<it:formatImageAction forward="watchissue" paramName="id"
 									paramValue="${unassignedIssue.issue.id}" caller="index"
 									src="/themes/defaulttheme/images/watch.gif"
@@ -177,25 +176,23 @@
 									arg0="${unassignedIssue.issue.id}"
 									textActionKey="itracker.web.image.watch.texttag" />
 							</c:if> 
-							<c:if test="${unassignedIssue.userCanViewIssue}">
+							<it:formatImageAction 
+								forward="viewissue" module="/module-projects"
+								paramName="id" paramValue="${unassignedIssue.issue.id}"
+								src="/themes/defaulttheme/images/view.gif"
+								altKey="itracker.web.image.view.issue.alt"
+								arg0="${unassignedIssue.issue.id}"
+								textActionKey="itracker.web.image.view.texttag" />
+							<c:if test="${unassignedIssue.userCanEdit}">
 								<it:formatImageAction 
-									forward="viewissue" module="/module-projects"
+									forward="editissue" module="/module-projects" 
 									paramName="id" paramValue="${unassignedIssue.issue.id}"
-									src="/themes/defaulttheme/images/view.gif"
-									altKey="itracker.web.image.view.issue.alt"
+									caller="index" 
+									src="/themes/defaulttheme/images/edit.gif"
+									altKey="itracker.web.image.edit.issue.alt"
 									arg0="${unassignedIssue.issue.id}"
-									textActionKey="itracker.web.image.view.texttag" />
-								<c:if test="${unassignedIssue.userCanEdit}">
-									<it:formatImageAction 
-										forward="editissue" module="/module-projects" 
-										paramName="id" paramValue="${unassignedIssue.issue.id}"
-										caller="index" 
-										src="/themes/defaulttheme/images/edit.gif"
-										altKey="itracker.web.image.edit.issue.alt"
-										arg0="${unassignedIssue.issue.id}"
-										textActionKey="itracker.web.image.edit.texttag" />
-								</c:if>
-							</c:if> 
+									textActionKey="itracker.web.image.edit.texttag" />
+							</c:if>
 
 						</td>
 						<td></td>
