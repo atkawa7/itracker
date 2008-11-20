@@ -204,7 +204,11 @@ public class WorkflowUtilitiesTest extends AbstractDependencyInjectionTest {
 
         class ValidatorFormAdhoc extends ValidatorForm {
 
-            public String status = "defaultStatus";
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			public String status = "defaultStatus";
             public String fieldDescription = "defaultDescription";
         }
 
