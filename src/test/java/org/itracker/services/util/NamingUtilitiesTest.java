@@ -20,7 +20,7 @@ public class NamingUtilitiesTest extends AbstractDependencyInjectionTest {
 
     @Test
     public void testGetStringValue() {
-        final Hashtable hashtable = new Hashtable();
+        final Hashtable<String, String> hashtable = new Hashtable<String, String>();
         hashtable.put("key", "value");
         try {
         final InitialContext context = new InitialContext(hashtable);
