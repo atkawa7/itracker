@@ -151,7 +151,7 @@ public class ProjectPTO {
 		return new ToStringBuilder(this).append("project", getProject()).toString();
 	}
 
-	//TODO: Code Cleanup 
+	//TODO: Code Cleanup: this method is not used and I don't like the name (what does setup stand for?)
 	private static final void setupNumberOfIssues(ProjectPTO pto,
 			ProjectService service) {
 		pto.setTotalNumberIssues(service.getTotalNumberIssuesByProject(pto
