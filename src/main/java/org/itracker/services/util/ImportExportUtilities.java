@@ -147,7 +147,7 @@ public class ImportExportUtilities implements ImportExportTags {
 
 
         buf.insert(0, "</" + TAG_PROJECTS +">\n");
-        for(Iterator iter = projects.keySet().iterator(); iter.hasNext(); ) {
+        for(Iterator<String> iter = projects.keySet().iterator(); iter.hasNext(); ) {
             Project project = (Project) projects.get((String) iter.next());
             for(int i = 0; i < project.getOwners().size(); i++) {
                 users.put(project.getOwners().get(i).getId().toString(), project.getOwners().get(i));
@@ -157,7 +157,7 @@ public class ImportExportUtilities implements ImportExportTags {
         buf.insert(0, "<" + TAG_PROJECTS + ">\n");
 
         buf.insert(0, "</" + TAG_USERS + ">\n");
-        for(Iterator iter = users.keySet().iterator(); iter.hasNext(); ) {
+        for(Iterator<String> iter = users.keySet().iterator(); iter.hasNext(); ) {
             buf.insert(0, exportModel((AbstractEntity) users.get((String) iter.next())));
         }
         buf.insert(0, "<" + TAG_USERS + ">\n");
