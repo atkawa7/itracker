@@ -26,6 +26,7 @@ import org.itracker.services.UserService;
 import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.util.AuthenticationConstants;
 
+// TODO: Rewrite Javadocs here: we don't have session beans or EJBs anymore
 
 /**
   * This class provides a skeleton implementation of the PluggableAuthenticator interface.
