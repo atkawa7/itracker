@@ -90,6 +90,9 @@ import org.itracker.web.util.ServletContextUtils;
  * @author ricardo
  * 
  */
+
+//TODO: Cleanup this file, go through all issues, todos, etc.
+
 public class IssueServiceImpl implements IssueService {
 
 	private static final Logger logger = Logger
@@ -488,8 +491,7 @@ public class IssueServiceImpl implements IssueService {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setActivityType(IssueActivityType.SEVERITY_CHANGE);
-			// FIXME why does it state Critical to Critical when it should Major
-			// to Critical!?
+			// FIXME why does it state Critical to Critical when it should Major to Critical!?
 			activity.setDescription(IssueUtilities
 					.getSeverityName(persistedIssue.getSeverity())
 					+ " "
