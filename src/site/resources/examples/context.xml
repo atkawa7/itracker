@@ -1,7 +1,6 @@
 <Context path="itracker" reloadable="true" >
  <ResourceLink name="itracker" global="itracker" type="javax.naming.Context"/>
  <ResourceLink name="itracker/mail/Session" global="itracker/mail/Session" type="javax.mail.Session"/>
- 
 </Context>
 
 <!--
@@ -29,4 +28,5 @@ How-to override application.properties values:
 ...
 </GlobalNamingResources>
 ...
-</Server>
+</Server>-->
+
