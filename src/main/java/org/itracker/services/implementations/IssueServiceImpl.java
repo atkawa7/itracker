@@ -1,35 +1,35 @@
 /*
- 
+
  * This software was designed and created by Jason Carroll.
- 
+
  * Copyright (c) 2002, 2003, 2004 Jason Carroll.
- 
+
  * The author can be reached at jcarroll@cowsultants.com
- 
+
  * ITracker website: http://www.cowsultants.com
- 
+
  * ITracker forums: http://www.cowsultants.com/phpBB/index.php
- 
+
  *
- 
+
  * This program is free software; you can redistribute it and/or modify
- 
+
  * it only under the terms of the GNU General Public License as published by
- 
+
  * the Free Software Foundation; either version 2 of the License, or
- 
+
  * (at your option) any later version.
- 
+
  *
- 
+
  * This program is distributed in the hope that it will be useful,
- 
+
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- 
+
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- 
+
  * GNU General Public License for more details.
- 
+
  */
 
 package org.itracker.services.implementations;
@@ -92,9 +92,8 @@ import org.itracker.web.util.ServletContextUtils;
  */
 public class IssueServiceImpl implements IssueService {
 
-
 	private static final Logger logger = Logger
-			.getLogger(IssueServiceImpl.class);
+	.getLogger(IssueServiceImpl.class);
 
 	private CustomFieldDAO customFieldDAO;
 
@@ -122,7 +121,9 @@ public class IssueServiceImpl implements IssueService {
 			IssueDAO issueDAO, IssueHistoryDAO issueHistoryDAO,
 			IssueRelationDAO issueRelationDAO,
 			IssueAttachmentDAO issueAttachmentDAO, ComponentDAO componentDAO,
-			IssueActivityDAO issueActivityDAO, VersionDAO versionDAO, CustomFieldDAO customFieldDAO, NotificationService notificationService) {
+			IssueActivityDAO issueActivityDAO, VersionDAO versionDAO,
+			CustomFieldDAO customFieldDAO,
+			NotificationService notificationService) {
 
 		this.userDAO = userDAO;
 		this.projectDAO = projectDAO;
@@ -137,7 +138,6 @@ public class IssueServiceImpl implements IssueService {
 		this.notificationService = notificationService;
 	}
 
-
 	public Issue getIssue(Integer issueId) {
 		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
 		return issue;
@@ -149,7 +149,8 @@ public class IssueServiceImpl implements IssueService {
 	public List<Issue> getAllIssues() {
 		logger.warn("getAllIssues: use of deprecated API");
 		if (logger.isDebugEnabled()) {
-			logger.debug("getAllIssues: stacktrace was",
+			logger
+			.debug("getAllIssues: stacktrace was",
 					new RuntimeException());
 		}
 		return getIssueDAO().findAll();
@@ -231,8 +232,8 @@ public class IssueServiceImpl implements IssueService {
 
 		if (availableProjectsOnly) {
 			issues = getIssueDAO()
-					.findByStatusLessThanEqualToInAvailableProjects(
-							IssueUtilities.STATUS_UNASSIGNED);
+			.findByStatusLessThanEqualToInAvailableProjects(
+					IssueUtilities.STATUS_UNASSIGNED);
 		} else {
 			issues = getIssueDAO().findByStatusLessThanEqualTo(
 					IssueUtilities.STATUS_UNASSIGNED);
@@ -248,7 +249,7 @@ public class IssueServiceImpl implements IssueService {
 	 * 
 	 * @param status
 	 * 
-	 * the status to compare
+	 *            the status to compare
 	 * 
 	 * @return an array of IssueModels that match the criteria
 	 * 
@@ -267,7 +268,7 @@ public class IssueServiceImpl implements IssueService {
 	 * 
 	 * @param status
 	 * 
-	 * the status to compare
+	 *            the status to compare
 	 * 
 	 * @return an array of IssueModels that match the criteria
 	 */
@@ -285,7 +286,7 @@ public class IssueServiceImpl implements IssueService {
 	 * 
 	 * @param severity
 	 * 
-	 * the severity to compare
+	 *            the severity to compare
 	 * 
 	 * @return an array of IssueModels that match the criteria
 	 * 
@@ -367,7 +368,7 @@ public class IssueServiceImpl implements IssueService {
 				+ " " + creator.getFirstName() + " " + creator.getLastName());
 
 		activity.setIssue(issue);
-		
+
 		if (!(createdById == null || createdById.equals(userId))) {
 
 			User createdBy = getUserDAO().findByPrimaryKey(createdById);
@@ -384,8 +385,6 @@ public class IssueServiceImpl implements IssueService {
 			notificationService.addIssueNotification(watchModel);
 
 		}
-		
-		
 
 		List<IssueActivity> activities = new ArrayList<IssueActivity>();
 		activities.add(activity);
@@ -411,8 +410,8 @@ public class IssueServiceImpl implements IssueService {
 	 * 
 	 */
 	public Issue updateIssue(final Issue issueDirty, final Integer userId)
-			throws ProjectException {
-		
+	throws ProjectException {
+
 		String existingTargetVersion = null;
 
 		// detach the modified Issue form the Hibernate Session
@@ -424,9 +423,10 @@ public class IssueServiceImpl implements IssueService {
 
 		getIssueDAO().refresh(persistedIssue);
 		if (logger.isDebugEnabled()) {
-			logger.debug("updateIssue: updating issue " + issueDirty + "\n(from " + persistedIssue + ")");
+			logger.debug("updateIssue: updating issue " + issueDirty
+					+ "\n(from " + persistedIssue + ")");
 		}
-		
+
 		User user = getUserDAO().findByPrimaryKey(userId);
 
 		if (persistedIssue.getProject().getStatus() != Status.ACTIVE) {
@@ -434,12 +434,12 @@ public class IssueServiceImpl implements IssueService {
 					+ persistedIssue.getProject().getName() + " is not active.");
 		}
 
-
 		if (!persistedIssue.getDescription().equalsIgnoreCase(
-						issueDirty.getDescription())) {
+				issueDirty.getDescription())) {
 
 			if (logger.isDebugEnabled()) {
-				logger.debug("updateIssue: updating description from " + persistedIssue.getDescription());
+				logger.debug("updateIssue: updating description from "
+						+ persistedIssue.getDescription());
 			}
 			IssueActivity activity = new IssueActivity();
 			activity.setActivityType(IssueActivityType.DESCRIPTION_CHANGE);
@@ -466,7 +466,8 @@ public class IssueServiceImpl implements IssueService {
 			issueDirty.getActivities().add(activity);
 		}
 
-		if (null == persistedIssue.getStatus() || !persistedIssue.getStatus().equals(issueDirty.getStatus())) {
+		if (null == persistedIssue.getStatus()
+				|| !persistedIssue.getStatus().equals(issueDirty.getStatus())) {
 			IssueActivity activity = new IssueActivity();
 			activity.setActivityType(IssueActivityType.STATUS_CHANGE);
 			activity.setDescription(IssueUtilities.getStatusName(persistedIssue
@@ -480,14 +481,17 @@ public class IssueServiceImpl implements IssueService {
 			issueDirty.getActivities().add(activity);
 		}
 
-		if (issueDirty.getSeverity()!= null && !issueDirty.getSeverity().equals(persistedIssue.getSeverity())
-				&& issueDirty.getSeverity() != -1) {
+		if (issueDirty.getSeverity() != null
+				&& !issueDirty.getSeverity().equals(
+						persistedIssue.getSeverity())
+						&& issueDirty.getSeverity() != -1) {
 
 			IssueActivity activity = new IssueActivity();
 			activity.setActivityType(IssueActivityType.SEVERITY_CHANGE);
-			// FIXME why does it state Critical to Critical when it should Major to Critical!?
-			activity.setDescription(
-					IssueUtilities.getSeverityName(persistedIssue.getSeverity())
+			// FIXME why does it state Critical to Critical when it should Major
+			// to Critical!?
+			activity.setDescription(IssueUtilities
+					.getSeverityName(persistedIssue.getSeverity())
 					+ " "
 					+ ITrackerResources.getString("itracker.web.generic.to")
 					+ " "
@@ -503,43 +507,44 @@ public class IssueServiceImpl implements IssueService {
 				&& !persistedIssue.getTargetVersion().getId().equals(
 						issueDirty.getTargetVersion().getId())) {
 			existingTargetVersion = persistedIssue.getTargetVersion()
-					.getNumber();
+			.getNumber();
 			Version version = this.getVersionDAO().findByPrimaryKey(
 					issueDirty.getTargetVersion().getId());
 
 			IssueActivity activity = new IssueActivity();
 			activity.setActivityType(IssueActivityType.TARGETVERSION_CHANGE);
 			String description = existingTargetVersion + " "
-					+ ITrackerResources.getString("itracker.web.generic.to")
-					+ " ";
+			+ ITrackerResources.getString("itracker.web.generic.to")
+			+ " ";
 			description += version.getNumber();
 			activity.setDescription(description);
 			activity.setUser(user);
 			activity.setIssue(issueDirty);
 			issueDirty.getActivities().add(activity);
 		}
-	
 
 		// (re-)assign issue
 		User newOwner = issueDirty.getOwner();
 		issueDirty.setOwner(persistedIssue.getOwner());
 		if (logger.isDebugEnabled()) {
-			logger.debug("updateIssue: assigning from " + issueDirty.getOwner() + " to " + newOwner);
+			logger.debug("updateIssue: assigning from " + issueDirty.getOwner()
+					+ " to " + newOwner);
 		}
 		assignIssue(issueDirty, newOwner, user, false);
 		if (logger.isDebugEnabled()) {
 			logger.debug("updateIssue: updated assignment: " + issueDirty);
 		}
-		
-		
+
 		if (logger.isDebugEnabled()) {
-			logger.debug("updateIssue: merging issue " + issueDirty + " to " + persistedIssue);
+			logger.debug("updateIssue: merging issue " + issueDirty + " to "
+					+ persistedIssue);
 		}
-		
+
 		persistedIssue = getIssueDAO().merge(issueDirty);
-		
+
 		if (logger.isDebugEnabled()) {
-			logger.debug("updateIssue: merged issue for saving: " + persistedIssue);
+			logger.debug("updateIssue: merged issue for saving: "
+					+ persistedIssue);
 		}
 		getIssueDAO().saveOrUpdate(persistedIssue);
 		if (logger.isDebugEnabled()) {
@@ -556,50 +561,52 @@ public class IssueServiceImpl implements IssueService {
 	 * 
 	 * @param issue
 	 * 
-	 * an Issue of the issue to move
+	 *            an Issue of the issue to move
 	 * 
 	 * @param projectId
 	 * 
-	 * the id of the target project
+	 *            the id of the target project
 	 * 
 	 * @param userId
 	 * 
-	 * the id of the user that is moving the issue
+	 *            the id of the user that is moving the issue
 	 * 
 	 * @return an Issue of the issue after it has been moved
 	 */
 
 	public Issue moveIssue(Issue issue, Integer projectId, Integer userId) {
-		
+
 		if (logger.isDebugEnabled()) {
-			logger.debug("moveIssue: " + issue + " to project#" + projectId + ", user#" + userId);
+			logger.debug("moveIssue: " + issue + " to project#" + projectId
+					+ ", user#" + userId);
 		}
-		
+
 		Project project = getProjectDAO().findByPrimaryKey(projectId);
 		User user = getUserDAO().findByPrimaryKey(userId);
-		
+
 		if (logger.isDebugEnabled()) {
-			logger.debug("moveIssue: " + issue + " to project: " + project + ", user: " + user);
+			logger.debug("moveIssue: " + issue + " to project: " + project
+					+ ", user: " + user);
 		}
-		
+
 		IssueActivity activity = new IssueActivity();
 		activity
-				.setActivityType(org.itracker.model.IssueActivityType.ISSUE_MOVE);
+		.setActivityType(org.itracker.model.IssueActivityType.ISSUE_MOVE);
 		activity.setDescription(issue.getProject().getName() + " "
 				+ ITrackerResources.getString("itracker.web.generic.to") + " "
 				+ project.getName());
 		activity.setUser(user);
 		activity.setIssue(issue);
 		issue.setProject(project);
-		
+
 		issue.getActivities().add(activity);
-		
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("moveIssue: updated issue: " + issue);
 		}
 		try {
 			getIssueDAO().saveOrUpdate(issue);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("moveIssue: failed to save issue: " + issue, e);
 			return null;
 		}
@@ -622,41 +629,43 @@ public class IssueServiceImpl implements IssueService {
 	}
 
 	/**
-	 * TODO maybe it has no use at all. is it obsolete?
-	 * when I'd set the issue-fields on an issue and then save/update issue, would it be good enough?
+	 * TODO maybe it has no use at all. is it obsolete? when I'd set the
+	 * issue-fields on an issue and then save/update issue, would it be good
+	 * enough?
 	 */
 	public boolean setIssueFields(Integer issueId, List<IssueField> fields) {
 		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
 
 		setIssueFields(issue, fields, true);
-		
+
 		return true;
 	}
-	private boolean setIssueFields(Issue issue, List<IssueField> fields, boolean save) { 
+
+	private boolean setIssueFields(Issue issue, List<IssueField> fields,
+			boolean save) {
 
 		List<IssueField> issueFields = issue.getFields();
-		
+
 		if (fields.size() > 0) {
 			for (int i = 0; i < fields.size(); i++) {
-				
-				
+
 				IssueField field = fields.get(i);
 				if (issueFields.contains(field)) {
 					issueFields.remove(field);
 				}
-				
+
 				CustomField customField = getCustomFieldDAO().findByPrimaryKey(
 						fields.get(i).getCustomField().getId());
 				field.setCustomField(customField);
 				field.setIssue(issue);
-				
-//				what date value?
-//				field.setDateValue(new Timestamp(new Date().getTime()));
+
+				// what date value?
+				// field.setDateValue(new Timestamp(new Date().getTime()));
 				issueFields.add(field);
 			}
 		}
 		issue.setFields(issueFields);
-		
+
 		if (save) {
 			logger.debug("setIssueFields: save was true");
 			getIssueDAO().saveOrUpdate(issue);
@@ -664,12 +673,12 @@ public class IssueServiceImpl implements IssueService {
 		return true;
 	}
 
-	
 	public boolean setIssueComponents(Integer issueId,
 			HashSet<Integer> componentIds, Integer userId) {
 
 		Issue issue = getIssueDAO().findByPrimaryKey(issueId);
-		List<Component> components = new ArrayList<Component>(componentIds.size());
+		List<Component> components = new ArrayList<Component>(componentIds
+				.size());
 		User user = userDAO.findByPrimaryKey(userId);
 		Iterator<Integer> idIt = componentIds.iterator();
 		while (idIt.hasNext()) {
@@ -677,13 +686,13 @@ public class IssueServiceImpl implements IssueService {
 			Component c = getComponentDAO().findById(id);
 			components.add(c);
 		}
-		
+
 		setIssueComponents(issue, components, user, true);
 		return true;
 	}
 
-	private boolean setIssueComponents(Issue issue,
-			List<Component> components, User user, boolean save) {
+	private boolean setIssueComponents(Issue issue, List<Component> components,
+			User user, boolean save) {
 
 		if (issue.getComponents() == null) {
 			if (logger.isInfoEnabled()) {
@@ -692,38 +701,41 @@ public class IssueServiceImpl implements IssueService {
 			issue.setComponents(new ArrayList<Component>(components.size()));
 		}
 		if (components.isEmpty() && !issue.getComponents().isEmpty()) {
-			addComponentsModifiedActivity(issue, user, 
-					new StringBuilder(ITrackerResources.getString("itracker.web.generic.all"))
-					.append(" ")
-					.append(ITrackerResources.getString("itracker.web.generic.removed"))
+			addComponentsModifiedActivity(issue, user, new StringBuilder(
+					ITrackerResources.getString("itracker.web.generic.all"))
+			.append(" ").append(
+					ITrackerResources
+					.getString("itracker.web.generic.removed"))
 					.toString());
 			issue.getComponents().clear();
 		} else {
 			Collections.sort(issue.getComponents(), Component.NAME_COMPARATOR);
-			
-			for (Iterator<Component> iterator = issue.getComponents().iterator(); iterator
-					.hasNext();) {
+
+			for (Iterator<Component> iterator = issue.getComponents()
+					.iterator(); iterator.hasNext();) {
 				Component component = (Component) iterator.next();
 				if (components.contains(component)) {
 					components.remove(component);
 				} else {
-					addComponentsModifiedActivity(issue, user, 
-							new StringBuilder(ITrackerResources.getString("itracker.web.generic.removed"))
-							.append(": ")
-							.append(component.getName()).toString());
+					addComponentsModifiedActivity(issue, user,
+							new StringBuilder(ITrackerResources
+									.getString("itracker.web.generic.removed"))
+					.append(": ").append(component.getName())
+					.toString());
 					iterator.remove();
 				}
 			}
 			Collections.sort(components, Component.NAME_COMPARATOR);
 			for (Iterator<Component> iterator = components.iterator(); iterator
-					.hasNext();) {
+			.hasNext();) {
 
 				Component component = iterator.next();
 				if (!issue.getComponents().contains(component)) {
-					addComponentsModifiedActivity(issue, user, 
-							new StringBuilder(ITrackerResources.getString("itracker.web.generic.added"))
-								.append(": ")
-								.append(component.getName()).toString());
+					addComponentsModifiedActivity(issue, user,
+							new StringBuilder(ITrackerResources
+									.getString("itracker.web.generic.added"))
+					.append(": ").append(component.getName())
+					.toString());
 					issue.getComponents().add(component);
 				}
 			}
@@ -738,47 +750,51 @@ public class IssueServiceImpl implements IssueService {
 		return true;
 
 	}
-	
+
 	/**
 	 * used by setIssueComponents for adding change activities
+	 * 
 	 * @param issue
 	 * @param user
 	 * @param description
 	 */
-	private void addComponentsModifiedActivity(Issue issue, User user, String description) {
+	private void addComponentsModifiedActivity(Issue issue, User user,
+			String description) {
 		IssueActivity activity = new IssueActivity();
-		activity.setActivityType(org.itracker.model.IssueActivityType.COMPONENTS_MODIFIED);
+		activity
+		.setActivityType(org.itracker.model.IssueActivityType.COMPONENTS_MODIFIED);
 		activity.setDescription(description);
 		activity.setIssue(issue);
 		activity.setUser(user);
 		issue.getActivities().add(activity);
 	}
-	
-	private boolean setIssueVersions(Issue issue,
-			List<Version> versions, User user, boolean save) {
-		
+
+	private boolean setIssueVersions(Issue issue, List<Version> versions,
+			User user, boolean save) {
+
 		if (issue.getVersions() == null) {
 			if (logger.isInfoEnabled()) {
 				logger.info("setIssueVersions: versions were null!");
 			}
 			issue.setVersions(new ArrayList<Version>());
 		}
-		
+
 		if (versions.isEmpty() && !issue.getVersions().isEmpty()) {
 
-			addVersionsModifiedActivity(issue, user, 
-					new StringBuilder(ITrackerResources.getString("itracker.web.generic.all"))
-						.append(" ")
-						.append(ITrackerResources.getString("itracker.web.generic.removed"))
-						.toString());
+			addVersionsModifiedActivity(issue, user, new StringBuilder(
+					ITrackerResources.getString("itracker.web.generic.all"))
+			.append(" ").append(
+					ITrackerResources
+					.getString("itracker.web.generic.removed"))
+					.toString());
 			issue.getVersions().clear();
 		} else {
 
 			Collections.sort(issue.getVersions(), Version.VERSION_COMPARATOR);
-			
+
 			StringBuilder changesBuf = new StringBuilder();
 			for (Iterator<Version> iterator = issue.getVersions().iterator(); iterator
-					.hasNext();) {
+			.hasNext();) {
 
 				Version version = iterator.next();
 				if (versions.contains(version)) {
@@ -791,21 +807,19 @@ public class IssueServiceImpl implements IssueService {
 					iterator.remove();
 				}
 			}
-			
+
 			if (changesBuf.length() > 0) {
-				addVersionsModifiedActivity(issue, user, 
-						new StringBuilder(ITrackerResources.getString("itracker.web.generic.removed"))
-							.append(": ")
-							.append(changesBuf)
-							.toString());
+				addVersionsModifiedActivity(issue, user, new StringBuilder(
+						ITrackerResources
+						.getString("itracker.web.generic.removed"))
+				.append(": ").append(changesBuf).toString());
 			}
-			
+
 			changesBuf = new StringBuilder();
-			
+
 			Collections.sort(versions, Version.VERSION_COMPARATOR);
 			for (Iterator<Version> iterator = versions.iterator(); iterator
-					.hasNext();) {
-
+			.hasNext();) {
 
 				Version version = iterator.next();
 				if (changesBuf.length() > 0) {
@@ -815,11 +829,10 @@ public class IssueServiceImpl implements IssueService {
 				issue.getVersions().add(version);
 			}
 			if (changesBuf.length() > 0) {
-				addVersionsModifiedActivity(issue, user, 
-						new StringBuilder(ITrackerResources.getString("itracker.web.generic.added"))
-							.append(": ")
-							.append(changesBuf)
-							.toString());
+				addVersionsModifiedActivity(issue, user, new StringBuilder(
+						ITrackerResources
+						.getString("itracker.web.generic.added"))
+				.append(": ").append(changesBuf).toString());
 			}
 		}
 		if (save) {
@@ -834,20 +847,22 @@ public class IssueServiceImpl implements IssueService {
 
 	/**
 	 * used by setIssueComponents for adding change activities
+	 * 
 	 * @param issue
 	 * @param user
 	 * @param description
 	 */
-	private void addVersionsModifiedActivity(Issue issue, User user, String description) {
+	private void addVersionsModifiedActivity(Issue issue, User user,
+			String description) {
 		IssueActivity activity = new IssueActivity();
 		activity
-				.setActivityType(org.itracker.model.IssueActivityType.TARGETVERSION_CHANGE);
+		.setActivityType(org.itracker.model.IssueActivityType.TARGETVERSION_CHANGE);
 		activity.setDescription(description);
 		activity.setIssue(issue);
 		activity.setUser(user);
 		issue.getActivities().add(activity);
 	}
-	
+
 	public boolean setIssueVersions(Integer issueId,
 			HashSet<Integer> versionIds, Integer userId) {
 
@@ -857,10 +872,10 @@ public class IssueServiceImpl implements IssueService {
 		ArrayList<Version> versions = new ArrayList<Version>(versionIds.size());
 		Iterator<Integer> versionsIdIt = versionIds.iterator();
 		while (versionsIdIt.hasNext()) {
-			Integer id = versionsIdIt.next() ;
+			Integer id = versionsIdIt.next();
 			versions.add(getVersionDAO().findByPrimaryKey(id));
 		}
-		
+
 		return setIssueVersions(issue, versions, user, true);
 	}
 
@@ -872,6 +887,7 @@ public class IssueServiceImpl implements IssueService {
 		return issueRelation;
 
 	}
+
 	/**
 	 * add a relation between two issues.
 	 * 
@@ -881,15 +897,15 @@ public class IssueServiceImpl implements IssueService {
 			int relationType, Integer userId) {
 
 		User user = getUserDAO().findByPrimaryKey(userId);
-		
+
 		if (null == user) {
 			throw new IllegalArgumentException("Invalid user-id: " + userId);
 		}
-		
+
 		if (issueId != null && relatedIssueId != null) {
 
 			int matchingRelationType = IssueUtilities
-					.getMatchingRelationType(relationType);
+			.getMatchingRelationType(relationType);
 
 			// if(matchingRelationType < 0) {
 
@@ -912,16 +928,15 @@ public class IssueServiceImpl implements IssueService {
 			relationA.setIssue(issue);
 
 			relationA.setRelatedIssue(relatedIssue);
-			
+
 			// set to 0 first, later reassign to relationB.id
 			relationA.setMatchingRelationId(0);
 
-			relationA.setLastModifiedDate(new java.sql.Timestamp(
-					new Date().getTime()));
+			relationA.setLastModifiedDate(new java.sql.Timestamp(new Date()
+			.getTime()));
 
-			
 			getIssueRelationDAO().saveOrUpdate(relationA);
-			
+
 			IssueRelation relationB = new IssueRelation();
 
 			relationB.setRelationType(matchingRelationType);
@@ -931,23 +946,24 @@ public class IssueServiceImpl implements IssueService {
 			relationB.setIssue(relatedIssue);
 
 			relationB.setRelatedIssue(issue);
-			
+
 			relationB.setMatchingRelationId(relationA.getId());
 
-			relationB.setLastModifiedDate(new java.sql.Timestamp(
-					new Date().getTime()));
-			
+			relationB.setLastModifiedDate(new java.sql.Timestamp(new Date()
+			.getTime()));
+
 			getIssueRelationDAO().saveOrUpdate(relationB);
-			
+
 			relationA.setMatchingRelationId(relationB.getId());
 			getIssueRelationDAO().saveOrUpdate(relationA);
 
 			IssueActivity activity = new IssueActivity();
 			activity
-					.setActivityType(org.itracker.model.IssueActivityType.RELATION_ADDED);
-			activity.setDescription(ITrackerResources
-					.getString("itracker.activity.relation.add", 
-							new Object[] {IssueUtilities.getRelationName(relationType), relatedIssueId }));
+			.setActivityType(org.itracker.model.IssueActivityType.RELATION_ADDED);
+			activity.setDescription(ITrackerResources.getString(
+					"itracker.activity.relation.add", new Object[] {
+							IssueUtilities.getRelationName(relationType),
+							relatedIssueId }));
 
 			activity.setIssue(issue);
 			issue.getActivities().add(activity);
@@ -958,11 +974,12 @@ public class IssueServiceImpl implements IssueService {
 
 			activity = new IssueActivity();
 			activity
-					.setActivityType(org.itracker.model.IssueActivityType.RELATION_ADDED);
+			.setActivityType(org.itracker.model.IssueActivityType.RELATION_ADDED);
 			activity.setDescription(ITrackerResources.getString(
-					"itracker.activity.relation.add",
-					new Object[] { IssueUtilities
-							.getRelationName(matchingRelationType), issueId }));
+					"itracker.activity.relation.add", new Object[] {
+							IssueUtilities
+							.getRelationName(matchingRelationType),
+							issueId }));
 			activity.setIssue(relatedIssue);
 			activity.setUser(user);
 			relatedIssue.getActivities().add(activity);
@@ -987,7 +1004,7 @@ public class IssueServiceImpl implements IssueService {
 		if (matchingRelationId != null) {
 			IssueActivity activity = new IssueActivity();
 			activity
-					.setActivityType(org.itracker.model.IssueActivityType.RELATION_REMOVED);
+			.setActivityType(org.itracker.model.IssueActivityType.RELATION_REMOVED);
 			activity.setDescription(ITrackerResources.getString(
 					"itracker.activity.relation.removed", issueId.toString()));
 			// FIXME need to fix the commented code and save
@@ -998,7 +1015,7 @@ public class IssueServiceImpl implements IssueService {
 
 		IssueActivity activity = new IssueActivity();
 		activity
-				.setActivityType(org.itracker.model.IssueActivityType.RELATION_REMOVED);
+		.setActivityType(org.itracker.model.IssueActivityType.RELATION_REMOVED);
 		activity.setDescription(ITrackerResources
 				.getString("itracker.activity.relation.removed", relatedIssueId
 						.toString()));
@@ -1006,7 +1023,7 @@ public class IssueServiceImpl implements IssueService {
 		// activity.setUser(userId);
 		// irHome.remove(relationId);
 		// need to save
-		
+
 		getIssueRelationDAO().delete(issueRelation);
 	}
 
@@ -1019,41 +1036,46 @@ public class IssueServiceImpl implements IssueService {
 	 */
 	public boolean assignIssue(Integer issueId, Integer userId,
 			Integer assignedByUserId) {
-	
-		
-		return assignIssue(getIssueDAO().findByPrimaryKey(issueId), getUserDAO().findByPrimaryKey(userId), getUserDAO().findByPrimaryKey(assignedByUserId), true);
+
+		return assignIssue(getIssueDAO().findByPrimaryKey(issueId),
+				getUserDAO().findByPrimaryKey(userId), getUserDAO()
+				.findByPrimaryKey(assignedByUserId), true);
 	}
+
 	/**
 	 * Only for use
+	 * 
 	 * @param issueId
 	 * @param userId
 	 * @param assignedByUserId
-	 * @param save save issue and send notification
+	 * @param save
+	 *            save issue and send notification
 	 * @return
 	 */
-	private boolean assignIssue(Issue issue, User user,
-			User assignedByUser, boolean save) {
+	private boolean assignIssue(Issue issue, User user, User assignedByUser,
+			boolean save) {
 
-		if (issue.getOwner() == user || (null != issue.getOwner() && issue.getOwner().equals(user))) {
+		if (issue.getOwner() == user
+				|| (null != issue.getOwner() && issue.getOwner().equals(user))) {
 			// nothing to do.
 			if (logger.isDebugEnabled()) {
-				logger.debug("assignIssue: attempted to reassign " + issue + " to current owner " + user);
+				logger.debug("assignIssue: attempted to reassign " + issue
+						+ " to current owner " + user);
 			}
 			return false;
 		}
-		
+
 		if (null == user) {
-			if (logger.isInfoEnabled()){
+			if (logger.isInfoEnabled()) {
 				logger.info("assignIssue: call to unasign " + issue);
 			}
-				
+
 			return unassignIssue(issue, assignedByUser, save);
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("assignIssue: assigning " + issue + " to " + user);
 		}
-
 
 		User currOwner = issue.getOwner();
 
@@ -1073,10 +1095,10 @@ public class IssueServiceImpl implements IssueService {
 
 			IssueActivity activity = new IssueActivity();
 			activity
-					.setActivityType(org.itracker.model.IssueActivityType.OWNER_CHANGE);
+			.setActivityType(org.itracker.model.IssueActivityType.OWNER_CHANGE);
 			activity.setDescription((currOwner == null ? "["
 					+ ITrackerResources
-							.getString("itracker.web.generic.unassigned") + "]"
+					.getString("itracker.web.generic.unassigned") + "]"
 					: currOwner.getLogin())
 					+ " "
 					+ ITrackerResources.getString("itracker.web.generic.to")
@@ -1088,15 +1110,16 @@ public class IssueServiceImpl implements IssueService {
 			issue.setOwner(user);
 
 			if (logger.isDebugEnabled()) {
-				logger.debug("assignIssue: current status: " + issue.getStatus());
+				logger.debug("assignIssue: current status: "
+						+ issue.getStatus());
 			}
 			if (issue.getStatus() < IssueUtilities.STATUS_ASSIGNED) {
 				issue.setStatus(IssueUtilities.STATUS_ASSIGNED);
 				if (logger.isDebugEnabled()) {
-					logger.debug("assignIssue: new status set to " + issue.getStatus());
+					logger.debug("assignIssue: new status set to "
+							+ issue.getStatus());
 				}
 			}
-			
 
 			// send assignment notification
 			// TODO: configurationService should be set from context
@@ -1106,32 +1129,34 @@ public class IssueServiceImpl implements IssueService {
 				}
 				getIssueDAO().saveOrUpdate(issue);
 				notificationService.sendNotification(issue, Type.ASSIGNED,
-					ServletContextUtils.getItrackerServices()
-							.getConfigurationService().getSystemBaseURL());
-				
+						ServletContextUtils.getItrackerServices()
+						.getConfigurationService().getSystemBaseURL());
+
 			}
 		}
 		return true;
 
 	}
 
-
 	/**
 	 * 
 	 * @param issue
 	 * @param unassignedByUser
-	 * @param save save issue and send notification
+	 * @param save
+	 *            save issue and send notification
 	 * @return
 	 */
-	private boolean unassignIssue(Issue issue, User unassignedByUser, boolean save) {
+	private boolean unassignIssue(Issue issue, User unassignedByUser,
+			boolean save) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("unassignIssue: " + issue);
 		}
 		if (issue.getOwner() != null) {
 
 			if (logger.isDebugEnabled()) {
-				logger.debug("unassignIssue: unassigning from " + issue.getOwner());
-			} 
+				logger.debug("unassignIssue: unassigning from "
+						+ issue.getOwner());
+			}
 			if (!notificationService.hasIssueNotification(issue, issue
 					.getOwner().getId(), Role.CONTRIBUTER)) {
 				// Notification notification = new Notification();
@@ -1143,14 +1168,14 @@ public class IssueServiceImpl implements IssueService {
 			IssueActivity activity = new IssueActivity(issue, unassignedByUser,
 					IssueActivityType.OWNER_CHANGE);
 			activity
-					.setDescription(issue.getOwner().getLogin()
-							+ " "
-							+ ITrackerResources
-									.getString("itracker.web.generic.to")
-							+ " ["
-							+ ITrackerResources
-									.getString("itracker.web.generic.unassigned")
-							+ "]");
+			.setDescription(issue.getOwner().getLogin()
+					+ " "
+					+ ITrackerResources
+					.getString("itracker.web.generic.to")
+					+ " ["
+					+ ITrackerResources
+					.getString("itracker.web.generic.unassigned")
+					+ "]");
 
 			issue.setOwner(null);
 
@@ -1162,18 +1187,21 @@ public class IssueServiceImpl implements IssueService {
 					logger.debug("unassignIssue: saving unassigned issue..");
 				}
 				getIssueDAO().saveOrUpdate(issue);
-				notificationService.sendNotification(issue, Type.ASSIGNED, ServletContextUtils.getItrackerServices().getConfigurationService().getSystemBaseURL());
+				notificationService.sendNotification(issue, Type.ASSIGNED,
+						ServletContextUtils.getItrackerServices()
+						.getConfigurationService().getSystemBaseURL());
 			}
 		}
-		
+
 		return true;
 	}
 
 	/**
-	 * System-Update an issue, adds the action to the issue and updates the issue
+	 * System-Update an issue, adds the action to the issue and updates the
+	 * issue
 	 */
 	public Issue systemUpdateIssue(Issue updateissue, Integer userId)
-			throws ProjectException {
+	throws ProjectException {
 
 		IssueActivity activity = new IssueActivity();
 		activity.setActivityType(IssueActivityType.SYSTEM_UPDATE);
@@ -1245,7 +1273,7 @@ public class IssueServiceImpl implements IssueService {
 		}
 
 		Collection<IssueActivity> activity = getIssueActivityDAO()
-				.findByIssueId(issueId);
+		.findByIssueId(issueId);
 
 		for (Iterator<IssueActivity> iter = activity.iterator(); iter.hasNext();) {
 
@@ -1265,14 +1293,14 @@ public class IssueServiceImpl implements IssueService {
 	 */
 	public boolean addIssueAttachment(IssueAttachment attachment, byte[] data) {
 		Issue issue = attachment.getIssue();
-//		User user = attachment.getUser();
+		// User user = attachment.getUser();
 
 		attachment.setFileName("attachment_issue_" + issue.getId() + "_"
 				+ attachment.getOriginalFileName());
 		attachment.setFileData((data == null ? new byte[0] : data));
 
-//		attachment.setIssue(issue);
-//		attachment.setUser(user);
+		// attachment.setIssue(issue);
+		// attachment.setUser(user);
 
 		// TODO: activity for adding attachment?
 		// IssueActivity activityAdd = new IssueActivity(attachment.getIssue(),
@@ -1295,7 +1323,7 @@ public class IssueServiceImpl implements IssueService {
 		if (attachmentId != null && data != null) {
 
 			IssueAttachment attachment = getIssueAttachmentDAO()
-					.findByPrimaryKey(attachmentId);
+			.findByPrimaryKey(attachmentId);
 
 			attachment.setFileData(data);
 
@@ -1312,7 +1340,7 @@ public class IssueServiceImpl implements IssueService {
 		if (fileName != null && data != null) {
 
 			IssueAttachment attachment = getIssueAttachmentDAO()
-					.findByFileName(fileName);
+			.findByFileName(fileName);
 
 			attachment.setFileData(data);
 
@@ -1333,7 +1361,7 @@ public class IssueServiceImpl implements IssueService {
 	public boolean removeIssueAttachment(Integer attachmentId) {
 
 		IssueAttachment attachementBean = this.getIssueAttachmentDAO()
-				.findByPrimaryKey(attachmentId);
+		.findByPrimaryKey(attachmentId);
 
 		getIssueAttachmentDAO().delete(attachementBean);
 
@@ -1348,19 +1376,19 @@ public class IssueServiceImpl implements IssueService {
 
 			history.setStatus(IssueUtilities.HISTORY_STATUS_REMOVED);
 
-//	      moved date stuff to BaseHibernateDAO
-//			history.setLastModifiedDate(new Timestamp(new Date().getTime()));
+			// moved date stuff to BaseHibernateDAO
+			// history.setLastModifiedDate(new Timestamp(new Date().getTime()));
 
 			IssueActivity activity = new IssueActivity();
 			activity
-					.setActivityType(org.itracker.model.IssueActivityType.REMOVE_HISTORY);
+			.setActivityType(org.itracker.model.IssueActivityType.REMOVE_HISTORY);
 			activity.setDescription(ITrackerResources
 					.getString("itracker.web.generic.entry")
 					+ " "
 					+ entryId
 					+ " "
 					+ ITrackerResources
-							.getString("itracker.web.generic.removed") + ".");
+					.getString("itracker.web.generic.removed") + ".");
 
 			getIssueHistoryDAO().delete(history);
 
@@ -1389,7 +1417,7 @@ public class IssueServiceImpl implements IssueService {
 		Collection<Component> components = issue.getComponents();
 
 		for (Iterator<Component> iterator = components.iterator(); iterator
-				.hasNext();) {
+		.hasNext();) {
 			componentIds.add(((Component) iterator.next()).getId());
 		}
 
@@ -1406,7 +1434,7 @@ public class IssueServiceImpl implements IssueService {
 		Collection<Version> versions = issue.getVersions();
 
 		for (Iterator<Version> iterator = versions.iterator(); iterator
-				.hasNext();) {
+		.hasNext();) {
 
 			versionIds.add(((Version) iterator.next()).getId());
 
@@ -1421,12 +1449,12 @@ public class IssueServiceImpl implements IssueService {
 		int i = 0;
 
 		Collection<IssueActivity> activity = getIssueActivityDAO()
-				.findByIssueId(issueId);
+		.findByIssueId(issueId);
 
 		IssueActivity[] activityArray = new IssueActivity[activity.size()];
 
 		for (Iterator<IssueActivity> iterator = activity.iterator(); iterator
-				.hasNext(); i++) {
+		.hasNext(); i++) {
 
 			activityArray[i] = ((IssueActivity) iterator.next());
 
@@ -1444,15 +1472,13 @@ public class IssueServiceImpl implements IssueService {
 
 		int i = 0;
 
-		
-
 		Collection<IssueActivity> activity = getIssueActivityDAO()
-				.findByIssueIdAndNotification(issueId, notificationSent);
+		.findByIssueIdAndNotification(issueId, notificationSent);
 
 		IssueActivity[] activityArray = new IssueActivity[activity.size()];
 
 		for (Iterator<IssueActivity> iterator = activity.iterator(); iterator
-				.hasNext(); i++) {
+		.hasNext(); i++) {
 
 			activityArray[i] = ((IssueActivity) iterator.next());
 
@@ -1461,7 +1487,6 @@ public class IssueServiceImpl implements IssueService {
 		return Arrays.asList(activityArray);
 
 	}
-
 
 	public Long getAllIssueAttachmentCount() {
 		return getIssueAttachmentDAO().countAll().longValue();
@@ -1482,7 +1507,6 @@ public class IssueServiceImpl implements IssueService {
 
 		return attachments;
 	}
-
 
 	public IssueAttachment getIssueAttachment(Integer attachmentId) {
 		IssueAttachment attachment = getIssueAttachmentDAO().findByPrimaryKey(
@@ -1527,28 +1551,25 @@ public class IssueServiceImpl implements IssueService {
 	 * 
 	 * @param issueId
 	 * 
-	 * the id of the issue to return the history entry for.
+	 *            the id of the issue to return the history entry for.
 	 * 
-	 * @return the latest IssueHistory, or null if no entries could be
-	 * found
+	 * @return the latest IssueHistory, or null if no entries could be found
 	 */
 	public IssueHistory getLastIssueHistory(Integer issueId) {
 
-		List<IssueHistory> history = getIssueHistoryDAO().findByIssueId(
-				issueId);
+		List<IssueHistory> history = getIssueHistoryDAO()
+		.findByIssueId(issueId);
 
 		if (null != history && history.size() > 0) {
-//			sort ascending by id
+			// sort ascending by id
 			Collections.sort(history, AbstractEntity.ID_COMPARATOR);
-//			return last entry in list
-			return history.get(history.size() -1);
+			// return last entry in list
+			return history.get(history.size() - 1);
 		}
-		
+
 		return null;
 
 	}
-
-
 
 	public int getOpenIssueCountByProjectId(Integer projectId) {
 
@@ -1582,14 +1603,12 @@ public class IssueServiceImpl implements IssueService {
 
 	}
 
-
-
 	public boolean canViewIssue(Integer issueId, User user) {
 
 		Issue issue = getIssue(issueId);
 
 		Map<Integer, Set<PermissionType>> permissions = getUserDAO()
-				.getUsersMapOfProjectsAndPermissionTypes(user);
+		.getUsersMapOfProjectsAndPermissionTypes(user);
 
 		return IssueUtilities.canViewIssue(issue, user.getId(), permissions);
 
@@ -1598,7 +1617,7 @@ public class IssueServiceImpl implements IssueService {
 	public boolean canViewIssue(Issue issue, User user) {
 
 		Map<Integer, Set<PermissionType>> permissions = getUserDAO()
-				.getUsersMapOfProjectsAndPermissionTypes(user);
+		.getUsersMapOfProjectsAndPermissionTypes(user);
 
 		return IssueUtilities.canViewIssue(issue, user.getId(), permissions);
 
@@ -1662,6 +1681,5 @@ public class IssueServiceImpl implements IssueService {
 	public Long totalSystemIssuesAttachmentSize() {
 		return getIssueAttachmentDAO().totalAttachmentsSize();
 	}
-
 
 }
