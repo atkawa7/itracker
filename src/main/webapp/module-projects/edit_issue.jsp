@@ -196,7 +196,9 @@
 		<c:when test="${ hasFullEdit }">
         <html:select property="severity" styleClass="editColumnText">
             <c:forEach items="${ fieldSeverity }" var="severity" varStatus="status">
-                <html:option value="${ severity.value }"styleClass="editColumnText">${ severity.name }</html:option>
+            <html:option value="${ severity.value }"styleClass="editColumnText">
+            ${ severity.name }
+			</html:option>
             </c:forEach>
         </html:select>
 		</c:when>
