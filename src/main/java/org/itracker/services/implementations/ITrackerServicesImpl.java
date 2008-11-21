@@ -19,6 +19,9 @@ import org.itracker.services.util.EmailService;
  * @author ricardow
  *
  */
+
+//TODO: Cleanup this file, go through all issues, todos, etc.
+
 public class ITrackerServicesImpl implements ITrackerServices {
     
     private IssueService issueService;
