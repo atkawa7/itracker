@@ -357,7 +357,7 @@
 							src="/themes/defaulttheme/images/edit.gif"
 							altKey="itracker.web.image.edit.version.alt"
 							arg0="${version.number}"
-							textActionKey="itracker.web.image.edit.texttag" /></td>
+							textActionKey="itracker.web.image.create.texttag" /></td>
 						<td></td>
 						<td>${version.number}</td>
 						<td>${version.description}</td>
