@@ -26,12 +26,14 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.itracker.model.Report;
 import org.itracker.services.ReportService;
  
 
 public class ReportDownloadController extends GenericController {
  
+	private static final Logger logger = Logger.getLogger(ReportDownloadController.class);
     /**
 	 * 
 	 */

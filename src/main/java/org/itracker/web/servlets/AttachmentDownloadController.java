@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
@@ -40,6 +41,7 @@ import org.itracker.services.IssueService;
  */
 public class AttachmentDownloadController extends GenericController {
 
+	private static final Logger logger = Logger.getLogger(AttachmentDownloadController.class);
     /**
 	 * 
 	 */
