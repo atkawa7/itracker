@@ -55,7 +55,7 @@
 
 		<tr
 			class="${ i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded' }"
-			style="${ project.active ? ( project.viewable ? 'color: yellow' : ''): 'color: red' }">
+			style="${ project.active ? '':  project.viewable ? 'color: orange' : 'color: red' }">
 
 			<td>
 				<it:formatImageAction action="editprojectform"
