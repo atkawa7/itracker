@@ -59,6 +59,8 @@ import org.itracker.web.util.ServletContextUtils;
 
 public class NotificationServiceImpl implements NotificationService {
 
+	// TODO: Cleanup this file, go through all issues, todos, etc.
+	
 	private EmailService emailService;
 	private NotificationDAO notificationDao;
 	private ProjectService projectService;
@@ -439,6 +441,7 @@ public class NotificationServiceImpl implements NotificationService {
 	 * @param type
 	 * @param url
 	 */
+	
 	@SuppressWarnings("unused")
 	private void handleLocalizedIssueNotification(final Issue issue, final Type type, final String url,
 			final InternetAddress[] receipients, Integer lastModifiedDays) {
