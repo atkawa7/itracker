@@ -64,6 +64,9 @@ import org.jfree.util.Log;
  *
  * @see ConfigurationService
  */
+
+// TODO: Cleanup this file, go through all issues, todos, etc.
+
 public class ConfigurationServiceImpl implements ConfigurationService {
     
     private static final Logger logger = Logger.getLogger(ConfigurationServiceImpl.class.getName());
