@@ -20,7 +20,6 @@ package org.itracker.services.implementations;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,7 +30,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
-import org.hibernate.exception.GenericJDBCException;
 import org.itracker.model.Issue;
 import org.itracker.model.Permission;
 import org.itracker.model.PermissionType;
