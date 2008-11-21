@@ -79,7 +79,6 @@ public class ListIssuesAction extends ItrackerBaseAction {
 	
 	public static final String FWD_LIST_ISSUES = "list_issues";
 	
-    @SuppressWarnings("unchecked")
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
