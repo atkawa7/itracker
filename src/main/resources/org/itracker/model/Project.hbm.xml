@@ -66,13 +66,13 @@
             </key>
             <one-to-many class="org.itracker.model.Issue"/>
         </bag-->
-        
-        <bag name="permissions" table="permissionbean" cascade="all" lazy="true">
+        <!-- should be a set, not list -->
+        <set name="permissions" table="permissionbean" cascade="all" lazy="true">
             <key>
                 <column name="project_id"/>
             </key>
             <one-to-many class="Permission"/>
-        </bag>
+        </set>
         
         <bag name="owners" table="project_owner_rel" lazy="true">
             <key>
