@@ -21,7 +21,6 @@ import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.UserUtilities;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.transaction.annotation.Transactional;
 
 public class UserServiceImplTest extends AbstractDependencyInjectionTest {
 
