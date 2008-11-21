@@ -13,19 +13,20 @@
             <generator class="native"/>
         </id>
 
-        <property name="permissionType" index="permisionTypeIdx">
-            <column name="permission_type" not-null="true"/>
-        </property>
-
-        <many-to-one name="project" class="Project" lazy="false">
-            <!-- May be null to indicate a permission on all projects. -->
-            <column name="project_id"/>
-        </many-to-one>
-
-        <many-to-one name="user" class="User" lazy="false">
-            <column name="user_id" not-null="true"/>
-        </many-to-one>
-
+		<natural-id mutable="false">
+	        <property not-null="true" name="permissionType" index="permisionTypeIdx">
+	            <column name="permission_type" not-null="true"/>
+	        </property>
+	
+	        <many-to-one not-null="true" name="project" class="Project" lazy="false">
+	            <!-- May be null to indicate a permission on all projects. -->
+	            <column name="project_id"/>
+	        </many-to-one>
+	
+	        <many-to-one not-null="true" name="user" class="User" lazy="false">
+	            <column name="user_id" not-null="true"/>
+	        </many-to-one>
+		</natural-id>
         <property name="createDate" update="false">
             <column name="create_date" sql-type="timestamp" not-null="true"/>
         </property>
