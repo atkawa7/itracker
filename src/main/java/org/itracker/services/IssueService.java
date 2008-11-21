@@ -186,6 +186,7 @@ public interface IssueService {
     
     boolean removeIssueAttachment(Integer attachmentId);
     
+    //TODO: shall we deprecate this one? why do we need to give it a userId?
     Integer removeIssueHistoryEntry(Integer entryId, Integer userId);
     
     void removeIssueRelation(Integer relationId, Integer userId);
