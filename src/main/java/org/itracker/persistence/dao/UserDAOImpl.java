@@ -1,8 +1,11 @@
 package org.itracker.persistence.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -194,7 +197,7 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
 
     }
 
-    private boolean isSamePermission(List<Permission> permissions, Integer[] permissionTypes) {
+    private boolean isSamePermission(Collection<Permission> permissions, Integer[] permissionTypes) {
 
         boolean retVal = true;
 
@@ -202,13 +205,17 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
             return false;
         }
 
-        for( int i = 0; i < permissions.size(); i++ ) {
+        Iterator<Permission> permsIt = permissions.iterator();
+        while (permsIt.hasNext()) {
 
             boolean found = false;
-            Permission permission = permissions.get(i);
+            Permission permission = permsIt.next();
 
-            for( int j = 0; j < permissionTypes.length; j++ ) {
-                if( permission.getPermissionType() == permissionTypes[i] ) {
+
+            Iterator<Integer> pTypesIt = Arrays.asList(permissionTypes).iterator();
+            while (pTypesIt.hasNext()) {
+				
+                if (pTypesIt.next().equals(permission.getPermissionType())) {
                     found = true;
                     break;
                 }
