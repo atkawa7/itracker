@@ -9,7 +9,7 @@ public class IssueActivityTypeTest {
 	
 	@Test
 	public void testForCode(){
-		// TODO: Remove call to deprecated code
+		// TODO: Remove call to depreciated code
 		assertEquals(IssueActivityType.ISSUE_CREATED, IssueActivityType.forCode(1));
 		assertEquals(IssueActivityType.STATUS_CHANGE, IssueActivityType.forCode(2));
 		assertEquals(IssueActivityType.OWNER_CHANGE, IssueActivityType.forCode(3));
