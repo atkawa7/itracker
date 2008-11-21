@@ -139,6 +139,7 @@ public class ApplicationInitialization {
                         throw new IOException(
                                 "The number of bytes read from the file, did not match the size of the file.");
                     }
+                    //FIXME: Null pointer access: The variable issueService can only be null at this location. 
                     if (issueService.setIssueAttachmentData(attachments[i].getName(), data)) {
                         // attachments[i].delete();
                         logger.debug("Successfully moved attachment " + attachments[i].getName()
