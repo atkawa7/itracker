@@ -204,8 +204,8 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     }
                     
                     if(! creatorPresent) {
-                        List<Permission> creatorpermissions = issue.getCreator().getPermissions();
-                        for ( Iterator premIterator = creatorpermissions.iterator(); premIterator.hasNext(); ) {
+                        Iterator premIterator = issue.getCreator().getPermissions().iterator();
+                        while (premIterator.hasNext()) {
                             Permission creatorPermission = (Permission) premIterator.next();
                             if ( creatorPermission.getPermissionType() == UserUtilities.PERMISSION_EDIT_USERS ) {
                                 possibleIssueOwners.add(userService.getUser(issue.getCreator().getId()));
