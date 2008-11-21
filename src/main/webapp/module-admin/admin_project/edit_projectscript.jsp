@@ -44,7 +44,7 @@
             <br>
 	</logic:messagesPresent>
 
-	<html:form action="/editprojectscript">
+	<html:form action="/editprojectscript" acceptCharset="UTF-8" enctype="multipart/form-data">
             <html:hidden property="action"/>
             <html:hidden property="projectId"/>
             <table border="0" cellspacing="0" cellspacing="1"  width="80%">

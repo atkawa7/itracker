@@ -24,7 +24,7 @@
 
 <table>
 	<tr>
-		<td><html:form action="/editproject">
+		<td><html:form action="/editproject" acceptCharset="UTF-8" enctype="multipart/form-data">
 			<html:hidden property="action" />
 			<html:hidden property="id" />
 

@@ -22,7 +22,7 @@
         <br>
       </logic:messagesPresent>
 
-<html:form action="/editcomponent">
+<html:form action="/editcomponent" acceptCharset="UTF-8" enctype="multipart/form-data">
     <html:hidden property="action"/>
     <html:hidden property="projectId"/>
     <html:hidden property="id"/>
