@@ -154,7 +154,7 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		Project project = projectService.getProject(2);
 		Assert.assertNotNull("project not found", project.getId());
 
-		// FIXME component exists but fails to delete
+		// FIXME: component exists but fails to delete
 		assertTrue(projectService.removeProjectComponent(project.getId(), 2));
 	}
 
@@ -165,8 +165,7 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		Project project = projectService.getProject(2);
 		Assert.assertNotNull("project not found", project.getId());
 
-		// FIXME Invalid component Id, so it should fail and it does but why throws an
-		// exception
+		// FIXME: Invalid component Id, so it should fail and it does but why throws an exception
 		assertFalse(projectService.removeProjectComponent(project.getId(), 89));
 	}
 
