@@ -56,7 +56,11 @@ import org.itracker.web.util.ServletContextUtils;
  */
 public abstract class GenericController extends HttpServlet {
     
-    protected final Logger logger;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	protected final Logger logger;
     
     public GenericController() {
         this.logger = Logger.getLogger(getClass());
