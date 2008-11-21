@@ -121,9 +121,10 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		Assert.assertEquals("addProjectComponent", savedComponent
 				.getDescription(), component.getDescription());
 
-		assertTrue("date modified", savedComponent.getLastModifiedDate().after(
-				then));
-		assertTrue("date created", savedComponent.getCreateDate().after(then));
+
+
+		assertTrue("date modified", savedComponent.getLastModifiedDate().compareTo(then) >= 0);
+		assertTrue("date created", savedComponent.getCreateDate().compareTo(then) >= 0);
 		assertEquals("parent project", project, savedComponent.getProject());
 
 		then = new Date();
