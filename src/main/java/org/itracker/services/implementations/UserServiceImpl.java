@@ -20,6 +20,7 @@ package org.itracker.services.implementations;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,8 +28,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
+import org.hibernate.exception.GenericJDBCException;
 import org.itracker.model.Issue;
 import org.itracker.model.Permission;
 import org.itracker.model.PermissionType;
@@ -452,7 +455,8 @@ public class UserServiceImpl implements UserService {
 
         try {
             User user = userDAO.findByPrimaryKey(userId);
-            user.setPermissions(permissions);
+            user.getPermissions().addAll(permissions);
+//            user.setPermissions(permissions);
             try {
                 PluggableAuthenticator authenticator = (PluggableAuthenticator) authenticatorClass.newInstance();
                 if (authenticator != null) {
@@ -524,65 +528,59 @@ public class UserServiceImpl implements UserService {
     	return null;
     }
     
-    public boolean setUserPermissions(Integer userId, List<Permission> newPermissions) {
-        boolean successful = true;
-        List<Permission> delPermissions = new ArrayList<Permission>();
-        List<Permission> addPermissions = new ArrayList<Permission>();
+    /**
+     * @param userId - id of update-user
+     * @param newPermissions - set of new permissions for this user
+     */
+    public boolean setUserPermissions(final Integer userId, final List<Permission> newPermissions) {
 
+        boolean hasChanges = false;
+        // rewriting this method
+        
+        TreeSet<Permission> pSet = new TreeSet<Permission>(Permission.PERMISSION_PROPERTIES_COMPARATOR);
+        pSet.addAll(newPermissions);
+        
 
-        try {
-            User usermodel = this.getUser(userId);
-            List<Permission> setPermissions = this.getUserPermissionsLocal(usermodel); // get assigned permissions from database
+        User usermodel = this.getUser(userId);
+        
+        Set<Permission> current = new TreeSet<Permission>(Permission.PERMISSION_PROPERTIES_COMPARATOR);
+        
+        current.addAll(usermodel.getPermissions());
+        
+        // setup permissions to be removed
+        Set<Permission> remove = new TreeSet<Permission>(Permission.PERMISSION_PROPERTIES_COMPARATOR);
+        remove.addAll(current);
+        remove.removeAll(pSet);
+        // setup permissions to be added
+        Set<Permission> add = new TreeSet<Permission>(Permission.PERMISSION_PROPERTIES_COMPARATOR);
+        add.addAll(pSet);
+        add.removeAll(current);
 
-            if (!setPermissions.isEmpty() && !newPermissions.isEmpty()) {
-                for (Iterator<Permission> setPerms = setPermissions.iterator(); setPerms.hasNext();) {
-                    Permission permission = setPerms.next();
-                    if (null == find(newPermissions, permission)) {
-                        delPermissions.add(permission);                    	
-                    }
-                }
-                for (Iterator<Permission> newPerms = newPermissions.iterator(); newPerms.hasNext();) {
-                    Permission permission = newPerms.next();
-                    if (null == find(setPermissions, permission)) {
-                        addPermissions.add(permission);
-                    }
-                }
-            } else if (!setPermissions.isEmpty() && newPermissions.isEmpty()) {
-                for (Iterator<Permission> setPerms = setPermissions.iterator(); setPerms.hasNext();) {
-                    Permission delpermission = setPerms.next();
-                    delPermissions.add(delpermission);
-                }
-            } else {
-                for (Iterator<Permission> newPerms = newPermissions.iterator(); newPerms.hasNext();) {
-                    Permission addpermission = newPerms.next();
-                    if (null == find(setPermissions, addpermission)) {
-                    	addPermissions.add(addpermission);
-                    }
-                }
-            }
-
-            // finally create all newPermissions which do not exist yet
-            if (!delPermissions.isEmpty()) {
-                for (Iterator<Permission> iterator = delPermissions.iterator(); iterator.hasNext();) {
-                    Permission permission = (Permission) iterator.next();
-//                    usermodel.getPermissions().remove(permission);
-                    permissionDAO.delete(permission);
-                }
-            }
-            if (!addPermissions.isEmpty()) {
-                for (Iterator<Permission> iterator = addPermissions.iterator(); iterator.hasNext();) {
-                    Permission permission = (Permission) iterator.next();
-//                    usermodel.getPermissions().add(permission);
-                    permissionDAO.saveOrUpdate(permission);
-                }
-            }
-
-        } catch (AuthenticatorException ae) {
-            logger.warn("Error setting user (" + userId + ") permissions.  AuthenticatorException.", ae);
-            successful = false;
+        // look permission
+        Permission p;
+        Iterator<Permission> pIt = remove.iterator();
+        while (pIt.hasNext()) {
+			p = (Permission) pIt.next();
+			if (usermodel.getPermissions().remove(find(usermodel.getPermissions(), p))) {
+				permissionDAO.delete(p);
+				hasChanges = true;
+			}
+		}
+        
+        pIt = add.iterator();
+        while (pIt.hasNext()) {
+			p = pIt.next();
+			if (usermodel.getPermissions().add(p)) {
+				permissionDAO.save(p);
+				hasChanges = true;
+			}
+		}
+        
+        if (hasChanges) {
+        	userDAO.saveOrUpdate(usermodel);
         }
-
-        return successful;
+        
+        return hasChanges;
     }
 
     public boolean removeUserPermissions(Integer userId, List<Permission> newPermissions) {
