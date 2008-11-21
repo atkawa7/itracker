@@ -137,32 +137,38 @@ public class EditProjectAction extends ItrackerBaseAction {
 
 				project = projectService.createProject(project, user.getId());
 
-				// get the initial project members from create-form
-				Set<Integer> userIds = new HashSet<Integer>(Arrays
-						.asList((Integer[]) PropertyUtils.getSimpleProperty(
-								form, "users")));
-
-				// get the  permissions-set for initial project members
-				Integer[] permissionArray = (Integer[]) PropertyUtils.getSimpleProperty(form, "permissions");
-				Set<Integer> permissions = null == permissionArray ? new HashSet<Integer>(0): 
-					new HashSet<Integer>(Arrays.asList(permissionArray));
-
-				// if admin-permission is selected, all permissions will be granted and users added as project owners
-				if (permissions.contains(UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
-					ownerIds.addAll(userIds);
-				} else {
-					// handle special initial user-/permissions-set
-					handleInitialProjectMembers(project, userIds, permissions,
-							projectService, userService);
+				//Fix Defect 2320871 - Handle Empty Users List- Nour Kamal
+				Integer[] users = (Integer[]) PropertyUtils.getSimpleProperty(form, "users");
+				if (users != null)
+				{
+					// get the initial project members from create-form
+					Set<Integer> userIds = new HashSet<Integer>(Arrays
+							.asList(users));
+					// get the  permissions-set for initial project members
+					Integer[] permissionArray = (Integer[]) PropertyUtils.getSimpleProperty(form, "permissions");
+					Set<Integer> permissions = null == permissionArray ? new HashSet<Integer>(0): 
+						new HashSet<Integer>(Arrays.asList(permissionArray));
+	
+					// if admin-permission is selected, all permissions will be granted and users added as project owners
+					if (permissions.contains(UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
+						ownerIds.addAll(userIds);
+					} else {
+						// handle special initial user-/permissions-set
+						handleInitialProjectMembers(project, userIds, permissions,
+								projectService, userService);
+					}
+	
+					// set project owners with all permissions
+					updateProjectOwners(project, ownerIds, projectService, userService);
 				}
-
-				// set project owners with all permissions
-				updateProjectOwners(project, ownerIds, projectService, userService);
-				
+				//End Fix Defect
 				if (log.isDebugEnabled()) {
 					log.debug("execute: updating new project: " + project);
 				}
 				project = projectService.updateProject(project, user.getId());
+
+
+				
 
 			} else if ("update".equals(action)) {
 
