@@ -21,6 +21,8 @@ package org.itracker.model;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -64,7 +66,8 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 	private UserPreferences userPreferences;
 
 	/** The Permissions of this User on all Projects. */
-	private List<Permission> permissions = new ArrayList<Permission>();
+	// TODO: it would be a Set, not list
+	private Set<Permission> permissions = new TreeSet<Permission>(Permission.PERMISSION_PROPERTIES_COMPARATOR);
 
 	/** The Projects owned by this User. */
 	private List<Project> projects = new ArrayList<Project>();
@@ -205,11 +208,11 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 		this.email = email;
 	}
 
-	public List<Permission> getPermissions() {
+	public Set<Permission> getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(List<Permission> getPermissions) {
+	public void setPermissions(Set<Permission> getPermissions) {
 		this.permissions = getPermissions;
 	}
 

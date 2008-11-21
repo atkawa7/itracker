@@ -22,6 +22,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -85,7 +87,8 @@ public class Project extends AbstractEntity implements Comparable<Entity> {
 	 * 
 	 * PENDING: Does this relationship need to be navigatable ?
 	 */
-	private List<Permission> permissions = new ArrayList<Permission>();
+	// TODO: it would be a Set, not list
+	private Set<Permission> permissions = new TreeSet<Permission>(Permission.PERMISSION_PROPERTIES_COMPARATOR);
 
 	/**
 	 * The Users who are responsible for this Project.
@@ -214,11 +217,11 @@ public class Project extends AbstractEntity implements Comparable<Entity> {
 		this.owners = getOwners;
 	}
 
-	public List<Permission> getPermissions() {
+	public Set<Permission> getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(List<Permission> getPermissions) {
+	public void setPermissions(Set<Permission> getPermissions) {
 		this.permissions = getPermissions;
 	}
 
