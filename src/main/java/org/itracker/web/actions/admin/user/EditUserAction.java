@@ -47,6 +47,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.SessionManager;
 
 
@@ -182,25 +183,28 @@ public class EditUserAction extends ItrackerBaseAction {
                 List<Permission> newPermissions = new ArrayList<Permission>();
                 
                 
-                for (Iterator<String> iter = permissionsMap.keySet().iterator(); iter.hasNext(); ) {
+                Iterator<String> iter = permissionsMap.keySet().iterator();
+                while (iter.hasNext()) {
                     String paramName = iter.next();
                     Integer projectIntValue =  new Integer(paramName.substring(paramName.lastIndexOf('j') + 1));
                     Project project = projectService.getProject(projectIntValue);
                     Integer permissionIntValue = Integer.parseInt(paramName.substring(4,paramName.lastIndexOf('P')));
                     Permission newPermission = new Permission(permissionIntValue, editUser, project); 
                     newPermission.setCreateDate(new Date());
-                    newPermissions.add(newPermission); 
+                    newPermissions.add(newPermission);
                 
                     if ( permissionIntValue == UserUtilities.PERMISSION_PRODUCT_ADMIN ) {
                         List<User> users = projectService.getProjectOwners(projectIntValue);
                         HashSet<Integer> owners = new HashSet<Integer>();
-                        for ( Iterator<User> userIterator = users.iterator(); userIterator.hasNext(); ) {
-                            User user = userIterator.next();
+                        Iterator<User> userIterator = users.iterator();
+                        User user;
+                        while (userIterator.hasNext()) {
+                            user = userIterator.next();
                             owners.add(user.getId());
                         }
                         owners.add(editUser.getId());
-                        projectService.setProjectOwners(project,owners);
-                        projectService.updateProject(project, editUser.getId());
+                        projectService.setProjectOwners(project, owners);
+                        projectService.updateProject(project, LoginUtilities.getCurrentUser(request).getId());
                     }
                 }
                 
