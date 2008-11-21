@@ -47,6 +47,7 @@ import org.itracker.services.util.IssueUtilities;
 
 public class ProjectServiceImpl implements ProjectService {
 
+	//TODO: Cleanup this file, go through all issues, todos, etc.
 	//TODO: Add Javadocs here: document this whole class.
 	
 	private static final Logger logger = Logger.getLogger(ProjectService.class);
