@@ -11,18 +11,12 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 
 public class UnauthorizedAction extends ItrackerBaseAction {
 
-	/* forward name="unauthorized" path="null" */
 	private final static String UNAUTHORIZED = "unauthorized";
-
-	//  TODO: Action Cleanup
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-//		 super.executeAlways(mapping,form,request,response);
-		// TODO process request and return an ActionForward instance, for example:
-		// return mapping.findForward(UNAUTHORIZED);
-		// return null;
+		
 		 return mapping.findForward(UNAUTHORIZED);
 	}
 
