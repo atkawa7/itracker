@@ -1050,7 +1050,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         
     }
     
-    @SuppressWarnings("unchecked")
     public HashMap<String,List<String>> getAvailableLanguages() {
         
         HashMap<String,List<String>> languages = new HashMap<String,List<String>>();
