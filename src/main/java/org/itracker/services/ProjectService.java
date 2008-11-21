@@ -122,6 +122,12 @@ public interface ProjectService {
      */
     Project createProject(Project project, Integer userId);
     
+    /**
+     * update a project, as the user with userId
+     * @param project
+     * @param userId
+     * @return the updated project from Persistence
+     */
     Project updateProject(Project project, Integer userId);
     
 }
