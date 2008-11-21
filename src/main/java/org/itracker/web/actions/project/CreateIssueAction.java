@@ -74,6 +74,9 @@ import org.itracker.web.util.Constants;
  * @author ranks
  *
  */
+
+//  TODO: Action Cleanup
+
 public class CreateIssueAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(CreateIssueAction.class);
 
@@ -82,7 +85,6 @@ public class CreateIssueAction extends ItrackerBaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ActionMessages errors = new ActionMessages();
-		//  TODO: Action Cleanup
 
 		if (!isTokenValid(request)) {
 			log.info("execute: Invalid request token while creating issue.");
