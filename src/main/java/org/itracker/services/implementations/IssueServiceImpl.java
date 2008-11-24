@@ -385,7 +385,10 @@ public class IssueServiceImpl implements IssueService {
 
 			watchModel.setRole(Notification.Role.CONTRIBUTER);
 
-			notificationService.addIssueNotification(watchModel);
+			issue.getNotifications().add(watchModel);
+//			Does save issue after saving notificaton ->  not-null property references a null or transient value: org.itracker.model.Notification.issue
+//			Will be saved by cascade when saving issue
+//			notificationService.addIssueNotification(watchModel);
 
 		}
 
