@@ -19,6 +19,7 @@
 package org.itracker.services.implementations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -713,27 +714,21 @@ public class UserServiceImpl implements UserService {
             }
 
             if (logger.isDebugEnabled()) {
-                StringBuffer permissionsString = new StringBuffer("{ ");
-                for (int i = 0; i < permissionTypes.length; i++) {
-                    permissionsString.append(permissionTypes[i] + " ");
-                }
-                permissionsString.append("}");
-                logger.debug("Found " + userList.size() + " users with project " + projectId + " permissions "
-                        + permissionsString.toString() + (requireAll ? "[AllReq," : "[AnyReq,")
+                logger.debug("getUsersWithProjectPermission: Found " + userList.size() + " users with project " + projectId + " permissions "
+                        + Arrays.toString(permissionTypes) + (requireAll ? "[AllReq," : "[AnyReq,")
                         + (activeOnly ? "ActiveUsersOnly]" : "AllUsers]"));
             }
 
             // TODO : don't swallow exceptions!! MUST be propagated to the caller!!
         } catch (IllegalAccessException iae) {
-            logger.error("Authenticator class " + authenticatorClassName + " can not be instantiated.");
+            logger.error("getUsersWithProjectPermission: Authenticator class " + authenticatorClassName + " can not be instantiated.", iae);
         } catch (InstantiationException ie) {
-            logger.error("Authenticator class " + authenticatorClassName + " can not be instantiated.");
+            logger.error("getUsersWithProjectPermission: Authenticator class " + authenticatorClassName + " can not be instantiated.", ie);
         } catch (ClassCastException cce) {
-            logger.error("Authenticator class " + authenticatorClassName
-                    + " does not extend the PluggableAuthenticator class.");
+            logger.error("getUsersWithProjectPermission: Authenticator class " + authenticatorClassName
+                    + " does not extend the PluggableAuthenticator class.", cce);
         } catch (AuthenticatorException ae) {
-            logger.error("Authenticator exception: " + ae.getMessage());
-            logger.debug("Authenticator exception: ", ae);
+            logger.error("getUsersWithProjectPermission: Authenticator exception caught.", ae);
         }
 
         return userList;
