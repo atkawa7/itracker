@@ -41,7 +41,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <property name="transactionManager" ref="transactionManager" />
         <property name="transactionAttributes">
             <props>
-                <prop key="*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,-DataAccessException</prop>
             </props>
         </property>
         <property name="target" ref="issueSearchServiceTarget" />
@@ -62,7 +62,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <property name="transactionManager" ref="transactionManager" />
         <property name="transactionAttributes">
             <props>
-                <prop key="*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,-DataAccessException</prop>
             </props>
         </property>
         <property name="target" ref="configurationServiceTarget" />
@@ -95,7 +95,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <property name="transactionManager" ref="transactionManager" />
         <property name="transactionAttributes">
             <props>
-                <prop key="*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,-DataAccessException</prop>
             </props>
         </property>
         <property name="target" ref="issueServiceTarget" />
@@ -131,7 +131,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <property name="transactionManager" ref="transactionManager" />
         <property name="transactionAttributes">
             <props>
-                <prop key="*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,-DataAccessException</prop>
             </props>
         </property>
         <property name="target" ref="notificationServiceTarget" />
@@ -145,7 +145,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <property name="transactionManager" ref="transactionManager" />
         <property name="transactionAttributes">
             <props>
-                <prop key="*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,-DataAccessException</prop>
             </props>
         </property>
         <property name="target" ref="projectServiceTarget" />
@@ -168,7 +168,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <property name="transactionManager" ref="transactionManager" />
         <property name="transactionAttributes">
             <props>
-                <prop key="*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,-DataAccessException</prop>
             </props>
         </property>
         <property name="target" ref="userServiceTarget" />
@@ -193,7 +193,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <property name="transactionManager" ref="transactionManager" />
         <property name="transactionAttributes">
             <props>
-                <prop key="*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,-DataAccessException</prop>
             </props>
         </property>
         <property name="target" ref="reportServiceTarget" />
@@ -212,7 +212,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <property name="transactionManager" ref="transactionManager" />
         <property name="transactionAttributes">
             <props>
-                <prop key="*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,-DataAccessException</prop>
             </props>
         </property>
         <property name="target" ref="schedulerServiceTarget" />
@@ -238,7 +238,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <property name="transactionManager" ref="transactionManager" />
         <property name="transactionAttributes">
             <props>
-                <prop key="*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED,-DataAccessException</prop>
             </props>
         </property>
         <property name="target" ref="emailServiceTarget" />
