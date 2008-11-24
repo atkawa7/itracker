@@ -793,7 +793,6 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		issueService.removeIssueRelation(1, 2);
 		
 		issueRelation = issueRelationDAO.findByPrimaryKey(1); // issue 1-2 connection
-		System.out.println( "issueRelation = " + issueRelation );
 		assertNull("issueRelation", issueRelation);
 	}
 
