@@ -126,6 +126,7 @@ a.headerLinks:visited {
 }
 
 .footer {
+	clear:both;
 	font-weight: normal;
 	text-align: left;
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
@@ -133,7 +134,8 @@ a.headerLinks:visited {
 	color: black;
   background-color: white;
 	text-decoration: none;
-}
+		}
+	
 
 .listHeading {
 	font-weight: bold;
@@ -314,6 +316,7 @@ table.portalhomeMain {
   border-left-width: 2px;
   border-right-width: 2px;
   border-bottom-width: 2px;
+  
 }
 .smalltext {
   font-family: Verdana, Arial, sans-serif;
