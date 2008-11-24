@@ -51,6 +51,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
+import org.springframework.dao.DataAccessException;
 
 //  TODO: Action Cleanup
 
@@ -68,7 +69,9 @@ public class EditProjectAction extends ItrackerBaseAction {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.transaction"));
 			saveErrors(request, errors);
-			return mapping.findForward("listprojectsadmin");
+			saveToken(request);
+			return mapping.getInputForward();
+//			return mapping.findForward("listprojectsadmin");
 			
 		}
 		resetToken(request);
@@ -107,6 +110,16 @@ public class EditProjectAction extends ItrackerBaseAction {
 					"name"));
 			Integer projectStatus = (Integer) PropertyUtils.getSimpleProperty(
 					form, "status");
+			
+			String projectName = (String) PropertyUtils.getSimpleProperty(form,	"name");
+			if (projectService.isUniqueProjectName(projectName, project.getId())) {
+				project.setName(projectName);
+			} else {
+				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.project.duplicate.name"));
+//				throw new ProjectException(
+//						"Project already exist with this name.");
+			}
+			
 			if (projectStatus != null) {
 				project.setStatus(Status.valueOf(projectStatus));
 			} else {
@@ -131,78 +144,93 @@ public class EditProjectAction extends ItrackerBaseAction {
 			HashSet<Integer> ownerIds = null == ownersArray ? new HashSet<Integer>():
 				new HashSet<Integer>(Arrays.asList(ownersArray));
 
-			projectService.setProjectFields(project, fields);
-			
-			if ("create".equals(action)) {
-
-				project = projectService.createProject(project, user.getId());
-
-				//Fix Defect 2320871 - Handle Empty Users List- Nour Kamal
-				Integer[] users = (Integer[]) PropertyUtils.getSimpleProperty(form, "users");
-				if (users != null)
-				{
-					// get the initial project members from create-form
-					Set<Integer> userIds = new HashSet<Integer>(Arrays
-							.asList(users));
-					// get the  permissions-set for initial project members
-					Integer[] permissionArray = (Integer[]) PropertyUtils.getSimpleProperty(form, "permissions");
-					Set<Integer> permissions = null == permissionArray ? new HashSet<Integer>(0): 
-						new HashSet<Integer>(Arrays.asList(permissionArray));
+			if (errors.isEmpty()) {
+				if ("create".equals(action)) {
 	
-					// if admin-permission is selected, all permissions will be granted and users added as project owners
-					if (permissions.contains(UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
-						ownerIds.addAll(userIds);
-					} else {
-						// handle special initial user-/permissions-set
-						handleInitialProjectMembers(project, userIds, permissions,
-								projectService, userService);
+					project = projectService.createProject(project, user.getId());
+					
+					if (log.isDebugEnabled()) {
+						log.debug("execute: created new project: " + project);
 					}
 	
-					// set project owners with all permissions
+					Integer[] users = (Integer[]) PropertyUtils.getSimpleProperty(form, "users");
+					if (users != null)
+					{
+						// get the initial project members from create-form
+						Set<Integer> userIds = new HashSet<Integer>(Arrays
+								.asList(users));
+						// get the  permissions-set for initial project members
+						Integer[] permissionArray = (Integer[]) PropertyUtils.getSimpleProperty(form, "permissions");
+						Set<Integer> permissions = null == permissionArray ? new HashSet<Integer>(0): 
+							new HashSet<Integer>(Arrays.asList(permissionArray));
+		
+						// if admin-permission is selected, all permissions will be granted and users added as project owners
+						if (permissions.contains(UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
+							ownerIds.addAll(userIds);
+						} else {
+							// handle special initial user-/permissions-set
+							handleInitialProjectMembers(project, userIds, permissions,
+									projectService, userService);
+						}
+		
+						// set project owners with all permissions
+						updateProjectOwners(project, ownerIds, projectService, userService);
+					}
+	
+					if (log.isDebugEnabled()) {
+						log.debug("execute: updating new project: " + project);
+					}
+					project = projectService.updateProject(project, user.getId());
+	
+				} else if ("update".equals(action)) {
+	
 					updateProjectOwners(project, ownerIds, projectService, userService);
+					
+					if (log.isDebugEnabled()) {
+						log.debug("execute: updating existing project: " + project);
+					}
+					project = projectService.updateProject(project, user.getId());
 				}
-				//End Fix Defect
-				if (log.isDebugEnabled()) {
-					log.debug("execute: updating new project: " + project);
-				}
-				project = projectService.updateProject(project, user.getId());
-
-
 				
-
-			} else if ("update".equals(action)) {
-
-
-				updateProjectOwners(project, ownerIds, projectService, userService);
-				
-				if (log.isDebugEnabled()) {
-					log.debug("execute: updating existing project: " + project);
-				}
-				project = projectService.updateProject(project, user.getId());
+				session.removeAttribute(Constants.PROJECT_KEY);
 			}
-			session.removeAttribute(Constants.PROJECT_KEY);
+
+			if (errors.isEmpty()) {
+				projectService.setProjectFields(project, fields);
+				
+				session.removeAttribute(Constants.PROJECT_KEY);
+			}
 
 			if (errors.isEmpty()) {
 				if (log.isDebugEnabled()) {
 					log.debug("execute: sucess, forward to listprojectsadmin");
 				}
 				return mapping.findForward("listprojectsadmin");
+			} else {
+
+				saveErrors(request, errors);
+
+				saveToken(request);
+				return mapping.getInputForward();
 			}
-			
+				
+		} catch (DataAccessException dae) {
+			log.info("execute: Exception processing form data", dae);
+			throw dae;
 		} catch (RuntimeException e) {
-			log.error("Exception processing form data", e);
+			log.error("execute: Exception processing form data", e);
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.system"));
 		} catch (IllegalAccessException e) {
-			log.error("Exception processing form data", e);
+			log.error("execute: Exception processing form data", e);
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.system"));
 		} catch (InvocationTargetException e) {
-			log.error("Exception processing form data", e);
+			log.error("execute: Exception processing form data", e);
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.system"));
 		} catch (NoSuchMethodException e) {
-			log.error("Exception processing form data", e);
+			log.error("execute: Exception processing form data", e);
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.system"));
 		}
@@ -232,7 +260,7 @@ public class EditProjectAction extends ItrackerBaseAction {
 	private void handleInitialProjectMembers(Project project,
 			Set<Integer> userIds, Set<Integer> permissions,
 			ProjectService projectService, UserService userService) {
-		List<Permission> userPermissionModels = new ArrayList<Permission>();
+		Set<Permission> userPermissionModels;
 		if (userIds != null && permissions != null && userIds.size() > 0
 				&& permissions.size() > 0) {
 
@@ -244,20 +272,11 @@ public class EditProjectAction extends ItrackerBaseAction {
 			}
 
 			// process member-users
-			for (Iterator<User> iterator = users.iterator(); iterator.hasNext();) {
+			Iterator<User> iterator = users.iterator(); 
+			while (iterator.hasNext()) {
 				User usermodel = (User) iterator.next();
-				userPermissionModels = userService
-						.getUserPermissionsLocal(usermodel);
+				userPermissionModels = new HashSet<Permission>(userService.getUserPermissionsLocal(usermodel));
 
-				// remove all user permissions for current project
-//				Iterator<Permission> userPIterator = userPermissionModels
-//						.iterator();
-//				while (userPIterator.hasNext()) {
-//					Permission permission = (Permission) userPIterator.next();
-//					if (project.equals(permission.getProject())) {
-//						userPermissionModels.remove(permission);
-//					}
-//				}
 				// add all needed permissions
 				Iterator<Integer> permssionsIt = permissions.iterator();
 				while (permssionsIt.hasNext()) {
@@ -267,9 +286,9 @@ public class EditProjectAction extends ItrackerBaseAction {
 
 				// save the permissions
 				userService.setUserPermissions(usermodel.getId(),
-						userPermissionModels);
+						new ArrayList<Permission>(userPermissionModels));
 				userService.updateAuthenticator(usermodel.getId(),
-						userPermissionModels);
+						new ArrayList<Permission>(userPermissionModels));
 
 			}
 		}

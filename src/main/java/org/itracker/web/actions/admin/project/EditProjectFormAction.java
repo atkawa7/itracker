@@ -34,17 +34,14 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.services.ProjectService;
-import org.itracker.services.UserService;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
-import org.itracker.web.actions.project.EditProjectFormActionUtil;
 import org.itracker.web.forms.ProjectForm;
 import org.itracker.web.util.Constants;
 
@@ -64,15 +61,12 @@ public class EditProjectFormAction extends ItrackerBaseAction {
    	
         try {
             ProjectService projectService = getITrackerServices().getProjectService();
-            UserService userService = getITrackerServices().getUserService();
+            
             HttpSession session = request.getSession(true);
             
 
             Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
             User user = (User) session.getAttribute(Constants.USER_KEY);
-
-            String pageTitleKey = "";
-            String pageTitleArg = "";
 
             ProjectForm projectForm = (ProjectForm) form;
 
@@ -87,50 +81,33 @@ public class EditProjectFormAction extends ItrackerBaseAction {
             	if (null == projectForm.getId()) {
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
             	} else {
-            		pageTitleKey = "itracker.web.admin.editproject.title.update";
             		project = projectService.getProject(projectForm.getId());
             		if (null == project) {
-            			// does not exist.
 	                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-            		} else {
-	                	pageTitleArg = project.getName();
-	                }
+            		}
             	}
 
             } else {
                 project = new Project();
-                pageTitleKey = "itracker.web.admin.editproject.title.create";
-                //     pageTitleArg = ITrackerResources.getString("itracker.locale.name", parentLocale);
-                pageTitleArg = ITrackerResources.getString("itracker.locale.name", getLocale(request));
-                projectForm.setAction("create");
-
             }
-
-            request.setAttribute("pageTitleKey", pageTitleKey);
-            request.setAttribute("pageTitleArg", pageTitleArg);
-
 
 
             if ("create".equals(projectForm.getAction())) {
                 if (!user.isSuperUser()) {
                     return mapping.findForward("unauthorized");
                 }
-                boolean allowPermissionUpdate = userService.allowPermissionUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
-                request.setAttribute("allowPermissionUpdate", allowPermissionUpdate);
- 
-                project.setId(-1);
-                projectForm.setAction("create");
+//                project.setId(-1);
+//                projectForm.setAction("create");
                 projectForm.setId(project.getId());
             } else if ("update".equals(projectForm.getAction())) {
 
 
                 if (errors.isEmpty()) {
                     
-
                     if (!UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
                         return mapping.findForward("unauthorized");
                     } else if (errors.isEmpty()) {
-                        projectForm.setAction("update");
+//                        projectForm.setAction("update");
                         projectForm.setId(project.getId());
                         projectForm.setName(project.getName());
                         projectForm.setDescription(project.getDescription());
@@ -164,8 +141,10 @@ public class EditProjectFormAction extends ItrackerBaseAction {
                 request.setAttribute("projectForm", projectForm);
                 session.setAttribute(Constants.PROJECT_KEY, project);
                 saveToken(request);
-        		ActionForward af = new EditProjectFormActionUtil().init(mapping, request);
-        		if (af != null) return af;
+        		ActionForward af = new EditProjectFormActionUtil().init(mapping, request, projectForm);
+        		if (af != null) {
+        			return af;
+        		}
                return mapping.getInputForward();
             }
 

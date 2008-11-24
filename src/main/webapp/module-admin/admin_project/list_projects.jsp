@@ -22,7 +22,7 @@
          <td align="right">
          	<c:choose>
          		<c:when test="${ showAll }">
-         			<html:link module="/module-admin" action="/listprojectsadmin?showAll=false"><it:message key="itracker.web.listprojects.locked.hide"/></html:link>--%>
+         			<html:link module="/module-admin" action="/listprojectsadmin?showAll=false"><it:message key="itracker.web.listprojects.locked.hide"/></html:link>
          			<%-- TODO: better icon for show/hide closed projects
          			<it:formatImageAction action="/listprojectsadmin?showAll=false" src="/themes/defaulttheme/images/unwatch.gif" altKey="itracker.web.listprojects.locked.hide" textActionKey="itracker.web.listprojects.locked.hide"/>--%>
          		</c:when>

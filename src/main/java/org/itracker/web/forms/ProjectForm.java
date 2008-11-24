@@ -20,9 +20,11 @@ package org.itracker.web.forms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
+import org.itracker.web.actions.admin.project.EditProjectFormActionUtil;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
@@ -45,6 +47,8 @@ public class ProjectForm extends ValidatorForm {
 	private Integer[] permissions;
 	private Integer[] options;
 	private Integer[] fields;
+	
+	private static final Logger log = Logger.getLogger(ProjectForm.class);
 
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		action = null;
@@ -63,7 +67,11 @@ public class ProjectForm extends ValidatorForm {
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		ActionErrors errors = super.validate(mapping, request);
-
+		if (log.isDebugEnabled()) {
+			log.debug("ProjectForm validate called: mapping: " + mapping + ", request: "
+					+ request + ", errors: " + errors);
+		}
+		new EditProjectFormActionUtil().init(mapping, request, this);
 		return errors;
 	}
 
@@ -173,4 +181,5 @@ public class ProjectForm extends ValidatorForm {
 		else
 			this.users = users.clone();
 	}
+	
 }

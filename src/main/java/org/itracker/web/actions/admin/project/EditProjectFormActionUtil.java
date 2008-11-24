@@ -1,4 +1,4 @@
-package org.itracker.web.actions.project;
+package org.itracker.web.actions.admin.project;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +30,9 @@ import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
+import org.itracker.web.forms.ProjectForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
 
@@ -160,15 +162,16 @@ public class EditProjectFormActionUtil {
 
 	}
 
-	public ActionForward init(ActionMapping mapping, HttpServletRequest request){
-		ITrackerServices itrackerServices = ServletContextUtils
-		.getItrackerServices();
+	public ActionForward init(ActionMapping mapping, HttpServletRequest request, ProjectForm form){
+		ITrackerServices itrackerServices = ServletContextUtils.getItrackerServices();
 		ProjectService projectService = itrackerServices.getProjectService();
 		UserService userService = itrackerServices.getUserService();
 
-		Boolean allowPermissionUpdate = (Boolean) request.getAttribute("allowPermissionUpdate");
+        HttpSession session = request.getSession(true);
+        User user = (User) session.getAttribute(Constants.USER_KEY);
+		Boolean allowPermissionUpdate = userService.allowPermissionUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
 
-		HttpSession session = request.getSession();
+       
 		final Map<Integer, Set<PermissionType>> permissions = RequestHelper
 		.getUserPermissions(session);
 		Project project = (Project) session.getAttribute(Constants.PROJECT_KEY);
@@ -180,39 +183,48 @@ public class EditProjectFormActionUtil {
 		}
 		else {
 			isUpdate = false;
-			if (project.getId().intValue() > 0) {
+			if (!project.isNew()) {
 				isUpdate = true;
 			}
 		}
 		request.setAttribute("isUpdate", isUpdate);
 
+		setupTitle(request, form, projectService);
+
 
 		List<NameValuePair> statuses = new ArrayList<NameValuePair>();
-		statuses.add(new NameValuePair(ProjectUtilities.getStatusName(Status.ACTIVE, (java.util.Locale) session.getAttribute("currLocale")), Integer.toString(Status.ACTIVE.getCode())));
-		statuses.add(new NameValuePair(ProjectUtilities.getStatusName(Status.VIEWABLE, (java.util.Locale) session.getAttribute("currLocale")), Integer.toString(Status.VIEWABLE.getCode())));
-		statuses.add(new NameValuePair(ProjectUtilities.getStatusName(Status.LOCKED, (java.util.Locale) session.getAttribute("currLocale")), Integer.toString(Status.LOCKED.getCode())));
+		statuses.add(new NameValuePair(ProjectUtilities.getStatusName(Status.ACTIVE, LoginUtilities.getCurrentLocale(request)), Integer.toString(Status.ACTIVE.getCode())));
+		statuses.add(new NameValuePair(ProjectUtilities.getStatusName(Status.VIEWABLE, LoginUtilities.getCurrentLocale(request)), Integer.toString(Status.VIEWABLE.getCode())));
+		statuses.add(new NameValuePair(ProjectUtilities.getStatusName(Status.LOCKED, LoginUtilities.getCurrentLocale(request)), Integer.toString(Status.LOCKED.getCode())));
 		request.setAttribute("statuses", statuses);
 
 		Set<User> owners = new TreeSet<User>(User.NAME_COMPARATOR);
-		owners.addAll(userService.getUsersWithProjectPermission(project.getId(), UserUtilities.PERMISSION_VIEW_ALL));
+		if (!project.isNew()) {
+			owners.addAll(userService.getUsersWithProjectPermission(project.getId(), UserUtilities.PERMISSION_VIEW_ALL));
+		} else {
+			owners.addAll(userService.getSuperUsers());
+		}
 		owners.addAll(project.getOwners());
 		request.setAttribute("owners", owners);
 
-		boolean allowPermissionUpdateOption = allowPermissionUpdate==null?false:allowPermissionUpdate && UserUtilities.hasPermission(permissions, new Integer(-1), UserUtilities.PERMISSION_USER_ADMIN);
+		boolean allowPermissionUpdateOption = allowPermissionUpdate == null?false
+				:allowPermissionUpdate && UserUtilities.hasPermission(permissions, new Integer(-1), UserUtilities.PERMISSION_USER_ADMIN);
 		request.setAttribute("allowPermissionUpdateOption", allowPermissionUpdateOption);
 
-		List<User> users = new ArrayList<User>();
-		List<User> activeUsers = userService.getActiveUsers();
-		Collections.sort(activeUsers, User.NAME_COMPARATOR);
-		for (int i = 0; i < activeUsers.size(); i++) {
-			if (owners.contains(activeUsers.get(i))) {
-				continue;
+		if (project.isNew()) {
+			List<User> users = new ArrayList<User>();
+			List<User> activeUsers = userService.getActiveUsers();
+			Collections.sort(activeUsers, User.NAME_COMPARATOR);
+			for (int i = 0; i < activeUsers.size(); i++) {
+				if (owners.contains(activeUsers.get(i))) {
+					continue;
+				}
+				users.add(activeUsers.get(i));
 			}
-			users.add(activeUsers.get(i));
+			request.setAttribute("users", users);
 		}
-		request.setAttribute("users", users);
 
-		List<NameValuePair> permissionNames = UserUtilities.getPermissionNames((java.util.Locale) session.getAttribute("currLocale"));
+		List<NameValuePair> permissionNames = UserUtilities.getPermissionNames(LoginUtilities.getCurrentLocale(request));
 		request.setAttribute("permissions", permissionNames);
 
 		request.setAttribute("optionSupressHistoryHtml", Integer.toString(ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML));
@@ -233,8 +245,8 @@ public class EditProjectFormActionUtil {
 		while (fieldsIt.hasNext()) {
 			ci = (CustomField) fieldsIt.next();
 			fieldInfos.add(new CustomFieldInfo( ci.getId(), 
-					CustomFieldUtilities.getCustomFieldName(ci.getId(), (java.util.Locale) session.getAttribute("currLocale")), 
-					CustomFieldUtilities.getTypeString(ci.getFieldType(), (java.util.Locale) session.getAttribute("currLocale"))));
+					CustomFieldUtilities.getCustomFieldName(ci.getId(), LoginUtilities.getCurrentLocale(request)), 
+					CustomFieldUtilities.getTypeString(ci.getFieldType(), LoginUtilities.getCurrentLocale(request))));
 		}
 		
 		request.setAttribute("customFields", fieldInfos);
@@ -259,4 +271,30 @@ public class EditProjectFormActionUtil {
 		return null;         
 	}
 
+	/**
+	 * Setup the title for the Project-Form Action
+	 * @param request -  the servlet request
+	 * @param form - must be a ProjectForm
+	 * @param projectService - project-service
+	 */
+	public void setupTitle(HttpServletRequest request, ProjectForm form, ProjectService projectService) {
+		String pageTitleKey;
+		String pageTitleArg = "";
+
+		if ("update".equals(((ProjectForm)form).getAction())) {
+    		pageTitleKey = "itracker.web.admin.editproject.title.update";
+			if (form instanceof ProjectForm) {
+				Project project = projectService.getProject(((ProjectForm) form).getId());
+	    		if (null != project) {
+	            	pageTitleArg = project.getName();
+	            }
+			}
+		} else {
+			((ProjectForm)form).setAction("create");
+			pageTitleKey = "itracker.web.admin.editproject.title.create";
+		}
+        request.setAttribute("pageTitleKey", pageTitleKey);
+        request.setAttribute("pageTitleArg", pageTitleArg);
+	}
+	
 }
