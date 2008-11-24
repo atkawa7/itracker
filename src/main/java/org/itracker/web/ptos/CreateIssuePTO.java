@@ -50,6 +50,11 @@ public class CreateIssuePTO {
 		/*
 		 * Get the status name for the current locale and set in request
 		 */
+		String pageTitleKey = "itracker.web.createissue.title";
+		String pageTitleArg = project.getName();
+		req.setAttribute("pageTitleKey", pageTitleKey);
+		req.setAttribute("pageTitleArg", pageTitleArg);
+		
 		req.setAttribute("statusName", IssueUtilities.getStatusName(
 				IssueUtilities.STATUS_NEW, (java.util.Locale) session
 						.getAttribute("currLocale")));

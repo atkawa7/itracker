@@ -44,7 +44,9 @@ import org.itracker.services.exceptions.WorkflowException;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.services.util.WorkflowUtilities;
+import org.itracker.web.actions.project.EditIssueActionUtil;
 import org.itracker.web.actions.project.EditIssueFormAction;
+import org.itracker.web.ptos.CreateIssuePTO;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.RequestHelper;
 
@@ -280,11 +282,11 @@ public class IssueForm extends ITrackerForm {
 								RequestHelper.getUserPermissions(request
 										.getSession()));
 
-				EditIssueFormAction.setupJspEnv(mapping, this, request, issue,
+				EditIssueActionUtil.setupJspEnv(mapping, this, request, issue,
 						getITrackerServices().getIssueService(), 
 						getITrackerServices().getUserService(), 
 						RequestHelper.getUserPermissions(request.getSession()),
-						EditIssueFormAction.getListOptions(request, issue,
+						EditIssueActionUtil.getListOptions(request, issue,
 								ownersList, RequestHelper.getUserPermissions(request
 												.getSession()), 
 												issue.getProject(), currUser), errors);
@@ -303,6 +305,8 @@ public class IssueForm extends ITrackerForm {
 					validateProjectFields(issue, request, errors);
 					validateProjectScripts(issue, errors);
 				}
+			} else {
+				CreateIssuePTO.setupCreateIssue(request);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
