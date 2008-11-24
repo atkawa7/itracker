@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.itracker.model.Component;
 import org.itracker.model.CustomField;
 import org.itracker.model.Project;
@@ -43,6 +44,7 @@ import org.itracker.persistence.dao.ProjectScriptDAO;
 import org.itracker.persistence.dao.UserDAO;
 import org.itracker.persistence.dao.VersionDAO;
 import org.itracker.services.ProjectService;
+import org.itracker.services.exceptions.ProjectException;
 import org.itracker.services.util.IssueUtilities;
 
 public class ProjectServiceImpl implements ProjectService {
@@ -218,7 +220,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	public boolean setProjectFields(Project project,
-			Set<Integer> setOfNewsFieldIds) {
+			Set<Integer> setOfNewsFieldIds)  {
 		List<CustomField> fields;
 		fields = project.getCustomFields();
 		fields.clear();
@@ -385,9 +387,9 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	public Project createProject(Project project, Integer userId) {
 		User user = getUserDAO().findByPrimaryKey(userId);
-		project.setOwners(Arrays.asList(new User[]{user}));
+		project.setOwners(Arrays.asList(new User[]{ user }));
 		getProjectDAO().save(project);
-		
+
 		return project;
 	}
 	public Project updateProject(Project project, Integer userId) {
@@ -402,5 +404,23 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		return project;
 	}
-
+	
+	public Boolean isUniqueProjectName(String projectName , Integer updatedProjectId )
+	{
+		List<Project> projects = getProjectDAO().findByName(projectName);
+		if(projects != null && projects.size() > 0)
+		{
+			// In case of new created project
+			if(updatedProjectId == null)
+			{
+				return false;
+			}
+			// validate that the  returned project is not the updated one.
+			else if(projects.get(0) != null &&  ! projects.get(0).getId().equals(updatedProjectId))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 }

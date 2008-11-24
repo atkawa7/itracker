@@ -29,6 +29,7 @@ import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.User;
 import org.itracker.model.Version;
+import org.itracker.services.exceptions.ProjectException;
 
 
 public interface ProjectService {
@@ -59,7 +60,7 @@ public interface ProjectService {
     
     public List<User> getListOfProjectOwners(Integer projectId);
     
-    public boolean setProjectOwners(Project project, Set<Integer> newOwners);
+    public boolean setProjectOwners(Project project, Set<Integer> newOwners) ;
  
     public List<CustomField> getProjectFields(Integer projectId);
     
@@ -129,5 +130,14 @@ public interface ProjectService {
      * @return the updated project from Persistence
      */
     Project updateProject(Project project, Integer userId);
+    
+    /**
+     * Check if this project name is used by any of the projects which already exist in the database.
+     * 
+     * @param projectName
+     * @param updatedProjectId The updated project which will be use the new name.
+     * @return true if the name is unique.
+     */
+    Boolean isUniqueProjectName(String projectName , Integer updatedProjectId );
     
 }
