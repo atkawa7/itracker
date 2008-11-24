@@ -59,6 +59,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 			"itracker.web.error.transaction"));
 			saveErrors(request, errors);
+	        saveToken(request);
 			return mapping.getInputForward();
         }
         resetToken(request);
