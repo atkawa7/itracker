@@ -115,6 +115,11 @@
     where issue.project.id = :projectId ]]>
     </query>
     
+    <query name="ProjectsByNameQuery"><![CDATA[
+    select project 
+    from Project as project
+    where upper(project.name) = upper(:projectName) ]]>
+    </query>
     
     
 </hibernate-mapping>
