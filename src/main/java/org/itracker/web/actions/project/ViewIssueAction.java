@@ -58,7 +58,7 @@ public class ViewIssueAction extends ItrackerBaseAction {
 			saveErrors(request, getErrors(request));
 			return mapping.findForward("index");
 		}
-		EditIssueFormAction.setupNotificationsInRequest(request, issueService
+		EditIssueActionUtil.setupNotificationsInRequest(request, issueService
 				.getIssue(issueId),
 				getITrackerServices().getNotificationService());
 
@@ -141,7 +141,7 @@ public class ViewIssueAction extends ItrackerBaseAction {
 		/*
 		 * Create Project field map
 		 */
-		EditIssueFormAction.setupProjectFieldsMapJspEnv(project.getCustomFields(), issue.getFields(), request);
+		EditIssueActionUtil.setupProjectFieldsMapJspEnv(project.getCustomFields(), issue.getFields(), request);
 
 		/*
 		 * Set the objects in request that are required for ui render

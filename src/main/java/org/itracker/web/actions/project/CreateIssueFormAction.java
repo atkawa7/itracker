@@ -96,9 +96,10 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
 			}
 
 			Project project = projectService.getProject(projectId);
-			log.debug("Received request for project " + projectId + "("
+			if (log.isDebugEnabled() && project != null) {
+				log.debug("execute: Received request for project " + projectId + "("
 					+ project.getName() + ")");
-
+			}
 			if (project == null) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"itracker.web.error.invalidproject"));

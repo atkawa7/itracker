@@ -31,7 +31,7 @@
         <br>
       </logic:messagesPresent>
 
-      <html:form action="/createissue" focus="description" enctype="multipart/form-data" onsubmit="return validateCreateIssueForm(this);">
+      <html:form action="/createissue" focus="description" enctype="multipart/form-data">
         <html:hidden property="projectId" value="${project.id}"/>
 
         <table border="0" cellspacing="0"  cellspacing="1"  width="800px">
