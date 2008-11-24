@@ -138,10 +138,10 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 				.getDescription());
 		
 		 assertTrue("date modified", updatedComponent.getLastModifiedDate()
-		 .after(then));
+		 .compareTo(then) >= 0);
 
 		assertFalse("date created", updatedComponent.getCreateDate()
-				.after(then));
+				.compareTo(then) >= 0);
 
 
 
