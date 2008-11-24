@@ -46,4 +46,12 @@ public interface ProjectDAO extends BaseDAO<Project> {
      * @return
      */
     public Date getLastIssueUpdateDate(Integer projectId); 
+    
+    /**
+     * Finds a project by name. 
+     * 
+     * @param name project
+     * @return list of projects in unspecified order
+     */
+    List<Project> findByName(String name);
 }

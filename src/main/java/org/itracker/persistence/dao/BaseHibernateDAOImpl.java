@@ -37,6 +37,7 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
         	entity.setLastModifiedDate(createDate);
             getSession().save(entity);
         } catch (HibernateException ex) {
+        	logger.debug("save: caught HibernateException, call to convertHibernateException", ex);
             throw convertHibernateAccessException(ex);
         }
     }
@@ -61,6 +62,7 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
         	}
             getSession().saveOrUpdate(entity);
         } catch (HibernateException ex) {
+        	logger.debug("saveOrUpdate: caught HibernateException, call to convertHibernateException", ex);
             throw convertHibernateAccessException(ex);
         }
     }
@@ -72,6 +74,7 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
         try {
             getSession().delete(entity);
         } catch (HibernateException ex) {
+        	logger.debug("delete: caught HibernateException, call to convertHibernateException", ex);
             throw convertHibernateAccessException(ex);
         }    
     }
@@ -83,6 +86,7 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
     	try {
     		getSession().evict(entity);
         } catch (HibernateException ex) {
+        	logger.debug("detach: caught HibernateException, call to convertHibernateException", ex);
             throw convertHibernateAccessException(ex);
         }    
     }
@@ -94,6 +98,7 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
     	try {
     		getSession().refresh(entity);
         } catch (HibernateException ex) {
+        	logger.debug("refresh: caught HibernateException, call to convertHibernateException", ex);
             throw convertHibernateAccessException(ex);
         }    
     }
@@ -106,6 +111,7 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
     	try {
     		return (T)getSession().merge(entity);
         } catch (HibernateException ex) {
+        	logger.debug("merge: caught HibernateException, call to convertHibernateException", ex);
             throw convertHibernateAccessException(ex);
         }    
     }
