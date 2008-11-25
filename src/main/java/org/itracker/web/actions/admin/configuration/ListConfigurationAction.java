@@ -11,6 +11,8 @@ import org.itracker.model.CustomField;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
 
 
 public class ListConfigurationAction extends ItrackerBaseAction {
@@ -31,6 +33,7 @@ public class ListConfigurationAction extends ItrackerBaseAction {
 			request.setAttribute("severities",severities);
 			request.setAttribute("statuses",statuses);
 			request.setAttribute("customfields",customfields);
+			request.setAttribute("pageLocale", LoginUtilities.getCurrentLocale(request));
 			
 			return mapping.findForward("listconfiguration");
 	}

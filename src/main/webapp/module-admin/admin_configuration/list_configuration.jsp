@@ -38,7 +38,7 @@
         </tr>
         <c:forEach items="${ statuses }" var="status">
         	<tr class="listRowUnshaded">
-              <td align="left">${ it:getStatusName(status.value, request.locale) } (${ status.value })</td>
+              <td align="left">${ it:getStatusName(status.value, pageLocale) } (${ status.value })</td>
               <td align="right">
                 <it:link action="editconfigurationform" targetAction="update" paramName="id" paramValue="${ status.id }" titleKey="itracker.web.admin.listconfiguration.status.update.alt"><it:message key="itracker.web.admin.listconfiguration.status.update"/></it:link>
                 <it:link action="removeconfiguration" targetAction="delete" paramName="id" paramValue="${ status.id }" titleKey="itracker.web.admin.listconfiguration.status.delete.alt"><it:message key="itracker.web.admin.listconfiguration.status.delete"/></it:link>
@@ -58,7 +58,7 @@
         </tr>
         <c:forEach items="${ severities }" var="severity" varStatus="i" step="1">
         	<tr class="listRowUnshaded">
-              <td align="left">${ it:getSeverityName(severity.value, request.locale) } (${ severity.value })</td>
+              <td align="left">${ it:getSeverityName(severity.value, pageLocale) } (${ severity.value })</td>
               <td align="right">
               	<c:if test="${ i.index != 0 }">
               		<it:link action="orderconfiguration" targetAction="up" paramName="id" paramValue="${ severity.id }" titleKey="itracker.web.admin.listconfiguration.severity.orderup.alt"><it:message key="itracker.web.admin.listconfiguration.severity.orderup"/></it:link>
@@ -87,7 +87,7 @@
         </tr>
         <c:forEach items="${ resolutions }" var="resolution" varStatus="i" step="1">
         	<tr align="right" class="listRowUnshaded">
-              <td align="left">${ it:getResolutionName(resolution.value, request.locale) } (${ resolution.value })</td>
+              <td align="left">${ it:getResolutionName(resolution.value, pageLocale) } (${ resolution.value })</td>
               <td align="right">
               	<c:if test="${ i.index != 0 }">
                 	<it:link action="orderconfiguration" targetAction="up" paramName="id" paramValue="${ resolution.id }" titleKey="itracker.web.admin.listconfiguration.resolution.orderup.alt"><it:message key="itracker.web.admin.listconfiguration.resolution.orderup"/></it:link>
@@ -115,9 +115,9 @@
         <c:forEach items="${ customfields }" var="customField">
         	<tr class="listRowUnshaded">
               <td align="left">
-                ${ it:getCustomFieldName(customField.id, request.locale) }
+                ${ it:getCustomFieldName(customField.id, pageLocale) }
                 (<it:message key="itracker.web.attr.id"/>: ${ customField.id },
-                 <it:message key="itracker.web.attr.fieldtype"/>: ${ it:getCustomFieldTypeString(customField.fieldType.code, request.locale) }
+                 <it:message key="itracker.web.attr.fieldtype"/>: ${ it:getCustomFieldTypeString(customField.fieldType.code, pageLocale) }
                 )
               </td>
               <td align="right">
