@@ -23,11 +23,11 @@
 <a name="create"></a><span class="editColumnTitle">Creating an Issue</span> <a href="#top" class="headerLinks">[top]</a><br/>
 <p class="help">
 To create a new issue, first go to the project list screen by clicking "Project List"
-in the top menu.  From this screen you can click the create new issue icon
+in the top menu.  From this screen you can click on create new issue icon
 (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/create.gif"/>) beside the project you want to create
 the issue for.<br/>
 <br/>
-You must have create permission in a project before you can create a new issue
+You must have "create" permission in a project before you can create a new issue
 for that project.<br/>
 </p>
 
@@ -36,7 +36,7 @@ for that project.<br/>
 <p class="help">
 There are a couple ways to edit an existing issue.<br/>
 <br/>
-If the issue is visable on your myITracker page, you can click the edit
+If the issue is visible on your myITracker page, you can click the edit
 (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/edit.gif"/>) icon beside the issue you wish to edit.<br/>
 <br/>
 If you are currently viewing the details of an issue, the edit icon
@@ -45,7 +45,7 @@ If you are currently viewing the details of an issue, the edit icon
 To edit an existing issue, first go to the project list screen by clicking "Project List"
 in the top menu.  From this screen you can click the view project issues icon
 (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/view.gif"/>) beside the project you want a list
-of issues for. Once you have a list of issues, you can select the the edit icon
+of issues for. Once you have a list of issues, you can select the edit icon
 (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/edit.gif"/>) beside the issue you wish to edit.<br/>
 <br/>
 You must have edit permissions for a project before you can edit an existing issue
@@ -86,7 +86,7 @@ by clicking on the appropriate icon.
 <a name="report"></a><span class="editColumnTitle">Running Reports</span> <a href="#top" class="headerLinks">[top]</a><br/>
 <p class="help">
 To run the reports, first select the checkboxes beside the projects you want included in
-the report.  Then select the desired report from the pulldown menu and click the run report
+the report.  Then select the desired report from the pull-down menu and click the run report
 button.  The report will then be processed and the results will be displayed in your current
 browser window.  Depending on the number of issues in a project and the number of projects
 selected, a report may take several minutes to run.<br/>
@@ -104,6 +104,6 @@ plaintext userid and password.  This may be a security issue so be sure you want
 before you select it.<br/>
 <br/>
 When selecting the number of issues to display on a page, you can display all the issues
-by putting in either 0 or a negative number.  Any positive number will pageinate the results
+by putting in either 0 or a negative number.  Any positive number will paginate the results
 into screens of the selected number of items.<br/>
 </p>
