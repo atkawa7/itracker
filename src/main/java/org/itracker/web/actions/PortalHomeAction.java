@@ -130,8 +130,8 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 if (null!=userPrefs) {
                     String order = userPrefs.getSortColumnOnIssueList();
                     Comparator sort_id = Issue.STATUS_COMPARATOR;
-//TODO since repeating code, set a common Comparator variable to contain the Comparator to use and
-//          execute the sort pre issue type only once.
+                 //TODO: since repeating code, set a common Comparator variable to contain the Comparator to use and
+                 //      execute the sort pre issue type only once.
                     if("id".equals(order)) {
                         sort_id = Issue.ID_COMPARATOR;
                     } else if("sev".equals(order)) {
@@ -323,7 +323,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
     
     public PortalHomeAction() {
         super();
-        // TODO Auto-generated constructor stub
+  
     }
     
 }
