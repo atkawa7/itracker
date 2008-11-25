@@ -48,4 +48,6 @@ public interface Entity extends Serializable, Cloneable, Comparable<Entity> {
     void setCreateDate(Date date);
     
     Date getCreateDate();
+
+	boolean isNew();
 }
