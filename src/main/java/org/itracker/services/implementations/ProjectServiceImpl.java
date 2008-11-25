@@ -29,7 +29,6 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
 import org.itracker.model.Component;
 import org.itracker.model.CustomField;
 import org.itracker.model.Project;
