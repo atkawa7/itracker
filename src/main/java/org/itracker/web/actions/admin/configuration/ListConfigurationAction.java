@@ -11,7 +11,6 @@ import org.itracker.model.CustomField;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
-import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 
 
