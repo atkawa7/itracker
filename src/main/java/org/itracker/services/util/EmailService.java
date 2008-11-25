@@ -63,6 +63,7 @@ public class EmailService {
 
 	private final Logger logger = Logger.getLogger(EmailService.class);
 	private InternetAddress replyTo;
+	private InternetAddress from;
 
 	public void setConfigurationService(
 			ConfigurationService configurationService) {
@@ -111,31 +112,11 @@ public class EmailService {
 	private final void initFrom(String fromAddress, String fromText) {
 		if (null != fromAddress) {
 			try {
-				
-				if (this.session.getProperties().containsKey("mail.from")) {
-					logger.info("initFrom: already found property 'mail.from': " + this.session.getProperty("mail.from"));
-					try {
-						InternetAddress[] fromAddr = InternetAddress.parse(this.session.getProperty("mail.from"));
-						if (fromAddr.length > 0) {
-							fromAddr[0].setPersonal(fromText);
-						}
-						this.session.getProperties().remove("mail.from");
-						this.session.getProperties().put("mail.from", String.valueOf(fromAddr[0]));
-					} catch (AddressException e) {
-						logger.error("initFrom: failed to parse from-address from session: " + this.session.getProperty("mail.from"), e);
-					}
-				} else {
-				
-					this.session.getProperties().put(
-							"mail.from",
-							String.valueOf(new InternetAddress(fromAddress,
-									fromText)));
-				}
-				logger.info("initFrom: initialized to "
-						+ this.session.getProperty("mail.from"));
+				this.from = new InternetAddress(fromAddress, fromText);
+				logger.info("initFrom: initialized from-address: " + this.from);
 			} catch (UnsupportedEncodingException e) {
-				logger.warn(
-						"initFrom: failed to set FROM in session, ignoring", e);
+				logger.warn("initReplyTo: could not initialize reply-to (configured: " + 
+						fromText + " <" + fromAddress + ">" , e);
 			}
 		}
 	}
@@ -321,7 +302,9 @@ public class EmailService {
 
 			MimeMessage msg = new MimeMessage(this.session);
 
-			// msg.setFrom(new InternetAddress(fromAddress, fromText));
+			if(null != this.from ){
+				msg.setFrom(this.from);
+			}
 			if (null != this.replyTo) {
 				msg.setReplyTo(new InternetAddress[] { this.replyTo });
 			}
