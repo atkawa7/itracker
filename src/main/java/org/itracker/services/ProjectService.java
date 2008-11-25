@@ -29,7 +29,6 @@ import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.User;
 import org.itracker.model.Version;
-import org.itracker.services.exceptions.ProjectException;
 
 
 public interface ProjectService {
