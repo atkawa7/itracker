@@ -565,6 +565,8 @@
                             <jdk>1.5</jdk>
 							<excludes>
 								<exclude>**/web/**/*Action.java</exclude>
+								<exclude>**/web/scheduler/tasks/ReminderNotification.java</exclude>
+								<exclude>**/services/util/ImportHandler.java</exclude>
 							</excludes>
                         </configuration>
                     </plugin>
