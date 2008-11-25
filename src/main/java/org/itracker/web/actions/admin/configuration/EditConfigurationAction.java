@@ -58,7 +58,6 @@ public class EditConfigurationAction extends ItrackerBaseAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 		//  TODO: Action Cleanup
-
         
         if(! isTokenValid(request)) {
             log.debug("Invalid request token while editing configuration.");
@@ -180,7 +179,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                                     // TODO: is this inteded?
                                     issues.add(issueService.updateIssue(issues.get(i), currUserId));
                                     
-                                    // TODO need to fix this RJST
+                                    // TODO: need to fix this RJST
 //                                    activity.setIssue(issues.get(i));                                    
                                 }
                             }
