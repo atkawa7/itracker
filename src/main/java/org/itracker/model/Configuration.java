@@ -31,6 +31,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class Configuration extends AbstractEntity implements Comparable<Entity> {
 
+	public static final ConfigurationOrderComparator CONFIGURATION_ORDER_COMPARATOR = new ConfigurationOrderComparator();
 	/**
 	 * 
 	 */
