@@ -73,12 +73,11 @@ public class ApplicationInitialization {
             configurationService.resetConfigurationCache();
             
             // Preinitialize all of the PDF fonts available. Do it in a
-            // separate thread to speed up the
-            // rest of the startup.
-            // TODO I think this should be removed... why do we need to pre-init ? (rjst)
+            // separate thread to speed up the rest of the startup.
+            // TODO: I think this should be removed... why do we need to pre-init ? (rjst)
             // old code to pre-init fonts for jfree reports. make sure we can delete it
-            //BaseFontFactory fontFactory = BaseFontFactory.getFontFactory();
-            //fontFactory.registerDefaultFontPath();
+            // BaseFontFactory fontFactory = BaseFontFactory.getFontFactory();
+            // fontFactory.registerDefaultFontPath();
             
             // check for and create admin user, if so configured
             createAdminUser(configurationService);
