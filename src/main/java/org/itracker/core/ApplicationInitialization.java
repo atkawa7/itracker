@@ -37,7 +37,7 @@ import org.itracker.services.util.UserUtilities;
 
 
 /**
- * Please comment this for documentation reasons. What is this Class used for?
+ * TODO: Add Javadocs here: please comment this for documentation reasons. What is this Class used for?
  * It seems like this gets started when the application starts up...
  * @author ready
  *
@@ -72,8 +72,8 @@ public class ApplicationInitialization {
             logger.info("Setting up cached configuration entries");
             configurationService.resetConfigurationCache();
             
-            // Pre-initialize all of the PDF fonts available. Do it in a
-            // seperate thread to speed up the
+            // Preinitialize all of the PDF fonts available. Do it in a
+            // separate thread to speed up the
             // rest of the startup.
             // TODO I think this should be removed... why do we need to pre-init ? (rjst)
             // old code to pre-init fonts for jfree reports. make sure we can delete it
