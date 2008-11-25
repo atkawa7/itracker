@@ -43,7 +43,6 @@ import org.itracker.persistence.dao.ProjectScriptDAO;
 import org.itracker.persistence.dao.UserDAO;
 import org.itracker.persistence.dao.VersionDAO;
 import org.itracker.services.ProjectService;
-import org.itracker.services.exceptions.ProjectException;
 import org.itracker.services.util.IssueUtilities;
 
 public class ProjectServiceImpl implements ProjectService {
@@ -208,7 +207,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * TODO: implement Locale-aware ProjectFields.
+	 * TODO: implement Locale-aware ProjectFields. (Why? please explain why this is need)
 	 */
 	public List<CustomField> getProjectFields(Integer projectId, Locale locale) {
 
@@ -264,6 +263,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	public boolean removeProjectScript(Integer projectId, Integer scriptId) {
+		// TODO: R3.2: implemented ProjectScripts here
 		// Project project = projectDAO.findByPrimaryKey(projectId);
 		ProjectScript script = projectScriptDAO.findByPrimaryKey(scriptId);
 		this.projectScriptDAO.delete(script);
@@ -281,6 +281,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	public ProjectScript updateProjectScript(ProjectScript projectScript) {
+		// TODO: R3.2: implemented ProjectScripts here
 		ProjectScript editprojectScript = projectScriptDAO
 				.findByPrimaryKey(projectScript.getId());
 		editprojectScript.setId(projectScript.getId());
@@ -409,6 +410,7 @@ public class ProjectServiceImpl implements ProjectService {
 		List<Project> projects = getProjectDAO().findByName(projectName);
 		if(projects != null && projects.size() > 0)
 		{
+			//TODO: improve "code readability without comments"
 			// In case of new created project
 			if(updatedProjectId == null)
 			{
