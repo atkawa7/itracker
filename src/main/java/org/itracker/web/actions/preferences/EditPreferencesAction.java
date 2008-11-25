@@ -77,8 +77,10 @@ public class EditPreferencesAction extends ItrackerBaseAction {
         try {
             UserService userService = getITrackerServices().getUserService();
 
-            // TODO following checks make no sence from my perspective.
+            // TODO: the following checks make no sense from my perspective.
             // This check should happen in the ExecuteAlways filter maybe
+            // Shall we remove it?
+            
             HttpSession session = request.getSession();
 //            user = (User) session.getAttribute(Constants.USER_KEY);
 //            if(user == null) {
@@ -208,7 +210,7 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                 session.setAttribute(Constants.PREFERENCES_KEY, userPrefs);
                 session.setAttribute(Constants.LOCALE_KEY, ITrackerResources.getLocale(userPrefs.getUserLocale()));
 
-        		// TODO: remove deprecated currLocale attribute
+        		// TODO: remove depreciated currLocale attribute
         		request.setAttribute("currLocale", ITrackerResources.getLocale(userPrefs.getUserLocale()));
         		request.setAttribute(Constants.LOCALE_KEY, ITrackerResources.getLocale(userPrefs.getUserLocale()));
         		
