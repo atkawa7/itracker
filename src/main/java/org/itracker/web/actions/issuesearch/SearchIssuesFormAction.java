@@ -191,36 +191,59 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
                     selectedProjects = selectedProjectsList;
                     query.setProjects(selectedProjects);
 
-                    Integer[] componentsArray = new Integer[query.getComponents().size()];
-                    query.getComponents().toArray(componentsArray);
-                    searchForm.setComponents(componentsArray);
+                    searchForm.setComponents(null);
+                    if (null != query.getComponents() && query.getComponents().size() > 0) {
+	                    Integer[] componentsArray = new Integer[query.getComponents().size()];
+	                    query.getComponents().toArray(componentsArray);
+	                    searchForm.setComponents(componentsArray);
+                    }
 
+                    // TODO: contributor? is this same as creator? should it be removed? change to user-type?
                     searchForm.setContributor(query.getContributor());
-                    searchForm.setCreator(query.getCreator().getId());
-                    searchForm.setOwner(query.getOwner().getId());
+                    
+                    searchForm.setCreator(null);
+                    if (null != query.getCreator()) {
+                    	searchForm.setCreator(query.getCreator().getId());
+                    }
+                    searchForm.setOwner(null);
+                    if (null != query.getOwner()) {
+                    	searchForm.setOwner(query.getOwner().getId());
+                    }
                     searchForm.setOrderBy(query.getOrderBy());
                     searchForm.setProject(query.getProjectId());
 
-                    Integer[] projectsArray = new Integer[query.getProjects().size()];
-                    query.getProjects().toArray(projectsArray);
-                    searchForm.setProjects(projectsArray);
-
+                    searchForm.setProjects(null);
+                    if (null != query.getProjects() && query.getProjects().size() > 0) {
+                    	Integer[] projectsArray = new Integer[query.getProjects().size()];
+                    	query.getProjects().toArray(projectsArray);
+                        searchForm.setProjects(projectsArray);
+                    }
+                    
                     searchForm.setResolution(query.getResolution());
 
-                    Integer[] severitiesArray = new Integer[query.getSeverities().size()];
-                    query.getSeverities().toArray(severitiesArray);
-                    searchForm.setSeverities(severitiesArray);
+                    searchForm.setSeverities(null);
+                    if (null != query.getSeverities() && query.getSeverities().size() > 0) {
+	                    Integer[] severitiesArray = new Integer[query.getSeverities().size()];
+	                    query.getSeverities().toArray(severitiesArray);
+	                    searchForm.setSeverities(severitiesArray);
+                    }
 
-                    Integer[] statusesArray = new Integer[query.getStatuses().size()];
-                    query.getStatuses().toArray(statusesArray);
-                    searchForm.setStatuses(statusesArray);
-
+                    searchForm.setStatuses(null);
+                    if (null != query.getStatuses() && query.getStatuses().size() > 0) {
+	                    Integer[] statusesArray = new Integer[query.getStatuses().size()];
+	                    query.getStatuses().toArray(statusesArray);
+	                    searchForm.setStatuses(statusesArray);
+                    }
+                    
                     searchForm.setTargetVersion(query.getTargetVersion());
                     searchForm.setTextphrase(query.getText());
 
-                    Integer[] versionsArray = new Integer[query.getVersions().size()];
-                    query.getVersions().toArray(versionsArray);
-                    searchForm.setVersions(versionsArray);
+                    searchForm.setVersions(null);
+                    if (query.getVersions() != null && query.getVersions().size() > 0) {
+	                    Integer[] versionsArray = new Integer[query.getVersions().size()];
+	                    query.getVersions().toArray(versionsArray);
+	                    searchForm.setVersions(versionsArray);
+                    }
 
                 }
 
