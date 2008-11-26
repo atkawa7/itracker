@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -44,6 +45,7 @@ import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ConfigurationForm;
+import org.itracker.web.util.LoginUtilities;
 
 public class EditConfigurationFormAction extends ItrackerBaseAction {
 	private static final Logger log = Logger
@@ -54,8 +56,13 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
 			throws ServletException, IOException {
 		ActionMessages errors = new ActionMessages();
 
+		if (log.isDebugEnabled()) {
+			log.debug("execute: called");
+		}
 		if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request,
 				response)) {
+			log.warn("execute: user has not permissue user-admin: " + LoginUtilities.getCurrentUser(request) + ", forwarding to unauthorized!");
+			
 			return mapping.findForward("unauthorized");
 		}
 
@@ -120,6 +127,41 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
 			}
 			String baseLocaleKey = "translations("
 					+ ITrackerResources.BASE_LOCALE + ")";
+
+			String pageTitleKey = "";
+			String pageTitleArg = "";
+			boolean isUpdate = false;
+
+			if (log.isDebugEnabled()) {
+				log.debug("execute: action was "
+						+ configurationForm.getAction());
+			}
+			if ("update".equals(configurationForm.getAction())) {
+				isUpdate = true;
+				pageTitleKey = "itracker.web.admin.editconfiguration.title.update";
+			} else {
+				Locale locale = getLocale(request);
+				pageTitleKey = "itracker.web.admin.editconfiguration.title.create";
+				if ("createseverity".equals(configurationForm.getAction())) {
+					pageTitleArg = ITrackerResources.getString(
+							"itracker.web.attr.severity", locale);
+				} else if ("createstatus".equals(configurationForm.getAction())) {
+					pageTitleArg = ITrackerResources.getString(
+							"itracker.web.attr.status", locale);
+				} else if ("createresolution".equals(configurationForm
+						.getAction())) {
+					pageTitleArg = ITrackerResources.getString(
+							"itracker.web.attr.resolution", locale);
+				} else {
+					log.warn("execute: unrecognized action in form: "
+							+ configurationForm.getAction());
+					return mapping.findForward("unauthorized");
+				}
+			}
+			request.setAttribute("isUpdate", Boolean.valueOf(isUpdate));
+			request.setAttribute("pageTitleKey", pageTitleKey);
+			request.setAttribute("pageTitleArg", pageTitleArg);
+
 			request.setAttribute("languagesNameValuePair",
 					languagesNameValuePair);
 			request.setAttribute("sc", configurationService);

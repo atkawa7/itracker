@@ -254,7 +254,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                    pageTitleArg = ITrackerResources.getString("itracker.web.attr.resolution", locale);
                } else {
             	   return mapping.findForward("unauthorized");
-                        }
+               }
             }
             request.setAttribute("isUpdate",Boolean.valueOf(isUpdate)); 
             request.setAttribute("pageTitleKey",pageTitleKey); 

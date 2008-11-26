@@ -80,7 +80,7 @@ public class OrderConfigurationItemAction extends ItrackerBaseAction {
                     Configuration secondConfiguration = new Configuration();
                     Configuration curConfiguration = (Configuration) configItems.get(i);
                     int todo_i = -1;
-                    if ( curConfiguration.getId() == configId ) {
+                    if ( curConfiguration.getId().equals(configId) ) {
                         if ("up".equals(action) ){
                             todo_i = i - 1;
                         } else {
@@ -88,21 +88,21 @@ public class OrderConfigurationItemAction extends ItrackerBaseAction {
                         }
                         Configuration todoConfiguration = (Configuration) configItems.get(todo_i);
 
-                        firstConfiguration.setId(curConfiguration.getId());
+                        firstConfiguration.setId(todoConfiguration.getId());
                         firstConfiguration.setCreateDate(todoConfiguration.getCreateDate());
                         firstConfiguration.setLastModifiedDate(todoConfiguration.getLastModifiedDate());
                         firstConfiguration.setName(todoConfiguration.getName());
-                        firstConfiguration.setOrder(todoConfiguration.getOrder());
+                        firstConfiguration.setOrder(curConfiguration.getOrder());
                         firstConfiguration.setType(todoConfiguration.getType());
                         firstConfiguration.setValue(todoConfiguration.getValue());
                         firstConfiguration.setVersion(todoConfiguration.getVersion());
 
 
-                        secondConfiguration.setId(todoConfiguration.getId());
+                        secondConfiguration.setId(curConfiguration.getId());
                         secondConfiguration.setCreateDate(curConfiguration.getCreateDate());
                         secondConfiguration.setLastModifiedDate(curConfiguration.getLastModifiedDate());
                         secondConfiguration.setName(curConfiguration.getName());
-                        secondConfiguration.setOrder(curConfiguration.getOrder());
+                        secondConfiguration.setOrder(todoConfiguration.getOrder());
                         secondConfiguration.setType(curConfiguration.getType());
                         secondConfiguration.setValue(curConfiguration.getValue());
                         secondConfiguration.setVersion(curConfiguration.getVersion());
@@ -113,7 +113,7 @@ public class OrderConfigurationItemAction extends ItrackerBaseAction {
                 }
             }
             
-//            newConfigItems = configurationService.updateConfigurationItems(newConfigItems,configType);
+            newConfigItems = configurationService.updateConfigurationItems(newConfigItems,configType);
             
             // Only resolutions and severities can be reordered at this point.  Statuses
             // and some basic workflow depend on the actual value of the status, so

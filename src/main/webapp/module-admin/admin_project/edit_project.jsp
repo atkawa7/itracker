@@ -282,24 +282,25 @@
 						src="/themes/defaulttheme/images/create.gif"
 						altKey="itracker.web.image.create.version.alt"
 						arg0="${project.name}"
-						textActionKey="itracker.web.image.createtexttag" />
+						textActionKey="itracker.web.image.create.texttag" />
 				   </td>
 				</tr>
 
-				<tr align="left" class="listHeading">
-					<td width="40"></td>
-					<td>
-					  <html:img module="/"	page="/themes/defaulttheme/images/blank.gif" width="4" />
-				  </td>
+				<tr align="left" class="listHeading">					
 					<td><it:message key="itracker.web.attr.number" /></td>
 					<td><it:message key="itracker.web.attr.description" /></td>
 					<td><it:message key="itracker.web.attr.lastmodified" /></td>
 					<td align="left"><it:message key="itracker.web.attr.issues" /></td>
+					<td><html:img module="/"
+						page="/themes/defaulttheme/images/blank.gif" width="4" /></td>
 				</tr>
 
 				<c:forEach var="version" items="${versions}" varStatus="i">
-					<tr align="right"
-						class="${ (i.index % 2 == 0) ? 'listRowUnshaded' : 'listRowShaded' }">
+					<tr align="right" class="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}">										
+						<td class="listRowSmall" align="left">${version.number}</td>
+						<td class="listRowSmall" align="left">${version.description}</td>
+						<td class="listRowSmall" align="left"><it:formatDate date="${version.date}" /></td>
+						<td class="listRowSmall" align="right">${version.count}</td>
 						<td align="right"><it:formatImageAction
 							action="editversionform" paramName="id"
 							paramValue="${version.id}" targetAction="update"
@@ -308,11 +309,6 @@
 							arg0="${version.number}"
 							textActionKey="itracker.web.image.edit.texttag" />
 						</td>
-						<td></td>
-						<td>${version.number}</td>
-						<td>${version.description}</td>
-						<td><it:formatDate date="${version.date}" /></td>
-						<td align="left">${version.count}</td>
 					</tr>
 				</c:forEach>
 				<tr>
@@ -331,37 +327,33 @@
 						src="/themes/defaulttheme/images/create.gif"
 						altKey="itracker.web.image.create.component.alt"
 						arg0="${project.name}"
-								textActionKey="itracker.web.image.create.texttag" />
+						textActionKey="itracker.web.image.create.texttag" />
 					</td>
 				</tr>
 				<tr align="left" class="listHeading">
-					<td width="40"></td>
-					<td>
-					  <html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4" />
-					</td>
+					
 					<td><it:message key="itracker.web.attr.name" /></td>
 					<td><it:message key="itracker.web.attr.description" /></td>
 					<td><it:message key="itracker.web.attr.lastmodified" /></td>
 					<td align="left"><it:message key="itracker.web.attr.issues" /></td>
+					<td><html:img module="/"
+						page="/themes/defaulttheme/images/blank.gif" width="4" /></td>
 				</tr>
 
 				<c:forEach var="component" items="${components}" varStatus="i">
-					<tr align="right"
-						class="${ (i.index % 2 == 0) ? 'listRowUnshaded' : 'listRowShaded' }">
-						<td align="right">
-						  <it:formatImageAction
+					<tr align="right" class="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}">
+						<td class="listRowSmall" align="left">${component.name}</td>
+						<td class="listRowSmall" align="left">${component.description}</td>
+						<td class="listRowSmall" align="left"><it:formatDate date="${component.date}" /></td>
+						<td class="listRowSmall" align="right">${component.count}</td>
+						<td align="right"><it:formatImageAction
 							action="editcomponentform" paramName="id"
 							paramValue="${component.id}" targetAction="update"
 							src="/themes/defaulttheme/images/edit.gif"
 							altKey="itracker.web.image.edit.component.alt"
 							arg0="${component.name}"
 									textActionKey="itracker.web.image.edit.texttag" />
-							</td>
-						<td></td>
-						<td>${component.name}</td>
-						<td>${component.description}</td>
-						<td><it:formatDate date="${component.date}" /></td>
-						<td align="left">${component.count}</td>
+						</td>
 					</tr>
 
 				</c:forEach>

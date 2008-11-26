@@ -121,14 +121,15 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
                 ITrackerResources.clearKeyFromBundles(key, true);
             // Now reset the cached versions in IssueUtilities
             configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
-            String pageTitleKey = "";
+            String pageTitleKey = "itracker.web.admin.editcustomfield.title.create";
             String pageTitleArg = "";
-            pageTitleKey = "itracker.web.admin.editcustomfield.title.create";
-            if (action == "update") {
+            
+            if ("update".equals(action)) {
             	 pageTitleKey = "itracker.web.admin.editcustomfield.title.update";
+            	 pageTitleArg = customField.getName();
             }
-            request.setAttribute("pageTitleKey",pageTitleKey); 
-            request.setAttribute("pageTitleArg",pageTitleArg);      
+            request.setAttribute("pageTitleKey", pageTitleKey); 
+            request.setAttribute("pageTitleArg", pageTitleArg);      
             saveToken(request);
 
             if(customField.getFieldType() == CustomField.Type.LIST && "create".equals(action) ) { 

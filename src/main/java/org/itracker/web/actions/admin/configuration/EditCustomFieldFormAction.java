@@ -131,6 +131,15 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
 				customField.setLabels(locale);
 			}
 
+            String pageTitleKey = "itracker.web.admin.editcustomfield.title.create";
+            String pageTitleArg = "";
+            
+            if ("update".equals(action)) {
+            	 pageTitleKey = "itracker.web.admin.editcustomfield.title.update";
+            }
+            request.setAttribute("pageTitleKey", pageTitleKey); 
+            request.setAttribute("pageTitleArg", pageTitleArg); 
+            
 			request.setAttribute("customFieldForm", customFieldForm);
 			request.setAttribute("languages", languages);
 			// request.setAttribute("languages_ary", languages_ary);
@@ -144,6 +153,7 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
 			 * object to render output
 			 */
 			if (customField == null) {
+				log.warn("execute: customField was null!");
 				return mapping.findForward("unauthorized");
 			} else {
 				setRequestEnv(request, configurationService);
@@ -151,10 +161,11 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
 			}
 
 		} catch (SystemConfigurationException sce) {
+			log.error("execute: Exception system configuration exception caught.", sce);
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.invalidcustomfield"));
 		} catch (Exception e) {
-			log.error("Exception while creating edit custom field form.", e);
+			log.error("execute: Exception while creating edit custom field form.", e);
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.system"));
 		}

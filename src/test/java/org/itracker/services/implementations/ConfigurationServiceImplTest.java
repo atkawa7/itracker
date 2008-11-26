@@ -15,6 +15,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 
+import org.apache.log4j.Logger;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
@@ -28,16 +29,14 @@ import org.itracker.persistence.dao.ConfigurationDAO;
 import org.itracker.persistence.dao.CustomFieldDAO;
 import org.itracker.persistence.dao.CustomFieldValueDAO;
 import org.itracker.persistence.dao.LanguageDAO;
-import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.persistence.dao.ProjectDAO;
 import org.itracker.persistence.dao.ProjectScriptDAO;
 import org.itracker.persistence.dao.WorkflowScriptDAO;
 import org.itracker.services.ConfigurationService;
+import org.itracker.services.util.IssueUtilities;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-
-import org.apache.log4j.Logger;
 
 public class ConfigurationServiceImplTest extends
 		AbstractDependencyInjectionTest {
@@ -52,7 +51,13 @@ public class ConfigurationServiceImplTest extends
 	private CustomFieldDAO customFieldDAO;
 	private CustomFieldValueDAO customFieldValueDAO;
 	private LanguageDAO languageDAO;
+	private Properties configurationProperties;
 
+	/**
+	 * Object to be Tested: configuration-service
+	 */
+	private ConfigurationService configurationService;
+	
 	public static final class TestInitialContextFactory implements
 			InitialContextFactory {
 
@@ -73,11 +78,17 @@ public class ConfigurationServiceImplTest extends
 
 
 
-	/**
-	 * Object to be Tested: configuration-service
-	 */
-	private ConfigurationService configurationService;
-	private Properties configurationProperties;
+	
+	@Test
+	public void testConfigurationServiceImplConstructor(){
+		try{
+			configurationService = new ConfigurationServiceImpl(null, configurationDAO, customFieldDAO, customFieldValueDAO,
+					languageDAO, projectScriptDAO, workflowScriptDAO);
+			fail("argument Properties configurationProperties is null, did not throw IllegalArgumentException");
+		} catch (IllegalArgumentException e){
+			assertTrue(true);
+		}
+	}
 
 	@Test
 	public void testLookupConfigurationItemById() {
@@ -171,6 +182,10 @@ public class ConfigurationServiceImplTest extends
 		
 		prop = configurationService.getIntegerProperty("non_existent_property_name", 123456);
 		assertEquals(123456,prop);
+		
+		//project property is in configuration.properties, value is itracker		
+		prop = configurationService.getIntegerProperty("project", 123456);
+		assertEquals(123456,prop);
 	}
 	
 	@Test
@@ -180,7 +195,12 @@ public class ConfigurationServiceImplTest extends
 		
 		prop = configurationService.getLongProperty("non_existent_property_name", 123456L);
 		assertEquals(123456,prop);
+		
+		//project property is in configuration.properties, value is itracker		
+		prop = configurationService.getLongProperty("project", 123456);
+		assertEquals(123456,prop);
 	}
+	
 
 	@Test
 	public void testProperty() {
@@ -190,22 +210,58 @@ public class ConfigurationServiceImplTest extends
 		
 	}
 	
+ 	@Test 
+ 	public void testResetConfigurationCache() {
+		//SystemConfigurationUtilities.TYPE_RESOLUTION, value 4		
+		configurationService.resetConfigurationCache(4);
+		assertEquals(1, IssueUtilities.getResolutions(Locale.ENGLISH).size());
+		
+		//SystemConfigurationUtilities.TYPE_SEVERITY, value 3
+		configurationService.resetConfigurationCache(3);
+		assertEquals(1, IssueUtilities.getSeverities(Locale.ENGLISH).size());
+		
+		//SystemConfigurationUtilities.TYPE_STATUS, value 2
+		configurationService.resetConfigurationCache(2);
+		assertEquals(1, IssueUtilities.getStatuses(Locale.ENGLISH).size());
+		
+		//SystemConfigurationUtilities.TYPE_CUSTOMFIELD, value 5
+		configurationService.resetConfigurationCache(5);
+		assertEquals(4, IssueUtilities.getCustomFields(Locale.ENGLISH).size()); 			
+ 		}
+	
 	@Test
 	public void testGetConfigurationItemsByType() {
 		List<Configuration> configs = configurationService.getConfigurationItemsByType(1);
-		assertNotNull(configs);
-		assertEquals("configs of type 1", 2, configs.size());
+ 		assertNotNull(configs);
+		assertEquals("configs of type ", 2, configs.size());
 		assertEquals("config type", 1, configs.get(0).getType());
-		
-		configs = configurationService.getConfigurationItemsByType(2);
-		assertNotNull(configs);
+		assertEquals("configs of type 2", 2, configs.size());
+ 		
+ 		configs = configurationService.getConfigurationItemsByType(2);
+ 		assertNotNull(configs);
+		assertEquals("configs of type ", 1, configs.size());
 		assertEquals("configs of type 2", 1, configs.size());
-		
-		configs = configurationService.getConfigurationItemsByType(1, Locale.UK);
+		assertEquals("config type", 2, configs.get(0).getType());
+ 		
+		//SystemConfigurationUtilities.TYPE_LOCALE, value is 1
+ 		configs = configurationService.getConfigurationItemsByType(1, Locale.UK);
+ 		assertNotNull(configs);
+		assertEquals("configs of type", 2, configs.size());
+		assertEquals("configs of type 2", 2, configs.size());
+ 		
+		//SystemConfigurationUtilities.TYPE_STATUS, value is 2
+ 		configs = configurationService.getConfigurationItemsByType(2, Locale.UK);
+ 		assertNotNull(configs);
+		assertEquals("configs of type ", 1, configs.size());
+		assertEquals("configs of type 1", 1, configs.size());
+ 		
+		//SystemConfigurationUtilities.TYPE_SEVERITY, value is 3
+		configs = configurationService.getConfigurationItemsByType(3, Locale.UK);
 		assertNotNull(configs);
-		assertEquals("configs of type 1", 2, configs.size());
+		assertEquals("configs of type 1", 1, configs.size());
 		
-		configs = configurationService.getConfigurationItemsByType(2, Locale.UK);
+		//SystemConfigurationUtilities.TYPE_RESOLUTION, value is 4
+		configs = configurationService.getConfigurationItemsByType(4, Locale.UK);
 		assertNotNull(configs);
 		assertEquals("configs of type 1", 1, configs.size());
 		
@@ -254,6 +310,7 @@ public class ConfigurationServiceImplTest extends
 	
 	@Test
 	public void testRemoveConfigurationItems() {
+		//test method removeConfigurationItems(int type)
 		Configuration conf = new Configuration(123,"1","1",2);
 		configurationDAO.save(conf);
 		Integer id = conf.getId();
@@ -264,6 +321,28 @@ public class ConfigurationServiceImplTest extends
 		conf = configurationDAO.findByPrimaryKey(id);
 		assertNull("removed item", conf);
 		
+		//test method removeConfigurationItems(Configuration configuration)
+		Configuration conf1 = new Configuration(234,"1","1",2);
+		configurationDAO.save(conf1);
+		Integer id1 = conf1.getId();
+		assertNotNull(id1);
+		assertNotNull(configurationDAO.findByPrimaryKey(id1));
+		
+		configurationService.removeConfigurationItems(conf1);
+		conf1 = configurationDAO.findByPrimaryKey(id1);
+		assertNull("removed item", conf1);
+	}
+	
+ 	@Test
+ 	@Ignore
+	public void testRemoveCustomFieldValues(){
+		CustomField customField = this.customFieldDAO.findByPrimaryKey(4);
+		assertNotNull("CustomField#id:4", customField);
+		CustomFieldValue cfv = customField.getOptions().get(0);		
+		Integer cfvId = cfv.getId();		
+		assertNotNull("CustomFieldValue#id", cfvId);
+		configurationService.removeCustomFieldValues(4);
+		assertNull(customFieldValueDAO.findByPrimaryKey(cfvId));
 	}
 	
 	@Test 
@@ -444,16 +523,25 @@ public class ConfigurationServiceImplTest extends
 	
 	@Test
 	public void testRemoveCustomField() {
+		//test CustomField which type is String
 		CustomField customField = new CustomField("my_field", Type.STRING);
 		customFieldDAO.save(customField);
 		Integer id = customField.getId();
 		assertNotNull( id );
-		assertNotNull( customFieldDAO.findByPrimaryKey(id) );
-		
+		assertNotNull( customFieldDAO.findByPrimaryKey(id) );		
 		
 		configurationService.removeCustomField(id);
-		assertNull( customFieldDAO.findByPrimaryKey(id) );
+		assertNull( customFieldDAO.findByPrimaryKey(id) );	
 		
+		//test CustomField which type is List
+		CustomField customField1 = new CustomField("List CustomField", Type.LIST);
+		customFieldDAO.save(customField1);
+		Integer id1 = customField1.getId();
+		assertNotNull( id1 );
+		assertNotNull( customFieldDAO.findByPrimaryKey(id1) );		
+		
+		configurationService.removeCustomField(id1);
+		assertNull( customFieldDAO.findByPrimaryKey(id1) );
 	}
 	
 	@Test
@@ -532,23 +620,14 @@ public class ConfigurationServiceImplTest extends
 	}
 	
 	@Test
-	@Ignore
 	//TODO: Activate skipped, ignored Test (when implementation is done correctly)
 	// FIXME: probably getLanguageItemByKey() should search for the provided locale first and
 	// only then for the BASE locale, not vice versa
 	public void testGetLanguageItemByKey() {
-		try {
-			configurationService.getLanguageItemByKey("test_key", Locale.US);
-			fail("test_key, " + Locale.US);
-		} catch (NoSuchEntityException e) {
-		}
-		
-		try {
-			Language lang = configurationService.getLanguageItemByKey("test_key", new Locale("test_locale"));
-			System.out.println(lang);
-		} catch (NoSuchEntityException e) {
-			fail("test_key, test_locale" );
-		}
+		Language languageItem = configurationService.getLanguageItemByKey("test_key", null);
+		assertNotNull("Language", languageItem);
+		assertEquals("id", new Integer(9999971), languageItem.getId());
+		assertEquals("resource_value", "test_value", languageItem.getResourceValue());
 		
 	}
 	
@@ -643,8 +722,7 @@ public class ConfigurationServiceImplTest extends
 		
 	}
 	
-	@Test
-	@Ignore
+	@Test	
 	public void testGetAvailableLanguages() {
 		Map<String,List<String>> availableLanguages = configurationService.getAvailableLanguages();
 		assertNotNull( availableLanguages );
@@ -655,7 +733,6 @@ public class ConfigurationServiceImplTest extends
 	}
 	
 	@Test
-	@Ignore
 	public void testGetNumberAvailableLanguages() {
 		int availableLanguages = configurationService.getNumberAvailableLanguages();
 		

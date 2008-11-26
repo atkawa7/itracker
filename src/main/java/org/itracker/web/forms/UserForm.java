@@ -231,9 +231,9 @@ public class UserForm extends ValidatorForm {
 
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
-
-		ActionErrors errors = new ActionErrors();
-
+		
+		ActionErrors errors = super.validate(mapping, request);
+		
 		if (password == null || password.trim().equals("")) {
 			return errors;
 		}

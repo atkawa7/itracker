@@ -116,6 +116,17 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
 				return mapping.findForward("unauthorized");
 
 			} else {
+	            String pageTitleKey = "";
+	            String pageTitleArg = "";
+	            pageTitleKey = "itracker.web.admin.editcustomfield.title.create";
+	            if (action == "update") {
+	            	 pageTitleKey = "itracker.web.admin.editcustomfield.title.update";
+	            }
+	            
+	            request.setAttribute("languages", configurationService.getAvailableLanguages());
+	            request.setAttribute("pageTitleKey", pageTitleKey); 
+	            request.setAttribute("pageTitleArg", pageTitleArg);    
+				
 				request.setAttribute("languages", languages);
 				request.setAttribute("customFieldValueForm", customFieldValueForm);
 				request.setAttribute("action", action);

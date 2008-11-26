@@ -11,6 +11,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.apache.derby.catalog.GetProcedureColumns;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Component;
 import org.itracker.model.CustomField;
@@ -196,21 +197,28 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 
 		version = projectService.getProjectVersion(version.getId());
 		assertEquals("version not updated", version.getMinor(), 2);
+		
+		projectDAO.detach(project);
+		projectService.removeProjectVersion(project.getId(), version.getId());
+		 assertNull("version not removed", projectService
+		 .getProjectVersion(version.getId()));
+
 	}
 
 	@Test
-	@Ignore
 	public void removeProjectVersion() {
 
-		Version version = projectService.getProjectVersion(1);
-		assertNotNull("version not found", version);
+//		Version version = projectService.getProjectVersion(1);
+//		assertNotNull("version not found", version);
 
 		Project project = projectService.getProject(2);
 		Assert.assertNotNull("project not found", project.getId());
 
-		projectService.removeProjectVersion(project.getId(), version.getId());
+		projectDAO.detach(project);
+		assertTrue(projectService.removeProjectVersion(project.getId(), 1));
 		assertNull("version not removed", projectService
-				.getProjectVersion(version.getId()));
+				.getProjectVersion(1));
+		
 
 	}
 
@@ -238,8 +246,7 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		Project project = projectService.getProject(2);
 		Assert.assertNotNull("project not found", project.getId());
 
-		assertEquals(0,
-				project.getOwners().size());
+		assertEquals(0, project.getOwners().size());
 		assertEquals(projectService.getProjectOwners(project.getId()).size(),
 				project.getOwners().size());
 
@@ -247,7 +254,6 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		newOwners.add(1);
 		projectService.setProjectOwners(project, newOwners);
 		assertEquals(1, projectService.getProjectOwners(project.getId()).size());
-		
 
 		projectService.setProjectOwners(project, new HashSet<Integer>());
 		assertEquals(0, projectService.getProjectOwners(project.getId()).size());
@@ -426,6 +432,18 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		assertNotNull(project);
 		assertEquals("version not updated", 1, project.getVersions().size());
 
+	}
+	
+	@Test
+	public void testIsNameUniqueProjectName() throws Exception {
+		
+		List<Project> projects = projectDAO.findAll();
+		String existingName = projects.get(0).getName();
+		
+		assertTrue("existing name", projectService.isUniqueProjectName(existingName, projects.get(0).getId()));
+		assertFalse("existing name", projectService.isUniqueProjectName(existingName, projects.get(1).getId()));
+		assertFalse("existing name", projectService.isUniqueProjectName(existingName, null));
+		
 	}
 	
 	@Override

@@ -1,8 +1,10 @@
 package org.itracker.web.actions.admin.configuration;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -33,6 +35,9 @@ public class ListConfigurationAction extends ItrackerBaseAction {
 			request.setAttribute("statuses",statuses);
 			request.setAttribute("customfields",customfields);
 			request.setAttribute("pageLocale", LoginUtilities.getCurrentLocale(request));
+
+			request.setAttribute("pageTitleKey", "itracker.web.admin.listconfiguration.title");
+			request.setAttribute("pageTitleArg", "");
 			
 			return mapping.findForward("listconfiguration");
 	}
