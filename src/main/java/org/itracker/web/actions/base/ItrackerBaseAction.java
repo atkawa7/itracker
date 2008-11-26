@@ -116,15 +116,15 @@ public abstract class ItrackerBaseAction extends Action {
 	protected boolean hasPermission(int permissionNeeded,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		if (isLoggedIn(request, response)) {
+//		if (isLoggedIn(request, response)) {
 			HttpSession session = request.getSession(false);
 			Map<Integer, Set<PermissionType>> permissionsMap = (session == null) ? null
 					: getUserPermissions(session);
-			if (!UserUtilities.hasPermission(permissionsMap, permissionNeeded)) {
-				return false;
+			if (UserUtilities.hasPermission(permissionsMap, permissionNeeded)) {
+				return true;
 			}
-			return true;
-		}
+//			return true;
+//		}
 		return false;
 	}
 
