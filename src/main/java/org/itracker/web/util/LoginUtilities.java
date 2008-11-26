@@ -36,7 +36,6 @@ import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
 import org.itracker.services.UserService;
 import org.itracker.services.util.AuthenticationConstants;
-import org.jfree.util.Log;
 
 public class LoginUtilities {
 
@@ -398,7 +397,7 @@ public class LoginUtilities {
 		UserPreferences userPrefs = user.getPreferences();
 		// TODO : this is a hack, remove when possible
 		if (userPrefs == null) {
-			Log.warn("setupSession: got user with no preferences!: " + user + " (prefs: " + user.getPreferences() + ")");
+			logger.warn("setupSession: got user with no preferences!: " + user + " (prefs: " + user.getPreferences() + ")");
 			userPrefs = new UserPreferences();
 		}
 		session.setAttribute(Constants.PREFERENCES_KEY, userPrefs);
