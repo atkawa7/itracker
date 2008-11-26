@@ -53,7 +53,6 @@ import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
-import org.jfree.util.Log;
 
 /**
  * Implements the UserService interface. See that interface for method
@@ -294,7 +293,9 @@ public class UserServiceImpl implements UserService {
 //        // Only set the password if it is a new value...
         if (user.getPassword() != null && (!user.getPassword().equals(""))) {
 //                && (!user.getPassword().equals(user.getPassword()))) {
-        	Log.info("updateUser: setting new password for " + user.getLogin());
+        	if (logger.isInfoEnabled()) {
+        		logger.info("updateUser: setting new password for " + user.getLogin());
+        	}
             existinguser.setPassword(user.getPassword());
         }
 
