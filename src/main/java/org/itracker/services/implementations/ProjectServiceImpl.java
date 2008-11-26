@@ -31,6 +31,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.itracker.model.Component;
 import org.itracker.model.CustomField;
+import org.itracker.model.Issue;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.User;
@@ -113,13 +114,16 @@ public class ProjectServiceImpl implements ProjectService {
 
 	public boolean removeProjectComponent(Integer projectId, Integer componentId) {
 
-		Project project = projectDAO.findByPrimaryKey(projectId);
-
 		Component component = componentDAO.findById(componentId);
-
-		Collection<Component> components = project.getComponents();
-
-		components.remove(component);
+		if(component == null) {
+			return false; //component doesn't exist
+		}
+		
+		if(!component.getProject().getId().equals(projectId)) {
+			//throw new ProjectException("the component doesn't belong to the project specified");
+			return false;
+		}
+		
 		componentDAO.delete(component);
 
 		return true;
@@ -149,13 +153,36 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	public boolean removeProjectVersion(Integer projectId, Integer versionId) {
-		Project project = projectDAO.findByPrimaryKey(projectId);
+
 		Version version = versionDAO.findByPrimaryKey(versionId);
-		Collection<Version> versions = project.getVersions();
+		if (version == null) {
+			return false; // version doesn't exist
+		}
 
-		versions.remove(version);
+		if (!version.getProject().getId().equals(projectId)) {
+			// throw new
+			// ProjectException("the component doesn't belong to the project specified");
+			return false;
+		}
+
+		List<Issue> issues = issueDAO.findByTargetVersion(version.getId());
+		Iterator<Issue> iterator = issues.iterator();
+		while (iterator.hasNext()) {
+			Issue issue = (Issue) iterator.next();
+			issue.setTargetVersion(null);
+			issueDAO.save(issue);
+		}
+
+		issues = issueDAO.findByVersion(version.getId());
+		iterator = issues.iterator();
+		while (iterator.hasNext()) {
+			Issue issue = (Issue) iterator.next();
+			if (issue.getVersions().remove(version)) {
+				issueDAO.save(issue);
+			}
+		}
+
 		versionDAO.delete(version);
-
 		return true;
 	}
 
@@ -207,7 +234,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * TODO: implement Locale-aware ProjectFields. (Why? please explain why this is need)
+	 * TODO: implement Locale-aware ProjectFields.
 	 */
 	public List<CustomField> getProjectFields(Integer projectId, Locale locale) {
 
@@ -263,7 +290,6 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	public boolean removeProjectScript(Integer projectId, Integer scriptId) {
-		// TODO: R3.2: implemented ProjectScripts here
 		// Project project = projectDAO.findByPrimaryKey(projectId);
 		ProjectScript script = projectScriptDAO.findByPrimaryKey(scriptId);
 		this.projectScriptDAO.delete(script);
@@ -281,7 +307,6 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	public ProjectScript updateProjectScript(ProjectScript projectScript) {
-		// TODO: R3.2: implemented ProjectScripts here
 		ProjectScript editprojectScript = projectScriptDAO
 				.findByPrimaryKey(projectScript.getId());
 		editprojectScript.setId(projectScript.getId());
@@ -405,20 +430,12 @@ public class ProjectServiceImpl implements ProjectService {
 		return project;
 	}
 	
-	public Boolean isUniqueProjectName(String projectName , Integer updatedProjectId )
-	{
-		List<Project> projects = getProjectDAO().findByName(projectName);
-		if(projects != null && projects.size() > 0)
-		{
-			//TODO: improve "code readability without comments"
-			// In case of new created project
-			if(updatedProjectId == null)
-			{
-				return false;
-			}
-			// validate that the  returned project is not the updated one.
-			else if(projects.get(0) != null &&  ! projects.get(0).getId().equals(updatedProjectId))
-			{
+	public Boolean isUniqueProjectName(String projectName,
+			Integer updatedProjectId) {
+		Project project = getProjectDAO().findByName(projectName);
+		if (project != null) {
+			// validate that the returned project is not the updated one.
+			if (!project.getId().equals(updatedProjectId)) {
 				return false;
 			}
 		}
