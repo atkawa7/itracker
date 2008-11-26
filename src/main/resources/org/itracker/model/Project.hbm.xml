@@ -115,10 +115,10 @@
     where issue.project.id = :projectId ]]>
     </query>
     
-    <query name="ProjectsByNameQuery"><![CDATA[
+    <query name="ProjectByNameQuery"><![CDATA[
     select project 
     from Project as project
-    where upper(project.name) = upper(:projectName) ]]>
+    where project.name = :projectName ]]>
     </query>
     
     
