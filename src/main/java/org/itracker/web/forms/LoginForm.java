@@ -74,6 +74,11 @@ public class LoginForm extends ValidatorForm {
 			HttpServletRequest request) {
 		Boolean skipLogin = (Boolean) request.getSession().getAttribute(
 				"loginForwarded");
+		if (null == skipLogin) {
+			skipLogin = false;
+		}
+		skipLogin |= (null == getLogin() && null == getPassword());
+		
 		ActionErrors errors;
 		/*
 		 * SKIP credentials validation when forwarded to login.

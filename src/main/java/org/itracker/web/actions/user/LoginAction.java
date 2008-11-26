@@ -74,7 +74,6 @@ public class LoginAction extends ItrackerBaseAction {
 		 */
 		if (skipLogin) {
 			log.debug("execute: forwarded, skip login.");
-			saveErrors(request, null);
 			saveErrors(request, new ActionMessages());
 			return mapping.getInputForward();
 		} else {

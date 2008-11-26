@@ -16,12 +16,28 @@
         </form>
 
         <form name="loginForm">
-            <field property="login" depends="required">
-                <arg0 key="itracker.web.attr.login"/>
-            </field>
-            <field property="password" depends="required">
-                <arg0 key="itracker.web.attr.password"/>
-            </field>
+			<field property="login"
+				depends="validwhen">
+				<msg key="itracker.web.error.validate.required" name="validwhen" />
+				<arg0 key="itracker.web.attr.login" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>
+						((password == null) or (*this* != null))
+					</var-value>
+				</var>
+			</field>
+			<field property="password"
+				depends="validwhen">
+				<msg key="itracker.web.error.validate.required" name="validwhen" />
+				<arg0 key="itracker.web.attr.password" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>
+						((login == null) or (*this* != null))
+					</var-value>
+				</var>
+			</field>
         </form>
 
         <form name="selfRegistrationForm">
