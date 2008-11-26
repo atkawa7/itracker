@@ -40,7 +40,6 @@ import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 import org.itracker.services.ConfigurationService;
-import org.jfree.util.Log;
 
 public class EmailService {
 
@@ -162,7 +161,7 @@ public class EmailService {
 		
 			this.session = (Session) NamingUtilites.lookup(ctx, mailSessionLookupName);
 		} catch (NamingException e) {
-			Log.warn("init: failed to get Mailsession from initial context.", e);
+			logger.warn("init: failed to get Mailsession from initial context.", e);
 		}
 		if (null == this.session) {
 			logger
