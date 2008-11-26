@@ -51,7 +51,7 @@ public interface ProjectDAO extends BaseDAO<Project> {
      * Finds a project by name. 
      * 
      * @param name project
-     * @return list of projects in unspecified order
+     * @return the project by name or null if it does not exist in database.
      */
-    List<Project> findByName(String name);
+    Project findByName(String name);
 }

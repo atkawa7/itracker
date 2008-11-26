@@ -604,5 +604,23 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         this.projectDAO = projectDAO;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return 
+     */
+	@SuppressWarnings("unchecked")
+	public List<Issue> findByTargetVersion(Integer versionId) {
+
+	        try {
+	            final Query query = getSession().getNamedQuery("FindByTargetVersion");
+	            query.setInteger("versionId", versionId);
+	            return query.list();
+	        } catch (HibernateException ex) {
+	            throw convertHibernateAccessException(ex);
+	        }
+
+		
+	}
+
 
 }

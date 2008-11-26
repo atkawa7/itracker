@@ -278,5 +278,11 @@ public interface IssueDAO extends BaseDAO<Issue> {
      */
     List<Issue> query(IssueSearchQuery queryModel, User user, Map<Integer, Set<PermissionType>> userPermissions);
 
+    /**
+     * Delete all issues targeted for the specified version.
+     * @param versionId the version ID.
+     */
+	List<Issue> findByTargetVersion(Integer versionId);
+
 
 }

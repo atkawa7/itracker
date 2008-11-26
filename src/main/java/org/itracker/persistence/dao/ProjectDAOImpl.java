@@ -77,20 +77,19 @@ public class ProjectDAOImpl extends BaseHibernateDAOImpl<Project>
     	return null;
     }
     
-    @SuppressWarnings("unchecked") 
-    public List<Project> findByName(String name)
+    public Project findByName(String name)
     {
     
-    	List<Project> projects ;
+    	Object project;
     	try {
-	    	Query query = getSession().getNamedQuery("ProjectsByNameQuery");
+	    	Query query = getSession().getNamedQuery("ProjectByNameQuery");
 	    	query.setParameter("projectName", name);
-	    	projects = query.list();
+	    	project = query.uniqueResult();
+	    	return (Project)project;
     	} catch (HibernateException ex) {
-        throw convertHibernateAccessException(ex);
-    }
-      
-    return projects;
+	        throw convertHibernateAccessException(ex);
+	    }
+    	
     }
 
 }
