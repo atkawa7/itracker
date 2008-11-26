@@ -57,7 +57,6 @@ import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NamingUtilites;
 import org.itracker.services.util.SystemConfigurationUtilities;
-import org.jfree.util.Log;
 
 /**
  * Implementation of the ConfigurationService Interface.
@@ -205,7 +204,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 								super.getProperty(
 				    					"jndi_override_prefix", null) + "/" + String.valueOf(key));
 					} catch (NamingException e) {
-						if (Log.isDebugEnabled()) {
+						if (logger.isDebugEnabled()) {
 							logger.debug("get: failed to create initial context", e);
 						}
 					}
