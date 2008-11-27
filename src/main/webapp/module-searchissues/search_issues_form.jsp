@@ -170,17 +170,9 @@
                 </tr>
                 <tr><td colspan="99"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
                 <tr>
-                  <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.contributor"/>: </td>
-                  <td valign="top" class="editColumnText">
-                    <html:select property="contributor" styleClass="editColumnText">
-                      <html:option value="-1" key="itracker.web.generic.any"/>
-                      <% for(int j = 0; j < possibleContributors.size(); j++) { %>
-                           <html:option value="<%= possibleContributors.get(j).getId().toString() %>"><%= possibleContributors.get(j).getFirstName() + " " + possibleContributors.get(j).getLastName() %></html:option>
-                      <% } %>
-                    </html:select>
-                  </td>
+
                   <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.target"/>: </td>
-                  <td valign="top" class="editColumnText">
+                  <td valign="top" class="editColumnText" colspan="3">
                     <html:select property="targetVersion" styleClass="editColumnText">
                       <html:option value="-1" key="itracker.web.generic.any"/>
                       <% for(int i = 0; i < versions.size(); i++) { %>

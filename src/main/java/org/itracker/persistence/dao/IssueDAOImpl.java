@@ -532,11 +532,6 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
             criteria.add(Restrictions.in("version", searchQuery.getVersions()));
         }
 
-        // contributor
-        if (searchQuery.getContributor() != null) {
-            criteria.add(Restrictions.eq("contributor", searchQuery.getContributor()));
-        }
-
         // creator
         if (searchQuery.getCreator() != null) {
             criteria.add(Restrictions.eq("creator", searchQuery.getCreator()));

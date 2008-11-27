@@ -36,7 +36,6 @@ public class SearchForm extends ValidatorForm {
 	private static final long serialVersionUID = 1L;
 	private String action;
 	private Integer[] components;
-	private Integer contributor;
 	private Integer creator;
 	private String orderBy;
 	private Integer owner;
@@ -53,7 +52,6 @@ public class SearchForm extends ValidatorForm {
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		action = null;
 		components = null;
-		contributor = null;
 		creator = null;
 		orderBy = null;
 		owner = null;
@@ -95,14 +93,6 @@ public class SearchForm extends ValidatorForm {
 			this.components = null;
 		else
 			this.components = components.clone();
-	}
-
-	public Integer getContributor() {
-		return contributor;
-	}
-
-	public void setContributor(Integer contributor) {
-		this.contributor = contributor;
 	}
 
 	public Integer getCreator() {

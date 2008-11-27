@@ -120,13 +120,6 @@ public class SearchIssuesAction extends ItrackerBaseAction {
                 isqm.setCreator(null);
             }
             
-            Integer contributorValue = (Integer) PropertyUtils.getSimpleProperty(form, "contributor");
-            if(contributorValue != null && contributorValue.intValue() != -1) {
-                isqm.setContributor(contributorValue);
-            } else {
-                isqm.setContributor(null);
-            }
-            
             Integer ownerValue = (Integer) PropertyUtils.getSimpleProperty(form, "owner");
             if(ownerValue != null && ownerValue.intValue() != -1) {
                 isqm.setOwner(getITrackerServices().getUserService().getUser(ownerValue));

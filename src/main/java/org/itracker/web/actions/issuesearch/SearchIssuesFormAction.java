@@ -198,9 +198,6 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
 	                    searchForm.setComponents(componentsArray);
                     }
 
-                    // TODO: contributor? is this same as creator? should it be removed? change to user-type?
-                    searchForm.setContributor(query.getContributor());
-                    
                     searchForm.setCreator(null);
                     if (null != query.getCreator()) {
                     	searchForm.setCreator(query.getCreator().getId());

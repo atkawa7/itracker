@@ -47,7 +47,6 @@ public class IssueSearchQuery implements Serializable {
 	private Integer targetVersion = null;
 	private User owner = null;
 	private User creator = null;
-	private Integer contributor = null;
 	private String text = null;
 	private String resolution = null;
 
@@ -168,14 +167,6 @@ public class IssueSearchQuery implements Serializable {
 
 	public void setCreator(User value) {
 		creator = value;
-	}
-
-	public Integer getContributor() {
-		return contributor;
-	}
-
-	public void setContributor(Integer value) {
-		contributor = value;
 	}
 
 	public String getText() {
