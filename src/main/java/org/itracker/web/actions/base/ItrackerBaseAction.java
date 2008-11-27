@@ -470,7 +470,7 @@ public abstract class ItrackerBaseAction extends Action {
 	}
 
 	@Override
-	protected Locale getLocale(HttpServletRequest request) {
+	public Locale getLocale(HttpServletRequest request) {
 		Locale locale = super.getLocale(request);
 		if (null == locale) {
 			locale = LoginUtilities.getCurrentLocale(request);
