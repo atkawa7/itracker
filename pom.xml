@@ -565,7 +565,7 @@
                             <jdk>1.5</jdk>
 							<excludes>
 								<exclude>org.itracker.web.actions/**/*.java</exclude>
-								<exclude>**/web/scheduler/tasks/ReminderNotification.java</exclude>
+								<exclude>org.itracker.web.scheduler.tasks/ReminderNotification.java</exclude>
 								<exclude>**/services/util/ImportHandler.java</exclude>
 							</excludes>
                         </configuration>
