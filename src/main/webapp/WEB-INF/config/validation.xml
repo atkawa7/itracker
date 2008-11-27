@@ -42,6 +42,7 @@
 
         <form name="selfRegistrationForm">
             <field property="email" depends="required,email">
+            	<msg name="email" key="itracker.web.error.validate.email"/>
                 <arg0 key="itracker.web.attr.email"/>
             </field>
             <field property="firstName" depends="required">
@@ -74,6 +75,7 @@
 
         <form name="userForm">
             <field property="email" depends="required,email">
+            	<msg name="email" key="itracker.web.error.validate.email"/>
                 <arg0 key="itracker.web.attr.email"/>
             </field>
             <field property="firstName" depends="required">
