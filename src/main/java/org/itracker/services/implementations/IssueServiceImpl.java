@@ -1058,7 +1058,7 @@ public class IssueServiceImpl implements IssueService {
 	 * @return
 	 */
 	private boolean assignIssue(Issue issue, User user, User assignedByUser,
-			boolean save) {
+			final boolean save) {
 
 		if (issue.getOwner() == user
 				|| (null != issue.getOwner() && issue.getOwner().equals(user))) {
@@ -1167,8 +1167,11 @@ public class IssueServiceImpl implements IssueService {
 				// Notification notification = new Notification();
 				Notification notification = new Notification(issue.getOwner(),
 						issue, Role.CONTRIBUTER);
-				// TODO check implementation
-				notificationService.addIssueNotification(notification);
+				if (save) {
+					notificationService.addIssueNotification(notification);
+				} else {
+					issue.getNotifications().add(notification);
+				}
 			}
 			IssueActivity activity = new IssueActivity(issue, unassignedByUser,
 					IssueActivityType.OWNER_CHANGE);
