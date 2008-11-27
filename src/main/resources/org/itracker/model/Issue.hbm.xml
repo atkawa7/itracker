@@ -67,42 +67,42 @@
             <many-to-many class="Version" column="version_id" outer-join="auto"/>
         </bag>
 
-        <bag name="notifications" table="notificationbean" cascade="all,delete-orphan" lazy="true" inverse="true">
+        <bag name="notifications" table="notificationbean" cascade="all" lazy="true" inverse="true">
             <key>
                 <column name="issue_id"/>
             </key>
             <one-to-many class="Notification"/>
         </bag>
 
-        <bag name="attachments" table="issueattachmentbean" cascade="all,delete-orphan" lazy="true" inverse="true">
+        <bag name="attachments" table="issueattachmentbean" cascade="all" lazy="true" inverse="true">
             <key>
                 <column name="issue_id"/>
             </key>
             <one-to-many class="IssueAttachment"/>
         </bag>
 
-        <bag name="fields" table="issuefieldbean" cascade="all,delete-orphan" lazy="true" inverse="true">
+        <bag name="fields" table="issuefieldbean" cascade="all" lazy="true" inverse="true">
             <key>
                 <column name="issue_id"/>
             </key>
             <one-to-many class="IssueField"/>
         </bag>
 
-        <bag name="history" table="issuehistorybean" cascade="all,delete-orphan" lazy="true" inverse="true">
+        <bag name="history" table="issuehistorybean" cascade="all" lazy="true" inverse="true">
             <key>
                 <column name="issue_id"/>
             </key>
             <one-to-many class="IssueHistory"/>
         </bag>
 
-        <bag name="relations" table="issuerelationbean" cascade="all,delete-orphan" lazy="true" inverse="true">
+        <bag name="relations" table="issuerelationbean" cascade="all" lazy="true" inverse="true">
             <key>
                 <column name="issue_id"/>
             </key>
             <one-to-many class="IssueRelation"/>
         </bag>
 
-        <bag name="activities" table="issueactivitybean" cascade="all,delete-orphan" lazy="false" inverse="true" >
+        <bag name="activities" table="issueactivitybean" cascade="all" lazy="false" inverse="true" >
             <key>
                 <column name="issue_id" not-null="true" />
             </key>
