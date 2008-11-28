@@ -1,4 +1,6 @@
-       // how reliable is this test?
+// TODO: Code Clean Up needed...
+
+// how reliable is this test?
        isIE = (document.all ? true : false);
      	 isDOM = (document.getElementById ? true : false);
 
@@ -11,7 +13,6 @@
      	 var displayYear = new Date().getFullYear();
     	 var displayDivName;
     	 var displayElement;
-
 
       // get the true offset of anything on NS4, IE4/5 & NS6, even if it's in a table!
       function getAbsX(elt) {
@@ -122,13 +123,13 @@
                 var elt = document.all[eltName];
                 elt.innerHTML = daysGrid;
             } else if (isDOM) {
-                var elt = document.getElementById(eltName);
-                elt.innerHTML = daysGrid;
+                var elti = document.getElementById(eltName);
+                elti.innerHTML = daysGrid;
       	    } else {
-                var elt = document.layers[eltName].document;
-                elt.open();
-                elt.write(daysGrid);
-                elt.close();
+                var eltl = document.layers[eltName].document;
+                eltl.open();
+                eltl.write(daysGrid);
+                eltl.close();
 	          }
        }
 
