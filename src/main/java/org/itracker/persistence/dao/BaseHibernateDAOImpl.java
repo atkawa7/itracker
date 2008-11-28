@@ -73,6 +73,7 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
     	}
         try {
             getSession().delete(entity);
+            getSession().flush();
         } catch (HibernateException ex) {
         	logger.debug("delete: caught HibernateException, call to convertHibernateException", ex);
             throw convertHibernateAccessException(ex);
