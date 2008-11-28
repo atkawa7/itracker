@@ -16,8 +16,6 @@ import org.itracker.model.PermissionType;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
-import org.itracker.services.ReportService;
-import org.itracker.services.UserService;
 import org.itracker.services.util.ReportUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
@@ -33,23 +31,43 @@ public class AdminHomeAction extends ItrackerBaseAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		//  TODO: Action Cleanup
+		final Map<Integer, Set<PermissionType>> permissions = RequestHelper
+		.getUserPermissions(request.getSession());
+
 		
+		
+		if (!UserUtilities.hasPermission(permissions,
+				UserUtilities.PERMISSION_USER_ADMIN)) {
+
+			mapping.findForward("listprojectadmin");
+		}
+
+		execSetupJspEnv(request);
+		
+		return mapping.findForward("adminhome");
+	}
+
+	
+	/**
+	 * This utility has to be called for any page forwarding to the admin-home, before forwarding. Else the page will contain no data.
+	 * 
+	 * @param request
+	 */
+	public static final void execSetupJspEnv(HttpServletRequest request) {
 		Date time_millies = new Date(System.currentTimeMillis());
 		// super.executeAlways(mapping, form, request, response);
 
-		IssueService issueService = this.getITrackerServices()
+		IssueService issueService = ServletContextUtils.getItrackerServices()
 				.getIssueService();
-		ProjectService projectService = this.getITrackerServices()
-				.getProjectService();
-		ReportService reportService = this.getITrackerServices()
-				.getReportService();
-		ConfigurationService configurationService = this.getITrackerServices()
+//		ProjectService projectService = ServletContextUtils.getItrackerServices()
+//				.getProjectService();
+//		ReportService reportService = ServletContextUtils.getItrackerServices()
+//				.getReportService();
+		ConfigurationService configurationService = ServletContextUtils.getItrackerServices()
 				.getConfigurationService();
-		UserService userService = this.getITrackerServices().getUserService();
+//		UserService userService = ServletContextUtils.getItrackerServices().getUserService();
 
-		final Map<Integer, Set<PermissionType>> permissions = RequestHelper
-				.getUserPermissions(request.getSession());
+
 		ProjectService projectService2 = ServletContextUtils
 				.getItrackerServices().getProjectService();
 
@@ -140,11 +158,11 @@ public class AdminHomeAction extends ItrackerBaseAction {
 		request.setAttribute("exportReport", exportReport);
 		request.setAttribute("sizeps", projectService2.getAllProjects().size());
 		request.setAttribute("lastRun", lastRun);
-		request.setAttribute("ih", issueService);
-		request.setAttribute("ph", projectService);
-		request.setAttribute("rh", reportService);
-		request.setAttribute("sc", configurationService);
-		request.setAttribute("uh", userService);
+//		request.setAttribute("ih", issueService);
+//		request.setAttribute("ph", projectService);
+//		request.setAttribute("rh", reportService);
+//		request.setAttribute("sc", configurationService);
+//		request.setAttribute("uh", userService);
 		logTimeMillies("execute: put services to request", time_millies, log,
 				Level.INFO);
 
@@ -154,12 +172,5 @@ public class AdminHomeAction extends ItrackerBaseAction {
 		request.setAttribute("pageTitleArg", pageTitleArg);
 
 		logTimeMillies("execute: returning", time_millies, log, Level.INFO);
-		if (!UserUtilities.hasPermission(permissions,
-				UserUtilities.PERMISSION_USER_ADMIN)) {
-
-			mapping.findForward("listprojectadmin");
-		}
-		return mapping.findForward("adminhome");
 	}
-
 }

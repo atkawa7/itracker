@@ -33,6 +33,7 @@ import org.apache.struts.action.ActionMessages;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
+import org.itracker.web.actions.admin.AdminHomeAction;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
 
@@ -54,6 +55,7 @@ public class InitializeLanguagesAction extends ItrackerBaseAction {
 
             SystemConfigurationUtilities.initializeAllLanguages(configurationService, true);
 
+            AdminHomeAction.execSetupJspEnv(request);
             return mapping.getInputForward();
         } catch(Exception e) {
             log.error("Exception while reinitializing languages.", e);
