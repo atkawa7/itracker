@@ -488,7 +488,7 @@ public abstract class ItrackerBaseAction extends Action {
 	 * @param log
 	 * @param priority
 	 */
-	protected void logTimeMillies(String message, Date startTime, Logger log,
+	protected static void logTimeMillies(String message, Date startTime, Logger log,
 			Level level) {
 		if (log.isEnabledFor(level)) {
 			long milliesStart = startTime.getTime();
