@@ -57,21 +57,11 @@
             <field property="password" depends="required">
                 <arg0 key="itracker.web.attr.password"/>
             </field>
+            <!-- changed case from itracker.web.attr.confPassword -->
             <field property="confPassword" depends="required">
-                <arg0 key="itracker.web.attr.confPassword"/>
+                <arg0 key="itracker.web.attr.confpassword"/>
             </field>
         </form>
-        <!--   this has been replaced by issueForm, please test.
-          <form name="createIssueForm">
-             <field property="description" depends="required">
-               <arg0 key="itracker.web.attr.description"/>
-             </field>
-             <field property="history" depends="required">
-               <arg0 key="itracker.web.attr.detaileddescription"/>
-             </field>
-           </form>
-
--->
 
         <form name="userForm">
             <field property="email" depends="required,email">
