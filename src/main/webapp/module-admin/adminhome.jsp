@@ -90,8 +90,10 @@
           <td colspan="3" ><it:message key="itracker.web.admin.index.configadmin"/></td>
           <td colspan="2" align="right">
              
+             <%-- Removed due to Not working links (Bug#2341693)
              <it:link action="importdata" titleKey="itracker.web.admin.index.config.import.alt" styleClass="editColumnText">[<it:message key="itracker.web.attr.import"/>]</it:link>
              <it:link action="displayreport" target="_blank" queryString="${exportReport}" titleKey="itracker.web.admin.index.config.export.alt" styleClass="editColumnText">[<it:message key="itracker.web.attr.export"/>]</it:link>
+              --%>
              <it:link forward="listconfiguration" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link>
           </td>
         </tr>
