@@ -45,10 +45,10 @@ import org.itracker.web.util.ServletContextUtils;
  * TODO: Rewrite Javadocs here
  * This needs documentation.
  * Is it still used?
- * What is it used for
+ * What is it used for?
  * How?
- * Hmm, is it referenced by
- * AttachementDownloadController,
+ * It is referenced by
+ * AttachementDownloadController, (@deprecated Use org.itracker.web.actions.admin.attachment.DownloadAttachmentAction instead.)
  * ReportChartController,
  * ReportDownloadController
  * @author ready
