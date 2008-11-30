@@ -38,10 +38,19 @@ import org.itracker.services.util.UserUtilities;
 
 /**
  * TODO: Add Javadocs here: please comment this for documentation reasons. What is this Class used for?
+ * 
  * It seems like this gets started when the application starts up...
- * @author ready
  *
+ * What's the general idea?
+ * 
+ * Why is processAttachmentFiles commented and therefore not used currently?
+ * Where does itracker store its attachments?  
+ * What's the idea behind the attachment_dir ? 
+ * 
+ * @author ready
+ * 
  */
+
 public class ApplicationInitialization {
     
     private final Logger logger;
