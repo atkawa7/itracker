@@ -105,14 +105,14 @@ public class EditPreferencesAction extends ItrackerBaseAction {
             }
             errors = form.validate(mapping, request);
 
-            User existingUser = userService.getUser(user.getId());
+//            User existingUser = userService.getUser(user.getId());
             // edit user-object
             if(errors.isEmpty()) {
             	if (log.isDebugEnabled()){
             		log.debug("execute: updating user-attributes.");
             	}
             		
-                if(userService.allowPasswordUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
+                if(userService.allowPasswordUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
                     if(userForm.getPassword() != null && userForm.getPassword().trim().length() > 1) {
                         if(userForm.getCurrPassword() == null || "".equals(userForm.getCurrPassword())) {
                         	log.error("execute: current password was not set");
@@ -126,7 +126,7 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                                 if (log.isDebugEnabled()) {
                                 	log.debug("execute: setting new user password");
                                 }
-                                existingUser.setPassword(UserUtilities.encryptPassword(userForm.getPassword()));
+                                user.setPassword(UserUtilities.encryptPassword(userForm.getPassword()));
                             } catch(AuthenticatorException ae) {
                             	log.error("execute: current password was wrong, AuthenticatorException", ae);
                             	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.wrongpassword"));
@@ -145,15 +145,15 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                 }
 
                 // TODO: should this check happen earlier?
-                if(userService.allowProfileUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
+                if(userService.allowProfileUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
                 	if (log.isInfoEnabled()) {
-                		log.info("execute: allowing profile updates for " + existingUser);
+                		log.info("execute: allowing profile updates for " + user);
                 	}
-                    existingUser.setFirstName(userForm.getFirstName());
-                    existingUser.setLastName(userForm.getLastName());
-                    existingUser.setEmail(userForm.getEmail());
+                	user.setFirstName(userForm.getFirstName());
+                	user.setLastName(userForm.getLastName());
+                	user.setEmail(userForm.getEmail());
                 } else {
-                	log.error("execute: profile updates are not allowed for " + existingUser);
+                	log.error("execute: profile updates are not allowed for " + user);
                 	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprofileupdates"));
                 	saveErrors(request, errors);
                     return mapping.findForward("error");
@@ -167,13 +167,14 @@ public class EditPreferencesAction extends ItrackerBaseAction {
 
             if(errors.isEmpty()) {
                 log.debug("Passed required checks.  Updating user info for " + user.getLogin());
-                user = userService.updateUser(existingUser);
+                user = userService.updateUser(user);
 
                 UserPreferences userPrefs = user.getPreferences();
                 if (userPrefs == null) userPrefs = new UserPreferences();
                 
-                if(userService.allowPreferenceUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
-                    userPrefs.setUser(existingUser);
+                if(userService.allowPreferenceUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
+                    //userPrefs.setUser(existingUser);
+                	userPrefs.setUser(user);
 
                     userPrefs.setUserLocale(userForm.getUserLocale());
                     
@@ -206,12 +207,11 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                     userPrefs = userService.updateUserPreferences(userPrefs);
                 }
 
-                session.setAttribute(Constants.USER_KEY, existingUser);
+                //session.setAttribute(Constants.USER_KEY, existingUser);
+                session.setAttribute(Constants.USER_KEY, user);
                 session.setAttribute(Constants.PREFERENCES_KEY, userPrefs);
                 session.setAttribute(Constants.LOCALE_KEY, ITrackerResources.getLocale(userPrefs.getUserLocale()));
 
-        		// TODO: remove depreciated currLocale attribute
-        		request.setAttribute("currLocale", ITrackerResources.getLocale(userPrefs.getUserLocale()));
         		request.setAttribute(Constants.LOCALE_KEY, ITrackerResources.getLocale(userPrefs.getUserLocale()));
         		
                 session.removeAttribute(Constants.EDIT_USER_KEY);
