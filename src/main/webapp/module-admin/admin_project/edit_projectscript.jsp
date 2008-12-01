@@ -19,6 +19,7 @@
   
 <% // TODO : move redirect logic to the Action class. 
    ProjectScriptForm projectScriptForm = (ProjectScriptForm) request.getAttribute("projectScriptForm");
+   Locale locale = LoginUtilities.getCurrentLocale(request);
    boolean isUpdate = false;
     
    if ( "update".equals(action) )
@@ -92,19 +93,16 @@
                                 <html:select property="<%=fieldIdKey%>" styleClass="editColumnText">
                                     <c:forEach items="${projectScriptForm.customFields}" var="customfield" varStatus="k">
                                         <%  CustomField cfField = (CustomField) cfFields.get(indx);
-                                            String name = CustomFieldUtilities.getCustomFieldName(cfField.getId(), (java.util.Locale)pageContext.getAttribute("currLocale"));
+                                            String name = CustomFieldUtilities.getCustomFieldName(cfField.getId(), locale);
                                             name += " ";
-                                            name += CustomFieldUtilities.getTypeString(cfField.getFieldType(), (java.util.Locale)pageContext.getAttribute("currLocale"));
+                                            name += CustomFieldUtilities.getTypeString(cfField.getFieldType(), locale);
                                             indx++;
                                         %>
-                                        <option value="${customfield.id}" 
-                                                <c:choose>
-                                                    <c:when test="${customfield.id == fieldId}">
-                                                        selected
-                                                    </c:when>
-                                                    <c:otherwise> 
-                                                    </c:otherwise>
-                                                </c:choose>><%= name %>
+                                        <option value="${customfield.id}" >
+                                            <c:if test="${customfield.id == fieldId}">
+                                            	<jsp:attribute name="selected">selected</jsp:attribute>
+                                            </c:if>
+                                            <%= name %>
                                         </option>
                                     </c:forEach>
                                 </html:select>
@@ -113,14 +111,11 @@
                                 <c:set var="priorityId" value="<%=projectScriptForm.getPriority().get(key)%>"/>
                                 <html:select property="<%=priorityKey%>" styleClass="editColumnText">
                                     <c:forEach items="${projectScriptForm.priorityList}" var="priority" varStatus="k">
-                                        <option value="${priority.key}" 
-                                                <c:choose>
-                                                    <c:when test="${priority.key == priorityId}">
-                                                        selected
-                                                    </c:when>
-                                                    <c:otherwise> 
-                                                    </c:otherwise>
-                                                </c:choose>>${priority.value}
+                                        <option value="${priority.key}">
+                                            <c:if test="${priority.key == priorityId}">
+                                            	<jsp:attribute name="selected">selected</jsp:attribute>
+                                            </c:if>
+											${priority.value}
                                         </option>
                                     </c:forEach>
                                 </html:select>
@@ -139,5 +134,6 @@
                         <html:submit styleClass="button" altKey="itracker.web.button.create.alt" titleKey="itracker.web.button.create.alt"><it:message key="itracker.web.button.create"/></html:submit>
                  <% } %>
  	</html:form>
-      <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
+      <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body>
+<%@page import="java.util.Locale"%></html>
 <%  } %>
