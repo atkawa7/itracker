@@ -34,6 +34,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.exceptions.IssueException;
 import org.itracker.services.util.CustomFieldUtilities;
+import org.itracker.web.taglib.FormatCustomFieldTag;
 
 /**
  * A custom field that can be added to an Issue.
@@ -219,6 +220,7 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 	/**
 	 * Returns the name for a particular option value.
 	 * 
+	 * FIXME: Don't know, this seems not to be working. Removed use from {@link FormatCustomFieldTag}
 	 * @param optionValue
 	 *            the value to lookup the name for
 	 * @return the localized name for the supplied value
