@@ -45,6 +45,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
 
 public class EditPreferencesFormAction extends ItrackerBaseAction {
 	private static final Logger log = Logger
@@ -212,8 +213,7 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
 								: ", "));
 						hiddenSectionsString.append(", ").append(ITrackerResources.getString(
 										"itracker.web.editprefs.section.assigned",
-										(java.util.Locale) session
-												.getAttribute("currLocale")));
+										locale));
 					} else if (sectionNumber == UserUtilities.PREF_HIDE_UNASSIGNED) {
 						hiddenSectionsString.append((hiddenSectionsString.length() == 0 ? ""
 								: ", "));
@@ -221,24 +221,21 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
 								ITrackerResources
 										.getString(
 												"itracker.web.editprefs.section.unassigned",
-												(java.util.Locale) session
-														.getAttribute("currLocale")));
+												locale));
 					} else if (sectionNumber == UserUtilities.PREF_HIDE_CREATED) {
 						hiddenSectionsString.append((hiddenSectionsString.length() == 0 ? ""
 								: ", "));
 						hiddenSectionsString.append(", ").append(
 								ITrackerResources.getString(
 										"itracker.web.editprefs.section.created",
-										(java.util.Locale) session
-												.getAttribute("currLocale")));
+										locale));
 					} else if (sectionNumber == UserUtilities.PREF_HIDE_WATCHED) {
 						hiddenSectionsString.append((hiddenSectionsString.length() == 0 ? ""
 								: ", "));
 						hiddenSectionsString.append(", ").append(
 								ITrackerResources.getString(
 										"itracker.web.editprefs.section.watched",
-										(java.util.Locale) session
-												.getAttribute("currLocale")));
+										locale));
 					}
 				
 				}
