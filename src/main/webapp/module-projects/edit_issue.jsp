@@ -399,7 +399,6 @@
 				</tr>
 			</c:forEach>
 
-			</tr>
 			<tr>
 				<td colspan="4"><html:img module="/"
 					page="/themes/defaulttheme/images/blank.gif" width="1" height="18" /></td>
