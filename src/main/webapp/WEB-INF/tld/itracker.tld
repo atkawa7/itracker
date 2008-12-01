@@ -344,7 +344,7 @@
 		<tag-class>
 			org.itracker.web.taglib.FormatResolutionTag
 		</tag-class>
-		<body-content>empty</body-content>
+		<body-content>JSP</body-content>
 		<attribute>
 			<name>displayType</name>
 			<required>false</required>
