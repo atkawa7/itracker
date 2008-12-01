@@ -307,7 +307,7 @@
 		<tag-class>
 			org.itracker.web.taglib.FormatPaginationLinkTag
 		</tag-class>
-		<body-content>empty</body-content>
+		<body-content>JSP</body-content>
 		<attribute>
 			<name>page</name>
 			<required>true</required>
@@ -403,7 +403,7 @@
 			forward to use in the url [action or forward required]
 			queryString - a query string to append directly to the url
 			parameters, only the name/value pairs, with equals, are
-			needed, not the initial question mark. This may be used in
+			needed, not th	e initial question mark. This may be used in
 			conjunction with all of the other ways to add parameters
 			paramName - name of parameter to pass if any paramValue -
 			value of parameter to pass if any caller - add a caller
