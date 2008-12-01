@@ -29,7 +29,6 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
@@ -46,8 +45,8 @@ import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
-import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 import org.itracker.web.util.SessionManager;
 
 
@@ -76,11 +75,24 @@ public class EditUserAction extends ItrackerBaseAction {
             return mapping.findForward("listusers");
         }
 
-        HttpSession session = request.getSession();
+        ActionForward forward = setupJspEnv(request, userForm, errors, mapping);
+
+        
+
+        if(! errors.isEmpty()) {
+        	saveErrors(request, errors);
+        }
+        return forward;
+//        request.getSession().removeAttribute(Constants.EDIT_USER_KEY);
+//        return mapping.findForward("error");
+    }
+
+    
+    public static final ActionForward setupJspEnv(HttpServletRequest request, UserForm userForm, ActionMessages errors, ActionMapping mapping) {
 
         try {
-            UserService userService = getITrackerServices().getUserService();
-            ProjectService projectService = getITrackerServices().getProjectService();
+            UserService userService = ServletContextUtils.getItrackerServices().getUserService();
+            ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
 
             String previousLogin = userForm.getLogin();
             User editUser;
@@ -104,7 +116,7 @@ public class EditUserAction extends ItrackerBaseAction {
                 if("create".equals(userForm.getAction())) {
                     if(! userService.allowProfileCreation(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
                     	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprofilecreates"));
-                    	saveErrors(request, errors);
+//                    	saveErrors(request, errors);
                         return mapping.findForward("error");
                     }
 
@@ -117,7 +129,7 @@ public class EditUserAction extends ItrackerBaseAction {
 	                    	// Passwort was attempted to set, but authenticator is not able to. Exception
 //	                    	itracker.web.error.nopasswordupdates
 	                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
-	                    	saveErrors(request, errors);
+//	                    	saveErrors(request, errors);
 	                        return mapping.findForward("error");
 	                    }
                     }
@@ -133,7 +145,7 @@ public class EditUserAction extends ItrackerBaseAction {
                             editUser = existingUser;
 //                            itracker.web.error.noprofileupdates
 	                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprofileupdates"));
-	                    	saveErrors(request, errors);
+//	                    	saveErrors(request, errors);
 	                        return mapping.findForward("error");
                         }
                         
@@ -152,7 +164,7 @@ public class EditUserAction extends ItrackerBaseAction {
 	                            editUser = existingUser;
 //		                            itracker.web.error.nopasswordupdates
 		                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
-		                    	saveErrors(request, errors);
+//		                    	saveErrors(request, errors);
 		                        return mapping.findForward("error");
 	                        }
                         }
@@ -170,11 +182,11 @@ public class EditUserAction extends ItrackerBaseAction {
                 } else {
                 	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidaction"));
                 }
-            } catch(UserException ue) {
+            } catch (UserException ue) {
                 ue.printStackTrace();
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.existinglogin"));
-                saveErrors(request, errors);
-                saveToken(request);
+//                saveErrors(request, errors);
+//                saveToken(request);
                 mapping.findForward("error");
             }
 
@@ -214,7 +226,6 @@ public class EditUserAction extends ItrackerBaseAction {
                 
                 } else {
                 	log.debug("No good. User Permissions have not been nicely set.");
-                 
                 }
             }
 
@@ -231,22 +242,13 @@ public class EditUserAction extends ItrackerBaseAction {
                 }
 
                 log.debug("Forwarding to list users.");
-                session.removeAttribute(Constants.EDIT_USER_KEY);
                 return mapping.findForward("listusers");
             }
         } catch(Exception e) {
             log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
-
-        if(! errors.isEmpty()) {
-        	saveErrors(request, errors);
-            saveToken(request);
-            return mapping.findForward("error");
-        }
-        session.removeAttribute(Constants.EDIT_USER_KEY);
-        return mapping.findForward("error");
+        return mapping.getInputForward();
     }
-
 }
   
