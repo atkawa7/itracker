@@ -32,30 +32,32 @@ import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.IssuePTO;
+import org.itracker.web.util.LoginUtilities;
 
 //  TODO: Action Cleanup
 
 public class PortalHomeAction extends ItrackerBaseAction {
     
-    static final Logger LOGGER = Logger.getLogger("org.itracker.PortalHomeAction");
+    static final Logger LOGGER = Logger.getLogger(PortalHomeAction.class);
     
     @SuppressWarnings("unchecked")
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         LOGGER.info("Stepping up into the loginRouter method");
-        
-        // maybe wrong the next line... setting a default forward...
-        ActionForward forward=mapping.findForward("portalhome");
-        
-        if (forward==null) {
-            return null;
-        } else {
+
+		// maybe wrong the next line... setting a default forward...
+		ActionForward forward = mapping.findForward("portalhome");
+
+		if (forward == null) {
+			return null;
+		} else {
             
             LOGGER.info("Found forward, let's go and check if this forward is portalhome...");
 //            super.executeAlways(mapping,form,request,response);
             
-            if (forward.getName().equals("portalhome")||forward.getName().equals("index")) {
+            if (forward.getName().equals("portalhome")
+					|| forward.getName().equals("index")) {
                 
                 IssueService issueService = this.getITrackerServices().getIssueService();
                 ProjectService projectService = this.getITrackerServices().getProjectService();
@@ -213,42 +215,27 @@ public class PortalHomeAction extends ItrackerBaseAction {
                             }
                         }
                     }
-//                    creatorsPresent.add(Boolean.valueOf(creatorPresent));
                     possibleOwnersMap[i] = possibleIssueOwners;
                     
                 }
-
-// Moved the creatorPresent and possibleIssueOwners attributes so they are set only once.
-//                request.setAttribute("creatorsPresent", creatorsPresent);
-                
-//                LOGGER.info("possibleIssueOwners Size: "+possibleIssueOwners.size());
                 request.setAttribute("possibleIssueOwnersMap", possibleOwnersMap);
                 
-                // SETTING THE STATUS ON THE ISSUES AS STRINGS IN THE RIGHT LOCALE
-                //IssueUtilities.getStatusName(createdIssues[i].getStatus(), (Locale)pageContext.getAttribute("currLocale"));
-                
-                // SETTING THE SEVERITIES ON THE ISSUES AS STRINGS  IN THE RIGHT LOCALE
-                //IssueUtilities.getSeverityName(createdIssues[i].getSeverity(), (Locale)pageContext.getAttribute("currLocale"));
-                
-                // SETTING UNASSIGNED ON THE ISSUES AS STRINGS  IN THE RIGHT LOCALE
-                //String unassignedString = ITrackerResources.getString("itracker.web.generic.unassigned", (Locale)pageContext.getAttribute("currLocale"));
-                
-                // PUTTING PERMISSIONS INTO THE REQUEST SCOPE
+
                 
                 request.setAttribute("itracker_web_generic_unassigned", ITrackerResources.getString("itracker.web.generic.unassigned", locale));
                 
                 // PUTTING ISSUES INTO THE REQUEST SCOPE
-                LOGGER.info("ownedIssues Size: "+ownedIssuePTOs.size());
-                request.setAttribute("ownedIssues",ownedIssuePTOs);
-                
-                LOGGER.info("unassignedIssues Size:  "+unassignedIssuePTOs.size());
-                request.setAttribute("unassignedIssues",unassignedIssuePTOs);
-                
-                LOGGER.info("createdIssues Size: "+createdIssuePTOs.size());
-                request.setAttribute("createdIssues",createdIssuePTOs);
-                
-                LOGGER.info("watchedIssues Size: "+watchedIssuePTOs.size());
-                request.setAttribute("watchedIssues",watchedIssuePTOs);
+				LOGGER.info("ownedIssues Size: " + ownedIssuePTOs.size());
+				request.setAttribute("ownedIssues", ownedIssuePTOs);
+
+				LOGGER.info("unassignedIssues Size:  " + unassignedIssuePTOs.size());
+				request.setAttribute("unassignedIssues", unassignedIssuePTOs);
+
+				LOGGER.info("createdIssues Size: " + createdIssuePTOs.size());
+				request.setAttribute("createdIssues", createdIssuePTOs);
+
+				LOGGER.info("watchedIssues Size: " + watchedIssuePTOs.size());
+				request.setAttribute("watchedIssues", watchedIssuePTOs);
                 
                 
                 
@@ -295,8 +282,8 @@ public class PortalHomeAction extends ItrackerBaseAction {
     
     @SuppressWarnings("unchecked")
 	public List<IssuePTO> buildIssueList( List<Issue> issues, HttpServletRequest request ) {
-        User currUser = (User)request.getSession().getAttribute("currUser");
-        Locale currLocale = getLocale(request);
+        User currUser = LoginUtilities.getCurrentUser(request);
+        Locale locale = getLocale(request);
         //Integer userId = currUser.getId();
         Map<Integer, Set<PermissionType>> permissions =
                 (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");
@@ -306,8 +293,8 @@ public class PortalHomeAction extends ItrackerBaseAction {
         for (int i=0;i<issues.size();i++) {
             Issue issue = issues.get(i);
             IssuePTO issuePTO = new IssuePTO(issue);
-            issuePTO.setSeverityLocalizedString(IssueUtilities.getSeverityName(issue.getSeverity(), currLocale));
-            issuePTO.setStatusLocalizedString(IssueUtilities.getStatusName(issue.getStatus(), currLocale));
+            issuePTO.setSeverityLocalizedString(IssueUtilities.getSeverityName(issue.getSeverity(), locale));
+            issuePTO.setStatusLocalizedString(IssueUtilities.getStatusName(issue.getStatus(), locale));
             issuePTO.setUnassigned((issuePTO.getIssue().getOwner() == null ? true : false));
             issuePTO.setUserCanEdit(IssueUtilities.canEditIssue(issue, currUser.getId(), permissions));
             issuePTO.setUserCanViewIssue(IssueUtilities.canViewIssue(issue, currUser.getId(), permissions));
