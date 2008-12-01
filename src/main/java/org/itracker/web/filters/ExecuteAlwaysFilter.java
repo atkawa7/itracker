@@ -291,7 +291,7 @@ public class ExecuteAlwaysFilter implements Filter {
 				"allow_save_login", true);
 		alternateLogo = configurationService
 				.getProperty("alternate_logo", null);
-		Locale currLocale = LoginUtilities.getCurrentLocale(request);
+		Locale locale = LoginUtilities.getCurrentLocale(request);
 
 		// TODO: this should be configured per-instance. Request server-name
 		// should only be used for exception and logged (configuration not
@@ -311,8 +311,13 @@ public class ExecuteAlwaysFilter implements Filter {
 		request.setAttribute("alternateLogo", alternateLogo);
 		request.setAttribute("baseURL", baseURL);
 		// TODO: remove deprecated currLocale attribute
-		request.setAttribute("currLocale", currLocale);
-		request.setAttribute(Constants.LOCALE_KEY, currLocale);
+		request.setAttribute("currLocale", locale);
+		
+		// set a default page-title key
+		request.setAttribute("pageTitleKey", "itracker.web.generic.itracker");
+		request.setAttribute("pageTitleArg", "");
+		
+		request.setAttribute(Constants.LOCALE_KEY, locale);
 		
 		
 	}
