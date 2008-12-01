@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.bcel.generic.GETSTATIC;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.AbstractEntity;
@@ -386,6 +387,7 @@ public class IssueServiceImpl implements IssueService {
 			watchModel.setRole(Notification.Role.CONTRIBUTER);
 
 			issue.getNotifications().add(watchModel);
+			
 //			Does save issue after saving notificaton ->  not-null property references a null or transient value: org.itracker.model.Notification.issue
 //			Will be saved by cascade when saving issue
 //			notificationService.addIssueNotification(watchModel);
