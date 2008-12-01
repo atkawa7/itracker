@@ -335,16 +335,21 @@ public class UserServiceImpl implements UserService {
             newUserPrefs.setRememberLastSearch(userPrefs.getRememberLastSearch());
             newUserPrefs.setUseTextActions(userPrefs.getUseTextActions());
 
+            // FIXME: it's a bad one-to-one reference, has to be set on both ends. Fix mappings in hibernate.
             newUserPrefs.setUser(user);
 
-            if (userPrefs.getId() == null) {
+            if (userPrefs.isNew()) {
                 newUserPrefs.setCreateDate(new Date());
                 newUserPrefs.setLastModifiedDate(userPrefs.getCreateDate());
-            }
-            this.userPreferencesDAO.saveOrUpdate(newUserPrefs);
-            newUserPrefs = userPreferencesDAO.findByUserId(user.getId());
-
-            user.setUserPreferences(newUserPrefs);
+                
+                // first time create UserPreferences
+                user.setPreferences(newUserPrefs);
+                userDAO.saveOrUpdate(user);
+            } else {
+            	this.userPreferencesDAO.saveOrUpdate(newUserPrefs);
+            	newUserPrefs = userPreferencesDAO.findByUserId(user.getId());
+            	user.setUserPreferences(newUserPrefs);
+            }          
 
             try {
                 PluggableAuthenticator authenticator =
@@ -963,7 +968,7 @@ public class UserServiceImpl implements UserService {
             }
 
             logger.error("Unable to create new authenticator.");
-            throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
+            throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR); 
         } catch (IllegalAccessException iae) {
             logger.error("Authenticator class " + authenticatorClassName + " can not be instantiated.");
             throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
