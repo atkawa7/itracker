@@ -216,13 +216,15 @@
 				key="itracker.web.attr.locale" />:</td>
 			<c:choose>
 				<c:when test="${allowPreferenceUpdate}">
-					<td class="editColumnText"><html:select property="userLocale"
-						styleClass="editColumnText">
-						<html:option value="" styleClass="editColumnText"></html:option>
-						<c:forEach var="lang" items="${languagesList}">
-							<html:option value="${lang.key}" styleClass="editColumnText">${lang.value}</html:option>
-						</c:forEach>
-					</html:select><!-- $ {languageCodeName} --></td>
+					<td class="editColumnText">
+						<html:select property="userLocale"
+							styleClass="editColumnText">
+							<html:option value="" styleClass="editColumnText"></html:option>
+							<c:forEach var="lang" items="${languagesList}">
+								<html:option value="${lang.key}" styleClass="editColumnText">${lang.value}</html:option>
+							</c:forEach>
+						</html:select>
+					</td>
 				</c:when>
 				<c:otherwise>
 					<td class="editColumnText">${ userLocaleAsString }</td>
@@ -301,7 +303,7 @@
 			<td class="editColumnTitle"><it:message
 				key="itracker.web.editprefs.sortcolumn" />:</td>
 			<c:choose>
-				<c:when test="${allowPreferenceUpdate}">
+				<c:when test="${ allowPreferenceUpdate }">
 					<td class="editColumnText"><html:select
 						property="sortColumnOnIssueList" styleClass="editColumnText">
 						<html:option value="id" styleClass="editColumnText"
@@ -318,17 +320,17 @@
 				</c:when>
 				<c:otherwise>
 					<c:choose>
-						<c:when test="${edituserprefs.sortColumnOnIssueList=='sev'}">
+						<c:when test="${ edituserprefs.sortColumnOnIssueList=='sev' }">
 							<td class="editColumnText">${
 							it:ITrackerResources_GetString("itracker.web.attr.severity",currLocale)
 							}</td>
 						</c:when>
-						<c:when test="${edituserprefs.sortColumnOnIssueList=='stat'}">
+						<c:when test="${ edituserprefs.sortColumnOnIssueList=='stat' }">
 							<td class="editColumnText">${
 							it:ITrackerResources_GetString("itracker.web.attr.status",
 							currLocale) }</td>
 						</c:when>
-						<c:when test="${edituserprefs.sortColumnOnIssueList=='own'}">
+						<c:when test="${ edituserprefs.sortColumnOnIssueList=='own' }">
 							<td class="editColumnText">${
 							it:ITrackerResources_GetString("itracker.web.attr.owner",
 							currLocale) }</td>
