@@ -424,51 +424,6 @@ public abstract class ItrackerBaseAction extends Action {
 		return forward;
 	}
 
-	//TODO: remove this unnecessary code because it's not used and its named ugly
-//	private boolean getAllowSaveLogin() {
-//		return (getITrackerServices().getConfigurationService()
-//				.getBooleanProperty("allow_save_login", true));
-//	}
-
-	/**
-	 * @deprecated no state information is allowed in actions. use a correct
-	 *             pattern like request-attributes.
-	 * @return
-	 */
-	public Locale getCurrLocale() {
-		return null;
-	}
-
-	/**
-	 * get locale from request-attribute Constants.LOCALE_KEY as initialized by
-	 * {@link ExecuteAlwaysFilter}.
-	 * 
-	 * @return
-	 * @deprecated use getLocale instead
-	 */
-	public Locale getCurrLocale(HttpServletRequest request) {
-		return getLocale(request);
-	}
-
-	/**
-	 * @deprecated no state information is allowed in actions. use a correct
-	 *             pattern like request-attributes.
-	 * @return
-	 */
-	public void setCurrLocale(Locale currLocale) {
-		// this.currLocale = currLocale;
-	}
-
-	/**
-	 * set the locale in request attribute Constants.LOCALE_KEY
-	 * 
-	 * @deprecated
-	 */
-	public void setCurrLocale(Locale currLocale, HttpServletRequest request) {
-		request.setAttribute(Constants.LOCALE_KEY, currLocale);
-		// this.currLocale = currLocale;
-	}
-
 	@Override
 	public Locale getLocale(HttpServletRequest request) {
 		Locale locale = super.getLocale(request);
