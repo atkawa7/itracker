@@ -3,6 +3,7 @@ package org.itracker.web.actions.project;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,7 +45,8 @@ public class ViewIssueAction extends ItrackerBaseAction {
 
 		IssueService issueService = this.getITrackerServices()
 				.getIssueService();
-		request.setAttribute("ih", issueService);
+		
+		Locale locale = getLocale(request);
 
 		String pageTitleKey = "itracker.web.viewissue.title";
 		String pageTitleArg = request.getParameter("id");
@@ -133,11 +135,11 @@ public class ViewIssueAction extends ItrackerBaseAction {
 		/*
 		 * Get the issue status name to display.
 		 */
-		String issueStatusName = IssueUtilities.getStatusName(issue.getStatus(), (java.util.Locale)session.getAttribute("currLocale"));
+		String issueStatusName = IssueUtilities.getStatusName(issue.getStatus(), locale);
 		/* Get issue severity name
 		 * 
 		 */
-		String issueSeverityName = IssueUtilities.getSeverityName(issue.getSeverity(), (java.util.Locale)session.getAttribute("currLocale"));
+		String issueSeverityName = IssueUtilities.getSeverityName(issue.getSeverity(), locale);
 		/*
 		 * Create Project field map
 		 */
@@ -164,7 +166,7 @@ public class ViewIssueAction extends ItrackerBaseAction {
 								UserUtilities.PERMISSION_CREATE)));
 		request.setAttribute("issueStatusName",issueStatusName);
 		request.setAttribute("issueSeverityName",issueSeverityName);
-		request.setAttribute("issueOwnerName",(issue.getOwner() == null ? ITrackerResources.getString("itracker.web.generic.unassigned", (java.util.Locale)session.getAttribute("currLocale")) : issue.getOwner().getFirstName() + " " + issue.getOwner().getLastName()) );
+		request.setAttribute("issueOwnerName",(issue.getOwner() == null ? ITrackerResources.getString("itracker.web.generic.unassigned", locale) : issue.getOwner().getFirstName() + " " + issue.getOwner().getLastName()) );
 
 		log.info("ViewIssueAction: Forward: viewissue");
 		return mapping.findForward("viewissue");
