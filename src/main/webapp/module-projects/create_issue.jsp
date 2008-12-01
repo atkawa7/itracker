@@ -1,7 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-
-
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
@@ -151,21 +149,17 @@
 
           
           <c:if test="${not empty projectFields}">
-          <!-- TODO: never used? int numRows = (projectFields.size() / 2);-->
                 <tr><td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.customfields"/>:</td></tr>
                 <tr class="listHeading"><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
                 <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3" width="1"/></td></tr>
-                <tr>
-                <c:forEach var="projectField" items="${projectFields}" varStatus="i">
-                
-                	<c:if test="${i.count % 2 == 0}">
-                           </tr>
-                           <tr>
-                   	</c:if>
-                       <it:formatCustomField field="${projectField}" formName="createIssueForm" listOptions="${listOptions}"/>
-               
+                <c:forEach var="projectField" items="${ projectFields }" varStatus="i">
+                	<tr>
+                       <it:formatCustomField field="${ projectField }" formName="createIssueForm" listOptions="${ listOptions }"/>
+                       <c:forEach var="projectField" items="${ projectFields }" begin="${ i.index + 1 }" end="${ i.index + 1 }">
+                       		<it:formatCustomField field="${ projectField }" formName="createIssueForm" listOptions="${ listOptions }"/>
+                       </c:forEach>
+               		<tr>
                 </c:forEach>
-                </tr>
                 
             <%-- TODO reinsert this once related issues have been implemented correctly
                 <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td></tr>
