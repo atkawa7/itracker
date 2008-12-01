@@ -212,7 +212,7 @@
                       <option value=""></option>
                       <%
                          List<NameValuePair> possResolutions = IssueUtilities.getResolutions(locale);
-                         for(int i = 0; i < possResolutions.size(); i++) {
+                         for (int i = 0; i < possResolutions.size(); i++) {
                       %>
                             <html:option value="<%= possResolutions.get(i).getValue() %>"><%= possResolutions.get(i).getName() %></html:option>
                       <% } %>
@@ -235,7 +235,7 @@
       if(issues != null) {
 %>
         <br/>
-        <hr width="75%" height="1" noshade/>
+        <hr width="75%" height="1" noshade="noshade"/>
         <br/>
 
         <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
