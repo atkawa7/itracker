@@ -86,11 +86,13 @@
 
 	<filter-mapping>
 		<filter-name>SetRequestCharacterEncoding</filter-name>
-		<servlet-name>action</servlet-name>
+		<url-pattern>*.do</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>OpenSessionInView</filter-name>
-		<url-pattern>/*</url-pattern>
+		<servlet-name>action</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>ExecuteAlways</filter-name>
