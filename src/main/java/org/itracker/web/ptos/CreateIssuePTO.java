@@ -17,6 +17,7 @@ import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
 
 /**
  * @author Venkoba
@@ -56,8 +57,8 @@ public class CreateIssuePTO {
 		req.setAttribute("pageTitleArg", pageTitleArg);
 		
 		req.setAttribute("statusName", IssueUtilities.getStatusName(
-				IssueUtilities.STATUS_NEW, (java.util.Locale) session
-						.getAttribute("currLocale")));
+				IssueUtilities.STATUS_NEW, (java.util.Locale) 
+						LoginUtilities.getCurrentLocale(req)));
 		req.setAttribute("hasAttachmentOption", !ProjectUtilities.hasOption(
 				ProjectUtilities.OPTION_NO_ATTACHMENTS, project.getOptions()));
 		req.setAttribute("possibleOwners", possibleOwners);
