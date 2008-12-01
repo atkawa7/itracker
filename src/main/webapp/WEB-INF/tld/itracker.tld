@@ -21,7 +21,7 @@
 		</description>
 		<name>addError</name>
 		<tag-class>org.itracker.web.taglib.AddErrorTag</tag-class>
-		<body-content>scriptless</body-content>
+		<body-content>JSP</body-content>
 		<attribute>
 			<name>name</name>
 			<required>false</required>
@@ -68,7 +68,7 @@
 		</description>
 		<name>clearErrors</name>
 		<tag-class>org.itracker.web.taglib.ClearErrorsTag</tag-class>
-		<body-content>scriptless</body-content>
+		<body-content>empty</body-content>
 		<attribute>
 			<name>name</name>
 			<required>false</required>
@@ -85,7 +85,7 @@
 		</description>
 		<name>formatDate</name>
 		<tag-class>org.itracker.web.taglib.FormatDateTag</tag-class>
-		<body-content>scriptless</body-content>
+		<body-content>empty</body-content>
 		<attribute>
 			<name>date</name>
 			<required>true</required>
@@ -114,7 +114,8 @@
 		<tag-class>
 			org.itracker.web.taglib.FormatDescriptionTag
 		</tag-class>
-		<body-content>scriptless</body-content>
+		
+		<body-content>JSP</body-content>
 		<attribute>
 			<name>truncateLength</name>
 			<required>false</required>
@@ -141,7 +142,7 @@
 		<tag-class>
 			org.itracker.web.taglib.FormatHistoryEntryTag
 		</tag-class>
-		<body-content>scriptless</body-content>
+		<body-content>JSP</body-content>
 		<attribute>
 			<name>forward</name>
 			<required>false</required>
@@ -198,7 +199,7 @@
 		<tag-class>
 			org.itracker.web.taglib.FormatImageActionTag
 		</tag-class>
-		<body-content>scriptless</body-content>
+		<body-content>empty</body-content>
 		<attribute>
 			<name>forward</name>
 			<required>false</required>
@@ -277,7 +278,7 @@
 		<tag-class>
 			org.itracker.web.taglib.FormatIssueOwnerTag
 		</tag-class>
-		<body-content>scriptless</body-content>
+		<body-content>empty</body-content>
 		<attribute>
 			<name>issue</name>
 			<required>true</required>
@@ -306,7 +307,7 @@
 		<tag-class>
 			org.itracker.web.taglib.FormatPaginationLinkTag
 		</tag-class>
-		<body-content>scriptless</body-content>
+		<body-content>empty</body-content>
 		<attribute>
 			<name>page</name>
 			<required>true</required>
@@ -343,7 +344,7 @@
 		<tag-class>
 			org.itracker.web.taglib.FormatResolutionTag
 		</tag-class>
-		<body-content>scriptless</body-content>
+		<body-content>empty</body-content>
 		<attribute>
 			<name>displayType</name>
 			<required>false</required>
@@ -368,7 +369,7 @@
 		<tag-class>
 			org.itracker.web.taglib.FormatCustomFieldTag
 		</tag-class>
-		<body-content>scriptless</body-content>
+		<body-content>empty</body-content>
 		<attribute>
 			<name>field</name>
 			<required>true</required>
@@ -482,7 +483,7 @@
 		</description>
 		<name>message</name>
 		<tag-class>org.itracker.web.taglib.FormatMessageTag</tag-class>
-		<body-content>scriptless</body-content>
+		<body-content>empty</body-content>
 		<attribute>
 			<name>key</name>
 			<required>true</required>
