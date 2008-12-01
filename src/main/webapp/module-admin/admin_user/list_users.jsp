@@ -96,7 +96,7 @@
         <td><%= currentUser.getLogin() %></td>
         <td><%= currentUser.getFirstName() %> <%= currentUser.getLastName() %></td>
         <td><%= currentUser.getEmail() %></td>
-        <td align="left"><%= (currentUser.isSuperUser() ? ITrackerResources.getString("itracker.web.generic.yes", (java.util.Locale)pageContext.getAttribute("currLocale")) : ITrackerResources.getString("itracker.web.generic.no", (java.util.Locale)pageContext.getAttribute("currLocale"))) %></td>
+        <td align="left"><%= (currentUser.isSuperUser() ? ITrackerResources.getString("itracker.web.generic.yes", LoginUtilities.getCurrentLocale(request)) : ITrackerResources.getString("itracker.web.generic.no", LoginUtilities.getCurrentLocale(request))) %></td>
         <td><it:formatDate date="<%= currentUser.getLastModifiedDate() %>" format="notime"/></td>
         <td><it:formatDate date="<%= lastAccess %>" format="short" emptyKey="itracker.web.generic.no"/></td>
       </tr>
@@ -105,4 +105,5 @@
   <tr><td colspan="8" class="tableNote"><it:message key="itracker.web.admin.listusers.note"/></td></tr>
 </table>
 
-<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
+<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body>
+<%@page import="org.itracker.web.util.LoginUtilities"%></html>
