@@ -238,22 +238,26 @@ public class UserForm extends ValidatorForm {
 			return errors;
 		}
 
-		if (!("register".equalsIgnoreCase(action)
+		if (!(     "register".equalsIgnoreCase(action)
 				|| "create".equalsIgnoreCase(action)
-				|| "update".equalsIgnoreCase(action) || "preferences"
-				.equalsIgnoreCase(action))
-				&& (currPassword == null || "".equals(currPassword))) {
+				|| "update".equalsIgnoreCase(action)
+				|| "preferences".equalsIgnoreCase(action)
+			 ) && (currPassword == null || "".equals(currPassword))) {
 
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.missingpassword"));
-			request.setAttribute("warnings", errors);
 
 		} else if (!password.equals(confPassword)) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"itracker.web.error.matchingpass"));
-			request.setAttribute("warnings", errors);
 		}
 
+
+		request.setAttribute("warnings", errors);
+		request.setAttribute("isUpdate", true);
+		request.setAttribute("allowProfileUpdate", true);
+		request.setAttribute("allowPasswordUpdate", true);
+		
 		return errors;
 	}
 
