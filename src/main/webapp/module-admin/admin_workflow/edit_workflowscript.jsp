@@ -4,6 +4,7 @@
  
 <%@ page import="org.itracker.web.util.*" %>
 <%@ page import="org.itracker.services.util.*" %>
+<%@ page import="org.itracker.web.util.LoginUtilities" %>
  
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -66,7 +67,7 @@
             <td class="editColumnTitle"><it:message key="itracker.web.attr.event"/>:</td>
             <td>
                 <html:select property="event" styleClass="editColumnText">
-                    <% NameValuePair[] eventTypes = WorkflowUtilities.getEvents((java.util.Locale)pageContext.getAttribute("currLocale")); %>
+                    <% NameValuePair[] eventTypes = WorkflowUtilities.getEvents(LoginUtilities.getCurrentLocale(request)); %>
                     <% for(int i = 0; i < eventTypes.length; i++) { %>
                     <html:option value="<%= eventTypes[i].getValue() %>" styleClass="editColumnText"><%= eventTypes[i].getName() %></html:option>
                     <% } %>
@@ -93,5 +94,6 @@
         <% } %>
     </table>
 </html:form>
-<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
+<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body>
+</html>
 <%  } %>
