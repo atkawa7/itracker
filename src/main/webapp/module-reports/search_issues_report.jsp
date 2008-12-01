@@ -130,13 +130,13 @@ User um = RequestHelper.getCurrentUser(session);
               <% List<Configuration> statuses = IssueUtilities.getStatuses(); %>
               <html:select property="statuses" styleClass="editColumnText" size="5" multiple="true">
               <% for(int i = 0; i < statuses.size(); i++) { %>
-                    <html:option value="<%= statuses.get(i).getValue() %>" styleClass="editColumnText"><%= IssueUtilities.getStatusName(statuses.get(i).getValue(), (java.util.Locale)pageContext.getAttribute("currLocale")) %></html:option>
+                    <html:option value="<%= statuses.get(i).getValue() %>" styleClass="editColumnText"><%= IssueUtilities.getStatusName(statuses.get(i).getValue(), LoginUtilities.getCurrentLocale(request)) %></html:option>
               <% } %>
               </html:select>
             </td>
             <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.severity"/>: </td>
             <td valign="top" class="editColumnText">
-              <% List<NameValuePair> severities = IssueUtilities.getSeverities((java.util.Locale)pageContext.getAttribute("currLocale")); %>
+              <% List<NameValuePair> severities = IssueUtilities.getSeverities(LoginUtilities.getCurrentLocale(request)); %>
               <html:select property="severities" styleClass="editColumnText" size="5" multiple="true">
               <%
                  for(int i = 0; i < severities.size(); i++) {
@@ -221,7 +221,7 @@ User um = RequestHelper.getCurrentUser(session);
                     <html:select property="resolution" styleClass="editColumnText">
                       <option value=""></option>
                       <%
-                         List<NameValuePair> possResolutions = IssueUtilities.getResolutions((java.util.Locale)pageContext.getAttribute("currLocale"));
+                         List<NameValuePair> possResolutions = IssueUtilities.getResolutions(LoginUtilities.getCurrentLocale(request));
                          for(int i = 0; i < possResolutions.size(); i++) {
                       %>
                             <html:option value="<%= possResolutions.get(i).getValue() %>"><%= possResolutions.get(i).getName() %></html:option>
@@ -298,9 +298,9 @@ User um = RequestHelper.getCurrentUser(session);
                 <td></td>
                 <td><%= issues.get(i).getId() %></td>
                 <td><%= issues.get(i).getProject().getName() %></td>
-                <td><%= IssueUtilities.getStatusName(issues.get(i).getStatus(), (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>
-                <td><%= IssueUtilities.getSeverityName(issues.get(i).getSeverity(), (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>
-                <td><%= (issues.get(i).getComponents().size() == 0 ? ITrackerResources.getString("itracker.web.generic.unknown", (java.util.Locale)pageContext.getAttribute("currLocale")) : issues.get(i).getComponents().get(0).getName() + (issues.get(i).getComponents().size() > 1 ? " (+)" : "")) %></td>
+                <td><%= IssueUtilities.getStatusName(issues.get(i).getStatus(), LoginUtilities.getCurrentLocale(request)) %></td>
+                <td><%= IssueUtilities.getSeverityName(issues.get(i).getSeverity(), LoginUtilities.getCurrentLocale(request)) %></td>
+                <td><%= (issues.get(i).getComponents().size() == 0 ? ITrackerResources.getString("itracker.web.generic.unknown", LoginUtilities.getCurrentLocale(request)) : issues.get(i).getComponents().get(0).getName() + (issues.get(i).getComponents().size() > 1 ? " (+)" : "")) %></td>
                 <td><it:formatDescription><%= issues.get(i).getDescription() %></it:formatDescription></td>
                 <td><it:formatIssueOwner issue="<%= issues.get(i) %>" format="short"/></td>
                 <td><it:formatDate date="<%= issues.get(i).getLastModifiedDate() %>"/></td>
