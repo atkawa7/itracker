@@ -27,7 +27,7 @@
 
 <!-- assigned issues -->
 
-<table class="portalhomeMain">
+<table class="portalhomeMain" cellspacing="0">
 <c:if test="${(! UserUtilities_PREF_HIDE_ASSIGNED) || allSections}">     
 	<tr id="ownedIssues">
 	    <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.assigned"/>:</td>
