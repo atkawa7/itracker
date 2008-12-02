@@ -152,7 +152,7 @@
                 <tr><td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.customfields"/>:</td></tr>
                 <tr class="listHeading"><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
                 <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="3" width="1"/></td></tr>
-                <c:forEach var="projectField" items="${ projectFields }" varStatus="i">
+                <c:forEach var="projectField" items="${ projectFields }" varStatus="i" step="2">
                 	<tr>
                        <it:formatCustomField field="${ projectField }" formName="createIssueForm" listOptions="${ listOptions }"/>
                        <c:forEach var="projectField" items="${ projectFields }" begin="${ i.index + 1 }" end="${ i.index + 1 }">
