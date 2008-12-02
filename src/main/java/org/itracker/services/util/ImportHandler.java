@@ -87,6 +87,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             throw endException;
         }
 
+        
         tempStorage = "";
         try {
             if(TAG_COMPONENT.equals(qName)) {
@@ -407,7 +408,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if(TAG_VERSIONS.equals(qName)) {
                 List<Version> itemListArray = new ArrayList<Version>();
                 for(int i = 0; i < itemList.size(); i++) {
-                    itemListArray.set(i,(Version) itemList.get(i));
+                    itemListArray.add(i,(Version) itemList.get(i));
                 }
                 ((Project) parentModel).setVersions(itemListArray);
             } else if(TAG_VERSION_DESCRIPTION.equals(qName)) {
