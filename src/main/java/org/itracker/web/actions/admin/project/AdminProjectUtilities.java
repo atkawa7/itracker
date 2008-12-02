@@ -1,13 +1,20 @@
 package org.itracker.web.actions.admin.project;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.itracker.model.Permission;
 import org.itracker.model.Project;
+import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
@@ -133,4 +140,48 @@ public class AdminProjectUtilities {
 		projectService.setProjectOwners(project, userIds);
 	}
 
+	public static final void setFormProperties(Project project, ProjectService projectService, 
+			ActionForm form, ActionMessages errors) 
+	throws IllegalAccessException, InvocationTargetException, NoSuchMethodException  {
+		project.setDescription((String) PropertyUtils.getSimpleProperty(
+				form, "description"));
+		project.setName((String) PropertyUtils.getSimpleProperty(form,
+		"name"));
+		Integer projectStatus = (Integer) PropertyUtils.getSimpleProperty(
+				form, "status");
+
+		String projectName = (String) PropertyUtils.getSimpleProperty(form,	"name");
+//		if (projectService.isUniqueProjectName(projectName, project.getId())) {
+			project.setName(projectName);
+//		} else {
+//			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.project.duplicate.name"));
+//			//			throw new ProjectException(
+//			//					"Project already exist with this name.");
+//		}
+
+		if (errors.isEmpty()) {
+			if (projectStatus != null) {
+				project.setStatus(Status.valueOf(projectStatus));
+			} else {
+				project.setStatus(Status.ACTIVE);
+			}
+
+			Integer[] optionValues = (Integer[]) PropertyUtils
+			.getSimpleProperty(form, "options");
+			int optionmask = 0;
+			if (optionValues != null) {
+				for (int i = 0; i < optionValues.length; i++) {
+					optionmask += optionValues[i].intValue();
+				}
+			}
+			project.setOptions(optionmask);
+
+			Integer[] fieldsArray = (Integer[]) PropertyUtils.getSimpleProperty(form, "fields");
+			Set<Integer> fields = null == fieldsArray? new HashSet<Integer>(0):
+				new HashSet<Integer>(Arrays.asList(fieldsArray));
+
+			projectService.setProjectFields(project, fields);
+
+		}
+	}
 }

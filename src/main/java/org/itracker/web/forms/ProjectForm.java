@@ -23,8 +23,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.ValidatorForm;
 import org.itracker.web.actions.admin.project.EditProjectFormActionUtil;
+import org.itracker.web.util.ServletContextUtils;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
@@ -47,7 +50,7 @@ public class ProjectForm extends ValidatorForm {
 	private Integer[] permissions;
 	private Integer[] options;
 	private Integer[] fields;
-	
+
 	private static final Logger log = Logger.getLogger(ProjectForm.class);
 
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
@@ -68,9 +71,18 @@ public class ProjectForm extends ValidatorForm {
 			HttpServletRequest request) {
 		ActionErrors errors = super.validate(mapping, request);
 		if (log.isDebugEnabled()) {
-			log.debug("ProjectForm validate called: mapping: " + mapping + ", request: "
-					+ request + ", errors: " + errors);
+			log.debug("ProjectForm validate called: mapping: " + mapping
+					+ ", request: " + request + ", errors: " + errors);
 		}
+		if (ServletContextUtils.getItrackerServices().getProjectService()
+				.isUniqueProjectName(getName(), getId())) {
+		} else {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"itracker.web.error.project.duplicate.name"));
+			// throw new ProjectException(
+			// "Project already exist with this name.");
+		}
+
 		new EditProjectFormActionUtil().init(mapping, request, this);
 		return errors;
 	}
@@ -149,15 +161,15 @@ public class ProjectForm extends ValidatorForm {
 	public Integer[] getPermissions() {
 		if (null == permissions)
 			return null;
-		
+
 		return permissions.clone();
-		
+
 	}
 
 	public void setPermissions(Integer[] permissions) {
 		if (null == permissions)
 			this.permissions = null;
-		else 
+		else
 			this.permissions = permissions.clone();
 	}
 
@@ -181,5 +193,5 @@ public class ProjectForm extends ValidatorForm {
 		else
 			this.users = users.clone();
 	}
-	
+
 }

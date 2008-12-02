@@ -40,7 +40,6 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
-import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
@@ -48,8 +47,6 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
-
-//  TODO: Action Cleanup
 
 public class EditProjectAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(EditProjectAction.class);
@@ -67,8 +64,8 @@ public class EditProjectAction extends ItrackerBaseAction {
 			saveErrors(request, errors);
 			saveToken(request);
 			return mapping.getInputForward();
-//			return mapping.findForward("listprojectsadmin");
-			
+			// return mapping.findForward("listprojectsadmin");
+
 		}
 		resetToken(request);
 
@@ -80,136 +77,98 @@ public class EditProjectAction extends ItrackerBaseAction {
 
 			HttpSession session = request.getSession(true);
 			User user = LoginUtilities.getCurrentUser(request);
-			
+
 			String action = (String) request.getParameter("action");
 
 			if ("update".equals(action)) {
 
 				Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
-				
+
 				project = projectService.getProject((Integer) PropertyUtils
 						.getSimpleProperty(form, "id"));
 				if (!UserUtilities.hasPermission(userPermissions, project
 						.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
 					return mapping.findForward("unauthorized");
 				}
-			} else {
+				AdminProjectUtilities.setFormProperties(project,
+						projectService, form, errors);
+				if (!errors.isEmpty()) {
+					saveErrors(request, errors);
+					return mapping.getInputForward();
+				} else {
+					Integer[] ownersArray = (Integer[]) PropertyUtils
+							.getSimpleProperty(form, "owners");
+					Set<Integer> ownerIds = null == ownersArray ? new HashSet<Integer>()
+							: new HashSet<Integer>(Arrays.asList(ownersArray));
+					AdminProjectUtilities.updateProjectOwners(project,
+							ownerIds, projectService, userService);
+
+					if (log.isDebugEnabled()) {
+						log.debug("execute: updating existing project: "
+								+ project);
+					}
+					project = projectService.updateProject(project, user
+							.getId());
+				}
+			} else if ("create".equals(action)) {
 				if (!user.isSuperUser()) {
 					return mapping.findForward("unauthorized");
 				}
 
 				project = new Project();
-			}
-			project.setDescription((String) PropertyUtils.getSimpleProperty(
-					form, "description"));
-			project.setName((String) PropertyUtils.getSimpleProperty(form,
-					"name"));
-			Integer projectStatus = (Integer) PropertyUtils.getSimpleProperty(
-					form, "status");
-			
-			String projectName = (String) PropertyUtils.getSimpleProperty(form,	"name");
-			if (projectService.isUniqueProjectName(projectName, project.getId())) {
-				project.setName(projectName);
-			} else {
-				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.project.duplicate.name"));
-//				throw new ProjectException(
-//						"Project already exist with this name.");
-			}
-			
-			if (errors.isEmpty()) {
-				if (projectStatus != null) {
-					project.setStatus(Status.valueOf(projectStatus));
-				} else {
-					project.setStatus(Status.ACTIVE);
+				AdminProjectUtilities.setFormProperties(project,
+						projectService, form, errors);
+				if (!errors.isEmpty()) {
+					saveErrors(request, errors);
+					return mapping.getInputForward();
 				}
-	
-				Integer[] optionValues = (Integer[]) PropertyUtils
-						.getSimpleProperty(form, "options");
-				int optionmask = 0;
-				if (optionValues != null) {
-					for (int i = 0; i < optionValues.length; i++) {
-						optionmask += optionValues[i].intValue();
-					}
-				}
-				project.setOptions(optionmask);
-	
-				Integer[] fieldsArray = (Integer[]) PropertyUtils.getSimpleProperty(form, "fields");
-				Set<Integer> fields = null == fieldsArray? new HashSet<Integer>(0):
-					new HashSet<Integer>(Arrays.asList(fieldsArray));
-	
-				Integer[] ownersArray = (Integer[]) PropertyUtils.getSimpleProperty(form, "owners");
-				Set<Integer> ownerIds = null == ownersArray ? new HashSet<Integer>():
-					new HashSet<Integer>(Arrays.asList(ownersArray));
+				project = projectService.createProject(project, user.getId());
 
-
-				if ("create".equals(action)) {
-	
-					project = projectService.createProject(project, user.getId());
-					
-					if (log.isDebugEnabled()) {
-						log.debug("execute: created new project: " + project);
-					}
-	
-					Integer[] users = (Integer[]) PropertyUtils.getSimpleProperty(form, "users");
-					if (users != null)
-					{
-						// get the initial project members from create-form
-						Set<Integer> userIds = new HashSet<Integer>(Arrays
-								.asList(users));
-						// get the  permissions-set for initial project members
-						Integer[] permissionArray = (Integer[]) PropertyUtils.getSimpleProperty(form, "permissions");
-						Set<Integer> permissions = null == permissionArray ? new HashSet<Integer>(0): 
-							new HashSet<Integer>(Arrays.asList(permissionArray));
-		
-						// if admin-permission is selected, all permissions will be granted and users added as project owners
-						if (permissions.contains(UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
-							ownerIds.addAll(userIds);
-						} else {
-							// handle special initial user-/permissions-set
-						AdminProjectUtilities.handleInitialProjectMembers(project, userIds, permissions,
-									projectService, userService);
-						}
-		
-						// set project owners with all permissions
-					AdminProjectUtilities.updateProjectOwners(project, ownerIds, projectService, userService);
-					}
-	
-					if (log.isDebugEnabled()) {
-						log.debug("execute: updating new project: " + project);
-					}
-					project = projectService.updateProject(project, user.getId());
-	
-				} else if ("update".equals(action)) {
-				AdminProjectUtilities.updateProjectOwners(project, ownerIds, projectService, userService);
-					
-					if (log.isDebugEnabled()) {
-						log.debug("execute: updating existing project: " + project);
-					}
-					project = projectService.updateProject(project, user.getId());
-				}
-				
-				session.removeAttribute(Constants.PROJECT_KEY);
-				projectService.setProjectFields(project, fields);
-			}
-
-			if (errors.isEmpty()) {
-				
-				session.removeAttribute(Constants.PROJECT_KEY);
-			}
-
-			if (errors.isEmpty()) {
 				if (log.isDebugEnabled()) {
-					log.debug("execute: sucess, forward to listprojectsadmin");
+					log.debug("execute: created new project: " + project);
 				}
-				return mapping.findForward("listprojectsadmin");
-			} else {
 
-				saveErrors(request, errors);
+				Integer[] users = (Integer[]) PropertyUtils.getSimpleProperty(
+						form, "users");
+				if (users != null) {
+					// get the initial project members from create-form
+					Set<Integer> userIds = new HashSet<Integer>(Arrays
+							.asList(users));
+					// get the permissions-set for initial project members
+					Integer[] permissionArray = (Integer[]) PropertyUtils
+							.getSimpleProperty(form, "permissions");
+					Set<Integer> permissions = null == permissionArray ? new HashSet<Integer>(
+							0)
+							: new HashSet<Integer>(Arrays
+									.asList(permissionArray));
 
-				saveToken(request);
-				return mapping.getInputForward();
+					Integer[] ownersArray = (Integer[]) PropertyUtils
+							.getSimpleProperty(form, "owners");
+					Set<Integer> ownerIds = null == ownersArray ? new HashSet<Integer>()
+							: new HashSet<Integer>(Arrays.asList(ownersArray));
+
+					// if admin-permission is selected, all permissions will be
+					// granted and users added as project owners
+					if (permissions
+							.contains(UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
+						ownerIds.addAll(userIds);
+					} else {
+						// handle special initial user-/permissions-set
+						AdminProjectUtilities.handleInitialProjectMembers(
+								project, userIds, permissions, projectService,
+								userService);
+					}
+
+					// set project owners with all permissions
+					AdminProjectUtilities.updateProjectOwners(project,
+							ownerIds, projectService, userService);
+				}
+
+				if (log.isDebugEnabled()) {
+					log.debug("execute: updating new project: " + project);
+				}
+				session.removeAttribute(Constants.PROJECT_KEY);
 			}
-				
 		} catch (RuntimeException e) {
 			log.error("execute: Exception processing form data", e);
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -229,15 +188,14 @@ public class EditProjectAction extends ItrackerBaseAction {
 		}
 
 		if (!errors.isEmpty()) {
+			saveErrors(request, errors);
 			if (log.isDebugEnabled()) {
 				log.debug("execute: got errors in action-messages: " + errors);
 			}
-			saveErrors(request, errors);
+			return mapping.findForward("error");
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("execute: failed, forward to error");
-		}
-		return mapping.findForward("error");
+
+		return mapping.findForward("listprojectsadmin");
 	}
 
 }
