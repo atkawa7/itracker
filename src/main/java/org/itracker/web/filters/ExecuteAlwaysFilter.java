@@ -126,11 +126,15 @@ public class ExecuteAlwaysFilter implements Filter {
 //			check for autologin
 			if (LoginUtilities.checkAutoLogin(request, configurationService.getBooleanProperty(
 					"allow_save_login", true))) {
-//				currUser = LoginUtilities.processAutoLogin(request, iTrackerServices);
 
 				String login = String.valueOf(request.getAttribute(Constants.AUTH_LOGIN_KEY));
 				currUser = LoginUtilities.setupSession(login, request, (HttpServletResponse)response);
-				SessionManager.createSession(login);
+				
+				try {
+					SessionManager.createSession(login);
+				} catch (Exception e) {
+					handleError(e, request, response);
+				}
 				
 			}
 		}
@@ -203,25 +207,19 @@ public class ExecuteAlwaysFilter implements Filter {
 			log.error(
 					"doFilter: failed to execute chain with runtime exception: "
 							+ e.getMessage(), e);
-			if (response instanceof HttpServletResponse)
-				handleError(e, request, (HttpServletResponse)response);
-			else
-				throw e;
+			handleError(e, request, response);
+
 		} catch (IOException ioe) {
 			log.error("doFilter: failed to execute chain with i/o exception: "
 					+ ioe.getMessage(), ioe);
-			if (response instanceof HttpServletResponse)
-				handleError(ioe, request, (HttpServletResponse)response);
-			else
-				throw ioe;
+			handleError(ioe, request, response);
+
 		} catch (ServletException se) {
 			log.error(
 					"doFilter: failed to execute chain with servlet exception: "
 							+ se.getMessage(), se);
-			if (response instanceof HttpServletResponse)
-				handleError(se, request, (HttpServletResponse)response);
-			else
-				throw se;
+			handleError(se, request, response);
+
 		} catch (Error err) {
 			log.fatal("doFilter: caught fatal error executing filter chain",
 					err);
@@ -229,17 +227,31 @@ public class ExecuteAlwaysFilter implements Filter {
 		}
 	}
 
-	private final void handleError(Throwable error, HttpServletRequest request, HttpServletResponse response) {
+	private final void handleError(Throwable error, ServletRequest request, ServletResponse response) throws ServletException {
 
+		if (null == error) {
+			log.info("handleError: called with null throwable");
+			error = new RuntimeException(error);
+		}
+		
+		log.info("handleError: called with " + error.getClass().getSimpleName(), error);
+		
+		if (!(response instanceof HttpServletResponse) || !(request instanceof HttpServletRequest)) {
+			log.error("handleError: unknown request/response: " + request + ", " + response, error);
+			throw new ServletException(error.getMessage(), error);
+		}
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		HttpServletResponse httpResponse = (HttpServletResponse) response;
+		
 		ActionMessages errors = new ActionMessages();
 		errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system.message",
 				new Object[]{error.getLocalizedMessage() == null ? error.getMessage() : error.getLocalizedMessage(),
 						error.getClass().getCanonicalName()}));
 		
-		saveErrors(request, errors);
+		saveErrors((HttpServletRequest)request, errors);
 		try {
 //			response.sendError(500, "Internal Server Error");
-			response.sendRedirect(request.getContextPath() + "/error.do");
+			httpResponse.sendRedirect(httpRequest.getContextPath() + "/error.do");
 		} catch (IOException e) {
 			log.fatal("handleError: failed to redirect to error-page");
 			return;
