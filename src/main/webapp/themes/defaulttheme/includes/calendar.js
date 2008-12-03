@@ -156,7 +156,7 @@
     	    var month = newCal.getMonth();
     	    var year = newCal.getFullYear();
     	    var isThisYear = (year == new Date().getFullYear());
-    	    var isThisMonth = (day > -1)
+    	    var isThisMonth = (day > -1);
     	    daysGrid = '<table border=1 cellspacing=0 cellpadding=2><tr><td bgcolor=#ffffff nowrap>';
     	    daysGrid += '<font face="courier new, courier" size=2>';
     	    daysGrid += '<a href="javascript:hideElement(\'' + eltName + '\')">x</a>';
@@ -198,7 +198,7 @@
                           color="red";
                       }
             		      daysGrid += '<a href="javascript:setDay(';
-            		      daysGrid += dayOfMonth + ',\'' + eltName + '\')" '
+            		      daysGrid += dayOfMonth + ',\'' + eltName + '\')" ';
             		      daysGrid += 'style="color:' + color + '">';
             		      var dayString = dayOfMonth + "</a> ";
 		                  if (dayString.length == 6) {
@@ -235,6 +235,6 @@
           if (isPlacedUnder) {
               setPosition(divstyle,positionerImgName,true);
           } else {
-              setPosition(divstyle,positionerImgName)
+              setPosition(divstyle,positionerImgName);
           }
       }
