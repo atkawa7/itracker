@@ -536,29 +536,29 @@ public class IssueUtilities {
 		customFields = (value == null ? new ArrayList<CustomField>() : value);
 	}
 
-	/**
-	 * Returns an array of the cached custom fields. The fields labels will be
-	 * initialized based on the Locale given. If no locale is given, the default
-	 * locale of the system will be used.
-	 * 
-	 * @param locale
-	 *            the locale to use to populate the field labels
-	 * @return the cached array of CustomFieldModels
-	 */
-	public static List<CustomField> getCustomFields(Locale locale) {
-		CustomField[] localizedFields = new CustomField[customFields.size()];
-		for (int i = 0; i < customFields.size(); i++) {
-			try {
-				localizedFields[i] = (CustomField) customFields.get(i).clone();
-				if (localizedFields[i] != null) {
-					localizedFields[i].setLabels(locale);
-				}
-			} catch (CloneNotSupportedException cnse) {
-				logger.error("Error cloning CustomField: " + cnse.getMessage());
-			}
-		}
-		return Arrays.asList(localizedFields);
-	}
+//	/**
+//	 * Returns an array of the cached custom fields. The fields labels will be
+//	 * initialized based on the Locale given. If no locale is given, the default
+//	 * locale of the system will be used.
+//	 * 
+//	 * @param locale
+//	 *            the locale to use to populate the field labels
+//	 * @return the cached array of CustomFieldModels
+//	 */
+//	public static List<CustomField> getCustomFields(Locale locale) {
+//		CustomField[] localizedFields = new CustomField[customFields.size()];
+//		for (int i = 0; i < customFields.size(); i++) {
+//			try {
+//				localizedFields[i] = (CustomField) customFields.get(i).clone();
+//				if (localizedFields[i] != null) {
+//					localizedFields[i].setLabels(locale);
+//				}
+//			} catch (CloneNotSupportedException cnse) {
+//				logger.error("Error cloning CustomField: " + cnse.getMessage());
+//			}
+//		}
+//		return Arrays.asList(localizedFields);
+//	}
 
 	/**
 	 * Returns the custom field with the supplied id. Any labels will be
@@ -597,11 +597,7 @@ public class IssueUtilities {
 		} catch (CloneNotSupportedException cnse) {
 			logger.error("Error cloning CustomField: " + cnse.getMessage());
 		}
-		if (retField != null) {
-			if (retField.getFieldType() == CustomField.Type.LIST) {
-				retField.setLabels(locale);
-			}
-		} else {
+		if (retField == null) {
 			retField = new CustomField();
 		}
 
