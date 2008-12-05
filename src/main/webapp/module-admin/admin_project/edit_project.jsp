@@ -26,7 +26,7 @@
 			<html:hidden property="action" />
 			<html:hidden property="id" />
 
-			<table border="0" cellspacing="0" cellspacing="1" width="800">
+			<table border="0" cellspacing="0" width="800">
 				<tr>
 					<td class="editColumnTitle"><it:message
 						key="itracker.web.attr.name" />:</td>
