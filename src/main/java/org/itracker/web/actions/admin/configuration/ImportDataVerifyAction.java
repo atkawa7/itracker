@@ -223,7 +223,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                     CustomField field = (CustomField) importData[i];
                     if(model.getReuseFields()) {
                         for(int j = 0; j < fields.size(); j++) {
-                            if(fields.get(j).getFieldType() == field.getFieldType() && fields.get(j).getName().equalsIgnoreCase(field.getName())) {
+                            if(fields.get(j).getFieldType() == field.getFieldType() /*&& fields.get(j).getName().equalsIgnoreCase(field.getName())*/) {
                                 // Matching custom field.  Set id, but don't need to update issues
                                 // since it contains the customfield model
                                 field.setId(fields.get(j).getId());

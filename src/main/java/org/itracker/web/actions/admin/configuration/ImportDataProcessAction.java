@@ -138,12 +138,14 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
                     // Now add new language keys.  One for the field and then add one for for
                     // each option that exists.
                     String key = CustomFieldUtilities.getCustomFieldLabelKey(customField.getId());
-                    configurationService.updateLanguageItem(new Language(ImportExportUtilities.EXPORT_LOCALE_STRING, key, customField.getName()));
+                	// TODO, removed name attribute, so it's defaulted to the key
+                    configurationService.updateLanguageItem(new Language(ImportExportUtilities.EXPORT_LOCALE_STRING, key, key));
                     ITrackerResources.clearKeyFromBundles(key, true);
                     if(customField.getFieldType() == CustomField.Type.LIST) {
+                    	// TODO, removed name attribute, so it's defaulted to the key
                         for(int j = 0; j < customField.getOptions().size(); j++) {
                             String optionKey = CustomFieldUtilities.getCustomFieldOptionLabelKey(customField.getId(), customField.getOptions().get(j).getId());
-                            configurationService.updateLanguageItem(new Language(ImportExportUtilities.EXPORT_LOCALE_STRING, optionKey, customField.getOptions().get(j).getCustomField().getName()));
+                            configurationService.updateLanguageItem(new Language(ImportExportUtilities.EXPORT_LOCALE_STRING, optionKey, optionKey));
                             ITrackerResources.clearKeyFromBundles(optionKey, true);
                         }
                     }
