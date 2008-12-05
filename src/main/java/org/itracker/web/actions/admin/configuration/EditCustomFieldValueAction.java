@@ -96,7 +96,7 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
 
                 customFieldValue.setValue(customFieldValueForm.getValue());
                 String name = CustomFieldUtilities.getCustomFieldOptionName(customFieldValue.getCustomField().getId(), id);
-                customFieldValue.setName(name);
+//                customFieldValue.setName(name);
                 customFieldValue = configurationService.updateCustomFieldValue(customFieldValue);
             } else {
                 throw new SystemConfigurationException("Invalid action " + action + " while editing custom field value.");
