@@ -23,15 +23,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
+import org.itracker.model.IssueField;
 import org.itracker.model.NameValuePair;
+import org.itracker.services.util.CustomFieldUtilities;
+import org.itracker.services.util.IssueUtilities;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 
@@ -42,6 +48,8 @@ public final class FormatCustomFieldTag extends TagSupport {
     private static final long serialVersionUID = 1L;
     public static final String DISPLAY_TYPE_EDIT = "edit";
     public static final String DISPLAY_TYPE_VIEW = "view";
+    
+    private static final Logger logger = Logger.getLogger(FormatCustomFieldTag.class);
     
     private CustomField field;
     private String currentValue;
@@ -92,26 +100,27 @@ public final class FormatCustomFieldTag extends TagSupport {
     public int doStartTag() throws JspException {
         return SKIP_BODY;
     }
-    
     public int doEndTag() throws JspException {
         Locale locale = null;
         
         if(field != null) {
-            HttpSession session = pageContext.getSession();
-            if(session != null) {
-                locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
-                field.setLabels(locale);
-            }
-            
+            locale = LoginUtilities.getCurrentLocale((HttpServletRequest)pageContext.getRequest());
             
             StringBuffer buf = new StringBuffer();
             buf.append("<td class=\"" + (DISPLAY_TYPE_VIEW.equalsIgnoreCase(displayType) ? "editColumnTitle" : "editColumnTitle") +"\">");
-            buf.append(field.getName() + ": ");
+            buf.append(CustomFieldUtilities.getCustomFieldName(field.getId(), locale) + ": ");
             buf.append("</td>\n");
             buf.append("<td align=\"left\" class=\"editColumnText\">");
             if(DISPLAY_TYPE_VIEW.equalsIgnoreCase(displayType)) {
                 if(currentValue != null) {
-                    buf.append((field.getFieldType() == CustomField.Type.LIST ? field.getOptionNameByValue(currentValue) : currentValue));
+//                    buf.append((field.getFieldType() == CustomField.Type.LIST ? field.getOptionNameByValue(currentValue) : currentValue));
+
+                    if (field.getFieldType().equals(CustomField.Type.LIST)) {
+                    		buf.append(CustomFieldUtilities.getCustomFieldOptionName(getField(), currentValue, locale));
+    
+                    } else {
+                        buf.append(currentValue);
+                    }
                 }
             } else {
                 // Object requestValue = RequestUtils.lookup(pageContext, org.apache.struts.taglib.html.Constants.BEAN_KEY, "customFields(" + field.getId() + ")", null);
@@ -126,11 +135,12 @@ public final class FormatCustomFieldTag extends TagSupport {
 
                     buf.append("<select name=\"customFields(" + field.getId() + ")\" class=\"editColumnText\">\n");
                     for(int i = 0; i < options.size(); i++) {
-                        
+                        // TODO: why not work with option-id here? if value contains quotes, problem.
                         buf.append("<option value=\"" + options.get(i).getValue() + "\"");
                         buf.append((currentValue != null && currentValue.equals(options.get(i).getValue()) ? " selected=\"selected\"" : ""));
                         buf.append(" class=\"editColumnText\">");
-                        buf.append(options.get(i).getName());
+                        buf.append(CustomFieldUtilities.getCustomFieldOptionName(options.get(i), locale));
+//                        buf.append(options.get(i).getName());
                         buf.append("</option>\n");
                     }
                     buf.append("</select>\n");
@@ -169,7 +179,9 @@ public final class FormatCustomFieldTag extends TagSupport {
         return (EVAL_PAGE);
     }
     
-    public void release() {
+  
+
+	public void release() {
         super.release();
         clearState();
     }
