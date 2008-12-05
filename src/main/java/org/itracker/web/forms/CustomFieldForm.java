@@ -25,18 +25,17 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
+import org.itracker.core.resources.ITrackerResources;
+import org.itracker.web.actions.admin.configuration.EditCustomFieldActionUtil;
 
 /**
- * This is the LoginForm Struts Form. It is used by Login form.
+ * This is the Struts Form. It is used by action.
  * 
  * @author ready
  * 
  */
+@SuppressWarnings("serial")
 public class CustomFieldForm extends ValidatorForm {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	String action = null;
 	Integer id = null;
 	Integer fieldType = null;
@@ -44,8 +43,9 @@ public class CustomFieldForm extends ValidatorForm {
 	String dateFormat = null;
 	String sortOptionsByName = null;
 	String value = null;
-	// let's try to put String,String here:
+//	private String base_locale;
 	HashMap<String, String> translations = new HashMap<String, String>();
+
 
 	/*
 	 * public void reset(ActionMapping mapping, HttpServletRequest request) {
@@ -53,13 +53,20 @@ public class CustomFieldForm extends ValidatorForm {
 	 * null; sortOptionsByName= null; value= null; translations = null;
 	 *  }
 	 */
+	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		ActionErrors errors = super.validate(mapping, request);
-
+		EditCustomFieldActionUtil.setRequestEnv(request, this);
 		return errors;
 	}
 
+
+	@Override
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		super.reset(mapping, request);
+	}
+	
 	public String getAction() {
 		return action;
 	}
@@ -108,14 +115,13 @@ public class CustomFieldForm extends ValidatorForm {
 		this.sortOptionsByName = sortOptionsByName;
 	}
 
-	// let's try to put String,String here:
 	public HashMap<String, String> getTranslations() {
 		return translations;
 	}
 
-	// let's try to put String,String here:
 	public void setTranslations(HashMap<String, String> translations) {
 		this.translations = translations;
+//		this.base_locale = translations.get(ITrackerResources.BASE_LOCALE);
 	}
 
 	public String getValue() {
@@ -126,4 +132,13 @@ public class CustomFieldForm extends ValidatorForm {
 		this.value = value;
 	}
 
+	public String getBase_locale() {
+		return translations.get(ITrackerResources.BASE_LOCALE);
+	}
+
+	public void setBase_locale(String base_locale) {
+//		this.base_locale = base_locale;
+//		translations.put(ITrackerResources.BASE_LOCALE, base_locale);
+	}
+	
 }
