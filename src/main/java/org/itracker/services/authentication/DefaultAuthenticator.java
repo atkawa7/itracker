@@ -29,6 +29,7 @@ import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.UserUtilities;
+import org.jfree.util.Log;
 import org.springframework.dao.DataAccessException;
 
 
@@ -60,50 +61,61 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
             try {
                 user = getUserService().getUserByLogin(login);
             } catch (DataAccessException e) {
-                throw new AuthenticatorException(0, e.getMessage());
+            	logger.error("checkLogin: failed to get user by login: " + login, e);
+                throw new AuthenticatorException(AuthenticatorException.UNKNOWN_USER, e.getMessage());
             }
 
-            if (user == null) {
-                throw new AuthenticatorException(AuthenticatorException.UNKNOWN_USER);
-            }
+//            if (user == null) {
+//                AuthenticatorException e =  new AuthenticatorException(AuthenticatorException.UNKNOWN_USER);
+//                logger.error("checkLogin: failed to get user by login: " + login, e);
+//                throw e;
+//            }
             if (user.getStatus() != UserUtilities.STATUS_ACTIVE) {
-                throw new AuthenticatorException(AuthenticatorException.INACTIVE_ACCOUNT);
+            	AuthenticatorException e =  new AuthenticatorException(AuthenticatorException.INACTIVE_ACCOUNT);
+            	logger.info("checkLogin: user is inactive, user: " + user, e);
+                throw e; 
             }
 
             String userPassword;
             try {
                 userPassword = getUserService().getUserPasswordByLogin(login);
             } catch (DataAccessException e) {
-                throw new AuthenticatorException(e.getMessage(), authType);
+                AuthenticatorException ex = new AuthenticatorException(e.getMessage(), authType);
+                logger.info("checkLogin: user is inactive, user: " + user, ex);
+                throw e;
             }
             if (userPassword == null || userPassword.equals("")) {
-                throw new AuthenticatorException(AuthenticatorException.INVALID_PASSWORD);
+                AuthenticatorException e = new AuthenticatorException(AuthenticatorException.INVALID_PASSWORD);
+                logger.info("checkLogin: user has no password, user: " + user, e);
+                throw e;
             }
 
             try {
                 if (!userPassword.endsWith("=")) {
-                    logger.info("User " + login + " has old style password.  Converting to SHA1 hash.");
+                    logger.info("checkLogin: User " + login + " has old style password.  Converting to SHA1 hash.");
                     try {
                         user.setPassword(UserUtilities.encryptPassword(userPassword));
                         getUserService().updateUser(user);
                     } catch (UserException ue) {
-                        logger.info("User password conversion failed for user " + login);
+                        logger.error("checkLogin: User password conversion failed for user " + user, ue);
+                        throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
                     }
                 }
 
                 if (authType == AUTH_TYPE_PASSWORD_PLAIN) {
                     if (!userPassword.equals(UserUtilities.encryptPassword((String) authentication))) {
-                        throw new AuthenticatorException(AuthenticatorException.INVALID_PASSWORD);
+                        throw new AuthenticatorException(AuthenticatorException.INVALID_PASSWORD);                        
                     }
                 } else if (authType == AUTH_TYPE_PASSWORD_ENC) {
                     if (!userPassword.equals(authentication)) {
                         throw new AuthenticatorException(AuthenticatorException.INVALID_PASSWORD);
                     }
                 } else {
+                	Log.info("checkLogin: invalid authenticator type: " + authType);
                     throw new AuthenticatorException(AuthenticatorException.INVALID_AUTHENTICATION_TYPE);
                 }
             } catch (ClassCastException cce) {
-                logger.error("Authenticator was of wrong type.", cce);
+                logger.error("checkLogin: Authenticator was of wrong type.", cce);
                 throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
             } catch (PasswordException pe) {
                 throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
@@ -112,6 +124,7 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
             return user;
         }
 
+    	Log.info("checkLogin: no login was supplied: " + login + ", type: " + authType + ", source: " + reqSource);
         throw new AuthenticatorException(AuthenticatorException.INVALID_DATA);
     }
 
