@@ -21,6 +21,7 @@ package org.itracker.services.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
@@ -40,20 +41,31 @@ public class Convert {
 	 */
 	public static List<NameValuePair> customFieldOptionsToNameValuePairs(
 			List<CustomFieldValue> options) {
+		return customFieldOptionsToNameValuePairs(options, null);
+		
+	}
+	/**
+	 * Converts an array of CustomFieldValueModels to NameValuePairs
+	 * 
+	 * @param options
+	 *            the array of CustomFieldValueModels to convert
+	 * @return the new NameValuePair array
+	 */
+	public static List<NameValuePair> customFieldOptionsToNameValuePairs(
+			List<CustomFieldValue> options, Locale locale) {
 		List<NameValuePair> returnValues = new ArrayList<NameValuePair>();
-
+		String name;
 		if (options != null) {
 			returnValues = new ArrayList<NameValuePair>();
 			for (int i = 0; i < options.size(); i++) {
+				name = CustomFieldUtilities.getCustomFieldOptionName(options.get(i), locale);
 				returnValues
-						.add(new NameValuePair(options.get(i).getCustomField()
-								.getName(), options.get(i).getValue()));
+						.add(new NameValuePair(name, options.get(i).getValue()));
 			}
 		}
 
 		return returnValues;
 	}
-
 	/**
 	 * Converts an array of UserModels to NameValuePairs
 	 * 
