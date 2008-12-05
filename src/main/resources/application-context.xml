@@ -35,13 +35,13 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         <constructor-arg ref="schedulerService" />
     </bean -->
 
-    <!-- Initialize ITracker Resources -->
+    <!-- Initialize ITracker Resources
     <bean id="resourcesinit"
         class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="staticMethod" value="org.itracker.core.resources.ITrackerResources.setConfigurationService"/>
         <property name="arguments" ref="configurationService" />
     </bean>
-
+ -->
     <!-- Override properties specified in this file with properties from a properties file -->
     <!-- Usefull for db passwords, etc.. -->
     <bean id="applicationOverride"

@@ -30,6 +30,7 @@ import org.itracker.model.Language;
 import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.ITrackerDirtyResourceException;
+import org.itracker.web.util.ServletContextUtils;
 
 /**
  * 
@@ -91,7 +92,7 @@ public class ITrackerResources {
 
     private static Object bundleLock = new Object();
 
-    private static ConfigurationService configurationService;
+//    private static ConfigurationService configurationService;
 
     public static Locale getLocale() {
         return getLocale(getDefaultLocale());
@@ -168,7 +169,7 @@ public class ITrackerResources {
         ResourceBundle bundle = (ResourceBundle) languages.get(locale);
         if (bundle == null) {
             logger.debug("Loading new resource bundle for locale " + locale + " from the database.");
-            List<Language> languageItems = configurationService.getLanguage(locale);
+            List<Language> languageItems = ServletContextUtils.getItrackerServices().getConfigurationService().getLanguage(locale);
             bundle = new ITrackerResourceBundle(locale, languageItems);
             if (bundle != null) {
                 putBundle(locale, bundle);
@@ -186,7 +187,7 @@ public class ITrackerResources {
         }
             ResourceBundle bundle = (ResourceBundle) languages.get(locale);
             logger.debug("Loading new resource bundle for locale " + locale + " from the database.");
-            List<Language> languageItems = configurationService.getLanguage(locale);
+            List<Language> languageItems = ServletContextUtils.getItrackerServices().getConfigurationService().getLanguage(locale);
             bundle = new ITrackerResourceBundle(locale, languageItems);
             if (bundle != null) {
                 putBundle(locale, bundle);
@@ -270,15 +271,31 @@ public class ITrackerResources {
         if (locale == null) {
             locale = getLocale(getDefaultLocale());
         }
-
+        String val;
         try {
             try {
-                return getBundle(locale).getString(key);
+            	if (logger.isDebugEnabled()) {
+            		logger.debug("getString: " + key + " for locale " + locale);
+            	}
+                val = getBundle(locale).getString(key);
+                if (null != val) {
+
+//                	if (logger.isDebugEnabled()) {
+//                		logger.debug("getString: found " + val + " for key" + key + ", locale " + locale);
+//                	}
+                	return val;
+                } else {
+            		val = ITrackerResources.getString(key);
+
+//                	if (logger.isDebugEnabled()) {
+//                		logger.debug("getString: found in base: " + val + " for key" + key);
+//                	}
+            	}
             } catch (ITrackerDirtyResourceException idre) {
 
-                logger.debug("Loading new key to replace dirty key " + key + " for resource bundle for locale "
-                        + locale);
-                Language languageItem = configurationService.getLanguageItemByKey(key, locale);
+//                logger.debug("Loading new key to replace dirty key " + key + " for resource bundle for locale "
+//                        + locale);
+                Language languageItem = ServletContextUtils.getItrackerServices().getConfigurationService().getLanguageItemByKey(key, locale);
                 ((ITrackerResourceBundle) getBundle(locale)).updateValue(languageItem);
             }
             return getBundle(locale).getString(key);
@@ -411,9 +428,9 @@ public class ITrackerResources {
         return value;
     }
 
-    public static void setConfigurationService(ConfigurationService configurationService) {
-        ITrackerResources.configurationService = configurationService;
-    }
+//    public static void setConfigurationService(ConfigurationService configurationService) {
+//        ITrackerResources.configurationService = configurationService;
+//    }
 
 	public static boolean isInitialized() {
 		return initialized;
