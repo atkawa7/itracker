@@ -21,7 +21,9 @@ package org.itracker.web.actions.project;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -37,6 +39,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.ValidatorForm;
+import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
@@ -45,6 +49,8 @@ import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
+import org.itracker.services.exceptions.IssueException;
+import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.services.util.WorkflowUtilities;
@@ -77,8 +83,52 @@ public class EditIssueAction extends ItrackerBaseAction {
 		}
 		resetToken(request);
 
+
 		try {
 			IssueService issueService = getITrackerServices().getIssueService();
+			if (((IssueForm)form).getId() != null) {
+				Issue issue = getITrackerServices().getIssueService().getIssue((((IssueForm)form).getId()));			
+				List<CustomField> projectFields = issue.getProject().getCustomFields();
+				if (projectFields.size() > 0) {
+					HttpSession session = request.getSession();
+					Locale locale = ITrackerResources.getLocale();
+					if (session != null) {
+						locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+					}
+
+					ResourceBundle bundle = ITrackerResources.getBundle(locale);
+
+					for (int i = 0; i < projectFields.size(); i++) {
+						CustomField customField = projectFields.get(i);
+						String fieldValue = ((IssueForm)form).getCustomFields().get(String.valueOf(customField.getId()));
+//						String fieldValue = request.getParameter("customFields("
+//								+ customField.getId() + ")");
+						if (fieldValue != null && !fieldValue.equals("")) {
+							try {
+								customField.checkAssignable(fieldValue, locale, bundle);
+							} catch (IssueException ie) {
+								String label = CustomFieldUtilities.getCustomFieldName(
+										projectFields.get(i).getId(), locale);
+								errors.add(ActionMessages.GLOBAL_MESSAGE,
+										new ActionMessage(ie.getType(), label));
+							}
+						} else if (projectFields.get(i).isRequired()) {
+							String label = CustomFieldUtilities.getCustomFieldName(
+									projectFields.get(i).getId(), locale);
+							errors.add(ActionMessages.GLOBAL_MESSAGE,
+									new ActionMessage(IssueException.TYPE_CF_REQ_FIELD,
+											label));
+						}
+					}
+				}
+				if (!errors.isEmpty()) {
+					saveErrors(request, errors);
+					log.info("execute: return to edit-issue");
+					saveToken(request);	
+					return mapping.getInputForward();
+				}
+			}
+			
 			logTimeMillies("execute: got issueService", logDate, log, Level.DEBUG);
 			NotificationService notificationService = getITrackerServices()
 			.getNotificationService();
