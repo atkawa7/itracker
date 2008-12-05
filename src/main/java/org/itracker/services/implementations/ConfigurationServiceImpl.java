@@ -596,11 +596,14 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     
     public List<CustomField> getCustomFields(Locale locale) {
         
+    	if (true)
+    		return null;
+    	// skip this code.
         List<CustomField> fields = getCustomFields();
         
         for (int i = 0; i < fields.size(); i++) {
             
-            fields.get(i).setLabels(locale);
+//            fields.get(i).setLabels(locale);
             
         }
         Collections.sort(fields,  new CustomField.NameComparator());
@@ -620,7 +623,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         addcustomField.setDateFormat(customField.getDateFormat());
         addcustomField.setFieldType(customField.getFieldType());
         addcustomField.setOptions(customField.getOptions());
-        addcustomField.setName(customField.getName());
+//        addcustomField.setName(customField.getName());
         addcustomField.setRequired(customField.isRequired());
         this.customFieldDAO.save( addcustomField );
         
@@ -643,7 +646,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editcustomField.setDateFormat(customField.getDateFormat());
         editcustomField.setFieldType(customField.getFieldType());
         editcustomField.setOptions(customField.getOptions());
-        editcustomField.setName(customField.getName());
+//        editcustomField.setName(customField.getName());
         editcustomField.setRequired(customField.isRequired());
 //      moved date stuff to BaseHibernateDAO
 //        editcustomField.setLastModifiedDate(new Date());
@@ -709,7 +712,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         CustomFieldValue addcustomFieldValue = new CustomFieldValue();
         addcustomFieldValue.setCustomField(customFieldValue.getCustomField());
         addcustomFieldValue.setValue(customFieldValue.getValue());
-        addcustomFieldValue.setName(customFieldValue.getName());
+//        addcustomFieldValue.setName(customFieldValue.getName());
         this.customFieldValueDAO.save(addcustomFieldValue);
         
         return addcustomFieldValue;
@@ -730,7 +733,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editcustomFieldValue.setValue(customFieldValue.getValue());
 //      moved date stuff to BaseHibernateDAO
 //        editcustomFieldValue.setLastModifiedDate(new Date());
-        editcustomFieldValue.setName(customFieldValue.getName());
+//        editcustomFieldValue.setName(customFieldValue.getName());
         this.customFieldValueDAO.saveOrUpdate( editcustomFieldValue );
         return editcustomFieldValue;
     }
@@ -754,7 +757,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                         curCustomFieldValue.setCreateDate(customFieldValueItem.getCreateDate());
 //                      moved date stuff to BaseHibernateDAO
 //                        curCustomFieldValue.setLastModifiedDate(customFieldValueItem.getLastModifiedDate());
-                        curCustomFieldValue.setName(customFieldValueItem.getName());
+//                        curCustomFieldValue.setName(customFieldValueItem.getName());
                         curCustomFieldValue.setValue(customFieldValueItem.getValue());
                         curCustomFieldValue.setCustomField(customFieldValueItem.getCustomField());
                         curCustomFieldValue.setSortOrder(customFieldValueItem.getSortOrder());
@@ -1168,7 +1171,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         
         // Now load the CustomFields
         
-        config.setCustomFields(IssueUtilities.getCustomFields(locale));
+//        config.setCustomFields(IssueUtilities.getCustomFields(locale));
         
         // Now set the system version
         
