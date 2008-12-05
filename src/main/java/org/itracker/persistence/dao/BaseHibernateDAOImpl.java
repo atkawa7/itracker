@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.hibernate.HibernateException;
 import org.itracker.model.Entity;
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -29,7 +30,7 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
      */
     public void save(T entity) {
     	if (null == entity) {
-    		throw new NullPointerException("entity must not be null");
+    		throw new InvalidDataAccessResourceUsageException( "entity must not be null" );
     	}
         try {
         	Date createDate = new Date();
@@ -50,7 +51,7 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
      */
     public void saveOrUpdate(T entity) {
     	if (null == entity) {
-    		throw new NullPointerException("entity must not be null");
+    		throw new InvalidDataAccessResourceUsageException( "entity must not be null" );
     	}
 
         try {
@@ -69,7 +70,7 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
 
     public void delete(T entity) {
         if (null == entity) {
-    		throw new NullPointerException("entity must not be null");
+    		throw new InvalidDataAccessResourceUsageException( "entity must not be null" );
     	}
         try {
             getSession().delete(entity);
@@ -82,7 +83,7 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
 
     public void detach(T entity) {
     	if (null == entity) {
-    		throw new NullPointerException("entity must not be null");
+    		throw new InvalidDataAccessResourceUsageException( "entity must not be null" );
     	}
     	try {
     		getSession().evict(entity);
@@ -94,7 +95,7 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
     
     public void refresh(T entity) {
     	if (null == entity) {
-    		throw new NullPointerException("entity must not be null");
+    		throw new InvalidDataAccessResourceUsageException( "entity must not be null" );
     	}
     	try {
     		getSession().refresh(entity);
@@ -107,7 +108,7 @@ public abstract class BaseHibernateDAOImpl<T extends Entity> extends HibernateDa
     @SuppressWarnings("unchecked")
 	public T merge(T entity) {
     	if (null == entity) {
-    		throw new NullPointerException("entity must not be null");
+    		throw new InvalidDataAccessResourceUsageException( "entity must not be null" );
     	}
     	try {
     		return (T)getSession().merge(entity);
