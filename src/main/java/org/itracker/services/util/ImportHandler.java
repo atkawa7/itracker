@@ -276,7 +276,8 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if(TAG_CUSTOM_FIELD_DATEFORMAT.equals(qName)) {
                 ((CustomField) childModel).setDateFormat(getBuffer());
             } else if(TAG_CUSTOM_FIELD_LABEL.equals(qName)) {
-                ((CustomField) childModel).setName(getBuffer());
+//                ((CustomField) childModel).setName(getBuffer());
+//            	TODO handle configuration for setting the BASE label
             } else if(TAG_CUSTOM_FIELD_OPTION.equals(qName)) {
                 ((CustomField) childModel).addOption(tempStorage, getBuffer());
             } else if(TAG_CUSTOM_FIELD_REQUIRED.equals(qName)) {
