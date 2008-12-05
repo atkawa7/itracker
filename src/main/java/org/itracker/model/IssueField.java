@@ -26,6 +26,7 @@ import java.util.ResourceBundle;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.CustomField.Type;
 import org.itracker.services.exceptions.IssueException;
 
 /**
@@ -136,7 +137,14 @@ public class IssueField extends AbstractEntity {
 	 * @return the current value of this field
 	 */
 	public String getValue(Locale locale) {
-		return getValue(ITrackerResources.getBundle(locale));
+		// only date fields are currently localizable
+		if (getCustomField().getFieldType() == Type.DATE) {
+			return getValue(ITrackerResources.getBundle(locale));
+		} else if (getCustomField().getFieldType() == Type.INTEGER) {
+			return String.valueOf(getIntValue());
+		}
+		return getStringValue();
+		
 	}
 
 	/**
@@ -165,8 +173,12 @@ public class IssueField extends AbstractEntity {
 	 * @param bundle
 	 *            a resource bundle to use for any string formatting
 	 * @return the current value of this field
+	 * @deprecated this can not be in the entity, replace by Utility or service.
 	 */
 	public String getValue(ResourceBundle bundle) {
+
+		
+		// skip this code, it's not approved
 		Locale locale = bundle.getLocale();
 
 		if (log.isDebugEnabled()) {
@@ -222,12 +234,12 @@ public class IssueField extends AbstractEntity {
 				log.debug("getValue: ", ne);
 				if (dateValue == null) {
 					log.warn("getValue: failed to format date, null for "
-							+ customField.getName());
+							+ customField);
 					return sdf.format(new Date());
 				}
 			}
 		default:
-			return (this.stringValue == null ? "" : this.stringValue);
+			return this.stringValue;
 		}
 
 	}
