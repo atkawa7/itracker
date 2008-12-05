@@ -90,9 +90,9 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
 					throw new SystemConfigurationException(
 							"Invalid custom field value id " + id);
 				}
-				String name = CustomFieldUtilities.getCustomFieldOptionName(
-						customFieldValue.getCustomField().getId(), id);
-				customFieldValue.setName(name);
+//				String name = CustomFieldUtilities.getCustomFieldOptionName(
+//						customFieldValue.getCustomField().getId(), id);
+//				customFieldValue.setName(name);
 
 				customFieldValueForm.setId(id);
 				customFieldValueForm.setValue(customFieldValue.getValue());
