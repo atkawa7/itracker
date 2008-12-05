@@ -160,7 +160,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
 				List<CustomField> projectFields = project.getCustomFields();
 				for (int i = 0; i < projectFields.size(); i++) {
 					if (projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
-						projectFields.get(i).setLabels(locale);
+//						projectFields.get(i).setLabels(locale);
 						listOptions
 								.put(
 										projectFields.get(i).getId(),
