@@ -31,6 +31,7 @@ import org.itracker.model.NameValuePair;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.SystemConfiguration;
 import org.itracker.model.WorkflowScript;
+import org.itracker.services.util.CustomFieldUtilities;
 
 /**
  * Manages the applications configuration properties.
@@ -210,6 +211,7 @@ public interface ConfigurationService {
       * also initialize all of the field labels using the supplied locale.
       * @param locale the locale to use to initialize the labels
       * @return an array of CustomFieldModels
+      * @deprecated use {@link CustomFieldUtilities} to retrieve localization to custom fields
       */
     List<CustomField> getCustomFields(Locale locale);
     
