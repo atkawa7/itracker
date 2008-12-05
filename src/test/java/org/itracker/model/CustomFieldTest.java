@@ -17,20 +17,20 @@ public class CustomFieldTest extends AbstractDependencyInjectionTest{
 		assertEquals("options size",1,cust.getOptions().size());
 	}
 	
-	@Test
-	public void testGetOptionNameByValue(){	
-		assertEquals("",cust.getOptionNameByValue("0"));
-		cust.setName("male");
-		cust.addOption("0", "male");
-		assertEquals("get name by value 0",null,cust.getOptionNameByValue("0"));
-	}
+//	@Test
+//	public void testGetOptionNameByValue(){	
+//		assertEquals("",cust.getOptionNameByValue("0"));
+////		cust.setName("male");
+////		cust.addOption("0", "male");
+//		assertEquals("get name by value 0",null,cust.getOptionNameByValue("0"));
+//	}
 	
-	@Test
-	public void testSetLabels(){	
-		cust.setId(4444);
-		cust.setLabels("en");
-		assertEquals("hi", cust.getName());
-	}
+//	@Test
+//	public void testSetLabels(){	
+//		cust.setId(4444);
+//		cust.setLabels("en");
+//		assertEquals("hi", cust.getName());
+//	}
 	
 	@Test
 	public void testCheckAssignable() throws IssueException{	

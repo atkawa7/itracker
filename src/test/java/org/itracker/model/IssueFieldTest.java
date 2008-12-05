@@ -79,17 +79,16 @@ public class IssueFieldTest extends AbstractDependencyInjectionTest{
 	
 	@Test
 	public void testGetStringValue(){
-		Locale en = new Locale("en");
 		CustomField cust = new CustomField();
 		iss.setCustomField(cust);
 		iss.setStringValue(null);
 		cust.setFieldType(CustomField.Type.STRING);
-		assertEquals("", iss.getValue(en));
+		assertNull("iss.stringValue", iss.getStringValue());
 		
 		cust.setFieldType(CustomField.Type.STRING);
 		iss.setCustomField(cust);
 		iss.setStringValue("value");		
-		assertEquals("value", iss.getValue(en));
+		assertEquals("iss.stringValue", "value", iss.getStringValue());
 	}
 	
 	@Test

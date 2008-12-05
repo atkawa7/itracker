@@ -543,8 +543,7 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
         for (final CustomField cf : expected) {
             boolean found = false;
             for (final CustomField cfActual: actual) {
-                found = cf.getName().equals(cfActual.getName())
-                        && cf.getFieldType().equals(cfActual.getFieldType());
+                found = cf.equals(cfActual);
                 if (found) break;
             }
             assertTrue(found);
@@ -571,23 +570,7 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
         assertEquals(expected, IssueUtilities.getCustomFields());
     }
 
-    public void doTestGetCustomFieldsByLocale(final Locale locale,
-            final List<CustomField> expected) {
-        final List<CustomField> actual = IssueUtilities.getCustomFields(locale);
-        assertEquals(expected.size(), actual.size());
-        for (final CustomField cf : expected) {
-            assertTrue(actual.contains(cf));
-        }
-    }
 
-    @Test
-    public void testGetCustomFieldsByLocale() {
-        final List<CustomField> expected = new Vector<CustomField>();
-        final CustomField customField1 = new CustomField("key", Type.STRING);
-        customField1.setId(1);
-        expected.add(customField1);
-        doTestGetCustomFieldsByLocale(null, expected);
-    }
 
     @Test
     public void testCanViewIssue() {

@@ -11,6 +11,7 @@ import org.itracker.model.Report;
 import org.itracker.persistence.dao.ReportDAO;
 import org.itracker.services.ReportService;
 import org.junit.Test;
+import org.springframework.dao.DataAccessException;
 
 public class ReportServiceImplTest extends AbstractDependencyInjectionTest {
 
@@ -97,8 +98,8 @@ public class ReportServiceImplTest extends AbstractDependencyInjectionTest {
 		try{
 			report = null;
 			reportService.createReport(report);		
-			fail("do not throw NullPointerException ");
-		} catch(NullPointerException e){
+			fail("do not throw DataAccessException ");
+		} catch(DataAccessException e){
 			assertTrue(true);
 		}
 		
