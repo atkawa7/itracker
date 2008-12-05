@@ -36,6 +36,7 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.Issue;
 import org.itracker.model.NameValuePair;
+import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.Status;
 import org.itracker.model.User;
@@ -282,13 +283,14 @@ public class IssueForm extends ITrackerForm {
 										.getSession()));
 
 				EditIssueActionUtil.setupJspEnv(mapping, this, request, issue,
-						getITrackerServices().getIssueService(), 
-						getITrackerServices().getUserService(), 
-						RequestHelper.getUserPermissions(request.getSession()),
+						getITrackerServices().getIssueService(),
+						getITrackerServices().getUserService(), RequestHelper
+								.getUserPermissions(request.getSession()),
 						EditIssueActionUtil.getListOptions(request, issue,
-								ownersList, RequestHelper.getUserPermissions(request
-												.getSession()), 
-												issue.getProject(), currUser), errors);
+								ownersList, RequestHelper
+										.getUserPermissions(request
+												.getSession()), issue
+										.getProject(), currUser), errors);
 
 				if (errors.isEmpty() && issue.getProject() == null) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -300,12 +302,15 @@ public class IssueForm extends ITrackerForm {
 							new ActionMessage(
 									"itracker.web.error.projectlocked"));
 				} else if (errors.isEmpty()) {
-
-					validateProjectFields(issue, request, errors);
-					validateProjectScripts(issue, errors);
+					validateProjectScripts(issue.getProject(), errors);
 				}
 			} else {
 				CreateIssuePTO.setupCreateIssue(request);
+				HttpSession session = request.getSession();
+				Project project = (Project) session
+						.getAttribute(Constants.PROJECT_KEY);
+				validateProjectFields(project, request, errors);
+				validateProjectScripts(project, errors);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -319,9 +324,9 @@ public class IssueForm extends ITrackerForm {
 		return errors;
 	}
 
-	private static void validateProjectFields(Issue issue,
+	private static void validateProjectFields(Project project,
 			HttpServletRequest request, ActionErrors errors) {
-		List<CustomField> projectFields = issue.getProject().getCustomFields();
+		List<CustomField> projectFields = project.getCustomFields();
 		if (projectFields.size() > 0) {
 			HttpSession session = request.getSession();
 
@@ -334,7 +339,6 @@ public class IssueForm extends ITrackerForm {
 
 			for (int i = 0; i < projectFields.size(); i++) {
 				CustomField customField = projectFields.get(i);
-
 				String fieldValue = request.getParameter("customFields("
 						+ customField.getId() + ")");
 				if (fieldValue != null && !fieldValue.equals("")) {
@@ -362,10 +366,10 @@ public class IssueForm extends ITrackerForm {
 		}
 	}
 
-	private void validateProjectScripts(Issue issue, ActionErrors errors)
+	private void validateProjectScripts(Project project, ActionErrors errors)
 			throws WorkflowException {
 
-		List<ProjectScript> scripts = issue.getProject().getScripts();
+		List<ProjectScript> scripts = project.getScripts();
 		WorkflowUtilities.processFieldScripts(scripts,
 				WorkflowUtilities.EVENT_FIELD_ONVALIDATE, null, errors, this);
 	}
