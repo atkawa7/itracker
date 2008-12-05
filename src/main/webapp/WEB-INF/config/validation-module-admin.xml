@@ -121,5 +121,19 @@
                 <arg0 key="itracker.web.attr.description"/>
             </field>
         </form>
+        
+        <form name="customFieldForm">
+            <field property="base_locale" depends="required">
+                <arg0 key="itracker.web.attr.baselocale"/>
+            </field>
+        </form>
+        <form name="customFieldValueForm">
+            <field property="base_locale" depends="required">
+                <arg0 key="itracker.web.attr.baselocale"/>
+            </field>
+            <field property="value" depends="required">
+                <arg0 key="value"/>
+            </field>
+        </form>
     </formset>
 </form-validation>
