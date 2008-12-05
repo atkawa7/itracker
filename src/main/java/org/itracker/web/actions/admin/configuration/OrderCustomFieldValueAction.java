@@ -96,7 +96,7 @@ public class OrderCustomFieldValueAction extends ItrackerBaseAction {
                         firstCustomFieldValue.setId(curCustomFieldValue.getId());
                         firstCustomFieldValue.setCreateDate(todoCustomFieldValue.getCreateDate());
                         firstCustomFieldValue.setLastModifiedDate(todoCustomFieldValue.getLastModifiedDate());
-                        firstCustomFieldValue.setName(todoCustomFieldValue.getName());
+//                        firstCustomFieldValue.setName(todoCustomFieldValue.getName());
                         firstCustomFieldValue.setValue(todoCustomFieldValue.getValue());
                         firstCustomFieldValue.setCustomField(todoCustomFieldValue.getCustomField());
                         firstCustomFieldValue.setSortOrder(todoCustomFieldValue.getSortOrder());
@@ -104,7 +104,7 @@ public class OrderCustomFieldValueAction extends ItrackerBaseAction {
                         secondCustomFieldValue.setId(todoCustomFieldValue.getId());
                         secondCustomFieldValue.setCreateDate(curCustomFieldValue.getCreateDate());
                         secondCustomFieldValue.setLastModifiedDate(curCustomFieldValue.getLastModifiedDate());
-                        secondCustomFieldValue.setName(curCustomFieldValue.getName());
+//                        secondCustomFieldValue.setName(curCustomFieldValue.getName());
                         secondCustomFieldValue.setValue(curCustomFieldValue.getValue());
                         secondCustomFieldValue.setCustomField(curCustomFieldValue.getCustomField());
                         secondCustomFieldValue.setSortOrder(curCustomFieldValue.getSortOrder());
