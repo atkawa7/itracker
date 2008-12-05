@@ -20,9 +20,11 @@ package org.itracker.model;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.Locale;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.itracker.services.util.CustomFieldUtilities;
 
 /**
  * An option for the value of a CustomField of type <code>LIST</code>.
@@ -42,15 +44,7 @@ public class CustomFieldValue extends AbstractEntity {
 	/** The custom field to which this option belongs. */
 	private CustomField customField;
 
-	/**
-	 * This option's localized label.
-	 * 
-	 * <p>
-	 * This property is obtained from a <code>ResourceBundle</code>, not from
-	 * the database!
-	 * </p>
-	 */
-	private String name;
+
 
 	/** This option's value. */
 	private String value;
@@ -73,6 +67,12 @@ public class CustomFieldValue extends AbstractEntity {
 	public CustomFieldValue() {
 	}
 
+	/**
+	 * 
+	 * @deprecated this can not be in the entity, replace by Utility or service.
+	 * @param customField
+	 * @param value
+	 */
 	public CustomFieldValue(CustomField customField, String value) {
 		setCustomField(customField);
 		setValue(value);
@@ -89,18 +89,15 @@ public class CustomFieldValue extends AbstractEntity {
 		this.customField = customField;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public String getValue() {
 		return value;
 	}
 
+	/**
+	 * 
+	 * @param value
+	 */
 	public void setValue(String value) {
 		if (value == null) {
 			throw new IllegalArgumentException("null value");
@@ -145,7 +142,7 @@ public class CustomFieldValue extends AbstractEntity {
 
 		public int compare(CustomFieldValue a, CustomFieldValue b) {
 			return new CompareToBuilder().append(a.getSortOrder(),
-					b.getSortOrder()).append(a.getName(), b.getName())
+					b.getSortOrder())
 					.toComparison();
 		}
 
@@ -171,13 +168,26 @@ public class CustomFieldValue extends AbstractEntity {
 		 */
 		private static final long serialVersionUID = 1L;
 
+		private final Locale locale;
+		/**
+		 * @deprecated should create a localized comparator
+		 */
 		private NameComparator() {
+			this(null);
 		}
-
+		private NameComparator(Locale locale) {
+			this.locale = null;
+		}
+		
 		public int compare(CustomFieldValue a, CustomFieldValue b) {
-			return new CompareToBuilder().append(a.getName(), b.getName())
-					.append(a.getSortOrder(), b.getSortOrder()).append(
-							a.getId(), b.getId()).toComparison();
+			
+			// 
+			return new CompareToBuilder()
+				.append(
+					CustomFieldUtilities.getCustomFieldOptionName(a,this.locale), 
+					CustomFieldUtilities.getCustomFieldOptionName(b,this.locale))
+				.append(a.getSortOrder(), b.getSortOrder())
+				.append(a.getId(), b.getId()).toComparison();
 		}
 
 	}
