@@ -18,10 +18,17 @@
 
 package org.itracker.services.util;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
+import javax.swing.text.FieldView;
+
+import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
+import org.itracker.model.CustomFieldValue;
+import org.itracker.model.IssueField;
 
 
 public class CustomFieldUtilities {
@@ -30,6 +37,7 @@ public class CustomFieldUtilities {
     public static final String DATE_FORMAT_FULL = "full";
     public static final String DATE_FORMAT_DATEONLY = "dateonly";
     public static final String DATE_FORMAT_TIMEONLY = "timeonly";
+	private static final Logger logger = Logger.getLogger(CustomFieldUtilities.class);
 
     
     /**
@@ -134,5 +142,57 @@ public class CustomFieldUtilities {
             return ITrackerResources.getString(CustomFieldUtilities.getCustomFieldOptionLabelKey(fieldId, optionId), locale);
         }
         return "";
+    }
+    
+    public static final String getCustomFieldOptionName(CustomFieldValue option, Locale locale) {
+    	if (null == option) {
+    		return null;
+    	}
+    	return getCustomFieldOptionName(option.getCustomField().getId(), option.getId(), locale);
+    }
+    public static final CustomFieldValue getCustomFieldOptionByValue(List<CustomFieldValue> fields, String value) {
+    	
+    	if (null != fields && ! fields.isEmpty()) {
+    		Iterator<CustomFieldValue> it = fields.iterator();
+    		while (it.hasNext()) {
+				CustomFieldValue fieldValue = it.next();
+				if (fieldValue.getValue().equalsIgnoreCase(value)) {
+					return fieldValue;
+				}
+			}
+    	}
+    	return fields.get(0);
+    }
+    
+
+    public static final String getCustomFieldOptionName(CustomField field,
+			String value, Locale locale) {
+    	if (null == field) {
+    		return null;
+    	}
+    	
+    	if (field.getFieldType() != CustomField.Type.LIST) {
+    		return value;
+    	}
+    	try {
+    		return CustomFieldUtilities.getCustomFieldOptionName(field.getId(), 
+    				CustomFieldUtilities.getCustomFieldOptionByValue(
+    						field.getOptions(), 
+    						value).getId(), 
+    				locale);
+    	} catch (Exception e) {
+    		logger .warn("doEndTag: failed to get custom field option name for value " + value + ", " + field.getOptions());
+    	}
+    	return value;
+	}
+
+    
+    public static final String getCustomFieldOptionName(IssueField field, Locale locale) {
+    	if (null == field) {
+    		return null;
+    	}
+    	
+    	return getCustomFieldOptionName(field.getCustomField(), field.getStringValue(), locale);
+    	
     }
 }
