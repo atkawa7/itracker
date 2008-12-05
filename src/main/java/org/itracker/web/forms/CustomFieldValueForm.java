@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
+import org.itracker.core.resources.ITrackerResources;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
@@ -45,6 +46,7 @@ public class CustomFieldValueForm extends ValidatorForm {
 
 	// let's try to put String,String here:
 	HashMap<String, String> translations = new HashMap<String, String>();
+	private String base_locale;
 
 	// private Map<String, String> translations;
 
@@ -72,7 +74,9 @@ public class CustomFieldValueForm extends ValidatorForm {
 	// let's try to put String,String here:
 	public void setTranslations(HashMap<String, String> translations) {
 		this.translations = translations;
+		this.base_locale = translations.get(ITrackerResources.BASE_LOCALE);
 	}
+
 
 	public String getValue() {
 		return value;
@@ -83,9 +87,13 @@ public class CustomFieldValueForm extends ValidatorForm {
 	}
 
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
-
+		
 	}
-
+	public void setBase_locale(String base_locale) {
+		this.base_locale = base_locale;
+		translations.put(ITrackerResources.BASE_LOCALE, base_locale);
+	}
+	
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		ActionErrors errors = super.validate(mapping, request);
