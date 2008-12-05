@@ -41,6 +41,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 
 /**
+ * FIXME: This is not XML, this is string concatenating/parsing. Use proper SAX Handler or remove this unsave code. see java.xml.parsers for more information.
+ * 
   * This class provides functionality needed to import and export issues and their associated
   * data as XML.  This xml provides all the data necessary to import the issues into another
   * instance of ITracker or some other issue tracking tool.
@@ -393,7 +395,7 @@ public class ImportExportUtilities implements ImportExportTags {
         buf.append("  <" + TAG_CUSTOM_FIELDS + ">\n");
         for(int i = 0; i < config.getCustomFields().size(); i++) {
             buf.append("    <" + TAG_CUSTOM_FIELD + " " + ATTR_ID + "=\"" + TAG_CUSTOM_FIELD + config.getCustomFields().get(i).getId() + "\" " + ATTR_SYSTEMID + "=\"" + config.getCustomFields().get(i).getId() + "\">\n");
-            buf.append("      <" + TAG_CUSTOM_FIELD_LABEL + "><![CDATA[" + ITrackerResources.escapeUnicodeString(config.getCustomFields().get(i).getName(), false) + "]]></" + TAG_CUSTOM_FIELD_LABEL + ">\n");
+            buf.append("      <" + TAG_CUSTOM_FIELD_LABEL + "><![CDATA[" + ITrackerResources.escapeUnicodeString(CustomFieldUtilities.getCustomFieldName(config.getCustomFields().get(i).getId()), false) + "]]></" + TAG_CUSTOM_FIELD_LABEL + ">\n");
             buf.append("      <" + TAG_CUSTOM_FIELD_TYPE + "><![CDATA[" + config.getCustomFields().get(i).getFieldType() + "]]></" + TAG_CUSTOM_FIELD_TYPE + ">\n");
             buf.append("      <" + TAG_CUSTOM_FIELD_REQUIRED + "><![CDATA[" + config.getCustomFields().get(i).isRequired() + "]]></" + TAG_CUSTOM_FIELD_REQUIRED + ">\n");
             buf.append("      <" + TAG_CUSTOM_FIELD_DATEFORMAT + "><![CDATA[" + ITrackerResources.escapeUnicodeString(config.getCustomFields().get(i).getDateFormat(), false) + "]]></" + TAG_CUSTOM_FIELD_DATEFORMAT + ">\n");
@@ -401,7 +403,7 @@ public class ImportExportUtilities implements ImportExportTags {
             if(config.getCustomFields().get(i).getFieldType() == CustomField.Type.LIST) {
                 List<CustomFieldValue> options = config.getCustomFields().get(i).getOptions();
                 for(int j = 0; j < options.size(); j++) {
-                    buf.append("      <" + TAG_CUSTOM_FIELD_OPTION + " " + ATTR_VALUE + "=\"" + ITrackerResources.escapeUnicodeString(options.get(j).getValue(), false) + "\"><![CDATA[" + ITrackerResources.escapeUnicodeString(options.get(j).getCustomField().getName(), false) + "]]></" + TAG_CUSTOM_FIELD_OPTION + ">\n");
+                    buf.append("      <" + TAG_CUSTOM_FIELD_OPTION + " " + ATTR_VALUE + "=\"" + ITrackerResources.escapeUnicodeString(options.get(j).getValue(), false) + "\"><![CDATA[" + ITrackerResources.escapeUnicodeString(CustomFieldUtilities.getCustomFieldOptionName(options.get(j), null), false) + "]]></" + TAG_CUSTOM_FIELD_OPTION + ">\n");
                 }
             }
             buf.append("    </" + TAG_CUSTOM_FIELD + ">\n");
