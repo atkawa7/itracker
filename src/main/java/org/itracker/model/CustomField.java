@@ -31,10 +31,12 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.exceptions.IssueException;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.web.taglib.FormatCustomFieldTag;
+import org.jfree.util.Log;
 
 /**
  * A custom field that can be added to an Issue.
@@ -72,6 +74,8 @@ import org.itracker.web.taglib.FormatCustomFieldTag;
  */
 public class CustomField extends AbstractEntity implements Comparable<Entity> {
 
+	private static final Logger logger = Logger.getLogger(CustomField.class);
+	
 	public static final Comparator<CustomField> NAME_COMPARATOR = new NameComparator();
 	/**
 	 * Dateformat able to parse datepicker generated date string (dd/MM/yyyy)
@@ -89,6 +93,7 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 	 * No matching field exists in the database for this property : it is
 	 * obtained from a <code>ResourceBundle</code>, not from the database!
 	 * </p>
+	 * @deprecated this can not be in the entity, replace by Utility or service.
 	 */
 	private String name;
 
@@ -153,18 +158,24 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 	public CustomField() {
 	}
 
+	@Deprecated
 	public CustomField(String name, Type type) {
-		setName(name);
+//		setName(name);
 		setFieldType(type);
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+//	/**
+//	 * 
+//	 * @deprecated this can not be in the entity, replace by Utility or service.
+//	 * @return
+//	 */
+//	public String getName() {
+//		return name;
+//	}
+//
+//	public void setName(String name) {
+//		this.name = name;
+//	}
 
 	public Type getFieldType() {
 		return type;
@@ -212,6 +223,8 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 	 *            the option value
 	 * @param label
 	 *            the label/name for the new option
+	 *            
+	 * @deprecated this can not be in the entity, replace by Utility or service.
 	 */
 	public void addOption(String value, String label) {
 		this.options.add(new CustomFieldValue(this, value));
@@ -220,6 +233,7 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 	/**
 	 * Returns the name for a particular option value.
 	 * 
+	 * @deprecated this can not be in the entity, replace by Utility or service.
 	 * FIXME: Don't know, this seems not to be working. Removed use from {@link FormatCustomFieldTag}
 	 * @param optionValue
 	 *            the value to lookup the name for
@@ -228,11 +242,14 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 	public String getOptionNameByValue(String optionValue) {
 		final Iterator<CustomFieldValue> iter = this.options.iterator();
 
+		if (logger.isDebugEnabled()) {
+			logger.warn("getOptionNameByValue: called deprecated api", new RuntimeException());
+		}
 		while (iter.hasNext()) {
 			CustomFieldValue option = iter.next();
 
 			if (option.getValue().equalsIgnoreCase(optionValue)) {
-				return option.getName();
+				return CustomFieldUtilities.getCustomFieldOptionName(option, null);
 			}
 		}
 		return "";
@@ -242,53 +259,59 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 		return sortOptionsByName;
 	}
 
+	/**
+	 * @param sortOptionsByName
+	 */
 	public void setSortOptionsByName(boolean sortOptionsByName) {
 		this.sortOptionsByName = sortOptionsByName;
 	}
 
-	/**
-	 * Sets this custom fields names based on the supplied local string.
-	 * 
-	 * @param locale
-	 *            the name of the locale to use for the names
-	 */
-	public void setLabels(String locale) {
-		Locale loc = ITrackerResources.getLocale(locale);
-		setLabels(loc);
-	}
+//	/**
+//	 * Sets this custom fields names based on the supplied local string.
+//	 * 
+//	 * @deprecated this can not be in the entity, replace by Utility or service.
+//	 * @param locale
+//	 *            the name of the locale to use for the names
+//	 */
+//	public void setLabels(String locale) {
+//		Locale loc = ITrackerResources.getLocale(locale);
+//		setLabels(loc);
+//	}
 
-	/**
-	 * Sets this custom fields names based on the supplied locale.
-	 * 
-	 * @param locale
-	 *            the locale to use for the names
-	 */
-	public void setLabels(Locale locale) {
-//		String localeCode = locale.toString();
-
-		setName(CustomFieldUtilities.getCustomFieldName(getId(), locale));
-
-		final Iterator<CustomFieldValue> iter = this.getOptions().iterator();
-
-		while (iter.hasNext()) {
-			CustomFieldValue option = iter.next();
-
-			option.setName(CustomFieldUtilities.getCustomFieldOptionName(
-					this.getId(), option.getId(), locale));
-		}
-
-		if (isSortOptionsByName()) {
-			// Specify ordering other than the natural ordering of
-			// CustomFieldValue.
-			Collections.sort(this.getOptions(), CustomFieldValue.NAME_COMPARATOR);
-		}
-	}
+//	/**
+//	 * Sets this custom fields names based on the supplied locale.
+//	 * @deprecated this can not be in the entity, replace by Utility or service.
+//	 * @param locale
+//	 *            the locale to use for the names
+//	 */
+//	public void setLabels(Locale locale) {
+//		setName(CustomFieldUtilities.getCustomFieldName(getId(), locale));
+//
+//		final Iterator<CustomFieldValue> iter = this.getOptions().iterator();
+//
+//		while (iter.hasNext()) {
+//			CustomFieldValue option = iter.next();
+//
+//			option.setName(CustomFieldUtilities.getCustomFieldOptionName(
+//					this.getId(), option.getId(), locale));
+//		}
+//
+//		if (isSortOptionsByName()) {
+//			// Specify ordering other than the natural ordering of
+//			// CustomFieldValue.
+//			Collections.sort(this.getOptions(), CustomFieldValue.NAME_COMPARATOR);
+//		} else {
+//			Collections.sort(this.getOptions(), CustomFieldValue.SORT_ORDER_COMPARATOR);
+//		}
+//	}
 
 	@Override
 	public String toString() {
 
-		return new ToStringBuilder(this).append("id", getId()).append("name", getName())
-				.toString();
+		return new ToStringBuilder(this)
+			.append("id", getId())
+			.append("type", getFieldType())
+			.append("sortOptionsByName", isSortOptionsByName()).toString();
 	}
 
 	//    
@@ -329,6 +352,11 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 	public void checkAssignable(String value, Locale locale,
 			ResourceBundle bundle) throws IssueException {
 
+		
+		if (this.isRequired() && (value == null || value.trim().length() == 0)) {
+			throw new IssueException("Value is required.", IssueException.TYPE_CF_REQ_FIELD);
+		}
+		
 		switch (this.type) {
 
 		case INTEGER:
@@ -356,6 +384,19 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 			}
 			break;
 
+		case LIST:
+			Iterator<CustomFieldValue> it = getOptions().iterator();
+			while (it.hasNext()) {
+				CustomFieldValue customFieldValue = (CustomFieldValue) it
+						.next();
+				if (customFieldValue.getValue().equalsIgnoreCase(value)) {
+					return;
+				}
+			}
+			if (Log.isDebugEnabled()) {
+				Log.debug("checkAssignable: could not assign value to custom field values: " + value + ", " + getOptions());
+			}
+			throw new IssueException("Invalid value.", IssueException.TYPE_CF_INVALID_LIST_OPTION);
 		default:
 			// Value is OK
 		}
@@ -422,8 +463,20 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 		 */
 		private static final long serialVersionUID = 1L;
 
+		private final Locale locale;
+		
+		public NameComparator() {
+			this(null);
+		}
+		public NameComparator(Locale locale) {
+			this.locale = locale;
+		}
+		
 		public int compare(CustomField o1, CustomField o2) {
-			return new CompareToBuilder().append(o1.getName(), o2.getName()).append(o1.getId(), o2.getId())
+			return new CompareToBuilder().append(
+						CustomFieldUtilities.getCustomFieldName(o1.getId(), locale), 
+						CustomFieldUtilities.getCustomFieldName(o2.getId(), locale))
+					.append(o1.getId(), o2.getId())
 					.toComparison();
 		}
 
