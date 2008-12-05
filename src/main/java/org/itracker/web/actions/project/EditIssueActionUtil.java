@@ -47,6 +47,7 @@ import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.WorkflowException;
 import org.itracker.services.util.Convert;
+import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.HTMLUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NotificationUtilities;
@@ -216,7 +217,7 @@ public class EditIssueActionUtil {
 		}
 		
 		ResourceBundle bundle = ITrackerResources.getBundle(locale);
-		List<IssueField> issueFieldsList = new ArrayList<IssueField>(projectCustomFields.size());
+//		List<IssueField> issueFieldsList = new ArrayList<IssueField>(projectCustomFields.size());
 		Iterator<CustomField> customFieldsIt = projectCustomFields.iterator();
 		// declare iteration fields
 		CustomField field;
@@ -233,24 +234,45 @@ public class EditIssueActionUtil {
 				fieldValue = (String) formCustomFields.get(String.valueOf(field
 						.getId()));
 
+				// remove the existing field for re-setting 
+				issueField = getIssueField(issue, field);
+				
+
 				if (fieldValue != null && fieldValue.trim().length() > 0) {
-
-					issueField = new IssueField(issue, field);
-					issueField.setValue(fieldValue, bundle);
+					if (null == issueField) {
+						issueField = new IssueField(issue, field);
+						issue.getFields().add(issueField);
+					}
 					
-					issueFieldsList.add(issueField);
-
+					issueField.setValue(fieldValue, bundle);
+				} else {
+					if (null != issueField) {
+						issue.getFields().remove(issueField);
+					}
 				}
 			}
 			
 			// set new issue fields for later saving
-			issue.setFields(issueFieldsList);
+//			issue.setFields(issueFieldsList);
 			
 //			issueService.setIssueFields(issue.getId(), issueFieldsList);
 		} catch (Exception e) {
 			log.error("setIssueFields: failed to process custom fields", e);
 			throw e;
 		}
+	}
+
+	private static IssueField getIssueField(Issue issue, CustomField field) {
+		Iterator<IssueField> it = issue.getFields().iterator();
+		IssueField issueField = null;
+		while (it.hasNext()) {
+			issueField = it.next();
+			if (issueField.getCustomField().equals(field)) {
+				return issueField;
+			}
+		}
+		return null;
+		
 	}
 
 	private static void setOwner(Issue issue, User user,
@@ -514,6 +536,7 @@ public class EditIssueActionUtil {
 	
 	/**
 	 *  Get project fields and put name and value in map 
+	 *  TODO: simplify this code, it's not readable, unsave yet.
 	 */
 	protected static final void setupProjectFieldsMapJspEnv(List<CustomField> projectFields, Collection<IssueField> issueFields, HttpServletRequest request) {
 		Map<CustomField,String> projectFieldsMap = new HashMap<CustomField, String>();
@@ -528,21 +551,29 @@ public class EditIssueActionUtil {
 			
 				if (issueField.getCustomField() != null
 						&& issueField.getCustomField().getId() > 0) {
-					Locale currLocale = LoginUtilities.getCurrentLocale(request);
+//					Locale currLocale = LoginUtilities.getCurrentLocale(request);
 					fieldValues.put(issueField.getCustomField().getId()
 							.toString(), issueField
-							.getValue(currLocale));
+							.getStringValue());
 				}
 			}
-			for (int i = 0; i < projectFields.size(); i++) {
-				String fieldValue = (fieldValues.get(String
-						.valueOf(projectFields.get(i).getId())) == null ? ""
-						: fieldValues.get(String.valueOf(projectFields.get(i)
-								.getId())));
-				if (fieldValue != null) { 
-	        	 fieldValue = (projectFields.get(i).getFieldType() == CustomField.Type.LIST ? projectFields.get(i).getOptionNameByValue(fieldValue) : fieldValue);
-	        	 } 
-				projectFieldsMap.put(projectFields.get(i), fieldValue);
+			Iterator<CustomField> fieldsIt = projectFields.iterator();
+			CustomField field;
+			while (fieldsIt.hasNext()) {
+				
+				field = fieldsIt.next();
+				
+				String fieldValue = fieldValues.get(String.valueOf(field
+						.getId()));
+				if (null == fieldValue) {
+					fieldValue = "";
+				}
+//				if (fieldValue != null && field.getFieldType() == CustomField.Type.LIST) { 
+//					fieldValue = CustomFieldUtilities.getCustomFieldOptionName(field, 
+//							fieldValue, LoginUtilities.getCurrentLocale(request)); 
+////					projectFields.get(i).getOptionNameByValue(fieldValue));
+//	        	} 
+				projectFieldsMap.put(field, fieldValue);
 				
 			}
 			
@@ -694,7 +725,7 @@ public class EditIssueActionUtil {
 		List<CustomField> projectFields = project.getCustomFields();
 		for (int i = 0; i < projectFields.size(); i++) {
 			if (projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
-				projectFields.get(i).setLabels(locale);
+//				projectFields.get(i).setLabels(locale);
 				listOptions.put(projectFields.get(i).getId(), Convert
 						.customFieldOptionsToNameValuePairs(projectFields
 								.get(i).getOptions()));
