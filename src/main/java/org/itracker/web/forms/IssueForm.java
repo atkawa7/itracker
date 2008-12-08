@@ -19,6 +19,7 @@
 package org.itracker.web.forms;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -327,7 +328,7 @@ public class IssueForm extends ITrackerForm {
 	private static void validateProjectFields(Project project,
 			HttpServletRequest request, ActionErrors errors) {
 		List<CustomField> projectFields = project.getCustomFields();
-		if (projectFields.size() > 0) {
+		if (null != projectFields && projectFields.size() > 0) {
 			HttpSession session = request.getSession();
 
 			Locale locale = ITrackerResources.getLocale();
@@ -336,9 +337,9 @@ public class IssueForm extends ITrackerForm {
 			}
 
 			ResourceBundle bundle = ITrackerResources.getBundle(locale);
-
-			for (int i = 0; i < projectFields.size(); i++) {
-				CustomField customField = projectFields.get(i);
+			Iterator<CustomField> it = projectFields.iterator();
+			while (it.hasNext()) {
+				CustomField customField = it.next();
 				String fieldValue = request.getParameter("customFields("
 						+ customField.getId() + ")");
 				if (fieldValue != null && !fieldValue.equals("")) {
@@ -351,13 +352,13 @@ public class IssueForm extends ITrackerForm {
 						customField.checkAssignable(fieldValue, locale, bundle);
 					} catch (IssueException ie) {
 						String label = CustomFieldUtilities.getCustomFieldName(
-								projectFields.get(i).getId(), locale);
+								customField.getId(), locale);
 						errors.add(ActionMessages.GLOBAL_MESSAGE,
 								new ActionMessage(ie.getType(), label));
 					}
-				} else if (projectFields.get(i).isRequired()) {
+				} else if (customField.isRequired()) {
 					String label = CustomFieldUtilities.getCustomFieldName(
-							projectFields.get(i).getId(), locale);
+							customField.getId(), locale);
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
 							new ActionMessage(IssueException.TYPE_CF_REQ_FIELD,
 									label));
