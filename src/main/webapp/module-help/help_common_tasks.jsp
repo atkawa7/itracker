@@ -40,7 +40,7 @@ If the issue is visible on your myITracker page, you can click the edit
 (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/edit.gif"/>) icon beside the issue you wish to edit.<br/>
 <br/>
 If you are currently viewing the details of an issue, the edit icon
-(<html:img styleClass="helpImage" src="../themes/defaulttheme/images/edit.gif"/>) will be displayed actions area.<br/>
+(<html:img styleClass="helpImage" src="../themes/defaulttheme/images/edit.gif"/>) will be displayed in actions area.<br/>
 <br/>
 To edit an existing issue, first go to the project list screen by clicking "Project List"
 in the top menu.  From this screen you can click the view project issues icon
@@ -95,12 +95,12 @@ selected, a report may take several minutes to run.<br/>
 <center><hr width="75%" noshade height="1"/></center>
 <a name="prefs"></a><span class="editColumnTitle">Editing Preferences</span> <a href="#top" class="headerLinks">[top]</a><br/>
 <p class="help">
-To edit your preferences, click on the My Preferences Link in thee top menu.  This
-will take you to a screen that will allow you to change you personal information.  You
+To edit your preferences, click on the My Preferences Link in the top menu.  This
+will take you to a screen that will allow you to change your personal information.  You
 can also set some preferences that affect the display of the site.<br/>
 <br/>
 If you allow automatic login, a permanent cookie will be stored on your machine with your
-plaintext userid and password.  This may be a security issue so be sure you want this option
+plaintext user ID and password.  This may be a security issue so be sure you want this option
 before you select it.<br/>
 <br/>
 When selecting the number of issues to display on a page, you can display all the issues
