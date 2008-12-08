@@ -51,6 +51,7 @@ public class Component extends AbstractEntity implements Comparable<Entity> {
 	private static final long serialVersionUID = 1L;
 
 	public static final Comparator<Component> NAME_COMPARATOR = new NameComparator();
+	public static final Comparator<Component> PROJECTNAME_COMPARATOR = new ProjectNameComparator();
 
 	/**
 	 * Project to which this component belongs. Invariant: never <tt>null</tt>.
@@ -292,8 +293,11 @@ public class Component extends AbstractEntity implements Comparable<Entity> {
 		private static final long serialVersionUID = 1L;
 
 		public int compare(Component o1, Component o2) {
-			return new CompareToBuilder().append(o1.getProject(), o2.getProject())
+			if (null != o1.getProject() && null != o2.getProject()) {
+				return new CompareToBuilder().append(o1.getProject().getName(), o2.getProject().getName())
 					.append(o1.getName(), o2.getName()).toComparison();
+			}
+			return ID_COMPARATOR.compare(o1, o2);
 		}
 	}
 

@@ -70,6 +70,34 @@ public class ComponentTest {
 
 	}
 
+
+	@Test
+	public void testProjectNameComparator() throws Exception {
+		Component componentA, componentB;
+
+		componentA = new Component();
+		componentB = new Component();
+
+		componentA.setName("a");
+		componentB.setName("b");
+		
+		componentA.setProject(new Project("a"));
+		componentB.setProject(new Project("b"));
+
+		assertEntityComparator("name comparator", Component.PROJECTNAME_COMPARATOR,
+				componentA, componentB);
+		assertEntityComparator("name comparator", Component.PROJECTNAME_COMPARATOR,
+				componentA, null);
+
+		componentA.setName(componentB.getName());
+		assertEntityComparatorEquals("name comparator",
+				Component.PROJECTNAME_COMPARATOR, componentA, componentB);
+		assertEntityComparatorEquals("name comparator",
+				Component.PROJECTNAME_COMPARATOR, componentA, componentA);
+
+	}
+
+	
 	@Before
 	public void setUp() throws Exception {
 		component = new Component();

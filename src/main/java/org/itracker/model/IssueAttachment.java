@@ -42,6 +42,8 @@ public class IssueAttachment extends AbstractEntity implements
 	private static final long serialVersionUID = 1L;
 	/** Compares 2 attachments by file size. */
 	public static final Comparator<IssueAttachment> SIZE_COMPARATOR = new SizeComparator();
+	/** Compares 2 attachments by original filename. */
+	public static final Comparator<IssueAttachment> ORIGIINAL_FILENAME_COMPARATOR = new OriginalFilenameComparator();
 
 	/** The issue to which the file is attached. */
 	private Issue issue;
@@ -216,7 +218,8 @@ public class IssueAttachment extends AbstractEntity implements
 		private static final long serialVersionUID = 1L;
 
 		public int compare(IssueAttachment a, IssueAttachment b) {
-			return new CompareToBuilder().append(a.getSize(), b.getSize())
+			return new CompareToBuilder()
+					.append(a.getSize(), b.getSize())
 					.append(a.getOriginalFileName(), b.getOriginalFileName())
 					.append(a.getCreateDate(), b.getCreateDate())
 					.toComparison();
@@ -238,8 +241,9 @@ public class IssueAttachment extends AbstractEntity implements
 		private static final long serialVersionUID = 1L;
 
 		public int compare(IssueAttachment o1, IssueAttachment o2) {
-			return new CompareToBuilder().append(o1.getIssue(), o2.getIssue())
+			return new CompareToBuilder()
 					.append(o1.getOriginalFileName(), o1.getOriginalFileName())
+					.append(o1.getCreateDate(), o2.getCreateDate())
 					.toComparison();
 
 		}

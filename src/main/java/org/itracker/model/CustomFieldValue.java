@@ -24,6 +24,7 @@ import java.util.Locale;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.util.CustomFieldUtilities;
 
 /**
@@ -69,7 +70,6 @@ public class CustomFieldValue extends AbstractEntity {
 
 	/**
 	 * 
-	 * @deprecated this can not be in the entity, replace by Utility or service.
 	 * @param customField
 	 * @param value
 	 */
@@ -173,10 +173,10 @@ public class CustomFieldValue extends AbstractEntity {
 		 * @deprecated should create a localized comparator
 		 */
 		private NameComparator() {
-			this(null);
+			this(new Locale(ITrackerResources.getDefaultLocale()));
 		}
 		private NameComparator(Locale locale) {
-			this.locale = null;
+			this.locale = locale;
 		}
 		
 		public int compare(CustomFieldValue a, CustomFieldValue b) {
