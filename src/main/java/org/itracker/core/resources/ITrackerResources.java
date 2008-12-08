@@ -307,12 +307,11 @@ public class ITrackerResources {
                     + locale, ex);
             return "MISSING KEY: " + key;
         } catch (NoSuchEntityException ex) {
-            logger.warn("", ex);
-            
+            logger.info("getString: not found " + key + " locale: " + locale, ex);
             try {
                 return getEditBundle(locale).getString(key);
             } catch (Exception ex2) {
-                logger.warn("NoSuchEntityException caught while retrieving translation key '" + key + "' for locale "
+                logger.warn("getString: caught while retrieving translation key '" + key + "' for locale "
                     + locale, ex2);
                 return "MISSING KEY: " + key;
             }
