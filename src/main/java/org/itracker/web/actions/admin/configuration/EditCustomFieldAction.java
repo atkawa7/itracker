@@ -103,29 +103,44 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
 				throw new SystemConfigurationException("Invalid action " + action + " while editing custom field.");
 			}
 
-			if(customField == null) {
-				throw new SystemConfigurationException("Unable to create new custom field model.");
+			if (customField == null) {
+				throw new SystemConfigurationException(
+						"Unable to create new custom field model.");
 			}
 
-			HashMap<String, String> translations = (HashMap<String, String>) PropertyUtils.getSimpleProperty(form, "translations");
-			String key = CustomFieldUtilities.getCustomFieldLabelKey(customField.getId());
-			log.debug("Processing label translations for custom field " + customField.getId() + " with key " + key);
-			if(translations != null && key != null && ! key.equals("")) {
-				for(Iterator<String> iter = translations.keySet().iterator(); iter.hasNext(); ) {
+			HashMap<String, String> translations = (HashMap<String, String>) PropertyUtils
+					.getSimpleProperty(form, "translations");
+			String key = CustomFieldUtilities
+					.getCustomFieldLabelKey(customField.getId());
+			log.debug("Processing label translations for custom field "
+					+ customField.getId() + " with key " + key);
+			if (translations != null && key != null && !key.equals("")) {
+				configurationService.removeLanguageKey(key);
+				Iterator<String> iter = translations.keySet().iterator();
+				while (iter.hasNext()) {
 					String locale = (String) iter.next();
-					if(locale != null) {
+					if (locale != null) {
 						String translation = (String) translations.get(locale);
-						if(translation != null && ! translation.equals("")) {
-							log.debug("Adding new translation for locale " + locale + " for " + String.valueOf(customField.getId()));
-							configurationService.updateLanguageItem(new Language(locale, key, translation));
+						if (translation != null && !translation.trim().equals("")) {
+							log.debug("Adding new translation for locale "
+									+ locale + " for "
+									+ customField.getId());
+							configurationService
+									.updateLanguageItem(new Language(locale,
+											key, translation));
 						}
 					}
 				}
 			}
-			if ( key != null )
+			if ( key != null ) {
 				ITrackerResources.clearKeyFromBundles(key, true);
+			}
+			try {
 			// Now reset the cached versions in IssueUtilities
-			configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
+				configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
+			} catch (Exception e) {
+				log.info("execute: resetConfigurationCache trowed exception, caught", e);
+			}
 
 			HttpSession session = request.getSession();
 			if(customField.getFieldType() == CustomField.Type.LIST && "create".equals(action) ) { 
