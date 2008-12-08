@@ -162,8 +162,8 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
 		for (Map.Entry<String, List<String>> entry : languages.entrySet()) {
 			String language = entry.getKey();
 			List<String> locales = entry.getValue();
-			System.out.println(language);
-			System.out.println(locales);
+//			System.out.println(language);
+//			System.out.println(locales);
 			List<NameValuePair> localesNameValuePair = new ArrayList<NameValuePair>();
 			for (String locale : locales) {
 				NameValuePair localeNameValuePair = new NameValuePair(locale,ITrackerResources.getString("itracker.locale.name", locale));
