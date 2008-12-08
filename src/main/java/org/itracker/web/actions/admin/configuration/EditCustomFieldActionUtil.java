@@ -30,7 +30,7 @@ public class EditCustomFieldActionUtil {
 		CustomField customField = (CustomField) request.getSession().getAttribute(Constants.CUSTOMFIELD_KEY);
 		
 		Map<String, List<String>> languages_map = configurationService.getAvailableLanguages();
-		String[] languages1 = new String[languages_map.size()];
+		String[] languagesArray = new String[languages_map.size()];
 		int idx = 0;
 		// TODO: there is some bugs around here still, needs debugging. See
 		// jsp error output.
@@ -40,7 +40,7 @@ public class EditCustomFieldActionUtil {
 			// task added
 			// String languageKey = "translations(" + language + ")";
 			// Vector locales = (Vector) languages_map.get(language);
-			languages1[idx] = language;
+			languagesArray[idx] = language;
 			idx++;
 		}
 
@@ -51,13 +51,13 @@ public class EditCustomFieldActionUtil {
 
 		if ("update".equals(action)) {
 			pageTitleKey = "itracker.web.admin.editcustomfield.title.update";
+			pageTitleArg = ITrackerResources.getString(CustomFieldUtilities.getCustomFieldLabelKey(customField.getId()));
 		}
 		request.setAttribute("pageTitleKey", pageTitleKey); 
 		request.setAttribute("pageTitleArg", pageTitleArg); 
 
 		request.setAttribute("customFieldForm", customFieldForm);
-		request.setAttribute("languages", languages1);
-		// request.setAttribute("languages_ary", languages_ary);
+		request.setAttribute("languages", languagesArray);
 		request.setAttribute("action", action);
 		
 		Map<String, List<String>> languages = configurationService.getAvailableLanguages();
