@@ -19,7 +19,13 @@ public class IssueActivityDAOImplTest extends AbstractDependencyInjectionTest {
 
 		List<IssueActivity> activities = issueActivityDAO.findByIssueId(2);
 		assertNotNull("issue#2.activities", activities);
-
+		
+		assertEquals("issue#2.activities.size", 1, activities.size());
+		
+		IssueActivity issueActivity = activities.get(0);
+		assertEquals("issue#2.activities[].issueId", Integer.valueOf(2), issueActivity.getIssue().getId());
+		
+		
 	}
 
 	@Test
@@ -34,6 +40,30 @@ public class IssueActivityDAOImplTest extends AbstractDependencyInjectionTest {
 
 	}
 
+	@Test
+	public void testFindByIssueIdAndNotification() {
+		Integer issueId = 1;
+		boolean notificationSent = true;
+		
+		List<IssueActivity> results = issueActivityDAO.findByIssueIdAndNotification(issueId, notificationSent);
+		assertNotNull("issue#1.notificatioSent#true.activities", results);
+		assertEquals("issue#1.notificatioSent#true.activities.size", results.size(), 1);
+		
+		IssueActivity got = results.get(0);
+		assertNotNull("issue#1.notificatioSent#true.activities[0]", got);
+		assertEquals("issue#1.notificatioSent#true.activities[0].notificationSent", notificationSent, got.getNotificationSent());
+		assertEquals("issue#1.notificatioSent#true.activities[0].issueId", issueId, got.getIssue().getId());
+		
+		notificationSent = false;
+		results = issueActivityDAO.findByIssueIdAndNotification(issueId, notificationSent);
+		
+		assertNotNull("issue#1.notificatioSent#false.activities", results);
+		assertEquals("issue#1.notificatioSent#false.activities.size", results.size(), 0);
+		
+	}
+	
+	
+	
 	@Override
 	public void onSetUp() throws Exception {
 		super.onSetUp();
