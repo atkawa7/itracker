@@ -21,8 +21,6 @@ package org.itracker.web.util;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
-
 /**
  * What's this for? Please comment!
  * 
@@ -34,8 +32,8 @@ public class SessionTracker implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static transient final Logger logger = Logger
-			.getLogger(SessionTracker.class);
+//	private static transient final Logger logger = Logger
+//			.getLogger(SessionTracker.class);
 	private Date now;
 	private String login;
 	private String sessionId;
@@ -51,9 +49,9 @@ public class SessionTracker implements Serializable {
 	}
 
 	protected void finalize() throws Throwable {
-		if (logger.isDebugEnabled()) {
-			logger.debug("finalize: Invalidating SessionManager info for " + this.login);
-		}
+//		if (logger.isDebugEnabled()) {
+//			logger.debug("finalize: Invalidating SessionManager info for " + this.login);
+//		}
 		SessionManager.invalidateSession(this.login);
 	}
 
