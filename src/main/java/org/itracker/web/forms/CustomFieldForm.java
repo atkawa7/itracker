@@ -24,9 +24,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.ValidatorForm;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.web.actions.admin.configuration.EditCustomFieldActionUtil;
+import org.itracker.web.util.LoginUtilities;
 
 /**
  * This is the Struts Form. It is used by action.
@@ -57,6 +60,12 @@ public class CustomFieldForm extends ValidatorForm {
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		ActionErrors errors = super.validate(mapping, request);
+		
+		if (null == getBaseTranslation() || "".equals(getBaseTranslation().trim())) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.validate.required", 
+					ITrackerResources.getString("itracker.web.attr.baselocale", LoginUtilities.getCurrentLocale(request))));
+		}
+		
 		EditCustomFieldActionUtil.setRequestEnv(request, this);
 		return errors;
 	}
@@ -121,7 +130,6 @@ public class CustomFieldForm extends ValidatorForm {
 
 	public void setTranslations(HashMap<String, String> translations) {
 		this.translations = translations;
-//		this.base_locale = translations.get(ITrackerResources.BASE_LOCALE);
 	}
 
 	public String getValue() {
@@ -132,13 +140,13 @@ public class CustomFieldForm extends ValidatorForm {
 		this.value = value;
 	}
 
-	public String getBase_locale() {
+	/**
+	 * get localization in base locale
+	 * @return
+	 */
+	private String getBaseTranslation() {
 		return translations.get(ITrackerResources.BASE_LOCALE);
 	}
 
-	public void setBase_locale(String base_locale) {
-//		this.base_locale = base_locale;
-//		translations.put(ITrackerResources.BASE_LOCALE, base_locale);
-	}
 	
 }
