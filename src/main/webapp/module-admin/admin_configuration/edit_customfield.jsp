@@ -60,11 +60,12 @@
                 </tr>
                 <tr>
                     <td class="editColumnTitle"><it:message key="itracker.web.attr.required"/>:</td>
-                    <td>
-                        <html:select property="required" styleClass="editColumnText">
+                    <td class="editColumnText">
+                    	<html:checkbox property="required" value="true"><it:message key="itracker.web.generic.yes"/></html:checkbox>
+                        <%--<html:select property="required" styleClass="editColumnText">
                             <html:option value="false" styleClass="editColumnText"><it:message key="itracker.web.generic.no"/></html:option>
                             <html:option value="true" styleClass="editColumnText"><it:message key="itracker.web.generic.yes"/></html:option>
-                        </html:select>
+                        </html:select>--%>
                     </td>
                     <td></td>
                     <td class="editColumnTitle"><it:message key="itracker.web.attr.lastmodified"/>:</td>
@@ -72,11 +73,12 @@
                 </tr>
                 <tr>
                     <td class="editColumnTitle"><it:message key="itracker.web.attr.sortoptions"/>:</td>
-                    <td>
-                        <html:select property="sortOptionsByName" styleClass="editColumnText">
+                    <td class="editColumnText">
+                    	<html:checkbox property="sortOptionsByName" value="true"><it:message key="itracker.web.generic.yes"/></html:checkbox>
+                        <%--<html:select property="sortOptionsByName" styleClass="editColumnText">
                             <html:option value="false" styleClass="editColumnText"><it:message key="itracker.web.generic.no"/></html:option>
                             <html:option value="true" styleClass="editColumnText"><it:message key="itracker.web.generic.yes"/></html:option>
-                        </html:select>
+                        </html:select>--%>
                     </td>
                     <td></td>
                     <td class="editColumnTitle"><it:message key="itracker.web.attr.dateformat"/>:</td>
