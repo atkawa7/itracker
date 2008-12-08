@@ -297,7 +297,7 @@ public class Component extends AbstractEntity implements Comparable<Entity> {
 				return new CompareToBuilder().append(o1.getProject().getName(), o2.getProject().getName())
 					.append(o1.getName(), o2.getName()).toComparison();
 			}
-			return ID_COMPARATOR.compare(o1, o2);
+			return NAME_COMPARATOR.compare(o1, o2);
 		}
 	}
 

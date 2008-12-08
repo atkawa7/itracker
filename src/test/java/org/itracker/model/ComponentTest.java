@@ -84,15 +84,22 @@ public class ComponentTest {
 		componentA.setProject(new Project("a"));
 		componentB.setProject(new Project("b"));
 
-		assertEntityComparator("name comparator", Component.PROJECTNAME_COMPARATOR,
+		assertEntityComparator("project name comparator", Component.PROJECTNAME_COMPARATOR,
 				componentA, componentB);
-		assertEntityComparator("name comparator", Component.PROJECTNAME_COMPARATOR,
+		assertEntityComparator("project name comparator", Component.PROJECTNAME_COMPARATOR,
+				componentA, null);
+		
+		componentA.setName(componentB.getName());
+
+		assertEntityComparator("project name comparator", Component.PROJECTNAME_COMPARATOR,
+				componentA, componentB);
+		assertEntityComparator("project name comparator", Component.PROJECTNAME_COMPARATOR,
 				componentA, null);
 
-		componentA.setName(componentB.getName());
-		assertEntityComparatorEquals("name comparator",
+		componentA.getProject().setName(componentB.getProject().getName());
+		assertEntityComparatorEquals("project name comparator",
 				Component.PROJECTNAME_COMPARATOR, componentA, componentB);
-		assertEntityComparatorEquals("name comparator",
+		assertEntityComparatorEquals("project name comparator",
 				Component.PROJECTNAME_COMPARATOR, componentA, componentA);
 
 	}
