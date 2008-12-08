@@ -123,16 +123,23 @@
         </form>
         
         <form name="customFieldForm">
-            <field property="base_locale" depends="required">
-                <arg0 key="itracker.web.attr.baselocale"/>
+            <field property="fieldType" depends="required">
+                <arg0 key="itracker.web.attr.fieldtype"/>
             </field>
+
         </form>
         <form name="customFieldValueForm">
             <field property="base_locale" depends="required">
                 <arg0 key="itracker.web.attr.baselocale"/>
             </field>
-            <field property="value" depends="required">
-                <arg0 key="value"/>
+            <field property="value" depends="mask">
+                <arg0 key="itracker.web.attr.value"/>
+                <var>
+					<var-name>mask</var-name>
+					<var-value>
+						[A-Za-z0-9\.:]*
+					</var-value>
+				</var>
             </field>
         </form>
     </formset>
