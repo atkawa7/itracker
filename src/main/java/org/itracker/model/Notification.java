@@ -21,6 +21,7 @@ package org.itracker.model;
 import java.io.Serializable;
 import java.util.Comparator;
 
+import org.apache.bcel.generic.NEW;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -43,6 +44,8 @@ public class Notification extends AbstractEntity implements Comparable<Entity> {
 	public static final Comparator<Notification> TYPE_COMPARATOR = new RoleComparator();
 
 	public static final Comparator<Notification> USER_COMPARATOR = new UserComparator();
+
+	public static final Comparator<Notification> ISSUE_USER_ROLE_COMPARATOR = new IssueUserRoleComparator();
 
 	private Issue issue;
 
@@ -146,9 +149,9 @@ public class Notification extends AbstractEntity implements Comparable<Entity> {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", getId())
-				.append("issue", getIssue()).append("user", getUser()).append("role",
-						getRole()).toString();
+		return new ToStringBuilder(this).append("id", getId()).append("issue",
+				getIssue()).append("user", getUser()).append("role", getRole())
+				.toString();
 	}
 
 	/**
@@ -163,32 +166,45 @@ public class Notification extends AbstractEntity implements Comparable<Entity> {
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
+
 		public int compare(Notification o1, Notification o2) {
-			return new CompareToBuilder().append(o1.getIssue(), o2.getIssue()).append(
-					o1.getUser(), o2.getUser()).append(o1.getRole().getCode(), o2.getRole().getCode()).toComparison();
+			return new CompareToBuilder().append(o1.getIssue(), o2.getIssue())
+					.append(o1.getUser(), o2.getUser(), User.NAME_COMPARATOR)
+					.append(o1.getRole().getCode(), o2.getRole().getCode())
+					.toComparison();
 		}
 	}
 
-	private static class UserComparator implements Comparator<Notification>, Serializable {
+	private static class UserComparator implements Comparator<Notification>,
+			Serializable {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		public int compare(Notification a, Notification b) {
-			return User.NAME_COMPARATOR.compare(a.getUser(), b.getUser());
+			return new CompareToBuilder().append(a.getUser(), b.getUser(),
+					User.NAME_COMPARATOR).append(a.getRole(), b.getRole(),
+					Notification.TYPE_COMPARATOR).toComparison();
 		}
 
 	}
 
-	private static class RoleComparator implements Comparator<Notification>, Serializable {
+	private static class RoleComparator implements Comparator<Notification>,
+			Serializable {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		public int compare(Notification a, Notification b) {
-			return new CompareToBuilder().append(a.getRole().getCode(), b.getRole().getCode()).toComparison();
+			if (null == a.getRole()) {
+				return null == b.getRole()?0 : -1;
+			} else if (b.getRole() == null) {
+				return 1;
+			}
+			return new CompareToBuilder().append(a.getRole().getCode(),
+					b.getRole().getCode()).toComparison();
 		}
 
 	}
@@ -224,8 +240,6 @@ public class Notification extends AbstractEntity implements Comparable<Entity> {
 		public Integer getCode() {
 			return this.code;
 		}
-		
-		
 
 	}
 
