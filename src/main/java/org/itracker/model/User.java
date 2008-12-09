@@ -45,6 +45,7 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = Logger.getLogger(User.class);
 	public static final Comparator<User> NAME_COMPARATOR = new NameComparator();
+	public static final Comparator<User> LOGIN_COMPARATOR = new LoginComparator();	
 
 	private String login;
 
@@ -294,7 +295,7 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 
 		public int compare(User a, User b) {
 			return new CompareToBuilder().append(a.getLastName(), b.getLastName())
-			.append(a.getFirstName(), b.getFirstName()).append(a.getLogin(), b.getLogin()).toComparison();
+			.append(a.getFirstName(), b.getFirstName()).append(a, b, LOGIN_COMPARATOR).toComparison();
 		}
 
 	}
