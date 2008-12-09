@@ -97,6 +97,8 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
 				customFieldValueForm.setId(id);
 				customFieldValueForm.setValue(customFieldValue.getValue());
 
+				customFieldValueForm.setSortOrder(customFieldValue.getSortOrder());
+
 				HashMap<String, String> translations = new HashMap<String, String>();
 				List<Language> languageItems = configurationService
 						.getLanguageItemsByKey(CustomFieldUtilities

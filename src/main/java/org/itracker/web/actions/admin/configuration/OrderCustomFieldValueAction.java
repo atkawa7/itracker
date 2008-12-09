@@ -174,7 +174,7 @@ public class OrderCustomFieldValueAction extends ItrackerBaseAction {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
             log.error("System Error.", e);
         }
-        if(! errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             saveErrors(request, errors);
         }
         return mapping.findForward("error");

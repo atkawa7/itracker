@@ -139,28 +139,27 @@
                             </tr>
                             <tr class="listHeading"><td colspan="3"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
                             <tr><td colspan="3"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="4"/></td></tr>
-                            <c:forEach items="${optionsMap}" var="i">
+                            <c:forEach items="${optionsMap}" var="option" varStatus="i">
                                 
                                 <tr>
-                                    <td class="listRowUnshaded" style="white-space: nowrap;" nowrap>
-                                        <it:link action="editcustomfieldvalueform" targetAction="update" paramName="id" paramValue="${i.value.id}" titleKey="itracker.web.admin.editcustomfield.option.edit.alt"><it:message key="itracker.web.admin.editcustomfield.option.edit"/></it:link>
-                                        <it:link action="removecustomfieldvalue" targetAction="delete" paramName="id" paramValue="${i.value.id}" titleKey="itracker.web.admin.editcustomfield.option.delete.alt"><it:message key="itracker.web.admin.editcustomfield.option.delete"/></it:link>
-                                        <!-- c:if test="$ {idx != 1}" -->
-                                            <!-- it:link action="ordercustomfieldvalue" targetAction="up" paramName="id" paramValue="$ {i.id}" titleKey="itracker.web.admin.editcustomfield.option.orderup.alt" -->
-                                                <!-- it:message key="itracker.web.admin.editcustomfield.option.orderup"/ -->
-                                            <!-- /it:link -->
-                                        <!-- /c:if -->
-                                        <!-- c:if test="$ {idx != opt_len}" -->
-                                            <!-- it:link action="ordercustomfieldvalue" targetAction="down" paramName="id" paramValue="$ {i.id}" titleKey="itracker.web.admin.editcustomfield.option.orderdown.alt" -->
-                                                <!-- it:message key="itracker.web.admin.editcustomfield.option.orderdown"/ -->
-                                            <!-- /it:link -->
-                                        <!-- /c:if -->
-                                        
+                                    <td class="listRowUnshaded" style="white-space: nowrap;" nowrap="nowrap">
+                                        <it:link action="editcustomfieldvalueform" targetAction="update" paramName="id" paramValue="${option.key.id}" titleKey="itracker.web.admin.editcustomfield.option.edit.alt"><it:message key="itracker.web.admin.editcustomfield.option.edit"/></it:link>
+                                        <it:link action="removecustomfieldvalue" targetAction="delete" paramName="id" paramValue="${option.key.id}" titleKey="itracker.web.admin.editcustomfield.option.delete.alt"><it:message key="itracker.web.admin.editcustomfield.option.delete"/></it:link>
+                                        <%--c:if test="${i.index != 1}">
+                                            <it:link action="ordercustomfieldvalue" targetAction="up" paramName="id" paramValue="${option.key.id}" titleKey="itracker.web.admin.editcustomfield.option.orderup.alt">
+                                                <it:message key="itracker.web.admin.editcustomfield.option.orderup"/>
+                                            </it:link>
+                                        </c:if>
+                                        <c:if test="${i.index != opt_len}">
+                                            <it:link action="ordercustomfieldvalue" targetAction="down" paramName="id" paramValue="${option.key.id}" titleKey="itracker.web.admin.editcustomfield.option.orderdown.alt">
+                                                <it:message key="itracker.web.admin.editcustomfield.option.orderdown"/>
+                                            </it:link>
+                                        </c:if--%>
                                         <html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="5" height="1"/>
-                                        </td>
+                                    </td>
                                     
                                     <td align="right" colspan="2" class="editColumnText">
-                                    	${i.key}
+                                    	${ option.value } (${ option.key.value })
                                     </td>
                                 </tr>
                                 

@@ -42,7 +42,8 @@
             <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
         </tr>
         <tr>
-            <td colspan="4"><span class="editColumnTitle"><it:message key="itracker.web.attr.value"/>:</span> <html:text property="value" styleClass="editColumnText"/></td>
+            <td colspan="2"><span class="editColumnTitle"><it:message key="itracker.web.attr.value"/>:</span> <html:text property="value" styleClass="editColumnText"/></td>
+            <td colspan="2"><span class="editColumnTitle"><it:message key="itracker.web.attr.sortorder"/>:</span> <html:text property="sortOrder" styleClass="editColumnText"/></td>
         </tr>
         
         <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>

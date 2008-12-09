@@ -1,6 +1,7 @@
 package org.itracker.web.actions.admin.configuration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
@@ -22,6 +24,8 @@ import org.itracker.web.util.ServletContextUtils;
 
 public class EditCustomFieldActionUtil {
 
+	private static final Logger logger = Logger.getLogger(EditCustomFieldActionUtil.class);
+	
 	public static final void setRequestEnv(HttpServletRequest request, CustomFieldForm customFieldForm) {
 		
 		ConfigurationService configurationService = ServletContextUtils
@@ -78,12 +82,19 @@ public class EditCustomFieldActionUtil {
 		String baseLocaleKey = "translations(" + ITrackerResources.BASE_LOCALE + ")";
 
 		List<CustomFieldValue> options = customField.getOptions();
-		Map<String, CustomFieldValue> optionsMap = new TreeMap<String, CustomFieldValue>();
+
+		Collections.sort(options, CustomFieldValue.SORT_ORDER_COMPARATOR);
+		if (logger.isDebugEnabled()) {
+			logger.debug("setRequestEnv: sorted values by sort order comparator: " + options);
+		}
+		Map<CustomFieldValue, String> optionsMap = new TreeMap<CustomFieldValue, String>(CustomFieldValue.SORT_ORDER_COMPARATOR);
 		for (CustomFieldValue option: options) {
 			String optionName = CustomFieldUtilities.getCustomFieldOptionName(customField.getId(),option.getId());
-			optionsMap.put(optionName, option);
-
+			optionsMap.put(option, optionName);
 		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("setRequestEnv: sorted optionsMap by sort order comparator: " + optionsMap);
+		}		
 
 		String fieldTypeString = Integer.toString(CustomField.Type.STRING.getCode());
 		String fieldTypeInteger = Integer.toString(CustomField.Type.INTEGER.getCode());

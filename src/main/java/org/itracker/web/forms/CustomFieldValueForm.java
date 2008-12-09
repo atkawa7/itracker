@@ -46,9 +46,9 @@ public class CustomFieldValueForm extends ValidatorForm {
 	private Integer id;
 
 	private String value;
-
+	private Integer sortOrder;
 	// let's try to put String,String here:
-	HashMap<String, String> translations = new HashMap<String, String>();
+	private HashMap<String, String> translations = new HashMap<String, String>();
 
 	// private Map<String, String> translations;
 
@@ -97,6 +97,14 @@ public class CustomFieldValueForm extends ValidatorForm {
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		
 	}
+
+	public void setSortOrder(Integer sortOrder) {
+		this.sortOrder = sortOrder;
+	}
+
+	public Integer getSortOrder() {
+		return sortOrder;
+	}
 	
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
@@ -109,5 +117,6 @@ public class CustomFieldValueForm extends ValidatorForm {
 		}
 		return errors;
 	}
+
 
 }

@@ -21,7 +21,6 @@ package org.itracker.web.actions.admin.configuration;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -66,7 +65,6 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
 		try {
 
 			HttpSession session = request.getSession(true);
-			Locale locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
 
 			CustomFieldForm customFieldForm = (CustomFieldForm) form;			
 			if (customFieldForm == null) 

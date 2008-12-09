@@ -88,14 +88,15 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
                 customFieldValue = new CustomFieldValue();
                 customFieldValue.setCustomField(customField);
                 customFieldValue.setValue(customFieldValueForm.getValue());
-                customFieldValue.setSortOrder(highestSortOrder + 1);
+                customFieldValue.setSortOrder(customFieldValueForm.getSortOrder());
                 customFieldValue = configurationService.createCustomFieldValue(customFieldValue);
             } else if("update".equals(action)) {
                 Integer id = (Integer) PropertyUtils.getSimpleProperty(form, "id");
                 customFieldValue = configurationService.getCustomFieldValue(id);
 
                 customFieldValue.setValue(customFieldValueForm.getValue());
-                String name = CustomFieldUtilities.getCustomFieldOptionName(customFieldValue.getCustomField().getId(), id);
+                customFieldValue.setSortOrder(customFieldValueForm.getSortOrder());
+//                String name = CustomFieldUtilities.getCustomFieldOptionName(customFieldValue.getCustomField().getId(), id);
 //                customFieldValue.setName(name);
                 customFieldValue = configurationService.updateCustomFieldValue(customFieldValue);
             } else {

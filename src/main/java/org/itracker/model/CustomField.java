@@ -22,7 +22,6 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +31,6 @@ import java.util.ResourceBundle;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
-import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.exceptions.IssueException;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.web.taglib.FormatCustomFieldTag;
@@ -86,16 +84,6 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Unique name identifying this custom field globally.
-	 * 
-	 * <p>
-	 * No matching field exists in the database for this property : it is
-	 * obtained from a <code>ResourceBundle</code>, not from the database!
-	 * </p>
-	 * @deprecated this can not be in the entity, replace by Utility or service.
-	 */
-	private String name;
 
 	/* Is a CustomField instance locale-specific ? */
 	// private Locale locale;
