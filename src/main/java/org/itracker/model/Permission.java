@@ -134,7 +134,7 @@ public class Permission extends AbstractEntity {
 	
 	public static final class PermissionPropertiesComparator implements java.util.Comparator<Permission> {
 		public int compare(Permission lhs, Permission rhs) {
-			return new CompareToBuilder().append(lhs.type, rhs.type).append(lhs.user, rhs.user).append(lhs.project, rhs.project).toComparison();
+			return new CompareToBuilder().append(lhs.type, rhs.type).append(lhs.user, rhs.user, User.NAME_COMPARATOR).append(lhs.project, rhs.project, Project.PROJECT_COMPARATOR).toComparison();
 	    }
 	}
 }
