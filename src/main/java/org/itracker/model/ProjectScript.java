@@ -31,7 +31,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class ProjectScript extends AbstractEntity {
 
-	public static final CompareByFieldAndPriority FIELD_PRIORITY_COMPARATOR = new CompareByFieldAndPriority();
+	public static final FieldPriorityComparator FIELD_PRIORITY_COMPARATOR = new FieldPriorityComparator();
 	/**
 	 * 
 	 */
@@ -102,7 +102,7 @@ public class ProjectScript extends AbstractEntity {
 		this.priority = priority;
 	}
 
-	public static class CompareByFieldAndPriority implements
+	public static class FieldPriorityComparator implements
 			Comparator<ProjectScript>, Serializable {
 		/**
 		 * 
