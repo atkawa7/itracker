@@ -1,6 +1,8 @@
 package org.itracker.model;
 import static org.junit.Assert.*;
 
+import static org.itracker.Assert.assertEntityComparatorEquals;
+import static org.itracker.Assert.assertEntityComparator;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
@@ -104,6 +106,36 @@ public class UserTest {
 	@Test
 	public void testToString(){		
 		assertNotNull("toString", user.toString());
+	}
+	
+	@Test
+	public void testNameComparator() {
+		User entityA = new User("aaa", "", "a", "a", "a@a.com", false);
+		User entityB = new User("bbb", "", "b", "b", "a@a.com", false);
+		
+		assertEntityComparator("name comparator", User.NAME_COMPARATOR, entityA, entityB);
+		assertEntityComparator("name comparator", User.NAME_COMPARATOR, entityA, null);
+		
+		entityA.setLastName(entityB.getLastName());
+
+		assertEntityComparator("name comparator", User.NAME_COMPARATOR, entityA, entityB);
+		assertEntityComparator("name comparator", User.NAME_COMPARATOR, entityA, null);
+
+		entityA.setFirstName(entityB.getFirstName());
+		
+		assertEntityComparator("name comparator", User.NAME_COMPARATOR, entityA, entityB);
+		assertEntityComparator("name comparator", User.NAME_COMPARATOR, entityA, null);
+		
+		assertEntityComparator("login comparator", User.LOGIN_COMPARATOR, entityA, entityB);
+		assertEntityComparator("login comparator", User.LOGIN_COMPARATOR, entityA, null);
+		
+		entityA.setLogin(entityB.getLogin());
+		
+		assertEntityComparatorEquals("name comparator", User.NAME_COMPARATOR, entityA, entityB);
+		assertEntityComparatorEquals("name comparator", User.NAME_COMPARATOR, entityA, entityA);
+		assertEntityComparatorEquals("login comparator", User.LOGIN_COMPARATOR, entityA, entityB);
+		assertEntityComparatorEquals("login comparator", User.LOGIN_COMPARATOR, entityA, entityA);
+		
 	}
 	
 	@Before
