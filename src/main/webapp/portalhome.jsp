@@ -236,7 +236,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 													value="${unassignedIssue.issue.owner.lastName}" /></option>
 											</c:otherwise>
 										</c:choose>
-										<c:forEach items="${possibleIssueOwnersMap[i.index]}"
+										<c:forEach items="${unassignedIssue.possibleOwners}"
 											var="possibleIssueOwner" varStatus="k">
 											<c:if test="${possibleIssueOwner.lastName != null}">
 												<option value="${possibleIssueOwner.id}"

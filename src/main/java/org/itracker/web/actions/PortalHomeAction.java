@@ -181,18 +181,19 @@ public class PortalHomeAction extends ItrackerBaseAction {
 // Marky:  moved these out of for loop so they can be referenced after loop is over to set attributes.
                 
 //                List<Boolean> creatorsPresent = new ArrayList<Boolean>();
-                List[] possibleOwnersMap = new List[unassignedIssues.size()];
 //                HashMap<Integer,List<User>> usersWithEditOwnMap = new HashMap<Integer,List<User>>();
                 HttpSession session = request.getSession(true);
                 Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
                 
-                for (int i = 0; i < unassignedIssues.size(); i++) {
+                Iterator<IssuePTO> unassignedIssuePTOIt = unassignedIssuePTOs.iterator();
+                while (unassignedIssuePTOIt.hasNext()) {
+					IssuePTO issuePTO = unassignedIssuePTOIt.next();
+
                     List<User> possibleIssueOwners = new ArrayList<User>();
                     boolean creatorPresent = false;
-                    final Issue issue = unassignedIssuePTOs.get(i).getIssue();
+                    final Issue issue = issuePTO.getIssue();
                     final Project project = issueService.getIssueProject(issue.getId());
                     
-                    //List<User> tempOwners = new ArrayList<User>();
                     final List<NameValuePair> ownersList;
                     
                     ownersList = UserUtilities.getAssignableIssueOwnersList(issue, project, currUser, locale, userService, userPermissions);
@@ -215,10 +216,9 @@ public class PortalHomeAction extends ItrackerBaseAction {
                             }
                         }
                     }
-                    possibleOwnersMap[i] = possibleIssueOwners;
+                    issuePTO.setPossibleOwners(possibleIssueOwners);
                     
                 }
-                request.setAttribute("possibleIssueOwnersMap", possibleOwnersMap);
                 
 
                 

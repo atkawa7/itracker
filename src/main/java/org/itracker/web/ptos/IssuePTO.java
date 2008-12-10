@@ -1,6 +1,9 @@
 package org.itracker.web.ptos;
 
+import java.util.List;
+
 import org.itracker.model.Issue;
+import org.itracker.model.User;
 
 
 public class IssuePTO {
@@ -15,6 +18,7 @@ public class IssuePTO {
     private String severityLocalizedString;
     private String statusLocalizedString;
     private String componentsSize;
+	private List<User> possibleOwners;
     
     public IssuePTO(Issue issue) {
         this.issue = issue;
@@ -99,6 +103,13 @@ public class IssuePTO {
 	public void setUserHasPermission_PERMISSION_ASSIGN_OTHERS(
 			boolean userHasPermission_PERMISSION_ASSIGN_OTHERS) {
 		this.userHasPermission_PERMISSION_ASSIGN_OTHERS = userHasPermission_PERMISSION_ASSIGN_OTHERS;
+	}
+	
+	public void setPossibleOwners(List<User> users) {
+		this.possibleOwners = users;
+	}
+	public List<User> getPossibleOwners() {
+		return possibleOwners;
 	}
     
 }
