@@ -167,10 +167,10 @@ public class LoginUtilities {
 
 			requestLocale = (Locale) request.getAttribute(Constants.LOCALE_KEY);
 
-			if (logger.isDebugEnabled()) {
-				logger.debug("getCurrentLocale: request-attribute was "
-						+ requestLocale);
-			}
+//			if (logger.isDebugEnabled()) {
+//				logger.debug("getCurrentLocale: request-attribute was "
+//						+ requestLocale);
+//			}
 
 			if (null == requestLocale) {
 				// get locale from request param
@@ -179,37 +179,37 @@ public class LoginUtilities {
 				if (null != loc && loc.trim().length() > 1) {
 					requestLocale = ITrackerResources.getLocale(loc);
 				}
-				if (logger.isDebugEnabled()) {
-					logger.debug("getCurrentLocale: request-parameter was "
-							+ loc);
-				}
+//				if (logger.isDebugEnabled()) {
+//					logger.debug("getCurrentLocale: request-parameter was "
+//							+ loc);
+//				}
 			}
 
 			if (null == requestLocale) {
 				// get it from the session
 				requestLocale = (Locale) session
 						.getAttribute(Constants.LOCALE_KEY);
-				if (logger.isDebugEnabled()) {
-					logger.debug("getCurrentLocale: session-attribute was "
-							+ requestLocale);
-				}
+//				if (logger.isDebugEnabled()) {
+//					logger.debug("getCurrentLocale: session-attribute was "
+//							+ requestLocale);
+//				}
 			}
 
 			if (null == requestLocale) {
 				ResourceBundle bundle = ITrackerResources.getBundle(request
 						.getLocale());
-				if (logger.isDebugEnabled()) {
-					logger
-							.debug("getCurrentLocale: trying request header locale "
-									+ request.getLocale());
-				}
+//				if (logger.isDebugEnabled()) {
+//					logger
+//							.debug("getCurrentLocale: trying request header locale "
+//									+ request.getLocale());
+//				}
 				if (bundle.getLocale().getLanguage().equals(
 						request.getLocale().getLanguage())) {
 					requestLocale = request.getLocale();
-					if (logger.isDebugEnabled()) {
-						logger.debug("getCurrentLocale: request-locale was "
-								+ requestLocale);
-					}
+//					if (logger.isDebugEnabled()) {
+//						logger.debug("getCurrentLocale: request-locale was "
+//								+ requestLocale);
+//					}
 				}
 			}
 
@@ -223,19 +223,19 @@ public class LoginUtilities {
 				while (locales.hasMoreElements()) {
 					locale = (Locale) locales.nextElement();
 					bundle = ITrackerResources.getBundle(locale);
-					if (logger.isDebugEnabled()) {
-						logger
-								.debug("getCurrentLocale: request-locales prcessing "
-										+ locale + ", bundle: " + bundle);
-					}
+//					if (logger.isDebugEnabled()) {
+//						logger
+//								.debug("getCurrentLocale: request-locales prcessing "
+//										+ locale + ", bundle: " + bundle);
+//					}
 					if (bundle.getLocale().getLanguage().equals(
 							locale.getLanguage())) {
 						requestLocale = locale;
-						if (logger.isDebugEnabled()) {
-							logger
-									.debug("getCurrentLocale: request-locales locale was "
-											+ requestLocale);
-						}
+//						if (logger.isDebugEnabled()) {
+//							logger
+//									.debug("getCurrentLocale: request-locales locale was "
+//											+ requestLocale);
+//						}
 					}
 				}
 			}
@@ -244,20 +244,20 @@ public class LoginUtilities {
 			if (null == requestLocale) {
 				// fall back to default locale
 				requestLocale = ITrackerResources.getLocale();
-				if (logger.isDebugEnabled()) {
-					logger
-							.debug("getCurrentLocale: fallback default locale was "
-									+ requestLocale);
-				}
+//				if (logger.isDebugEnabled()) {
+//					logger
+//							.debug("getCurrentLocale: fallback default locale was "
+//									+ requestLocale);
+//				}
 			}
 			session.setAttribute(Constants.LOCALE_KEY, requestLocale);
 			request.setAttribute(Constants.LOCALE_KEY, requestLocale);
 			request.setAttribute("currLocale", requestLocale);
-			if (logger.isDebugEnabled()) {
-				logger
-						.debug("getCurrentLocale: request and session was setup with "
-								+ requestLocale);
-			}
+//			if (logger.isDebugEnabled()) {
+//				logger
+//						.debug("getCurrentLocale: request and session was setup with "
+//								+ requestLocale);
+//			}
 		}
 
 		return requestLocale;

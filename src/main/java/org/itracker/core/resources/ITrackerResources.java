@@ -28,7 +28,6 @@ import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
 import org.itracker.model.Language;
 import org.itracker.persistence.dao.NoSuchEntityException;
-import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.ITrackerDirtyResourceException;
 import org.itracker.web.util.ServletContextUtils;
 
@@ -274,9 +273,9 @@ public class ITrackerResources {
         String val;
         try {
             try {
-            	if (logger.isDebugEnabled()) {
-            		logger.debug("getString: " + key + " for locale " + locale);
-            	}
+//            	if (logger.isDebugEnabled()) {
+//            		logger.debug("getString: " + key + " for locale " + locale);
+//            	}
                 val = getBundle(locale).getString(key);
                 if (null != val) {
 

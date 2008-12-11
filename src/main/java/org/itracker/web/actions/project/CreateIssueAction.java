@@ -193,48 +193,13 @@ public class CreateIssueAction extends ItrackerBaseAction {
 					if (!ProjectUtilities.hasOption(
 							ProjectUtilities.OPTION_NO_ATTACHMENTS, project
 									.getOptions())) {
-//						FormFile file = issueForm.getAttachment();
 						msg = new ActionMessages();
 						issue = AttachmentUtilities.addAttachment(issue, project, currUser, issueForm, getITrackerServices(), msg);
 						
 						if (!msg.isEmpty()) {
-							// Validation of attachment failed
 							errors.add(msg);
 						}
 						
-						
-						
-	//					if (file != null && !"".equals(file.getFileName())) {
-	//						String origFileName = file.getFileName();
-	//
-	//						ActionMessages msg = AttachmentUtilities.validate(file, this
-	//								.getITrackerServices());
-	//						if (msg.isEmpty()) {
-	//							int lastSlash = Math.max(origFileName
-	//									.lastIndexOf('/'), origFileName
-	//									.lastIndexOf('\\'));
-	//
-	//							if (lastSlash > -1) {
-	//								origFileName = origFileName
-	//										.substring(lastSlash + 1);
-	//							}
-	//
-	//							IssueAttachment attachmentModel = new IssueAttachment(
-	//									issue, origFileName, file.getContentType(),
-	//									issueForm.getAttachmentDescription(), file
-	//											.getFileSize(), currUser);
-	//							
-	//							
-	//							AttachmentUtilities.addAttachment(issue, project, currUser, issueForm, getITrackerServices(), errors);
-	////							issueService.addIssueAttachment(attachmentModel,
-	////									file.getFileData());
-	//						}
-	//						else {
-	//							errors.add(msg);
-	//							saveErrors(request, errors);
-	//							return mapping.getInputForward();
-	//						}
-	//					}
 					}
 
 				

@@ -167,7 +167,7 @@ public class AttachmentUtilities {
 
 		} else {
 			if (logger.isDebugEnabled()) {
-				logger.debug("addAttachment: failed to validate: " + origFileName);
+				logger.debug("addAttachment: failed to validate: " + origFileName + ", " + validation);
 			}
 			messages.add(validation);
 		}

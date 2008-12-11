@@ -41,6 +41,7 @@ import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.Status;
 import org.itracker.model.User;
+import org.itracker.services.ITrackerServices;
 import org.itracker.services.exceptions.IssueException;
 import org.itracker.services.exceptions.WorkflowException;
 import org.itracker.services.util.CustomFieldUtilities;
@@ -48,6 +49,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.actions.project.EditIssueActionUtil;
 import org.itracker.web.ptos.CreateIssuePTO;
+import org.itracker.web.util.AttachmentUtilities;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.RequestHelper;
 
@@ -260,6 +262,10 @@ public class IssueForm extends ITrackerForm {
 	 */
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
+		if (log.isDebugEnabled()) {
+			log.debug("validate called: mapping: " + mapping + ", request: "
+					+ request);
+		}
 		ActionErrors errors = super.validate(mapping, request);
 
 		if (log.isDebugEnabled()) {
@@ -294,24 +300,38 @@ public class IssueForm extends ITrackerForm {
 										.getProject(), currUser), errors);
 
 				if (errors.isEmpty() && issue.getProject() == null) {
+					if (log.isDebugEnabled()) {
+						log.debug("validate: issue project is null: " + issue);
+					}
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
 							new ActionMessage(
 									"itracker.web.error.invalidproject"));
 				} else if (errors.isEmpty()
 						&& issue.getProject().getStatus() != Status.ACTIVE) {
+					if (log.isDebugEnabled()) {
+						log.debug("validate: issue project is not active: " + issue);
+					}
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
 							new ActionMessage(
 									"itracker.web.error.projectlocked"));
 				} else if (errors.isEmpty()) {
-					validateProjectScripts(issue.getProject(), errors);
+					if (log.isDebugEnabled()) {
+						log.debug("validate: validation had errors for " + issue + ": " + errors);
+					}
+					validateProjectScripts(issue.getProject(), errors, this);
+					validateAttachment(this.getAttachment(), getITrackerServices(), errors);
 				}
 			} else {
 				CreateIssuePTO.setupCreateIssue(request);
 				HttpSession session = request.getSession();
 				Project project = (Project) session
 						.getAttribute(Constants.PROJECT_KEY);
+				if (log.isDebugEnabled()) {
+					log.debug("validate: validating create new issue for project: " + page);
+				}
 				validateProjectFields(project, request, errors);
-				validateProjectScripts(project, errors);
+				validateProjectScripts(project, errors, this);
+				validateAttachment(this.getAttachment(), getITrackerServices(), errors);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -323,6 +343,18 @@ public class IssueForm extends ITrackerForm {
 			log.debug("validate: returning errors: " + errors);
 		}
 		return errors;
+	}
+
+	private static void validateAttachment(FormFile attachment, ITrackerServices services, ActionMessages errors) {
+		if (null != attachment) {
+			ActionMessages msg = AttachmentUtilities.validate(attachment, services);
+			if (!msg.isEmpty()) {
+				if (log.isDebugEnabled()) {
+					log.debug("validateAttachment: failed to validate, " + msg);
+				}
+				errors.add(msg);
+			}
+		}
 	}
 
 	private static void validateProjectFields(Project project,
@@ -367,12 +399,12 @@ public class IssueForm extends ITrackerForm {
 		}
 	}
 
-	private void validateProjectScripts(Project project, ActionErrors errors)
+	private static void validateProjectScripts(Project project, ActionErrors errors, IssueForm form)
 			throws WorkflowException {
 
 		List<ProjectScript> scripts = project.getScripts();
 		WorkflowUtilities.processFieldScripts(scripts,
-				WorkflowUtilities.EVENT_FIELD_ONVALIDATE, null, errors, this);
+				WorkflowUtilities.EVENT_FIELD_ONVALIDATE, null, errors, form);
 	}
 
 }
