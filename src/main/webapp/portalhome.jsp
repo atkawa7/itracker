@@ -266,7 +266,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 												value="${unassignedIssue.issue.project.id}" />
 
 											<%--!String styleClass2 = "(i % 2 == 1 ? \"listRowShaded\" : \"listRowUnshaded\")";--%>
-											<td style="white-space: nwrap;"><html:select property="userId"
+											<td style="white-space: nowrap;"><html:select property="userId"
 												styleClass="${listRowClass}"
 												onchange="this.form.submit();">
 												<c:choose>
