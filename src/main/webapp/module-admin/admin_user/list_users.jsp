@@ -1,14 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="java.util.*" %>
-<%@ page import="org.itracker.web.util.SessionManager" %>
-<%@ page import="org.itracker.services.util.UserUtilities" %>
-<%@ page import="org.itracker.model.User" %>
-<%@ page import="org.itracker.services.*" %>
-<%@ page import="org.itracker.core.resources.*" %>
-<%@ page import="java.util.Collections" %>
-<%@ page import="java.util.List" %>
-
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
@@ -34,18 +25,14 @@
   <br>
 </logic:messagesPresent>
 
-<%
-    UserService uh = (UserService)request.getAttribute("uh");
-%>
-
 <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
   <tr>
-    <td class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.users"/>: (<it:message key="itracker.web.admin.listusers.numactive" arg0="<%= Integer.toString(SessionManager.getNumActiveSessions()) %>"/>)</td>
-    <% if(uh.allowProfileCreation(null, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) { %>
+    <td class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.users"/>: (<it:message key="itracker.web.admin.listusers.numactive" arg0="${activeSessions}"/>)</td>
+    <c:if test="${allowProfileCreation}">
         <td align="right">
           <it:formatImageAction action="edituserform" targetAction="create" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.user.alt" textActionKey="itracker.web.image.create.texttag"/>
         </td>
-    <% } %>
+    </c:if>
   </tr>
   <tr align="left" class="listHeading">
     <td width="1"></td>
@@ -58,52 +45,56 @@
     <td><it:message key="itracker.web.attr.online"/></td>
   </tr>
 
-<%
-    List<User> users = uh.getAllUsers();
+    <c:forEach items="${users}" var="aUser" varStatus="i">
+        <c:set var="style" value="" />
+        <c:if test="${aUser.statusLocked}">
+            <c:set var="style" value="color: red;" />
+        </c:if>
+        <c:if test="${aUser.regisrationTypeSelf}">
+            <c:set var="style" value="${style}font-style: italic;" />
+        </c:if>
 
-    Collections.sort(users, User.NAME_COMPARATOR);
-	User currentUser = null;
-	Iterator<User> usersIt = users.iterator();
-	boolean shade = true;
-	String style;
-	while (usersIt.hasNext()) {
-		shade = !shade;
-		currentUser = usersIt.next();
-        style  = (currentUser.getStatus() == UserUtilities.STATUS_LOCKED ? "color: red;" : "");
-        style += (currentUser.getRegistrationType() == UserUtilities.REGISTRATION_TYPE_SELF ? "font-style: italic;" : "");
-        Date lastAccess = SessionManager.getSessionLastAccess(currentUser.getLogin());
-		if (null != style && !(style.length() == 0)) { 
-			style = "style=\"" + style + "\""; 
-		} else { 
-			style = ""; 
-		} 
-		pageContext.setAttribute("style",style);
-		
-        if(shade) { %>
-          <tr align="right" class="listRowShaded" ${style}>
-<%      } else { %>
-          <tr align="right" class="listRowUnshaded" ${style}> 
-<%      } %>
+        <c:choose>
+            <c:when test="${i.count % 2 == 1}">
+                <tr align="right" class="listRowUnshaded" style="${style}">
+            </c:when>
+            <c:otherwise>
+                <tr align="right" class="listRowShaded" style="${style}">
+            </c:otherwise>
+        </c:choose>
+
         <td>
-          <it:formatImageAction action="edituserform" paramName="id" paramValue="<%= currentUser.getId() %>" targetAction="update" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.user.alt" arg0="<%= currentUser.getLogin() %>" textActionKey="itracker.web.image.edit.texttag"/>
-          <% if(currentUser.getStatus() == UserUtilities.STATUS_LOCKED) { %>
-                <it:formatImageAction action="unlockuser" paramName="id" paramValue="<%= currentUser.getId() %>" src="/themes/defaulttheme/images/unlock.gif" altKey="itracker.web.image.unlock.user.alt" arg0="<%= currentUser.getLogin() %>" textActionKey="itracker.web.image.unlock.texttag"/>
-          <% } else { %>
-                <it:formatImageAction action="lockuser" paramName="id" paramValue="<%= currentUser.getId() %>" src="/themes/defaulttheme/images/lock.gif" altKey="itracker.web.image.lock.user.alt" arg0="<%= currentUser.getLogin() %>" textActionKey="itracker.web.image.lock.texttag"/>
-          <% } %>
+          <it:formatImageAction action="edituserform" paramName="id" paramValue="${aUser.user.id}" targetAction="update" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.user.alt" arg0="${aUser.user.login}" textActionKey="itracker.web.image.edit.texttag"/>
+            <c:choose>
+                <c:when test="${aUser.statusLocked}">
+                    <it:formatImageAction action="unlockuser" paramName="id" paramValue="c" src="/themes/defaulttheme/images/unlock.gif" altKey="itracker.web.image.unlock.user.alt" arg0="${aUser.user.login}" textActionKey="itracker.web.image.unlock.texttag"/>
+                </c:when>
+                <c:otherwise>
+                    <it:formatImageAction action="lockuser" paramName="id" paramValue="${aUser.user.id}" src="/themes/defaulttheme/images/lock.gif" altKey="itracker.web.image.lock.user.alt" arg0="${aUser.user.login}" textActionKey="itracker.web.image.lock.texttag"/>
+                </c:otherwise>
+            </c:choose>
         </td>
         <td></td>
-        <td><%= currentUser.getLogin() %></td>
-        <td><%= currentUser.getFirstName() %> <%= currentUser.getLastName() %></td>
-        <td><%= currentUser.getEmail() %></td>
-        <td align="left"><%= (currentUser.isSuperUser() ? ITrackerResources.getString("itracker.web.generic.yes", LoginUtilities.getCurrentLocale(request)) : ITrackerResources.getString("itracker.web.generic.no", LoginUtilities.getCurrentLocale(request))) %></td>
-        <td><it:formatDate date="<%= currentUser.getLastModifiedDate() %>" format="notime"/></td>
-        <td><it:formatDate date="<%= lastAccess %>" format="short" emptyKey="itracker.web.generic.no"/></td>
+        <td>${aUser.user.login}</td>
+        <td>${aUser.user.firstName} ${aUser.user.lastName}</td>
+        <td>${aUser.user.email}</td>
+        <td align="left">
+            <c:choose>
+                <c:when test="${aUser.user.superUser}">
+                    <it:message key="itracker.web.generic.yes" />
+                </c:when>
+                <c:otherwise>
+                    <it:message key="itracker.web.generic.no" />
+                </c:otherwise>
+            </c:choose>
+        </td>
+        <td><it:formatDate date="${aUser.user.lastModifiedDate}" format="notime"/></td>
+        <td><it:formatDate date="${aUser.lastAccess}" format="short" emptyKey="itracker.web.generic.no"/></td>
       </tr>
-<%  } %>
+    </c:forEach>
+
   <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="8" width="1"/></td></tr>
   <tr><td colspan="8" class="tableNote"><it:message key="itracker.web.admin.listusers.note"/></td></tr>
 </table>
 
-<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body>
-<%@page import="org.itracker.web.util.LoginUtilities"%></html>
+<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>

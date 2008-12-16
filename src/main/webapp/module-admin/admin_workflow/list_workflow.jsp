@@ -1,10 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
  
-<%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.services.*" %>
-<%@ page import="java.util.*" %>
-<%@ page import="org.itracker.core.resources.*" %>
-
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
@@ -49,34 +44,31 @@
     <td align="right"><it:message key="itracker.web.attr.lastmodified"/></td>
   </tr>
 
-<%
-  ConfigurationService sc = (ConfigurationService)request.getAttribute("sc");
-  
-  List<WorkflowScript> workflowScripts = sc.getWorkflowScripts();
+    <c:forEach items="${sc.workflowScripts}" var="aScript" varStatus="i">
+      <c:choose>
+        <c:when test="${i.count % 2 == 1}">
+          <tr align="right" class="listRowUnshaded">
+        </c:when>
+        <c:otherwise>
+            <tr align="right" class="listRowShaded">
+        </c:otherwise>
+      </c:choose>
 
-  for(int i = 0; i < workflowScripts.size(); i++) {
-    if(i % 2 == 1) {
-%>
-      <tr align="right" class="listRowShaded">
-<%  } else { %>
-      <tr align="right" class="listRowUnshaded">
-<%  } %>
       <td>
-        <it:formatImageAction action="editworkflowscriptform" paramName="id" paramValue="<%= workflowScripts.get(i).getId() %>" targetAction="update" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.workflowscript.alt" arg0="<%= workflowScripts.get(i).getName() %>" textActionKey="itracker.web.image.edit.texttag"/>
-        <it:formatImageAction action="removeworkflowscript" paramName="id" paramValue="<%= workflowScripts.get(i).getId() %>" src="/themes/defaulttheme/images/delete.gif" altKey="itracker.web.image.delete.workflowscript.alt" arg0="<%= workflowScripts.get(i).getName() %>" textActionKey="itracker.web.image.delete.texttag"/>
+        <it:formatImageAction action="editworkflowscriptform" paramName="id" paramValue="${aScript.id}" targetAction="update" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.workflowscript.alt" arg0="${aScript.name}" textActionKey="itracker.web.image.edit.texttag"/>
+        <it:formatImageAction action="removeworkflowscript" paramName="id" paramValue="${aScript.id}" src="/themes/defaulttheme/images/delete.gif" altKey="itracker.web.image.delete.workflowscript.alt" arg0="${aScript.name}" textActionKey="itracker.web.image.delete.texttag"/>
       </td>                           
       <td></td>
-      <td><%= workflowScripts.get(i).getName() %></td>
+      <td>${aScript.name}</td>
       <td></td>
-      <td align="left"><%= ITrackerResources.getString(ITrackerResources.KEY_BASE_WORKFLOW_EVENT + workflowScripts.get(i).getEvent(), (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>
+      <td align="left"><it:message key="itracker.workflow.field.event.${aScript.event}"/></td>
       <td></td>
-      <td align="right"><%= workflowScripts.get(i).getNumberUses() %></td>
+      <td align="right">${aScript.numberUses}</td>
       <td></td>
-      <td align="right"><it:formatDate date="<%= workflowScripts.get(i).getLastModifiedDate() %>"/></td>
+      <td align="right"><it:formatDate date="${aScript.lastModifiedDate}"/></td>
     </tr>
-<%
-  }
-%>
+  </c:forEach>
+
 </table>
 
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>

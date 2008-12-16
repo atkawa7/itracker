@@ -19,6 +19,7 @@
 package org.itracker.web.actions.admin.workflow;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -33,14 +34,14 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.model.WorkflowScript;
+import org.itracker.model.NameValuePair;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.UserUtilities;
+import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.WorkflowScriptForm;
 import org.itracker.web.util.Constants;
-
-
 
 public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(EditWorkflowScriptFormAction.class);
@@ -55,9 +56,9 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
+
         boolean isUpdate = false;
-        
-     
+
         try {
             WorkflowScriptForm workflowScriptForm = (WorkflowScriptForm) form;
             
@@ -96,15 +97,23 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
                   
             }
 
+            if (workflowScript == null) {
+                return mapping.findForward("unauthorized");    
+            }
+
             if(errors.isEmpty()) {
-		HttpSession session = request.getSession(true);
+		        HttpSession session = request.getSession(true);
                 request.setAttribute("workflowScriptForm", workflowScriptForm);
                 session.setAttribute(Constants.WORKFLOW_SCRIPT_KEY, workflowScript);
                 request.setAttribute("action",action);
                 saveToken(request);
                 
                 request.setAttribute("pageTitleKey",pageTitleKey); 
-                request.setAttribute("pageTitleArg",pageTitleArg); 
+                request.setAttribute("pageTitleArg",pageTitleArg);
+
+                NameValuePair[] eventTypes = WorkflowUtilities.getEvents( getLocale(request) );
+                request.setAttribute("nameValuePair", Arrays.asList(eventTypes) );
+
                 return mapping.getInputForward();
             }
         } catch(SystemConfigurationException sce) {

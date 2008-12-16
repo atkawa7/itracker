@@ -819,11 +819,13 @@ public class NotificationServiceImpl implements NotificationService {
 			getNotificationDao().save(notification);
 			// TODO: is it needed to update issue too?
 			issue.getNotifications().add(notification);
-			getIssueDao().saveOrUpdate(issue);
+			getIssueDao().merge(issue);
 			
 			return true;
 		}
-		logger.debug("addIssueNotification: attempted to add duplicate notification " + notification + " for issue: " + issue);
+		if (logger.isDebugEnabled()) {
+			logger.debug("addIssueNotification: attempted to add duplicate notification " + notification + " for issue: " + issue);
+		}
 		return false;
 	}
 

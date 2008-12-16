@@ -1,10 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page import="org.itracker.web.util.*" %>
-<%@ page import="org.itracker.services.util.UserUtilities" %>
-<%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.core.resources.*" %>
-
 <%@ taglib uri="/tags/itracker" prefix="it" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
@@ -13,15 +8,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<%
-    // TODO : move redirect logic to the Action class. 
-    User user = (User) session.getAttribute(Constants.EDIT_USER_KEY);
-
-    if(user == null) {
-%>
-      <logic:forward name="unauthorized"/>
-<%  } %>
-<c:set var="user" value="<%= user %>" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
@@ -66,7 +52,7 @@
                   </c:otherwise>
               </c:choose>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.status"/>:</td>
-            <td class="editColumnText"><%= UserUtilities.getStatusName(user.getStatus(), (java.util.Locale)pageContext.getAttribute("currLocale")) %></td>
+            <td class="editColumnText">${userStatus}</td>
           </tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.firstname"/>:</td>
@@ -132,7 +118,14 @@
             <td class="editColumnTitle"><it:message key="itracker.web.attr.superuser"/>:</td>
               <c:choose>
                   <c:when test="${isUpdate && !allowProfileUpdate}">
-                      <td class="editColumnText"><%= ITrackerResources.getString((user.isSuperUser() ? "itracker.web.generic.yes" : "itracker.web.generic.no"), (java.util.Locale)pageContext.getAttribute("currLocale")) %><html:hidden property="superUser" /></td>
+                      <c:choose>
+                          <c:when test="${edituser.superUser}">
+                              <td class="editColumnText"><it:message key="itracker.web.generic.yes"/><html:hidden property="superUser" /></td>
+                          </c:when>
+                          <c:otherwise>
+                              <td class="editColumnText"><it:message key="itracker.web.generic.no"/><html:hidden property="superUser" /></td>
+                          </c:otherwise>
+                      </c:choose>
                   </c:when>
                   <c:otherwise>
                       <td class="editColumnText">

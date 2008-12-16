@@ -70,23 +70,22 @@ public class EditUserFormAction extends ItrackerBaseAction {
         if (action != null && action.equals("update")) {
 
             isUpdate = true;
-            request.setAttribute("isUpdate", isUpdate);
             pageTitleKey = "itracker.web.admin.edituser.title.update";
             pageTitleArg = user.getLogin();
-            request.setAttribute("pageTitleKey", pageTitleKey);
-            request.setAttribute("pageTitleArg", pageTitleArg);
 
         } else {
 
-            request.setAttribute("isUpdate", isUpdate);
             pageTitleKey = "itracker.web.admin.edituser.title.create";
             //     pageTitleArg = ITrackerResources.getString("itracker.locale.name", parentLocale);
             //    pageTitleArg = ITrackerResources.getString("itracker.locale.name", this.getCurrLocale());
-            request.setAttribute("pageTitleKey", pageTitleKey);
-            request.setAttribute("pageTitleArg", pageTitleArg);
+
 
         }
-
+        
+        request.setAttribute("isUpdate", isUpdate);
+        request.setAttribute("pageTitleKey", pageTitleKey);
+        request.setAttribute("pageTitleArg", pageTitleArg);
+        
         try {
 
             UserService userService = getITrackerServices().getUserService();
@@ -212,7 +211,14 @@ public class EditUserFormAction extends ItrackerBaseAction {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidaction"));
             }
 
+            if (editUser == null) {
+                return mapping.findForward("unauthorized");    
+            }
+
             if (errors.isEmpty()) {
+
+                String userStatus = UserUtilities.getStatusName(editUser.getStatus());
+                request.setAttribute("userStatus", userStatus);
             	
             	projects = projectService.getAllAvailableProjects();
             	Collections.sort(projects, Project.PROJECT_COMPARATOR);
