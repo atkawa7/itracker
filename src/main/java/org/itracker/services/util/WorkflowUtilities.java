@@ -29,6 +29,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.ValidatorForm;
 import org.itracker.core.resources.ITrackerResources;
@@ -227,48 +228,63 @@ public class WorkflowUtilities  {
     }
     
     /**
-     * Run provided script against form instance, taking into account
+     * Run provided BEANSHELL script against form instance, taking into account
      * incoming event type, field raised an event and current values.
      * As a result, a set of new current values is returned and if
      * appropriate, default values are changed in form.
+     * TODO: should issue, project, user, services be available too?
+     * 
      * @param projectScript is a script to run.
      * @param event is an event type.
      * @param fieldId is a field id associated with event.
-     * @param currentValue is a set of current values.
+     * @param currentValues is a set of current values.
      * @param currentErrors is a container for occured errors.
      * @param form is a form instance, holding values.
      * @return new current values.
      * @throws org.itracker.services.exceptions.WorkflowException
      */
-    @SuppressWarnings("unchecked")
-    public static List<NameValuePair> processFieldScript(ProjectScript projectScript, int event, Integer fieldId, List<NameValuePair> currentValue, ActionMessages currentErrors, ValidatorForm form) throws WorkflowException {
-        if(projectScript == null) {
+    public static List<NameValuePair> processFieldScript(ProjectScript projectScript, int event, Integer fieldId, List<NameValuePair> currentValues, ActionMessages currentErrors, ValidatorForm form) throws WorkflowException {
+        if (projectScript == null) {
             throw new WorkflowException("ProjectScript was null.", WorkflowException.INVALID_ARGS);
         }
-        
-        if(currentErrors == null) {
-            currentErrors = new ActionMessages();
+        if (currentErrors == null) {
+            throw new WorkflowException("Errors was null.", WorkflowException.INVALID_ARGS);
         }
         
         try {
             Interpreter bshInterpreter = new Interpreter();
             bshInterpreter.set("event", event);
             bshInterpreter.set("fieldId", fieldId);
-            bshInterpreter.set("currentValue", currentValue);
+            // TODO: remove currentValue from bshInterpreter, it's a collection of current values.
+            bshInterpreter.set("currentValue", currentValues);
+            bshInterpreter.set("currentValues", currentValues);
             bshInterpreter.set("currentErrors", currentErrors);
             bshInterpreter.set("currentForm", form);
             bshInterpreter.eval(projectScript.getScript().getScript());
-            currentValue = (List<NameValuePair>)bshInterpreter.get("currentValue");
-            logger.debug("Script returned current value of '" + currentValue + "' (" + (currentValue != null ? currentValue.getClass().getName() : "NULL") + ")");
-            if(event == EVENT_FIELD_ONSETDEFAULT && form != null && currentValue != null) {
-                logger.debug("Setting current form field value for field " + IssueUtilities.getFieldName(projectScript.getFieldId()) + " to '" + currentValue + "'");
-                setFormProperty(form, projectScript.getFieldId(), currentValue);
+            // TODO: is this necessary? It should stay the same list-object..
+//            currentValues = (List<NameValuePair>)bshInterpreter.get("currentValue");
+            if (logger.isDebugEnabled()) {
+            	logger.debug("processFieldScript: Script returned current value of '" + currentValues + "' (" + (currentValues != null ? currentValues.getClass().getName() : "NULL") + ")");
+            }
+            if (event == EVENT_FIELD_ONSETDEFAULT && form != null && currentValues != null) {
+            	if (logger.isDebugEnabled()) {
+            		logger.debug("processFieldScript: Setting current form field value for field " + IssueUtilities.getFieldName(projectScript.getFieldId()) + " to '" + currentValues + "'");
+            	}
+                setFormProperty(form, projectScript.getFieldId(), currentValues);
             }
         } catch(Exception e) {
-            logger.error("Error processing field script.", e);
+            logger.error("processFieldScript: Error processing field script.", e);
+            // TODO: error-handling..?
+            currentErrors.add(ActionMessages.GLOBAL_MESSAGE, 
+            		new ActionMessage("itracker.web.error.system.message", 
+            				new Object[]{ITrackerResources.getString("itracker.web.attr.script"), // Script
+            					e.getMessage()
+            }));
         }
-        
-        return currentValue;
+        if (logger.isDebugEnabled()) {
+        	logger.debug("processFieldScript: returning " + currentValues + ", errors: " + currentErrors);
+        }
+        return currentValues;
     }
     
     @SuppressWarnings("unchecked")
