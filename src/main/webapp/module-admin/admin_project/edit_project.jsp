@@ -262,18 +262,18 @@
 	<tr>
 		<td><c:if test="${isUpdate}">
 			<table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
-				<%-- 
+
 
 <tr>
     <td class="editColumnTitle" colspan="5"><it:message key="itracker.web.attr.scripts"/>:</td>
     <td align="right">
         <it:formatImageAction action="editprojectscriptform"
                               paramName="projectId"
-                              paramValue="<%= project.getId() %>"
+                              paramValue="${ project.id }"
                               targetAction="update"
                               src="/themes/defaulttheme/images/create.gif"
                               altKey="itracker.web.image.create.projectscript.alt"
-                              arg0="<%= project.getName() %>"
+                              arg0="${ project.name }"
                               textActionKey="itracker.web.image.create.texttag"/>
     </td>
 </tr>
@@ -285,47 +285,38 @@
     <td align="left"><it:message key="itracker.web.attr.priority"/></td>
     <td><it:message key="itracker.web.attr.event"/></td>
 </tr>
-<%
-    List<CustomField> customFields2 = IssueUtilities.getCustomFields();
-    List<ProjectScript> scripts = project.getScripts();
 
-    Collections.sort(scripts, new ProjectScript.CompareByFieldAndPriority());
+<%-- TODO: fix the edit_projectscript.jsp before enabling this  --%>
+<%--c:if test="${ projectScripts && not empty projectScripts }">
+	<c:forEach items="${ projectScripts }" var="script" varStatus="i">
+	
+		<tr style="text-align: right;" class="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}">
+		
+		    <td style="text-align: right;" >
+		        <it:formatImageAction action="removeprojectscript"
+		                              paramName="delId"
+		                              paramValue="${ script.vO.id }"
+		                              src="/themes/defaulttheme/images/delete.gif"
+		                              altKey="itracker.web.image.delete.projectscript.alt"
+		                              textActionKey="itracker.web.image.delete.texttag"/>
+		    </td>
+		    <td></td>
+		    <td>${ script.fieldName }
+		    </td>
+		    <td>${ script.vO.name }
+		    </td>
+		    <td>${ script.eventName }
+		    </td>
+		    <td>${ script.vO.priority }
+		    </td>
+		    
+		</tr>
+	</c:forEach>
+</c:if--%>
 
-    for (int i = 0; i < scripts.size(); i++) {
-        if (i % 2 == 1) {
-%>
-
-<tr align="right" class="listRowShaded">
-
-    <%    } else { %>
-
-<tr align="right" class="listRowUnshaded">
-
-    <% } %>
-
-    <td align="right">
-        <it:formatImageAction action="removeprojectscript"
-                              paramName="delId"
-                              paramValue="<%= scripts.get(i).getId() %>"
-                              src="/themes/defaulttheme/images/delete.gif"
-                              altKey="itracker.web.image.delete.projectscript.alt"
-                              textActionKey="itracker.web.image.delete.texttag"/>
-    </td>
-    <td></td>
-    <td><%= IssueUtilities.getFieldName(scripts.get(i).getFieldId(), customFields2, (java.util.Locale) pageContext.getAttribute("currLocale")) %>
-    </td>
-    <td><%= scripts.get(i).getScript().getName() %>
-    </td>
-    <td><%= WorkflowUtilities.getEventName(scripts.get(i).getScript().getEvent(), (java.util.Locale) pageContext.getAttribute("currLocale")) %>
-    </td>
-    <td align="left"><%= scripts.get(i).getPriority() %>
-    </td>
-</tr>
-<% } %>
 <tr>
     <td colspan="6"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15"/></td>
 </tr>
---%>
 				<tr>
 					<td class="editColumnTitle" colspan="4">
 						<it:message key="itracker.web.attr.versions" />:</td>
@@ -349,7 +340,7 @@
 				</tr>
 
 				<c:forEach var="version" items="${versions}" varStatus="i">
-					<tr align="right" class="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}">										
+					<tr align="right" class="${ i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded' }">										
 						<td class="listRowSmall" align="left">${version.number}</td>
 						<td class="listRowSmall" align="left">${version.description}</td>
 						<td class="listRowSmall" align="left"><it:formatDate date="${version.date}" /></td>

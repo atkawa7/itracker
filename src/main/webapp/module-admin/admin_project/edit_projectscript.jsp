@@ -90,7 +90,7 @@
                            </td> 
                            <td valign="top" align="left"><%=value%></td>
                            <td valign="top" align="left">
-                                <html:select property="<%=fieldIdKey%>" styleClass="editColumnText">
+                                <html:select property="<%=fieldIdKey%>" styleClass="editColumnText" value="${ fieldId }">
                                     <c:forEach items="${projectScriptForm.customFields}" var="customfield" varStatus="k">
                                         <%  CustomField cfField = (CustomField) cfFields.get(indx);
                                             String name = CustomFieldUtilities.getCustomFieldName(cfField.getId(), locale);
@@ -99,9 +99,9 @@
                                             indx++;
                                         %>
                                         <option value="${customfield.id}" >
-                                            <c:if test="${customfield.id == fieldId}">
+                                            <%--c:if test="${customfield.id == fieldId}">
                                             	<jsp:attribute name="selected">selected</jsp:attribute>
-                                            </c:if>
+                                            </c:if--%>
                                             <%= name %>
                                         </option>
                                     </c:forEach>
@@ -109,12 +109,12 @@
                            </td>
                            <td valign="top" align="left">
                                 <c:set var="priorityId" value="<%=projectScriptForm.getPriority().get(key)%>"/>
-                                <html:select property="<%=priorityKey%>" styleClass="editColumnText">
+                                <html:select property="<%=priorityKey%>" styleClass="editColumnText" value="${ priorityId }">
                                     <c:forEach items="${projectScriptForm.priorityList}" var="priority" varStatus="k">
                                         <option value="${priority.key}">
-                                            <c:if test="${priority.key == priorityId}">
+                                            <%--c:if test="${priority.key == priorityId}">
                                             	<jsp:attribute name="selected">selected</jsp:attribute>
-                                            </c:if>
+                                            </c:if--%>
 											${priority.value}
                                         </option>
                                     </c:forEach>

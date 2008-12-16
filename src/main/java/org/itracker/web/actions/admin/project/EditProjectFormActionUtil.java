@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -20,6 +21,7 @@ import org.itracker.model.CustomField;
 import org.itracker.model.NameValuePair;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
+import org.itracker.model.ProjectScript;
 import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.model.Version;
@@ -30,7 +32,9 @@ import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
+import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.forms.ProjectForm;
+import org.itracker.web.ptos.ProjectScriptPTO;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.RequestHelper;
@@ -224,6 +228,9 @@ public class EditProjectFormActionUtil {
 			request.setAttribute("users", users);
 		}
 
+		
+
+		
 		List<NameValuePair> permissionNames = UserUtilities.getPermissionNames(LoginUtilities.getCurrentLocale(request));
 		request.setAttribute("permissions", permissionNames);
 
@@ -252,7 +259,21 @@ public class EditProjectFormActionUtil {
 		request.setAttribute("customFields", fieldInfos);
 
 
+		// setup project-scripts
+		
+	    List<ProjectScript> scripts = project.getScripts();
+	    Collections.sort(scripts, ProjectScript.FIELD_PRIORITY_COMPARATOR);
 
+	    Locale locale = LoginUtilities.getCurrentLocale(request);
+	    Iterator<ProjectScript> it = scripts.iterator();
+	    
+	    List<ProjectScriptPTO> scriptPTOs = new ArrayList<ProjectScriptPTO>(scripts.size());
+	    while (it.hasNext()) {
+			ProjectScriptPTO projectScript = new ProjectScriptPTO(it.next(), locale);
+			scriptPTOs.add(projectScript);
+		}
+	    request.setAttribute("projectScripts", scriptPTOs);
+		
 		List<Version> versions = project.getVersions();
 		Collections.sort(versions, new Version.VersionComparator());
 		List<VersionInfo> vis = new ArrayList<VersionInfo>(); 
