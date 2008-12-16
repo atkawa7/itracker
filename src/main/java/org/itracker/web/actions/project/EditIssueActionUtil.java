@@ -47,7 +47,6 @@ import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.WorkflowException;
 import org.itracker.services.util.Convert;
-import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.HTMLUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NotificationUtilities;

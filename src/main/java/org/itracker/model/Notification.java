@@ -21,7 +21,6 @@ package org.itracker.model;
 import java.io.Serializable;
 import java.util.Comparator;
 
-import org.apache.bcel.generic.NEW;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 

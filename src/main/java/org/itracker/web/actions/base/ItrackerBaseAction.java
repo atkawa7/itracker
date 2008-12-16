@@ -45,7 +45,6 @@ import org.itracker.model.User;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ITrackerServices;
 import org.itracker.services.util.UserUtilities;
-import org.itracker.web.filters.ExecuteAlwaysFilter;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.RequestHelper;

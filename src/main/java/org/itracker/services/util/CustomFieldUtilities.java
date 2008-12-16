@@ -22,8 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import javax.swing.text.FieldView;
-
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;

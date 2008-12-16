@@ -11,7 +11,6 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.apache.derby.catalog.GetProcedureColumns;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Component;
 import org.itracker.model.CustomField;

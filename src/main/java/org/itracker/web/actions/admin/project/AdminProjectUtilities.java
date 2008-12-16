@@ -10,7 +10,6 @@ import java.util.Set;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.model.Permission;
 import org.itracker.model.Project;

@@ -45,7 +45,6 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.Constants;
-import org.itracker.web.util.LoginUtilities;
 
 public class EditPreferencesFormAction extends ItrackerBaseAction {
 	private static final Logger log = Logger

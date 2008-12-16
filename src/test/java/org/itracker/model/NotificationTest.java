@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.apache.derby.tools.sysinfo;
 import org.itracker.model.Notification.Role;
 import org.junit.After;
 import org.junit.Before;

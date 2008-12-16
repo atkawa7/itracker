@@ -24,7 +24,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -32,11 +31,8 @@ import org.apache.log4j.Logger;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
-import org.itracker.model.IssueField;
 import org.itracker.model.NameValuePair;
 import org.itracker.services.util.CustomFieldUtilities;
-import org.itracker.services.util.IssueUtilities;
-import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 

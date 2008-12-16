@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.bcel.generic.GETSTATIC;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.AbstractEntity;
