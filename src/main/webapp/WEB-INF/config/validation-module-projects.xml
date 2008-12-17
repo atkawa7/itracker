@@ -25,14 +25,14 @@
 					<var-value>255</var-value>
 				</var>
 			</field>
-			<field property="history" depends="required,maxlength">
+			<!-- field property="history" depends="required,maxlength">
 				<arg0 key="itracker.web.attr.detaileddescription" />
 				<arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
 				<var>
 					<var-name>maxlength</var-name>
 					<var-value>255</var-value>
 				</var>
-			</field>
+			</field -->
 			 
 			<field property="attachmentDescription"
 				depends="validwhen,maxlength">
@@ -83,12 +83,12 @@
 					<var-value>255</var-value>
 				</var>
 			</field>
-			<field property="history" depends="validwhen,maxlength">
+			<!-- field property="history" depends="validwhen,maxlength">
 				<msg key="itracker.web.error.validate.required.issuedescription" name="validwhen" />
 				<arg0 key="itracker.web.attr.history" />
 				<var>
 					<var-name>test</var-name>
-					<!-- allow empty history on edit if status not changed, or closed(500) -->
+					<!- allow empty history on edit if status not changed, or closed(500) ->
 					<var-value>
 						(((prevStatus == status) or (status >= 500)) or (*this* != null))
 					</var-value>
@@ -98,7 +98,7 @@
 					<var-name>maxlength</var-name>
 					<var-value>255</var-value>
 				</var>
-			</field>
+			</field -->
 			 
 			<field property="attachmentDescription"
 				depends="validwhen,maxlength">
