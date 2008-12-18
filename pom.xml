@@ -71,7 +71,7 @@
   <scm>
     <connection>scm:svn:https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/trunk/</connection>
     <developerConnection>scm:svn:https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/trunk/</developerConnection>
-    <url>https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/trunk/</url>
+    <url>http://itracker.svn.sourceforge.net/viewvc/%69tracker/itracker/</url>
   </scm>
   <organization>
     <name>itracker</name>
@@ -515,6 +515,9 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>changelog-maven-plugin</artifactId>
+        <configuration>
+        	<scmUrl>http://itracker.svn.sourceforge.net/viewvc/%69tracker/itracker/</scmUrl>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-report-plugin</artifactId>
@@ -539,7 +542,7 @@
   <distributionManagement>
     <site>
       <id>itracker.website</id>
-      <url>scp://web.sourceforge.net/home/groups/i/it/itracker/htdocs</url>
+      <url>scp://shell.sourceforge.net/home/groups/i/it/itracker/htdocs</url>
     </site>
   </distributionManagement>
 
@@ -564,8 +567,9 @@
                             <licenseLocation>${itracker.clover.license}</licenseLocation>
                             <jdk>1.5</jdk>
 							<excludes>
-								<exclude>org.itracker.web.actions/**/*.java</exclude>
-								<exclude>org.itracker.web.scheduler.tasks/ReminderNotification.java</exclude>
+								<exclude>**/web/actions/**/*</exclude>
+								<exclude>**/web/actions/*</exclude>
+								<exclude>**/web/scheduler/**</exclude>
 								<exclude>**/services/util/ImportHandler.java</exclude>
 							</excludes>
                         </configuration>
@@ -581,7 +585,10 @@
                         <version>3.6</version>
                         <configuration>
 							<excludes>
-								<exclude>**/web/**/*Action.java</exclude>
+								<exclude>**/web/actions/**/*</exclude>
+								<exclude>**/web/actions/*</exclude>
+								<exclude>**/web/scheduler/**</exclude>
+								<exclude>**/services/util/ImportHandler.java</exclude>
 							</excludes>
                             <licenseLocation>${itracker.clover.license}</licenseLocation>
                             <jdk>1.5</jdk>
