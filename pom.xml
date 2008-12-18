@@ -566,10 +566,12 @@
                         <configuration>
                             <licenseLocation>${itracker.clover.license}</licenseLocation>
                             <jdk>1.5</jdk>
+                            <targetPercentage>50%</targetPercentage>
 							<excludes>
 								<exclude>**/web/actions/**/*</exclude>
 								<exclude>**/web/actions/*</exclude>
 								<exclude>**/web/scheduler/**</exclude>
+								<exclude>**/taglib/*Tag.java</exclude>
 								<exclude>**/services/util/ImportHandler.java</exclude>
 							</excludes>
                         </configuration>
@@ -588,6 +590,7 @@
 								<exclude>**/web/actions/**/*</exclude>
 								<exclude>**/web/actions/*</exclude>
 								<exclude>**/web/scheduler/**</exclude>
+								<exclude>**/taglib/*Tag.java</exclude>
 								<exclude>**/services/util/ImportHandler.java</exclude>
 							</excludes>
                             <licenseLocation>${itracker.clover.license}</licenseLocation>
