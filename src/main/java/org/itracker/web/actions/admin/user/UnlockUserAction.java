@@ -24,6 +24,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -33,26 +34,33 @@ import org.itracker.model.User;
 import org.itracker.services.UserService;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.LoginUtilities;
 
 
 public class UnlockUserAction extends ItrackerBaseAction {
-
+	private static final Logger log = Logger.getLogger(UnlockUserAction.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     	ActionMessages errors = new ActionMessages();
 
         if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        	log.info("execute: forwarding to unauthorized for " + LoginUtilities.getCurrentUser(request));
             return mapping.findForward("unauthorized");
         }
 
         try {
             UserService userService = getITrackerServices().getUserService();
 
-            Integer userId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
+            Integer userId = Integer.valueOf((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
             User user = userService.getUser(userId);
+            if (log.isInfoEnabled()) {
+            	log.info("Unlocking user " + user + " (id: " + userId + ")");
+            }
             user.setStatus(UserUtilities.STATUS_ACTIVE);
-        } catch(Exception e) {
+            userService.updateUser(user);
+        } catch (Exception e) {
+        	log.error("execute: failed with unexpected exception", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
