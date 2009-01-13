@@ -256,23 +256,28 @@ public class UserServiceImpl implements UserService {
                 authenticator.updateProfile(user, AuthenticationConstants.UPDATE_TYPE_CORE, null,
                         AuthenticationConstants.AUTH_TYPE_UNKNOWN, AuthenticationConstants.REQ_SOURCE_UNKNOWN);
             } else {
+            	logger.warn("updateUser: no authenticator, throwing AuthenticatorException");
                 throw new AuthenticatorException("Unable to create new authenticator.",
                         AuthenticatorException.SYSTEM_ERROR);
             }
         } catch (IllegalAccessException ex) {
+        	logger.error("updateUser: IllegalAccessException caught, throwing AuthenticatorException", ex);
             throw new AuthenticatorException(
                     "Authenticator class " + authenticatorClassName + " can not be instantiated.",
                     AuthenticatorException.SYSTEM_ERROR, ex);
         } catch (InstantiationException ex) {
+        	logger.error("updateUser: InstantiationException caught, throwing AuthenticatorException", ex);
             throw new AuthenticatorException(
                     "Authenticator class " + authenticatorClassName + " can not be instantiated.",
                     AuthenticatorException.SYSTEM_ERROR, ex);
         } catch (ClassCastException ex) {
+        	logger.error("updateUser: ClassCastException caught, throwing AuthenticatorException", ex);
             throw new AuthenticatorException(
                     "Authenticator class " + authenticatorClassName
                             + " does not extend the PluggableAuthenticator class.",
                     AuthenticatorException.SYSTEM_ERROR, ex);
         } catch (AuthenticatorException ex) {
+        	logger.error("updateUser: AuthenticatorException caught, throwing AuthenticatorException", ex);
             throw new UserException("Unable to update user.", ex);
         }
         
@@ -288,6 +293,9 @@ public class UserServiceImpl implements UserService {
         existinguser.setLastName(user.getLastName());
         existinguser.setEmail(user.getEmail());
         existinguser.setSuperUser(user.isSuperUser());
+        
+        existinguser.setStatus(user.getStatus());
+        
 //        existinguser.setLastModifiedDate(new Timestamp(new Date().getTime()));
 
 //        // Only set the password if it is a new value...

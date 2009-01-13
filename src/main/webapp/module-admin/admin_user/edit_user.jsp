@@ -45,20 +45,29 @@
             <td class="editColumnTitle"><it:message key="itracker.web.attr.login"/>:</td>
               <c:choose>
                   <c:when test="${isUpdate && !allowProfileUpdate}">
-                      <td class="editColumnText">${user.login}<html:hidden property="login" />
+                      <td class="editColumnText">${edituser.login}<html:hidden property="login" /></td>
                   </c:when>
                   <c:otherwise>
                       <td><html:text property="login" styleClass="editColumnText"/></td>
                   </c:otherwise>
               </c:choose>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.status"/>:</td>
-            <td class="editColumnText">${userStatus}</td>
+            <td class="editColumnText">
+            ${userStatus}
+            <c:choose>
+                <c:when test="${ edituser.status != 1 }">
+                    <it:formatImageAction action="unlockuser" paramName="id" paramValue="${edituser.id}" src="/themes/defaulttheme/images/unlock.gif" altKey="itracker.web.image.unlock.user.alt" arg0="${edituser.login}" textActionKey="itracker.web.image.unlock.texttag"/>
+                </c:when>
+                <c:otherwise>
+                    <it:formatImageAction action="lockuser" paramName="id" paramValue="${edituser.id}" src="/themes/defaulttheme/images/lock.gif" altKey="itracker.web.image.lock.user.alt" arg0="${edituser.login}" textActionKey="itracker.web.image.lock.texttag"/>
+                </c:otherwise>
+            </c:choose></td>
           </tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.firstname"/>:</td>
               <c:choose>
                   <c:when test="${isUpdate && !allowProfileUpdate}">
-                      <td class="editColumnText">${user.firstName}<html:hidden property="firstName" />
+                      <td class="editColumnText">${ edituser.firstName }<html:hidden property="firstName" />
                           *</td>
                   </c:when>
                   <c:otherwise>
@@ -66,13 +75,13 @@
                   </c:otherwise>
               </c:choose>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.created"/>:</td>
-            <td class="editColumnText"><it:formatDate date="${user.createDate}"/></td>
+            <td class="editColumnText"><it:formatDate date="${ edituser.createDate }"/></td>
           </tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.lastname"/>:</td>
               <c:choose>
                   <c:when test="${isUpdate && !allowProfileUpdate}">
-                      <td class="editColumnText">${user.lastName}<html:hidden property="lastName" />
+                      <td class="editColumnText">${ edituser.lastName }<html:hidden property="lastName" />
                           *</td>
                   </c:when>
                   <c:otherwise>
@@ -80,13 +89,13 @@
                   </c:otherwise>
               </c:choose>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.lastmodified"/>:</td>
-            <td class="editColumnText"><it:formatDate date="${ user.lastModifiedDate }"/></td>
+            <td class="editColumnText"><it:formatDate date="${ edituser.lastModifiedDate }"/></td>
           </tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.email"/>:</td>
               <c:choose>
                   <c:when test="${isUpdate && !allowProfileUpdate}">
-                      <td class="editColumnText">${user.email}<html:hidden property="email" />
+                      <td class="editColumnText">${edituser.email}<html:hidden property="email" />
                           *</td>
                   </c:when>
                   <c:otherwise>
