@@ -22,11 +22,11 @@
 
 	<version position="right" />
 
-	<!--skin>
+	<skin>
 		<groupId>org.itracker.site</groupId>
 		<artifactId>skin-itracker</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-	</skin-->
+	</skin>
 
 	<body>
 		<breadcrumbs>
