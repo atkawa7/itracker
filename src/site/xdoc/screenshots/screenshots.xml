@@ -16,15 +16,18 @@
 			<dt>Preferences for users</dt>
 			<dd><img src="../images/screenshots/myPreferences.png" alt="my preferences" /></dd>
 			<dt>Project issues</dt>
-			<dd><img src="../images/screenshots/project-issues.png" alt="project" /></dd>
-			<dt>Create issue</dt>
-			<dd><img src="../images/screenshots/create-issue.png" alt="create issue" /></dd>
-			<dt>View issue</dt>
-			<dd><img src="../images/screenshots/view-issue.png" alt="view issue" /></dd>
-			<dt>Edit issue</dt>
-			<dd><img src="../images/screenshots/edit-issue.png" alt="edit issue" /></dd>
-			<dt>Issue search</dt>
-			<dd><img src="../images/screenshots/issue-search.png" alt="search issues" /></dd>
+<dd>
+<img src="../images/screenshots/project-issues.png" alt="project" /></dd>
+
+<dt>Create issue</dt>
+<dd><img src="../images/screenshots/create-issue.png" alt="create issue" /></dd>
+<dt>View issue</dt>
+<dd><img src="../images/screenshots/view-issue.png" alt="view issue" /></dd>
+<dt>Edit issue</dt>
+<dd>
+<img src="../images/screenshots/edit-issue.png" alt="edit issue" /></dd>
+<dt>Issue search</dt>
+<dd><img src="../images/screenshots/issue-search.png" alt="search issues" /></dd>
 		</dl>
 		</section>
 		<section name="Notifications">
