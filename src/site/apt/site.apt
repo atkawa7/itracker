@@ -75,7 +75,7 @@ Verbatim text
 
   --- instead of +-- suppresses the box around verbatim text.
 
-[images/ROSA.png] Figure caption
+[http://media.rosa.com/branding_clients/logo_rosa.gif] Figure caption
 
 *----------*--------------+----------------:
 | Centered | Left-aligned | Right-aligned  |
