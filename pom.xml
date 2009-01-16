@@ -43,7 +43,7 @@
 			<id>ranks</id>
 			<name>Marco Glur</name>
 			<email>ranks@rosa.com</email>
-      		<organization>R.Ø.S.A. Creation. Technology. Intelligence. AG, Zurich</organization>
+      		<organization>R.√ò.S.A. Creation. Technology. Intelligence. AG, Zurich</organization>
      		<organizationUrl>http://rosa.com/</organizationUrl>
 			<roles>
 				<role>Developer</role>
@@ -54,7 +54,7 @@
 			<id>MarkyGoldstein</id>
 			<name>Marky Goldstein</name>
 			<email>ready@rosa.com</email>
-    		<organization>R.Ø.S.A. Creation. Technology. Intelligence. AG, Zurich</organization>
+    		<organization>R.√ò.S.A. Creation. Technology. Intelligence. AG, Zurich</organization>
 			<organizationUrl>http://www.rosa.com</organizationUrl>
 			<timezone>1</timezone>
 			<roles>
@@ -72,13 +72,24 @@
 	<scm>
 		<connection>scm:svn:https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/trunk/</connection>
 		<developerConnection>scm:svn:https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/trunk/</developerConnection>
-		<url>https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/trunk/</url>
+		<url>https://itracker.svn.sourceforge.net/svnroot/%69tracker/itracker/trunk/</url>
 	</scm>
 	<organization>
 		<name>itracker</name>
 		<url>http://www.itracker.org/</url>
 	</organization>
 	<build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.dtd</include>
+                </includes>
+            </resource>
+        </resources>
 		<testResources>
 			<testResource>
 				<directory>src/test/resources</directory>
@@ -102,6 +113,25 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
+				
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>unit-testing</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <skip>false</skip>
+                            <excludes>
+                                <exclude>org/itracker/selenium/**/*.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -127,10 +157,57 @@
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 			</plugin>
-			<plugin>
+			<!--plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 		        <executions>
 		          <execution>
+                        <id>hsql-server-start</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+				<property name="plugin_classpath"
+                                          refid="maven.plugin.classpath"/>
+				<concat destfile="${project.build.directory}/temp.bsh">
+			        <![CDATA[
+			            import java.sql.*;
+
+			            try {
+			                Class.forName("org.hsqldb.jdbcDriver");
+			                String url = "jdbc:hsqldb:hsql://localhost:8887/" + bsh.args[0];
+			                Connection con = DriverManager.getConnection(url, "sa", "");
+			                String sql = "SHUTDOWN";
+			                Statement stmt = con.createStatement();
+			                stmt.executeUpdate(sql);
+			                stmt.close();
+				    } catch (Exception e) {
+					//
+				    }
+			        ]]>
+			    	</concat>
+			        <java classname="bsh.Interpreter" classpath="${plugin_classpath}">
+			            <arg line="${project.build.directory}/temp.bsh itrackerdev-test"/>
+			        </java>
+				<delete>
+				    <fileset dir="${project.build.directory}" includes="temp.bsh"/>
+				    <fileset dir="${java.io.tmpdir}/hsqldb" includes="itrackerdev-test*"/>
+				</delete>
+                                <java fork="true" spawn="true" dir="${java.io.tmpdir}"
+					classname="org.hsqldb.Server"
+					classpath="${plugin_classpath}">
+                                    <arg value="-database.0"/>
+                                    <arg value="${java.io.tmpdir}/hsqldb/itrackerdev-test"/>
+                                    <arg value="-dbname.0"/>
+                                    <arg value="itrackerdev-test"/>
+                                    <arg value="-port"/>
+                                    <arg value="8887"/>
+                                </java>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                    <execution>
 		            <phase>package</phase>
 		            <goals>
 		              <goal>run</goal>
@@ -178,6 +255,12 @@
 		              </exclusion>
 		            </exclusions>
 		          </dependency>
+		        	
+		        	<!-dependency>
+		        		<groupId>bsh</groupId>
+		        		<artifactId>bsh</artifactId>
+		        		<version>1.3.0</version>
+		        	</dependency->
 		          <dependency>
 		            <groupId>org.hibernate</groupId>
 		            <artifactId>hibernate-entitymanager</artifactId>
@@ -189,7 +272,7 @@
 		            <version>1.2.13</version>
 		          </dependency>
 		        </dependencies>
-		      </plugin>
+		      </plugin-->
 		      <plugin>
 				<artifactId>maven-clean-plugin</artifactId>
 				<configuration>
@@ -467,6 +550,12 @@
 			<version>2.1</version>
 		</dependency>
 
+        <dependency>
+            <groupId>org.openqa.selenium.client-drivers</groupId>
+            <artifactId>selenium-java-client-driver</artifactId>
+            <version>1.0-beta-1</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 	<reporting>
 		<plugins>
@@ -589,6 +678,133 @@
                     </plugin>
                 </plugins>
             </reporting>
+        </profile>
+        <profile>
+            <id>selenium</id>
+            <properties>
+                <selenium.host>localhost</selenium.host>
+                <selenium.port>5555</selenium.port>
+                <selenium.browser>*firefox</selenium.browser>
+                <application.host>localhost</application.host>
+                <application.port>8080</application.port>
+                <application.path>itracker</application.path>
+            </properties>
+            <repositories>
+                <repository>
+                    <id>openqa.org</id>
+                    <name>Openqa Release Repository</name>
+                    <url>http://archiva.openqa.org/repository/releases</url>
+                    <layout>default</layout>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                </repository>
+                <repository>
+                    <id>mortbay-repo</id>
+                    <name>mortbay-repo</name>
+                    <url>http://www.mortbay.org/maven2/release</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>mortbay-repo</id>
+                    <name>mortbay-repo</name>
+                    <url>http://www.mortbay.org/maven2/snapshot</url>
+                </pluginRepository>
+            </pluginRepositories>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>selenium-maven-plugin</artifactId>
+                        <version>1.0-beta-3</version>
+                        <executions>
+                            <execution>
+                                <id>start</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start-server</goal>
+                                </goals>
+                                <configuration>
+                                    <background>true</background>
+                                    <logOutput>true</logOutput>
+                                    <multiWindow>true</multiWindow>
+                                    <port>${selenium.port}</port>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.mortbay.jetty</groupId>
+                        <artifactId>maven-jetty-plugin</artifactId>
+                        <version>6.1.10</version>
+                        <configuration>
+                            <stopPort>9966</stopPort>
+                            <stopKey>foo</stopKey>
+                            <webAppConfig>
+                                <contextPath>/${application.path}</contextPath>
+                            </webAppConfig>
+                            <connectors>
+                                <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                                    <port>${application.port}</port>
+                                    <maxIdleTime>60000</maxIdleTime>
+                                </connector>
+                            </connectors>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start-jetty</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <scanIntervalSeconds>0</scanIntervalSeconds>
+                                    <daemon>true</daemon>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>stop-jetty</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>hsqldb</groupId>
+                                <artifactId>hsqldb</artifactId>
+                                <version>1.8.0.7</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>selenium-testing</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <configuration>
+                                    <skip>false</skip>
+                                    <includes>
+                                        <include>org/itracker/selenium/LoginTest.java</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 </project>
