@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.security.auth.login.LoginException;
 
+import org.apache.log4j.Logger;
 import org.itracker.model.User;
 import org.itracker.services.exceptions.AuthenticatorException;
 
@@ -17,7 +18,7 @@ import org.itracker.services.exceptions.AuthenticatorException;
  * @author ricardo
  */
 public class WindowsSSONAuthenticatorADInfo extends WindowsSSONAuthenticator {
-    
+    private static final Logger logger = Logger.getLogger(WindowsSSONAuthenticatorADInfo.class);
     /**
      *
      * @see com.emation.itracker.authentication.WindowsSSONAuthenticator#getExternalUserInfo(java.lang.String)
@@ -31,9 +32,8 @@ public class WindowsSSONAuthenticatorADInfo extends WindowsSSONAuthenticator {
             User userModel = (User)ad.getUserInfo( login );
             return userModel;
         } catch (LoginException e) {
-            logger.error("ErrodeautenticaonoA.D.: " + e.getMessage() + AuthenticatorException.SYSTEM_ERROR );
-            logger.error( "Confirme as suas credenciais de autentica��o no A.D. " );
-            throw new AuthenticatorException( "Erro de autentica��o no A.D. : " + e.getMessage(), AuthenticatorException.SYSTEM_ERROR);
+            logger.error("getExternalUserInfo: " + e.getMessage() + AuthenticatorException.SYSTEM_ERROR );
+            throw new AuthenticatorException( "Error accessing Active Directory: " + e.getMessage(), AuthenticatorException.SYSTEM_ERROR, e);
         } catch (IOException e) {
             logger.error( e.getMessage() );
             throw new AuthenticatorException( e.getMessage(), AuthenticatorException.SYSTEM_ERROR);

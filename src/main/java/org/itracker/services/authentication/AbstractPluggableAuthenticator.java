@@ -20,7 +20,6 @@ package org.itracker.services.authentication;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.AuthenticatorException;
@@ -36,13 +35,10 @@ import org.itracker.services.util.AuthenticationConstants;
 public abstract class AbstractPluggableAuthenticator 
         implements PluggableAuthenticator, AuthenticationConstants {
     
-    protected final Logger logger;
+//    private final Logger logger;
     private UserService userService = null;
     private ConfigurationService configurationService = null;
 
-    public AbstractPluggableAuthenticator() {
-        this.logger = Logger.getLogger(getClass());
-    }
 
     /**
       * This method is called after creating a new instance of the Authenticator.  It supplies

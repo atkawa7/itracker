@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.itracker.model.Permission;
 import org.itracker.model.User;
 import org.itracker.services.exceptions.AuthenticatorException;
@@ -40,6 +41,8 @@ import org.springframework.dao.DataAccessException;
  */
 public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
 
+	private static final Logger logger = Logger.getLogger(DefaultAuthenticator.class);
+	
     /**
      * Checks the login of a user against the user profile provided in ITracker.  This is
      * the default authentication scheme provided by ITracker.
@@ -111,7 +114,7 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
                         throw new AuthenticatorException(AuthenticatorException.INVALID_PASSWORD);
                     }
                 } else {
-                	Log.info("checkLogin: invalid authenticator type: " + authType);
+                	logger.info("checkLogin: invalid authenticator type: " + authType);
                     throw new AuthenticatorException(AuthenticatorException.INVALID_AUTHENTICATION_TYPE);
                 }
             } catch (ClassCastException cce) {
@@ -119,6 +122,11 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
                 throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
             } catch (PasswordException pe) {
                 throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
+            } catch (AuthenticatorException ae) {
+            	if (logger.isDebugEnabled()) {
+            		logger.debug("checkLogin: failed to authenticate " + login, ae);
+            	}
+            	throw ae;
             }
 
             return user;

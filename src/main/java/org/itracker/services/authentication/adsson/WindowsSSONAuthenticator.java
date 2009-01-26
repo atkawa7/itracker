@@ -8,6 +8,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
 import org.itracker.services.UserService;
@@ -27,6 +28,8 @@ import org.itracker.services.util.UserUtilities;
  */
 public abstract class WindowsSSONAuthenticator extends DefaultAuthenticator {
 
+	private static final Logger logger = Logger.getLogger(WindowsSSONAuthenticator.class);
+	
     private static String TEMPLATE_USER = "TemplateUser";
 
     /**
