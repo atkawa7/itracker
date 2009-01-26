@@ -31,4 +31,11 @@ public abstract class AbstractSeleniumTestCase extends AbstractDependencyInjecti
             assertTrue(e.getMessage(), false);
         }
     }
+    
+    /**
+     * This will initialize a new selenium session for this test scope.
+     */
+    protected void closeSession() {
+        SeleniumManager.closeSession(selenium);
+    }
 }

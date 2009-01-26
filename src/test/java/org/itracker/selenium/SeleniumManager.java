@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.jfree.util.Log;
+
 /**
  *
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
@@ -65,6 +67,18 @@ public class SeleniumManager {
         return selenium;
     }
 
+    /**
+     * This will initialize a new selenium session for this test scope.
+     */
+    protected static void closeSession(Selenium selenium) {
+    	if (Log.isDebugEnabled()) {
+    		Log.debug("closeSession: " + selenium);
+    	}
+        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+                + applicationPath);
+        selenium.deleteCookie("JSESSIONID", "/" + applicationPath);
+    }
+    
     public static String getSeleniumHost() {
         return seleniumHost;
     }

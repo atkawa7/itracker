@@ -9,11 +9,7 @@ import org.junit.Test;
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
  */
 public class LoginTest extends AbstractSeleniumTestCase {
-    private void closeSession() {
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
-                + applicationPath);
-        selenium.deleteCookie("JSESSIONID", "/" + applicationPath);
-    }
+
     
     /**
      * Verifies the successfull login case with valid login/password.
