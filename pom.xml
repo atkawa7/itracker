@@ -368,6 +368,15 @@
 			<name>clim Apache Maven Repository</name>
 			<url>http://people.apache.org/~clim/maven2</url>
 		</repository>
+		<repository>
+			<snapshots>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+			<id>openqa release</id>
+			<name>OpenQA</name>
+			<url>http://nexus.openqa.org/content/repositories/releases</url>
+		</repository>
+
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
@@ -802,8 +811,11 @@
                                 <configuration>
                                     <skip>false</skip>
                                     <includes>
-                                        <include>org/itracker/selenium/LoginTest.java</include>
+                                        <include>org/itracker/selenium/**/*.java</include>
                                     </includes>
+                                	<excludes>
+                                		<exclude>org/itracker/selenium/**/Selenium**.java</exclude>
+                                	</excludes>
                                 </configuration>
                             </execution>
                         </executions>
