@@ -30,8 +30,8 @@ public class LoginTest extends AbstractSeleniumTestCase {
         assertTrue(selenium.isElementPresent("xpath=//.[@name='login']"));
         assertTrue(selenium.isElementPresent("xpath=//.[@name='password']"));
         assertTrue(selenium.isElementPresent("xpath=//.[@value='Login']"));
-        selenium.type("xpath=//.[@name='login']", "admin");
-        selenium.type("xpath=//.[@name='password']", "admin");
+        selenium.type("xpath=//.[@name='login']", "admin_test1");
+        selenium.type("xpath=//.[@name='password']", "admin_test1");
         selenium.click("xpath=//.[@value='Login']");
         selenium.waitForPageToLoad(SE_TIMEOUT);
         assertTrue(selenium.isElementPresent("xpath=//.[@name='id']"));
@@ -66,6 +66,7 @@ public class LoginTest extends AbstractSeleniumTestCase {
     @Override
     protected String[] getDataSetFiles() {
         return new String[]{
+                "dataset/languagebean_init_dataset.xml",
                 "dataset/languagebean_dataset.xml",
                 "dataset/userpreferencesbean_dataset.xml",
                 "dataset/userbean_dataset.xml"

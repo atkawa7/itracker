@@ -245,10 +245,10 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     }
     
     @Test 
-    public void testGetUserPasswordByLogin() {
+    public void testGetUserPasswordByLogin() throws PasswordException {
     	String password = userService.getUserPasswordByLogin("admin_test1");
     	assertNotNull("password", password);
-    	assertEquals("admin_test1", password);
+    	assertEquals(UserUtilities.encryptPassword("admin_test1"), password);
     }
     
     @Test 

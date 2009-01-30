@@ -75,8 +75,7 @@ public class SeleniumManager {
     		Log.debug("closeSession: " + selenium);
     	}
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
-                + applicationPath);
-        selenium.deleteCookie("JSESSIONID", "/" + applicationPath);
+                + applicationPath + "/logoff.do");
     }
     
     public static String getSeleniumHost() {

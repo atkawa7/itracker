@@ -1,9 +1,6 @@
 package org.itracker;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -12,9 +9,9 @@ import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.XmlDataSet;
+import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
-import org.dbunit.operation.InsertOperation;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.After;
@@ -35,7 +32,7 @@ public abstract class AbstractDependencyInjectionTest extends
 	private DataSource dataSource;
 	private LocalSessionFactoryBean sessionFactoryBean;
 	public ClassLoader classLoader;
-	public List<IDataSet> dataSets;
+	public IDataSet dataSet;
 	private SessionFactory sessionFactory;
 
 	protected AbstractDependencyInjectionTest() {
@@ -51,7 +48,7 @@ public abstract class AbstractDependencyInjectionTest extends
 		TransactionSynchronizationManager.bindResource(sessionFactory,
 				new SessionHolder(session));
 
-		dataSets = getDataSet();
+		dataSet = getDataSet();
 		DatabaseConnection dbConnection = null;
 		try {
 			dbConnection = new DatabaseConnection(getDataSource().getConnection());
@@ -59,13 +56,9 @@ public abstract class AbstractDependencyInjectionTest extends
 					DatabaseConfig.PROPERTY_DATATYPE_FACTORY,
 					new HsqldbDataTypeFactory());
 
-			if (dataSets != null) {
-				for (Iterator<IDataSet> iterator = dataSets.iterator(); iterator
-						.hasNext();) {
-					IDataSet dataSet = (IDataSet) iterator.next();
-					InsertOperation.INSERT.execute(dbConnection, dataSet);
+			if (dataSet != null) {
+                            DatabaseOperation.CLEAN_INSERT.execute(dbConnection, dataSet);
 				}
-			}
 
 			if (!dbConnection.getConnection().getAutoCommit()) {
 				dbConnection.getConnection().commit();
@@ -91,12 +84,9 @@ public abstract class AbstractDependencyInjectionTest extends
 			dbConnection = new DatabaseConnection(getDataSource()
 					.getConnection());
 
-			if (dataSets != null) {
-				for (int i = dataSets.size() - 1; i >= 0; i--) {
-					IDataSet dataSet = (IDataSet) dataSets.get(i);
+			if (dataSet != null) {
 					DatabaseOperation.DELETE_ALL.execute(dbConnection, dataSet);
 				}
-			}
 
 			if (!dbConnection.getConnection().getAutoCommit()) {
 				dbConnection.getConnection().commit();
@@ -119,19 +109,15 @@ public abstract class AbstractDependencyInjectionTest extends
 		}
 	}
 
-	private List<IDataSet> getDataSet() throws Exception {
-		List<IDataSet> dataSets = new ArrayList<IDataSet>();
-
-		String[] aDataSet = getDataSetFiles();
+	private IDataSet getDataSet() throws Exception {
+		final String[] aDataSet = getDataSetFiles();
+                final IDataSet[] dataSets = new IDataSet[aDataSet.length];
 
 		for (int i = 0; i < aDataSet.length; i++) {
-			IDataSet dataset = new XmlDataSet(classLoader
+			dataSets[i] = new XmlDataSet(classLoader
 					.getResourceAsStream(aDataSet[i]));
-
-			dataSets.add(dataset);
 		}
-
-		return dataSets;
+		return new CompositeDataSet(dataSets);
 	}
 
 	/**

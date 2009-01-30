@@ -8,6 +8,7 @@ import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.User;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.UserService;
+import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.util.UserUtilities;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class AuthenticatorForProjectPermissionTest extends AbstractDependencyInj
     private DefaultAuthenticator authenticator;
 
     @Test
-    public void testSuperUser() {
+    public void testSuperUser() throws PasswordException {
 
         int[] permissionTypes = new int[]{
                 UserUtilities.PERMISSION_USER_ADMIN
@@ -31,7 +32,7 @@ public class AuthenticatorForProjectPermissionTest extends AbstractDependencyInj
         User superUser = users.get(0);
 
         assertEquals("admin_test1", superUser.getLogin());
-        assertEquals("admin_test1", superUser.getPassword());
+        assertEquals(UserUtilities.encryptPassword((String) "admin_test1"), superUser.getPassword());
         assertEquals("admin firstname", superUser.getFirstName());
         assertEquals("admin lastname", superUser.getLastName());
         assertEquals("email@email.email", superUser.getEmail());
@@ -40,7 +41,7 @@ public class AuthenticatorForProjectPermissionTest extends AbstractDependencyInj
     }
 
     @Test
-    public void testProjectAdmin() {
+    public void testProjectAdmin() throws PasswordException {
 
         int[] permissionTypes = new int[]{
                 UserUtilities.PERMISSION_PRODUCT_ADMIN
@@ -52,7 +53,7 @@ public class AuthenticatorForProjectPermissionTest extends AbstractDependencyInj
 
         User user1 = users.get(0);
         assertEquals("admin_test1", user1.getLogin());
-        assertEquals("admin_test1", user1.getPassword());
+        assertEquals(UserUtilities.encryptPassword((String) "admin_test1"), user1.getPassword());
         assertEquals("admin firstname", user1.getFirstName());
         assertEquals("admin lastname", user1.getLastName());
         assertEquals("email@email.email", user1.getEmail());
@@ -60,11 +61,11 @@ public class AuthenticatorForProjectPermissionTest extends AbstractDependencyInj
 
         User user2 = users.get(1);
         assertEquals("user_test1", user2.getLogin());
-        assertEquals("user_test1", user2.getPassword());
+        assertEquals(UserUtilities.encryptPassword((String) "user_test1"), user2.getPassword());
         assertEquals("user firstname", user2.getFirstName());
         assertEquals("user lastname", user2.getLastName());
         assertEquals("email@email.email", user2.getEmail());
-        assertFalse(user2.isSuperUser());
+
 
     }
 

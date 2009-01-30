@@ -105,11 +105,11 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	@Test
 	public void testGetIssuesWithStatus() {
 
-		Collection<Issue> issues = issueService.getIssuesWithStatus(1);
+		Collection<Issue> issues = issueService.getIssuesWithStatus(100);
 		assertEquals("status 1 issues", 1, issues.size());
-		issues = issueService.getIssuesWithStatus(2);
+		issues = issueService.getIssuesWithStatus(200);
 		assertEquals("status 2 issues", 1, issues.size());
-		issues = issueService.getIssuesWithStatus(3);
+		issues = issueService.getIssuesWithStatus(300);
 		assertEquals("status 3 issues", 2, issues.size());
 
 	}
@@ -121,10 +121,10 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testGetIssuesWithStatusLessThan() {
-		Collection<Issue> issues = issueService.getIssuesWithStatusLessThan(2);
+		Collection<Issue> issues = issueService.getIssuesWithStatusLessThan(200);
 		assertEquals("status less 2 issues", 1, issues.size());
 
-		issues = issueService.getIssuesWithStatusLessThan(3);
+		issues = issueService.getIssuesWithStatusLessThan(300);
 		assertEquals("status less 3 issues", 2, issues.size());
 	}
 
@@ -160,9 +160,9 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	 */
 	@Test
 	public void testGetIssuesByProjectIdIntegerInt() {
-		Collection<Issue> issues = issueService.getIssuesByProjectId(2, 2);
+		Collection<Issue> issues = issueService.getIssuesByProjectId(2, 200);
 		assertEquals("issues count", 1, issues.size());
-		issues = issueService.getIssuesByProjectId(2, 3);
+		issues = issueService.getIssuesByProjectId(2, 300);
 		assertEquals("issues count", 2, issues.size());
 	}
 
@@ -248,13 +248,13 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		assertNotNull(issues);
 		
 		// unassigned issues, status <= 200
-		assertEquals("4 unassigned issues", 4, issues.size()); 
+		assertEquals("2 unassigned issues", 2, issues.size()); 
 		
 		issues = issueService.getUnassignedIssues(false);
 		assertNotNull(issues);
 		
 		// unassigned issues, status <= 200
-		assertEquals("4 unassigned issues", 4, issues.size());
+		assertEquals("2 unassigned issues", 2, issues.size());
 		
 		// TODO: test getUnassignedIssues(true)
 		
