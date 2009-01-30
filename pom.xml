@@ -10,6 +10,18 @@
   <properties>
   	<clover.maven.charset>UTF-8</clover.maven.charset>
   	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+	<main.dataSource.jdbcUrl>jdbc:mysql://localhost:3306/itrackerdev</main.dataSource.jdbcUrl>
+	<main.dataSource.user>root</main.dataSource.user>
+	<main.dataSource.password></main.dataSource.password>
+	<main.dataSource.driverClass>com.mysql.jdbc.Driver</main.dataSource.driverClass>
+	<main.hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</main.hibernate.dialect>
+
+	<test.dataSource.jdbcUrl>jdbc:hsqldb:mem:itrackerdev-test</test.dataSource.jdbcUrl>
+	<test.dataSource.user>sa</test.dataSource.user>
+	<test.dataSource.password></test.dataSource.password>
+	<test.dataSource.driverClass>org.hsqldb.jdbcDriver</test.dataSource.driverClass>
+	<test.hibernate.dialect>org.hibernate.dialect.HSQLDialect</test.hibernate.dialect>
   </properties>
 	<issueManagement>
 		<system>SourceForge</system>
@@ -105,6 +117,13 @@
 		<finalName>itracker</finalName>
 		<plugins>
 			<plugin>
+				<!--groupId>org.apache.maven.plugins</groupId-->
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>1.5</source>
@@ -161,53 +180,6 @@
 				<artifactId>maven-antrun-plugin</artifactId>
 		        <executions>
 		          <execution>
-                        <id>hsql-server-start</id>
-                        <phase>process-test-classes</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-							<tasks>
-								<property name="plugin_classpath" refid="maven.plugin.classpath"/>
-								<concat destfile="${project.build.directory}/temp.bsh">
-									<![CDATA[
-			            import java.sql.*;
-
-			            try {
-			                Class.forName("org.hsqldb.jdbcDriver");
-			                String url = "jdbc:hsqldb:hsql://localhost:8887/" + bsh.args[0];
-			                Connection con = DriverManager.getConnection(url, "sa", "");
-			                String sql = "SHUTDOWN";
-			                Statement stmt = con.createStatement();
-			                stmt.executeUpdate(sql);
-			                stmt.close();
-				    } catch (Exception e) {
-					//
-				    }
-			        ]]>
-								</concat>
-								<java classname="bsh.Interpreter" classpath="${plugin_classpath}">
-									<arg line="${project.build.directory}/temp.bsh itrackerdev-test"
-									/>
-								</java>
-								<delete failonerror="false">
-									<fileset dir="${project.build.directory}" includes="temp.bsh"/>
-									<fileset dir="${java.io.tmpdir}/hsqldb"
-										includes="itrackerdev-test*"/>
-								</delete>
-								<java fork="true" spawn="true" dir="${java.io.tmpdir}"
-									classname="org.hsqldb.Server" classpath="${plugin_classpath}">
-									<arg value="-database.0"/>
-									<arg value="${java.io.tmpdir}/hsqldb/itrackerdev-test"/>
-									<arg value="-dbname.0"/>
-									<arg value="itrackerdev-test"/>
-									<arg value="-port"/>
-									<arg value="8887"/>
-								</java>
-							</tasks>
-                        </configuration>
-                    </execution>
-                    <execution>
 		            <phase>package</phase>
 		            <goals>
 		              <goal>run</goal>
@@ -570,6 +542,12 @@
             <version>1.0-beta-1</version>
             <scope>test</scope>
         </dependency>
+		<dependency>
+			<groupId>dumbster</groupId>
+			<artifactId>dumbster</artifactId>
+			<version>1.6</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<reporting>
 		<plugins>
@@ -702,6 +680,18 @@
                 <application.host>localhost</application.host>
                 <application.port>8080</application.port>
                 <application.path>itracker</application.path>
+
+		<main.dataSource.jdbcUrl>jdbc:hsqldb:hsql://localhost:8887/itrackerdev-test</main.dataSource.jdbcUrl>
+		<main.dataSource.user>sa</main.dataSource.user>
+		<main.dataSource.password></main.dataSource.password>
+		<main.dataSource.driverClass>org.hsqldb.jdbcDriver</main.dataSource.driverClass>
+		<main.hibernate.dialect>org.hibernate.dialect.HSQLDialect</main.hibernate.dialect>
+
+		<test.dataSource.jdbcUrl>jdbc:hsqldb:hsql://localhost:8887/itrackerdev-test</test.dataSource.jdbcUrl>
+		<test.dataSource.user>sa</test.dataSource.user>
+		<test.dataSource.password></test.dataSource.password>
+		<test.dataSource.driverClass>org.hsqldb.jdbcDriver</test.dataSource.driverClass>
+		<test.hibernate.dialect>org.hibernate.dialect.HSQLDialect</test.hibernate.dialect>
             </properties>
             <repositories>
                 <repository>
@@ -732,6 +722,57 @@
             <build>
                 <plugins>
                     <plugin>
+			<artifactId>maven-antrun-plugin</artifactId>
+			<executions>
+			    <execution>
+				<id>hsql-server-start</id>
+				<phase>process-test-classes</phase>
+				<goals>
+				    <goal>run</goal>
+				</goals>
+				<configuration>
+				    <tasks unless="maven.test.skip">
+					<property name="plugin_classpath" refid="maven.plugin.classpath"/>
+					<concat destfile="${project.build.directory}/temp.bsh">
+					    <![CDATA[
+						import java.sql.*;
+
+						try {
+						    Class.forName("org.hsqldb.jdbcDriver");
+						    String url = "jdbc:hsqldb:hsql://localhost:8887/" + bsh.args[0];
+						    Connection con = DriverManager.getConnection(url, "sa", "");
+						    String sql = "SHUTDOWN";
+						    Statement stmt = con.createStatement();
+						    stmt.executeUpdate(sql);
+						    stmt.close();
+						} catch (Exception e) {
+						    //
+						}
+					    ]]>
+					</concat>
+					<java classname="bsh.Interpreter" classpath="${plugin_classpath}">
+					    <arg line="${project.build.directory}/temp.bsh itrackerdev-test"/>
+					</java>
+					<delete failonerror="false">
+					    <fileset dir="${project.build.directory}" includes="temp.bsh"/>
+					    <fileset dir="${java.io.tmpdir}/hsqldb"
+						includes="itrackerdev-test*"/>
+					</delete>
+					<java fork="true" spawn="true" dir="${java.io.tmpdir}"
+					    classname="org.hsqldb.Server" classpath="${plugin_classpath}">
+					    <arg value="-database.0"/>
+					    <arg value="${java.io.tmpdir}/hsqldb/itrackerdev-test"/>
+					    <arg value="-dbname.0"/>
+					    <arg value="itrackerdev-test"/>
+					    <arg value="-port"/>
+					    <arg value="8887"/>
+					</java>
+				    </tasks>
+				</configuration>
+			    </execution>
+			</executions>
+		    </plugin>
+                    <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>selenium-maven-plugin</artifactId>
                         <version>1.0-beta-3</version>
@@ -761,6 +802,7 @@
                             <webAppConfig>
                                 <contextPath>/${application.path}</contextPath>
                             </webAppConfig>
+                            <jettyEnvXml>${basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
                             <connectors>
                                 <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
                                     <port>${application.port}</port>
@@ -823,5 +865,42 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+	    <!-- special profile for selenium testcases development -->
+	    <!-- it allows running some particular test you define -->
+	    <!-- but before running - you need to run application server, -->
+	    <!-- selenium server and database server separately -->
+            <id>ide</id>
+            <properties>
+                <selenium.host>localhost</selenium.host>
+                <selenium.port>5555</selenium.port>
+                <selenium.browser>*firefox</selenium.browser>
+                <application.host>localhost</application.host>
+                <application.port>8080</application.port>
+                <application.path>itracker</application.path>
+
+		<main.dataSource.jdbcUrl>jdbc:mysql://localhost:3306/itrackerdev</main.dataSource.jdbcUrl>
+		<main.dataSource.user>root</main.dataSource.user>
+		<main.dataSource.password></main.dataSource.password>
+		<main.dataSource.driverClass>com.mysql.jdbc.Driver</main.dataSource.driverClass>
+		<main.hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</main.hibernate.dialect>
+
+		<test.dataSource.jdbcUrl>jdbc:mysql://localhost:3306/itrackerdev</test.dataSource.jdbcUrl>
+		<test.dataSource.user>root</test.dataSource.user>
+		<test.dataSource.password></test.dataSource.password>
+		<test.dataSource.driverClass>com.mysql.jdbc.Driver</test.dataSource.driverClass>
+		<test.hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</test.hibernate.dialect>
+            </properties>
+	    <build>
+		<plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+		</profile>
     </profiles>
 </project>
