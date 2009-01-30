@@ -166,7 +166,7 @@
 
 					<c:set var="listRowClass"
 						value="${iCount % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}" />
-					<tr class="${listRowClass}">
+					<tr id="unassignedIssue.${iCount}" class="${listRowClass}">
 						<td style="white-space: nowrap">
 							<c:if test="${not unassignedIssue.userHasIssueNotification}">
 								<it:formatImageAction forward="watchissue" paramName="id"
@@ -365,7 +365,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 
 				<c:set var="listRowClass"
 					value="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}" />
-				<tr class="${listRowClass}">
+				<tr id="createdIssue.${i.count}" class="${listRowClass}">
 					<td style="white-space: nowrap">
 						<c:if test="${createdIssue.userCanViewIssue}">
 							<it:formatImageAction 
@@ -486,7 +486,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 
 				<c:set var="listRowClass"
 					value="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}" />
-				<tr class="${listRowClass}">
+				<tr id="watchedIssue.${i.count}" class="${listRowClass}">
 					<td style="white-space: nowrap"><it:formatImageAction
 						forward="watchissue" paramName="id"
 						paramValue="${watchedIssue.issue.id}" caller="index"
