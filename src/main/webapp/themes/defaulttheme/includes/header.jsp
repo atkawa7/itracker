@@ -112,7 +112,7 @@
 					titleKey="itracker.web.header.menu.help.alt" module="/module-help">
 					<it:message key="itracker.web.header.menu.help" />
 				</html:link>
-	                | <html:link action="/logoff" styleClass="headerLinks"
+	                | <html:link linkName="logoff" action="/logoff" styleClass="headerLinks"
 					titleKey="itracker.web.header.menu.logout.alt" module="/">
 					<it:message key="itracker.web.header.menu.logout" />
 				</html:link>
@@ -121,8 +121,7 @@
 		             	<%-- <nitrox:var name="allowForgotPassword" type="java.lang.Boolean"/> --%>
 				<c:if test="${allowForgotPassword}">
 			           
-		          	<html:link forward="forgotpassword" styleClass="headerLinks" titleKey="itracker.web.header.menu.forgotpass.alt">
-		            	<it:message key="itracker.web.header.menu.forgotpass"/></html:link>
+                                   <html:link linkName="forgotpassword" forward="forgotpassword" styleClass="headerLinks" titleKey="itracker.web.header.menu.forgotpass.alt">		            	<it:message key="itracker.web.header.menu.forgotpass"/></html:link>
 		        </c:if>  
 		                <%-- <nitrox:var name="allowSelfRegister" type="java.lang.Boolean"/> --%>
 		        <c:if test="${allowSelfRegister}">      
