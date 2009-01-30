@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+
+<Configure class="org.mortbay.jetty.webapp.WebAppContext">
+  <New id="mailSession" class="org.mortbay.jetty.plus.naming.Resource">
+    <Arg>itracker/mail/Session</Arg>
+    <Arg>
+      <New class="org.mortbay.naming.factories.MailSessionReference">
+        <Set name="user"></Set>
+        <Set name="password"></Set>
+        <Set name="properties">
+          <New class="java.util.Properties">
+            <Put name="mail.smtp.host">localhost</Put>
+	    <Put name="mail.smtp.port">2525</Put>
+            <Put name="mail.from">itracker@example.com</Put>
+            <Put name="mail.senderName">itracker</Put>
+            <Put name="mail.debug">true</Put>
+	    <Put name="mail.smtp.auth">false</Put>
+          </New>
+        </Set>
+      </New>
+    </Arg>
+  </New>
+</Configure>
+
