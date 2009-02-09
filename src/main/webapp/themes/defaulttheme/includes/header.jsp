@@ -62,7 +62,7 @@
 	             	<it:message key="itracker.web.header.menu.home"/></html:link>	
 	             		
 				 | <html:link
-					styleClass="headerLinks"
+                                        linkName="listprojects"					styleClass="headerLinks"
 					titleKey="itracker.web.header.menu.projectlist.alt"
 					module="/module-projects" action="/list_projects">
 					<it:message key="itracker.web.header.menu.projectlist" />
