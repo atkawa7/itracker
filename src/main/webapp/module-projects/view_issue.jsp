@@ -23,13 +23,13 @@
               </tr>
               <tr>
                 <td class="editColumnTitle" valign="top"><it:message key="itracker.web.attr.description"/>: </td>
-                <td class="editColumnText">${issue.description}</td>
+                <td id="description" class="editColumnText">${issue.description}</td>
                 <td class="editColumnTitle" valign="top"><it:message key="itracker.web.attr.actions"/>: </td>
                 
                 <td class="editColumnText" valign="top">
                   <table style="border: none; padding: 1px; border-spacing: 0; text-align: left;">
                     <tr>
-                      <td style="text-align: right; vertical-align: top;"  class="editColumnText" style="white-space: nowrap;" nowrap>
+                      <td id="actions" style="text-align: right; vertical-align: top;"  class="editColumnText" style="white-space: nowrap;" nowrap>
 
                         <it:formatImageAction forward="listissues"
                                               module="/module-projects"
@@ -95,7 +95,7 @@
               <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="8"/></td></tr>
               <tr>
                 <td class="editColumnTitle"><it:message  key="itracker.web.attr.status"/>: </td>
-                <td class="editColumnText">${issueStatusName}</td>
+                <td id="status" class="editColumnText">${issueStatusName}</td>
                 <td class="editColumnTitle"><it:message key="itracker.web.attr.created"/>: </td>
                 <td class="editColumnText">
                   <it:formatDate date="${issue.createDate}"/>
@@ -104,15 +104,15 @@
               </tr>
               <tr>
                 <td class="editColumnTitle"><it:message key="itracker.web.attr.resolution"/>: </td>
-                <td class="editColumnText"><it:formatResolution projectOptions="${project.options}">${issue.resolution}</it:formatResolution></td>
+                <td id="resolution" class="editColumnText"><it:formatResolution projectOptions="${project.options}">${issue.resolution}</it:formatResolution></td>
                 <td class="editColumnTitle"><it:message key="itracker.web.attr.lastmodified"/>: </td>
                 <td class="editColumnText"><it:formatDate date="${issue.lastModifiedDate}"/></td>
               </tr>
               <tr>
                 <td class="editColumnTitle"><it:message key="itracker.web.attr.severity"/>: </td>
-                <td class="editColumnText">${issueSeverityName}</td>
+                <td id="severity" class="editColumnText">${issueSeverityName}</td>
                 <td class="editColumnTitle"><it:message key="itracker.web.attr.owner"/>: </td>
-                <td class="editColumnText">${issueOwnerName}</td>
+                <td id="ownerName" class="editColumnText">${issueOwnerName}</td>
               </tr>
               <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
               <tr>
@@ -131,7 +131,7 @@
                 
                 <c:if test="${not empty project.versions}">
                     <td class="editColumnTitle" style="white-space: nowrap;" ><it:message key="itracker.web.attr.target"/>:</td>
-                    <td class="editColumnText">${issue.targetVersion == null ? '' : issue.targetVersion.number}</td>
+                    <td id="targetVersion" class="editColumnText">${issue.targetVersion == null ? '' : issue.targetVersion.number}</td>
                 </c:if>
                 
               </tr>
@@ -157,7 +157,7 @@
                 <c:choose>
                 <c:when test="${not empty project.versions}">
                       <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.versions"/>: </td>
-                      <td valign="top" class="editColumnText">
+                      <td id="versions" valign="top" class="editColumnText">
 	                  	<c:forEach var="version" items="${project.versions}">
                             ${version.number} <br/>
                          </c:forEach>

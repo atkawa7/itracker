@@ -17,7 +17,7 @@
 
       <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
         <tr>
-          <td class="editColumnTitle" colspan="14"><it:message key="itracker.web.attr.issues"/>:</td>
+          <td id="issues" class="editColumnTitle" colspan="14"><it:message key="itracker.web.attr.issues"/>:</td>
           <td align="right" style="white-space: nowrap">
             <c:if test="${canCreateIssue}">
                   <it:formatImageAction forward="createissue"
@@ -51,7 +51,7 @@
  
       	<c:forEach items="${issuePTOs}" var="issuePTO" step="1" varStatus="i"><%-- nitrox:varType="org.itracker.web.ptos.IssuePTO" --%>
            	
-            <tr align="right" class="${i.count % 2 == 1 ? 'listRowShaded':'listRowUnshaded'}">
+            <tr id="issue.${i.count}" align="right" class="${i.count % 2 == 1 ? 'listRowShaded':'listRowUnshaded'}">
             <td style="white-space: nowrap">
               <it:formatImageAction forward="viewissue" module="/module-projects" paramName="id" paramValue="${issuePTO.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${issuePTO.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
             	<c:if test="${issuePTO.userCanEdit}">

@@ -41,16 +41,16 @@
           </tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.description"/>:</td>
-            <td colspan="3" class="editColumnText"><html:text size="80" maxlength="255" property="description" styleClass="editColumnText"/></td>
+            <td id="description" colspan="3" class="editColumnText"><html:text size="80" maxlength="255" property="description" styleClass="editColumnText"/></td>
           </tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.status"/>:</td>
-            <td class="editColumnText">${statusName}</td>
+            <td id="statusName" class="editColumnText">${statusName}</td>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.owner"/>:</td>
               
               <c:choose>
               	<c:when test="${not empty possibleOwners}">
-                   <td><html:select property="ownerId" styleClass="editColumnText">
+                   <td id="ownerId"><html:select property="ownerId" styleClass="editColumnText">
                       <html:option value="-1" key="itracker.web.generic.unassigned"/>
                       
                       <c:forEach var="possibleOwner" items="${possibleOwners}">
@@ -66,7 +66,7 @@
           </tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.severity"/>:</td>
-            <td class="editColumnText">
+            <td id="severity" class="editColumnText">
               <html:select property="severity" styleClass="editColumnText">
              
               <c:forEach var="severity" items="${severities}">
@@ -78,7 +78,7 @@
             
             <c:choose>
             	<c:when test="${not empty possibleCreators}">
-                  <td><html:select property="creatorId" styleClass="editColumnText">
+                  <td id="creatorId"><html:select property="creatorId" styleClass="editColumnText">
             
                   	<c:forEach var="possibleCreator" items="${possibleCreators}">
                        <html:option value="${possibleCreator.value}">${possibleCreator.name}</html:option>
@@ -94,7 +94,7 @@
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.project"/>: </td>
-            <td class="editColumnText">
+            <td id="project" class="editColumnText">
                                       
                     <it:formatImageAction forward="listissues"
                                           module="/module-projects"
@@ -114,7 +114,7 @@
             <c:choose>
             	<c:when test="${not empty components}">
                   <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.components"/>:</td>
-                  <td valign="top" class="editColumnText">
+                  <td id="components" valign="top" class="editColumnText">
                     <html:select property="components" size="5" multiple="true" styleClass="editColumnText">
                     	<c:forEach var="component" items="${components}">
                           <html:option value="${component.value}">${component.name}</html:option>
@@ -131,7 +131,7 @@
             <c:choose>
                 <c:when test="${not empty versions}">
                   <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.versions"/>:</td>
-                  <td valign="top" class="editColumnText">
+                  <td id="versions" valign="top" class="editColumnText">
                     <html:select property="versions" size="5" multiple="true" styleClass="editColumnText">
                     	<c:forEach var="version" items="${versions}">
                            <html:option value="${version.value}">${version.name}</html:option>
@@ -208,7 +208,7 @@
 
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="10"/></td></tr>
 
-          <tr><td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.create.alt" titleKey="itracker.web.button.create.alt"><it:message key="itracker.web.button.create"/></html:submit></td></tr>
+          <tr><td id="submit" colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.create.alt" titleKey="itracker.web.button.create.alt"><it:message key="itracker.web.button.create"/></html:submit></td></tr>
         </table>
         <br/>
       </html:form>

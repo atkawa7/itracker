@@ -28,7 +28,7 @@
 
 <table border="0" cellspacing="0"  cellpadding="1"  width="100%">
   <tr>
-    <td class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.projects"/>:</td>
+    <td id="projects" class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.projects"/>:</td>
   </tr>
   <tr align="left" class="listHeading">
     <td width="40"></td>
@@ -50,7 +50,7 @@
 	  	<c:set var="totalResolvedIssues" value="${ project.totalResolvedIssues + totalResolvedIssues}" />
   		<c:set var="totalNumberProjects" value="${ totalNumberProjects + 1 }" />
 
-	    <tr class="${ i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded' }">
+	    <tr id="project.${i.count}" class="${ i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded' }">
 	      <td nowrap>
 	        <it:formatImageAction forward="listissues" paramName="projectId" paramValue="${ project.id }" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.project.alt" arg0="${ project.name }" textActionKey="itracker.web.image.view.texttag"/>
 	        <c:if test="${ project.active && project.canCreate }">
