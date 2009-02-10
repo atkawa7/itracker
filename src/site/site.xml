@@ -41,7 +41,7 @@
 		</menu>
 
 		<menu name="Download">
-			<item name="Sourceforge Downloads" href="https://sourceforge.net/project/showfiles.php?group_id=54141" />
+			<item name="Binaries" href="https://sourceforge.net/project/showfiles.php?group_id=54141" />
 			<!-- TODO
 			<item name="Installation 2.4 production" href="/download.html" />
 			<item name="Installation 3.0 development" href="/release-notes.html" />
@@ -62,8 +62,8 @@
 			</item>
 			-->
 
-			<item name="FAQ" href="/FAQ.html"/>
-			<item name="3.0 (stable) Release Notes" href="/release-notes/itracker-3.0-stable.html" />
+		
+			<item name="3.0 Release Notes" href="/release-notes/itracker-3.0-stable.html" />
             <item name="Screenshots" href="/screenshots/screenshots.html"/>
 			<item name="Data Migration from 2.4" href="/migration/migrate2.4-3.0.html" />
 		</menu>
@@ -85,7 +85,8 @@
 			<item name="Development Environment Setup"
 				href="/development_environment_setup.html" />
 			<item name="Coding guidelines" href="/coding-guidelines.html"/>
-			<item name="WIKI" href="http://itracker.wiki.sourceforge.net/" />
+			<item name="FAQ" href="/FAQ.html"/>
+			<item name="Wiki" href="http://itracker.wiki.sourceforge.net/" />
 
 		</menu>
 <!--
