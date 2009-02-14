@@ -332,14 +332,18 @@
 		</plugins>
 	</build>
 	<repositories>
-		<repository>
-			<snapshots>
-				<updatePolicy>never</updatePolicy>
-			</snapshots>
-			<id>clim.apache</id>
-			<name>clim Apache Maven Repository</name>
-			<url>http://people.apache.org/~clim/maven2</url>
-		</repository>
+        <repository>
+            <id>openqa.org</id>
+            <name>Openqa Release Repository</name>
+            <url>http://archiva.openqa.org/repository/releases</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
 		<repository>
 			<snapshots>
 				<updatePolicy>never</updatePolicy>
@@ -401,11 +405,6 @@
 			<version>2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>jfree</groupId>
-			<artifactId>jfreereport</artifactId>
-			<version>0.8.7</version>
-		</dependency>
-		<dependency>
 			<groupId>oro</groupId>
 			<artifactId>oro</artifactId>
 			<version>2.0.7</version>
@@ -416,19 +415,9 @@
 			<version>1.7.0</version>
 		</dependency>
 		<dependency>
-			<groupId>jfree</groupId>
-			<artifactId>jcommon</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>jfree</groupId>
-			<artifactId>jcommon-xml</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-		<dependency>
 			<groupId>jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
-			<version>0.6.4</version>
+			<version>3.1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>bsh</groupId>
@@ -489,12 +478,6 @@
 			<artifactId>spring-mock</artifactId>
 			<version>2.0</version>
 			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>strutstestcase</groupId>
-			<artifactId>strutstestcase</artifactId>
-			<version>2.1.3-1.2-2.3</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>hsqldb</groupId>
@@ -694,18 +677,6 @@
 		<test.hibernate.dialect>org.hibernate.dialect.HSQLDialect</test.hibernate.dialect>
             </properties>
             <repositories>
-                <repository>
-                    <id>openqa.org</id>
-                    <name>Openqa Release Repository</name>
-                    <url>http://archiva.openqa.org/repository/releases</url>
-                    <layout>default</layout>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                </repository>
                 <repository>
                     <id>mortbay-repo</id>
                     <name>mortbay-repo</name>
