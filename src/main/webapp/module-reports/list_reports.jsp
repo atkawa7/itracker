@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="/common/taglibs.jsp"%>
 
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
@@ -10,14 +10,6 @@
 <%@ page import="org.itracker.services.*" %>
 <%@ page import="org.itracker.services.IssueService" %>
 <%@ page import="org.itracker.web.util.RequestHelper" %>
-
-<%@ taglib uri="/tags/itracker" prefix="it" %>
-<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
-<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
-<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
-<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <bean:define id="pageTitleKey" value="itracker.web.listreports.title"/>
 <bean:define id="pageTitleArg" value=""/>
