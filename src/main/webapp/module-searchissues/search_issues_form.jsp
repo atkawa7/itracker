@@ -74,9 +74,9 @@
         <% } else { %>
             <input type="hidden" name="type" value="<%= IssueSearchQuery.TYPE_FULL %>">
         <% } %>
-        <table>
-        <tr>
-        <td>
+       <table width="100%">
+       <tr>
+       <td>
         <table border="0" cellspacing="0"  cellspacing="1" align="left" width="800px">
           <tr>
             <td></td>
@@ -104,11 +104,13 @@
             <td valign="top" class="editColumnText">
               <html:select property="orderBy" styleClass="editColumnText">
                 <html:option value="id" key="itracker.web.attr.id"/>
-                <html:option value="proj" key="itracker.web.attr.project"/>
+                <% if (!query.getType().equals(IssueSearchQuery.TYPE_PROJECT)) { %>
+                	<html:option value="proj" key="itracker.web.attr.project"/>
+                <% } %>
                 <html:option value="stat" key="itracker.web.attr.status"/>
                 <html:option value="sev" key="itracker.web.attr.severity"/>
                 <html:option value="owner" key="itracker.web.attr.owner"/>
-                <html:option value="lm" key="itracker.web.attr.lastmodified"/>
+                	<html:option value="lm" key="itracker.web.attr.lastmodified"/>
               </html:select>
             </td>
           </tr>
@@ -163,34 +165,48 @@
                 </tr>
                 <tr><td colspan="99"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
                 <tr>
-
+				
                   <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.target"/>: </td>
                   <td valign="top" class="editColumnText" colspan="3">
+                  <% if (null != versions && versions.size() > 0) { %>
                     <html:select property="targetVersion" styleClass="editColumnText">
                       <html:option value="-1" key="itracker.web.generic.any"/>
-                      <% for(int i = 0; i < versions.size(); i++) { %>
+                      <% for (int i = 0; i < versions.size(); i++) { %>
                             <html:option value="<%= versions.get(i).getId().toString() %>" styleClass="editColumnText"><%= versions.get(i).getNumber() %></html:option>
                       <% } %>
                     </html:select>
+                  <% } else { %>
+                  		<it:message key="itracker.web.generic.unavailable"/>
+                  <% } %>
                   </td>
                 </tr>
                 <tr><td colspan="99"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
                 <tr>
                   <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.components"/>: </td>
                   <td valign="top" class="editColumnText">
+                  
+                  <% if (null != components && components.size() > 0) { %>
                     <html:select property="components" styleClass="editColumnText" size="3" multiple="true">
                       <% for(int i = 0; i < components.size(); i++) { %>
                             <html:option value="<%= components.get(i).getId().toString() %>" styleClass="editColumnText"><%= components.get(i).getName() %></html:option>
                       <% } %>
                     </html:select>
+                  <% } else { %>
+                  		<it:message key="itracker.web.generic.unavailable"/>
+                  <% } %>
                   </td>
                   <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.versions"/>: </td>
                   <td valign="top" class="editColumnText">
+                  
+                  <% if (null != versions && versions.size() > 0) { %>
                     <html:select property="versions" styleClass="editColumnText" size="3" multiple="true">
                       <% for(int i = 0; i < versions.size(); i++) { %>
                             <html:option value="<%= versions.get(i).getId().toString() %>" styleClass="editColumnText"><%= versions.get(i).getNumber() %></html:option>
                       <% } %>
                     </html:select>
+                  <% } else { %>
+                  		<it:message key="itracker.web.generic.unavailable"/>
+                  <% } %>
                   </td>
                 </tr>
           <% } %>

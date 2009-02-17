@@ -21,6 +21,7 @@ package org.itracker.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -112,6 +113,8 @@ public class IssueSearchQuery implements Serializable {
 	public void setSeverities(List<Integer> value) {
 		if (value != null && value.size() > 0) {
 			severities = value;
+		} else {
+			severities = Collections.EMPTY_LIST;
 		}
 	}
 
@@ -122,6 +125,8 @@ public class IssueSearchQuery implements Serializable {
 	public void setStatuses(List<Integer> value) {
 		if (value != null && value.size() > 0) {
 			statuses = value;
+		} else {
+			statuses = Collections.EMPTY_LIST;
 		}
 	}
 
@@ -132,6 +137,8 @@ public class IssueSearchQuery implements Serializable {
 	public void setComponents(List<Integer> value) {
 		if (value != null && value.size() > 0) {
 			components = value;
+		} else {
+			components = Collections.EMPTY_LIST;
 		}
 	}
 
@@ -142,6 +149,8 @@ public class IssueSearchQuery implements Serializable {
 	public void setVersions(List<Integer> value) {
 		if (value != null && value.size() > 0) {
 			versions = value;
+		} else {
+			versions = Collections.EMPTY_LIST;
 		}
 	}
 

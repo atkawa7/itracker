@@ -13,6 +13,7 @@ import org.apache.commons.collections.Predicate;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueSearchQuery;
@@ -524,12 +525,12 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
         // componentes
         if (searchQuery.getComponents().size() > 0) {
-            criteria.add(Restrictions.in("components", searchQuery.getComponents()));
+            criteria.createCriteria("components").add(Restrictions.in("id", searchQuery.getComponents()));
         }
 
         // versions
         if (searchQuery.getVersions().size() > 0) {
-            criteria.add(Restrictions.in("version", searchQuery.getVersions()));
+        	criteria.createCriteria("versions").add(Restrictions.in("id", searchQuery.getVersions()));
         }
 
         // creator
@@ -553,14 +554,36 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
         // resolution
         if (searchQuery.getResolution() != null) {
-            criteria.add(Restrictions.eq("resolution", searchQuery.getResolution()));
+            criteria.add(Restrictions.eq("resolution", searchQuery.getResolution() + "%"));
         }
 
         // resolution
         if (searchQuery.getTargetVersion() != null) {
-            criteria.add(Restrictions.eq("targetVersion", searchQuery.getTargetVersion()));
+            criteria.add(Restrictions.eq("targetVersion.id", searchQuery.getTargetVersion()));
         }
 
+        
+        // sort
+        String order = searchQuery.getOrderBy();
+        if ("id".equals(order)) {
+        } else if ("sev".equals(order)) {
+        	criteria.addOrder(order("severity", true));
+//            Collections.sort(list, Issue.SEVERITY_COMPARATOR);
+        } else if ("proj".equals(order)) {
+        	criteria.addOrder(order("project", true)).addOrder(order("status", false));
+//            Collections.sort(list, Issue.PROJECT_AND_STATUS_COMPARATOR);
+        } else if ("owner".equals(order)) { 
+        	criteria.addOrder(order("owner", true)).addOrder(order("status", false));
+//        	Collections.sort(list, Issue.OWNER_AND_STATUS_COMPARATOR);
+        } else if ("lm".equals(order)) {
+        	criteria.addOrder(order("lastModifiedDate", true));
+//            Collections.sort(list, Collections.reverseOrder(Issue.LAST_MODIFIED_DATE_COMPARATOR));
+        } else {
+        	criteria.addOrder(order("status", true));
+//            Collections.sort(list, Issue.STATUS_COMPARATOR);
+        }
+    	criteria.addOrder(order("id", true));
+    	
         List<Issue> list = Collections.checkedList(Criteria.DISTINCT_ROOT_ENTITY.transformList(criteria.list()), Issue.class);
 
         // filter for permission
@@ -571,24 +594,13 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         }), Issue.class));
 
         
-        // sort
-        String order = searchQuery.getOrderBy();
-        if ("id".equals(order)) {
-            Collections.sort(list, Issue.ID_COMPARATOR);
-        } else if ("sev".equals(order)) {
-            Collections.sort(list, Issue.SEVERITY_COMPARATOR);
-        } else if ("proj".equals(order)) {
-            Collections.sort(list, Issue.PROJECT_AND_STATUS_COMPARATOR);
-        } else if ("owner".equals(order)) {
-            Collections.sort(list, Issue.OWNER_AND_STATUS_COMPARATOR);
-        } else if ("lm".equals(order)) {
-            Collections.sort(list, Collections.reverseOrder(Issue.LAST_MODIFIED_DATE_COMPARATOR));
-        } else {
-            Collections.sort(list, Issue.STATUS_COMPARATOR);
-        }
+
 
         return list;
 
+    }
+    Order order(String propertyName, boolean asc) {
+    	return asc? Order.asc(propertyName): Order.desc(propertyName);
     }
 
     public ProjectDAO getProjectDAO() {
