@@ -169,7 +169,7 @@ public class ITrackerResources {
         if (bundle == null) {
             logger.debug("Loading new resource bundle for locale " + locale + " from the database.");
             List<Language> languageItems = ServletContextUtils.getItrackerServices().getConfigurationService().getLanguage(locale);
-            bundle = new ITrackerResourceBundle(locale, languageItems);
+            bundle = ITrackerResourceBundle.loadBundle(locale, languageItems);
             if (bundle != null) {
                 putBundle(locale, bundle);
             } else if (!locale.toString().equals(getDefaultLocale())) {
@@ -187,7 +187,7 @@ public class ITrackerResources {
             ResourceBundle bundle = (ResourceBundle) languages.get(locale);
             logger.debug("Loading new resource bundle for locale " + locale + " from the database.");
             List<Language> languageItems = ServletContextUtils.getItrackerServices().getConfigurationService().getLanguage(locale);
-            bundle = new ITrackerResourceBundle(locale, languageItems);
+            bundle = ITrackerResourceBundle.loadBundle(locale, languageItems);
             if (bundle != null) {
                 putBundle(locale, bundle);
             } else if (!locale.toString().equals(getDefaultLocale())) {

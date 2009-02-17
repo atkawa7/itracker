@@ -3,7 +3,7 @@ package org.itracker.core.resources;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.itracker.AbstractDependencyInjectionTest;
@@ -20,25 +20,7 @@ public class ITrackerResourceBundleTest extends AbstractDependencyInjectionTest 
 		resourceBundle = new ITrackerResourceBundle(Locale.ENGLISH, data);
 		assertNotNull(resourceBundle);
 	}
-	
-	@Test
-	public void testITrackerResourceBundleDefault() {
-		assertNotNull(new ITrackerResourceBundle());
-	}
-	
-	@Test
-	public void testGetContents() {
-		Object[][] contents = resourceBundle.getContents();
-		assertNotNull(contents);
-		assertEquals(2, contents.length);
-		for (int i = 0; i < contents.length; ++i) {
-			assertEquals(2, contents[i].length);
-		}
-		assertEquals("itracker.web.attr.admin", contents[0][0]);
-		assertEquals("itracker.web.attr.administer", contents[0][1]);
-		assertEquals("Admin", contents[1][0]);
-		assertEquals("Administer", contents[1][1]);		
-	}
+
 	
 	@Test
 	public void testValue() {
@@ -60,8 +42,10 @@ public class ITrackerResourceBundleTest extends AbstractDependencyInjectionTest 
 		resourceBundle.removeValue("itracker.web.attr.admin", false);
 		try {
 			resourceBundle.getString("itracker.web.attr.admin");
-			fail("Should throw MissingResourceException");
-		} catch (MissingResourceException exception) {
+			assertEquals(ResourceBundle.getBundle(ITrackerResources.RESOURCE_BUNDLE_NAME).getString("itracker.web.attr.admin"), 
+					resourceBundle.getString("itracker.web.attr.admin"));
+		} catch (RuntimeException exception) {
+			fail("throwed " + exception.getClass()+ ": " + exception.getMessage());
 		}		
 	}
 	
@@ -77,7 +61,7 @@ public class ITrackerResourceBundleTest extends AbstractDependencyInjectionTest 
 		while (keys.hasMoreElements()) {
 			resultKeySet.add(keys.nextElement());
 		}
-		assertEquals(keySet, resultKeySet);
+		assertTrue(resultKeySet.containsAll(keySet));
 	}
 	
 	@Override

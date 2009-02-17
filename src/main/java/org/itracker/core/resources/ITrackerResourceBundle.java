@@ -32,22 +32,39 @@ import org.itracker.services.exceptions.ITrackerDirtyResourceException;
 public class ITrackerResourceBundle extends ResourceBundle {
     
     private HashMap<String,Object> data = new HashMap<String,Object>();
+    /**
+     * TODO can be removed?
+     */
     private Object[][] dataArray = null;
-    private Locale locale;
-
-    public ITrackerResourceBundle() {
+    public ITrackerResourceBundle(Locale locale) {
+    	super();
+    	this.setParent(ResourceBundle.getBundle(ITrackerResources.RESOURCE_BUNDLE_NAME, locale));
     }
 
+    /**
+     * TODO reduce visibility
+     * @param locale
+     * @param data
+     */
     public ITrackerResourceBundle(Locale locale, Object[][] data) {
-        setLocale(locale);
+        this(locale);
         setContents(data);
     }
 
+    /**
+     * TODO reduce visibility
+     * @param locale
+     * @param items
+     */
     public ITrackerResourceBundle(Locale locale, List<Language> items) {
-        setLocale(locale);
+        this(locale);
         setContents(items);
     }
 
+    /**
+     * @deprecated
+     * @return
+     */
     public Object[][] getContents() {
         // Only load the array if it is requested for some reason.
         if(dataArray == null) {
@@ -63,10 +80,15 @@ public class ITrackerResourceBundle extends ResourceBundle {
         return dataArray.clone();
     }
 
+    /**
+     * @deprecated
+     * @param content
+     */
     public void setContents(List<Language> content) {
         if(content != null ) {
             synchronized (data) {
                 data.clear();
+                this.dataArray = null;
                 for(int i = 0; i < content.size(); i++) {
                     data.put(content.get(i).getResourceKey(), content.get(i).getResourceValue());
                 }
@@ -74,10 +96,15 @@ public class ITrackerResourceBundle extends ResourceBundle {
         }
     }
 
+    /**
+     * @deprecated
+     * @param content
+     */
     public void setContents(Object[][] content) {
         if(content != null && content.length == 2 && content[0].length == content[1].length) {
             synchronized (data) {
                 data.clear();
+                this.dataArray = null;
                 for(int i = 0; i < content[0].length; i++) {
                     data.put((String)content[0][i], content[1][i]);
                 }
@@ -86,12 +113,9 @@ public class ITrackerResourceBundle extends ResourceBundle {
     }
 
     public Locale getLocale() {
-        return (this.locale == null ? super.getLocale() : this.locale);
+        return (this.parent == null ? super.getLocale() : this.parent.getLocale());
     }
 
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
 
     public boolean isDirty(String key) {
     	try {
@@ -111,6 +135,7 @@ public class ITrackerResourceBundle extends ResourceBundle {
     public void updateValue(String key, String value) {
         synchronized (data) {
             data.put(key, value);
+            this.dataArray = null;
         }
     }
 
@@ -118,6 +143,7 @@ public class ITrackerResourceBundle extends ResourceBundle {
         if(model != null) {
             synchronized (data) {
                 data.put(model.getResourceKey(), model.getResourceValue());
+                this.dataArray = null;
             }
         }
     }
@@ -142,6 +168,7 @@ public class ITrackerResourceBundle extends ResourceBundle {
                 } else {
                     data.remove(key);
                 }
+                this.dataArray = null;
             }
         }
     }
@@ -150,10 +177,12 @@ public class ITrackerResourceBundle extends ResourceBundle {
       * Implementation of ResourceBundle.handleGetObject.  Returns
       * the request key from the internal data map.
       */
-    public final Object handleGetObject(String key) {
+    protected final Object handleGetObject(String key) {
         Object value = data.get(key);
         if(value instanceof DirtyKey) {
-            throw new ITrackerDirtyResourceException("The requested key has been marked dirty.", "ITrackerResourceBundle_" + locale.toString(), key);
+            throw new ITrackerDirtyResourceException("The requested key has been marked dirty.", 
+            		"ITrackerResourceBundle_" + getLocale(),
+            		key);
         }
         return value;
     }
@@ -163,10 +192,33 @@ public class ITrackerResourceBundle extends ResourceBundle {
       * It creates a new Hashtable, and returns that collections enumerator.
       */
     public Enumeration<String> getKeys() {
-        Hashtable<String, Object> table = new Hashtable<String, Object>(data);
+        Hashtable<String, Object> table = new Hashtable<String, Object>(data.size());
+        if (null != parent) {
+        	Enumeration<String> keys = super.parent.getKeys();
+        	String key;
+        	while (keys.hasMoreElements()) {
+        		key = keys.nextElement();
+				table.put(key, parent.getString(key));
+				
+			}
+        }
+        table.putAll(data);
         return table.keys();
     }
 
     public static interface DirtyKey {
     }
+
+
+    /**
+     * create a new bundle with locale and language items (for ItrackerResources)
+     * @param locale
+     * @param languageItems
+     * @return
+     */
+	static ResourceBundle loadBundle(Locale locale,
+			List<Language> languageItems) {
+		// TODO Auto-generated method stub
+		return new ITrackerResourceBundle(locale, languageItems);
+	}
 }

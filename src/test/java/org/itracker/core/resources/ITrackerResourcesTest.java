@@ -6,7 +6,6 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.itracker.AbstractDependencyInjectionTest;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
@@ -87,13 +86,7 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 	}
 
 	@Test
-	@Ignore
-	//TODO: Activate skipped, ignored Test (when implementation is done correctly)
-	// TODO: fails with:
-//	testGetEditBundleNullLocale(org.itracker.core.resources.ITrackerResourcesTest)  Time elapsed: 0.006 sec  <<< ERROR!
-//	java.util.MissingResourceException: Can't find resource for bundle org.itracker.core.resources.ITrackerResourceBundle, key test_key
 	public void testGetEditBundleNullLocale() {
-		//TODO: set languageDAO of ConfigurationService
 		ResourceBundle resourceBundle = ITrackerResources.getEditBundle(null);
 		assertNotNull(resourceBundle);
 		assertEquals(defaultResourceBundle_.getLocale(), resourceBundle.getLocale());
@@ -110,7 +103,6 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 	}
 
 	@Test
-	@Ignore
 	public void testClearBundles() {
 		Enumeration<String> keys = ITrackerResources.getBundle(testLocale_).getKeys();
 		int nKeys = 0;
@@ -118,7 +110,7 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 			keys.nextElement();
 			++nKeys;
 		}
-		assertEquals(5, nKeys);
+		assertTrue(5 < nKeys);
 
 		ITrackerResources.clearBundles();
 
@@ -129,45 +121,10 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 			++nKeys;
 		}
 
-        // When a bundle is cleared and accessed again, it will load the the base
+        // When a bundle is cleared and accessed again, it will default to the the base
         // language items.
-//		Ignore added,ignore Assertion fails: 
-//			testClearBundles(org.itracker.core.resources.ITrackerResourcesTest)  Time elapsed: 0.005 sec  <<< FAILURE!
-//			junit.framework.AssertionFailedError: expected:<665> but was:<0>
-//			        at junit.framework.Assert.fail(Assert.java:47)
-//			        at junit.framework.Assert.failNotEquals(Assert.java:277)
-//			        at junit.framework.Assert.assertEquals(Assert.java:64)
-//			        at junit.framework.Assert.assertEquals(Assert.java:195)
-//			        at junit.framework.Assert.assertEquals(Assert.java:201)
-//			        at org.itracker.core.resources.ITrackerResourcesTest.testClearBundles(ITrackerResourcesTest.java:133)
-//			        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-//			        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-//			        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-//			        at java.lang.reflect.Method.invoke(Method.java:585)
-//			        at org.junit.internal.runners.TestMethod.invoke(TestMethod.java:59)
-//			        at org.junit.internal.runners.MethodRoadie.runTestMethod(MethodRoadie.java:98)
-//			        at org.junit.internal.runners.MethodRoadie$2.run(MethodRoadie.java:79)
-//			        at org.junit.internal.runners.MethodRoadie.runBeforesThenTestThenAfters(MethodRoadie.java:87)
-//			        at org.junit.internal.runners.MethodRoadie.runTest(MethodRoadie.java:77)
-//			        at org.junit.internal.runners.MethodRoadie.run(MethodRoadie.java:42)
-//			        at org.junit.internal.runners.JUnit4ClassRunner.invokeTestMethod(JUnit4ClassRunner.java:88)
-//			        at org.junit.internal.runners.JUnit4ClassRunner.runMethods(JUnit4ClassRunner.java:51)
-//			        at org.junit.internal.runners.JUnit4ClassRunner$1.run(JUnit4ClassRunner.java:44)
-//			        at org.junit.internal.runners.ClassRoadie.runUnprotected(ClassRoadie.java:27)
-//			        at org.junit.internal.runners.ClassRoadie.runProtected(ClassRoadie.java:37)
-//			        at org.junit.internal.runners.JUnit4ClassRunner.run(JUnit4ClassRunner.java:42)
-//			        at org.apache.maven.surefire.junit4.JUnit4TestSet.execute(JUnit4TestSet.java:62)
-//			        at org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.executeTestSet(AbstractDirectoryTestSuite.java:140)
-//			        at org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.execute(AbstractDirectoryTestSuite.java:127)
-//			        at org.apache.maven.surefire.Surefire.run(Surefire.java:177)
-//			        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-//			        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-//			        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-//			        at java.lang.reflect.Method.invoke(Method.java:585)
-//			        at org.apache.maven.surefire.booter.SurefireBooter.runSuitesInProcess(SurefireBooter.java:338)
-//			        at org.apache.maven.surefire.booter.SurefireBooter.main(SurefireBooter.java:997)
 
-		assertEquals(665, nKeys);
+		assertTrue(5 < nKeys);
 	}
 
 	@Test
@@ -182,8 +139,9 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 		resourceBundle = ITrackerResources.getBundle(testLocale_);
 		try {
 			resourceBundle.getString("itracker.web.attr.admin");
-			fail();
-		} catch (MissingResourceException exception) {
+			
+		} catch (RuntimeException exception) {
+			fail("throwed " + exception.getClass() + ": " + exception.getMessage());
 		}
 	}
 
@@ -209,45 +167,11 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 	}
 
 	@Test
-	@Ignore
 	public void testGetStringWithLocaleWithDirtyKey() {
 		testResourceBundle_.removeValue("itracker.web.attr.admin", true);
 		String value = ITrackerResources.getString("itracker.web.attr.admin", testLocale_);
 
-        // When a language items is removed, the default is reloaded by the configuration service.
-		// Ignore added, fails with:
-//		testGetStringWithLocaleWithDirtyKey(org.itracker.core.resources.ITrackerResourcesTest)  Time elapsed: 0.005 sec  <<< FAILURE!
-//		junit.framework.ComparisonFailure: null expected:<[A]dmin> but was:<[MISSING KEY: itracker.web.attr.a]dmin>
-//		        at junit.framework.Assert.assertEquals(Assert.java:81)
-//		        at junit.framework.Assert.assertEquals(Assert.java:87)
-//		        at org.itracker.core.resources.ITrackerResourcesTest.testGetStringWithLocaleWithDirtyKey(ITrackerResourcesTest.java:180)
-//		        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-//		        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-//		        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-//		        at java.lang.reflect.Method.invoke(Method.java:585)
-//		        at org.junit.internal.runners.TestMethod.invoke(TestMethod.java:59)
-//		        at org.junit.internal.runners.MethodRoadie.runTestMethod(MethodRoadie.java:98)
-//		        at org.junit.internal.runners.MethodRoadie$2.run(MethodRoadie.java:79)
-//		        at org.junit.internal.runners.MethodRoadie.runBeforesThenTestThenAfters(MethodRoadie.java:87)
-//		        at org.junit.internal.runners.MethodRoadie.runTest(MethodRoadie.java:77)
-//		        at org.junit.internal.runners.MethodRoadie.run(MethodRoadie.java:42)
-//		        at org.junit.internal.runners.JUnit4ClassRunner.invokeTestMethod(JUnit4ClassRunner.java:88)
-//		        at org.junit.internal.runners.JUnit4ClassRunner.runMethods(JUnit4ClassRunner.java:51)
-//		        at org.junit.internal.runners.JUnit4ClassRunner$1.run(JUnit4ClassRunner.java:44)
-//		        at org.junit.internal.runners.ClassRoadie.runUnprotected(ClassRoadie.java:27)
-//		        at org.junit.internal.runners.ClassRoadie.runProtected(ClassRoadie.java:37)
-//		        at org.junit.internal.runners.JUnit4ClassRunner.run(JUnit4ClassRunner.java:42)
-//		        at org.apache.maven.surefire.junit4.JUnit4TestSet.execute(JUnit4TestSet.java:62)
-//		        at org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.executeTestSet(AbstractDirectoryTestSuite.java:140)
-//		        at org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.execute(AbstractDirectoryTestSuite.java:127)
-//		        at org.apache.maven.surefire.Surefire.run(Surefire.java:177)
-//		        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-//		        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-//		        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-//		        at java.lang.reflect.Method.invoke(Method.java:585)
-//		        at org.apache.maven.surefire.booter.SurefireBooter.runSuitesInProcess(SurefireBooter.java:338)
-//		        at org.apache.maven.surefire.booter.SurefireBooter.main(SurefireBooter.java:997)
-
+        // When a language items is removed, the default is loaded from properties.
         assertEquals("Admin", value);
 	}
 
@@ -255,49 +179,16 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 	public void testGetStringWithLocaleWithRemovedKey() {
 		testResourceBundle_.removeValue("itracker.web.attr.admin", false);
 		String value = ITrackerResources.getString("itracker.web.attr.admin", testLocale_);
-		assertEquals("MISSING KEY: itracker.web.attr.admin", value);
+        // When a language items is removed, the default is loaded from properties.
+		assertEquals("Admin", value);
 	}
 
 	@Test
-	@Ignore
 	public void testGetStringWithWrongLocale() {
 		Locale locale = new Locale("EEEEEEEEEEe");
 		String value = ITrackerResources.getString("itracker.web.attr.admin", locale);
 
-        // When a language items is removed, the default is reloaded by the configuration service.
-		// Ignore added, Fails assertion with:
-//		testGetStringWithWrongLocale(org.itracker.core.resources.ITrackerResourcesTest)  Time elapsed: 0.005 sec  <<< FAILURE!
-//		junit.framework.ComparisonFailure: null expected:<[A]dmin> but was:<[MISSING KEY: itracker.web.attr.a]dmin>
-//		        at junit.framework.Assert.assertEquals(Assert.java:81)
-//		        at junit.framework.Assert.assertEquals(Assert.java:87)
-//		        at org.itracker.core.resources.ITrackerResourcesTest.testGetStringWithWrongLocale(ITrackerResourcesTest.java:196)
-//		        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-//		        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-//		        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-//		        at java.lang.reflect.Method.invoke(Method.java:585)
-//		        at org.junit.internal.runners.TestMethod.invoke(TestMethod.java:59)
-//		        at org.junit.internal.runners.MethodRoadie.runTestMethod(MethodRoadie.java:98)
-//		        at org.junit.internal.runners.MethodRoadie$2.run(MethodRoadie.java:79)
-//		        at org.junit.internal.runners.MethodRoadie.runBeforesThenTestThenAfters(MethodRoadie.java:87)
-//		        at org.junit.internal.runners.MethodRoadie.runTest(MethodRoadie.java:77)
-//		        at org.junit.internal.runners.MethodRoadie.run(MethodRoadie.java:42)
-//		        at org.junit.internal.runners.JUnit4ClassRunner.invokeTestMethod(JUnit4ClassRunner.java:88)
-//		        at org.junit.internal.runners.JUnit4ClassRunner.runMethods(JUnit4ClassRunner.java:51)
-//		        at org.junit.internal.runners.JUnit4ClassRunner$1.run(JUnit4ClassRunner.java:44)
-//		        at org.junit.internal.runners.ClassRoadie.runUnprotected(ClassRoadie.java:27)
-//		        at org.junit.internal.runners.ClassRoadie.runProtected(ClassRoadie.java:37)
-//		        at org.junit.internal.runners.JUnit4ClassRunner.run(JUnit4ClassRunner.java:42)
-//		        at org.apache.maven.surefire.junit4.JUnit4TestSet.execute(JUnit4TestSet.java:62)
-//		        at org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.executeTestSet(AbstractDirectoryTestSuite.java:140)
-//		        at org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.execute(AbstractDirectoryTestSuite.java:127)
-//		        at org.apache.maven.surefire.Surefire.run(Surefire.java:177)
-//		        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-//		        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-//		        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-//		        at java.lang.reflect.Method.invoke(Method.java:585)
-//		        at org.apache.maven.surefire.booter.SurefireBooter.runSuitesInProcess(SurefireBooter.java:338)
-//		        at org.apache.maven.surefire.booter.SurefireBooter.main(SurefireBooter.java:997)
-
+        // When a language items is removed, the default is loaded from properties.
         assertEquals("Admin", value);
 	}
 
@@ -328,46 +219,12 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 	}
 
 	@Test
-	@Ignore
 	public void testGetCheckForKeyDirty() {
 		ITrackerResources.setDefaultLocale(testLocaleString_);
 		testResourceBundle_.removeValue("itracker.web.attr.admin", true);
 		String value = ITrackerResources.getCheckForKey("itracker.web.attr.admin");
 
         // When a language items is removed, the default is reloaded by the configuration service.
-//		Fails, Ignore added
-//		testGetCheckForKeyDirty(org.itracker.core.resources.ITrackerResourcesTest)  Time elapsed: 0.005 sec  <<< FAILURE!
-//		junit.framework.ComparisonFailure: null expected:<[A]dmin> but was:<[MISSING KEY: itracker.web.attr.a]dmin>
-//		        at junit.framework.Assert.assertEquals(Assert.java:81)
-//		        at junit.framework.Assert.assertEquals(Assert.java:87)
-//		        at org.itracker.core.resources.ITrackerResourcesTest.testGetCheckForKeyDirty(ITrackerResourcesTest.java:232)
-//		        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-//		        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-//		        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-//		        at java.lang.reflect.Method.invoke(Method.java:585)
-//		        at org.junit.internal.runners.TestMethod.invoke(TestMethod.java:59)
-//		        at org.junit.internal.runners.MethodRoadie.runTestMethod(MethodRoadie.java:98)
-//		        at org.junit.internal.runners.MethodRoadie$2.run(MethodRoadie.java:79)
-//		        at org.junit.internal.runners.MethodRoadie.runBeforesThenTestThenAfters(MethodRoadie.java:87)
-//		        at org.junit.internal.runners.MethodRoadie.runTest(MethodRoadie.java:77)
-//		        at org.junit.internal.runners.MethodRoadie.run(MethodRoadie.java:42)
-//		        at org.junit.internal.runners.JUnit4ClassRunner.invokeTestMethod(JUnit4ClassRunner.java:88)
-//		        at org.junit.internal.runners.JUnit4ClassRunner.runMethods(JUnit4ClassRunner.java:51)
-//		        at org.junit.internal.runners.JUnit4ClassRunner$1.run(JUnit4ClassRunner.java:44)
-//		        at org.junit.internal.runners.ClassRoadie.runUnprotected(ClassRoadie.java:27)
-//		        at org.junit.internal.runners.ClassRoadie.runProtected(ClassRoadie.java:37)
-//		        at org.junit.internal.runners.JUnit4ClassRunner.run(JUnit4ClassRunner.java:42)
-//		        at org.apache.maven.surefire.junit4.JUnit4TestSet.execute(JUnit4TestSet.java:62)
-//		        at org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.executeTestSet(AbstractDirectoryTestSuite.java:140)
-//		        at org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.execute(AbstractDirectoryTestSuite.java:127)
-//		        at org.apache.maven.surefire.Surefire.run(Surefire.java:177)
-//		        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-//		        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-//		        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-//		        at java.lang.reflect.Method.invoke(Method.java:585)
-//		        at org.apache.maven.surefire.booter.SurefireBooter.runSuitesInProcess(SurefireBooter.java:338)
-//		        at org.apache.maven.surefire.booter.SurefireBooter.main(SurefireBooter.java:997)
-
         assertEquals("Admin", value);
 	}
 
@@ -376,8 +233,10 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 		ITrackerResources.setDefaultLocale("AAAAAA");
 		try {
 			ITrackerResources.getCheckForKey("itracker.web.attr.admin");
-			fail();
-		} catch (MissingResourceException exception) {
+			
+		} catch (RuntimeException exception) {
+
+			fail("throwed " + exception.getClass() + ": " + exception.getMessage());
 		}
 	}
 
