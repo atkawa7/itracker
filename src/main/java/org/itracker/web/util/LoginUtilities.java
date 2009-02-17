@@ -129,7 +129,7 @@ public class LoginUtilities {
 						.getAttribute(Constants.AUTH_TYPE_KEY)).intValue();
 			}
 			if (request.getParameter(Constants.AUTH_TYPE_KEY) != null) {
-				authType = Integer.parseInt(request
+				authType = Integer.valueOf(request
 						.getParameter(Constants.AUTH_TYPE_KEY));
 			}
 		} catch (Exception e) {
