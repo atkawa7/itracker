@@ -279,7 +279,7 @@
 </tr>
 
 <%-- TODO: fix the edit_projectscript.jsp before enabling this  --%>
-<%--c:if test="${ projectScripts && not empty projectScripts }">
+<%--c:if test="${ projectScripts != null && not empty projectScripts }">
 	<c:forEach items="${ projectScripts }" var="script" varStatus="i">
 	
 		<tr style="text-align: right;" class="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}">
