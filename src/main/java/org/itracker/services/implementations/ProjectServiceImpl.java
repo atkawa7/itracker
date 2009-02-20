@@ -420,11 +420,6 @@ public class ProjectServiceImpl implements ProjectService {
 	public Project updateProject(Project project, Integer userId) {
 		User user = getUserDAO().findByPrimaryKey(userId);
 
-		if (null == project.getOwners()) {
-			project.setOwners(Arrays.asList(new User[]{user}));
-		} else if (!project.getOwners().contains(user)) {
-			project.getOwners().add(user);
-		}
 		getProjectDAO().saveOrUpdate(project);
 		
 		return project;

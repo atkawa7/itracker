@@ -53,11 +53,11 @@
             <column name="preferences_id"/>
         </many-to-one>
         <!--  Should be a set, not a bag -->
-        <set name="permissions" table="permissionbean" cascade="all" lazy="true">
+        <set name="permissions" table="permissionbean" inverse="true" cascade="all" lazy="true">
             <key>
-                <column name="user_id"/>
+                <column unique="false" not-null="true" name="user_id"/>
             </key>
-            <one-to-many class="Permission"/>
+            <one-to-many class="Permission" />
         </set>
         
         <bag name="projects" table="project_owner_rel" lazy="true">

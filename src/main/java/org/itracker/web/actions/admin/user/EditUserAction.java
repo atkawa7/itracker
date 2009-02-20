@@ -204,20 +204,6 @@ public class EditUserAction extends ItrackerBaseAction {
                     Permission newPermission = new Permission(permissionIntValue, editUser, project); 
                     newPermission.setCreateDate(new Date());
                     newPermissions.add(newPermission);
-                
-                    if ( permissionIntValue == UserUtilities.PERMISSION_PRODUCT_ADMIN ) {
-                        List<User> users = projectService.getProjectOwners(projectIntValue);
-                        HashSet<Integer> owners = new HashSet<Integer>();
-                        Iterator<User> userIterator = users.iterator();
-                        User user;
-                        while (userIterator.hasNext()) {
-                            user = userIterator.next();
-                            owners.add(user.getId());
-                        }
-                        owners.add(editUser.getId());
-                        projectService.setProjectOwners(project, owners);
-                        projectService.updateProject(project, LoginUtilities.getCurrentUser(request).getId());
-                    }
                 }
                 
                 boolean successful = userService.setUserPermissions(editUser.getId(), newPermissions);

@@ -573,8 +573,12 @@ public class UserServiceImpl implements UserService {
         Permission p;
         Iterator<Permission> pIt = remove.iterator();
         while (pIt.hasNext()) {
-			p = (Permission) pIt.next();
-			if (usermodel.getPermissions().remove(find(usermodel.getPermissions(), p))) {
+			p = find(usermodel.getPermissions(), (Permission) pIt.next());
+			if (null == p) {
+				continue;
+			}
+			if (usermodel.getPermissions().contains(p)) {
+				usermodel.getPermissions().remove(p);
 				permissionDAO.delete(p);
 				hasChanges = true;
 			}
@@ -583,7 +587,9 @@ public class UserServiceImpl implements UserService {
         pIt = add.iterator();
         while (pIt.hasNext()) {
 			p = pIt.next();
-			if (usermodel.getPermissions().add(p)) {
+			if (null == find(usermodel.getPermissions(), p) && !usermodel.getPermissions().contains(p)) {
+				p.setUser(usermodel);
+				usermodel.getPermissions().add(p);
 				permissionDAO.save(p);
 				hasChanges = true;
 			}
