@@ -87,6 +87,7 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 
 	@Test
 	public void testGetEditBundleNullLocale() {
+		//TODO: set languageDAO of ConfigurationService
 		ResourceBundle resourceBundle = ITrackerResources.getEditBundle(null);
 		assertNotNull(resourceBundle);
 		assertEquals(defaultResourceBundle_.getLocale(), resourceBundle.getLocale());
@@ -120,10 +121,6 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 			keys.nextElement();
 			++nKeys;
 		}
-
-        // When a bundle is cleared and accessed again, it will default to the the base
-        // language items.
-
 		assertTrue(5 < nKeys);
 	}
 
@@ -137,12 +134,15 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 		ITrackerResources.clearKeyFromBundles("itracker.web.attr.admin", false);
 
 		resourceBundle = ITrackerResources.getBundle(testLocale_);
+
 		try {
-			resourceBundle.getString("itracker.web.attr.admin");
-			
+			assertNotNull(resourceBundle.getString("itracker.web.attr.admin"));
+			assertEquals("", ResourceBundle.getBundle(ITrackerResources.RESOURCE_BUNDLE_NAME, resourceBundle.getLocale()).getString("itracker.web.attr.admin"), 
+					resourceBundle.getString("itracker.web.attr.admin"));
+//			fail("Should throw MissingResourceException");
 		} catch (RuntimeException exception) {
-			fail("throwed " + exception.getClass() + ": " + exception.getMessage());
-		}
+			fail("should fall back to properties resource, but throwed " + exception.getClass() + ", " + exception.getMessage());
+		}	
 	}
 
 	@Test
@@ -171,11 +171,13 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 		testResourceBundle_.removeValue("itracker.web.attr.admin", true);
 		String value = ITrackerResources.getString("itracker.web.attr.admin", testLocale_);
 
+
         // When a language items is removed, the default is loaded from properties.
         assertEquals("Admin", value);
 	}
 
 	@Test
+
 	public void testGetStringWithLocaleWithRemovedKey() {
 		testResourceBundle_.removeValue("itracker.web.attr.admin", false);
 		String value = ITrackerResources.getString("itracker.web.attr.admin", testLocale_);
@@ -187,6 +189,7 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 	public void testGetStringWithWrongLocale() {
 		Locale locale = new Locale("EEEEEEEEEEe");
 		String value = ITrackerResources.getString("itracker.web.attr.admin", locale);
+
 
         // When a language items is removed, the default is loaded from properties.
         assertEquals("Admin", value);
@@ -225,6 +228,7 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 		String value = ITrackerResources.getCheckForKey("itracker.web.attr.admin");
 
         // When a language items is removed, the default is reloaded by the configuration service.
+
         assertEquals("Admin", value);
 	}
 
@@ -233,7 +237,7 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 		ITrackerResources.setDefaultLocale("AAAAAA");
 		try {
 			ITrackerResources.getCheckForKey("itracker.web.attr.admin");
-			
+
 		} catch (RuntimeException exception) {
 
 			fail("throwed " + exception.getClass() + ": " + exception.getMessage());

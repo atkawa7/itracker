@@ -21,7 +21,6 @@ package org.itracker.core.resources;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -33,47 +32,73 @@ public class ITrackerResourceBundle extends ResourceBundle {
     
     private HashMap<String,Object> data = new HashMap<String,Object>();
     /**
-     * TODO can be removed?
+     * TODO should dataArray be re-factored out?
      */
     private Object[][] dataArray = null;
-    public ITrackerResourceBundle(Locale locale) {
-    	super();
-    	this.setParent(ResourceBundle.getBundle(ITrackerResources.RESOURCE_BUNDLE_NAME, locale));
+    
+
+    static ResourceBundle loadBundle() {
+    	return new ITrackerResourceBundle();
+    }
+    static ResourceBundle loadBundle(Locale locale) {
+    	return new ITrackerResourceBundle(locale);
+    }
+    static ResourceBundle loadBundle(Locale locale, Object[][] data)  {
+    	return new ITrackerResourceBundle(locale, data);
     }
 
+    static ResourceBundle loadBundle(Locale locale, List<Language> items) {
+    	return new ITrackerResourceBundle(locale, items);
+    }
+    private ITrackerResourceBundle() {
+    	super.setParent(ResourceBundle.getBundle(ITrackerResources.RESOURCE_BUNDLE_NAME, new Locale(ITrackerResources.getDefaultLocale())));
+    }
     /**
-     * TODO reduce visibility
+     * @param locale
+     */
+    private ITrackerResourceBundle(Locale locale) {
+    	if (null == locale) {
+    		locale = new Locale(ITrackerResources.getDefaultLocale());
+    	}
+    	setParent(ResourceBundle.getBundle(ITrackerResources.RESOURCE_BUNDLE_NAME, locale));
+    }
+    /**
      * @param locale
      * @param data
+     * @deprecated used still for testing
      */
     public ITrackerResourceBundle(Locale locale, Object[][] data) {
-        this(locale);
+    	this(locale);
         setContents(data);
     }
 
     /**
-     * TODO reduce visibility
      * @param locale
      * @param items
      */
-    public ITrackerResourceBundle(Locale locale, List<Language> items) {
-        this(locale);
+    private ITrackerResourceBundle(Locale locale, List<Language> items) {
+    	this(locale);
         setContents(items);
     }
 
+
     /**
+     * 
+     * @return should be private or removed
      * @deprecated
-     * @return
      */
     public Object[][] getContents() {
         // Only load the array if it is requested for some reason.
         if(dataArray == null) {
             int i = 0;
             Object[][] newData = new Object[2][data.size()];
-            for(Iterator<String> iter = data.keySet().iterator(); iter.hasNext(); i++) {
-                newData[0][i] = iter.next();
+            Enumeration<String> keys = getKeys();
+            while (keys.hasMoreElements()) {
+                newData[0][i] = keys.nextElement();
                 newData[1][i] = data.get(newData[0][i]);
-            }
+			}
+            
+            
             this.dataArray = newData;
         }
         
@@ -81,7 +106,7 @@ public class ITrackerResourceBundle extends ResourceBundle {
     }
 
     /**
-     * @deprecated
+     * @deprecated should be private
      * @param content
      */
     public void setContents(List<Language> content) {
@@ -98,9 +123,9 @@ public class ITrackerResourceBundle extends ResourceBundle {
 
     /**
      * @deprecated
-     * @param content
+     * @param content should be private
      */
-    public void setContents(Object[][] content) {
+    private void setContents(Object[][] content) {
         if(content != null && content.length == 2 && content[0].length == content[1].length) {
             synchronized (data) {
                 data.clear();
@@ -112,10 +137,15 @@ public class ITrackerResourceBundle extends ResourceBundle {
         }
     }
 
-    public Locale getLocale() {
-        return (this.parent == null ? super.getLocale() : this.parent.getLocale());
-    }
 
+    @Override
+    public Locale getLocale() {
+    	Locale l =  super.getLocale();
+    	if (null == l && null != parent) {
+    		return parent.getLocale();
+    	}
+    	return l;
+    }
 
     public boolean isDirty(String key) {
     	try {
@@ -147,21 +177,9 @@ public class ITrackerResourceBundle extends ResourceBundle {
             }
         }
     }
-
-    // public void removeValue(String key, boolean markDirty) {
-    // if(key != null) {
-    //          synchronized (data) {
-    //              if(markDirty) {
-    //                  data.put(key, new DirtyKey());
-    //             } else {
-    //                 data.remove(key);
-    //             }
-    //         }
-    //     }
-    // }
     
     public void removeValue(String key, boolean markDirty) {
-        if(key != null) {
+        if (key != null) {
             synchronized (data) {
                 if(markDirty) {
                     data.put(key, new DirtyKey(){});
@@ -177,7 +195,7 @@ public class ITrackerResourceBundle extends ResourceBundle {
       * Implementation of ResourceBundle.handleGetObject.  Returns
       * the request key from the internal data map.
       */
-    protected final Object handleGetObject(String key) {
+    public final Object handleGetObject(String key) {
         Object value = data.get(key);
         if(value instanceof DirtyKey) {
             throw new ITrackerDirtyResourceException("The requested key has been marked dirty.", 
@@ -188,37 +206,24 @@ public class ITrackerResourceBundle extends ResourceBundle {
     }
 
     /**
-      * Implementation of ResourceBundle.getKeys.  Since it returns an enumeration,
-      * It creates a new Hashtable, and returns that collections enumerator.
-      */
-    public Enumeration<String> getKeys() {
-        Hashtable<String, Object> table = new Hashtable<String, Object>(data.size());
-        if (null != parent) {
-        	Enumeration<String> keys = super.parent.getKeys();
-        	String key;
-        	while (keys.hasMoreElements()) {
-        		key = keys.nextElement();
+     * Implementation of ResourceBundle.getKeys.  Since it returns an enumeration,
+     * It creates a new Hashtable, and returns that collections enumerator.
+     */
+   public Enumeration<String> getKeys() {
+       Hashtable<String, Object> table = new Hashtable<String, Object>(data.size());
+       if (null != parent) {
+       	Enumeration<String> keys = parent.getKeys();
+       	String key;
+       	while (keys.hasMoreElements()) {
+       		key = keys.nextElement();
 				table.put(key, parent.getString(key));
 				
 			}
-        }
-        table.putAll(data);
-        return table.keys();
-    }
+       }
+       table.putAll(data);
+       return table.keys();
+   }
 
     public static interface DirtyKey {
     }
-
-
-    /**
-     * create a new bundle with locale and language items (for ItrackerResources)
-     * @param locale
-     * @param languageItems
-     * @return
-     */
-	static ResourceBundle loadBundle(Locale locale,
-			List<Language> languageItems) {
-		// TODO Auto-generated method stub
-		return new ITrackerResourceBundle(locale, languageItems);
-	}
 }

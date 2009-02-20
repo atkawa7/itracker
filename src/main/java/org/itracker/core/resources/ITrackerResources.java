@@ -150,7 +150,7 @@ public class ITrackerResources {
     }
 
     public static ResourceBundle getBundle() {
-        return getBundle(getDefaultLocale());
+    	return getBundle(getDefaultLocale());
     }
 
     public static ResourceBundle getBundle(String locale) {

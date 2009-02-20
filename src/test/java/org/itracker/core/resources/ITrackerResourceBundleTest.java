@@ -20,7 +20,7 @@ public class ITrackerResourceBundleTest extends AbstractDependencyInjectionTest 
 		resourceBundle = new ITrackerResourceBundle(Locale.ENGLISH, data);
 		assertNotNull(resourceBundle);
 	}
-
+	
 	
 	@Test
 	public void testValue() {
@@ -33,6 +33,10 @@ public class ITrackerResourceBundleTest extends AbstractDependencyInjectionTest 
 		resourceBundle.updateValue(language);
 		assertEquals("administer", resourceBundle.getString("itracker.web.attr.administer"));		
 	}
+	@Test
+	public void testGetLocale() {
+		assertEquals("Locale.ENGLISH", Locale.ENGLISH, resourceBundle.getLocale());
+	}
 	
 	@Test
 	public void testDirty() {
@@ -41,11 +45,12 @@ public class ITrackerResourceBundleTest extends AbstractDependencyInjectionTest 
 		assertTrue(resourceBundle.isDirty("itracker.web.attr.admin"));
 		resourceBundle.removeValue("itracker.web.attr.admin", false);
 		try {
-			resourceBundle.getString("itracker.web.attr.admin");
-			assertEquals(ResourceBundle.getBundle(ITrackerResources.RESOURCE_BUNDLE_NAME).getString("itracker.web.attr.admin"), 
+			assertNotNull(resourceBundle.getString("itracker.web.attr.admin"));
+			assertEquals("itracker.web.attr.admin", ResourceBundle.getBundle(ITrackerResources.RESOURCE_BUNDLE_NAME, resourceBundle.getLocale()).getString("itracker.web.attr.admin"), 
 					resourceBundle.getString("itracker.web.attr.admin"));
+//			fail("Should throw MissingResourceException");
 		} catch (RuntimeException exception) {
-			fail("throwed " + exception.getClass()+ ": " + exception.getMessage());
+			fail("should fall back to properties resource, but throwed " + exception.getClass() + ", " + exception.getMessage());
 		}		
 	}
 	
@@ -61,7 +66,7 @@ public class ITrackerResourceBundleTest extends AbstractDependencyInjectionTest 
 		while (keys.hasMoreElements()) {
 			resultKeySet.add(keys.nextElement());
 		}
-		assertTrue(resultKeySet.containsAll(keySet));
+		assertTrue("keys are contained", resultKeySet.containsAll(keySet));
 	}
 	
 	@Override
