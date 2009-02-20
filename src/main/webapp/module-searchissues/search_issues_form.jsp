@@ -74,10 +74,10 @@
         <% } else { %>
             <input type="hidden" name="type" value="<%= IssueSearchQuery.TYPE_FULL %>">
         <% } %>
-       <table width="100%">
-       <tr>
-       <td>
-        <table border="0" cellspacing="0"  cellspacing="1" align="left" width="800px">
+        <table width="100%">
+        <tr>
+        <td>
+        <table border="0" cellspacing="0"  cellspacing="1" align="left" width="100%">
           <tr>
             <td></td>
             <td></td>

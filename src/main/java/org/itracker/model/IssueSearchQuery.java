@@ -68,7 +68,11 @@ public class IssueSearchQuery implements Serializable {
 	}
 
 	public void setAvailableProjects(List<Project> value) {
-		availableProjects = value;
+		if (null != value) {
+			availableProjects = Collections.unmodifiableList(value);
+		} else {
+			availableProjects = Collections.EMPTY_LIST;
+		}
 	}
 
 	public Project getProject() {
@@ -101,8 +105,10 @@ public class IssueSearchQuery implements Serializable {
 	}
 
 	public void setProjects(List<Integer> value) {
-		if (value != null && value.size() > 0) {
-			projects = value;
+		if (value != null) {
+			projects = Collections.unmodifiableList(value);
+		} else {
+			projects = Collections.EMPTY_LIST;
 		}
 	}
 
@@ -111,8 +117,8 @@ public class IssueSearchQuery implements Serializable {
 	}
 
 	public void setSeverities(List<Integer> value) {
-		if (value != null && value.size() > 0) {
-			severities = value;
+		if (value != null) {
+			severities = Collections.unmodifiableList(value);
 		} else {
 			severities = Collections.EMPTY_LIST;
 		}
@@ -123,8 +129,8 @@ public class IssueSearchQuery implements Serializable {
 	}
 
 	public void setStatuses(List<Integer> value) {
-		if (value != null && value.size() > 0) {
-			statuses = value;
+		if (value != null) {
+			statuses = Collections.unmodifiableList(value);
 		} else {
 			statuses = Collections.EMPTY_LIST;
 		}
@@ -135,8 +141,9 @@ public class IssueSearchQuery implements Serializable {
 	}
 
 	public void setComponents(List<Integer> value) {
-		if (value != null && value.size() > 0) {
-			components = value;
+		
+		if (value != null) {
+			components = Collections.unmodifiableList(value);
 		} else {
 			components = Collections.EMPTY_LIST;
 		}
@@ -147,8 +154,8 @@ public class IssueSearchQuery implements Serializable {
 	}
 
 	public void setVersions(List<Integer> value) {
-		if (value != null && value.size() > 0) {
-			versions = value;
+		if (value != null) {
+			versions = Collections.unmodifiableList(value);
 		} else {
 			versions = Collections.EMPTY_LIST;
 		}
