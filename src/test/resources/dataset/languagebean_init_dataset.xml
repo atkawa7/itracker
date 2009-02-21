@@ -6843,7 +6843,7 @@
     <row>
       <value>850</value>
       <value>zh</value>
-      <value>itracker.activity.8</value>
+      <value>itracker.activity.ISSUE_MOVE</value>
       <value>问题移除</value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
@@ -6859,7 +6859,7 @@
     <row>
       <value>852</value>
       <value>zh</value>
-      <value>itracker.activity.7</value>
+      <value>itracker.activity.REMOVE_HISTORY</value>
       <value><![CDATA[History Entry Removed]]></value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
@@ -6875,7 +6875,7 @@
     <row>
       <value>854</value>
       <value>zh</value>
-      <value>itracker.activity.6</value>
+      <value>itracker.activity.VERSIONS_MODIFIED</value>
       <value>影响的修改的版本</value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
@@ -6899,7 +6899,7 @@
     <row>
       <value>857</value>
       <value>zh</value>
-      <value>itracker.activity.5</value>
+      <value>itracker.activity.COMPONENTS_MODIFIED</value>
       <value>影响的已修改的组件</value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
@@ -6915,7 +6915,7 @@
     <row>
       <value>859</value>
       <value>zh</value>
-      <value>itracker.activity.4</value>
+      <value>itracker.activity.SEVERITY_CHANGE</value>
       <value>严重级别</value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
@@ -6931,7 +6931,7 @@
     <row>
       <value>861</value>
       <value>zh</value>
-      <value>itracker.activity.3</value>
+      <value>itracker.activity.OWNER_CHANGE</value>
       <value>更改用户</value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
@@ -6939,7 +6939,7 @@
     <row>
       <value>862</value>
       <value>zh</value>
-      <value>itracker.activity.2</value>
+      <value>itracker.activity.STATUS_CHANGE</value>
       <value>状态改变</value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
@@ -6947,7 +6947,7 @@
     <row>
       <value>863</value>
       <value>zh</value>
-      <value>itracker.activity.1</value>
+      <value>itracker.activity.ISSUE_CREATED</value>
       <value>创建问题</value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
       <value><![CDATA[2009-01-26 23:10:15.0]]></value>
@@ -9879,7 +9879,7 @@
     <row>
       <value>1225</value>
       <value>ca</value>
-      <value>itracker.activity.8</value>
+      <value>itracker.activity.ISSUE_MOVE</value>
       <value><![CDATA[Tasca moguda]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
@@ -9895,7 +9895,7 @@
     <row>
       <value>1227</value>
       <value>ca</value>
-      <value>itracker.activity.7</value>
+      <value>itracker.activity.REMOVE_HISTORY</value>
       <value><![CDATA[Entrada d'histÚric esborrada]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
@@ -9911,7 +9911,7 @@
     <row>
       <value>1229</value>
       <value>ca</value>
-      <value>itracker.activity.6</value>
+      <value>itracker.activity.VERSIONS_MODIFIED</value>
       <value><![CDATA[Versions afectades modificades]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
@@ -9935,7 +9935,7 @@
     <row>
       <value>1232</value>
       <value>ca</value>
-      <value>itracker.activity.5</value>
+      <value>itracker.activity.COMPONENTS_MODIFIED</value>
       <value><![CDATA[Components afectats modificats]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
@@ -9951,7 +9951,7 @@
     <row>
       <value>1234</value>
       <value>ca</value>
-      <value>itracker.activity.4</value>
+      <value>itracker.activity.SEVERITY_CHANGE</value>
       <value><![CDATA[Canvia severitat]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
@@ -9967,7 +9967,7 @@
     <row>
       <value>1236</value>
       <value>ca</value>
-      <value>itracker.activity.3</value>
+      <value>itracker.activity.OWNER_CHANGE</value>
       <value><![CDATA[Canvia propietari]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
@@ -9975,7 +9975,7 @@
     <row>
       <value>1237</value>
       <value>ca</value>
-      <value>itracker.activity.2</value>
+      <value>itracker.activity.STATUS_CHANGE</value>
       <value><![CDATA[Canvia estat]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
@@ -9983,7 +9983,7 @@
     <row>
       <value>1238</value>
       <value>ca</value>
-      <value>itracker.activity.1</value>
+      <value>itracker.activity.ISSUE_CREATED</value>
       <value><![CDATA[Tasca creada]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
       <value><![CDATA[2009-01-26 23:10:18.0]]></value>
@@ -12624,7 +12624,7 @@
     <row>
       <value>1565</value>
       <value>it</value>
-      <value>itracker.activity.7</value>
+      <value>itracker.activity.REMOVE_HISTORY</value>
       <value><![CDATA[Rimossa versione storicizzata]]></value>
       <value><![CDATA[2009-01-26 23:10:22.0]]></value>
       <value><![CDATA[2009-01-26 23:10:22.0]]></value>
@@ -12640,7 +12640,7 @@
     <row>
       <value>1567</value>
       <value>it</value>
-      <value>itracker.activity.6</value>
+      <value>itracker.activity.VERSIONS_MODIFIED</value>
       <value><![CDATA[Modificata versione coinvolta]]></value>
       <value><![CDATA[2009-01-26 23:10:22.0]]></value>
       <value><![CDATA[2009-01-26 23:10:22.0]]></value>
@@ -12664,7 +12664,7 @@
     <row>
       <value>1570</value>
       <value>it</value>
-      <value>itracker.activity.5</value>
+      <value>itracker.activity.COMPONENTS_MODIFIED</value>
       <value><![CDATA[Modificati componenti coinvolti]]></value>
       <value><![CDATA[2009-01-26 23:10:22.0]]></value>
       <value><![CDATA[2009-01-26 23:10:22.0]]></value>
@@ -12680,7 +12680,7 @@
     <row>
       <value>1572</value>
       <value>it</value>
-      <value>itracker.activity.4</value>
+      <value>itracker.activity.SEVERITY_CHANGE</value>
       <value><![CDATA[Cambiata gravità]]></value>
       <value><![CDATA[2009-01-26 23:10:22.0]]></value>
       <value><![CDATA[2009-01-26 23:10:22.0]]></value>
@@ -12696,7 +12696,7 @@
     <row>
       <value>1574</value>
       <value>it</value>
-      <value>itracker.activity.3</value>
+      <value>itracker.activity.OWNER_CHANGE</value>
       <value><![CDATA[Cambiato responsabile]]></value>
       <value><![CDATA[2009-01-26 23:10:22.0]]></value>
       <value><![CDATA[2009-01-26 23:10:22.0]]></value>
@@ -12704,7 +12704,7 @@
     <row>
       <value>1575</value>
       <value>it</value>
-      <value>itracker.activity.2</value>
+      <value>itracker.activity.STATUS_CHANGE</value>
       <value><![CDATA[Cambiato stato]]></value>
       <value><![CDATA[2009-01-26 23:10:22.0]]></value>
       <value><![CDATA[2009-01-26 23:10:22.0]]></value>
@@ -12712,7 +12712,7 @@
     <row>
       <value>1576</value>
       <value>it</value>
-      <value>itracker.activity.1</value>
+      <value>itracker.activity.ISSUE_CREATED</value>
       <value><![CDATA[Problema aperto]]></value>
       <value><![CDATA[2009-01-26 23:10:22.0]]></value>
       <value><![CDATA[2009-01-26 23:10:22.0]]></value>
@@ -15381,7 +15381,7 @@
     <row>
       <value>1905</value>
       <value>tr</value>
-      <value>itracker.activity.8</value>
+      <value>itracker.activity.ISSUE_MOVE</value>
       <value><![CDATA[Sorun Taşındı]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
@@ -15397,7 +15397,7 @@
     <row>
       <value>1907</value>
       <value>tr</value>
-      <value>itracker.activity.7</value>
+      <value>itracker.activity.REMOVE_HISTORY</value>
       <value><![CDATA[Geçmiş Kayıdı Çıkartıldı]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
@@ -15413,7 +15413,7 @@
     <row>
       <value>1909</value>
       <value>tr</value>
-      <value>itracker.activity.6</value>
+      <value>itracker.activity.VERSIONS_MODIFIED</value>
       <value><![CDATA[Etkilenen Sürümler Düzeltildi]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
@@ -15437,7 +15437,7 @@
     <row>
       <value>1912</value>
       <value>tr</value>
-      <value>itracker.activity.5</value>
+      <value>itracker.activity.COMPONENTS_MODIFIED</value>
       <value><![CDATA[Etkilenen Bileşenler Düzeltildi]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
@@ -15453,7 +15453,7 @@
     <row>
       <value>1914</value>
       <value>tr</value>
-      <value>itracker.activity.4</value>
+      <value>itracker.activity.SEVERITY_CHANGE</value>
       <value><![CDATA[Ciddiyet Değişti]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
@@ -15469,7 +15469,7 @@
     <row>
       <value>1916</value>
       <value>tr</value>
-      <value>itracker.activity.3</value>
+      <value>itracker.activity.OWNER_CHANGE</value>
       <value><![CDATA[Sahip Değişti]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
@@ -15477,7 +15477,7 @@
     <row>
       <value>1917</value>
       <value>tr</value>
-      <value>itracker.activity.2</value>
+      <value>itracker.activity.STATUS_CHANGE</value>
       <value><![CDATA[Durum Değişikliği]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
@@ -15485,7 +15485,7 @@
     <row>
       <value>1918</value>
       <value>tr</value>
-      <value>itracker.activity.1</value>
+      <value>itracker.activity.ISSUE_CREATED</value>
       <value><![CDATA[Sorun Yaratıldı]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
       <value><![CDATA[2009-01-26 23:10:25.0]]></value>
@@ -18254,7 +18254,7 @@
     <row>
       <value>2260</value>
       <value>pt_BR</value>
-      <value>itracker.activity.9</value>
+      <value>itracker.activity.SYSTEM_UPDATE</value>
       <value><![CDATA[Atualizado Devido a Mudanças no Sistema]]></value>
       <value><![CDATA[2009-01-26 23:10:28.0]]></value>
       <value><![CDATA[2009-01-26 23:10:28.0]]></value>
@@ -18262,7 +18262,7 @@
     <row>
       <value>2261</value>
       <value>pt_BR</value>
-      <value>itracker.activity.6</value>
+      <value>itracker.activity.VERSIONS_MODIFIED</value>
       <value><![CDATA[Versões Afetadas Modificadas]]></value>
       <value><![CDATA[2009-01-26 23:10:28.0]]></value>
       <value><![CDATA[2009-01-26 23:10:28.0]]></value>
@@ -18286,7 +18286,7 @@
     <row>
       <value>2264</value>
       <value>pt_BR</value>
-      <value>itracker.activity.5</value>
+      <value>itracker.activity.COMPONENTS_MODIFIED</value>
       <value><![CDATA[Componentes Afetados Modificados]]></value>
       <value><![CDATA[2009-01-26 23:10:29.0]]></value>
       <value><![CDATA[2009-01-26 23:10:29.0]]></value>
@@ -20891,7 +20891,7 @@
     <row>
       <value>2585</value>
       <value>es_MX</value>
-      <value>itracker.activity.8</value>
+      <value>itracker.activity.ISSUE_MOVE</value>
       <value><![CDATA[Issue Movido]]></value>
       <value><![CDATA[2009-01-26 23:10:31.0]]></value>
       <value><![CDATA[2009-01-26 23:10:31.0]]></value>
@@ -20907,7 +20907,7 @@
     <row>
       <value>2587</value>
       <value>es_MX</value>
-      <value>itracker.activity.7</value>
+      <value>itracker.activity.REMOVE_HISTORY</value>
       <value><![CDATA[Entrada de Histórico Removida]]></value>
       <value><![CDATA[2009-01-26 23:10:31.0]]></value>
       <value><![CDATA[2009-01-26 23:10:31.0]]></value>
@@ -20923,7 +20923,7 @@
     <row>
       <value>2589</value>
       <value>es_MX</value>
-      <value>itracker.activity.6</value>
+      <value>itracker.activity.VERSIONS_MODIFIED</value>
       <value><![CDATA[Versiones Afectadas Modificadas]]></value>
       <value><![CDATA[2009-01-26 23:10:31.0]]></value>
       <value><![CDATA[2009-01-26 23:10:31.0]]></value>
@@ -20947,7 +20947,7 @@
     <row>
       <value>2592</value>
       <value>es_MX</value>
-      <value>itracker.activity.5</value>
+      <value>itracker.activity.COMPONENTS_MODIFIED</value>
       <value><![CDATA[Componentes Afectados Modificados]]></value>
       <value><![CDATA[2009-01-26 23:10:31.0]]></value>
       <value><![CDATA[2009-01-26 23:10:31.0]]></value>
@@ -20963,7 +20963,7 @@
     <row>
       <value>2594</value>
       <value>es_MX</value>
-      <value>itracker.activity.4</value>
+      <value>itracker.activity.SEVERITY_CHANGE</value>
       <value><![CDATA[Cambio de Severidad]]></value>
       <value><![CDATA[2009-01-26 23:10:31.0]]></value>
       <value><![CDATA[2009-01-26 23:10:31.0]]></value>
@@ -20979,7 +20979,7 @@
     <row>
       <value>2596</value>
       <value>es_MX</value>
-      <value>itracker.activity.3</value>
+      <value>itracker.activity.OWNER_CHANGE</value>
       <value><![CDATA[Cambio de Dueño]]></value>
       <value><![CDATA[2009-01-26 23:10:31.0]]></value>
       <value><![CDATA[2009-01-26 23:10:31.0]]></value>
@@ -20987,7 +20987,7 @@
     <row>
       <value>2597</value>
       <value>es_MX</value>
-      <value>itracker.activity.2</value>
+      <value>itracker.activity.STATUS_CHANGE</value>
       <value><![CDATA[Cambio de Estatus]]></value>
       <value><![CDATA[2009-01-26 23:10:32.0]]></value>
       <value><![CDATA[2009-01-26 23:10:32.0]]></value>
@@ -20995,7 +20995,7 @@
     <row>
       <value>2598</value>
       <value>es_MX</value>
-      <value>itracker.activity.1</value>
+      <value>itracker.activity.ISSUE_CREATED</value>
       <value><![CDATA[Issue Creado]]></value>
       <value><![CDATA[2009-01-26 23:10:32.0]]></value>
       <value><![CDATA[2009-01-26 23:10:32.0]]></value>
@@ -28863,7 +28863,7 @@
     <row>
       <value>3576</value>
       <value>zh_TW</value>
-      <value>itracker.activity.9</value>
+      <value>itracker.activity.SYSTEM_UPDATE</value>
       <value>系統變更所造成的改變</value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
@@ -28879,7 +28879,7 @@
     <row>
       <value>3578</value>
       <value>zh_TW</value>
-      <value>itracker.activity.8</value>
+      <value>itracker.activity.ISSUE_MOVE</value>
       <value><![CDATA[Issue 已移動]]></value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
@@ -28895,7 +28895,7 @@
     <row>
       <value>3580</value>
       <value>zh_TW</value>
-      <value>itracker.activity.7</value>
+      <value>itracker.activity.REMOVE_HISTORY</value>
       <value>歷史記錄已移除</value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
@@ -28911,7 +28911,7 @@
     <row>
       <value>3582</value>
       <value>zh_TW</value>
-      <value>itracker.activity.6</value>
+      <value>itracker.activity.VERSIONS_MODIFIED</value>
       <value>影響的版本已修改</value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
@@ -28935,7 +28935,7 @@
     <row>
       <value>3585</value>
       <value>zh_TW</value>
-      <value>itracker.activity.5</value>
+      <value>itracker.activity.COMPONENTS_MODIFIED</value>
       <value>影響的元件已修改</value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
@@ -28951,7 +28951,7 @@
     <row>
       <value>3587</value>
       <value>zh_TW</value>
-      <value>itracker.activity.4</value>
+      <value>itracker.activity.SEVERITY_CHANGE</value>
       <value>變更嚴重程度</value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
@@ -28967,7 +28967,7 @@
     <row>
       <value>3589</value>
       <value>zh_TW</value>
-      <value>itracker.activity.3</value>
+      <value>itracker.activity.OWNER_CHANGE</value>
       <value>變更擁有人</value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
@@ -28975,7 +28975,7 @@
     <row>
       <value>3590</value>
       <value>zh_TW</value>
-      <value>itracker.activity.2</value>
+      <value>itracker.activity.STATUS_CHANGE</value>
       <value>變更狀態</value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
@@ -28983,7 +28983,7 @@
     <row>
       <value>3591</value>
       <value>zh_TW</value>
-      <value>itracker.activity.1</value>
+      <value>itracker.activity.ISSUE_CREATED</value>
       <value><![CDATA[Issue 已建立]]></value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
       <value><![CDATA[2009-01-26 23:10:43.0]]></value>
@@ -29615,7 +29615,7 @@
     <row>
       <value>3670</value>
       <value>zh_TW</value>
-      <value>itracker.activity.12</value>
+      <value>itracker.activity.RESOLUTION_CHANGE</value>
       <value>變更回應</value>
       <value><![CDATA[2009-01-26 23:10:44.0]]></value>
       <value><![CDATA[2009-01-26 23:10:44.0]]></value>
@@ -29623,7 +29623,7 @@
     <row>
       <value>3671</value>
       <value>zh_TW</value>
-      <value>itracker.activity.11</value>
+      <value>itracker.activity.DESCRIPTION_CHANGE</value>
       <value>變更說明</value>
       <value><![CDATA[2009-01-26 23:10:44.0]]></value>
       <value><![CDATA[2009-01-26 23:10:44.0]]></value>
@@ -29647,7 +29647,7 @@
     <row>
       <value>3674</value>
       <value>zh_TW</value>
-      <value>itracker.activity.10</value>
+      <value>itracker.activity.TARGETVERSION_CHANGE</value>
       <value>變更目標版本</value>
       <value><![CDATA[2009-01-26 23:10:44.0]]></value>
       <value><![CDATA[2009-01-26 23:10:44.0]]></value>
@@ -32993,7 +32993,7 @@
     <row>
       <value>4088</value>
       <value>pt</value>
-      <value>itracker.activity.9</value>
+      <value>itracker.activity.SYSTEM_UPDATE</value>
       <value><![CDATA[Actualizado devido a mudança no sistema]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
@@ -33009,7 +33009,7 @@
     <row>
       <value>4090</value>
       <value>pt</value>
-      <value>itracker.activity.8</value>
+      <value>itracker.activity.ISSUE_MOVE</value>
       <value><![CDATA[Assunto Movido]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
@@ -33025,7 +33025,7 @@
     <row>
       <value>4092</value>
       <value>pt</value>
-      <value>itracker.activity.7</value>
+      <value>itracker.activity.REMOVE_HISTORY</value>
       <value><![CDATA[Entrada no Histórico Removida]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
@@ -33041,7 +33041,7 @@
     <row>
       <value>4094</value>
       <value>pt</value>
-      <value>itracker.activity.6</value>
+      <value>itracker.activity.VERSIONS_MODIFIED</value>
       <value><![CDATA[Mudança de versões afectadas]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
@@ -33065,7 +33065,7 @@
     <row>
       <value>4097</value>
       <value>pt</value>
-      <value>itracker.activity.5</value>
+      <value>itracker.activity.COMPONENTS_MODIFIED</value>
       <value><![CDATA[Mudança de componentes afectados]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
@@ -33081,7 +33081,7 @@
     <row>
       <value>4099</value>
       <value>pt</value>
-      <value>itracker.activity.4</value>
+      <value>itracker.activity.SEVERITY_CHANGE</value>
       <value><![CDATA[Mudança de Gravidade]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
@@ -33097,7 +33097,7 @@
     <row>
       <value>4101</value>
       <value>pt</value>
-      <value>itracker.activity.3</value>
+      <value>itracker.activity.OWNER_CHANGE</value>
       <value><![CDATA[Mudança de Dono]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
@@ -33105,7 +33105,7 @@
     <row>
       <value>4102</value>
       <value>pt</value>
-      <value>itracker.activity.2</value>
+      <value>itracker.activity.STATUS_CHANGE</value>
       <value><![CDATA[Mudança de Estado]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
@@ -33113,7 +33113,7 @@
     <row>
       <value>4103</value>
       <value>pt</value>
-      <value>itracker.activity.1</value>
+      <value>itracker.activity.ISSUE_CREATED</value>
       <value><![CDATA[Assunto criado]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
       <value><![CDATA[2009-01-26 23:10:49.0]]></value>
@@ -33761,7 +33761,7 @@
     <row>
       <value>4184</value>
       <value>pt</value>
-      <value>itracker.activity.12</value>
+      <value>itracker.activity.RESOLUTION_CHANGE</value>
       <value><![CDATA[Mudança de Resolução]]></value>
       <value><![CDATA[2009-01-26 23:10:50.0]]></value>
       <value><![CDATA[2009-01-26 23:10:50.0]]></value>
@@ -33769,7 +33769,7 @@
     <row>
       <value>4185</value>
       <value>pt</value>
-      <value>itracker.activity.11</value>
+      <value>itracker.activity.DESCRIPTION_CHANGE</value>
       <value><![CDATA[Mudança de Descrição]]></value>
       <value><![CDATA[2009-01-26 23:10:50.0]]></value>
       <value><![CDATA[2009-01-26 23:10:50.0]]></value>
@@ -33785,7 +33785,7 @@
     <row>
       <value>4187</value>
       <value>pt</value>
-      <value>itracker.activity.10</value>
+      <value>itracker.activity.TARGETVERSION_CHANGE</value>
       <value><![CDATA[Mudança de Versão Alvo]]></value>
       <value><![CDATA[2009-01-26 23:10:50.0]]></value>
       <value><![CDATA[2009-01-26 23:10:50.0]]></value>
@@ -36557,7 +36557,7 @@
     <row>
       <value>4529</value>
       <value>fr</value>
-      <value>itracker.activity.8</value>
+      <value>itracker.activity.ISSUE_MOVE</value>
       <value><![CDATA[Sujet déplacé]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
@@ -36573,7 +36573,7 @@
     <row>
       <value>4531</value>
       <value>fr</value>
-      <value>itracker.activity.7</value>
+      <value>itracker.activity.REMOVE_HISTORY</value>
       <value><![CDATA[Entré supprimée de l'historique]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
@@ -36589,7 +36589,7 @@
     <row>
       <value>4533</value>
       <value>fr</value>
-      <value>itracker.activity.6</value>
+      <value>itracker.activity.VERSIONS_MODIFIED</value>
       <value><![CDATA[Modification des versions concernés]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
@@ -36613,7 +36613,7 @@
     <row>
       <value>4536</value>
       <value>fr</value>
-      <value>itracker.activity.5</value>
+      <value>itracker.activity.COMPONENTS_MODIFIED</value>
       <value><![CDATA[Modification des composants concernés]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
@@ -36629,7 +36629,7 @@
     <row>
       <value>4538</value>
       <value>fr</value>
-      <value>itracker.activity.4</value>
+      <value>itracker.activity.SEVERITY_CHANGE</value>
       <value><![CDATA[Changement de sévérité]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
@@ -36645,7 +36645,7 @@
     <row>
       <value>4540</value>
       <value>fr</value>
-      <value>itracker.activity.3</value>
+      <value>itracker.activity.OWNER_CHANGE</value>
       <value><![CDATA[Changement de propriétaire]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
@@ -36653,7 +36653,7 @@
     <row>
       <value>4541</value>
       <value>fr</value>
-      <value>itracker.activity.2</value>
+      <value>itracker.activity.STATUS_CHANGE</value>
       <value><![CDATA[Statut modifié]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
@@ -36661,7 +36661,7 @@
     <row>
       <value>4542</value>
       <value>fr</value>
-      <value>itracker.activity.1</value>
+      <value>itracker.activity.ISSUE_CREATED</value>
       <value><![CDATA[Sujet créé]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
       <value><![CDATA[2009-01-26 23:10:54.0]]></value>
@@ -45339,7 +45339,7 @@
     <row>
       <value>5617</value>
       <value>es</value>
-      <value>itracker.activity.9</value>
+      <value>itracker.activity.SYSTEM_UPDATE</value>
       <value><![CDATA[Actualización debida a un cambio en el sistema]]></value>
       <value><![CDATA[2009-01-26 23:11:03.0]]></value>
       <value><![CDATA[2009-01-26 23:11:03.0]]></value>
@@ -45355,7 +45355,7 @@
     <row>
       <value>5619</value>
       <value>es</value>
-      <value>itracker.activity.8</value>
+      <value>itracker.activity.ISSUE_MOVE</value>
       <value><![CDATA[Incidencia eliminada]]></value>
       <value><![CDATA[2009-01-26 23:11:03.0]]></value>
       <value><![CDATA[2009-01-26 23:11:03.0]]></value>
@@ -45371,7 +45371,7 @@
     <row>
       <value>5621</value>
       <value>es</value>
-      <value>itracker.activity.7</value>
+      <value>itracker.activity.REMOVE_HISTORY</value>
       <value><![CDATA[Entrada de histórico eliminada]]></value>
       <value><![CDATA[2009-01-26 23:11:03.0]]></value>
       <value><![CDATA[2009-01-26 23:11:03.0]]></value>
@@ -45387,7 +45387,7 @@
     <row>
       <value>5623</value>
       <value>es</value>
-      <value>itracker.activity.6</value>
+      <value>itracker.activity.VERSIONS_MODIFIED</value>
       <value><![CDATA[Versiones Afectadas]]></value>
       <value><![CDATA[2009-01-26 23:11:03.0]]></value>
       <value><![CDATA[2009-01-26 23:11:03.0]]></value>
@@ -45411,7 +45411,7 @@
     <row>
       <value>5626</value>
       <value>es</value>
-      <value>itracker.activity.5</value>
+      <value>itracker.activity.COMPONENTS_MODIFIED</value>
       <value><![CDATA[Componentes Afectados]]></value>
       <value><![CDATA[2009-01-26 23:11:03.0]]></value>
       <value><![CDATA[2009-01-26 23:11:03.0]]></value>
@@ -45427,7 +45427,7 @@
     <row>
       <value>5628</value>
       <value>es</value>
-      <value>itracker.activity.4</value>
+      <value>itracker.activity.SEVERITY_CHANGE</value>
       <value><![CDATA[Cambia Impacto]]></value>
       <value><![CDATA[2009-01-26 23:11:04.0]]></value>
       <value><![CDATA[2009-01-26 23:11:04.0]]></value>
@@ -45443,7 +45443,7 @@
     <row>
       <value>5630</value>
       <value>es</value>
-      <value>itracker.activity.3</value>
+      <value>itracker.activity.OWNER_CHANGE</value>
       <value><![CDATA[Cambia Propietario]]></value>
       <value><![CDATA[2009-01-26 23:11:04.0]]></value>
       <value><![CDATA[2009-01-26 23:11:04.0]]></value>
@@ -45451,7 +45451,7 @@
     <row>
       <value>5631</value>
       <value>es</value>
-      <value>itracker.activity.2</value>
+      <value>itracker.activity.STATUS_CHANGE</value>
       <value><![CDATA[Cambia Estado]]></value>
       <value><![CDATA[2009-01-26 23:11:04.0]]></value>
       <value><![CDATA[2009-01-26 23:11:04.0]]></value>
@@ -45459,7 +45459,7 @@
     <row>
       <value>5632</value>
       <value>es</value>
-      <value>itracker.activity.1</value>
+      <value>itracker.activity.ISSUE_CREATED</value>
       <value><![CDATA[Incidencia Creada]]></value>
       <value><![CDATA[2009-01-26 23:11:04.0]]></value>
       <value><![CDATA[2009-01-26 23:11:04.0]]></value>
