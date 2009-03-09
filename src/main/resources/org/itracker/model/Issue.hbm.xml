@@ -13,7 +13,7 @@
             <generator class="native"/>
         </id>
 
-        <property name="description" type="text" length="32000">
+        <property name="description">
             <column name="description"  not-null="true" />
         </property>
 
