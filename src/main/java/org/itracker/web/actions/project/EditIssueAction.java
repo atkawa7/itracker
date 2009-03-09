@@ -197,7 +197,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 				} catch (Exception e) {
 					log.warn("execute: failed to update " + issue, e);
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.other"));
-					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(e.toString()));
+					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(e.getMessage(), false));
 				}
 			}
 
