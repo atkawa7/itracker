@@ -753,7 +753,7 @@
                                 </td>
                                 <td style="text-align: left; white-space: normal;">
                                 <div style="white-space: normal; overflow: auto; width: 900px">
-                                    <it:formatHistoryEntry>${historyEntry.description}</it:formatHistoryEntry>
+									<it:formatHistoryEntry projectOptions="${project.options}">${historyEntry.description}</it:formatHistoryEntry>
 								</div>
                                 </td>
                             </tr>
