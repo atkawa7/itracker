@@ -13,8 +13,8 @@
             <generator class="native"/>
         </id>
 
-        <property name="description">
-            <column name="description" not-null="true" />
+        <property name="description" type="text" length="32000">
+            <column name="description"  not-null="true" />
         </property>
 
         <property name="severity" index="issuebeanSeverityIdx">

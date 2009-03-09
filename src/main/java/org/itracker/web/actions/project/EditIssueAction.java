@@ -132,13 +132,10 @@ public class EditIssueAction extends ItrackerBaseAction {
 			logTimeMillies("execute: got issueService", logDate, log, Level.DEBUG);
 			NotificationService notificationService = getITrackerServices()
 			.getNotificationService();
-			logTimeMillies("execute: got notificationService", logDate, log, Level.DEBUG);
 			HttpSession session = request.getSession(true);
 			User currUser = (User) session.getAttribute(Constants.USER_KEY);
-			logTimeMillies("execute: got currUser", logDate, log, Level.DEBUG);
 
 			Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
-			logTimeMillies("execute: got userPermissions", logDate, log, Level.DEBUG);
 
 			Integer currUserId = currUser.getId();
 			IssueForm issueForm = (IssueForm) form;
@@ -180,21 +177,27 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 			if (errors.isEmpty()) {
 				previousStatus = issue.getStatus();
-				if (UserUtilities.hasPermission(userPermissions, project.getId(),
-						UserUtilities.PERMISSION_EDIT_FULL)) {
-					if (log.isDebugEnabled()) {
-						log.debug("execute: process full, " + issue);
+				try {
+					if (UserUtilities.hasPermission(userPermissions, project.getId(),
+							UserUtilities.PERMISSION_EDIT_FULL)) {
+						if (log.isDebugEnabled()) {
+							log.debug("execute: process full, " + issue);
+						}
+						issue = EditIssueActionUtil.processFullEdit(issue, project, currUser, userPermissions,
+								getLocale(request), issueForm, issueService, errors);
+						logTimeMillies("execute: processed fulledit", logDate, log, Level.DEBUG);
+					} else {				
+						if (log.isDebugEnabled()) {
+							log.debug("execute: process limited, " + issue);
+						}
+						issue = EditIssueActionUtil.processLimitedEdit(issue, project, currUser, userPermissions,
+								getLocale(request), issueForm, issueService, errors);
+						logTimeMillies("execute: processed limited edit", logDate, log, Level.DEBUG);
 					}
-					issue = EditIssueActionUtil.processFullEdit(issue, project, currUser, userPermissions,
-							getLocale(request), issueForm, issueService, errors);
-					logTimeMillies("execute: processed fulledit", logDate, log, Level.DEBUG);
-				} else {				
-					if (log.isDebugEnabled()) {
-						log.debug("execute: process limited, " + issue);
-					}
-					issue = EditIssueActionUtil.processLimitedEdit(issue, project, currUser, userPermissions,
-							getLocale(request), issueForm, issueService, errors);
-					logTimeMillies("execute: processed limited edit", logDate, log, Level.DEBUG);
+				} catch (Exception e) {
+					log.warn("execute: failed to update " + issue, e);
+					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.other"));
+					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(e.toString()));
 				}
 			}
 
