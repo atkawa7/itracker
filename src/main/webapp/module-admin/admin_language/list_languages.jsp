@@ -33,7 +33,7 @@
         <it:link action="editlanguageform" targetAction="create" paramName="locale" paramValue="${ baseLocale }" titleKey="itracker.web.admin.listlanguages.create.alt" arg0="${ baseLocaleName }"><it:message key="itracker.web.admin.listlanguages.create" arg0="${ baseLocaleName }"/></it:link>
         <it:link action="createlanguagekeyform" targetAction="create" titleKey="itracker.web.admin.listlanguages.createkey.alt"><it:message key="itracker.web.admin.listlanguages.createkey"/></it:link>
         <it:link action="editlanguageform" targetAction="update" paramName="locale" paramValue="${ baseLocale }" titleKey="itracker.web.admin.listlanguages.update.alt" arg0="${ baseLocaleName }"><it:message key="itracker.web.admin.listlanguages.update" arg0="${ baseLocaleName }"/></it:link>
-        <it:link action="editlanguage" targetAction="disable" paramName="locale" paramValue="${ language }" titleKey="itracker.web.admin.listlanguages.disable.alt" arg0="${ languageName }"><it:message key="itracker.web.admin.listlanguages.disable"/></it:link>
+<!--        <it:link action="editlanguage" targetAction="disable" paramName="locale" paramValue="${ language }" titleKey="itracker.web.admin.listlanguages.disable.alt" arg0="${ languageName }"><it:message key="itracker.web.admin.listlanguages.disable"/></it:link>-->
         <it:link action="exportlanguage" targetAction="export" paramName="locale" paramValue="${ baseLocale }" titleKey="itracker.web.admin.listlanguages.export.alt" arg0="${ baseLocaleName }"><it:message key="itracker.web.admin.listlanguages.export" arg0="${ baseLocaleName }"/></it:link>
     </td>
   </tr>
@@ -53,7 +53,7 @@
             <td align="right">
 	      <it:link action="editlanguageform" targetAction="create" paramName="locale" paramValue="${ language }" titleKey="itracker.web.admin.listlanguages.create.alt" arg0="${ languageName }"><it:message key="itracker.web.admin.listlanguages.create"/></it:link>
 	      <it:link action="editlanguageform" targetAction="update" paramName="locale" paramValue="${ language }" titleKey="itracker.web.admin.listlanguages.update.alt" arg0="${ languageName }"><it:message key="itracker.web.admin.listlanguages.update"/></it:link>
-	      <it:link action="editlanguage" targetAction="disable" paramName="locale" paramValue="${ language }" titleKey="itracker.web.admin.listlanguages.disable.alt" arg0="${ languageName }"><it:message key="itracker.web.admin.listlanguages.disable"/></it:link>
+<!--	      <it:link action="editlanguage" targetAction="disable" paramName="locale" paramValue="${ language }" titleKey="itracker.web.admin.listlanguages.disable.alt" arg0="${ languageName }"><it:message key="itracker.web.admin.listlanguages.disable"/></it:link>-->
 	      <it:link action="exportlanguage" targetAction="export" paramName="locale" paramValue="${ language }" titleKey="itracker.web.admin.listlanguages.export.alt" arg0="${ languageName }"><it:message key="itracker.web.admin.listlanguages.export"/></it:link>
             </td>
           </tr>
@@ -70,7 +70,7 @@
               </td>
               <td align="right">
 	          <it:link action="editlanguageform" targetAction="update" paramName="locale" paramValue="${ locale }" titleKey="itracker.web.admin.listlanguages.update.alt" arg0="${ localeName }"><it:message key="itracker.web.admin.listlanguages.update"/></it:link>
-	          <it:link action="editlanguage" targetAction="disable" paramName="locale" paramValue="${ language }" titleKey="itracker.web.admin.listlanguages.disable.alt" arg0="${ languageName }"><it:message key="itracker.web.admin.listlanguages.disable"/></it:link>
+<!--	          <it:link action="editlanguage" targetAction="disable" paramName="locale" paramValue="${ language }" titleKey="itracker.web.admin.listlanguages.disable.alt" arg0="${ languageName }"><it:message key="itracker.web.admin.listlanguages.disable"/></it:link>-->
 	          <it:link action="exportlanguage" targetAction="export" paramName="locale" paramValue="${ locale }" titleKey="itracker.web.admin.listlanguages.export.alt" arg0="${ localeName }"><it:message key="itracker.web.admin.listlanguages.export"/></it:link>
               </td>
             </tr>

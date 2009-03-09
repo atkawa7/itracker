@@ -24,6 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -225,48 +226,32 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
     @SuppressWarnings("unchecked")
 	void putPropertiesKeys(Map<String, String> locItems, Map<String, String> items, String locale) {
         try {      	
-        	Properties p;
+        	Hashtable<Object, Object> p;
         	try {
-        		String path = File.separatorChar + ITrackerResources.RESOURCE_BUNDLE_NAME.replace('.', File.separatorChar) + (null != locale? "_" + locale: "") + ".properties";
+        		String path = File.separatorChar + ITrackerResources.RESOURCE_BUNDLE_NAME.replace('.', File.separatorChar) + (null != locale && !(ITrackerResources.BASE_LOCALE.equals(locale))? "_" + locale: "") + ".properties";
         		if (log.isDebugEnabled()) {
         			log.debug("putPropertiesKeys: loading: " + path);
         		}
         		p = new PropertiesFileHandler(path).getProperties();
+        		p = new Hashtable<Object, Object>(p);
+        		
         		if (log.isDebugEnabled()) {
-        			log.debug("putPropertiesKeys: loaded properties: " + new HashMap<Object, Object>(p) + " (" + p + ")");
+        			log.debug("putPropertiesKeys: loaded properties: " + p);
         		}
         	} catch (Exception e) {
-        		log.error("putPropertiesKeys", e);
-        		return;
+        		if (log.isDebugEnabled()) {
+        			log.debug("putPropertiesKeys", e);
+        		}
+        		p = new Properties();
         	}
         	// overload properties by loc items from db
-//        	p.putAll(locItems);
-        	Map<Object, Object> pMap = new HashMap<Object, Object>(p);
-        	pMap.putAll(locItems);
+			if (log.isDebugEnabled()) {
+				log.debug("putPropertiesKeys: overloading locItems: " + locItems);
+			}
+//        	Map<Object, Object> pMap = new HashMap<Object, Object>(p);
+        	p.putAll(locItems);
         	locItems.putAll(Collections.checkedMap((Map)p, String.class, String.class));
         	
-//        	ResourceBundle locBundle = ITrackerResources.getBundle(ITrackerResources.getLocale(locale));
-//            if (locBundle instanceof ITrackerResourceBundle) {
-//            	ITrackerResourceBundle bundle = (ITrackerResourceBundle)locBundle;
-//                Enumeration<String> keys = locBundle.getKeys();
-//                String key, value;
-//                String parentLocale = ITrackerResources.getParentLocale(locale);
-//                while (keys.hasMoreElements()) {
-//                	key = keys.nextElement();
-//                	if (!locItems.containsKey(key)) {
-//                		
-//	                	value = (String)bundle.handleGetObject(key);
-//	                	if (all && value != null) {
-//	                		locItems.put(key, value);
-//	                		
-//	                	} else if (value != null 
-//	                			&& !value.equals(items.get(key)) 
-//	                			&& !value.equals(ITrackerResources.getString(key, parentLocale))) {
-//	                		locItems.put(key, value);
-//	                	}
-//                	}
-//				}
-//            }
         } catch (RuntimeException e) {
         	log.error("addPropertiesKeys: caught ", e);
         }
