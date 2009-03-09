@@ -2,6 +2,7 @@ package org.itracker.services.implementations;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.itracker.AbstractDependencyInjectionTest;
@@ -19,7 +20,6 @@ import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.UserUtilities;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class UserServiceImplTest extends AbstractDependencyInjectionTest {
@@ -93,7 +93,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void testSetUserPermissions() {
         Integer userId = 3;
         Integer projectId = 2;
@@ -119,7 +119,7 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void testSetAndUnsetUserPermissions() {
         Integer userId = 3;
         Integer projectId = 2;
@@ -144,14 +144,22 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
         userService.setUserPermissions(userId, newPermissions);
 
         permission = new Permission(7, user, project);
-        permission.setCreateDate(new Date());
-        permission.setLastModifiedDate(new Date());
+//        permission.setCreateDate(new Date());
+//        permission.setLastModifiedDate(new Date());
 
         newPermissions.add(permission);
 
         userService.setUserPermissions(userId, newPermissions);
-        assertEquals(7, userService.getPermissionsByUserId(userId).get(
-                0).getPermissionType());
+        Boolean contains7 = false;
+        Iterator<Permission> it = userService.getPermissionsByUserId(userId).iterator();
+        while (it.hasNext()) {
+			Permission permission2 = (Permission) it.next();
+			assertNotNull(permission2);
+			if (permission2.getPermissionType() == 7) {
+				contains7 = true;
+			}
+		}
+        assertTrue("userService.getPermissionsByUserId(userId).get(0),contains(7)",contains7);
 
 
     }
@@ -317,31 +325,44 @@ public class UserServiceImplTest extends AbstractDependencyInjectionTest {
     }
     
     @Test
-    @Ignore
     public void testAddUserPermissions() {
-    	
+
+    	assertEquals(4, userService.getPermissionsByUserId(2).size());
     	boolean added = userService.addUserPermissions(2, null);
     	assertFalse(added);
-    	
+
+    	assertEquals(4, userService.getPermissionsByUserId(2).size());
     	added = userService.addUserPermissions(2, new ArrayList<Permission>());
+    	assertEquals(4, userService.getPermissionsByUserId(2).size());    	
     	assertFalse(added);
+    	added = userService.setUserPermissions(2, new ArrayList<Permission>());
+    	assertTrue(added);
+    	assertEquals(1, userService.getPermissionsByUserId(2).size());    	
+
     	
     	List<Permission> permissions = new ArrayList<Permission>();
     	Permission p1 = new Permission();
     	Permission p2 = new Permission();
     	permissions.add( p1 );
     	permissions.add( p2 );
-    	
+
     	User user = userService.getUser(2);
 		p1.setUser(user);
     	p2.setUser(user);
     	
+    	Project proj1 = projectDAO.findAll().get(0);
+    	
+    	p1.setProject(proj1);
+    	p2.setProject(proj1);
+    	
+    	p1.setPermissionType(1);
+    	p2.setPermissionType(2);
+    	assertEquals(1, userService.getPermissionsByUserId(2).size());
+    	
     	added = userService.addUserPermissions(2, permissions);
     	assertTrue(added);
-    	
-    	List<Permission> updatedPermissions = userService.getPermissionsByUserId(2);
-    	assertTrue(updatedPermissions.contains(p1));
-    	assertTrue(updatedPermissions.contains(p2));
+
+    	assertEquals(3, userService.getPermissionsByUserId(2).size());
     	
     	
     }

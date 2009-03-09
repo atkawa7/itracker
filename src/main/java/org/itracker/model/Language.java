@@ -18,6 +18,9 @@
 
 package org.itracker.model;
 
+import java.util.Comparator;
+
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
@@ -26,6 +29,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author ready
  */
 public class Language extends AbstractEntity {
+
 
 	/**
 	 * 
@@ -118,5 +122,28 @@ public class Language extends AbstractEntity {
 		return new ToStringBuilder(this).append("id", getId()).append("resourceKey",
 				getResourceKey()).append("locale", getLocale()).append("value", getResourceValue()).toString();
 	}
+	
+	public static final Comparator<Language> KEY_COMPARATOR = new LanguageKeyComparator();
 
+	private static class LanguageKeyComparator implements Comparator<Language> {
+
+		public int compare(Language o1, Language o2) {
+			return new CompareToBuilder().append(o1.getResourceKey(), o2.getResourceKey()).append(o1.getLocale(), o2.getLocale()).append(o1.getId(), o2.getId()).toComparison();
+		}
+
+	}
+	
+	public static final Comparator<Language> VALUE_COMPARATOR = new LanguageValueComparator();
+
+	private static class LanguageValueComparator implements Comparator<Language> {
+
+		public int compare(Language o1, Language o2) {
+			return new CompareToBuilder()
+			.append(o1.getResourceValue(), o2.getResourceValue())
+			.append(o1.getResourceKey(), o2.getResourceKey())
+			.append(o1.getId(), o2.getId()).toComparison();
+		}
+
+	}
+	
 }

@@ -29,14 +29,19 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
-
-
 public class SelfRegisterFormAction extends ItrackerBaseAction {
 
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        saveToken(request);
-        return mapping.getInputForward();
-    }
+	public ActionForward execute(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		saveToken(request);
+//		itracker.web.selfreg.title
+
+//		String pageTitleKey = "itracker.web.selfreg.title";
+//		String pageTitleArg = "";
+//		request.setAttribute("pageTitleKey", pageTitleKey);
+//		request.setAttribute("pageTitleArg", pageTitleArg);
+		return mapping.getInputForward();
+	}
 
 }
-  

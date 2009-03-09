@@ -45,6 +45,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
 
 public class EditPreferencesFormAction extends ItrackerBaseAction {
 	private static final Logger log = Logger
@@ -71,23 +72,15 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
 			Set<String> languageCodes = languagesMap.keySet();
 			request.setAttribute("languageCodes", languageCodes);
 
-			Map<String, String> languagesList = new LinkedHashMap<String, String>();
-			for (String languageCode : languageCodes) {
-				List<String> languagelist = languagesMap.get(languageCode);
-				ITrackerResources.getString("itracker.locale.name",
-						languageCode);
-				languagesList.put(languageCode, ITrackerResources.getString(
-						"itracker.locale.name", languageCode));
-				for (String languageitem : languagelist) {
-					languagesList.put(languageitem, ITrackerResources
-							.getString("itracker.locale.name", languageitem));
-				}
-
-			}
-			if (languagesList.size() == 0) {
-				languagesList.put("en_US", ITrackerResources.getString(
-						"itracker.locale.name", "en_US"));
-			}
+			Map<String, String> languagesList = ITrackerResources.getLocaleNamesMap(
+					LoginUtilities.getCurrentLocale(request),
+					languageCodes, 
+					languagesMap);
+//			
+//			if (languagesList.size() == 0) {
+//				languagesList.put("en_US", ITrackerResources.getString(
+//						"itracker.locale.name", "en_US"));
+//			}
 			request.setAttribute("languagesList", languagesList);
 			Integer languagesListSize = languagesList.size();
 			request.setAttribute("languagesListSize", languagesListSize);

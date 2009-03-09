@@ -96,14 +96,16 @@ public class SystemConfigurationUtilities {
 		configurationService.initializeLocale(ITrackerResources.BASE_LOCALE,
 				forceReload);
 
-		Language definedLocalesString = configurationService
-				.getLanguageItemByKey(ITrackerResources.DEFINED_LOCALES_KEY,
-						null);
-
-		if (definedLocalesString != null
-				&& definedLocalesString.getResourceValue() != null) {
-			String locales = definedLocalesString.getResourceValue();
-			StringTokenizer token = new StringTokenizer(locales, ",");
+		String definedLocalesString; 
+		try {
+			definedLocalesString = configurationService
+			.getLanguageItemByKey(ITrackerResources.DEFINED_LOCALES_KEY,
+				null).getResourceValue();
+		} catch (RuntimeException e) {
+			definedLocalesString = ITrackerResources.getString(ITrackerResources.DEFINED_LOCALES_KEY);
+		}
+		if (definedLocalesString != null) {
+			StringTokenizer token = new StringTokenizer(definedLocalesString, ",");
 			while (token.hasMoreTokens()) {
 				String locale = token.nextToken();
 				if (locale.length() == 5 && locale.indexOf('_') == 2) {

@@ -515,6 +515,7 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
+        	newPermissions.addAll(getUserPermissionsLocal(getUser(userId)));
             setUserPermissions(userId, newPermissions);
             successful = true;
         } catch (AuthenticatorException ae) {

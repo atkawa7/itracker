@@ -840,7 +840,10 @@ public class NotificationServiceImpl implements NotificationService {
 					+ activeOnly);
 		}
 		List<Notification> issueNotifications = new ArrayList<Notification>();
-
+		if (issue == null) {
+			logger.warn("getIssueNotifications: no issue, throwing exception");
+			throw new IllegalArgumentException("issue must not be null");
+		}
 		if (!primaryOnly) {
 			List<Notification> notifications = getNotificationDao()
 					.findByIssueId(issue.getId());

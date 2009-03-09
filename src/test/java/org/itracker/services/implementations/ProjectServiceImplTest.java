@@ -88,7 +88,7 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 		Assert.assertEquals("allAvailableProjects", 2, projects.size());
 	}
 
-    @Ignore
+//    @Ignore
 	@Test
     /**
      junit.framework.AssertionFailedError: date created
@@ -156,25 +156,20 @@ public class ProjectServiceImplTest extends AbstractDependencyInjectionTest {
 	}
 	
 	@Test
-	@Ignore
-	//TODO: Activate skipped, ignored Test (when implementation is done correctly)
 	public void testRemoveProjectComponent() {
 
 		Project project = projectService.getProject(2);
 		Assert.assertNotNull("project not found", project.getId());
 
-		// FIXME: component exists but fails to delete
 		assertTrue(projectService.removeProjectComponent(project.getId(), 2));
 	}
 
 	@Test
-	@Ignore
 	public void testTryRemoveInvalidComponent() {
 
 		Project project = projectService.getProject(2);
 		Assert.assertNotNull("project not found", project.getId());
 
-		// FIXME: Invalid component Id, so it should fail and it does but why throws an exception
 		assertFalse(projectService.removeProjectComponent(project.getId(), 89));
 	}
 

@@ -59,6 +59,14 @@
 	              <html:text property="localeTitle" styleClass="editColumnText" maxlength="20" size="20"/>
 	          </td>
           </tr>
+           <tr>
+	          <td colspan="2">
+	          </td>
+	          <td colspan="2">
+	              <span class="editColumnTitle"><it:message key="itracker.web.attr.baselocale"/>: </span>
+	              <html:text property="localeBaseTitle" styleClass="editColumnText" maxlength="20" size="20"/>
+	          </td>
+          </tr>
           <tr align="left" class="listHeading">
             <td><it:message key="itracker.web.attr.key"/></td>
             <td><it:message key="itracker.web.attr.baselocale"/></td>

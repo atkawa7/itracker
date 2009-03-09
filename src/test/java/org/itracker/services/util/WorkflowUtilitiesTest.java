@@ -30,7 +30,7 @@ public class WorkflowUtilitiesTest extends AbstractDependencyInjectionTest {
     /**
      * Verifies WorkflowUtilities.getEventName
      */
-    @Ignore
+//    @Ignore
     @Test
     /*
     junit.framework.ComparisonFailure: WorkflowUtilities.getEventName(2, test) expected:<[On Sort]> but was:<[MISSING KEY: itracker.workflow.field.event.2]>
@@ -65,7 +65,7 @@ public class WorkflowUtilitiesTest extends AbstractDependencyInjectionTest {
 //        doTestGetEventName(null,
 //                WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, "On SetDefault");
         doTestGetEventName(new Locale("test"),
-                WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, "On SetDefault");
+                WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, "On Set Default");
 
         // "On Validate"
 //        doTestGetEventName(new Locale(ITrackerResources.BASE_LOCALE),
@@ -81,7 +81,7 @@ public class WorkflowUtilitiesTest extends AbstractDependencyInjectionTest {
 //        doTestGetEventName(null,
 //                WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, "On PreSubmit");
         doTestGetEventName(new Locale("test"),
-                WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, "On PreSubmit");
+                WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, "On Pre Submit");
 
         // "On PostSubmit"
 //        doTestGetEventName(new Locale(ITrackerResources.BASE_LOCALE),
@@ -89,13 +89,13 @@ public class WorkflowUtilitiesTest extends AbstractDependencyInjectionTest {
 //        doTestGetEventName(null,
 //                WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, "On PostSubmit");
         doTestGetEventName(new Locale("test"),
-                WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, "On PostSubmit");
+                WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, "On Post Submit");
     }
 
     /**
      * Verifies WorkflowUtilities.getEvents
      */
-    @Ignore
+//    @Ignore
     @Test
     /*
     junit.framework.AssertionFailedError: WorkflowUtilities.getEvents(test).contains(new NameValuePair(On Sort,2))
@@ -141,13 +141,13 @@ public class WorkflowUtilitiesTest extends AbstractDependencyInjectionTest {
                     Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPOPULATE)),
                     new NameValuePair("On Sort",
                     Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSORT)),
-                    new NameValuePair("On SetDefault",
+                    new NameValuePair("On Set Default",
                     Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT)),
                     new NameValuePair("On Validate",
                     Integer.toString(WorkflowUtilities.EVENT_FIELD_ONVALIDATE)),
-                    new NameValuePair("On PreSubmit",
+                    new NameValuePair("On Pre Submit",
                     Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT)),
-                    new NameValuePair("On PostSubmit",
+                    new NameValuePair("On Post Submit",
                     Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT))
                 });
     }

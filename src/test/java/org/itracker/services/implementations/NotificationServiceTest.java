@@ -108,15 +108,32 @@ public class NotificationServiceTest extends AbstractDependencyInjectionTest {
 	}
 	
 	@Test
-	@Ignore
-	//TODO: Activate skipped, ignored Test (when implementation is done correctly)
+//	@Ignore
+	//TODO: should be different owner and creator, projectowners
 	public void testPrimaryIssueNotifications() {
-		List<Notification> notifications = 
-			notificationService.getPrimaryIssueNotifications(issueDAO.findByPrimaryKey(1));
-		assertNotNull( notifications );
-		// FIXME: returns 1, where is the creator role?	 (user 2 is creator of issue 1)
-		assertEquals( "notifications.size", 2, notifications.size() );
+		Issue issue = issueDAO.findByPrimaryKey(1);
+		assertEquals(0, issue.getProject().getOwners().size());
+		assertTrue(issue.getOwner() != null);
+		issueDAO.save(issue);
 		
+		List<Notification> notifications = 
+			notificationService.getPrimaryIssueNotifications(issue);
+		assertNotNull( notifications );
+		// only the owner
+		assertEquals( "notifications.size", 1, notifications.size() );
+
+		assertEquals( "notifications.user", notifications.get(0).getUser(), issue.getOwner() );
+		
+
+		issue.setOwner(null);
+		issueDAO.save(issue);
+
+		assertTrue(issue.getOwner() == null);
+		
+		// only the creator
+		assertEquals( "notifications.size", 1, notifications.size() );
+
+		assertEquals( "notifications.user", notifications.get(0).getUser(), issue.getCreator() );
 	}
 	
 	@Test

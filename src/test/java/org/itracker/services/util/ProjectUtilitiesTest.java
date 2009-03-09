@@ -42,7 +42,7 @@ public class ProjectUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verifies UserUtilities.getStatusName
      */
     @Test
-    @Ignore
+//    @Ignore
   //TODO: Activate skipped, ignored Test (when implementation is done correctly)
     public void testGetStatusName() {
 
@@ -105,7 +105,7 @@ public class ProjectUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verifies UserUtilities#getStatusNames(Locale)
      */
     @Test
-    @Ignore // still failing on LOCKED, sometimes on VIEWABLE..
+//    @Ignore // still failing on LOCKED, sometimes on VIEWABLE..
     public void testGetStatusNames() {
         final Map<Status, String> expected = new HashMap<Status, String>();
         expected.put(Status.DELETED, "Deleted");

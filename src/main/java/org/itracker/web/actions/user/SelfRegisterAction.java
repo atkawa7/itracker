@@ -42,64 +42,94 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 
-
 public class SelfRegisterAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(SelfRegisterAction.class);
-	
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private static final Logger log = Logger
+			.getLogger(SelfRegisterAction.class);
 
-    	ActionMessages errors = new ActionMessages();
-    	
-        resetToken(request);
+	public ActionForward execute(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        try {
+		ActionMessages errors = new ActionMessages();
 
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+		resetToken(request);
 
-            boolean allowSelfRegister = configurationService.getBooleanProperty("allow_self_register", false);
+		try {
+//			itracker.web.selfreg.title
 
-            if(! allowSelfRegister) {
-            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.notenabled"));
-            } else {
-                UserForm regForm = (UserForm) form;
+//			String pageTitleKey = "itracker.web.selfreg.title";
+//			String pageTitleArg = "";
+//			request.setAttribute("pageTitleKey", pageTitleKey);
+//			request.setAttribute("pageTitleArg", pageTitleArg);
+//			
+			ConfigurationService configurationService = getITrackerServices()
+					.getConfigurationService();
 
-                User user = new User(regForm.getLogin(), UserUtilities.encryptPassword(regForm.getPassword()),
-                                               regForm.getFirstName(), regForm.getLastName(), regForm.getEmail(),
-                                               UserUtilities.REGISTRATION_TYPE_SELF, false);
+			boolean allowSelfRegister = configurationService
+					.getBooleanProperty("allow_self_register", false);
 
-                if(! user.hasRequiredData()) {
-                	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingfields"));
-                } else {
-                    UserService userService = getITrackerServices().getUserService();
+			if (!allowSelfRegister) {
+				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+						"itracker.web.error.notenabled"));
+			} else {
+				UserForm regForm = (UserForm) form;
 
-                    try {
-                        if(userService.allowRegistration(user, regForm.getPassword(), AuthenticationConstants.AUTH_TYPE_PASSWORD_PLAIN, AuthenticationConstants.REQ_SOURCE_WEB)) {
-                            user = userService.createUser(user);
-                            Notification notification = new Notification();
-                            notification.setUser(user);
-                            notification.setRole(Role.ANY);
-                            getITrackerServices().getNotificationService().sendNotification(notification, Type.SELF_REGISTER, getBaseURL(request));
-                        } else {
-                        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.register.unauthorized"));
-                        }
-                    } catch(UserException ue) {
-                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.existinglogin"));
-                    }
-                }
-            }
-        } catch(Exception e) {
-            log.info("Error during self registration.  " + e.getMessage());
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.register.system"));
-        }
+				User user = new User(regForm.getLogin(), UserUtilities
+						.encryptPassword(regForm.getPassword()), regForm
+						.getFirstName(), regForm.getLastName(), regForm
+						.getEmail(), UserUtilities.REGISTRATION_TYPE_SELF,
+						false);
 
-      	if(! errors.isEmpty()) {
-      		saveErrors(request, errors);
-            saveToken(request);
-            return mapping.getInputForward();
-      	}
+				if (!user.hasRequiredData()) {
+					errors.add(ActionMessages.GLOBAL_MESSAGE,
+							new ActionMessage(
+									"itracker.web.error.missingfields"));
+				} else {
+					UserService userService = getITrackerServices()
+							.getUserService();
 
-        return mapping.findForward("login");
-    }
+					try {
+						if (userService
+								.allowRegistration(
+										user,
+										regForm.getPassword(),
+										AuthenticationConstants.AUTH_TYPE_PASSWORD_PLAIN,
+										AuthenticationConstants.REQ_SOURCE_WEB)) {
+							user = userService.createUser(user);
+							Notification notification = new Notification();
+							notification.setUser(user);
+							notification.setRole(Role.ANY);
+							getITrackerServices().getNotificationService()
+									.sendNotification(notification,
+											Type.SELF_REGISTER,
+											getBaseURL(request));
+						} else {
+							errors
+									.add(
+											ActionMessages.GLOBAL_MESSAGE,
+											new ActionMessage(
+													"itracker.web.error.register.unauthorized"));
+						}
+					} catch (UserException ue) {
+						errors.add(ActionMessages.GLOBAL_MESSAGE,
+								new ActionMessage(
+										"itracker.web.error.existinglogin"));
+					}
+				}
+			}
+		} catch (Exception e) {
+			log.info("Error during self registration.  " + e.getMessage());
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"itracker.web.error.register.system"));
+		}
+
+		if (!errors.isEmpty()) {
+			saveErrors(request, errors);
+			saveToken(request);
+			return mapping.getInputForward();
+		}
+
+		return mapping.findForward("login");
+	}
 
 }
-  

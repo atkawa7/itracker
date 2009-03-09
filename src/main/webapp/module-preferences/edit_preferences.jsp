@@ -46,7 +46,7 @@
 		</tr>
 		<tr>
 			<td class="editColumnTitle"><sup>*</sup><it:message
-				key="itracker.web.attr.firstname" /></td>
+				key="itracker.web.attr.firstname" />:</td>
 			<td></td>
 			<c:choose>
 				<c:when test="${allowProfileUpdate}">

@@ -165,38 +165,38 @@ public final class FormatLinkTag extends BodyTagSupport {
         StringBuffer buf = new StringBuffer("<a href=\"");
         try {
             // buf.append(RequestUtils.computeURL(pageContext, forward, null, null, action, null, null, false));
-            buf.append(TagUtils.getInstance().computeURL(pageContext, forward, null, null, action, null, null, null, false));            
+            buf.append(attEscapedString(TagUtils.getInstance().computeURL(pageContext, forward, null, null, action, null, null, null, false)));            
         } catch(MalformedURLException murle) {
-            buf.append(forward);
+            buf.append(attEscapedString(forward));
         }
         if(queryString != null) {
-            buf.append("?" + queryString);
+            buf.append("?" + attEscapedString(queryString));
             hasParams = true;
         }
         if(paramName != null && paramValue != null) {
-            buf.append((hasParams ? "&" : "?") + paramName + "=" + paramValue);
+            buf.append((hasParams ? "&amp;" : "?") + paramName + "=" + paramValue);
             hasParams = true;
         }
         if(caller != null) {
-            buf.append((hasParams ? "&" : "?") + "caller=" + caller);
+            buf.append((hasParams ? "&amp;" : "?") + "caller=" + attEscapedString(caller));
             hasParams = true;
         }
         if(targetAction != null) {
-            buf.append((hasParams ? "&" : "?") + "action=" + targetAction);
+            buf.append((hasParams ? "&amp;" : "?") + "action=" + attEscapedString(targetAction));
             hasParams = true;
         }
         buf.append("\"");
         if(target != null) {
-            buf.append(" target=\"" + target + "\"");
+            buf.append(" target=\"" + attEscapedString(target) + "\"");
         }
         if(titleKey != null) {
-            buf.append(" title=\"" + ITrackerResources.getString(titleKey, locale, (arg0 == null ? "" : arg0)) + "\"");
+            buf.append(" title=\"" + attEscapedString(ITrackerResources.getString(titleKey, locale, (arg0 == null ? "" : arg0))) + "\"");
         }
         if(styleClass != null) {
-            buf.append(" class=\"" + styleClass + "\"");
+            buf.append(" class=\"" + attEscapedString(styleClass) + "\"");
         }
         buf.append(">");
-        buf.append((text == null ? "" : text));
+        buf.append(htmlEscapedString(text));
         buf.append("</a>");
         // ResponseUtils.write(pageContext, buf.toString());
         TagUtils.getInstance().write(pageContext, buf.toString());
@@ -204,6 +204,17 @@ public final class FormatLinkTag extends BodyTagSupport {
         return (EVAL_PAGE);
     }
 
+    public static final String htmlEscapedString(String string) {
+    	if (string == null) {
+    		return "";
+    	}
+    	return string.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+    }
+    
+    public static final String attEscapedString(String string) {
+    	return htmlEscapedString(string).replace("\"", "\\\"");
+    }
+    
     public void release() {
         super.release();
         clearState();

@@ -44,7 +44,7 @@ public class Permission extends AbstractEntity {
 	/**
 	 * The type of permission granted. TODO: use PermissionType enum
 	 */
-	private int type;
+	private Integer type;
 
 	/**
 	 * The project on which this permission is granted. May be <tt>null</tt>
@@ -75,7 +75,7 @@ public class Permission extends AbstractEntity {
 	 * @param user
 	 *            grantee
 	 */
-	public Permission(int type, User user) {
+	public Permission(Integer type, User user) {
 		this(type, user, null);
 	}
 
@@ -90,17 +90,17 @@ public class Permission extends AbstractEntity {
 	 *            on which permission is granted, or <tt>null</tt> for all
 	 *            projects
 	 */
-	public Permission(int type, User user, Project project) {
+	public Permission(Integer type, User user, Project project) {
 		setPermissionType(type);
 		setUser(user);
 		setProject(project);
 	}
 
-	public int getPermissionType() {
+	public Integer getPermissionType() {
 		return type;
 	}
 
-	public void setPermissionType(int type) {
+	public void setPermissionType(Integer type) {
 		this.type = type;
 	}
 

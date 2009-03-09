@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -57,6 +58,7 @@ import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NamingUtilites;
 import org.itracker.services.util.SystemConfigurationUtilities;
+import org.jfree.util.Log;
 
 /**
  * Implementation of the ConfigurationService Interface.
@@ -843,19 +845,35 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
     
     public Language getLanguageItemByKey(String key, Locale locale) {
-        Language languageItem = null;
+        Language languageItem;
+        try {
+        	languageItem = languageDAO.findByKeyAndLocale(key, ITrackerResources.BASE_LOCALE);
+        } catch (RuntimeException e) {
+        	languageItem = null;
+        }
         
-        languageItem = languageDAO.findByKeyAndLocale(key, ITrackerResources.BASE_LOCALE);
-        
-        if (locale != null && !"".equals(locale.getLanguage())) {
-            languageItem = languageDAO.findByKeyAndLocale(key, locale.getLanguage());
-            if (!"".equals(locale.getCountry())) {
-                try {
-                    languageItem = languageDAO.findByKeyAndLocale(key, locale.toString());
-                } catch (Exception ex){
-                }
+        if (null == locale){  
+
+        	locale = ITrackerResources.getLocale(ITrackerResources.BASE_LOCALE);
+        	
+        }
+        try {
+        	return languageDAO.findByKeyAndLocale(key, locale.getLanguage());
+        } catch (RuntimeException re) {
+        	if (null == languageItem) {
+        		languageItem = new Language(locale.getDisplayName(), key, ITrackerResources.getBundle(locale.getLanguage()).getString(key));
+        	}
+        }
+        if (!"".equals(locale.getCountry())) {
+            try {
+                return languageDAO.findByKeyAndLocale(key, locale.toString());
+            } catch (RuntimeException ex){
+            	if (null == languageItem){
+            		return new Language(locale.getDisplayName(), key, ITrackerResources.getBundle(locale).getString(key));
+            	}
             }
         }
+        
         return languageItem;
         
     }
@@ -998,50 +1016,54 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         
         
         Map<String,String> language = new HashMap<String,String>();
+
+        if (locale == null) {
+     	   locale = new Locale("");
+        }
+
+        String localeString = (locale.toString().equals("") ? ITrackerResources.BASE_LOCALE : locale.toString());
         
-        Collection<Language> baseItems = languageDAO.findByLocale(ITrackerResources.BASE_LOCALE);
-        
-        for (Iterator<Language> iterator = baseItems.iterator(); iterator.hasNext();) {
+        Collection<Language> items = languageDAO.findByLocale(localeString);
+
+        for (Iterator<Language> iterator = items.iterator(); iterator.hasNext();) {
             
             Language item = (Language) iterator.next();
             
             language.put(item.getResourceKey(), item.getResourceValue());
             
         }
-        
-        if (locale != null && !"".equals(locale.getLanguage())) {
-            
-            Collection<Language> languageItems = languageDAO.findByLocale(locale.getLanguage());
-            
-            for (Iterator<Language> iterator = languageItems.iterator(); iterator.hasNext();) {
-                
-                Language item = (Language) iterator.next();
-                
-                language.put(item.getResourceKey(), item.getResourceValue());
-                
-            }
-            
-            if (!"".equals(locale.getCountry())) {
-                
-                Collection<Language> countryItems = languageDAO.findByLocale(locale.toString());
-                
-                for (Iterator<Language> iterator = countryItems.iterator(); iterator.hasNext();) {
-                    
-                    Language item = (Language) iterator.next();
-                    
-                    language.put(item.getResourceKey(), item.getResourceValue());
-                    
-                }
-                
-            }
-            
-        }
+//        if (locale != null && !"".equals(locale.getLanguage())) {
+//            
+//            Collection<Language> languageItems = languageDAO.findByLocale(locale.getLanguage());
+//            
+//            for (Iterator<Language> iterator = languageItems.iterator(); iterator.hasNext();) {
+//                
+//                Language item = (Language) iterator.next();
+//                
+//                language.put(item.getResourceKey(), item.getResourceValue());
+//                
+//            }
+//            
+//            if (!"".equals(locale.getCountry())) {
+//                
+//                Collection<Language> countryItems = languageDAO.findByLocale(locale.toString());
+//                
+//                for (Iterator<Language> iterator = countryItems.iterator(); iterator.hasNext();) {
+//                    
+//                    Language item = (Language) iterator.next();
+//                    
+//                    language.put(item.getResourceKey(), item.getResourceValue());
+//                    
+//                }
+//                
+//            }
+//            
+//        }
         
         Language[] languageArray = new Language[language.size()];
         
         int i = 0;
         
-        String localeString = (locale == null ? ITrackerResources.BASE_LOCALE : locale.toString());
         
         for (Iterator<String> iterator = language.keySet().iterator(); iterator.hasNext(); i++) {
             
@@ -1193,36 +1215,31 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             
             logger.debug("Loading database with locale " + locale);
             
-            PropertiesFileHandler localePropertiesHandler = new PropertiesFileHandler(
-                    "/org/itracker/core/resources/ITracker"
-                    + (ITrackerResources.BASE_LOCALE.equals(locale) ? "" : "_" + locale) + ".properties");
+//            PropertiesFileHandler localePropertiesHandler = new PropertiesFileHandler(
+//                    "/org/itracker/core/resources/ITracker"
+//                    + (ITrackerResources.BASE_LOCALE.equals(locale) ? "" : "_" + locale) + ".properties");
             
-            if (localePropertiesHandler.hasProperties()) {
+//            if (localePropertiesHandler.hasProperties()) {
                 
-                Properties localeProperties = localePropertiesHandler.getProperties();
+//                Properties localeProperties = localePropertiesHandler.getProperties();
                 
-                logger.debug("Locale " + locale + " contains " + localeProperties.size() + " properties.");
+//                logger.debug("Locale " + locale + " contains " + localeProperties.size() + " properties.");
                 
-                for (Enumeration<?> propertiesEnumeration = localeProperties.propertyNames();
-                propertiesEnumeration.hasMoreElements();) {
-                    String key = (String) propertiesEnumeration.nextElement();
-                    String value = localeProperties.getProperty(key);
-                    updateLanguageItem(new Language(locale, key, value));
-                }
+//                for (Enumeration<?> propertiesEnumeration = localeProperties.propertyNames();
+//                propertiesEnumeration.hasMoreElements();) {
+//                    String key = (String) propertiesEnumeration.nextElement();
+//                    String value = localeProperties.getProperty(key);
+//                    updateLanguageItem(new Language(locale, key, value));
+//                }
                 
                 removeConfigurationItems(localeConfig);
-                
+//                
                 createConfigurationItem(localeConfig);
-                
+//                
                 ITrackerResources.clearBundle(ITrackerResources.getLocale(locale));
                 
                 result = true;
                 
-            } else {
-                
-                logger.info("Locale " + locale + " contained no properties.");
-                
-            }
             
         }
         
@@ -1244,9 +1261,10 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                 
                 logger.debug("System does not appear to be initialized, initializing system configuration.");
                 
-                List<Language> baseLanguage = getLanguage(ITrackerResources.getLocale(ITrackerResources.BASE_LOCALE));
+                ResourceBundle baseLanguage = ITrackerResources.getBundle(ITrackerResources.getLocale(ITrackerResources.BASE_LOCALE));
+                 getLanguage(ITrackerResources.getLocale(ITrackerResources.BASE_LOCALE));
                 
-                if (baseLanguage == null || baseLanguage.size() == 0) {
+                if (baseLanguage == null) {
                     
                     throw new IllegalStateException (
                             "Languages must be initialized before the system configuration can be loaded.");
@@ -1263,17 +1281,17 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                 removeConfigurationItems(SystemConfigurationUtilities.TYPE_SEVERITY);
                 
                 removeConfigurationItems(SystemConfigurationUtilities.TYPE_RESOLUTION);
-                
-                for (int i = 0; i < baseLanguage.size(); i++) {
-                    
-                    if (baseLanguage.get(i).getResourceKey().startsWith(ITrackerResources.KEY_BASE_RESOLUTION)) {
+                Enumeration<String> keys = baseLanguage.getKeys();
+                while (keys.hasMoreElements()) {
+                    String key = keys.nextElement();
+                    if (key.startsWith(ITrackerResources.KEY_BASE_RESOLUTION)) {
                         
                         try {
                             
-                            String resolutionString = baseLanguage.get(i).getResourceKey().substring(20);
-                            
-                            logger.debug("Adding new configuration resolution value: " + resolutionString);
-                            
+                            String resolutionString = key.substring(20);
+                            if (Log.isDebugEnabled()) {
+                            	logger.debug("Adding new configuration resolution value: " + resolutionString);
+                            }
                             int resolutionNumber = Integer.parseInt(resolutionString);
                             
                             createConfigurationItem(new Configuration(
@@ -1282,18 +1300,18 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                             
                         } catch (RuntimeException e) {
                             
-                            logger.error("Unable to load resolution value: " + baseLanguage.get(i).getResourceKey(), e);
+                            logger.error("Unable to load resolution value: " + key, e);
                             throw e;
                             
                         }
                         
                     }
                     
-                    if (baseLanguage.get(i).getResourceKey().startsWith(ITrackerResources.KEY_BASE_SEVERITY)) {
+                    if (key.startsWith(ITrackerResources.KEY_BASE_SEVERITY)) {
                         
                         try {
                             
-                            String severityString = baseLanguage.get(i).getResourceKey().substring(18);
+                            String severityString = key.substring(18);
                             
                             logger.debug("Adding new configuration severity value: " + severityString);
                             
@@ -1304,17 +1322,17 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                             
                         } catch (RuntimeException e) {
                             
-                            logger.error("Unable to load severity value: " + baseLanguage.get(i).getResourceKey(), e);
+                            logger.error("Unable to load severity value: " + key, e);
                             throw e;
                         }
                         
                     }
                     
-                    if (baseLanguage.get(i).getResourceKey().startsWith(ITrackerResources.KEY_BASE_STATUS)) {
+                    if (key.startsWith(ITrackerResources.KEY_BASE_STATUS)) {
                         
                         try {
                             
-                            String statusString = baseLanguage.get(i).getResourceKey().substring(16);
+                            String statusString = key.substring(16);
                             
                             logger.debug("Adding new configuration status value: " + statusString);
                             
@@ -1323,7 +1341,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                             createConfigurationItem(new Configuration(SystemConfigurationUtilities.TYPE_STATUS,
                                     statusString, props.getProperty("version"), statusNumber));
                         } catch (RuntimeException e) {
-                            logger.error("Unable to load status value: " + baseLanguage.get(i).getResourceKey(), e);
+                            logger.error("Unable to load status value: " + key, e);
                             throw e;
                         }
                     }

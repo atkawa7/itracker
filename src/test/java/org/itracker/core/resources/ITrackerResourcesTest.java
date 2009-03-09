@@ -2,7 +2,6 @@ package org.itracker.core.resources;
 
 import java.util.Enumeration;
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.itracker.AbstractDependencyInjectionTest;
@@ -12,7 +11,7 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 	private String defaultLocaleString_;
 	private Locale defaultLocale_;
 	private ResourceBundle defaultResourceBundle_;
-	private String testLocaleString_ = "in_ID";
+	private String testLocaleString_ = "en_ID";
 	private Locale testLocale_;
 	private ITrackerResourceBundle testResourceBundle_;
 
@@ -105,7 +104,7 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 
 	@Test
 	public void testClearBundles() {
-		Enumeration<String> keys = ITrackerResources.getBundle(testLocale_).getKeys();
+		Enumeration<String> keys = ITrackerResources.getBundle(ITrackerResources.BASE_LOCALE).getKeys();
 		int nKeys = 0;
 		while (keys.hasMoreElements()) {
 			keys.nextElement();

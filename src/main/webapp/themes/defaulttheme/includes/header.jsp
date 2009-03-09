@@ -12,7 +12,7 @@
   <head>
     <title><it:message key="itracker.web.generic.itracker"/>: <it:message key="${pageTitleKey}" arg0="${pageTitleArg}"/>
    </title>
-    <link rel="STYLESHEET" type="text/css" href="${contextPath}/themes/defaulttheme/includes/styles.css"/>
+    <link rel="STYLESHEET" type="text/css" href="${contextPath}/themes/defaulttheme/includes/styles.css" />
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT"/> 
      <meta http-equiv="Pragma" content="no-cache"/>
@@ -39,10 +39,9 @@
 		  	<c:when test="${ currUser != null}">${ currUser.firstName } ${ currUser.lastName } (<em>${ currUser.login }</em>)</c:when>
 		  	<c:otherwise><em><it:message key="itracker.web.header.guest"/></em></c:otherwise>
 		  </c:choose>	
-		  </td>
         </td>
       </tr>
-      <tr><td colspan="3" class="top_ruler"><hr/></td></tr>
+      <tr><td colspan="3" class="top_ruler"><hr /></td></tr>
     </table>
     <table border="0" cellspacing="0" cellspacing="0" width="100%">
       <tr>

@@ -40,6 +40,9 @@ public class PropertiesFileHandler {
 
     public void addProperties(String resource) {
         if(resource == null || resource.equals("") || ! resource.endsWith(".properties")) {
+        	if (logger.isInfoEnabled()) {
+        		logger.info("addProperties: skip " +resource);
+        	}
             return;
         }
 

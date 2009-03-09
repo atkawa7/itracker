@@ -88,7 +88,6 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    @Ignore
     public void testFindByStatus() {
         List<User> users = userDAO.findByStatus(1);
 

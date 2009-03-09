@@ -23,7 +23,8 @@ public class ListLanguagesAction extends ItrackerBaseAction {
 				.getConfigurationService();
 		
 		Map<String,List<String>> languages = configurationService.getAvailableLanguages();
-		  
+		
+		
 		String baseLocaleName = ITrackerResources.getString("itracker.web.attr.baselocale");
 		request.setAttribute("languages", languages);
 		request.setAttribute("languageKeys",languages.keySet().toArray());

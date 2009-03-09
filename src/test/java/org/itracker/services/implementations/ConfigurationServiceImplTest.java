@@ -342,7 +342,7 @@ public class ConfigurationServiceImplTest extends
 		Integer cfvId = cfv.getId();		
 		assertNotNull("CustomFieldValue#id", cfvId);
 		configurationService.removeCustomFieldValues(4);
-		assertNull(customFieldValueDAO.findByPrimaryKey(cfvId));
+		assertNull("" + customFieldValueDAO.findByPrimaryKey(cfvId), customFieldValueDAO.findByPrimaryKey(cfvId));
 	}
 	
 	@Test 
@@ -622,9 +622,6 @@ public class ConfigurationServiceImplTest extends
 	}
 	
 	@Test
-	//TODO: Activate skipped, ignored Test (when implementation is done correctly)
-	// FIXME: probably getLanguageItemByKey() should search for the provided locale first and
-	// only then for the BASE locale, not vice versa
 	public void testGetLanguageItemByKey() {
 		Language languageItem = configurationService.getLanguageItemByKey("test_key", null);
 		assertNotNull("Language", languageItem);
@@ -760,15 +757,16 @@ public class ConfigurationServiceImplTest extends
 		
 	}
 	
+
 	@Test
 	public void testGetLanguage() {
 		List<Language> languages = configurationService.getLanguage( new Locale("test_locale") );
 		assertNotNull( languages );
-		assertEquals( "total languages with test_locale", 2, languages.size() );
+		assertEquals( "total languages with test_locale", 1, languages.size() );
 		
 		languages = configurationService.getLanguage( new Locale("undefined_locale") );
 		assertNotNull( languages );
-		assertEquals( "total languages with undefined_locale", 2, languages.size() );
+		assertEquals( "total languages with undefined_locale", 0, languages.size() );
 		
 	}
 
