@@ -27,6 +27,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.services.util.HTMLUtilities;
 import org.itracker.web.util.Constants;
 
 
@@ -164,13 +165,12 @@ public final class FormatLinkTag extends BodyTagSupport {
 
         StringBuffer buf = new StringBuffer("<a href=\"");
         try {
-            // buf.append(RequestUtils.computeURL(pageContext, forward, null, null, action, null, null, false));
-            buf.append(attEscapedString(TagUtils.getInstance().computeURL(pageContext, forward, null, null, action, null, null, null, false)));            
+            buf.append(TagUtils.getInstance().computeURL(pageContext, forward, null, null, action, null, null, null, false));            
         } catch(MalformedURLException murle) {
-            buf.append(attEscapedString(forward));
+            buf.append(HTMLUtilities.escapeTags(forward));
         }
         if(queryString != null) {
-            buf.append("?" + attEscapedString(queryString));
+            buf.append("?" + HTMLUtilities.escapeTags(queryString));
             hasParams = true;
         }
         if(paramName != null && paramValue != null) {
@@ -178,25 +178,25 @@ public final class FormatLinkTag extends BodyTagSupport {
             hasParams = true;
         }
         if(caller != null) {
-            buf.append((hasParams ? "&amp;" : "?") + "caller=" + attEscapedString(caller));
+            buf.append((hasParams ? "&amp;" : "?") + "caller=" + HTMLUtilities.escapeTags(caller));
             hasParams = true;
         }
         if(targetAction != null) {
-            buf.append((hasParams ? "&amp;" : "?") + "action=" + attEscapedString(targetAction));
+            buf.append((hasParams ? "&amp;" : "?") + "action=" + HTMLUtilities.escapeTags(targetAction));
             hasParams = true;
         }
         buf.append("\"");
         if(target != null) {
-            buf.append(" target=\"" + attEscapedString(target) + "\"");
+            buf.append(" target=\"" + HTMLUtilities.escapeTags(target) + "\"");
         }
         if(titleKey != null) {
-            buf.append(" title=\"" + attEscapedString(ITrackerResources.getString(titleKey, locale, (arg0 == null ? "" : arg0))) + "\"");
+            buf.append(" title=\"" + HTMLUtilities.escapeTags(ITrackerResources.getString(titleKey, locale, (arg0 == null ? "" : arg0))) + "\"");
         }
         if(styleClass != null) {
-            buf.append(" class=\"" + attEscapedString(styleClass) + "\"");
+            buf.append(" class=\"" + HTMLUtilities.escapeTags(styleClass) + "\"");
         }
         buf.append(">");
-        buf.append(htmlEscapedString(text));
+        buf.append(HTMLUtilities.escapeTags(text));
         buf.append("</a>");
         // ResponseUtils.write(pageContext, buf.toString());
         TagUtils.getInstance().write(pageContext, buf.toString());
@@ -204,17 +204,6 @@ public final class FormatLinkTag extends BodyTagSupport {
         return (EVAL_PAGE);
     }
 
-    public static final String htmlEscapedString(String string) {
-    	if (string == null) {
-    		return "";
-    	}
-    	return string.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
-    }
-    
-    public static final String attEscapedString(String string) {
-    	return htmlEscapedString(string).replace("\"", "\\\"");
-    }
-    
     public void release() {
         super.release();
         clearState();

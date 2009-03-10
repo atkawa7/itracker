@@ -19,7 +19,6 @@
 package org.itracker.web.taglib;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
@@ -29,6 +28,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.UserPreferences;
+import org.itracker.services.util.HTMLUtilities;
 import org.itracker.web.util.Constants;
 
 public final class FormatImageActionTag extends TagSupport {
@@ -175,23 +175,21 @@ public final class FormatImageActionTag extends TagSupport {
 
 		StringBuffer buf = new StringBuffer("<a href=\"");
 		try {
-			// buf.append(RequestUtils.computeURL(pageContext, forward, null,
-			// null, action, null, null, false));
-			buf.append(attEscapedString(TagUtils.getInstance().computeURL(pageContext, forward,
-					null, null, action, module, null, null, false)));
+			buf.append(TagUtils.getInstance().computeURL(pageContext, forward,
+					null, null, action, module, null, null, false));
 		} catch (MalformedURLException murle) {
-			buf.append(attEscapedString(forward));
+			buf.append(HTMLUtilities.escapeTags(forward));
 		}
 		if (paramName != null && paramValue != null) {
 			buf.append("?" + paramName + "=" + paramValue);
 			hasParams = true;
 		}
 		if (caller != null) {
-			buf.append((hasParams ? "&amp;" : "?") + "caller=" + attEscapedString(caller));
+			buf.append((hasParams ? "&amp;" : "?") + "caller=" + HTMLUtilities.escapeTags(caller));
 			hasParams = true;
 		}
 		if (targetAction != null) {
-			buf.append((hasParams ? "&amp;" : "?") + "action=" + attEscapedString(targetAction));
+			buf.append((hasParams ? "&amp;" : "?") + "action=" + HTMLUtilities.escapeTags(targetAction));
 			hasParams = true;
 		}
 		buf.append("\"");
@@ -208,13 +206,11 @@ public final class FormatImageActionTag extends TagSupport {
 			buf.append(">");
 			buf.append("<img src=\"");
 			try {
-				// buf.append(RequestUtils.computeURL(pageContext, null, null,
-				// src, null, null, null, false));
-				buf.append(attEscapedString(TagUtils.getInstance().computeURL(pageContext, null,
-						null, src, null, "", null, null, false)));
+				buf.append(TagUtils.getInstance().computeURL(pageContext, null,
+						null, src, null, "", null, null, false));
 
 			} catch (MalformedURLException murle) {
-				buf.append(attEscapedString(src));
+				buf.append(HTMLUtilities.escapeTags(src));
 			}
 			buf.append("\"");
 			if (altKey != null) {
@@ -238,16 +234,6 @@ public final class FormatImageActionTag extends TagSupport {
 		return (EVAL_PAGE);
 	}
 
-    public static final String htmlEscapedString(String string) {
-    	if (string == null) {
-    		return "";
-    	}
-    	return string.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
-    }
-    
-    public static final String attEscapedString(String string) {
-    	return htmlEscapedString(string).replace("\"", "\\\"");
-    }
     
 	public void release() {
 		super.release();
@@ -265,5 +251,8 @@ public final class FormatImageActionTag extends TagSupport {
 		textActionKey = null;
 		border = null;
 		caller = null;
+		target = null;
+		targetAction = null;
+		module = null;
 	}
 }
