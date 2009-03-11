@@ -777,7 +777,6 @@
                
                 <td colspan="3" class="editColumnText">
                     <textarea name="history"
-                              wrap="${wrap}"
                               cols="110"
                               rows="6"
                               class="editColumnText"><bean:write name="issueForm" property="history"/></textarea>

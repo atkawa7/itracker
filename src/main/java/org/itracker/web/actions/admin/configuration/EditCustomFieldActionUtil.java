@@ -2,15 +2,19 @@ package org.itracker.web.actions.admin.configuration;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
@@ -20,6 +24,7 @@ import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.web.forms.CustomFieldForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 public class EditCustomFieldActionUtil {
@@ -30,7 +35,7 @@ public class EditCustomFieldActionUtil {
 		
 		ConfigurationService configurationService = ServletContextUtils
 		.getItrackerServices().getConfigurationService();
-		
+		Locale currentLocale = LoginUtilities.getCurrentLocale(request);
 		CustomField customField = (CustomField) request.getSession().getAttribute(Constants.CUSTOMFIELD_KEY);
 		
 		Map<String, List<String>> languages_map = configurationService.getAvailableLanguages();
@@ -77,7 +82,7 @@ public class EditCustomFieldActionUtil {
 			NameValuePair languageNameValuePair = new NameValuePair(language,ITrackerResources.getString("itracker.locale.name", language));
 			languagesNameValuePair.put(languageNameValuePair, localesNameValuePair);
 		}
-		request.setAttribute("sc", configurationService);
+//		request.setAttribute("sc", configurationService);
 		HttpSession session = request.getSession();
 		String baseLocaleKey = "translations(" + ITrackerResources.BASE_LOCALE + ")";
 
@@ -87,14 +92,12 @@ public class EditCustomFieldActionUtil {
 		if (logger.isDebugEnabled()) {
 			logger.debug("setRequestEnv: sorted values by sort order comparator: " + options);
 		}
-		Map<CustomFieldValue, String> optionsMap = new TreeMap<CustomFieldValue, String>(CustomFieldValue.SORT_ORDER_COMPARATOR);
+		
+		HashMap<Integer, String> optionsMap = new HashMap<Integer, String>();
 		for (CustomFieldValue option: options) {
-			String optionName = CustomFieldUtilities.getCustomFieldOptionName(customField.getId(),option.getId());
-			optionsMap.put(option, optionName);
+			String optionName = CustomFieldUtilities.getCustomFieldOptionName(customField.getId(),option.getId(), currentLocale);
+			optionsMap.put(option.getId(), optionName);
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("setRequestEnv: sorted optionsMap by sort order comparator: " + optionsMap);
-		}		
 
 		String fieldTypeString = Integer.toString(CustomField.Type.STRING.getCode());
 		String fieldTypeInteger = Integer.toString(CustomField.Type.INTEGER.getCode());
@@ -117,6 +120,7 @@ public class EditCustomFieldActionUtil {
 		request.setAttribute("baseLocaleKey", baseLocaleKey);
 		request.setAttribute("field", customField);
 		request.setAttribute("languagesNameValuePair", languagesNameValuePair);
+		request.setAttribute("options", options);
 		request.setAttribute("optionsMap", optionsMap);
 
 	}

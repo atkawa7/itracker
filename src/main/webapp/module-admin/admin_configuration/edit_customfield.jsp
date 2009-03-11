@@ -14,9 +14,9 @@
                 </html:messages> 
             </span>
             
-            <br/>
+            <br/><br/><br/>
+            
         </logic:messagesPresent>
-        <br/><br/>
         
         <html:form action="/editcustomfield">
             <html:hidden property="action"/>
@@ -84,7 +84,7 @@
                 <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
                 <tr>
                     <td colspan="2" valign="top">
-                        <table width="100% cellspacing="0" cellpadding="0" border="0" src="../../images/blank.gif">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
                                <tr><td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.translations"/>:</td></tr>
                             <tr class="listHeading"><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
                             <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="4"/></td></tr>
@@ -130,27 +130,27 @@
                             </tr>
                             <tr class="listHeading"><td colspan="3"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
                             <tr><td colspan="3"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="4"/></td></tr>
-                            <c:forEach items="${optionsMap}" var="option" varStatus="i">
+                            <c:forEach items="${options}" var="option" varStatus="i">
                                 
                                 <tr>
                                     <td class="listRowUnshaded" style="white-space: nowrap;" nowrap="nowrap">
-                                        <it:link action="editcustomfieldvalueform" targetAction="update" paramName="id" paramValue="${option.key.id}" titleKey="itracker.web.admin.editcustomfield.option.edit.alt"><it:message key="itracker.web.admin.editcustomfield.option.edit"/></it:link>
-                                        <it:link action="removecustomfieldvalue" targetAction="delete" paramName="id" paramValue="${option.key.id}" titleKey="itracker.web.admin.editcustomfield.option.delete.alt"><it:message key="itracker.web.admin.editcustomfield.option.delete"/></it:link>
-                                        <%--c:if test="${i.index != 1}">
-                                            <it:link action="ordercustomfieldvalue" targetAction="up" paramName="id" paramValue="${option.key.id}" titleKey="itracker.web.admin.editcustomfield.option.orderup.alt">
+                                        <it:link action="editcustomfieldvalueform" targetAction="update" paramName="id" paramValue="${option.id}" titleKey="itracker.web.admin.editcustomfield.option.edit.alt"><it:message key="itracker.web.admin.editcustomfield.option.edit"/></it:link>
+                                        <it:link action="removecustomfieldvalue" targetAction="delete" paramName="id" paramValue="${option.id}" titleKey="itracker.web.admin.editcustomfield.option.delete.alt"><it:message key="itracker.web.admin.editcustomfield.option.delete"/></it:link>
+                                        <c:if test="${i.index != 0}">
+                                            <it:link action="ordercustomfieldvalue" targetAction="up" paramName="id" paramValue="${option.id}" titleKey="itracker.web.admin.editcustomfield.option.orderup.alt">
                                                 <it:message key="itracker.web.admin.editcustomfield.option.orderup"/>
                                             </it:link>
                                         </c:if>
-                                        <c:if test="${i.index != opt_len}">
-                                            <it:link action="ordercustomfieldvalue" targetAction="down" paramName="id" paramValue="${option.key.id}" titleKey="itracker.web.admin.editcustomfield.option.orderdown.alt">
+                                        <c:if test="${i.index lt fn:length(options)-1 }">
+                                            <it:link action="ordercustomfieldvalue" targetAction="down" paramName="id" paramValue="${option.id}" titleKey="itracker.web.admin.editcustomfield.option.orderdown.alt">
                                                 <it:message key="itracker.web.admin.editcustomfield.option.orderdown"/>
                                             </it:link>
-                                        </c:if--%>
+                                        </c:if>
                                         <html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="5" height="1"/>
                                     </td>
                                     
                                     <td align="right" colspan="2" class="editColumnText">
-                                    	${ option.value } (${ option.key.value })
+                                    	${ optionsMap[option.id]  } (${  option.value }) 
                                     </td>
                                 </tr>
                                 
