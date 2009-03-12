@@ -64,8 +64,15 @@
 
 		
 			<item name="3.0 Release Notes" href="/release-notes/itracker-3.0-stable.html" />
+
+
+            <item name="Install" href="/install.html"/>
+	    <item name="Configuration" href="/configuration.html"/>
+
+	    <item name="Data Migration from 2.4" href="/migration/migrate2.4-3.0.html" />
+            
             <item name="Screenshots" href="/screenshots/screenshots.html"/>
-			<item name="Data Migration from 2.4" href="/migration/migrate2.4-3.0.html" />
+
 		</menu>
 <!-- 
 	TODO
