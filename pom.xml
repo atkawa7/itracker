@@ -266,6 +266,13 @@
 					<update>true</update>
 				</configuration>
 			</plugin>
+			<plugin>
+			<!--groupId>org.apache.maven.plugins</groupId-->
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>ISO-8859-1</encoding>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<repositories>
@@ -707,7 +714,8 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>selenium-maven-plugin</artifactId>
-                        <version>1.0-rc-1</version>                        <executions>
+                        <version>1.0-rc-1</version>
+                          <executions>
                             <execution>
                                 <id>start</id>
                                 <phase>pre-integration-test</phase>
