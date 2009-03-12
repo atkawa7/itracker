@@ -263,6 +263,7 @@
 					<server>localhost</server>
 					<url>http://localhost:8080/manager</url>
 					<path>/itracker</path>
+					<update>true</update>
 				</configuration>
 			</plugin>
 		</plugins>
