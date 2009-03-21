@@ -1,28 +1,42 @@
 <?xml version="1.0"?>
-
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 	<properties>
 		<title>Migrate Itracker 2.4 to 3.0 Mysql Database</title>
 	</properties>
 
 	<body>
 		<section name="Migration-script">
-			Instructions:
+			<p>Instructions:</p>
 			<ol>
-				<li>Download and customize <a href="mysql/create_itracker_mig_and_transform.sh">create_itracker_mig_and_transform.sh"</a>
+				<li>
+					Download and customize
+					<a href="mysql/create_itracker_mig_and_transform.sh">create_itracker_mig_and_transform.sh"
+					</a>
 				</li>
-				<li>Download to the same directory: <a href="mysql/itracker_migration_transform_script.sql">itracker_migration_transform_script.sql</a></li>
-				<li>Download to the same directory: <a href="mysql/itracker_migration_new_indexes.sql">itracker_migration_new_indexes.sql</a></li>
-				<li>Stop any running itracker-instances pointing to the new database, if appropriate.</li>
-				<li>Execute the migration-script: <code>$ ./mysql/create_itracker_mig_and_transform.sh [&lt;password&gt;]</code></li>
+				<li>
+					Download to the same directory:
+					<a href="mysql/itracker_migration_transform_script.sql">itracker_migration_transform_script.sql
+					</a>
+				</li>
+				<li>
+					Download to the same directory:
+					<a href="mysql/itracker_migration_new_indexes.sql">itracker_migration_new_indexes.sql
+					</a>
+				</li>
+				<li>Stop any running itracker-instances pointing to the new
+					database, if appropriate.</li>
+				<li>
+					Execute the migration-script:
+					<code>$ ./mysql/create_itracker_mig_and_transform.sh [&lt;password&gt;]</code></li>
 				<li>Start itracker3 configured to the migrated database</li>
 				<li>Log-in to itracker3 using your previous 2.4 credentials</li>
 			</ol>
 			
 		</section>
 		<section name="Customize transformation">
-			Variables which can be set:<ol>
+			<p>Variables which can be set:</p>
+			<ol>
 				<li>DBUSER: Username for connecting Database.</li>
 				<li>DBPASS: Will be passed as an argument to the execution-call.</li>
 				<li>DATABASE: Name of 2.4 source-database to transform.</li>
@@ -112,6 +126,8 @@ alter table componentbean change status status INT NOT NULL;
 			
 		</pre>
 		</section>
-		
+		<section name="Older versions">
+		<a href="http://itracker.wiki.sourceforge.net/Old+Documents">see WIKI for more information</a>
+		</section>
 	</body>
 </document>

@@ -49,7 +49,7 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 	public void testGetLocaleNull() {
 		Locale locale = ITrackerResources.getLocale(null);
 		assertNotNull(locale);
-		assertEquals(defaultLocale_, locale);
+		assertEquals(ITrackerResources.getLocale(ITrackerResources.getDefaultLocale()), locale);
 	}
 
 	@Test

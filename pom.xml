@@ -5,7 +5,7 @@
 	<artifactId>itracker</artifactId>
 	<packaging>war</packaging>
 	<name>itracker</name>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.1</version>
     <url>http://itracker.sourceforge.net/</url>
   <properties>
   	<clover.maven.charset>UTF-8</clover.maven.charset>
@@ -55,7 +55,7 @@
 			<id>ranks</id>
 			<name>Marco Glur</name>
 			<email>ranks@rosa.com</email>
-      		<organization>R.‚àö√≤.S.A. Creation. Technology. Intelligence. AG, Zurich</organization>
+      		<organization>R.Ø.S.A. Creation. Technology. Intelligence. AG, Zurich</organization>
      		<organizationUrl>http://rosa.com/</organizationUrl>
 			<roles>
 				<role>Developer</role>
@@ -66,7 +66,7 @@
 			<id>MarkyGoldstein</id>
 			<name>Marky Goldstein</name>
 			<email>ready@rosa.com</email>
-    		<organization>R.‚àö√≤.S.A. Creation. Technology. Intelligence. AG, Zurich</organization>
+    		<organization>R.Ø.S.A. Creation. Technology. Intelligence. AG, Zurich</organization>
 			<organizationUrl>http://www.rosa.com</organizationUrl>
 			<timezone>1</timezone>
 			<roles>

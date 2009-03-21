@@ -18,16 +18,11 @@
 
 package org.itracker.core;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.User;
 import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.IssueService;
 import org.itracker.services.ReportService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.PasswordException;
@@ -116,49 +111,6 @@ public class ApplicationInitialization {
                         "", true);
                 userService.createUser(adminUser);
             }
-        }
-    }
-    
-    @SuppressWarnings("unused")
-	private void processAttachmentFiles(String attachmentDirectory) {
-        if (attachmentDirectory == null || attachmentDirectory.equals("")) {
-            return;
-        }
-        
-        try {
-            File directory = new File(attachmentDirectory.replace('/', File.separatorChar));
-            if (directory == null || !directory.isDirectory()) {
-                throw new Exception("Invalid attachment directory.");
-            }
-            File[] attachments = directory.listFiles();
-            
-            IssueService issueService = null;
-            
-            for (int i = 0; i < attachments.length; i++) {
-                try {
-                    if (attachments[i].length() > Integer.MAX_VALUE) {
-                        throw new IOException("File too large to load.");
-                    }
-                    byte[] data = new byte[(int) attachments[i].length()];
-                    FileInputStream fis = new FileInputStream(attachments[i]);
-                    int bytesRead = fis.read(data);
-                    fis.close();
-                    if (bytesRead != data.length) {
-                        throw new IOException(
-                                "The number of bytes read from the file, did not match the size of the file.");
-                    }
-                    //FIXME: Null pointer access: The variable issueService can only be null at this location. 
-                    if (issueService.setIssueAttachmentData(attachments[i].getName(), data)) {
-                        // attachments[i].delete();
-                        logger.debug("Successfully moved attachment " + attachments[i].getName()
-                        + " to the database.");
-                    }
-                } catch (IOException ioe) {
-                    logger.error("Unable to save attachment: " + ioe.getMessage());
-                }
-            }
-        } catch (Exception e) {
-            logger.error("Unable to check for existing file attachments: " + e.getMessage());
         }
     }
     

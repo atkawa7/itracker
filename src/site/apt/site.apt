@@ -8,10 +8,11 @@
  
 APT Documentation
 
-  Documentation is found here: {{http://maven.apache.org/doxia/references/apt-format.html}}.
-  
-  BTW: APT means almost plain text
-  
+   {{{http://maven.apache.org/doxia/references/apt-format.html}Documentation}}.
+
+  {{{http://apteditor.sourceforge.net/}Eclipse Plugin}}
+
+  {{{http://itracker.svn.sourceforge.net/viewvc/itracker/itracker/trunk/src/site/apt/site.apt}Source}}
   
   
 
@@ -75,7 +76,7 @@ Verbatim text
 
   --- instead of +-- suppresses the box around verbatim text.
 
-[http://media.rosa.com/branding_clients/logo_rosa.gif] Figure caption
+[http://sflogo.sourceforge.net/sflogo.php?group_id=54141&type=2] Figure caption
 
 *----------*--------------+----------------:
 | Centered | Left-aligned | Right-aligned  |
@@ -112,7 +113,7 @@ Table caption
 
   Non\ breaking\ space.
 
-  Escaped special characters: \~, \=, \-, \+, \*, \[, \], \<, \>, \{, \}, \\.
+  Escaped special characters: \~, \=, \-, \+, \*, \[, \], \<, \>, \{, \}, \\
 
   Copyright symbol: \251, \xA9, \u00a9.
 

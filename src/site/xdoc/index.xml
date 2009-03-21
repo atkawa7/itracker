@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
-<document>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
 	<properties>
-		<title>About itracker</title>
+		<title>itracker</title>
 	</properties>
 
 	<body>
@@ -10,49 +11,82 @@
 		<section name="About itracker">
 			<p>
 				itracker is a true open source issue tracking system
-				licensed under the LGPL license.
+				licensed under
+				the LGPL license.
             </p>
 			<p>
 				itracker is built using Java enterprise technology.
             </p>
 			<p>
-				itracker is a professional, easy to use, open, easy to integrate, fast,
-				modular, customizable and scalable solution for all kind of projects.
+				itracker is a professional, easy to use, open, easy to integrate,
+				fast,
+				modular, customizable and scalable solution for all kind of
+				projects.
             </p>
-			 
+		</section>
 
-        </section>
+		<section name="News">
+			<table border="1">
+				<tr>
+					<td>2009-3-22</td>
+					<td>
+						First stable 3.0.1 Release is available for
+						<a href="https://sourceforge.net/project/showfiles.php?group_id=54141">download,</a>
+						<a href="/release-notes/itracker-3.0.1.html">more..</a>
+					</td>
+				</tr>
+				<tr>
+					<td>2009-1-14</td>
+					<td>
+						First stable 3.0 Release is available for
+						<a href="https://sourceforge.net/project/showfiles.php?group_id=54141">download,</a>
+						<a href="/release-notes/itracker-3.0-stable.html">more..</a>
+					</td>
+				</tr>
+				<tr>
+					<td>2009-1-14</td>
+					<td>
+						New Project Site Skin released,
+						<a href="https://sourceforge.net/forum/forum.php?forum_id=907764">more..</a>
+					</td>
+				</tr>
+				<tr>
+					<td>2008-12-18</td>
+					<td>
+						Version 3.0 Release Candidate 3 is available for
+						<a href="https://sourceforge.net/project/showfiles.php?group_id=54141">download.</a>
+						<a href="/release-notes/itracker-3.0-rc3.html">itracker-3.0-rc3</a>
+					</td>
+				</tr>
+				<tr>
+					<td>2008-11-01</td>
+					<td>
+						Version 3.0 Release Candidate 2 is available for
+						<a href="https://sourceforge.net/project/showfiles.php?group_id=54141">download.</a>
+						<a href="/release-notes/itracker-3.0-rc2.html">itracker-3.0-rc2</a>
+					</td>
+				</tr>
+				<tr>
+					<td>2008-09-29</td>
+					<td>
+						First release candidate for version 3.0 is available for
+						<a href="https://sourceforge.net/project/showfiles.php?group_id=54141">download.</a> Release-notes:
+						<a href="/release-notes/itracker-3.0-rc1.html">itracker-3.0-rc1</a>
+					</td>
+				</tr>
+<!--				<tr>-->
+<!--					<td>2008-01-01</td>-->
+<!--					<td>Version 3.0 development has resumed.</td>-->
+<!--				</tr>-->
+<!--				<tr>-->
+<!--					<td></td>-->
+<!--					<td>-->
+<!--						<a href="https://sourceforge.net/projects/itracker/">more..</a>-->
+<!--					</td>-->
+<!--				</tr>-->
+			</table>
+		</section>
 
-        <section name="News">
-            <table border="1">
-                <tr>
-                    <td>2009-1-14</td>
-                    <td>First stable 3.0 Release is available for <a href="https://sourceforge.net/project/showfiles.php?group_id=54141">download</a>, <a href="https://sourceforge.net/forum/forum.php?forum_id=907765">more..</a></td>
-                </tr>
-                <tr>
-                    <td>2009-1-14</td>
-                    <td>New Project Site Skin released, <a href="https://sourceforge.net/forum/forum.php?forum_id=907764">more..</a></td>
-                </tr>
-                <tr>
-                    <td>2008-12-18</td>
-                    <td>Version 3.0 Release Candidate 3 is available for <a href="https://sourceforge.net/project/showfiles.php?group_id=54141">download.</a></td>
-                </tr>
-                <tr>
-                    <td>2008-11-01</td>
-                    <td>Version 3.0 Release Candidate 2 is available for <a href="https://sourceforge.net/project/showfiles.php?group_id=54141">download.</a></td>
-                </tr>
-                <tr>
-                    <td>2008-09-29</td>
-                    <td>First release candidate for version 3.0 is available for <a href="https://sourceforge.net/project/showfiles.php?group_id=54141">download</a>. Release-notes: <a href="/release-notes/itracker-3.0-rc1.html">itracker-3.0-rc1</a></td>
-                </tr>
-                <tr>
-                    <td>2008-01-01</td>
-                    <td>Version 3.0 development has resumed.</td>
-                </tr>
-				<tr><td></td><td><a href="https://sourceforge.net/projects/itracker/">more..</a></td></tr>
-            </table>
-        </section>
-
-    </body>
+	</body>
 
 </document>

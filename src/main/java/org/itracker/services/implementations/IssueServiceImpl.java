@@ -1677,7 +1677,7 @@ public class IssueServiceImpl implements IssueService {
 	 */
 	public Long getAllIssueAttachmentSize() {
 
-		return getIssueAttachmentDAO().countAll().longValue();
+		return getIssueAttachmentDAO().totalAttachmentsSize().longValue() / 1024;
 
 	}
 

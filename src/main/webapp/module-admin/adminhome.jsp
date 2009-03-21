@@ -39,7 +39,7 @@
           <td class="editColumnText"><fmt:formatNumber value="${sizeps}"/></td>
           <td></td>
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totalissues"/>: </td>
-          <td class="editColumnText"><fmt:formatNumber value="${ih.numberIssues}"/></td>
+          <td class="editColumnText"><fmt:formatNumber value="${numberIssues}"/></td>
         </tr>
         <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15" width="1"/></td></tr>
 
@@ -57,7 +57,7 @@
           <td class="editColumnText"><fmt:formatNumber value="${numberofActiveSesssions}"/></td>
           <td></td>
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totalusers"/>: </td>
-          <td class="editColumnText"><fmt:formatNumber value="${uh.numberUsers}"/></td>
+          <td class="editColumnText"><fmt:formatNumber value="${numberUsers}"/></td>
         </tr>
         <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15" width="1"/></td></tr>
 
@@ -71,7 +71,7 @@
         </tr>
         <tr class="listRowUnshaded">
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totalnumber"/>: </td>
-          <td class="editColumnText"><fmt:formatNumber value="${rh.numberReports}"/></td>
+          <td class="editColumnText"><fmt:formatNumber value="${numberReports}"/></td>
         </tr>
         <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15" width="1"/></td></tr>
 
@@ -128,13 +128,13 @@
         <tr class="listHeading">
           <td colspan="3" ><it:message key="itracker.web.admin.index.languageadmin"/></td>
           <td colspan="2" align="right">
-            <it:link action="initializelanguages" titleKey="itracker.web.admin.index.language.reinitialize.alt" styleClass="editColumnText">[<it:message key="itracker.web.attr.reinitialize"/>]</it:link>
+<!--            <it:link action="initializelanguages" titleKey="itracker.web.admin.index.language.reinitialize.alt" styleClass="editColumnText">[<it:message key="itracker.web.attr.reinitialize"/>]</it:link>-->
             <it:link forward="listlanguages" styleClass="editColumnText">[<it:message key="itracker.web.attr.administer"/>]</it:link>
           </td>
         </tr>
         <tr class="listRowUnshaded">
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totallanguages"/>: </td>
-          <td class="editColumnText"><fmt:formatNumber value="${sc.numberAvailableLanguages}"/></td>
+          <td class="editColumnText"><fmt:formatNumber value="${numberAvailableLanguages}"/></td>
           <td></td>
           <td class="editColumnTitle"><it:message key="itracker.web.attr.totalkeys"/>: </td>
           <td class="editColumnText"><fmt:formatNumber value="${numberDefinedKeys}"/></td>

@@ -1,7 +1,9 @@
 package org.itracker.web.actions.admin;
 
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,10 +14,13 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.PermissionType;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
+import org.itracker.services.ReportService;
+import org.itracker.services.UserService;
 import org.itracker.services.util.ReportUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
@@ -61,11 +66,11 @@ public class AdminHomeAction extends ItrackerBaseAction {
 				.getIssueService();
 //		ProjectService projectService = ServletContextUtils.getItrackerServices()
 //				.getProjectService();
-//		ReportService reportService = ServletContextUtils.getItrackerServices()
-//				.getReportService();
+		ReportService reportService = ServletContextUtils.getItrackerServices()
+				.getReportService();
 		ConfigurationService configurationService = ServletContextUtils.getItrackerServices()
 				.getConfigurationService();
-//		UserService userService = ServletContextUtils.getItrackerServices().getUserService();
+		UserService userService = ServletContextUtils.getItrackerServices().getUserService();
 
 
 		ProjectService projectService2 = ServletContextUtils
@@ -84,9 +89,18 @@ public class AdminHomeAction extends ItrackerBaseAction {
 		logTimeMillies("execute: looked up numberOfWorkflowScripts",
 				time_millies, log, Level.INFO);
 
-		Integer numberDefinedKeys = configurationService
-				.getNumberDefinedKeys(null);
-		request.setAttribute("numberDefinedKeys", numberDefinedKeys);
+		Map<String, String> numberDefinedKeys = configurationService
+				.getDefinedKeys(null);
+		
+        ResourceBundle bundle = ITrackerResources.getBundle(ITrackerResources.BASE_LOCALE);
+        Enumeration<String> keysEnum = bundle.getKeys();
+        int i = 0;
+        while (keysEnum.hasMoreElements()) {
+        	keysEnum.nextElement();
+        	i++;
+		}
+		
+		request.setAttribute("numberDefinedKeys", i);
 		logTimeMillies("execute: looked up numberDefinedKeys", time_millies,
 				log, Level.INFO);
 
@@ -119,9 +133,16 @@ public class AdminHomeAction extends ItrackerBaseAction {
 				time_millies, log, Level.INFO);
 
 		Integer numberofActiveSesssions = SessionManager.getNumActiveSessions();
+		
+		Integer numberUsers = userService.getAllUsers().size();
+		
 		request
 				.setAttribute("numberofActiveSesssions",
 						numberofActiveSesssions);
+		request
+		.setAttribute("numberUsers",
+				numberUsers);
+		
 		logTimeMillies("execute: looked up numberofActiveSesssions",
 				time_millies, log, Level.INFO);
 
@@ -132,6 +153,16 @@ public class AdminHomeAction extends ItrackerBaseAction {
 		logTimeMillies("execute: looked up allIssueAttachmentsTotalNumber",
 				time_millies, log, Level.INFO);
 
+		Integer numberReports = 0;
+		try {
+			numberReports = reportService.getNumberReports();
+		} catch (Exception e) {
+			log.warn("execSetupJspEnv", e);
+		}
+		request.setAttribute("numberReports",
+				numberReports);
+		Long numberIssues = issueService.getNumberIssues();
+		
 		// TODO: performance issue when attachments size needs to be calculated
 		// over many issues !
 		// select sum(size)
@@ -158,11 +189,16 @@ public class AdminHomeAction extends ItrackerBaseAction {
 		request.setAttribute("exportReport", exportReport);
 		request.setAttribute("sizeps", projectService2.getAllProjects().size());
 		request.setAttribute("lastRun", lastRun);
+		request.setAttribute("numberIssues", numberIssues);
+		
 //		request.setAttribute("ih", issueService);
 //		request.setAttribute("ph", projectService);
 //		request.setAttribute("rh", reportService);
 //		request.setAttribute("sc", configurationService);
 //		request.setAttribute("uh", userService);
+		
+		
+		request.setAttribute("numberAvailableLanguages", configurationService.getNumberAvailableLanguages());
 		logTimeMillies("execute: put services to request", time_millies, log,
 				Level.INFO);
 

@@ -316,24 +316,37 @@ public class EditIssueActionUtil {
 			try {
 				String history = form.getHistory();
 	
-			if (history == null || history.equals("")) {
-				if (log.isDebugEnabled()) {
-					log.debug("addHistoryEntry: skip history to " + issue);
+				if (history == null || history.equals("")) {
+					if (log.isDebugEnabled()) {
+						log.debug("addHistoryEntry: skip history to " + issue);
+					}
+					return;
 				}
-				return;
-			}
-			if (log.isDebugEnabled()) {
-				log.debug("addHistoryEntry: adding history to " + issue);
-			}
-			IssueHistory issueHistory = new IssueHistory(issue, user, history,
-				IssueUtilities.HISTORY_STATUS_AVAILABLE);
+				
 
-			issueHistory.setDescription(((IssueForm) form).getHistory());
-			issueHistory.setCreateDate(new Date());
-		
-			issueHistory.setLastModifiedDate(new Date());
-			issue.getHistory().add(issueHistory);
+		        if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML, issue.getProject().getOptions())) {
+	            	history = HTMLUtilities.removeMarkup(history);
+	            } else if(ProjectUtilities.hasOption(ProjectUtilities.OPTION_LITERAL_HISTORY_HTML, issue.getProject().getOptions())) {
+	            	history = HTMLUtilities.escapeTags(history);
+	            } else {
+	            	history = HTMLUtilities.newlinesToBreaks(history);
+	            }
+				
+				
+				if (log.isDebugEnabled()) {
+					log.debug("addHistoryEntry: adding history to " + issue);
+				}
+				IssueHistory issueHistory = new IssueHistory(issue, user, history,
+					IssueUtilities.HISTORY_STATUS_AVAILABLE);
+	
+				issueHistory.setDescription(((IssueForm) form).getHistory());
+				issueHistory.setCreateDate(new Date());
+			
+				issueHistory.setLastModifiedDate(new Date());
+				issue.getHistory().add(issueHistory);
 
+
+	            
 //  TODO why do we need to updateIssue here, and can not later?
 //			issueService.updateIssue(issue, user.getId());
 		} catch (Exception e) {
@@ -461,15 +474,10 @@ public class EditIssueActionUtil {
 
 		setupRelationsRequestEnv(issue.getRelations(), request);
 		
-		String wrap = "soft";
-        if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML, issue.getProject().getOptions()) ||
-                ProjectUtilities.hasOption(ProjectUtilities.OPTION_LITERAL_HISTORY_HTML, issue.getProject().getOptions())) {
-            wrap = "hard";
-        }
 
 		request.setAttribute("pageTitleKey", pageTitleKey);
 		request.setAttribute("pageTitleArg", pageTitleArg);
-		request.setAttribute("wrap", wrap);
+//		request.setAttribute("wrap", wrap);
 		request.getSession().setAttribute(Constants.LIST_OPTIONS_KEY,
 				listOptions);
 		request.setAttribute("targetVersions", targetVersion);
@@ -550,10 +558,16 @@ public class EditIssueActionUtil {
 			
 				if (issueField.getCustomField() != null
 						&& issueField.getCustomField().getId() > 0) {
-//					Locale currLocale = LoginUtilities.getCurrentLocale(request);
-					fieldValues.put(issueField.getCustomField().getId()
+					if (issueField.getCustomField().getFieldType() == CustomField.Type.DATE) {
+						Locale locale = LoginUtilities.getCurrentLocale(request);
+						String value = issueField.getValue(locale);
+						fieldValues.put(issueField.getCustomField().getId()
+								.toString(), value);
+					} else {
+						fieldValues.put(issueField.getCustomField().getId()
 							.toString(), issueField
 							.getStringValue());
+					}
 				}
 			}
 			Iterator<CustomField> fieldsIt = projectFields.iterator();

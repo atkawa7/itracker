@@ -976,12 +976,15 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         if (locale == null || locale.equals("")) {
             locale = ITrackerResources.BASE_LOCALE;
         }
+
         
         Collection<Language> items = languageDAO.findByLocale(locale);
         for (Iterator<Language> iter = items.iterator(); iter.hasNext();) {
             Language item = (Language) iter.next();
             keys.put(item.getResourceKey(), item.getResourceValue());
         }
+
+        
         return keys;
         
     }

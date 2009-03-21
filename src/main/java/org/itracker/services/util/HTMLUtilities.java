@@ -18,6 +18,10 @@
 
 package org.itracker.services.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.StringTokenizer;
+
 import org.apache.log4j.Logger;
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
@@ -158,6 +162,28 @@ public class HTMLUtilities {
 
         return sb.toString();
     }
+    
+    /**
+     * format a itracker date format for scal datepicker
+     * 
+     * @see http://scal.fieldguidetoprogrammers.com
+     * 
+     * @param format
+     * @return
+     */
+    public static final String getJSDateFormat(String format) {
+    	
+    	
+    	String f = format.replace('m', 'n'); 
+    		
+    		
+    	f = format.toLowerCase();
+    	
+    	return f;
+
+    	
+    }
+    
 }
 
  

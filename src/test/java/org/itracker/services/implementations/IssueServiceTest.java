@@ -15,6 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Component;
@@ -45,8 +46,6 @@ import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.web.util.ServletContextUtils;
 import org.junit.Test;
-
-import org.apache.log4j.Logger;
 
 /**
  * @author ranks
@@ -925,7 +924,15 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 	
 	@Test
 	public void testGetAllIssueAttachmentSize() {
-		assertEquals("total attachments", new Long(4), issueService.getAllIssueAttachmentSize()); 
+		Long size = 0l;
+		Iterator<IssueAttachment> attIt = issueAttachmentDAO.findAll().iterator();
+		while (attIt.hasNext()) {
+			IssueAttachment issueAttachment = (IssueAttachment) attIt.next();
+			assertNotNull(issueAttachment);
+			size += issueAttachment.getSize();
+		}
+		size = size / 1024;
+		assertEquals("total attachmentsSize", size, issueService.getAllIssueAttachmentSize()); 
 	}
 	
 
@@ -1151,6 +1158,9 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		
 	}
 
+	
+	
+	
 	@Override
 	public void onSetUp() throws Exception {
 
@@ -1193,4 +1203,5 @@ public class IssueServiceTest extends AbstractDependencyInjectionTest {
 		return new String[] { "application-context.xml" };
 	}
 
+	
 }

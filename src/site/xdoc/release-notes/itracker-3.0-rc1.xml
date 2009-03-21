@@ -1,16 +1,15 @@
 <?xml version="1.0"?>
-
-<document>
+<document xmlns="http://maven.apache.org/XDOC/2.0"   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
 	<properties>
 		<title>itracker 3.0-rc1 release-notes</title>
 	</properties>
 
 	<body>
-		<section name="intro">
-			This is the first 3.0 release candidate. There will be some stuff to
+		<section name="Intro">
+			<p>This is the first 3.0 release candidate. There will be some stuff to
 			fix, so please do testing of
-			essential stuff:
+			essential stuff:</p>
 			<ul>
 				<li>migrate from 2.4</li>
 				<li>use it for internal or less critical projects</li>
@@ -18,7 +17,7 @@
 				<li>provide feedback on bugs or failures in JIRA please.</li>
 			</ul>
 		</section>
-		<section name="environmental changes since 2.4">
+		<section name="Environmental changes since 2.4">
 			<ul>
 				<li>
 					Built using Maven 2, tests with Dbunit and in-memory hsqldb

@@ -76,7 +76,7 @@
                     <td>
                         <html:select property="dateFormat" styleClass="editColumnText">
                             <html:option value="${dateFormatDateOnly}" styleClass="editColumnText"><it:message key="itracker.web.attr.date.dateonly"/> (<it:message key="itracker.dateformat.dateonly"/>)</html:option>
-                            <html:option value="${dateFormatTimeonly}" styleClass="editColumnText"><it:message key="itracker.web.attr.date.timeonly"/> (<it:message key="itracker.dateformat.timeonly"/>)</html:option>
+<!--                            <html:option value="${dateFormatTimeonly}" styleClass="editColumnText"><it:message key="itracker.web.attr.date.timeonly"/> (<it:message key="itracker.dateformat.timeonly"/>)</html:option>-->
                             <html:option value="${dateFormatFull}" styleClass="editColumnText"><it:message key="itracker.web.attr.date.full"/> (<it:message key="itracker.dateformat.full"/>)</html:option>
                         </html:select>
                     </td>

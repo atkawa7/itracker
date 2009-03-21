@@ -210,7 +210,10 @@ public interface IssueService {
     List<IssueActivity> getIssueActivity(Integer issueId);
     
     List<IssueActivity> getIssueActivity(Integer issueId, boolean notificationSent);
-    
+    /**
+     * @deprecated
+     * @return
+     */
     List<IssueAttachment> getAllIssueAttachments();
     
 //    /**
