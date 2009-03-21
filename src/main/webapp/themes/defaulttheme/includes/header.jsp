@@ -1,77 +1,92 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 
-<%@ taglib uri="/tags/itracker" prefix="it" %>
-<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
-<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
-<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
-<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>    
+<%@ taglib uri="/tags/itracker" prefix="it"%>
+<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
+<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
+<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
+<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <html>
-  <head>
-    <title><it:message key="itracker.web.generic.itracker"/>: <it:message key="${pageTitleKey}" arg0="${pageTitleArg}"/>
-   </title>
-    <link rel="STYLESHEET" type="text/css" href="${contextPath}/themes/defaulttheme/includes/styles.css" />
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT"/> 
-     <meta http-equiv="Pragma" content="no-cache"/>
-    <script type="text/javascript" src="${contextPath}/themes/defaulttheme/includes/calendar.js"></script>
+<head>
+<title><it:message key="itracker.web.generic.itracker" />: <it:message
+	key="${pageTitleKey}" arg0="${pageTitleArg}" /></title>
+<link rel="STYLESHEET" type="text/css"
+	href="${contextPath}/themes/defaulttheme/includes/styles.css" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+<meta http-equiv="Pragma" content="no-cache" />
+<!-- script type="text/javascript"
+	src="${contextPath}/themes/defaulttheme/includes/calendar.js"></script -->
 
-    <script type="text/javascript" src="${contextPath}/themes/defaulttheme/includes/scripts.js"></script>
-  </head>
+<!-- Include calendar resources -->
+    <script src="${contextPath}/themes/defaulttheme/includes/calendar/javascripts/prototype.js" type="text/javascript"></script>
+    <script src="${contextPath}/themes/defaulttheme/includes/calendar/javascripts/effects.js" type="text/javascript"></script>
+    <script src="${contextPath}/themes/defaulttheme/includes/calendar/javascripts/scal.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="${contextPath}/themes/defaulttheme/includes/calendar/styles/scaltables.css" type="text/css" media="screen"/>
 
-  <body>
- 
-    <table border="0" cellspacing="1" cellspacing="0" width="100%">
-      <tr>
-        <td class="headerText">
-         <%-- TODO: temp. removed logo code, fix again <% if(alternateLogo != null && ! alternateLogo.equals("")) { %>
+<script type="text/javascript"
+	src="${contextPath}/themes/defaulttheme/includes/scripts.js"></script>
+</head>
+
+<body>
+
+<table border="0" cellspacing="1" cellspacing="0" width="100%">
+	<tr>
+		<td class="headerText"><%-- TODO: temp. removed logo code, fix again <% if(alternateLogo != null && ! alternateLogo.equals("")) { %>
                <!--  <img src="<%= alternateLogo %>"> itracker.org<br>
           <% } else { %>
                 <!--  <html:img page="/themes/defaulttheme/images/logo.gif"/> itracker.org<br>
-          <% } %> --%>
-        </td>
-        <td class="headerTextPageTitle"><h1><it:message key="${pageTitleKey}" arg0="${pageTitleArg}"/></h1></td>
-        <td class="headerTextWelcome">
-          <it:message key="itracker.web.header.welcome"/>
-		  <c:choose>
-		  	<c:when test="${ currUser != null}">${ currUser.firstName } ${ currUser.lastName } (<em>${ currUser.login }</em>)</c:when>
-		  	<c:otherwise><em><it:message key="itracker.web.header.guest"/></em></c:otherwise>
-		  </c:choose>	
-        </td>
-      </tr>
-      <tr><td colspan="3" class="top_ruler"><hr /></td></tr>
-    </table>
-    <table border="0" cellspacing="0" cellspacing="0" width="100%">
-      <tr>
-        <td class="headerLinks" align="left">
-        	<c:if test="${currUser != null}">
-        	
-    	<form name="lookupForm" action="<html:rewrite module="/module-projects" forward="viewissue"/>">
-                <input type="text" name="id" size="5" class="lookupBox" onchange="document.lookupForm.submit();">
-    	</form>
-        	</c:if>
-        </td>
-        <td class="headerLinks" align="right">
+          <% } %> --%></td>
+		<td class="headerTextPageTitle">
+		<h1><it:message key="${pageTitleKey}" arg0="${pageTitleArg}" /></h1>
+		</td>
+		<td class="headerTextWelcome"><it:message
+			key="itracker.web.header.welcome" /> <c:choose>
+			<c:when test="${ currUser != null}">${ currUser.firstName } ${ currUser.lastName } (<em>${
+				currUser.login }</em>)</c:when>
+			<c:otherwise>
+				<em><it:message key="itracker.web.header.guest" /></em>
+			</c:otherwise>
+		</c:choose></td>
+	</tr>
+	<tr>
+		<td colspan="3" class="top_ruler">
+		<hr />
+		</td>
+	</tr>
+</table>
+<table border="0" cellspacing="0" cellspacing="0" width="100%">
+	<tr>
+		<td class="headerLinks" align="left"><c:if
+			test="${currUser != null}">
 
-			<c:if test="${currUser != null}">
-	
-	          	<html:link styleClass="headerLinks" titleKey="itracker.web.header.menu.home.alt" module="/" action="/portalhome">
-	             	<it:message key="itracker.web.header.menu.home"/></html:link>	
+			<form name="lookupForm"
+				action="<html:rewrite module="/module-projects" forward="viewissue"/>">
+			<input type="text" name="id" size="5" class="lookupBox"
+				onchange="document.lookupForm.submit();"></form>
+		</c:if></td>
+		<td class="headerLinks" align="right"><c:if
+			test="${currUser != null}">
+
+			<html:link styleClass="headerLinks"
+				titleKey="itracker.web.header.menu.home.alt" module="/"
+				action="/portalhome">
+				<it:message key="itracker.web.header.menu.home" />
+			</html:link>	
 	             		
-				 | <html:link
-                                        linkName="listprojects"					styleClass="headerLinks"
-					titleKey="itracker.web.header.menu.projectlist.alt"
-					module="/module-projects" action="/list_projects">
-					<it:message key="itracker.web.header.menu.projectlist" />
-				</html:link> 
+				 | <html:link linkName="listprojects" styleClass="headerLinks"
+				titleKey="itracker.web.header.menu.projectlist.alt"
+				module="/module-projects" action="/list_projects">
+				<it:message key="itracker.web.header.menu.projectlist" />
+			</html:link> 
 				| <html:link forward="searchissues" module="/module-searchissues"
-					styleClass="headerLinks"
-					titleKey="itracker.web.header.menu.search.alt">
-					<it:message key="itracker.web.header.menu.search" />
-				</html:link>
-				<%-- TODO: fix reports-section 
+				styleClass="headerLinks"
+				titleKey="itracker.web.header.menu.search.alt">
+				<it:message key="itracker.web.header.menu.search" />
+			</html:link>
+			<%-- TODO: fix reports-section 
 				<c:if
 					test="<%=UserUtilities.hasPermission(permissions,
 										UserUtilities.PERMISSION_VIEW_ALL)%>">
@@ -83,57 +98,57 @@
 					</html:link>
 				</c:if>
 				--%>
-				<c:if
-					test="${hasPermissionUserAdmin}">
+			<c:if test="${hasPermissionUserAdmin}">
 	                      |
 	                      <html:link styleClass="headerLinks"
-						titleKey="itracker.web.header.menu.admin.alt"
-						module="/module-admin" action="/adminhome">
-						<it:message key="itracker.web.header.menu.admin" />
-					</html:link>
-				</c:if>
-				<c:if
-					test="${hasPermissionProductAdmin}">
+					titleKey="itracker.web.header.menu.admin.alt"
+					module="/module-admin" action="/adminhome">
+					<it:message key="itracker.web.header.menu.admin" />
+				</html:link>
+			</c:if>
+			<c:if test="${hasPermissionProductAdmin}">
 	               | <html:link styleClass="headerLinks"
-						titleKey="itracker.web.header.menu.projectadmin.alt"
-						module="/module-admin" action="/listprojectsadmin">
-						<it:message key="itracker.web.header.menu.projectadmin" />
-					</html:link>
-				</c:if>
+					titleKey="itracker.web.header.menu.projectadmin.alt"
+					module="/module-admin" action="/listprojectsadmin">
+					<it:message key="itracker.web.header.menu.projectadmin" />
+				</html:link>
+			</c:if>
 	           
 	            
 	                | <html:link module="/module-preferences"
-					forward="editpreferences" styleClass="headerLinks"
-					titleKey="itracker.web.header.menu.preferences.alt">
-					<it:message key="itracker.web.header.menu.preferences" />
-				</html:link>
+				forward="editpreferences" styleClass="headerLinks"
+				titleKey="itracker.web.header.menu.preferences.alt">
+				<it:message key="itracker.web.header.menu.preferences" />
+			</html:link>
 	                | <html:link forward="help" styleClass="headerLinks"
-					titleKey="itracker.web.header.menu.help.alt" module="/module-help">
-					<it:message key="itracker.web.header.menu.help" />
-				</html:link>
-	                | <html:link linkName="logoff" action="/logoff" styleClass="headerLinks"
-					titleKey="itracker.web.header.menu.logout.alt" module="/">
-					<it:message key="itracker.web.header.menu.logout" />
-				</html:link>
-			</c:if> 
-			<c:if test="${currUser == null}">
-		             	<%-- <nitrox:var name="allowForgotPassword" type="java.lang.Boolean"/> --%>
-				<c:if test="${allowForgotPassword}">
-			           
-                                   <html:link linkName="forgotpassword" forward="forgotpassword" styleClass="headerLinks" titleKey="itracker.web.header.menu.forgotpass.alt">		            	<it:message key="itracker.web.header.menu.forgotpass"/></html:link>
-		        </c:if>  
-		                <%-- <nitrox:var name="allowSelfRegister" type="java.lang.Boolean"/> --%>
-		        <c:if test="${allowSelfRegister}">      
-	                   | <html:link forward="selfregistration" styleClass="headerLinks" titleKey="itracker.web.header.menu.selfreg.alt">
-	                     <it:message key="itracker.web.header.menu.selfreg"/></html:link>
-		        </c:if>
-	   		</c:if> 
-        </td>
-      </tr>
-    </table>
-    
-    <p class="pageHeader"><%-- TODO: temp. removed code, fix this: <it:message key="<%= pageTitleKey %>" arg0="<%= pageTitleArg %>"/>--%></p>
- 
+				titleKey="itracker.web.header.menu.help.alt" module="/module-help">
+				<it:message key="itracker.web.header.menu.help" />
+			</html:link>
+	                | <html:link linkName="logoff" action="/logoff"
+				styleClass="headerLinks"
+				titleKey="itracker.web.header.menu.logout.alt" module="/">
+				<it:message key="itracker.web.header.menu.logout" />
+			</html:link>
+		</c:if> <c:if test="${currUser == null}">
+			<%-- <nitrox:var name="allowForgotPassword" type="java.lang.Boolean"/> --%>
+			<c:if test="${allowForgotPassword}">
 
+				<html:link linkName="forgotpassword" forward="forgotpassword"
+					styleClass="headerLinks"
+					titleKey="itracker.web.header.menu.forgotpass.alt">
+					<it:message key="itracker.web.header.menu.forgotpass" />
+				</html:link>
+			</c:if>
+			<%-- <nitrox:var name="allowSelfRegister" type="java.lang.Boolean"/> --%>
+			<c:if test="${allowSelfRegister}">      
+	                   | <html:link forward="selfregistration"
+					styleClass="headerLinks"
+					titleKey="itracker.web.header.menu.selfreg.alt">
+					<it:message key="itracker.web.header.menu.selfreg" />
+				</html:link>
+			</c:if>
+		</c:if></td>
+	</tr>
+</table>
 
-    
+<p class="pageHeader"><%-- TODO: temp. removed code, fix this: <it:message key="<%= pageTitleKey %>" arg0="<%= pageTitleArg %>"/>--%></p>

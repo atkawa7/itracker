@@ -17,3 +17,10 @@
 			}
 		}
 	}
+	
+
+    function toggleCalendar(cal) {
+
+    	cal.toggleCalendar();
+    }
+    

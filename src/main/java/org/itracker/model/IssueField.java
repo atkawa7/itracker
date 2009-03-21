@@ -49,14 +49,13 @@ public class IssueField extends AbstractEntity {
 	private static transient final Logger log = Logger
 			.getLogger(IssueField.class);
 
-
 	private Issue issue;
 
 	private CustomField customField;
 
 	private String stringValue;
 
-	private int intValue;
+	private Integer intValue;
 
 	private Date dateValue;
 
@@ -76,7 +75,6 @@ public class IssueField extends AbstractEntity {
 		setIssue(issue);
 		setCustomField(field);
 	}
-
 
 	public Issue getIssue() {
 		return issue;
@@ -101,6 +99,13 @@ public class IssueField extends AbstractEntity {
 	}
 
 	public String getStringValue() {
+		if (null != this.getCustomField() && Type.DATE == this.getCustomField().getFieldType()) {
+			this.stringValue = "";
+			if (null != this.dateValue) {
+				String stringValue = formatDate(ITrackerResources.getBundle(ITrackerResources.BASE_LOCALE));
+				this.stringValue = stringValue;
+			}
+		}
 		return stringValue;
 	}
 
@@ -108,11 +113,11 @@ public class IssueField extends AbstractEntity {
 		this.stringValue = stringValue;
 	}
 
-	public int getIntValue() {
+	public Integer getIntValue() {
 		return intValue;
 	}
 
-	public void setIntValue(int intValue) {
+	public void setIntValue(Integer intValue) {
 		this.intValue = intValue;
 	}
 
@@ -123,10 +128,12 @@ public class IssueField extends AbstractEntity {
 	}
 
 	public void setDateValue(Date dateValue) {
-		if (null == dateValue)
+		if (null == dateValue) {
 			this.dateValue = null;
-		else
+		} else {
 			this.dateValue = new Date(dateValue.getTime());
+			this.stringValue = formatDate(ITrackerResources.getBundle());
+		}
 	}
 
 	/**
@@ -144,7 +151,7 @@ public class IssueField extends AbstractEntity {
 			return String.valueOf(getIntValue());
 		}
 		return getStringValue();
-		
+
 	}
 
 	/**
@@ -177,7 +184,6 @@ public class IssueField extends AbstractEntity {
 	 */
 	public String getValue(ResourceBundle bundle) {
 
-		
 		// skip this code, it's not approved
 		Locale locale = bundle.getLocale();
 
@@ -193,7 +199,7 @@ public class IssueField extends AbstractEntity {
 						.debug("getValue: type was INTEGER, value: "
 								+ this.intValue);
 			}
-			return Integer.toString(this.intValue);
+			return String.valueOf(this.intValue);
 
 		case DATE:
 			if (log.isDebugEnabled()) {
@@ -206,42 +212,45 @@ public class IssueField extends AbstractEntity {
 				}
 				return null;
 			}
-			SimpleDateFormat sdf = CustomField.DEFAULT_DATE_FORMAT;
-			// FIXME: Fall back to a default date format or make date format mandatory!
-//			String dateFormat = "dd/MM/yyyy"; 
-//				(customField.getDateFormat()
-//					.equalsIgnoreCase(CustomFieldUtilities.DATE_FORMAT_UNKNOWN)) ? CustomFieldUtilities.DATE_FORMAT_DATEONLY
-//					: customField.getDateFormat();
-
-//			if (log.isDebugEnabled()) {
-//				log.debug("getValue: " + dateFormat + " (original was "
-//						+ customField.getDateFormat() + ")");
-//			}
-//			dateFormat = bundle.getString("itracker.dateformat." + dateFormat);
-			if (log.isDebugEnabled()) {
-				log.debug("getValue: dateFormat from itracker configuration "
-						+ sdf.toPattern());
+			if (this.dateValue == null) {
+				this.dateValue = new Date();
 			}
-			try {
-//				sdf = new SimpleDateFormat(dateFormat, locale);
-				String formattedDate = sdf.format(this.dateValue);
-				if (log.isDebugEnabled()) {
-					log.debug("getValue: formated date " + this.dateValue
-							+ " to " + formattedDate);
-				}
-				return formattedDate;
-			} catch (NullPointerException ne) {
-				log.debug("getValue: ", ne);
-				if (dateValue == null) {
-					log.warn("getValue: failed to format date, null for "
-							+ customField);
-					return sdf.format(new Date());
-				}
-			}
+			return formatDate(bundle);
 		default:
 			return this.stringValue;
 		}
 
+	}
+
+	private String formatDate(ResourceBundle bundle) {
+		assert (dateValue!= null): "dateValue failed";
+		try {
+
+			SimpleDateFormat sdf =
+				new SimpleDateFormat(bundle
+						.getString("itracker.dateformat."
+								+ customField.getDateFormat()), bundle.getLocale());
+
+			if (log.isDebugEnabled()) {
+				log.debug("getValue: dateFormat from itracker configuration "
+						+ sdf.toPattern());
+			}
+			
+			// sdf = new SimpleDateFormat(dateFormat, locale);
+			String formattedDate = sdf.format(this.dateValue);
+			if (log.isDebugEnabled()) {
+				log.debug("getValue: formated date " + this.dateValue
+						+ " to " + formattedDate);
+			}
+			return formattedDate;
+		} catch (NullPointerException ne) {
+			log.debug("getValue: ", ne);
+			if (dateValue == null) {
+				log.warn("getValue: failed to format date, null for "
+						+ customField);
+			}
+			return "";
+		}
 	}
 
 	/**
@@ -262,14 +271,20 @@ public class IssueField extends AbstractEntity {
 	 *            the ResourceBundle used for any string formatting
 	 * @throws IssueException
 	 *             represents an error formatting or parsing the value
-	 *             
-	 * @deprecated locale is redundant set, in bundle and as separate parameter. use {@link IssueField#setValue(String, ResourceBundle)} instead
+	 * 
+	 * @deprecated locale is redundant set, in bundle and as separate parameter.
+	 *             use {@link IssueField#setValue(String, ResourceBundle)}
+	 *             instead
 	 */
 	public void setValue(String value, Locale locale, ResourceBundle bundle)
 			throws IssueException {
+		this.stringValue = null;
+		this.intValue = 0;
+		this.dateValue = null;
+		
 		if (value != null && value.trim().length() > 0) {
 			switch (customField.getFieldType()) {
-		
+
 			case INTEGER:
 				setStringValue(value);
 				try {
@@ -283,27 +298,26 @@ public class IssueField extends AbstractEntity {
 			case DATE:
 				setStringValue(value);
 				try {
-//					if (customField.getDateFormat() != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
-						// FIXME: since the datepicker does not support different date format, always use the english date-only.
-						SimpleDateFormat sdf = CustomField.DEFAULT_DATE_FORMAT;
-//						new SimpleDateFormat(
-//								"dd/MM/yyyy",
-//								bundle
-//								.getString("itracker.dateformat."
-//										+ CustomFieldUtilities.DATE_FORMAT_DATEONLY),
-										//customField.getDateFormat()),
-//										Locale.ENGLISH);
-						Date dateValue = sdf.parse(value);
-						if (dateValue != null) {
-							setDateValue(dateValue);
-						} else {
-							log.error("setValue: caught exception for date " + value);
-							throw new IssueException("Invalid date.",
-									IssueException.TYPE_CF_PARSE_DATE);
-						}
-//					}
+					if (null == locale) {
+						locale = bundle.getLocale();
+					}
+					SimpleDateFormat sdf = // CustomField.DEFAULT_DATE_FORMAT;
+					new SimpleDateFormat(bundle
+							.getString("itracker.dateformat."
+									+ customField.getDateFormat()), locale);
+
+					Date dateValue = sdf.parse(value);
+					if (dateValue != null) {
+						setDateValue(dateValue);
+					} else {
+						log.error("setValue: caught exception for date "
+								+ value);
+						throw new IssueException("Invalid date.",
+								IssueException.TYPE_CF_PARSE_DATE);
+					}
 				} catch (Exception ex) {
-					log.error("setValue: caught exception for date " + value, ex);
+					log.error("setValue: caught exception for date " + value,
+							ex);
 					throw new IssueException("Invalid date format.",
 							IssueException.TYPE_CF_PARSE_DATE);
 				}
@@ -314,12 +328,13 @@ public class IssueField extends AbstractEntity {
 			}
 
 		} else {
-//			reset value
+			// reset value
 			setStringValue("");
 			setDateValue(null);
 			setIntValue(0);
 		}
 	}
+
 	/**
 	 * Sets the custom field value.
 	 * 
@@ -336,17 +351,17 @@ public class IssueField extends AbstractEntity {
 	 *            the ResourceBundle used for any string formatting
 	 * @throws IssueException
 	 *             represents an error formatting or parsing the value
-	 *             
+	 * 
 	 */
-	public void setValue(String value, ResourceBundle bundle) throws IssueException {
+	public void setValue(String value, ResourceBundle bundle)
+			throws IssueException {
 		setValue(value, bundle.getLocale(), bundle);
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("id", getId())
-				.append("issue", getIssue()).append("customField", getCustomField())
-				.toString();
+		return new ToStringBuilder(this).append("id", getId()).append("issue",
+				getIssue()).append("customField", getCustomField()).toString();
 	}
 
 }

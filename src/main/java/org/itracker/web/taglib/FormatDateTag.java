@@ -22,13 +22,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.services.util.UserUtilities;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
 
 public class FormatDateTag extends TagSupport {
 	/**
@@ -76,16 +79,13 @@ public class FormatDateTag extends TagSupport {
 		String value = "";
 		SimpleDateFormat sdf;
 		Locale locale = null;
-
-		HttpSession session = pageContext.getSession();
-		if (session != null) {
-			locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+		if (pageContext.getRequest() instanceof HttpServletRequest) {
+			locale = LoginUtilities.getCurrentLocale((HttpServletRequest)pageContext.getRequest());
 		}
-
 		if (locale == null) {
 			locale = ITrackerResources.getLocale();
 		}
-
+		
 		if (date == null) {
 			value = ITrackerResources.getString(emptyKey, locale);
 		} else {

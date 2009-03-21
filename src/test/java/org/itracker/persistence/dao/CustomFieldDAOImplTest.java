@@ -17,7 +17,7 @@ public class CustomFieldDAOImplTest extends AbstractDependencyInjectionTest {
         assertNotNull(customField);
 
         assertEquals(CustomField.Type.STRING, customField.getFieldType());
-        assertEquals("mm-dd-yyyy", customField.getDateFormat());
+        assertEquals("dateonly", customField.getDateFormat());
         assertEquals(true, customField.isRequired());
         assertEquals(true, customField.isSortOptionsByName());
     }
@@ -32,7 +32,7 @@ public class CustomFieldDAOImplTest extends AbstractDependencyInjectionTest {
 
         assertEquals(1, customField.getId().intValue());
         assertEquals(CustomField.Type.STRING, customField.getFieldType());
-        assertEquals("mm-dd-yyyy", customField.getDateFormat());
+        assertEquals("dateonly", customField.getDateFormat());
         assertEquals(true, customField.isRequired());
         assertEquals(true, customField.isSortOptionsByName());
     }

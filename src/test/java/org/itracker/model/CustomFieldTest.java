@@ -1,4 +1,6 @@
 package org.itracker.model;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import org.itracker.AbstractDependencyInjectionTest;
@@ -42,10 +44,19 @@ public class CustomFieldTest extends AbstractDependencyInjectionTest{
 		} catch (IssueException e){
 			assertTrue(true);
 		}
+		//test type is date
 		cust.setFieldType(CustomField.Type.DATE);
+		cust.setDateFormat(CustomField.DateFormat.DATE.code);	
+		SimpleDateFormat sdf =
+			new SimpleDateFormat(ITrackerResources.getBundle(en)
+					.getString("itracker.dateformat."
+							+ cust.getDateFormat()), en);
+		final Date date = new Date(100000);
+		final String dateString = sdf.format(date);
+		
 		try{
-			cust.checkAssignable("12/25/2008", en, ITrackerResources.getBundle(en));
-			cust.checkAssignable("2008-12-25", en, ITrackerResources.getBundle(en));
+			cust.checkAssignable(dateString, en, ITrackerResources.getBundle(en));
+			cust.checkAssignable("abdcd" + dateString, en, ITrackerResources.getBundle(en));
 		} catch (IssueException e){
 			assertTrue(true);
 		}

@@ -322,3 +322,16 @@ table.portalhomeMain {
   font-family: Verdana, Arial, sans-serif;
   font-size: small;
 }
+
+/**
+Calender Styles
+*********************/
+
+.cal_table {
+	background-color: white;
+	opacity: .8;
+	
+}
+.tinyscal {
+	position: absolute;
+}

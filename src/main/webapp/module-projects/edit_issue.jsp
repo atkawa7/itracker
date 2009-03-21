@@ -187,7 +187,7 @@
 		<c:when test="${ hasFullEdit }">
         <html:select property="severity" styleClass="editColumnText">
             <c:forEach items="${ fieldSeverity }" var="severity" varStatus="status">
-              <html:option value="${ severity.value }"styleClass="editColumnText">
+              <html:option value="${ severity.value }" styleClass="editColumnText">
                 ${ severity.name }
 			  </html:option>
             </c:forEach>
@@ -252,7 +252,7 @@
 		</td>
 
     <c:if test="${not empty targetVersions}">
-     <td valign="top" class="editColumnTitle" style="white-space: nowrap;" nowrap>
+     <td valign="top" class="editColumnTitle" style="white-space: nowrap;">
         <it:message key="itracker.web.attr.target"/>:&nbsp;</td>
  	   <td valign="top" class="editColumnText">
 

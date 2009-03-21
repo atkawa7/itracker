@@ -358,10 +358,11 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 
 		case DATE:
 			if (this.dateFormat != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
-				SimpleDateFormat format = DEFAULT_DATE_FORMAT;
-//					new SimpleDateFormat(bundle
-//						.getString("itracker.dateformat." + this.dateFormat),
-//						locale);
+				SimpleDateFormat format =
+					// DEFAULT_DATE_FORMAT;
+					new SimpleDateFormat(bundle
+						.getString("itracker.dateformat." + this.dateFormat),
+						locale);
 
 				try {
 					format.parse(value);

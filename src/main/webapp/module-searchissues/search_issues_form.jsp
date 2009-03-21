@@ -306,7 +306,9 @@
              }
              if(issues.size() == 0) {
           %>
-              <tr class="listRowUnshaded" align="left"><td colspan="10" align="left"><it:message key="itracker.web.error.noissues"/></td></tr>
+              <tr class="listRowUnshaded" align="left">
+              	<td colspan="10" align="left"><it:message key="itracker.web.error.noissues"/>
+              </td></tr>
            
           <% } else { %>
           <%-- TODO: fix reports 

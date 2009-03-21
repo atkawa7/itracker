@@ -63,9 +63,17 @@ public class IssueFieldTest extends AbstractDependencyInjectionTest{
 		assertEquals("int value 23", "23", iss.getValue(en));
 		
 		cust.setFieldType(CustomField.Type.DATE);
-		Date date = new Date(10000);
+		cust.setDateFormat(CustomField.DateFormat.DATE.code);
+		SimpleDateFormat sdf =
+			new SimpleDateFormat(ITrackerResources.getBundle(en)
+					.getString("itracker.dateformat."
+							+ cust.getDateFormat()), en);
+
+		final Date date = new Date(10000);
+		final String dateString = sdf.format(date);
+
 		iss.setDateValue(date);
-		assertEquals("date value","01/01/1970", iss.getValue(en));
+		assertEquals("date value",dateString, iss.getValue(en));
 		
 		cust.setRequired(false);
 		iss.setDateValue(null);
@@ -113,42 +121,40 @@ public class IssueFieldTest extends AbstractDependencyInjectionTest{
 		}
 		
 		//test type is date
-		cust.setFieldType(CustomField.Type.DATE);		
+		cust.setFieldType(CustomField.Type.DATE);
+		cust.setDateFormat(CustomField.DateFormat.DATE.code);	
+		SimpleDateFormat sdf =
+			new SimpleDateFormat(ITrackerResources.getBundle(en)
+					.getString("itracker.dateformat."
+							+ cust.getDateFormat()), en);
+
+		final String dateString = sdf.format(new Date(0));
+
 		try {
-			iss.setValue("01/01/1970",ITrackerResources.getBundle(en));
+			iss.setValue(dateString,ITrackerResources.getBundle(en));
 		} catch (IssueException e) {
 			fail("throw IssueException" + e);
 		}		
-		SimpleDateFormat sdf = CustomField.DEFAULT_DATE_FORMAT;
 		try {
-			assertEquals("date value",sdf.parseObject("01/01/1970"), iss.getDateValue());
+			assertEquals("date value",sdf.parseObject(dateString), iss.getDateValue());
 		} catch (ParseException e) {
 			fail("throw ParseException" + e);
 		}
 		//test wrong date
 		try {
-			iss.setValue("xxxx01/01/1970",ITrackerResources.getBundle(en));
+			iss.setValue("xxxx" + dateString,ITrackerResources.getBundle(en));
 		} catch (Exception e) {
 			assertTrue(true);
 		}
 		
-		
-		//test value is null
-		try {
-			iss.setValue(null,ITrackerResources.getBundle(en));
-			assertEquals("", iss.getStringValue());
-			assertNull(iss.getDateValue());
-			assertEquals(0, iss.getIntValue());
-		} catch (IssueException e) {
-			fail("throw IssueException" + e);
-		}
+
 		
 		//test value is empty
 		try {
 			iss.setValue(null,ITrackerResources.getBundle(en));
 			assertEquals("", iss.getStringValue());
 			assertNull(iss.getDateValue());
-			assertEquals(0, iss.getIntValue());
+			assertEquals(Integer.valueOf(0), iss.getIntValue());
 		} catch (IssueException e) {
 			fail("throw IssueException" + e);
 		}
