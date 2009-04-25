@@ -23,14 +23,11 @@ import java.util.Date;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.services.util.UserUtilities;
-import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 
 public class FormatDateTag extends TagSupport {
