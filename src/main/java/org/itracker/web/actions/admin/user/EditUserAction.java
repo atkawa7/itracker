@@ -21,7 +21,6 @@ package org.itracker.web.actions.admin.user;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +44,6 @@ import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
-import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 import org.itracker.web.util.SessionManager;
 
