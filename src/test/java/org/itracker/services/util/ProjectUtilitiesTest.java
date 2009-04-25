@@ -19,7 +19,6 @@ import org.itracker.model.Language;
 import org.itracker.model.Status;
 import org.itracker.model.util.PropertiesFileHandler;
 import org.itracker.persistence.dao.LanguageDAO;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
