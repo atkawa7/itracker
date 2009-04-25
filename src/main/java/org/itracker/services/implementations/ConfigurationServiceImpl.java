@@ -45,7 +45,6 @@ import org.itracker.model.NameValuePair;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.SystemConfiguration;
 import org.itracker.model.WorkflowScript;
-import org.itracker.model.util.PropertiesFileHandler;
 import org.itracker.persistence.dao.ConfigurationDAO;
 import org.itracker.persistence.dao.CustomFieldDAO;
 import org.itracker.persistence.dao.CustomFieldValueDAO;
