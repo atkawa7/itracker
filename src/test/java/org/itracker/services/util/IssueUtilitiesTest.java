@@ -28,7 +28,6 @@ import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.model.Version;
 import org.itracker.model.CustomField.Type;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
