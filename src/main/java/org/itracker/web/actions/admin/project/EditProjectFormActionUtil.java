@@ -32,7 +32,6 @@ import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
-import org.itracker.services.util.WorkflowUtilities;
 import org.itracker.web.forms.ProjectForm;
 import org.itracker.web.ptos.ProjectScriptPTO;
 import org.itracker.web.util.Constants;
