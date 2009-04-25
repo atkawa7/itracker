@@ -18,10 +18,6 @@
 
 package org.itracker.services.util;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.StringTokenizer;
-
 import org.apache.log4j.Logger;
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
