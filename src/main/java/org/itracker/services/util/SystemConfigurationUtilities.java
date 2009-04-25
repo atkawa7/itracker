@@ -26,7 +26,6 @@ import java.util.StringTokenizer;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
-import org.itracker.model.Language;
 import org.itracker.model.NameValuePair;
 import org.itracker.services.ConfigurationService;
 
