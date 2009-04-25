@@ -2,19 +2,15 @@ package org.itracker.web.actions.admin.configuration;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
