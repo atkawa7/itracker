@@ -32,7 +32,6 @@ import org.apache.log4j.Logger;
 import org.itracker.model.Language;
 import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.services.exceptions.ITrackerDirtyResourceException;
-import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 /**
