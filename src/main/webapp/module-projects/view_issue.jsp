@@ -150,7 +150,7 @@
                 <c:when test="${not empty project.versions}">
                       <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.versions"/>: </td>
                       <td id="versions" valign="top" class="editColumnText">
-	                  	<c:forEach var="version" items="${project.versions}">
+	                  	<c:forEach var="version" items="${issue.versions}">
                             ${version.number} <br/>
                          </c:forEach>
                         
