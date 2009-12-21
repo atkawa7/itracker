@@ -19,6 +19,18 @@
 				</li>
 
 				<li>
+					itracker assumes the mail and activation libs are provided
+					in the application class-path either by the JVM or application
+					server. Best practice is to install	the required files to the 
+					Tomcat lib folder if necessary:
+					<ol><li>download and extract java activation framework available from sun.com</li>
+					<li>copy the jar file <code>activation.jar</code> to the webserver library (eg <code>$TOMCAT6_HOME/lib/</code>)</li>
+					<li>download and extract javamail available from sun.com</li>
+					<li>copy the jar files <code>mail-api.jar</code> and <code>javamail.jar</code> to the webserver library</li>
+					<li>restart Tomcat to apply this changes</li></ol>
+				</li>
+				
+				<li>
 					After installing Tomcat-6 you have to set up an empty MySQL
 					database for your itracker.
 					<em><strong>The database must support UTF-8 charset for itracker to function properly.</strong></em>
@@ -30,7 +42,7 @@
 
 				<li>
 					If you have all this requirements resolved, download the binary
-					itracker file on Sourceforge. Extract it and copy the
+					itracker file on Sourceforge. Extract it and deploy the
 					<code>itracker.war</code>
 					file to
 					<code>$TOMCAT_HOME/webapps</code>
