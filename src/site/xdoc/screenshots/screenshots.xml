@@ -10,37 +10,49 @@
 			<dl title="screenshots">
 				<dt>Login-screen</dt>
 				<dd>
-					<img src="../images/screenshots/login.png" alt="login-screen" />
+					<img src="../images/screenshots/Login.png" alt="login-screen" />
 				</dd>
 				<dt>Home-screen with all sections, displaying 10 issues
 					per section</dt>
 				<dd>
-					<img src="../images/screenshots/home.png" alt="portal home" />
+					<img src="../images/screenshots/Dashboard.png" alt="portal home" />
 				</dd>
+				<dt>Admin-screen</dt>
+				<dd>
+					<img src="../images/screenshots/Admin.png" alt="admin home" />
+				</dd>
+				<dt>Admin users</dt>
+				<dd>
+					<img src="../images/screenshots/UserAdmin.png" alt="user admin" />
+				</dd>		
 				<dt>Preferences for users</dt>
 				<dd>
-					<img src="../images/screenshots/myPreferences.png" alt="my preferences" />
+					<img src="../images/screenshots/UserPreferences.png" alt="my preferences" />
+				</dd>				
+				<dt>Create project</dt>
+				<dd>
+					<img src="../images/screenshots/CreateProject.png" alt="create project" />
 				</dd>
 				<dt>Project issues</dt>
 				<dd>
-					<img src="../images/screenshots/project-issues.png" alt="project" />
+					<img src="../images/screenshots/ProjectIssues.png" alt="project" />
 				</dd>
 
 				<dt>Create issue</dt>
 				<dd>
-					<img src="../images/screenshots/create-issue.png" alt="create issue" />
+					<img src="../images/screenshots/CreateIssue.png" alt="create issue" />
 				</dd>
 				<dt>View issue</dt>
 				<dd>
-					<img src="../images/screenshots/view-issue.png" alt="view issue" />
+					<img src="../images/screenshots/ViewIssue.png" alt="view issue" />
 				</dd>
 				<dt>Edit issue</dt>
 				<dd>
-					<img src="../images/screenshots/edit-issue.png" alt="edit issue" />
+					<img src="../images/screenshots/EditIssue.png" alt="edit issue" />
 				</dd>
 				<dt>Issue search</dt>
 				<dd>
-					<img src="../images/screenshots/issue-search.png" alt="search issues" />
+					<img src="../images/screenshots/IssueSearch.png" alt="search issues" />
 				</dd>
 			</dl>
 		</section>
@@ -48,11 +60,11 @@
 			<dl title="screenshots">
 				<dt>Assign issue</dt>
 				<dd>
-					<img src="../images/screenshots/assigned-notification.png" alt="assign notification" />
+					<img src="../images/screenshots/AssignedNotification.png" alt="assign notification" />
 				</dd>
 				<dt>Update issue</dt>
 				<dd>
-					<img src="../images/screenshots/update-notification.png" alt="update notification" />
+					<img src="../images/screenshots/UpdateNotification.png" alt="update notification" />
 				</dd>
 			</dl>
 		</section>
