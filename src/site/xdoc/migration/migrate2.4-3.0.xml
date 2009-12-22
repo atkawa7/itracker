@@ -11,7 +11,7 @@
 			<ol>
 				<li>
 					Download and customize
-					<a href="mysql/create_itracker_mig_and_transform.sh">create_itracker_mig_and_transform.sh"
+					<a href="mysql/create_itracker_mig_and_transform.sh">create_itracker_mig_and_transform.sh
 					</a>
 				</li>
 				<li>
@@ -127,7 +127,9 @@ alter table componentbean change status status INT NOT NULL;
 		</pre>
 		</section>
 		<section name="Older versions">
-		<a href="http://itracker.wiki.sourceforge.net/Old+Documents">see WIKI for more information</a>
+		<p>Check old docs how to upgrade from previous itracker:</p>
+		<p><a href="../old_docs/CHANGELOG">CHANGELOG itracker 2.4</a></p>
+		<p><a href="../old_docs/INSTALLATION">INSTALL itracker 2.4</a></p>
 		</section>
 	</body>
 </document>
