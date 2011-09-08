@@ -37,12 +37,9 @@ public class ShowHelpAction extends ItrackerBaseAction {
             helpPage = ITrackerResources.getString("itracker.web.helppage.commontasks", locale);
         } else if("ab".equals(helpParam)) {
         	setupHelpAboutPageAttributes(request);
-            helpPage = "help_about.jsp";
+            helpPage = ITrackerResources.getString("itracker.web.helppage.about", locale);
         } else {
-            helpPage = "help_index_" + locale + ".jsp";
-            if(! (new File(helpPage)).exists()) {
-                helpPage = "help_index.jsp";
-            }
+            helpPage = ITrackerResources.getString("itracker.web.helppage.index", locale);
         }
         log.debug("Redirecting to Help Page: " + helpPage);
         request.setAttribute("helpPage",helpPage);

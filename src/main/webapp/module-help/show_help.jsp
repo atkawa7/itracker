@@ -14,7 +14,7 @@
     <br/>
     <br/>
 
-<!-- Now include the appropriate help file -->
+<!-- Now include the appropriate help file ${helpPage} -->
 <jsp:include page="${helpPage}" flush="true" />
 
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>

@@ -9,41 +9,11 @@
 		
 <section name="itracker 3.0.2 release-notes - Changes from 3.0.1">
 <p>Fixes on JSPs, Workflow-/Project-Scripts configuration in the admin section. </p>
-
+<p>Fixing help section translations</p>
+<p></p>
 
 </section>
 
-		<section name="Fixed bugs">
-			<table>
-				<tr>
-					<th >3.0-rc1</th>
-				</tr>
-				<tr>
-					<td>Translation bugs fixed
-				</td>
-				</tr>
-				<tr>
-					<td>Minor fixes
-				</td>
-				</tr>
-				<tr>
-					<td>Admin home bugs fixed
-				</td>
-				</tr>
-				<tr>
-					<td>Validation bugs fixed
-				</td>
-				</tr>
-				<tr>
-					<td>Custom fields bugs fixed
-				</td>
-				</tr>
-				<tr>
-					<td>Backed testing bugs fixed
-				</td>
-				</tr>
-			</table>
-		</section>
 		
 
 		<section name="Migration from 2.4">
