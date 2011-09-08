@@ -28,6 +28,7 @@ import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.model.Version;
 import org.itracker.model.CustomField.Type;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -352,7 +353,8 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
                 IssueUtilities.getStatusName(IssueUtilities.STATUS_UNASSIGNED,
                 new Locale("test")));
     }
-
+    // FIXME: fails for me (maven 3) on finding only 1 of 5 expected
+    //@Ignore
     public void doTestGetStatusesByLocale(final Locale locale,
             final List<NameValuePair> expected) {
         final List<NameValuePair> actual = IssueUtilities.getStatuses(locale);

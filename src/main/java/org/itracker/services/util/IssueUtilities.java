@@ -187,20 +187,15 @@ public class IssueUtilities {
 
 	public static String getFieldName(Integer fieldId,
 			List<CustomField> customFields, Locale locale) {
+
 		if (fieldId.intValue() < 0) {
 			return ITrackerResources.getString(getStandardFieldKey(fieldId
 					.intValue()), locale);
 		} else {
-			for (int i = 0; i < customFields.size(); i++) {
-				if (fieldId.equals(customFields.get(i).getId())) {
-					return CustomFieldUtilities.getCustomFieldName(fieldId,
-							locale);
-				}
-			}
+		    return CustomFieldUtilities.getCustomFieldName(fieldId,
+					locale);
 		}
 
-		return ITrackerResources.getString("itracker.web.generic.unknown",
-				locale);
 	}
 
 	public static String getStandardFieldKey(int fieldId) {

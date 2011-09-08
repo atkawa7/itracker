@@ -4,11 +4,11 @@
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp" />
 
 <logic:messagesPresent>
-	<center><span class="formError"> <html:messages
+	<span class="formError"> <html:messages
 		id="error">
 		<bean:write name="error" />
 		<br />
-	</html:messages> </span></center>
+	</html:messages> </span>
 	<br>
 </logic:messagesPresent>
 
@@ -255,7 +255,9 @@
 		<td><c:if test="${isUpdate}">
 			<table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
 
+<%-- TODO: this should be tested more, or postponed for next release? --%>
 
+<%-- REVIEW: Should it be possible to assign same script on different fields of the same project (HBM index)? --%>
 <tr>
     <td class="editColumnTitle" colspan="5"><it:message key="itracker.web.attr.scripts"/>:</td>
     <td align="right">
@@ -279,15 +281,15 @@
 </tr>
 
 <%-- TODO: fix the edit_projectscript.jsp before enabling this  --%>
-<%--c:if test="${ projectScripts != null && not empty projectScripts }">
+<c:if test="${ projectScripts != null && not empty projectScripts }">
 	<c:forEach items="${ projectScripts }" var="script" varStatus="i">
 	
-		<tr style="text-align: right;" class="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}">
+		<tr style="text-align: left;" class="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}">
 		
 		    <td style="text-align: right;" >
 		        <it:formatImageAction action="removeprojectscript"
 		                              paramName="delId"
-		                              paramValue="${ script.vO.id }"
+		                              paramValue="${ script.script.id }"
 		                              src="/themes/defaulttheme/images/delete.gif"
 		                              altKey="itracker.web.image.delete.projectscript.alt"
 		                              textActionKey="itracker.web.image.delete.texttag"/>
@@ -295,16 +297,16 @@
 		    <td></td>
 		    <td>${ script.fieldName }
 		    </td>
-		    <td>${ script.vO.name }
+		    <td>${ script.script.script.name }
+		    </td>
+		    <td>${ script.script.priority }
 		    </td>
 		    <td>${ script.eventName }
-		    </td>
-		    <td>${ script.vO.priority }
 		    </td>
 		    
 		</tr>
 	</c:forEach>
-</c:if--%>
+</c:if>
 
 <tr>
     <td colspan="6"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15"/></td>

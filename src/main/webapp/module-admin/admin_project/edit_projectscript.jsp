@@ -14,9 +14,10 @@
    Locale locale = LoginUtilities.getCurrentLocale(request);
    boolean isUpdate = false;
     
-   if ( "update".equals(action) )
+   if ( "update".equals(action) )  {
         isUpdate = true;
-     Project project = (Project) session.getAttribute(Constants.PROJECT_SCRIPT_KEY);
+   }
+   Project project = (Project) session.getAttribute(Constants.PROJECT_SCRIPT_KEY);
 
     if(project == null) {
 %>
@@ -27,13 +28,11 @@
         <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 	<logic:messagesPresent>
-            <center> 
                 <span class="formError">
                     <html:messages id="error">
                         <bean:write name="error"/><br/>
                     </html:messages>
                 </span>
-            </center>
             <br>
 	</logic:messagesPresent>
 
@@ -78,7 +77,7 @@
                         <html:hidden indexed="false" property="<%=idKey%>"/>
                         <tr class="<%=styleClass%>">
                            <td valign="top" align="center">
-                               <html:checkbox indexed="false" name="projectScriptForm" property="<%=chkboxKey%>" value="on"/>                             
+                               <html:checkbox indexed="false" name="projectScriptForm" property="<%=chkboxKey%>"/>
                            </td> 
                            <td valign="top" align="left"><%=value%></td>
                            <td valign="top" align="left">

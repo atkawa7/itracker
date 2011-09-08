@@ -7,13 +7,11 @@
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 <logic:messagesPresent>
-  <center>
     <span class="formError">
      <html:messages id="error">
         <bean:write name="error"/><br/>
      </html:messages>
     </span>
-  </center>
   <br>
 </logic:messagesPresent>
 
