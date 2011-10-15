@@ -90,18 +90,22 @@ public class EditConfigurationAction extends ItrackerBaseAction {
 
 			Configuration configItem = null;
 			if ("createresolution".equals(action)) {
-				int value = 0;
+				int value = -1;
 				int order = 0;
 
 				try {
 					List<Configuration> resolutions = configurationService
 							.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_RESOLUTION);
+                    if (resolutions.size() < 1) {
+                        // fix for no existing resolution
+                        value=Math.max(value,0);
+                    }
 					for (int i = 0; i < resolutions.size(); i++) {
 						value = Math.max(value, Integer.parseInt(resolutions
 								.get(i).getValue()));
 						order = resolutions.get(i).getOrder();
 					}
-					if (value > 0) {
+					if (value > -1) {
 						String version = configurationService
 								.getProperty("version");
 						configItem = new Configuration(
@@ -301,6 +305,8 @@ public class EditConfigurationAction extends ItrackerBaseAction {
 
 			request.setAttribute("action", action);
 			request.setAttribute("value", formValue);
+			PropertyUtils.setSimpleProperty(form, "value", formValue);
+
 			String pageTitleKey = "";
 			String pageTitleArg = "";
 			boolean isUpdate = false;
