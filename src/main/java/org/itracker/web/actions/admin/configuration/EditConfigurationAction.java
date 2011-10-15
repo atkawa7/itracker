@@ -115,18 +115,22 @@ public class EditConfigurationAction extends ItrackerBaseAction {
 							"Found invalid value or order for a resolution.");
 				}
 			} else if ("createseverity".equals(action)) {
-				int value = 0;
+				int value = -1;
 				int order = 0;
 
 				try {
 					List<Configuration> severities = configurationService
 							.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_SEVERITY);
+                    if (severities.size() < 1) {
+                        // fix for no existing severity
+                        value=Math.max(value,0);
+                    }
 					for (int i = 0; i < severities.size(); i++) {
 						value = Math.max(value, Integer.parseInt(severities
 								.get(i).getValue()));
 						order = severities.get(i).getOrder();
 					}
-					if (value > 0) {
+					if (value > -1) {
 						String version = configurationService
 								.getProperty("version");
 						configItem = new Configuration(
