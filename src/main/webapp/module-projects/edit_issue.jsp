@@ -194,6 +194,7 @@
         </html:select>
 		</c:when>
 		<c:otherwise>
+            <html:hidden property="severity" />
 			${ severityName }
         </c:otherwise>
         </c:choose>
