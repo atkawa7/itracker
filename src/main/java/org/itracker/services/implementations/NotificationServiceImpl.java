@@ -102,7 +102,7 @@ public class NotificationServiceImpl implements NotificationService {
 		}
 		if (type == Type.SELF_REGISTER) {
 			this.handleSelfRegistrationNotification(notification.getUser()
-					.getLogin(), notification.getUser().getEmailAddress(), url);
+					.getLogin(), notification.getUser().getEmailAddress(), notification.getUser().getPreferences().getUserLocale(), url);
 		} else {
 			handleIssueNotification(notification.getIssue(), type, url);
 
@@ -133,11 +133,12 @@ public class NotificationServiceImpl implements NotificationService {
 
 	/**
 	 * 
-	 * @param notificationMsg
+	 * @param login
+     * @param toAddress
 	 * @param url
 	 */
 	private void handleSelfRegistrationNotification(String login,
-			InternetAddress toAddress, String url) {
+			InternetAddress toAddress, String locale, String url) {
 		if (logger.isDebugEnabled()) {
 			logger
 					.debug("handleSelfRegistrationNotification: called with login: "
@@ -151,10 +152,9 @@ public class NotificationServiceImpl implements NotificationService {
 
 			if (toAddress != null && !"".equals(toAddress.getAddress())) {
 				String subject = ITrackerResources
-						.getString("itracker.email.selfreg.subject");
+						.getString("itracker.email.selfreg.subject", locale);
 				String msgText = ITrackerResources.getString(
-						"itracker.email.selfreg.body", ITrackerResources
-								.getDefaultLocale(), new Object[] { login,
+						"itracker.email.selfreg.body", locale, new Object[] { login,
 								url + "/login.do" });
 				emailService.sendEmail(toAddress, subject, msgText);
 			} else {
@@ -171,7 +171,7 @@ public class NotificationServiceImpl implements NotificationService {
 	/**
 	 * Method for internal sending of a notification of specific type.
 	 * 
-	 * @param notificationMsg
+	 * @param issue
 	 * @param type
 	 * @param url
 	 */
@@ -181,18 +181,19 @@ public class NotificationServiceImpl implements NotificationService {
 			logger.debug("handleIssueNotification: called with issue: " + issue
 					+ ", type: " + type + "url: " + url);
 		}
-		this.handleIssueNotification(issue, type, url, null, null);
+        this.handleLocalizedIssueNotification(issue, type, url,null, null);
+		//this.handleIssueNotification(issue, type, url, null, null);
 	}
 
 	/**
 	 * Method for internal sending of a notification of specific type.
 	 * 
-	 * @param notificationMsg
+	 * @param issue
 	 * @param type
 	 * @param url
 	 */
 	private void handleIssueNotification(Issue issue, Type type, String url,
-			InternetAddress[] receipients, Integer lastModifiedDays) {
+			InternetAddress[] recipients, Integer lastModifiedDays) {
 		try {
 
 			if (logger.isDebugEnabled()) {
@@ -203,9 +204,9 @@ public class NotificationServiceImpl implements NotificationService {
 								+ type
 								+ "url: "
 								+ url
-								+ ", receipients: "
-								+ (null == receipients ? "<null>" : String
-										.valueOf(Arrays.asList(receipients)))
+								+ ", recipients: "
+								+ (null == recipients ? "<null>" : String
+										.valueOf(Arrays.asList(recipients)))
 								+ ", lastModifiedDays: " + lastModifiedDays);
 			}
 			List<Notification> notifications;
@@ -221,7 +222,7 @@ public class NotificationServiceImpl implements NotificationService {
 						.valueOf(org.itracker.web.scheduler.tasks.ReminderNotification.DEFAULT_ISSUE_AGE);
 			}
 
-			if (receipients == null) {
+			if (recipients == null) {
 				ArrayList<InternetAddress> recList = new ArrayList<InternetAddress>();
 				notifications = this.getIssueNotifications(issue);
 				Iterator<Notification> it = notifications.iterator();
@@ -238,7 +239,7 @@ public class NotificationServiceImpl implements NotificationService {
 						recList.add(currentUser.getEmailAddress());
 					}
 				}
-				receipients = recList.toArray(new InternetAddress[] {});
+				recipients = recList.toArray(new InternetAddress[] {});
 			}
 
 			List<IssueActivity> activity = getIssueService().getIssueActivity(
@@ -275,11 +276,11 @@ public class NotificationServiceImpl implements NotificationService {
 			List<Component> components = issue.getComponents();
 			// issueService
 			// .getIssueComponents(issue.getId());
-			
+
 			List<Version> versions = issue.getVersions();
 			// issueService.getIssueVersions(issue.getId());
-			
-			if (receipients.length > 0) {
+
+			if (recipients.length > 0) {
 				String subject = "";
 				if (type == Type.CREATED) {
 					subject = ITrackerResources.getString(
@@ -416,7 +417,7 @@ public class NotificationServiceImpl implements NotificationService {
 																	.getDescription())),
 											activityString });
 				}
-				emailService.sendEmail(receipients, subject, msgText);
+				emailService.sendEmail(recipients, subject, msgText);
 
 				updateIssueActivityNotification(issue, true);
 			}
@@ -437,14 +438,14 @@ public class NotificationServiceImpl implements NotificationService {
 	 * TODO: final debugging/integration/implementation
 	 * TODO: Decide if this code is really needed and document for what
 	 * 
-	 * @param notificationMsg
+	 * @param issue
 	 * @param type
 	 * @param url
 	 */
-	
+
 	@SuppressWarnings("unused")
 	private void handleLocalizedIssueNotification(final Issue issue, final Type type, final String url,
-			final InternetAddress[] receipients, Integer lastModifiedDays) {
+			final InternetAddress[] recipients, Integer lastModifiedDays) {
 		try {
 			
 			if (logger.isDebugEnabled()) {
@@ -455,14 +456,14 @@ public class NotificationServiceImpl implements NotificationService {
 								+ type
 								+ "url: "
 								+ url
-								+ ", receipients: "
-								+ (null == receipients ? "<null>" : String
-										.valueOf(Arrays.asList(receipients)))
+								+ ", recipients: "
+								+ (null == recipients ? "<null>" : String
+										.valueOf(Arrays.asList(recipients)))
 								+ ", lastModifiedDays: " + lastModifiedDays);
 			}
-			
+
 			final Integer notModifiedSince;
-			
+
 			if (lastModifiedDays == null || lastModifiedDays.intValue() < 0) {
 				notModifiedSince = Integer
 						.valueOf(org.itracker.web.scheduler.tasks.ReminderNotification.DEFAULT_ISSUE_AGE);
@@ -479,9 +480,9 @@ public class NotificationServiceImpl implements NotificationService {
 											+ type
 											+ "url: "
 											+ url
-											+ ", receipients: "
-											+ (null == receipients ? "<null>" : String
-													.valueOf(Arrays.asList(receipients)))
+											+ ", recipients: "
+											+ (null == recipients ? "<null>" : String
+													.valueOf(Arrays.asList(recipients)))
 											+ ", notModifiedSince: " + notModifiedSince);
 						}
 						final List<Notification> notifications;
@@ -492,7 +493,7 @@ public class NotificationServiceImpl implements NotificationService {
 						}
 						Map<InternetAddress, Locale> localeMapping = null;
 			
-						if (receipients == null) {
+						if (recipients == null) {
 							
 							
 							notifications = this.getIssueNotifications(issue);
@@ -518,7 +519,7 @@ public class NotificationServiceImpl implements NotificationService {
 						} else {
 							localeMapping = new Hashtable<InternetAddress, Locale>(1);
 							Locale locale = ITrackerResources.getLocale();
-							Iterator<InternetAddress> it = Arrays.asList(receipients).iterator();
+							Iterator<InternetAddress> it = Arrays.asList(recipients).iterator();
 							while (it.hasNext()) {
 								InternetAddress internetAddress = (InternetAddress) it
 										.next();
@@ -557,11 +558,12 @@ public class NotificationServiceImpl implements NotificationService {
 		
 		List<IssueActivity> activity = getIssueService().getIssueActivity(
 				issue.getId(), false);
-		issue.getActivities();
+
 		List<IssueHistory> histories = issue.getHistory();
 		Iterator<IssueHistory> it = histories.iterator();
 		IssueHistory history = null, currentHistory;
 		history = getIssueService().getLastIssueHistory(issue.getId());
+        StringBuilder recipientsString = new StringBuilder();
 
 		Integer historyId = 0;
 		// find history with greatest id
@@ -589,10 +591,15 @@ public class NotificationServiceImpl implements NotificationService {
 		Iterator<InternetAddress> iaIt = recipientsLocales.keySet().iterator();
 		while (iaIt.hasNext()) {
 			InternetAddress internetAddress = (InternetAddress) iaIt.next();
+
+            recipientsString.append("\n  ");
+            recipientsString.append(internetAddress.getPersonal());
+
 			if (localeRecipients.keySet().contains(recipientsLocales.get(internetAddress))) {
 				localeRecipients.get(recipientsLocales.get(internetAddress)).add(internetAddress);
 			} else {
 				Set<InternetAddress> addresses = new HashSet<InternetAddress>();
+                addresses.add(internetAddress);
 				localeRecipients.put(recipientsLocales.get(internetAddress), addresses);
 			}
 		}
@@ -602,8 +609,8 @@ public class NotificationServiceImpl implements NotificationService {
 			while (localesIt.hasNext()) {
 				Locale currentLocale = (Locale) localesIt.next();
 				recipients = localeRecipients.get(currentLocale);
-				
-				
+
+
 				if (recipients.size() > 0) {
 					String subject = "";
 					if (type == Type.CREATED) {
@@ -642,19 +649,23 @@ public class NotificationServiceImpl implements NotificationService {
 										issue.getProject().getName(),
 										notModifiedSince });
 					}
-	
+
 					String activityString;
 					String componentString = "";
 					String versionString = "";
 					StringBuffer sb = new StringBuffer();
-					for (int i = 0; i < activity.size(); i++) {
-						sb.append(
-								IssueUtilities.getActivityName(activity.get(i)
-										.getActivityType(), currentLocale)).append(": ").append(
-								activity.get(i).getDescription()).append("\n");
-	
-					}
-					
+                    if (activity.size()==0) {
+                       sb.append("-");
+                    } else {
+                        for (int i = 0; i < activity.size(); i++) {
+                            sb.append("\n ").append(
+                                    IssueUtilities.getActivityName(activity.get(i)
+                                            .getActivityType(), currentLocale)).append(": ").append(
+                                    activity.get(i).getDescription());
+
+                        }
+                    }
+					sb.append("\n");
 					activityString = sb.toString();
 					// TODO localize..
 					for (int i = 0; i < components.size(); i++) {
@@ -665,7 +676,7 @@ public class NotificationServiceImpl implements NotificationService {
 						versionString += (i != 0 ? ", " : "")
 								+ versions.get(i).getNumber();
 					}
-	
+
 					String msgText = "";
 					if (type == Type.ISSUE_REMINDER) {
 						msgText = ITrackerResources
@@ -679,10 +690,10 @@ public class NotificationServiceImpl implements NotificationService {
 												issue.getProject().getName(),
 												issue.getDescription(),
 												IssueUtilities.getStatusName(issue
-														.getStatus()),
+														.getStatus(), currentLocale),
 												IssueUtilities
 														.getSeverityName(issue
-																.getSeverity()),
+																.getSeverity(), currentLocale),
 												(issue.getOwner().getFirstName() != null ? issue
 														.getOwner().getFirstName()
 														: "")
@@ -712,9 +723,24 @@ public class NotificationServiceImpl implements NotificationService {
 												ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS,
 												issue.getProject().getOptions())) {
 							resolution = IssueUtilities.getResolutionName(
-									resolution, ITrackerResources.getLocale());
+									resolution, currentLocale);
 						}
-	
+	                    User oUser =  issue.getOwner();
+                        String owner = (null != oUser && null != oUser.getFirstName()
+                                ? oUser.getFirstName()
+                                : "")
+                                + " "
+                                + (null != oUser && null != oUser.getLastName()
+                                ? oUser.getLastName()
+                                : "");
+                        User hUser = null==history?null:history.getUser();
+                        String historyUser = (null != hUser && null != hUser.getFirstName()
+                                ? hUser.getFirstName()
+                                : "")
+                                + " "
+                                + (null != hUser && null != hUser.getLastName()
+                                ? hUser.getLastName()
+                                : "");
 						msgText = ITrackerResources
 								.getString(
 										"itracker.email.issue.body.standard",
@@ -724,42 +750,33 @@ public class NotificationServiceImpl implements NotificationService {
 												issue.getProject().getName(),
 												issue.getDescription(),
 												IssueUtilities.getStatusName(issue
-														.getStatus()),
+														.getStatus(), currentLocale),
 												resolution,
 												IssueUtilities
 														.getSeverityName(issue
-																.getSeverity()),
-												(null != issue.getOwner() && null != issue.getOwner().getFirstName() ? issue
-														.getOwner().getFirstName()
-														: "")
-														+ " "
-														+ (null != issue.getOwner() && null != issue.getOwner()
-																.getLastName() ? issue
-																.getOwner()
-																.getLastName()
-																: ""),
+																.getSeverity(), currentLocale),
+												owner,
 												componentString,
-												(history == null ? "" : history
-														.getUser().getFirstName()
-														+ " "
-														+ history.getUser()
-																.getLastName()),
+												historyUser,
 												(history == null ? ""
 														: HTMLUtilities
 																.removeMarkup(history
 																		.getDescription())),
-												activityString });
+												activityString,
+                                                recipientsString});
 					}
-					
+
 					if (logger.isInfoEnabled()) {
 						logger.info(new StringBuilder("handleNotification: sending notification for ").append(issue).append(" (").append(type).append(") to ").append(currentLocale).append("-users (").append(recipients + ")").toString());
-						
+
 					}
-					
-					emailService.sendEmail(recipients, subject, msgText);
-	
+                    for (InternetAddress iadr: recipients) {
+					    emailService.sendEmail(iadr, subject, msgText);
+                    }
+
 					if (logger.isDebugEnabled()) {
-						logger.debug("handleNotification: sent notification for " + issue);
+						logger.debug("handleNotification: sent notification for " + issue
+                         + ": " + subject + "\n  " + msgText);
 					}
 				}
 	
@@ -933,7 +950,7 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	/**
-	 * @param issueId
+	 * @param issue
 	 * @param userId
 	 * @param role
 	 * @return

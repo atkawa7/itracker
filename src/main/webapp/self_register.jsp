@@ -6,6 +6,15 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 <%-- <nitrox:var name="allowSelfRegister" type="java.lang.Boolean"/> --%>
+
+
+<div id="locales"><c:forEach items="${locales}" var="locMap">
+   <span><a href="?loc=${locMap.key}" class="${locMap.key}_loc">${locMap.key}</a><c:forEach items="${locMap.value}" var="loc"> <a href="?loc=${loc}" class="${loc}_loc">${loc}</a></c:forEach> </span>
+
+
+</c:forEach>
+</div>
+
 <c:choose>
 	<c:when test="${! allowSelfRegister}">
 	   <center><span style="color: red;"><it:message key="itracker.web.error.notenabled"/></span></center>

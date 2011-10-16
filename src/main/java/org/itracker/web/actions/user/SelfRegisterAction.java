@@ -34,17 +34,23 @@ import org.itracker.model.Notification;
 import org.itracker.model.User;
 import org.itracker.model.Notification.Role;
 import org.itracker.model.Notification.Type;
+import org.itracker.model.UserPreferences;
 import org.itracker.services.ConfigurationService;
+import org.itracker.services.ITrackerServices;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.RequestHelper;
 
 public class SelfRegisterAction extends ItrackerBaseAction {
 	private static final Logger log = Logger
 			.getLogger(SelfRegisterAction.class);
+
+
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -85,8 +91,8 @@ public class SelfRegisterAction extends ItrackerBaseAction {
 							new ActionMessage(
 									"itracker.web.error.missingfields"));
 				} else {
-					UserService userService = getITrackerServices()
-							.getUserService();
+                    UserService userService = getITrackerServices().getUserService();
+
 
 					try {
 						if (userService
@@ -96,6 +102,19 @@ public class SelfRegisterAction extends ItrackerBaseAction {
 										AuthenticationConstants.AUTH_TYPE_PASSWORD_PLAIN,
 										AuthenticationConstants.REQ_SOURCE_WEB)) {
 							user = userService.createUser(user);
+
+                            // TODO: remove this hack, this should be handled central, there are other
+                            // instances of this hack
+                            UserPreferences userPrefs = user.getPreferences();
+                            if (userPrefs == null) {
+                                userPrefs = new UserPreferences();
+                                user.setPreferences(userPrefs);
+                                userPrefs.setUser(user);
+                            }
+                            user.getPreferences().setUserLocale( String.valueOf(LoginUtilities.getCurrentLocale(request)) );
+
+
+
 							Notification notification = new Notification();
 							notification.setUser(user);
 							notification.setRole(Role.ANY);
@@ -125,6 +144,7 @@ public class SelfRegisterAction extends ItrackerBaseAction {
 
 		if (!errors.isEmpty()) {
 			saveErrors(request, errors);
+            SelfRegisterAction.setupRequestParams(request, getITrackerServices());
 			saveToken(request);
 			return mapping.getInputForward();
 		}
@@ -132,4 +152,12 @@ public class SelfRegisterAction extends ItrackerBaseAction {
 		return mapping.findForward("login");
 	}
 
+    public static void setupRequestParams(HttpServletRequest request, ITrackerServices service) {
+
+        ConfigurationService configurationService = service.getConfigurationService();
+        //request.setAttribute("configurationService", configurationService);
+        request.setAttribute("locales", configurationService.getAvailableLanguages());
+
+
+    }
 }

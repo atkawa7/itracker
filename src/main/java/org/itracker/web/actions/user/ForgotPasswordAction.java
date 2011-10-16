@@ -19,6 +19,7 @@
 package org.itracker.web.actions.user;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -59,8 +60,10 @@ public class ForgotPasswordAction extends ItrackerBaseAction {
 
 			if(login != null && lastName != null && ! login.equals("") && ! lastName.equals("")) {
 				User user = null;
+                Locale locale = null;
 				try {
 					user = userService.getUserByLogin(login);
+                    locale = ITrackerResources.getLocale(user.getPreferences().getUserLocale());
 					if(user == null) {
 						throw new PasswordException(PasswordException.UNKNOWN_USER);
 					}
@@ -78,13 +81,13 @@ public class ForgotPasswordAction extends ItrackerBaseAction {
 						log.debug("ForgotPasswordHandler found matching user: " + user.getFirstName() + " " + user.getLastName() + "(" + user.getLogin() + ")");
 					}
 
-					String subject = ITrackerResources.getString("itracker.email.forgotpass.subject");
+					String subject = ITrackerResources.getString("itracker.email.forgotpass.subject", locale);
 					StringBuffer msgText = new StringBuffer();
-					msgText.append(ITrackerResources.getString("itracker.email.forgotpass.body"));
+					msgText.append(ITrackerResources.getString("itracker.email.forgotpass.body", locale));
 					String newPass = userService.generateUserPassword(user);
 					//user.setPassword(newPass);
 					userService.updateUser(user);
-					msgText.append(ITrackerResources.getString("itracker.web.attr.password") + ": " + newPass);
+					msgText.append(ITrackerResources.getString("itracker.web.attr.password", locale)).append(": ").append(newPass);
 
 					getITrackerServices().getEmailService()
 					.sendEmail(user.getEmail(), subject, msgText.toString());
