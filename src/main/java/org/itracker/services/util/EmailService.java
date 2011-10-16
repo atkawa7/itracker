@@ -220,13 +220,13 @@ public class EmailService {
 		}
 	}
 
-	public void sendEmail(Set<InternetAddress> receipients, String subject,
+	public void sendEmail(Set<InternetAddress> recipients, String subject,
 			String message) {
 		
-		InternetAddress[] receipientsArray = new ArrayList<InternetAddress>(receipients).toArray(new InternetAddress[]{}); 
+		InternetAddress[] recipientsArray = new ArrayList<InternetAddress>(recipients).toArray(new InternetAddress[]{});
 
-		if (receipientsArray.length > 0) {
-			this.sendEmail(receipientsArray, subject, message);
+		if (recipientsArray.length > 0) {
+			this.sendEmail(recipientsArray, subject, message);
 		}
 
 	}
@@ -242,7 +242,7 @@ public class EmailService {
 
 		if (null == addresses || 0 == addresses.size()) {
 			throw new IllegalArgumentException(
-					"No addresses in receipients set.");
+					"No addresses in recipients set.");
 		}
 
 		try {
@@ -275,22 +275,22 @@ public class EmailService {
 
 	/**
 	 * 
-	 * @param receipients
+	 * @param recipients
 	 * @param subject
 	 * @param msgText
 	 */
-	public void sendEmail(InternetAddress[] receipients, String subject,
+	public void sendEmail(InternetAddress[] recipients, String subject,
 			String msgText) {
 		try {
 			if (logger.isDebugEnabled()) {
-				logger.debug("sendEmail: called with receipients: " + Arrays.asList(receipients) + ", subject: " + subject + ", msgText: " + subject);
+				logger.debug("sendEmail: called with recipients: " + Arrays.asList(recipients) + ", subject: " + subject + ", msgText: " + subject);
 			}
 			if (null == this.session) {
 				throw new IllegalStateException("session was not initialized.");
 			}
-			if (null == receipients || receipients.length < 1) {
+			if (null == recipients || recipients.length < 1) {
 				throw new IllegalArgumentException(
-						"at least one receipient must be specified.");
+						"at least one recipient must be specified.");
 			}
 			if (null == subject || subject.length() < 1) {
 				throw new IllegalArgumentException("subject must be specified.");
@@ -307,8 +307,9 @@ public class EmailService {
 			if (null != this.replyTo) {
 				msg.setReplyTo(new InternetAddress[] { this.replyTo });
 			}
-			msg.setRecipients(javax.mail.Message.RecipientType.TO, receipients);
-			msg.setSubject(subject);
+			msg.setRecipients(javax.mail.Message.RecipientType.TO, recipients);
+			msg.setSubject(subject, session.getProperty("mail.mime.charset"));
+
 			msg.setSentDate(new Date());
 
 			// really needed?
