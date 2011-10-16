@@ -204,7 +204,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 			if (errors.isEmpty()) {		
 				if (log.isDebugEnabled()) {
 					log.debug("execute: sending notification for issue: " + issue
-							+ " (HOSTORIES: " + issueService.getIssueHistory(issue.getId()) + ")");
+							+ " (HISTORIES: " + issueService.getIssueHistory(issue.getId()) + ")");
 				}
 				EditIssueActionUtil.sendNotification(issue.getId(), previousStatus,
 						getBaseURL(request), notificationService);

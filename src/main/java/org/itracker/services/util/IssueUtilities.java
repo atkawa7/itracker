@@ -559,7 +559,7 @@ public class IssueUtilities {
 	 * Returns the custom field with the supplied id. Any labels will be
 	 * localized to the system default locale.
 	 * 
-	 * @param bitValue
+	 * @param id
 	 *            the id of the field to return
 	 * @return the requested CustomField object, or a new field if not found
 	 */
