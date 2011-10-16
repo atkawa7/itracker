@@ -111,7 +111,7 @@ public class EmailService {
 	private final void initFrom(String fromAddress, String fromText) {
 		if (null != fromAddress) {
 			try {
-				this.from = new InternetAddress(fromAddress, fromText);
+				this.from = new InternetAddress(fromAddress, fromText, readSmtpCharset(this.session));
 				logger.info("initFrom: initialized from-address: " + this.from);
 			} catch (UnsupportedEncodingException e) {
 				logger.warn("initReplyTo: could not initialize reply-to (configured: " + 
@@ -122,7 +122,7 @@ public class EmailService {
 
 	private final void initReplyTo(String replyToAddress, String replyToText) {
 		try {
-			this.replyTo = new InternetAddress(replyToAddress, replyToText);
+			this.replyTo = new InternetAddress(replyToAddress, replyToText, readSmtpCharset(this.session));
 			logger.info("initFrom: initialized reply-to: " + this.replyTo);
 		} catch (UnsupportedEncodingException e) {
 			logger.warn("initReplyTo: could not initialize reply-to (configured: " + replyToText + " <" + replyToAddress + ">" , e);
@@ -307,15 +307,22 @@ public class EmailService {
 			if (null != this.replyTo) {
 				msg.setReplyTo(new InternetAddress[] { this.replyTo });
 			}
+            for (InternetAddress internetAddress: recipients) {
+                try {
+                    internetAddress.setPersonal(internetAddress.getPersonal(), readSmtpCharset(session));
+                } catch (UnsupportedEncodingException e) {
+                    logger.info("sendEmail: could not encode " + internetAddress + " using " + readSmtpCharset(session));
+                }
+            }
 			msg.setRecipients(javax.mail.Message.RecipientType.TO, recipients);
-			msg.setSubject(subject, session.getProperty("mail.mime.charset"));
+			msg.setSubject(subject, readSmtpCharset(session));
 
 			msg.setSentDate(new Date());
 
 			// really needed?
-			msg.setHeader("Content-Transfer-Encoding", "quoted-printable");
+			//msg.setHeader("Content-Transfer-Encoding", "quoted-printable");
 			msg.setContent(msgText.toString(), "text/plain; charset=\""
-					+ session.getProperty("mail.mime.charset") + "\"");
+					+ readSmtpCharset(session) + "\"");
 
 			Transport.send(msg);
 
@@ -323,4 +330,13 @@ public class EmailService {
 			logger.warn("MessagingException while sending email, caught.", me);
 		}
 	}
+
+    private String readSmtpCharset(Session session) {
+        String charset = null==session?null:session.getProperty("mail.mime.charset");
+        if (null == charset) {
+            charset = configurationService.getProperty(
+				"notification_smtp_charset", DEFAULT_SMTP_CHARSET);
+        }
+        return charset;
+    }
 }
