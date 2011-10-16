@@ -130,9 +130,13 @@
 				<it:message key="itracker.web.header.menu.logout" />
 			</html:link>
 		</c:if> <c:if test="${currUser == null}">
-			<%-- <nitrox:var name="allowForgotPassword" type="java.lang.Boolean"/> --%>
+            <%-- TODO: localization separated from page title? --%>
+            <html:link linkName="index" forward="index"
+                styleClass="headerLinks"
+                titleKey="itracker.web.login.title">
+                <it:message key="itracker.web.login.title" />
+            </html:link>
 			<c:if test="${allowForgotPassword}">
-
 				<html:link linkName="forgotpassword" forward="forgotpassword"
 					styleClass="headerLinks"
 					titleKey="itracker.web.header.menu.forgotpass.alt">
