@@ -109,7 +109,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                         if(issues.get(i) != null) {
                             issues.get(i).setSeverity(newSeverity);
 
-                            issues.add(issueService.systemUpdateIssue(issues.get(i), currUserId));
+                            issues.set(i, issueService.systemUpdateIssue(issues.get(i), currUserId));
                         }
                     }
                 } catch(Exception e) {
@@ -152,13 +152,8 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                     for(int i = 0; i < issues.size(); i++) {
                         if(issues.get(i) != null) {
                             issues.get(i).setStatus(newStatus);
-                            
-//                            IssueActivity activity = new IssueActivity();
-//                            activity.setActivityType(IssueActivityType.SYSTEM_UPDATE);
-//                            activity.setDescription(ITrackerResources.getString("itracker.activity.system.status"));
-//                            ArrayList<IssueActivity> activities = new ArrayList<IssueActivity>();
-//                            activities.add(activity);
-                            issues.add(issueService.systemUpdateIssue(issues.get(i), currUserId));
+
+                            issues.set(i, issueService.systemUpdateIssue(issues.get(i), currUserId));
                         }
                     }
                 } catch(Exception e) {
