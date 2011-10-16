@@ -22,7 +22,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     </bean>
 
     <!-- please comment this: -->
-    <bean id="applicationInitialization" class="org.itracker.core.ApplicationInitialization">        
+    <bean id="applicationInitialization" init-method="init" class="org.itracker.core.ApplicationInitialization">
         <constructor-arg ref="userService" />        
         <constructor-arg ref="configurationService" />
         <constructor-arg ref="reportService" />

@@ -30,6 +30,8 @@ import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
 
+import javax.jws.soap.InitParam;
+
 
 /**
  * TODO: Add Javadocs here: please comment this for documentation reasons. What is this Class used for?
@@ -56,9 +58,8 @@ public class ApplicationInitialization {
         this.userService = userService;
         this.configurationService = configurationService;
         this.logger = Logger.getLogger(getClass());
-        init();
     }
-    
+
     public void init() {
         try {
             ITrackerResources.setDefaultLocale(configurationService.getProperty("default_locale", ITrackerResources.DEFAULT_LOCALE));
