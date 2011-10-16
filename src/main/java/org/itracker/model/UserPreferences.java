@@ -19,6 +19,7 @@
 package org.itracker.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.itracker.core.resources.ITrackerResources;
 
 /**
  * The system configuration of a User.
@@ -39,23 +40,23 @@ public class UserPreferences extends AbstractEntity {
 	/** The User to whom these preferences belong. */
 	private User user;
 
-	private boolean saveLogin;
+	private boolean saveLogin = false;
 
-	private String userLocale;
+	private String userLocale = ITrackerResources.getDefaultLocale();
 
-	private int numItemsOnIndex;
+	private int numItemsOnIndex = 0; // all
 
-	private int numItemsOnIssueList;
+	private int numItemsOnIssueList = 0; // all
 
-	private boolean showClosedOnIssueList;
+	private boolean showClosedOnIssueList = false;
 
-	private String sortColumnOnIssueList;
+	private String sortColumnOnIssueList = "id";
 
-	private int hiddenIndexSections;
+	private int hiddenIndexSections = 0;
 
-	private boolean rememberLastSearch;
+	private boolean rememberLastSearch = false;
 
-	private boolean useTextActions;
+	private boolean useTextActions = false;
 
 	public int getHiddenIndexSections() {
 		return hiddenIndexSections;
