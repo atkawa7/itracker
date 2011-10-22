@@ -7,6 +7,7 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
 <head>
@@ -130,6 +131,23 @@
 				<it:message key="itracker.web.header.menu.logout" />
 			</html:link>
 		</c:if> <c:if test="${currUser == null}">
+
+            <c:if test="${fn:length(locales) gt 1}">
+                <div class="locales"><c:forEach items="${locales}" var="locMap">
+                    <span> | <a href="?loc=${locMap.key}" class="${locMap.key}_loc">${locMap.key}</a></span>
+                    <c:forEach items="${locMap.value}" var="loc"> <span> | <a href="?loc=${loc}" class="${loc}_loc">${loc}</a></span></c:forEach>
+                </c:forEach></div>
+            </c:if>
+            <%--<c:if test="${locales and (fn:length(locales) gt 1)}">
+            <div id="locales"><c:forEach items="${locales}" var="locMap">
+               <span><a href="?loc=${locMap.key}" class="${locMap.key}_loc">${locMap.key}</a><c:forEach items="${locMap.value}" var="loc"> <a href="?loc=${loc}" class="${loc}_loc">${loc}</a></c:forEach> </span>
+
+
+            </c:forEach>
+            </div>
+            </c:if--%>
+
+
             <%-- TODO: localization separated from page title? --%>
             <html:link linkName="index" forward="index"
                 styleClass="headerLinks"
@@ -137,7 +155,7 @@
                 <it:message key="itracker.web.login.title" />
             </html:link>
 			<c:if test="${allowForgotPassword}">
-				<html:link linkName="forgotpassword" forward="forgotpassword"
+				       | <html:link linkName="forgotpassword" forward="forgotpassword"
 					styleClass="headerLinks"
 					titleKey="itracker.web.header.menu.forgotpass.alt">
 					<it:message key="itracker.web.header.menu.forgotpass" />

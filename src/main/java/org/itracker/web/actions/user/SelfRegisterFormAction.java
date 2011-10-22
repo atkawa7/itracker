@@ -37,8 +37,6 @@ public class SelfRegisterFormAction extends ItrackerBaseAction {
 		saveToken(request);
 //		itracker.web.selfreg.title
 
-        SelfRegisterAction.setupRequestParams(request, getITrackerServices());
-
 //		String pageTitleKey = "itracker.web.selfreg.title";
 //		String pageTitleArg = "";
 //		request.setAttribute("pageTitleKey", pageTitleKey);

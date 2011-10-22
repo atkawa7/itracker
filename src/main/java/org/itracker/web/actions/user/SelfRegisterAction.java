@@ -144,7 +144,6 @@ public class SelfRegisterAction extends ItrackerBaseAction {
 
 		if (!errors.isEmpty()) {
 			saveErrors(request, errors);
-            SelfRegisterAction.setupRequestParams(request, getITrackerServices());
 			saveToken(request);
 			return mapping.getInputForward();
 		}
@@ -152,12 +151,4 @@ public class SelfRegisterAction extends ItrackerBaseAction {
 		return mapping.findForward("login");
 	}
 
-    public static void setupRequestParams(HttpServletRequest request, ITrackerServices service) {
-
-        ConfigurationService configurationService = service.getConfigurationService();
-        //request.setAttribute("configurationService", configurationService);
-        request.setAttribute("locales", configurationService.getAvailableLanguages());
-
-
-    }
 }

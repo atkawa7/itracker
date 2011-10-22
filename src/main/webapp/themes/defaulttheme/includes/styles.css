@@ -2,7 +2,7 @@ body {
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
 	background: #fff;
 }
-smallbody {
+.smallbody {
 	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	background: #fff;
@@ -69,6 +69,10 @@ a.history:visited {
   background-color: white;
 	text-decoration: none;
 }
+.locales {
+    float: left;
+    text-align: left;
+}
 
 
 .headerText,
@@ -126,6 +130,7 @@ a.headerLinks:visited {
 }
 
 .footer {
+    display: none;
 	clear:both;
 	font-weight: normal;
 	text-align: left;

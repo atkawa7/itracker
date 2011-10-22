@@ -328,7 +328,11 @@ public class ExecuteAlwaysFilter implements Filter {
 		// set a default page-title key
 		request.setAttribute("pageTitleKey", "itracker.web.generic.itracker");
 		request.setAttribute("pageTitleArg", "");
-		
+
+
+        request.setAttribute("locales", configurationService.getAvailableLanguages());
+
+
 		request.setAttribute(Constants.LOCALE_KEY, locale);
 		
 		
