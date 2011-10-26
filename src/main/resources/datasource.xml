@@ -8,6 +8,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
+
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
           destroy-method="close">
 
@@ -23,5 +24,8 @@
         <property name="maxIdleTime" value="300"/>
         <property name="loginTimeout" value="500"/>
     </bean>
-
+    <!-- Example for jndi datasource:
+       <bean id="dataSource" class="com.mchange.v2.c3p0.JndiRefForwardingDataSource">
+        <property name="jndiName" value="java:comp/env/jdbc/itracker_ds"/>
+    </bean>  -->
 </beans>
