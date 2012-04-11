@@ -1,17 +1,16 @@
 package org.itracker.persistence.dao;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 import org.itracker.services.util.UserUtilities;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class UserDAOImplTest extends AbstractDependencyInjectionTest {
 
@@ -20,17 +19,17 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
     @Test
     public void testCreateUser() {
 
-        User user = new User( "admin_test2","admin_test2", "admin firstname2", "admin lastname2", "", true );
-        user.setCreateDate( new Date() );
+        User user = new User("admin_test2", "admin_test2", "admin firstname2", "admin lastname2", "", true);
+        user.setCreateDate(new Date());
         user.setLastModifiedDate(new Date());
-        userDAO.saveOrUpdate( user );
+        userDAO.saveOrUpdate(user);
 
-        User foundUser = userDAO.findByLogin( "admin_test2" );
-        assertNotNull( foundUser );
-        assertEquals( "admin_test2", foundUser.getPassword() );
-        assertEquals( "admin firstname2", foundUser.getFirstName() );
-        assertEquals( "admin lastname2", foundUser.getLastName() );
-        assertTrue( foundUser.isSuperUser() );
+        User foundUser = userDAO.findByLogin("admin_test2");
+        assertNotNull(foundUser);
+        assertEquals("admin_test2", foundUser.getPassword());
+        assertEquals("admin firstname2", foundUser.getFirstName());
+        assertEquals("admin lastname2", foundUser.getLastName());
+        assertTrue(foundUser.isSuperUser());
         // delete for repeated testing in same persistence
         userDAO.delete(user);
     }
@@ -39,13 +38,13 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
     public void testCreateUserWithNotNullPK() {
 
         try {
-            User user = new User( "admin_test3","admin_test3", "admin firstname3", "admin lastname3", "", true );
-            user.setId( -1 );
-            user.setCreateDate( new Date() );
-            userDAO.saveOrUpdate( user );
-        } catch( Exception e ) {
+            User user = new User("admin_test3", "admin_test3", "admin firstname3", "admin lastname3", "", true);
+            user.setId(-1);
+            user.setCreateDate(new Date());
+            userDAO.saveOrUpdate(user);
+        } catch (Exception e) {
             // Expected behavior
-            assertTrue( e instanceof DataIntegrityViolationException);
+            assertTrue(e instanceof DataIntegrityViolationException);
         }
 
     }
@@ -69,20 +68,15 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    @Ignore
-  //TODO: Activate skipped, ignored Test (when implementation is done correctly)
     public void testFindAll() {
         List<User> users = userDAO.findAll();
-
         assertNotNull(users);
-        // TODO: fix this, users.size seems to be 5 sometimes?
-        assertEquals(6, users.size());
+        assertEquals(5, users.size());
     }
 
     @Test
     public void testFindActive() {
         List<User> users = userDAO.findActive();
-
         assertNotNull(users);
         assertEquals(4, users.size());
     }
@@ -114,12 +108,12 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
 
     @Test
     public void testGetUsersMapOfProjectsAndPermissionTypes() {
-    	Map<Integer, Set<PermissionType>> map =
-			userDAO.getUsersMapOfProjectsAndPermissionTypes(userDAO.findByPrimaryKey(2));
-    	
-    	assertNotNull( map );
-    	// all permissions connected with user 2 have only project 2 in relation
-    	assertEquals( "projects", 1, map.size() );
+        Map<Integer, Set<PermissionType>> map =
+                userDAO.getUsersMapOfProjectsAndPermissionTypes(userDAO.findByPrimaryKey(2));
+
+        assertNotNull(map);
+        // all permissions connected with user 2 have only project 2 in relation
+        assertEquals("projects", 1, map.size());
     }
 
     private void assertContainsUser(User user, List<User> users) {
@@ -134,11 +128,11 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
     public void onSetUp() throws Exception {
         super.onSetUp();
 
-        userDAO = (UserDAO)applicationContext.getBean( "userDAO" );
+        userDAO = (UserDAO) applicationContext.getBean("userDAO");
     }
 
     protected String[] getDataSetFiles() {
-        return new String[] {
+        return new String[]{
                 "dataset/userpreferencesbean_dataset.xml",
                 "dataset/userbean_dataset.xml",
                 "dataset/projectbean_dataset.xml",
@@ -147,7 +141,7 @@ public class UserDAOImplTest extends AbstractDependencyInjectionTest {
     }
 
     protected String[] getConfigLocations() {
-        return new String[] { "application-context.xml" };
+        return new String[]{"application-context.xml"};
     }
 
 }

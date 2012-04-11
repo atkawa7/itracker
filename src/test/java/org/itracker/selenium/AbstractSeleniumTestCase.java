@@ -1,20 +1,21 @@
 package org.itracker.selenium;
 
 import com.thoughtworks.selenium.Selenium;
-import java.io.IOException;
 import org.itracker.AbstractDependencyInjectionTest;
+
+import java.io.IOException;
 
 /**
  * It is a base class for all Selenium-based test case.
  * It performa initialization of Selenium client part and
  * retrieves some generally-used parameters like hose application
  * is running at, port, context.
- * 
+ *
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
  */
 public abstract class AbstractSeleniumTestCase extends AbstractDependencyInjectionTest {
-    public final static String SE_TIMEOUT = "60000";
-    
+    public final static String SE_TIMEOUT = "600";
+
     protected Selenium selenium;
     protected String applicationHost;
     protected int applicationPort;
@@ -31,7 +32,7 @@ public abstract class AbstractSeleniumTestCase extends AbstractDependencyInjecti
             assertTrue(e.getMessage(), false);
         }
     }
-    
+
     /**
      * This will initialize a new selenium session for this test scope.
      */

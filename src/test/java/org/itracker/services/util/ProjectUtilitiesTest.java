@@ -4,14 +4,6 @@
  */
 package org.itracker.services.util;
 
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.log4j.Logger;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.core.resources.ITrackerResources;
@@ -21,16 +13,17 @@ import org.itracker.model.util.PropertiesFileHandler;
 import org.itracker.persistence.dao.LanguageDAO;
 import org.junit.Test;
 
+import java.util.*;
+
 /**
- *
  * @author seas
  */
 public class ProjectUtilitiesTest extends AbstractDependencyInjectionTest {
 
-	private static final Logger log = Logger.getLogger(ProjectUtilities.class);
-	
+    private static final Logger log = Logger.getLogger(ProjectUtilities.class);
+
     private void doTestGetStatusName(final Locale locale,
-            final Status status, final String expected) {
+                                     final Status status, final String expected) {
         final String actual =
                 ProjectUtilities.getStatusName(status, locale);
         assertEquals("ProjectUtilities.getStatusName(" + status + ", " +
@@ -41,8 +34,6 @@ public class ProjectUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verifies UserUtilities.getStatusName
      */
     @Test
-//    @Ignore
-  //TODO: Activate skipped, ignored Test (when implementation is done correctly)
     public void testGetStatusName() {
 
         // "Deleted"
@@ -79,7 +70,7 @@ public class ProjectUtilitiesTest extends AbstractDependencyInjectionTest {
     }
 
     private void doTestGetStatusNames(final Locale locale,
-            final Map<Status, String> expected) {
+                                      final Map<Status, String> expected) {
         final Map<Status, String> actual = ProjectUtilities.getStatusNames(locale);
         for (final Map.Entry<Status, String> entry : expected.entrySet()) {
             final Status key = entry.getKey();
@@ -104,7 +95,6 @@ public class ProjectUtilitiesTest extends AbstractDependencyInjectionTest {
      * Verifies UserUtilities#getStatusNames(Locale)
      */
     @Test
-//    @Ignore // still failing on LOCKED, sometimes on VIEWABLE..
     public void testGetStatusNames() {
         final Map<Status, String> expected = new HashMap<Status, String>();
         expected.put(Status.DELETED, "Deleted");
@@ -138,7 +128,7 @@ public class ProjectUtilitiesTest extends AbstractDependencyInjectionTest {
     }
 
     private void doTestGetOptions(final int currentOptions,
-            final Integer[] expected) {
+                                  final Integer[] expected) {
         final Integer[] actual = ProjectUtilities.getOptions(currentOptions);
         final List<Integer> actualList = Arrays.asList(actual);
         assertEquals(expected.length, actual.length);
@@ -155,16 +145,16 @@ public class ProjectUtilitiesTest extends AbstractDependencyInjectionTest {
                 new Integer[]{ProjectUtilities.OPTION_ALLOW_SELF_REGISTERED_CREATE});
         doTestGetOptions(ProjectUtilities.OPTION_ALLOW_ASSIGN_TO_CLOSE | ProjectUtilities.OPTION_ALLOW_SELF_REGISTERED_CREATE,
                 new Integer[]{ProjectUtilities.OPTION_ALLOW_ASSIGN_TO_CLOSE,
-                    ProjectUtilities.OPTION_ALLOW_SELF_REGISTERED_CREATE
+                        ProjectUtilities.OPTION_ALLOW_SELF_REGISTERED_CREATE
                 });
         doTestGetOptions(ProjectUtilities.OPTION_ALLOW_ASSIGN_TO_CLOSE | ProjectUtilities.OPTION_ALLOW_SELF_REGISTERED_CREATE | ProjectUtilities.OPTION_ALLOW_SELF_REGISTERED_VIEW_ALL | ProjectUtilities.OPTION_LITERAL_HISTORY_HTML | ProjectUtilities.OPTION_NO_ATTACHMENTS | ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS | ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML,
                 new Integer[]{ProjectUtilities.OPTION_ALLOW_ASSIGN_TO_CLOSE,
-                    ProjectUtilities.OPTION_ALLOW_SELF_REGISTERED_CREATE,
-                    ProjectUtilities.OPTION_ALLOW_SELF_REGISTERED_VIEW_ALL,
-                    ProjectUtilities.OPTION_LITERAL_HISTORY_HTML,
-                    ProjectUtilities.OPTION_NO_ATTACHMENTS,
-                    ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS,
-                    ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML
+                        ProjectUtilities.OPTION_ALLOW_SELF_REGISTERED_CREATE,
+                        ProjectUtilities.OPTION_ALLOW_SELF_REGISTERED_VIEW_ALL,
+                        ProjectUtilities.OPTION_LITERAL_HISTORY_HTML,
+                        ProjectUtilities.OPTION_NO_ATTACHMENTS,
+                        ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS,
+                        ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML
                 });
 
     }
@@ -187,39 +177,41 @@ public class ProjectUtilitiesTest extends AbstractDependencyInjectionTest {
 
     @Override
     public void onSetUp() throws Exception {
-    	super.onSetUp();
-    	
+        super.onSetUp();
+
         try {
-	        // need to initialize translations from ITracker.properties explicitly
-	        LanguageDAO languageDAO = (LanguageDAO) applicationContext.getBean("languageDAO");
-	
-	        Properties localeProperties = new PropertiesFileHandler(
-	                "/org/itracker/core/resources/ITracker.properties").getProperties();
-	        for (Enumeration<?> propertiesEnumeration = localeProperties.propertyNames(); propertiesEnumeration.hasMoreElements();) {
-	            String key = (String) propertiesEnumeration.nextElement();
-	            String value = localeProperties.getProperty(key);
-	            languageDAO.saveOrUpdate(new Language(ITrackerResources.BASE_LOCALE, key, value));
-	        }
-	
-	        ITrackerResources.clearBundles();
-	        } catch (final Exception e) {
-	            log.warn(e);
-	        }
+            // need to initialize translations from ITracker.properties explicitly
+            LanguageDAO languageDAO = (LanguageDAO) applicationContext.getBean("languageDAO");
+
+            Properties localeProperties = new PropertiesFileHandler(
+                    "/org/itracker/core/resources/ITracker.properties").getProperties();
+            for (Enumeration<?> propertiesEnumeration = localeProperties.propertyNames(); propertiesEnumeration.hasMoreElements(); ) {
+                String key = (String) propertiesEnumeration.nextElement();
+                String value = localeProperties.getProperty(key);
+                languageDAO.saveOrUpdate(new Language(ITrackerResources.BASE_LOCALE, key, value));
+            }
+
+            ITrackerResources.clearBundles();
+        } catch (final Exception e) {
+            log.warn(e);
         }
-        
-    
+    }
+
+
     /**
      * Defines a set of datafiles to be uploaded into database.
+     *
      * @return an array with datafiles.
      */
     protected String[] getDataSetFiles() {
         return new String[]{
-                    "dataset/languagebean_dataset.xml"
-                };
+                "dataset/languagebean_dataset.xml"
+        };
     }
 
     /**
      * Defines a simple configuration, required for running tests.
+     *
      * @return an array of references to configuration files.
      */
     protected String[] getConfigLocations() {

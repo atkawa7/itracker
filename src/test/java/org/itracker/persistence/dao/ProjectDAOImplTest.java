@@ -1,14 +1,13 @@
 package org.itracker.persistence.dao;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Project;
 import org.itracker.model.Status;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
 
@@ -19,10 +18,10 @@ public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
 
         Project foundProject = projectDAO.findByPrimaryKey(2);
 
-        assertNotNull( foundProject );
-        assertEquals( "test_name", foundProject.getName() );
-        assertEquals( "test_description", foundProject.getDescription() );
-        assertEquals( Status.ACTIVE, foundProject.getStatus() );
+        assertNotNull(foundProject);
+        assertEquals("test_name", foundProject.getName());
+        assertEquals("test_description", foundProject.getDescription());
+        assertEquals(Status.ACTIVE, foundProject.getStatus());
     }
 
     @Test
@@ -35,20 +34,17 @@ public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
 
     @Test
     public void testFindAllAvailable() {
-    	List<Project> projects = projectDAO.findAllAvailable();
-    	
-    	assertNotNull(projects);
-    	assertEquals(2, projects.size());
+        List<Project> projects = projectDAO.findAllAvailable();
+
+        assertNotNull(projects);
+        assertEquals(2, projects.size());
     }
-    
+
     @Test
-    @Ignore
-    //TODO: Activate skipped, ignored Test (when implementation is done correctly)
     public void testGetLastIssueUpdateDate() {
         Date date = projectDAO.getLastIssueUpdateDate(2);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        // FIXME: there are 4 issues connected with project 2, why we got null here?
-        assertNotNull( "projectDAO.getLastIssueUpdateDate(2).date", date );
+        assertNotNull("projectDAO.getLastIssueUpdateDate(2).date", date);
         assertEquals("projectDAO.getLastIssueUpdateDate(2). date", "2008-01-01", df.format(date));
     }
 
@@ -56,17 +52,25 @@ public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
     public void onSetUp() throws Exception {
         super.onSetUp();
 
-        projectDAO = (ProjectDAO)applicationContext.getBean( "projectDAO" );
+        projectDAO = (ProjectDAO) applicationContext.getBean("projectDAO");
     }
 
     protected String[] getDataSetFiles() {
-        return new String[] {
-                "dataset/projectbean_dataset.xml"
+        return new String[]{
+                "dataset/userpreferencesbean_dataset.xml",
+                "dataset/userbean_dataset.xml",
+                "dataset/projectbean_dataset.xml",
+                "dataset/versionbean_dataset.xml",
+                "dataset/issuebean_dataset.xml",
+                "dataset/issueactivitybean_dataset.xml",
+                "dataset/componentbean_dataset.xml",
+                "dataset/issue_component_rel_dataset.xml",
+                "dataset/issue_version_rel_dataset.xml"
         };
     }
 
     protected String[] getConfigLocations() {
-        return new String[] { "application-context.xml" };
+        return new String[]{"application-context.xml"};
     }
 
 }

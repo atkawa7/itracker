@@ -4,32 +4,13 @@
  */
 package org.itracker.services.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
-
 import org.itracker.AbstractDependencyInjectionTest;
-import org.itracker.model.Component;
-import org.itracker.model.Configuration;
-import org.itracker.model.CustomField;
-import org.itracker.model.Issue;
-import org.itracker.model.IssueActivityType;
-import org.itracker.model.IssueHistory;
-import org.itracker.model.IssueRelation;
-import org.itracker.model.NameValuePair;
-import org.itracker.model.PermissionType;
-import org.itracker.model.Project;
-import org.itracker.model.User;
-import org.itracker.model.Version;
+import org.itracker.model.*;
 import org.itracker.model.CustomField.Type;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * TODO: make tests using the database where appropriat (setup testdata from datasets)
@@ -142,7 +123,7 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
     }
 
     public void doTestGetStandardFields(final Locale locale,
-            final NameValuePair[] expected) {
+                                        final NameValuePair[] expected) {
         final NameValuePair[] actual = IssueUtilities.getStandardFields(locale);
         for (final NameValuePair nvpExpected : expected) {
             boolean found = false;
@@ -163,38 +144,38 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
     @Test
     public void testGetStandardFields() {
         final NameValuePair[] expected = new NameValuePair[]{
-            new NameValuePair("test-field_id",
-            Integer.toString(IssueUtilities.FIELD_ID)),
-            new NameValuePair("test-field_description",
-            Integer.toString(IssueUtilities.FIELD_DESCRIPTION)),
-            new NameValuePair("test-field_status",
-            Integer.toString(IssueUtilities.FIELD_STATUS)),
-            new NameValuePair("test-field_resolution",
-            Integer.toString(IssueUtilities.FIELD_RESOLUTION)),
-            new NameValuePair("test-field_severity",
-            Integer.toString(IssueUtilities.FIELD_SEVERITY)),
-            new NameValuePair("test-field_creator",
-            Integer.toString(IssueUtilities.FIELD_CREATOR)),
-            new NameValuePair("test-field_createdate",
-            Integer.toString(IssueUtilities.FIELD_CREATEDATE)),
-            new NameValuePair("test-field_owner",
-            Integer.toString(IssueUtilities.FIELD_OWNER)),
-            new NameValuePair("test-field_lastmodified",
-            Integer.toString(IssueUtilities.FIELD_LASTMODIFIED)),
-            new NameValuePair("test-field_project",
-            Integer.toString(IssueUtilities.FIELD_PROJECT)),
-            new NameValuePair("test-field_target",
-            Integer.toString(IssueUtilities.FIELD_TARGET_VERSION)),
-            new NameValuePair("test-field_components",
-            Integer.toString(IssueUtilities.FIELD_COMPONENTS)),
-            new NameValuePair("test-field_versions",
-            Integer.toString(IssueUtilities.FIELD_VERSIONS)),
-            new NameValuePair("test-field_attachmentdescription",
-            Integer.toString(IssueUtilities.FIELD_ATTACHMENTDESCRIPTION)),
-            new NameValuePair("test-field_attachmentfilename",
-            Integer.toString(IssueUtilities.FIELD_ATTACHMENTFILENAME)),
-            new NameValuePair("test-field_detaileddescription",
-            Integer.toString(IssueUtilities.FIELD_HISTORY))
+                new NameValuePair("test-field_id",
+                        Integer.toString(IssueUtilities.FIELD_ID)),
+                new NameValuePair("test-field_description",
+                        Integer.toString(IssueUtilities.FIELD_DESCRIPTION)),
+                new NameValuePair("test-field_status",
+                        Integer.toString(IssueUtilities.FIELD_STATUS)),
+                new NameValuePair("test-field_resolution",
+                        Integer.toString(IssueUtilities.FIELD_RESOLUTION)),
+                new NameValuePair("test-field_severity",
+                        Integer.toString(IssueUtilities.FIELD_SEVERITY)),
+                new NameValuePair("test-field_creator",
+                        Integer.toString(IssueUtilities.FIELD_CREATOR)),
+                new NameValuePair("test-field_createdate",
+                        Integer.toString(IssueUtilities.FIELD_CREATEDATE)),
+                new NameValuePair("test-field_owner",
+                        Integer.toString(IssueUtilities.FIELD_OWNER)),
+                new NameValuePair("test-field_lastmodified",
+                        Integer.toString(IssueUtilities.FIELD_LASTMODIFIED)),
+                new NameValuePair("test-field_project",
+                        Integer.toString(IssueUtilities.FIELD_PROJECT)),
+                new NameValuePair("test-field_target",
+                        Integer.toString(IssueUtilities.FIELD_TARGET_VERSION)),
+                new NameValuePair("test-field_components",
+                        Integer.toString(IssueUtilities.FIELD_COMPONENTS)),
+                new NameValuePair("test-field_versions",
+                        Integer.toString(IssueUtilities.FIELD_VERSIONS)),
+                new NameValuePair("test-field_attachmentdescription",
+                        Integer.toString(IssueUtilities.FIELD_ATTACHMENTDESCRIPTION)),
+                new NameValuePair("test-field_attachmentfilename",
+                        Integer.toString(IssueUtilities.FIELD_ATTACHMENTFILENAME)),
+                new NameValuePair("test-field_detaileddescription",
+                        Integer.toString(IssueUtilities.FIELD_HISTORY))
         };
         doTestGetStandardFields(new Locale("test"), expected);
     }
@@ -203,90 +184,90 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
     public void testGetRelationNameByLocaleWithInt() {
         assertEquals("test-cloned_c",
                 IssueUtilities.getRelationName(
-                IssueUtilities.RELATION_TYPE_CLONED_C,
-                new Locale("test")));
+                        IssueUtilities.RELATION_TYPE_CLONED_C,
+                        new Locale("test")));
         assertEquals("test-cloned_p",
                 IssueUtilities.getRelationName(
-                IssueUtilities.RELATION_TYPE_CLONED_P,
-                new Locale("test")));
+                        IssueUtilities.RELATION_TYPE_CLONED_P,
+                        new Locale("test")));
         assertEquals("test-dependent_c",
                 IssueUtilities.getRelationName(
-                IssueUtilities.RELATION_TYPE_DEPENDENT_C,
-                new Locale("test")));
+                        IssueUtilities.RELATION_TYPE_DEPENDENT_C,
+                        new Locale("test")));
         assertEquals("test-dependent_p",
                 IssueUtilities.getRelationName(
-                IssueUtilities.RELATION_TYPE_DEPENDENT_P,
-                new Locale("test")));
+                        IssueUtilities.RELATION_TYPE_DEPENDENT_P,
+                        new Locale("test")));
         assertEquals("test-duplicate_c",
                 IssueUtilities.getRelationName(
-                IssueUtilities.RELATION_TYPE_DUPLICATE_C,
-                new Locale("test")));
+                        IssueUtilities.RELATION_TYPE_DUPLICATE_C,
+                        new Locale("test")));
         assertEquals("test-duplicate_p",
                 IssueUtilities.getRelationName(
-                IssueUtilities.RELATION_TYPE_DUPLICATE_P,
-                new Locale("test")));
+                        IssueUtilities.RELATION_TYPE_DUPLICATE_P,
+                        new Locale("test")));
         assertEquals("test-related_c",
                 IssueUtilities.getRelationName(
-                IssueUtilities.RELATION_TYPE_RELATED_C,
-                new Locale("test")));
+                        IssueUtilities.RELATION_TYPE_RELATED_C,
+                        new Locale("test")));
         assertEquals("test-related_p",
                 IssueUtilities.getRelationName(
-                IssueUtilities.RELATION_TYPE_RELATED_P,
-                new Locale("test")));
+                        IssueUtilities.RELATION_TYPE_RELATED_P,
+                        new Locale("test")));
         assertEquals("test-split_c",
                 IssueUtilities.getRelationName(
-                IssueUtilities.RELATION_TYPE_SPLIT_C,
-                new Locale("test")));
+                        IssueUtilities.RELATION_TYPE_SPLIT_C,
+                        new Locale("test")));
         assertEquals("test-split_p",
                 IssueUtilities.getRelationName(
-                IssueUtilities.RELATION_TYPE_SPLIT_P,
-                new Locale("test")));
+                        IssueUtilities.RELATION_TYPE_SPLIT_P,
+                        new Locale("test")));
     }
 
     @Test
     public void testGetRelationNameByLocaleWithString() {
         assertEquals("test-duplicate_c",
                 IssueUtilities.getRelationName(
-                "4",
-                new Locale("test")));
+                        "4",
+                        new Locale("test")));
         assertEquals("test-cloned_p",
                 IssueUtilities.getRelationName(
-                "5",
-                new Locale("test")));
+                        "5",
+                        new Locale("test")));
     }
 
     @Test
     public void testGetMatchingRelationType() {
         assertEquals(IssueUtilities.RELATION_TYPE_RELATED_C,
                 IssueUtilities.getMatchingRelationType(
-                IssueUtilities.RELATION_TYPE_RELATED_P));
+                        IssueUtilities.RELATION_TYPE_RELATED_P));
         assertEquals(IssueUtilities.RELATION_TYPE_RELATED_P,
                 IssueUtilities.getMatchingRelationType(
-                IssueUtilities.RELATION_TYPE_RELATED_C));
+                        IssueUtilities.RELATION_TYPE_RELATED_C));
         assertEquals(IssueUtilities.RELATION_TYPE_DUPLICATE_C,
                 IssueUtilities.getMatchingRelationType(
-                IssueUtilities.RELATION_TYPE_DUPLICATE_P));
+                        IssueUtilities.RELATION_TYPE_DUPLICATE_P));
         assertEquals(IssueUtilities.RELATION_TYPE_DUPLICATE_P,
                 IssueUtilities.getMatchingRelationType(
-                IssueUtilities.RELATION_TYPE_DUPLICATE_C));
+                        IssueUtilities.RELATION_TYPE_DUPLICATE_C));
         assertEquals(IssueUtilities.RELATION_TYPE_CLONED_C,
                 IssueUtilities.getMatchingRelationType(
-                IssueUtilities.RELATION_TYPE_CLONED_P));
+                        IssueUtilities.RELATION_TYPE_CLONED_P));
         assertEquals(IssueUtilities.RELATION_TYPE_CLONED_P,
                 IssueUtilities.getMatchingRelationType(
-                IssueUtilities.RELATION_TYPE_CLONED_C));
+                        IssueUtilities.RELATION_TYPE_CLONED_C));
         assertEquals(IssueUtilities.RELATION_TYPE_SPLIT_C,
                 IssueUtilities.getMatchingRelationType(
-                IssueUtilities.RELATION_TYPE_SPLIT_P));
+                        IssueUtilities.RELATION_TYPE_SPLIT_P));
         assertEquals(IssueUtilities.RELATION_TYPE_SPLIT_P,
                 IssueUtilities.getMatchingRelationType(
-                IssueUtilities.RELATION_TYPE_SPLIT_C));
+                        IssueUtilities.RELATION_TYPE_SPLIT_C));
         assertEquals(IssueUtilities.RELATION_TYPE_DEPENDENT_C,
                 IssueUtilities.getMatchingRelationType(
-                IssueUtilities.RELATION_TYPE_DEPENDENT_P));
+                        IssueUtilities.RELATION_TYPE_DEPENDENT_P));
         assertEquals(IssueUtilities.RELATION_TYPE_DEPENDENT_P,
                 IssueUtilities.getMatchingRelationType(
-                IssueUtilities.RELATION_TYPE_DEPENDENT_C));
+                        IssueUtilities.RELATION_TYPE_DEPENDENT_C));
         assertEquals(-1, IssueUtilities.getMatchingRelationType(999));
     }
 
@@ -329,34 +310,34 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
         assertEquals("description,firstName lastName,"
                 + dateFormat.format(new Date()),
                 IssueUtilities.historyToString(issue,
-                dateFormat));
+                        dateFormat));
     }
 
     @Test
     public void testGetStatusNameByLocaleInt() {
         assertEquals("test-status_assigned",
                 IssueUtilities.getStatusName(IssueUtilities.STATUS_ASSIGNED,
-                new Locale("test")));
+                        new Locale("test")));
         assertEquals("test-status_closed",
                 IssueUtilities.getStatusName(IssueUtilities.STATUS_CLOSED,
-                new Locale("test")));
+                        new Locale("test")));
         assertEquals("test-status_end",
                 IssueUtilities.getStatusName(IssueUtilities.STATUS_END,
-                new Locale("test")));
+                        new Locale("test")));
         assertEquals("test-status_new",
                 IssueUtilities.getStatusName(IssueUtilities.STATUS_NEW,
-                new Locale("test")));
+                        new Locale("test")));
         assertEquals("test-status_resolved",
                 IssueUtilities.getStatusName(IssueUtilities.STATUS_RESOLVED,
-                new Locale("test")));
+                        new Locale("test")));
         assertEquals("test-status_unassigned",
                 IssueUtilities.getStatusName(IssueUtilities.STATUS_UNASSIGNED,
-                new Locale("test")));
+                        new Locale("test")));
     }
-    // FIXME: fails for me (maven 3) on finding only 1 of 5 expected
-    //@Ignore
+
     public void doTestGetStatusesByLocale(final Locale locale,
-            final List<NameValuePair> expected) {
+                                          final List<NameValuePair> expected) {
+        assertEquals(expected.size(), IssueUtilities.getNumberStatuses());
         final List<NameValuePair> actual = IssueUtilities.getStatuses(locale);
         assertEquals(expected.size(), actual.size());
         for (final NameValuePair nvpExpected : expected) {
@@ -384,6 +365,7 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
 
     @Test
     public void testSetStatuses() {
+        final List<Configuration> statuses_ = IssueUtilities.getStatuses();
         final List<Configuration> statuses = new Vector<Configuration>();
         final Configuration configuration = new Configuration(0,
                 new NameValuePair("key", "100"));
@@ -392,16 +374,13 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
         final List<NameValuePair> expected = new Vector<NameValuePair>();
         expected.add(new NameValuePair("test-status_new", "100"));
         doTestGetStatusesByLocale(new Locale("test"), expected);
+
     }
 
     @Test
     public void testGetNumberStatuses() {
-        final List<Configuration> statuses = new Vector<Configuration>();
-        final Configuration configuration = new Configuration(0,
-                new NameValuePair("key", "value"));
-        statuses.add(configuration);
-        IssueUtilities.setStatuses(statuses);
-        assertEquals(1, IssueUtilities.getNumberStatuses());
+
+        assertEquals(5, IssueUtilities.getNumberStatuses());
     }
 
     @Test
@@ -417,7 +396,7 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
     }
 
     public void doTestGetSeverities(final Locale locale,
-            final List<NameValuePair> expected) {
+                                    final List<NameValuePair> expected) {
         final List<NameValuePair> actual = IssueUtilities.getSeverities(locale);
         assertEquals(expected.size(), actual.size());
         for (final NameValuePair nvpExpected : expected) {
@@ -493,13 +472,13 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
     }
 
     public void doTestGetResolutionsByLocale(final Locale locale,
-            final List<NameValuePair> expected) {
+                                             final List<NameValuePair> expected) {
         final List<NameValuePair> actual = IssueUtilities.getResolutions(locale);
         assertEquals(expected.size(), actual.size());
         for (final NameValuePair nvpExpected : expected) {
             boolean found = false;
-            for (final NameValuePair nvpActual: actual) {
-                found = nvpExpected.getName().equals(nvpActual.getName()) 
+            for (final NameValuePair nvpActual : actual) {
+                found = nvpExpected.getName().equals(nvpActual.getName())
                         && nvpExpected.getValue().equals(nvpActual.getValue());
             }
             assertTrue(found);
@@ -534,7 +513,7 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
     public void testGetActivityNameByLocale() {
         assertEquals("test-activity_issue_created",
                 IssueUtilities.getActivityName(IssueActivityType.ISSUE_CREATED,
-                new Locale("test")));
+                        new Locale("test")));
 
     }
 
@@ -543,7 +522,7 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
         assertEquals(expected.size(), actual.size());
         for (final CustomField cf : expected) {
             boolean found = false;
-            for (final CustomField cfActual: actual) {
+            for (final CustomField cfActual : actual) {
                 found = cf.equals(cfActual);
                 if (found) break;
             }
@@ -570,7 +549,6 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
         IssueUtilities.setCustomFields(expected);
         assertEquals(expected, IssueUtilities.getCustomFields());
     }
-
 
 
     @Test
@@ -638,7 +616,7 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
     @Test
     public void testCanUnassigneIssue() {
         final Project project = new Project("project");
-        project.setId(1);        
+        project.setId(1);
         final Issue issue = new Issue();
         issue.setProject(project);
         final User user1 = new User();
@@ -664,15 +642,13 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
         related.setId(1);
         final IssueRelation relation =
                 new IssueRelation(issue, related,
-                IssueUtilities.RELATION_TYPE_CLONED_C);
+                        IssueUtilities.RELATION_TYPE_CLONED_C);
         issue.getRelations().add(relation);
         assertTrue(IssueUtilities.hasIssueRelation(issue, 1));
         assertFalse(IssueUtilities.hasIssueRelation(issue, 2));
     }
 
     @Test
-    // TODO prepare with services 
-//    @Ignore
     public void testHasIssueNotification() {
         final Project project = new Project("project");
         project.setId(1);
@@ -687,18 +663,26 @@ public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
         //assertFalse(IssueUtilities.hasIssueNotification(issue, 2));
     }
 
+    @Override
+    public void onSetUp() throws Exception {
+
+        super.onSetUp();
+    }
+
     /**
      * Defines a set of datafiles to be uploaded into database.
+     *
      * @return an array with datafiles.
      */
     protected String[] getDataSetFiles() {
         return new String[]{
-                    "dataset/languagebean_dataset.xml"
-                };
+                "dataset/languagebean_dataset.xml"
+        };
     }
 
     /**
      * Defines a simple configuration, required for running tests.
+     *
      * @return an array of references to configuration files.
      */
     protected String[] getConfigLocations() {

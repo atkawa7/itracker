@@ -4,46 +4,33 @@
  */
 package org.itracker.services.util;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Vector;
-
 import org.itracker.AbstractDependencyInjectionTest;
-import org.itracker.model.AbstractEntity;
-import org.itracker.model.Component;
-import org.itracker.model.Configuration;
-import org.itracker.model.CustomField;
-import org.itracker.model.CustomFieldValue;
-import org.itracker.model.Issue;
-import org.itracker.model.IssueAttachment;
-import org.itracker.model.IssueField;
-import org.itracker.model.IssueHistory;
-import org.itracker.model.Project;
-import org.itracker.model.SystemConfiguration;
-import org.itracker.model.User;
-import org.itracker.model.Version;
+import org.itracker.model.*;
 import org.itracker.model.CustomField.Type;
 import org.itracker.services.exceptions.ImportExportException;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 /**
+ * FIXME: reimplement this test as soon we got an XML Import/Export
  *
- * FIXME: reimplement this test as soon we got an XML Import/Export 
  * @author seas
  */
-@Ignore
 public class ImportExportUtilitiesTest extends AbstractDependencyInjectionTest {
+
+    public static final long TEST_TIMESTAMP_EXPORT1 = 50000l;
+    public static final long TEST_TIMESTAMP_EXPORT2 = 8000000l;
 
     private String flatXml(final String xml) {
         return xml.replace("\n", "").replace("\r", "").replaceAll("> +<", "><").trim();
     }
 
     public void doTestImportIssues(final String xml,
-            final AbstractEntity[] expected) {
+                                   final AbstractEntity[] expected) {
         try {
             final AbstractEntity[] actual = ImportExportUtilities.importIssues(xml);
             final List<AbstractEntity> actualList = new Vector<AbstractEntity>(Arrays.asList(actual));
@@ -72,10 +59,10 @@ public class ImportExportUtilitiesTest extends AbstractDependencyInjectionTest {
                         }
                     } else if (aeExpected instanceof SystemConfiguration && aeActual instanceof SystemConfiguration) {
                         @SuppressWarnings("unused")
-						final SystemConfiguration configExpected =
+                        final SystemConfiguration configExpected =
                                 (SystemConfiguration) aeExpected;
                         @SuppressWarnings("unused")
-						final SystemConfiguration configActual =
+                        final SystemConfiguration configActual =
                                 (SystemConfiguration) aeActual;
                         found = true;
                     }
@@ -189,45 +176,33 @@ public class ImportExportUtilitiesTest extends AbstractDependencyInjectionTest {
                 "</itracker>";
         doTestImportIssues(xml,
                 new AbstractEntity[]{
-                    systemConfiguration,
-                    creator,
-                    owner,
-                    project,
-                    issue1,
-                    issue2
+                        systemConfiguration,
+                        creator,
+                        owner,
+                        project,
+                        issue1,
+                        issue2
                 });
-        
+
         //test throwing exception
         try {
-        	ImportExportUtilities.importIssues(null);
-        	fail("should throw ImportExportException");
+            ImportExportUtilities.importIssues(null);
+            fail("should throw ImportExportException");
+        } catch (final ImportExportException e) {
+
         }
-        catch (final ImportExportException e) {
-            
-        }
-        
+
         try {
-        	ImportExportUtilities.importIssues("");
-        	fail("should throw ImportExportException");
+            ImportExportUtilities.importIssues("");
+            fail("should throw ImportExportException");
+        } catch (final ImportExportException e) {
+
         }
-        catch (final ImportExportException e) {
-            
-        }
-        
+
     }
 
-    /*
-	Problem on some environments, probably due to other java version (1.6.0)
-    testExportIssues(org.itracker.services.util.ImportExportUtilitiesTest)  Time elapsed: 0.024 sec  <<< FAILURE!
-    junit.framework.ComparisonFailure: null expected:<...users><user id="user[1" systemid="1"><login><![CDATA[]]></login><first-name><![CDATA[]]></first-name><last-name><![CDATA[]]></last-name><email><![CDATA[]]></email><user-status>MISSING KEY: itrac
-    ker.user.status.0</user-status><super-user>false</super-user></user><user id="user4" systemid="4]"><login><![CDATA[]]...> but was:<...users><user id="user[4" systemid="4"><login><![CDATA[]]></login><first-name><![CDATA[]]></first-name><last-name><
-    ![CDATA[]]></last-name><email><![CDATA[]]></email><user-status>MISSING KEY: itracker.user.status.0</user-status><super-user>false</super-user></user><user id="user1" systemid="1]"><login><![CDATA[]]...>
-    	at junit.framework.Assert.assertEquals(Assert.java:81)
-    	at junit.framework.Assert.assertEquals(Assert.java:87)
-    	at org.itracker.services.util.ImportExportUtilitiesTest.testExportIssues(ImportExportUtilitiesTest.java:381)
-     */
+
     @Test
-    @Ignore
     public void testExportIssues() {
         final List<Issue> issues = new Vector<Issue>();
         final Project project = new Project("project");
@@ -240,18 +215,17 @@ public class ImportExportUtilitiesTest extends AbstractDependencyInjectionTest {
         user.setId(3);
         final User attachmentCreator = new User();
         attachmentCreator.setId(4);
-        final Date dateCreate = new Date();
-        final Date dateModify = new Date();
+        final Date dateCreate = new Date(TEST_TIMESTAMP_EXPORT1);
+        final Date dateModify = new Date(TEST_TIMESTAMP_EXPORT2);
         Date created = null;
         List<User> users = new ArrayList<User>();
         users.add(creator);
         project.setOwners(users);
         try {
-        	created = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2008-11-11 12:11:10");
+            created = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2008-11-11 12:11:10");
+        } catch (Exception e) {
+
         }
-        catch (Exception e) {
-			
-		}
         {
             final Issue issue = new Issue();
             issue.setId(1);
@@ -261,7 +235,7 @@ public class ImportExportUtilitiesTest extends AbstractDependencyInjectionTest {
             issue.setOwner(owner);
             issue.setCreateDate(dateCreate);
             issue.setLastModifiedDate(dateModify);
-            
+
             IssueHistory issueHistory = new IssueHistory();
             issueHistory.setUser(user);
             issueHistory.setStatus(1);
@@ -270,18 +244,18 @@ public class ImportExportUtilitiesTest extends AbstractDependencyInjectionTest {
             List<IssueHistory> histories = new ArrayList<IssueHistory>();
             histories.add(issueHistory);
             issue.setHistory(histories);
-            
+
             IssueAttachment attachment = new IssueAttachment();
             attachment.setUser(attachmentCreator);
             attachment.setFileName("proj1_issue801_attachment1");
             attachment.setOriginalFileName("ITracker.jmx");
             attachment.setSize(192521);
             attachment.setType("text/plain");
-            
+
             List<IssueAttachment> attachments = new ArrayList<IssueAttachment>();
             attachments.add(attachment);
             issue.setAttachments(attachments);
-            
+
             issues.add(issue);
         }
         {
@@ -294,125 +268,33 @@ public class ImportExportUtilitiesTest extends AbstractDependencyInjectionTest {
             issue.setCreateDate(dateCreate);
             issue.setLastModifiedDate(dateModify);
             issues.add(issue);
-            
+
         }
         final SystemConfiguration systemConfiguration =
                 new SystemConfiguration();
         try {
-            final String expected = "<itracker>" +
-                    "<configuration>" +
-                    "<configuration-version><![CDATA[]]></configuration-version>" +
-                    "<custom-fields>" +
-                    "</custom-fields>" +
-                    "<resolutions>" +
-                    "</resolutions>" +
-                    "<severities>" +
-                    "</severities>" +
-                    "<statuses>" +
-                    "</statuses>" +
-                    "</configuration>" +
-                    "<users>" +
-                    "<user id=\"user1\" systemid=\"1\">" +
-                    "<login><![CDATA[]]></login>" +
-                    "<first-name><![CDATA[]]></first-name>" +
-                    "<last-name><![CDATA[]]></last-name>" +
-                    "<email><![CDATA[]]></email>" +
-                    "<user-status>MISSING KEY: itracker.user.status.0</user-status>" +
-                    "<super-user>false</super-user>" +
-                    "</user>" +
-                    "<user id=\"user4\" systemid=\"4\">" +
-                    "<login><![CDATA[]]></login>" +
-                    "<first-name><![CDATA[]]></first-name>" +
-                    "<last-name><![CDATA[]]></last-name>" +
-                    "<email><![CDATA[]]></email>" +
-                    "<user-status>MISSING KEY: itracker.user.status.0</user-status>" +
-                    "<super-user>false</super-user>" +
-                    "</user>" +
-                    "<user id=\"user2\" systemid=\"2\">" +
-                    "<login><![CDATA[]]></login>" +
-                    "<first-name><![CDATA[]]></first-name>" +
-                    "<last-name><![CDATA[]]></last-name>" +
-                    "<email><![CDATA[]]></email>" +
-                    "<user-status>MISSING KEY: itracker.user.status.0</user-status>" +
-                    "<super-user>false</super-user>" +
-                    "</user>" +
-                    "<user id=\"user3\" systemid=\"3\">" +
-                    "<login><![CDATA[]]></login>" +
-                    "<first-name><![CDATA[]]></first-name>" +
-                    "<last-name><![CDATA[]]></last-name>" +
-                    "<email><![CDATA[]]></email>" +
-                    "<user-status>MISSING KEY: itracker.user.status.0</user-status>" +
-                    "<super-user>false</super-user>" +
-                    "</user>" +
-                    "</users>" +
-                    "<projects>" +
-                    "<project id=\"project1\" systemid=\"1\">" +
-                    "<project-name><![CDATA[project]]></project-name>" +
-                    "<project-description><![CDATA[]]></project-description>" +
-                    "<project-status>" + ProjectUtilities.getStatusName(project.getStatus(), ImportExportUtilities.EXPORT_LOCALE) + "</project-status>" +
-                    "<project-options>0</project-options>" +
-                    "<project-owners><project-owner>user1</project-owner></project-owners>" +
-                    "</project>" +
-                    "</projects>" +
-                    "<issues>" +
-                    "<issue id=\"issue1\" systemid=\"1\">" +
-                    "<issue-project><![CDATA[project1]]></issue-project>" +
-                    "<issue-description><![CDATA[issue description]]></issue-description>" +
-                    "<issue-severity>null</issue-severity>" +
-                    "<issue-status>null</issue-status>" +
-                    "<issue-resolution><![CDATA[]]></issue-resolution>" +
-                    "<create-date>" + ImportExportTags.DATE_FORMATTER.format(dateCreate) + "</create-date>" +
-                    "<last-modified>" + ImportExportTags.DATE_FORMATTER.format(dateModify) + "</last-modified>" +
-                    "<creator>user1</creator>" +
-                    "<owner>user2</owner>" +
-                    "<issue-attachments>" +
-                    "<issue-attachment>" +
-                    "<issue-attachment-description><![CDATA[]]></issue-attachment-description>" +
-                    "<issue-attachment-filename><![CDATA[proj1_issue801_attachment1]]></issue-attachment-filename>" +
-                    "<issue-attachment-origfile><![CDATA[ITracker.jmx]]></issue-attachment-origfile>" +
-                    "<issue-attachment-size><![CDATA[192521]]></issue-attachment-size>" +
-                    "<issue-attachment-type><![CDATA[text/plain]]></issue-attachment-type>" +
-                    "<issue-attachment-creator><![CDATA[user4]]></issue-attachment-creator>" +
-                    "</issue-attachment>" +
-                    "</issue-attachments>" +
-                    "<issue-history><history-entry creator-id=\"user3\" date=\"11/11/2008 12:11:10\" status=\"1\">" +
-                    "<![CDATA[Test issue history entry.]]></history-entry>" +
-                    "</issue-history>" +
-                    "</issue>" +
-                    "<issue id=\"issue2\" systemid=\"2\">" +
-                    " <issue-project><![CDATA[project1]]></issue-project>" +
-                    "<issue-description><![CDATA[issue description]]></issue-description>" +
-                    "<issue-severity>null</issue-severity>" +
-                    "<issue-status>null</issue-status>" +
-                    "<issue-resolution><![CDATA[]]></issue-resolution>" +
-                    "<create-date>" + ImportExportTags.DATE_FORMATTER.format(dateCreate) + "</create-date>" +
-                    "<last-modified>" + ImportExportTags.DATE_FORMATTER.format(dateModify) + "</last-modified>" +
-                    "<creator>user1</creator>" +
-                    "<owner>user2</owner>" +
-                    "</issue>" +
-                    "</issues>" +
-                    "</itracker>";
-            assertEquals(flatXml(expected),
-                    flatXml(ImportExportUtilities.exportIssues(issues,
-                    systemConfiguration)));
+            final String expected = readXmlString("org/itracker/services/util/testExportIssuesExpected.xml");
+            String xml = ImportExportUtilities.exportIssues(issues,
+                    systemConfiguration);
+
+            assertEquals("xml", flatXml(expected),
+                    flatXml(xml));
         } catch (final ImportExportException ex) {
             assertTrue(ex.getMessage(), false);
         }
-        
+
         try {
-        	ImportExportUtilities.exportIssues(null, systemConfiguration);
-        	fail("should throw ImportExportException");
+            ImportExportUtilities.exportIssues(null, systemConfiguration);
+            fail("should throw ImportExportException");
+        } catch (ImportExportException e) {
+
         }
-        catch (ImportExportException e) {
-			
-		}
-        
+
         try {
-        	ImportExportUtilities.exportIssues(new ArrayList<Issue>(), systemConfiguration);
-        	fail("should throw ImportExportException");
-        }
-        catch (ImportExportException e) {
-        	
+            ImportExportUtilities.exportIssues(new ArrayList<Issue>(), systemConfiguration);
+            fail("should throw ImportExportException");
+        } catch (ImportExportException e) {
+
         }
     }
 
@@ -531,38 +413,38 @@ public class ImportExportUtilitiesTest extends AbstractDependencyInjectionTest {
         } catch (final ImportExportException ex) {
             assertTrue(ex.getMessage(), false);
         }
-        
+
         try {
-        	ImportExportUtilities.exportModel(null);
-        	fail("should throw ImportExportException");
+            ImportExportUtilities.exportModel(null);
+            fail("should throw ImportExportException");
+        } catch (ImportExportException e) {
         }
-        catch (ImportExportException e) {
-		}
-        
+
         try {
-        	ImportExportUtilities.exportModel(null);
-        	fail("should throw ImportExportException");
+            ImportExportUtilities.exportModel(null);
+            fail("should throw ImportExportException");
+        } catch (ImportExportException e) {
+            assertEquals("The bean to export was null.", e.getMessage());
         }
-        catch (ImportExportException e) {
-        	assertEquals("The bean to export was null.", e.getMessage());
-		}
-        
+
         try {
-        	ImportExportUtilities.exportModel(new Component());
-        	fail("should throw ImportExportException");
-        }
-        catch (ImportExportException e) {
-        	assertEquals("This bean type can not be exported.", e.getMessage());
+            ImportExportUtilities.exportModel(new Component());
+            fail("should throw ImportExportException");
+        } catch (ImportExportException e) {
+            assertEquals("This bean type can not be exported.", e.getMessage());
         }
     }
 
+    /**
+     * TODO: Not a valid XML..
+     */
     @Test
     public void testGetConfigurationXML() {
-    	
-    	String got = ImportExportUtilities.getConfigurationXML(null);
-    	assertNotNull(got);
-    	assertEquals("", got);
-    	
+
+        String got = ImportExportUtilities.getConfigurationXML(null);
+        assertNotNull(got);
+        assertEquals("", got);
+
         final SystemConfiguration config = new SystemConfiguration();
         config.setId(1);
         config.setVersion("1/1");
@@ -573,72 +455,57 @@ public class ImportExportUtilitiesTest extends AbstractDependencyInjectionTest {
         customField2.setId(2);
         CustomFieldValue customFieldValue = new CustomFieldValue();
         customFieldValue.setId(2);
-//        customFieldValue.setName("name2");
         customFieldValue.setValue("value2");
         customFieldValue.setCustomField(new CustomField("field3", Type.LIST));
-        
+
         customField2.getOptions().add(customFieldValue);
         config.getCustomFields().add(customField2);
-        
-        
+
+
         config.getResolutions().add(new Configuration(1, "resolution"));
-        
+
         config.getSeverities().add(new Configuration(2, "severity"));
-        
+
         config.getStatuses().add(new Configuration(3, "status"));
-        
-        
-        final String expected =
-                "<configuration-version><![CDATA[1/1]]></configuration-version>" +
-                "<custom-fields>" +
-                "<custom-field id=\"custom-field1\" systemid=\"1\">" +
-                "<custom-field-label><![CDATA[field1]]></custom-field-label>" +
-                "<custom-field-type><![CDATA[STRING]]></custom-field-type>" +
-                "<custom-field-required><![CDATA[false]]></custom-field-required>" +
-                "<custom-field-dateformat><![CDATA[]]></custom-field-dateformat>" +
-                "<custom-field-sortoptions><![CDATA[false]]></custom-field-sortoptions>" +
-                "</custom-field>" +
-                "<custom-field id=\"custom-field2\" systemid=\"2\">" +
-                "<custom-field-label><![CDATA[field2]]></custom-field-label>" +
-                "<custom-field-type><![CDATA[LIST]]></custom-field-type>" +
-                "<custom-field-required><![CDATA[false]]></custom-field-required>" +
-                "<custom-field-dateformat><![CDATA[]]></custom-field-dateformat>" +
-                "<custom-field-sortoptions><![CDATA[false]]></custom-field-sortoptions>" +
-                "<custom-field-option value=\"value2\"><![CDATA[field3]]></custom-field-option>" +
-                "</custom-field>" +
-                "</custom-fields>" +
-                "<resolutions>" +
-                "<resolution value=\"resolution\" order=\"0\"><![CDATA[]]></resolution>" +
-                "</resolutions>" +
-                "<severities>" +
-                "<severity value=\"severity\" order=\"0\"><![CDATA[]]></severity>" +
-                "</severities>" +
-                "<statuses>" +
-                "<status value=\"status\" order=\"0\"><![CDATA[]]></status>" +
-                "</statuses>";
-        assertEquals(flatXml(expected),
-                flatXml(ImportExportUtilities.getConfigurationXML(config)));
+
+        final String expected = readXmlString("org/itracker/services/util/testGetConfigurationXMLExpected.xml");
+
+        String string = ImportExportUtilities.getConfigurationXML(config);
+        assertEquals("xml", flatXml(expected),
+                flatXml(string));
+    }
+
+    private String readXmlString(String filename) {
+        InputStreamReader is = new InputStreamReader(getClass().getClassLoader().getResourceAsStream(filename));
+        StringBuilder sb = new StringBuilder();
+        try {
+            while (is.ready()) {
+                sb.append((char) is.read());
+            }
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+        return sb.toString();
     }
 
     @Test
     public void testConstructor() {
-    	ImportExportUtilities importExportUtilities = new ImportExportUtilities();
-    	
-    	assertNotNull(importExportUtilities);
-    	
+        ImportExportUtilities importExportUtilities = new ImportExportUtilities();
+
+        assertNotNull(importExportUtilities);
+
     }
-    
+
     @Test
-    @Ignore 
     // Cannot test this it's not a real test, String is not XML anyway! (XML is structured, String is pain)
     public void testGetIssueXML() {
-    	
-    	String got = ImportExportUtilities.getIssueXML(null);
-    	assertNotNull(got);
-    	assertEquals("", got);
-    	
-    	
-    	final User creator = new User();
+
+        String got = ImportExportUtilities.getIssueXML(null);
+        assertNotNull(got);
+        assertEquals("", got);
+
+
+        final User creator = new User();
         creator.setId(1);
         final User owner = new User();
         owner.setId(2);
@@ -679,10 +546,10 @@ public class ImportExportUtilitiesTest extends AbstractDependencyInjectionTest {
 //        customField.setName("customFieldName");
         customField.setFieldType(Type.STRING);
         issueField.setCustomField(customField);
-        
-        
+
+
         issue.getFields().add(issueField);
-        
+
         final String expected = "<issue id=\"issue1\" systemid=\"1\">" +
                 "<issue-project><![CDATA[project1]]></issue-project>" +
                 "<issue-description><![CDATA[issue description]]></issue-description>" +
@@ -716,91 +583,92 @@ public class ImportExportUtilitiesTest extends AbstractDependencyInjectionTest {
                 "<history-entry creator-id=\"user1\" date=\"" + ImportExportTags.DATE_FORMATTER.format(dateCreate) + "\" status=\"100\"><![CDATA[some description]]></history-entry>" +
                 "</issue-history>" +
                 "</issue>";
-        
-       	 assertEquals(flatXml(expected),
-       			 flatXml(ImportExportUtilities.getIssueXML(issue)));
-        
-    	
+
+        assertEquals(flatXml(expected),
+                flatXml(ImportExportUtilities.getIssueXML(issue)));
+
+
     }
-    
+
     @Test
     public void testGetProjectXML() {
-    	
-    	String got = ImportExportUtilities.getProjectXML(null);
-    	assertNotNull(got);
-    	assertEquals("", got);
-    	
-    	final Project project = new Project("project");
-    	project.setId(1);
-    	final Component component = new Component(project, "component");
-    	component.setId(1);
-    	project.getComponents().add(component);
-    	
-    	CustomField customField = new CustomField();
-    	customField.setId(1);
-    	project.getCustomFields().add(customField);
-    	Version version = new Version(project, "1.1.1");
-    	version.setId(1);
-    	project.getVersions().add(version);
-    	
-    	
-    	final String expected = "<project id=\"project1\" systemid=\"1\">" +
-    	"<project-name><![CDATA[project]]></project-name>" +
-    	"<project-description><![CDATA[]]></project-description>" +
-    	"<project-status>" + ProjectUtilities.getStatusName(project.getStatus(), ImportExportUtilities.EXPORT_LOCALE) + "</project-status>" +
-    	"<project-options>0</project-options>" +
-    	"<project-custom-fields><project-custom-field>custom-field1</project-custom-field></project-custom-fields>" +
-    	"<components>" +
-    	"<component id=\"component1\" systemid=\"1\">" +
-    	"<component-name><![CDATA[component]]></component-name>" +
-    	"<component-description><![CDATA[]]></component-description>" +
-    	"</component>" +
-    	"</components>" +
-    	"<versions><version id=\"version1\" systemid=\"1\"><version-number><![CDATA[1.1.1]]>" +
-    	"</version-number><version-description><![CDATA[]]></version-description></version></versions>" +
-    	"</project>";
-    	
-    	assertEquals(flatXml(expected), flatXml(ImportExportUtilities.getProjectXML(project)));
-        
+
+        String got = ImportExportUtilities.getProjectXML(null);
+        assertNotNull(got);
+        assertEquals("", got);
+
+        final Project project = new Project("project");
+        project.setId(1);
+        final Component component = new Component(project, "component");
+        component.setId(1);
+        project.getComponents().add(component);
+
+        CustomField customField = new CustomField();
+        customField.setId(1);
+        project.getCustomFields().add(customField);
+        Version version = new Version(project, "1.1.1");
+        version.setId(1);
+        project.getVersions().add(version);
+
+
+        final String expected = "<project id=\"project1\" systemid=\"1\">" +
+                "<project-name><![CDATA[project]]></project-name>" +
+                "<project-description><![CDATA[]]></project-description>" +
+                "<project-status>" + ProjectUtilities.getStatusName(project.getStatus(), ImportExportUtilities.EXPORT_LOCALE) + "</project-status>" +
+                "<project-options>0</project-options>" +
+                "<project-custom-fields><project-custom-field>custom-field1</project-custom-field></project-custom-fields>" +
+                "<components>" +
+                "<component id=\"component1\" systemid=\"1\">" +
+                "<component-name><![CDATA[component]]></component-name>" +
+                "<component-description><![CDATA[]]></component-description>" +
+                "</component>" +
+                "</components>" +
+                "<versions><version id=\"version1\" systemid=\"1\"><version-number><![CDATA[1.1.1]]>" +
+                "</version-number><version-description><![CDATA[]]></version-description></version></versions>" +
+                "</project>";
+
+        assertEquals(flatXml(expected), flatXml(ImportExportUtilities.getProjectXML(project)));
+
     }
-    
+
     @Test
     public void testGetUserXML() {
-    	String got = ImportExportUtilities.getUserXML(null);
-    	assertNotNull(got);
-    	assertEquals("", got);
-    	
-    	 final User user = new User();
-         user.setId(1);
-         user.setFirstName("firstName");
-         user.setLastName("lastName");
-         final String expected = "<user id=\"user1\" systemid=\"1\">" +
-                 "<login><![CDATA[]]></login>" +
-                 "<first-name><![CDATA[firstName]]></first-name>" +
-                 "<last-name><![CDATA[lastName]]></last-name>" +
-                 "<email><![CDATA[]]></email>" +
-                 "<user-status>MISSING KEY: itracker.user.status.0</user-status>" +
-                 "<super-user>false</super-user>" +
-                 "</user>";
-         assertEquals(flatXml(expected),
-                 flatXml(ImportExportUtilities.getUserXML(user)));
-    	
+        String got = ImportExportUtilities.getUserXML(null);
+        assertNotNull(got);
+        assertEquals("", got);
+
+        final User user = new User();
+        user.setId(1);
+        user.setFirstName("firstName");
+        user.setLastName("lastName");
+        final String expected = "<user id=\"user1\" systemid=\"1\">" +
+                "<login><![CDATA[]]></login>" +
+                "<first-name><![CDATA[firstName]]></first-name>" +
+                "<last-name><![CDATA[lastName]]></last-name>" +
+                "<email><![CDATA[]]></email>" +
+                "<user-status>MISSING KEY: itracker.user.status.0</user-status>" +
+                "<super-user>false</super-user>" +
+                "</user>";
+        assertEquals(flatXml(expected),
+                flatXml(ImportExportUtilities.getUserXML(user)));
+
     }
-    
-    
-   
+
+
     /**
      * Defines a set of datafiles to be uploaded into database.
+     *
      * @return an array with datafiles.
      */
     protected String[] getDataSetFiles() {
         return new String[]{
-                    "dataset/languagebean_dataset.xml"
-                };
+                "dataset/languagebean_dataset.xml"
+        };
     }
 
     /**
      * Defines a simple configuration, required for running tests.
+     *
      * @return an array of references to configuration files.
      */
     protected String[] getConfigLocations() {
