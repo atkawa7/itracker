@@ -5,7 +5,7 @@
 	<artifactId>itracker</artifactId>
 	<packaging>war</packaging>
 	<name>itracker</name>
-    <version>3.0.2</version>
+    <version>3.1.0-SNAPSHOT</version>
     <url>http://itracker.sourceforge.net/</url>
   <properties>
   	<clover.maven.charset>UTF-8</clover.maven.charset>
@@ -82,9 +82,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:svn:https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/tags/itracker-3.0.2</connection>
-		<developerConnection>scm:svn:https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/tags/itracker-3.0.2</developerConnection>
-		<url>https://itracker.svn.sourceforge.net/svnroot/%69tracker/itracker/tags/itracker-3.0.2</url>
+		<connection>scm:svn:https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/trunk/</connection>
+		<developerConnection>scm:svn:https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/trunk/</developerConnection>
+		<url>https://itracker.svn.sourceforge.net/svnroot/%69tracker/itracker/trunk/</url>
 	</scm>
 	<organization>
 		<name>itracker</name>
