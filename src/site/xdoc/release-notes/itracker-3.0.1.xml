@@ -52,9 +52,6 @@
 		
 
 		<section name="Migration from 2.4">
-			<p>This is the first 3.0 bugfix release. There will still be some stuff to
-			fix, so please do testing of
-			essential stuff:</p>
 			<ul>
 				<li>migrate from 2.4</li>
 				<li>use it for internal or less critical projects</li>

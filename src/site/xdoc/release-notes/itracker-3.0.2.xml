@@ -8,25 +8,22 @@
 	<body>
 		
 <section name="itracker 3.0.2 release-notes - Changes from 3.0.1">
-<p>Fixes on JSPs, Workflow-/Project-Scripts configuration in the admin section. </p>
-<p>Fixing help section translations</p>
-<p></p>
 
+<p>Anonymous header display language chooser.</p>
+<p>Fixing severity on update issue (self registered).</p>
+<p>Fixing loop for removing severity / status.</p>
+<p>Improved navigation.</p>
+<p>Fix localization of e-mail addresses (encoding).</p>
+<p>Documentation for workflowscripts added.</p>
+<p>Mail templates extended.</p>
+<p>Other bugfixes.</p>
+<p>Prepare for next dev-version 3.1 to upgrade libraries and features.</p>
 </section>
 
 		
 
 		<section name="Migration from 2.4">
-			<p>This is the first 3.0 bugfix release. There will still be some stuff to
-			fix, so please do testing of
-			essential stuff:</p>
-			<ul>
-				<li>migrate from 2.4</li>
-				<li>use it for internal or less critical projects</li>
-				<li>try to break it (over the web-interface)</li>
-				<li>provide feedback on bugs or failures in JIRA please.</li>
-			</ul>
-			<p>see also <a href="itracker-3.0-stable.html">itracker-3.0 release notes</a></p>
+			<p>see <a href="itracker-3.0-stable.html">itracker-3.0 release notes</a></p>
 		</section>
 	</body>
 </document>
