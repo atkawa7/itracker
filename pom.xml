@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.itracker</groupId>
 	<artifactId>itracker</artifactId>
 	<packaging>war</packaging>
 	<name>itracker</name>
-    <version>3.1.0-SNAPSHOT</version>
+    <version>3.0.2-SNAPSHOT</version>
     <url>http://itracker.sourceforge.net/</url>
   <properties>
   	<clover.maven.charset>UTF-8</clover.maven.charset>
@@ -13,13 +13,13 @@
 
 	<main.dataSource.jdbcUrl>jdbc:mysql://localhost:3306/itrackerdev</main.dataSource.jdbcUrl>
 	<main.dataSource.user>root</main.dataSource.user>
-	<main.dataSource.password />
+	<main.dataSource.password></main.dataSource.password>
 	<main.dataSource.driverClass>com.mysql.jdbc.Driver</main.dataSource.driverClass>
 	<main.hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</main.hibernate.dialect>
 
 	<test.dataSource.jdbcUrl>jdbc:hsqldb:mem:itrackerdev-test</test.dataSource.jdbcUrl>
 	<test.dataSource.user>sa</test.dataSource.user>
-	<test.dataSource.password />
+	<test.dataSource.password></test.dataSource.password>
 	<test.dataSource.driverClass>org.hsqldb.jdbcDriver</test.dataSource.driverClass>
 	<test.hibernate.dialect>org.hibernate.dialect.HSQLDialect</test.hibernate.dialect>
   </properties>
@@ -133,10 +133,6 @@
 		</testResources>
 		<finalName>itracker</finalName>
 		<plugins>
-		    <plugin>
-		        <artifactId>maven-release-plugin</artifactId>
-		        <version>2.2.2</version>
-		    </plugin>    
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -627,13 +623,13 @@
 
 		<main.dataSource.jdbcUrl>jdbc:hsqldb:hsql://localhost:8887/itrackerdev-test</main.dataSource.jdbcUrl>
 		<main.dataSource.user>sa</main.dataSource.user>
-		<main.dataSource.password />
+		<main.dataSource.password></main.dataSource.password>
 		<main.dataSource.driverClass>org.hsqldb.jdbcDriver</main.dataSource.driverClass>
 		<main.hibernate.dialect>org.hibernate.dialect.HSQLDialect</main.hibernate.dialect>
 
 		<test.dataSource.jdbcUrl>jdbc:hsqldb:hsql://localhost:8887/itrackerdev-test</test.dataSource.jdbcUrl>
 		<test.dataSource.user>sa</test.dataSource.user>
-		<test.dataSource.password />
+		<test.dataSource.password></test.dataSource.password>
 		<test.dataSource.driverClass>org.hsqldb.jdbcDriver</test.dataSource.driverClass>
 		<test.hibernate.dialect>org.hibernate.dialect.HSQLDialect</test.hibernate.dialect>
             </properties>
@@ -664,7 +660,7 @@
 				</goals>
 				<configuration>
 				    <tasks unless="maven.test.skip">
-					<property name="plugin_classpath" refid="maven.plugin.classpath" />
+					<property name="plugin_classpath" refid="maven.plugin.classpath"/>
 					<concat destfile="${project.build.directory}/temp.bsh">
 					    <![CDATA[
 						import java.sql.*;
@@ -683,19 +679,21 @@
 					    ]]>
 					</concat>
 					<java classname="bsh.Interpreter" classpath="${plugin_classpath}">
-					    <arg line="${project.build.directory}/temp.bsh itrackerdev-test" />
+					    <arg line="${project.build.directory}/temp.bsh itrackerdev-test"/>
 					</java>
 					<delete failonerror="false">
-					    <fileset dir="${project.build.directory}" includes="temp.bsh" />
-					    <fileset dir="${java.io.tmpdir}/hsqldb" includes="itrackerdev-test*" />
+					    <fileset dir="${project.build.directory}" includes="temp.bsh"/>
+					    <fileset dir="${java.io.tmpdir}/hsqldb"
+						includes="itrackerdev-test*"/>
 					</delete>
-					<java fork="true" spawn="true" dir="${java.io.tmpdir}" classname="org.hsqldb.Server" classpath="${plugin_classpath}">
-					    <arg value="-database.0" />
-					    <arg value="${java.io.tmpdir}/hsqldb/itrackerdev-test" />
-					    <arg value="-dbname.0" />
-					    <arg value="itrackerdev-test" />
-					    <arg value="-port" />
-					    <arg value="8887" />
+					<java fork="true" spawn="true" dir="${java.io.tmpdir}"
+					    classname="org.hsqldb.Server" classpath="${plugin_classpath}">
+					    <arg value="-database.0"/>
+					    <arg value="${java.io.tmpdir}/hsqldb/itrackerdev-test"/>
+					    <arg value="-dbname.0"/>
+					    <arg value="itrackerdev-test"/>
+					    <arg value="-port"/>
+					    <arg value="8887"/>
 					</java>
 				    </tasks>
 				</configuration>
@@ -828,13 +826,13 @@
 
 		<main.dataSource.jdbcUrl>jdbc:mysql://localhost:3306/itrackerdev</main.dataSource.jdbcUrl>
 		<main.dataSource.user>root</main.dataSource.user>
-		<main.dataSource.password />
+		<main.dataSource.password></main.dataSource.password>
 		<main.dataSource.driverClass>com.mysql.jdbc.Driver</main.dataSource.driverClass>
 		<main.hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</main.hibernate.dialect>
 
 		<test.dataSource.jdbcUrl>jdbc:mysql://localhost:3306/itrackerdev</test.dataSource.jdbcUrl>
 		<test.dataSource.user>root</test.dataSource.user>
-		<test.dataSource.password />
+		<test.dataSource.password></test.dataSource.password>
 		<test.dataSource.driverClass>com.mysql.jdbc.Driver</test.dataSource.driverClass>
 		<test.hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</test.hibernate.dialect>
             </properties>
