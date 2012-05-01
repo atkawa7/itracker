@@ -1,859 +1,383 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.itracker</groupId>
-	<artifactId>itracker</artifactId>
-	<packaging>war</packaging>
-	<name>itracker</name>
-    <version>3.1.0-SNAPSHOT</version>
-    <url>http://itracker.sourceforge.net/</url>
-  <properties>
-  	<clover.maven.charset>UTF-8</clover.maven.charset>
-  	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-	<main.dataSource.jdbcUrl>jdbc:mysql://localhost:3306/itrackerdev</main.dataSource.jdbcUrl>
-	<main.dataSource.user>root</main.dataSource.user>
-	<main.dataSource.password />
-	<main.dataSource.driverClass>com.mysql.jdbc.Driver</main.dataSource.driverClass>
-	<main.hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</main.hibernate.dialect>
-
-	<test.dataSource.jdbcUrl>jdbc:hsqldb:mem:itrackerdev-test</test.dataSource.jdbcUrl>
-	<test.dataSource.user>sa</test.dataSource.user>
-	<test.dataSource.password />
-	<test.dataSource.driverClass>org.hsqldb.jdbcDriver</test.dataSource.driverClass>
-	<test.hibernate.dialect>org.hibernate.dialect.HSQLDialect</test.hibernate.dialect>
-  </properties>
-	<issueManagement>
-		<system>SourceForge</system>
-		<url>http://sourceforge.net/tracker2/?group_id=54141</url>
-	</issueManagement>
-	<inceptionYear>2002</inceptionYear>
-	<mailingLists>
-		<mailingList>
-			<name>itracker Developer List</name>
-			<subscribe>https://lists.sourceforge.net/lists/listinfo/itracker-developer</subscribe>
-			<unsubscribe>https://lists.sourceforge.net/lists/listinfo/itracker-developer</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum_name=itracker-developer</archive>
-		</mailingList>
-		<mailingList>
-			<name>itracker SVN Commit List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/itracker-commits</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/itracker-commits</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum_name=itracker-commits</archive>
-		</mailingList>
-	</mailingLists>
-	<developers>
-		<developer>
-			<id>clim1219</id>
-			<name>Chris Lim</name>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>8</timezone>
-		</developer>
-		<developer>
-			<id>ranks</id>
-			<name>Marco Glur</name>
-			<email>ranks@rosa.com</email>
-      		<organization>R.‚àö√≤.S.A. Creation. Technology. Intelligence. AG, Zurich</organization>
-     		<organizationUrl>http://rosa.com/</organizationUrl>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>1</timezone>
-		</developer>
-		<developer>
-			<id>MarkyGoldstein</id>
-			<name>Marky Goldstein</name>
-			<email>ready@rosa.com</email>
-    		<organization>R.‚àö√≤.S.A. Creation. Technology. Intelligence. AG, Zurich</organization>
-			<organizationUrl>http://www.rosa.com</organizationUrl>
-			<timezone>1</timezone>
-			<roles>
-				<role>Developer</role>
-			</roles>
-		</developer>
-	</developers>
-	<licenses>
-		<license>
-			<name>GNU Lesser General Public License</name>
-			<url>http://www.gnu.org/licenses/lgpl.html</url>
-			<distribution>manual</distribution>
-		</license>
-	</licenses>
-	<scm>
-		<connection>scm:svn:https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/trunk/</connection>
-		<developerConnection>scm:svn:https://itracker.svn.sourceforge.net/svnroot/itracker/itracker/trunk/</developerConnection>
-		<url>https://itracker.svn.sourceforge.net/svnroot/%69tracker/itracker/trunk/</url>
-	</scm>
-	<organization>
-		<name>itracker</name>
-		<url>http://www.itracker.org/</url>
-	</organization>
-	<build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-                <includes>
-                    <include>**/*.xml</include>
-                    <include>**/*.dtd</include>
-                    <include>**/*.xsd</include>
-                </includes>
-            </resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<excludes>
-					<exclude>**/*.xml</exclude>
-					<exclude>**/*.dtd</exclude>
-					<exclude>**/*.xsd</exclude>
-				</excludes>
-			</resource>
-        </resources>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>true</filtering>
-				<excludes>
-					<exclude>**/*.xml</exclude>
-					<exclude>**/*.dtd</exclude>
-					<exclude>**/*.xsd</exclude>
-				</excludes>
-			</testResource>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>false</filtering>
-                <includes>
-                    <include>**/*.xml</include>
-                    <include>**/*.dtd</include>
-                    <include>**/*.xsd</include>
-                </includes>
-			</testResource>
-		</testResources>
-		<finalName>itracker</finalName>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>unit-testing</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <skip>false</skip>
-                            <excludes>
-                                <exclude>org/itracker/selenium/**/*.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </execution>
-                </executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.0</version>
-				<executions>
-					<execution>
-						<id>clean</id>
-						<goals>
-							<goal>clean</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<instrumentation>
-						<excludes>
-							<exclude>org/itracker/**/*Test.class</exclude>
-							<exclude>org/itracker/web/**/*.class</exclude>
-						</excludes>
-					</instrumentation>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-			</plugin>
-		      <plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>${basedir}</directory>
-							<includes>
-								<include>*.log</include>
-							</includes>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>maven-jetty-plugin</artifactId>
-				<version>6.1.7</version>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>netbeans-freeform-maven-plugin</artifactId>
-				<configuration>
-					<additionalGoals>source:jar</additionalGoals>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-site-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<configuration>
-					<additionalProjectFacets>
-						<jst.web>2.5</jst.web>
-						<wstudio.hibernate>3.2</wstudio.hibernate>
-						<jst.java>5.0</jst.java>
-					</additionalProjectFacets>
-					<additionalProjectnatures>
-            			<projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
-            			<projectnature>org.eclipse.wst.common.project.facet.core.nature</projectnature>
-            			<projectnature>org.eclipse.wst.common.modulecore.ModuleCoreNature</projectnature>
-            			<projectnature>org.maven.ide.eclipse.maven2Nature</projectnature>
-            			<projectnature>org.hibernate.eclipse.nature</projectnature>
-          			</additionalProjectnatures>
-          			<additionalBuildcommands>
-            			<buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
-            			<buildcommand>org.eclipse.wst.common.project.facet.core.builder</buildcommand>
-            			<buildcommand>org.eclipse.wst.validation.validationbuilder</buildcommand>
-            			<buildcommand>org.maven.ide.eclipse.maven2Builder</buildcommand>
-          			</additionalBuildcommands>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>src/main/assembly/assembly-src.xml</descriptor>
-						<descriptor>src/main/assembly/assembly-bin.xml</descriptor>
-					</descriptors>
-				</configuration>
-				<executions>
-					<execution>
-                    	<id>make-assembly</id>
-                    	<phase>deploy</phase>
-						<goals>
-							<goal>attached</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>tomcat-maven-plugin</artifactId>
-				<configuration>
-					<server>localhost</server>
-					<url>http://localhost:8080/manager</url>
-					<path>/itracker</path>
-					<update>true</update>
-				</configuration>
-			</plugin>
-			<plugin>
-			<!--groupId>org.apache.maven.plugins</groupId-->
-				<artifactId>maven-resources-plugin</artifactId>
-				<configuration>
-					<encoding>ISO-8859-1</encoding>
-				</configuration>
-			</plugin>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-deploy-plugin</artifactId>
-              <version>2.7</version>
-              <configuration>
-                <skip>true</skip>
-              </configuration>
-            </plugin>
-		</plugins>
-	</build>
-	<repositories>
-        <repository>
-            <id>openqa.org</id>
-            <name>Openqa Release Repository</name>
-            <url>http://archiva.openqa.org/repository/releases</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-		<repository>
-			<snapshots>
-				<updatePolicy>never</updatePolicy>
-			</snapshots>
-			<id>openqa release</id>
-			<name>OpenQA</name>
-			<url>http://nexus.openqa.org/content/repositories/releases</url>
-		</repository>
-
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots />
-			<id>apache.org</id>
-			<name>Maven Snapshots</name>
-			<url>http://people.apache.org/maven-snapshot-repository</url>
-		</pluginRepository>
-		<pluginRepository>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots />
-			<id>codehaus.org</id>
-			<name>Codehaus Snapshots</name>
-			<url>http://snapshots.repository.codehaus.org</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>Codehaus Repository</id>
-			<url>http://repository.codehaus.org/</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>atlassian-m2-repository</id>
-			<name>Atlassian Maven 2.x Repository</name>
-			<url>http://repository.atlassian.com/maven2</url>
-		</pluginRepository>
-	</pluginRepositories>
-	<dependencies>
-		<dependency>
-			<groupId>struts</groupId>
-			<artifactId>struts</artifactId>
-			<version>1.2.9</version>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.13</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-jta_1.0.1B_spec</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring</artifactId>
-			<version>2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>oro</groupId>
-			<artifactId>oro</artifactId>
-			<version>2.0.7</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-			<version>1.7.0</version>
-		</dependency>
-		<dependency>
-			<groupId>jasperreports</groupId>
-			<artifactId>jasperreports</artifactId>
-			<version>3.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>bsh</groupId>
-			<artifactId>bsh</artifactId>
-			<version>1.3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.derby</groupId>
-			<artifactId>derby</artifactId>
-			<version>10.3.2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>8.2-507.jdbc4</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.4</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<version>2.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>taglibs</groupId>
-			<artifactId>standard</artifactId>
-			<version>1.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.4</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.dbunit</groupId>
-			<artifactId>dbunit</artifactId>
-			<version>2.2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-mock</artifactId>
-			<version>2.0</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<version>1.8.0.7</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-    		<groupId>c3p0</groupId>
-    		<artifactId>c3p0</artifactId>
-    		<version>0.9.1.2</version>
-    	</dependency>
-		<dependency>
-			<groupId>quartz</groupId>
-			<artifactId>quartz</artifactId>
-			<version>1.5.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate</artifactId>
-			<version>3.2.6.ga</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>jta</artifactId>
-					<groupId>javax.transaction</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.4</version>
-      		<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.1</version>
-		</dependency>
-		<dependency>
-            <groupId>org.openqa.selenium.client-drivers</groupId>
-            <artifactId>selenium-java-client-driver</artifactId>
-            <version>1.0-beta-1</version>
-            <scope>test</scope>
-        </dependency>
-		<dependency>
-			<groupId>dumbster</groupId>
-			<artifactId>dumbster</artifactId>
-			<version>1.6</version>
-			<scope>test</scope>
-		</dependency>
-<!--		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.3</version>
-			<scope>test</scope>
-		</dependency>-->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.6</version>
-		</dependency>
-	</dependencies>
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.0</version>
-				<configuration>
-					<instrumentation>
-						<excludes>
-							<exclude>org/itracker/**/*Test.class</exclude>
-							<exclude>org/itracker/web/**/*Action.class</exclude>
-						</excludes>
-					</instrumentation>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<configuration>
-					<targetJdk>1.5</targetJdk>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>taglist-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<artifactId>maven-jxr-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<artifactId>maven-changes-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>changelog-maven-plugin</artifactId>
-				<configuration>
-				
-          			<type>range</type>
-					<range>
-						300
-					</range>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<artifactId>maven-javadoc-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>1.1.1</version>
-				<configuration>
-					<xmlOutput>false</xmlOutput>
-					<xmlOutputDirectory>findbugs</xmlOutputDirectory>
-					<threshold>Normal</threshold>
-					<effort>Default</effort>
-					<pluginList>/libs/fb-contrib/fb-contrib-2.8.0.jar</pluginList>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
-	<distributionManagement>
-		<site>
-			<id>itracker.website</id>
-     		<url>scp://shell.sourceforge.net/home/groups/i/it/itracker/htdocs</url>
-		</site>
-	</distributionManagement>
+<settings>
 	<profiles>
-        <profile>
-            <id>developer.env</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.atlassian.maven.plugins</groupId>
-                        <artifactId>maven-clover-plugin</artifactId>
-                        <version>3.7</version>
-                        <executions>
-                            <execution>
-                                <phase>pre-site</phase>
-                                <goals>
-                                    <goal>instrument</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-							<excludes>
-								<exclude>org/itracker/web/actions/*.java</exclude>
-								<exclude>org/itracker/web/actions/**/*.java</exclude>
-							</excludes>
-							<statementContexts>
-								<logIsDebugEnabled>[\s]*if[\s]*\([\s]*(logger|log|_log|LOG|_LOG)\.isDebugEnabled.*</logIsDebugEnabled>
-								<logDebug>[\s]*(logger|log|_log|LOG|_LOG)\.debug[\s]*\(.*</logDebug>
-							</statementContexts>
-							
-                        	<contextFilters>static, logIsDebugEnabled, logDebug</contextFilters>
-                            <licenseLocation>${itracker.clover.license}</licenseLocation>
-                            <jdk>1.5</jdk>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
+		<profile>
+			<id>
+				rosa-profile 
+			</id>
 
-            <reporting>
-                <plugins>                    
-                	<plugin>
-                        <groupId>com.atlassian.maven.plugins</groupId>
-                        <artifactId>maven-clover-plugin</artifactId>
-                        <version>3.7</version>
+			<properties>
+				<tg.sa.username>root</tg.sa.username>
+				<tg.sa.password>fd321</tg.sa.password>
+				<t3.sa.username>root</t3.sa.username>
+				<t3.sa.password>fd321</t3.sa.password>
+			</properties>
+			<!--
+				build> <plugins> <plugin>
+				<artifactId>maven-compiler-plugin</artifactId> <configuration>
+				<source>1.5</source> <target>1.5</target> </configuration> </plugin>
+				</plugins> </build
+			-->
+			<repositories>
+				<!-- use the following if you're not using a snapshot version. -->
 
-                        <configuration>
-							<excludes>
-								<exclude>org/itracker/web/actions/*.java</exclude>
-								<exclude>org/itracker/web/actions/**/*.java</exclude>
-							</excludes>
-							<statementContexts>
-								<logIsDebugEnabled>[\s]*if[\s]*\([\s]*(logger|log|_log|LOG|_LOG)\.isDebugEnabled.*</logIsDebugEnabled>
-								<logDebug>[\s]*(logger|log|_log|LOG|_LOG)\.debug[\s]*\(.*</logDebug>
-							</statementContexts>
-							
-                        	<contextFilters>static, logIsDebugEnabled, logDebug</contextFilters>
-                            <licenseLocation>${itracker.clover.license}</licenseLocation>
-                            <jdk>1.5</jdk>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </reporting>
-        </profile>
-        <profile>
-            <id>selenium</id>
-            <properties>
-                <selenium.host>localhost</selenium.host>
-                <selenium.port>5555</selenium.port>
-                <selenium.browser>*firefox</selenium.browser>
-                <application.host>localhost</application.host>
-                <application.port>8080</application.port>
-                <application.path>itracker</application.path>
+<!-- 				<repository> -->
+<!-- 					<id>apache-snapshots</id> -->
+<!-- 					<name>Apache Snapshots Repository</name> -->
+<!-- 					<url>http://people.apache.org/repo/m2-snapshot-repository</url> -->
+<!-- 					<layout>default</layout> -->
+<!-- 					<snapshots> -->
+<!-- 						<enabled>true</enabled> -->
+<!-- 						<updatePolicy>daily</updatePolicy> -->
+<!-- 						<checksumPolicy>ignore</checksumPolicy> -->
+<!-- 					</snapshots> -->
+<!-- 					<releases> -->
+<!-- 						<enabled>false</enabled> -->
+<!-- 					</releases> -->
+<!-- 				</repository> -->
+				<!--
+					use the following if you ARE using a snapshot version.
+					<snapshotRepository> <!- snapshot repository. must be referenced
+					like this in the POM -> <id>mvn.rosa.com.snapshot</id>
+					<name>R.Ø.S.A. SNAPSHOT Maven Repository</name>
+					<url>scp://mvn.rosa.com/repository</url> <!-
+					<url>scp://mvn.rosa.com/repository</url> -> </snapshotRepository>
+				-->
+<!--
+				<repository>
+				
+					<id>maven.nuxeo.org</id>
+					<url>https://maven.nuxeo.org/nexus/content/groups/public/</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+			    </repository>
+-->				
+			    
+			</repositories>
+<!-- 			<pluginRepositories> -->
 
-		<main.dataSource.jdbcUrl>jdbc:hsqldb:hsql://localhost:8887/itrackerdev-test</main.dataSource.jdbcUrl>
-		<main.dataSource.user>sa</main.dataSource.user>
-		<main.dataSource.password />
-		<main.dataSource.driverClass>org.hsqldb.jdbcDriver</main.dataSource.driverClass>
-		<main.hibernate.dialect>org.hibernate.dialect.HSQLDialect</main.hibernate.dialect>
+<!-- 				<pluginRepository> -->
+<!-- 					<id>codehaus-snapshots</id> -->
+<!-- 					<name>Codehaus Snapshots Repository</name> -->
+<!-- 					<url>http://snapshots.repository.codehaus.org</url> -->
+<!-- 					<layout>default</layout> -->
+<!-- 					<snapshots> -->
+<!-- 						<enabled>true</enabled> -->
+<!-- 						<updatePolicy>daily</updatePolicy> -->
+<!-- 						<checksumPolicy>ignore</checksumPolicy> -->
+<!-- 					</snapshots> -->
+<!-- 					<releases> -->
+<!-- 						<enabled>false</enabled> -->
+<!-- 					</releases> -->
+<!-- 				</pluginRepository> -->
+<!-- 			</pluginRepositories> -->
 
-		<test.dataSource.jdbcUrl>jdbc:hsqldb:hsql://localhost:8887/itrackerdev-test</test.dataSource.jdbcUrl>
-		<test.dataSource.user>sa</test.dataSource.user>
-		<test.dataSource.password />
-		<test.dataSource.driverClass>org.hsqldb.jdbcDriver</test.dataSource.driverClass>
-		<test.hibernate.dialect>org.hibernate.dialect.HSQLDialect</test.hibernate.dialect>
-            </properties>
-            <repositories>
-                <repository>
-                    <id>mortbay-repo</id>
-                    <name>mortbay-repo</name>
-                    <url>http://www.mortbay.org/maven2/release</url>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>mortbay-repo</id>
-                    <name>mortbay-repo</name>
-                    <url>http://www.mortbay.org/maven2/snapshot</url>
-                </pluginRepository>
-            </pluginRepositories>
-            <build>
-                <plugins>
-                    <plugin>
-			<artifactId>maven-antrun-plugin</artifactId>
-			<executions>
-			    <execution>
-				<id>hsql-server-start</id>
-				<phase>process-test-classes</phase>
-				<goals>
-				    <goal>run</goal>
-				</goals>
-				<configuration>
-				    <tasks unless="maven.test.skip">
-					<property name="plugin_classpath" refid="maven.plugin.classpath" />
-					<concat destfile="${project.build.directory}/temp.bsh">
-					    <![CDATA[
-						import java.sql.*;
-
-						try {
-						    Class.forName("org.hsqldb.jdbcDriver");
-						    String url = "jdbc:hsqldb:hsql://localhost:8887/" + bsh.args[0];
-						    Connection con = DriverManager.getConnection(url, "sa", "");
-						    String sql = "SHUTDOWN";
-						    Statement stmt = con.createStatement();
-						    stmt.executeUpdate(sql);
-						    stmt.close();
-						} catch (Exception e) {
-						    //
-						}
-					    ]]>
-					</concat>
-					<java classname="bsh.Interpreter" classpath="${plugin_classpath}">
-					    <arg line="${project.build.directory}/temp.bsh itrackerdev-test" />
-					</java>
-					<delete failonerror="false">
-					    <fileset dir="${project.build.directory}" includes="temp.bsh" />
-					    <fileset dir="${java.io.tmpdir}/hsqldb" includes="itrackerdev-test*" />
-					</delete>
-					<java fork="true" spawn="true" dir="${java.io.tmpdir}" classname="org.hsqldb.Server" classpath="${plugin_classpath}">
-					    <arg value="-database.0" />
-					    <arg value="${java.io.tmpdir}/hsqldb/itrackerdev-test" />
-					    <arg value="-dbname.0" />
-					    <arg value="itrackerdev-test" />
-					    <arg value="-port" />
-					    <arg value="8887" />
-					</java>
-				    </tasks>
-				</configuration>
-			    </execution>
-			</executions>
-			<dependencies>
-				<dependency>
-					<groupId>bsh</groupId>
-					<artifactId>bsh</artifactId>
-					<version>1.3.0</version>
-				</dependency>
-				<dependency>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-					<version>1.2.13</version>
-				</dependency>
-				<dependency>
-					<groupId>hsqldb</groupId>
-					<artifactId>hsqldb</artifactId>
-					<version>1.8.0.7</version>
-				</dependency>
-			</dependencies>
-		    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>selenium-maven-plugin</artifactId>
-                        <version>1.0-rc-1</version>
-                          <executions>
-                            <execution>
-                                <id>start</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>start-server</goal>
-                                </goals>
-                                <configuration>
-                                    <background>true</background>
-                                    <logOutput>true</logOutput>
-                                    <multiWindow>true</multiWindow>
-                                    <port>${selenium.port}</port>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.mortbay.jetty</groupId>
-                        <artifactId>maven-jetty-plugin</artifactId>
-                        <version>6.1.10</version>
-                        <configuration>
-                            <stopPort>9966</stopPort>
-                            <stopKey>foo</stopKey>
-                            <webAppConfig>
-                                <contextPath>/${application.path}</contextPath>
-                            </webAppConfig>
-                            <jettyEnvXml>${basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
-                            <connectors>
-                                <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                                    <port>${application.port}</port>
-                                    <maxIdleTime>60000</maxIdleTime>
-                                </connector>
-                            </connectors>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>start-jetty</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <scanIntervalSeconds>0</scanIntervalSeconds>
-                                    <daemon>true</daemon>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>stop-jetty</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>stop</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <dependencies>
-                            <dependency>
-                                <groupId>hsqldb</groupId>
-                                <artifactId>hsqldb</artifactId>
-                                <version>1.8.0.7</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>selenium-testing</id>
-                                <phase>integration-test</phase>
-                                <goals>
-                                    <goal>test</goal>
-                                </goals>
-                                <configuration>
-                                    <skip>false</skip>
-                                    <includes>
-                                        <include>org/itracker/selenium/**/*.java</include>
-                                    </includes>
-                                	<excludes>
-                                		<exclude>org/itracker/selenium/**/Selenium**.java</exclude>
-                                	</excludes>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-	    <!-- special profile for selenium testcases development -->
-	    <!-- it allows running some particular test you define -->
-	    <!-- but before running - you need to run application server, -->
-	    <!-- selenium server and database server separately -->
-            <id>ide</id>
-            <properties>
-                <selenium.host>localhost</selenium.host>
-                <selenium.port>5555</selenium.port>
-                <selenium.browser>*firefox</selenium.browser>
-                <application.host>localhost</application.host>
-                <application.port>8080</application.port>
-                <application.path>itracker</application.path>
-
-		<main.dataSource.jdbcUrl>jdbc:mysql://localhost:3306/itrackerdev</main.dataSource.jdbcUrl>
-		<main.dataSource.user>root</main.dataSource.user>
-		<main.dataSource.password />
-		<main.dataSource.driverClass>com.mysql.jdbc.Driver</main.dataSource.driverClass>
-		<main.hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</main.hibernate.dialect>
-
-		<test.dataSource.jdbcUrl>jdbc:mysql://localhost:3306/itrackerdev</test.dataSource.jdbcUrl>
-		<test.dataSource.user>root</test.dataSource.user>
-		<test.dataSource.password />
-		<test.dataSource.driverClass>com.mysql.jdbc.Driver</test.dataSource.driverClass>
-		<test.hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</test.hibernate.dialect>
-            </properties>
-	    <build>
-		<plugins>
-                    <plugin>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
 		</profile>
-    </profiles>
-</project>
+		<profile>
+			<id>magnolia-repositories</id>
+			<repositories>
+				<repository>
+					<id>magnolia.nexus.public</id>
+					<url>http://nexus.magnolia-cms.com/content/groups/public/</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>oss.sonatype.org</id>
+					<url>https://oss.sonatype.org/content/repositories/vaadin/</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+			    </repository>
+			    <!-- http://nexus.magnolia-cms.com/content/repositories/magnolia.public.releases/ -->
+                <repository>
+                  <id>magnolia.public.releases</id>
+                  <url>http://nexus.magnolia-cms.com/content/repositories/magnolia.public.releases/</url>
+                  <snapshots>
+                    <enabled>false</enabled>
+                  </snapshots>
+                  <releases>
+                    <enabled>true</enabled>
+                  </releases>
+                </repository>
+                <repository>
+                  <id>magnolia.public.snapshots</id>
+                  <url>http://nexus.magnolia-cms.com/content/repositories/magnolia.public.snapshots/</url>
+                  <snapshots>
+                    <enabled>true</enabled>
+                  </snapshots>
+                  <releases>
+                    <enabled>false</enabled>
+                  </releases>
+                </repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>magnolia.nexus.public</id>
+					<url>http://nexus.magnolia-cms.com/content/groups/public/</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
 
+		<profile>
+			<id>
+				developer.env 
+			</id>
+			<!--<repositories>
+			   <repository>
+                  <id>local</id>
+                  <url>file:///tmp/release</url>
+                  <snapshots>
+                    <enabled>true</enabled>
+                  </snapshots>
+                  <releases>
+                    <enabled>true</enabled>
+                  </releases>
+                </repository>
+			</repositories>-->
+			<properties>
+				<itracker.clover.license>src/test/resources/clover.license</itracker.clover.license>
+				<maven.ssh.args>-t</maven.ssh.args>
+			</properties>
+		</profile>
 
+		<profile>
+			<id>
+				selenium
+			</id>
+			<properties>
+				<application.port>8888</application.port>
+				<!--
+					itracker.clover.license>src/test/resources/clover.license</itracker.clover.license>
+					<maven.ssh.args>-t</maven.ssh.args
+				-->
+			</properties>
+		</profile>
+
+		<profile>
+			<id>jboss-public-repository</id>
+			<repositories>
+				<repository>
+					<id>jboss-public-repository-group</id>
+					<name>JBoss Public Maven Repository Group</name>
+					<url>https://repository.jboss.org/nexus/content/groups/public-jboss/
+					</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>jboss-public-repository-group</id>
+					<name>JBoss Public Maven Repository Group</name>
+					<url>https://repository.jboss.org/nexus/content/groups/public-jboss/
+					</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+		<profile>
+			<id>apache-incubation</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<repositories>
+				<repository>
+					<id>apache.incubating</id>
+					<name>Apache Incubating Repository</name>
+					<url>http://people.apache.org/repo/m2-incubating-repository</url>
+				</repository>
+
+				<repository>
+					<id>apache.snapshots-group</id>
+					<name>Apache Incubating Repository</name>
+					<url>https://repository.apache.org/content/repositories/snapshots-group
+					</url>
+				</repository>
+
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>apache.incubating.plugins</id>
+					<name>Apache Incubating Plugin Repository</name>
+					<url>http://people.apache.org/repo/m2-incubating-repository</url>
+				</pluginRepository>
+
+			</pluginRepositories>
+		</profile>
+
+		<profile>
+			<id>RichFaces</id>
+			<repositories>
+<!-- 				<repository> -->
+<!-- 					<releases> -->
+<!-- 						<enabled>true</enabled> -->
+<!-- 					</releases> -->
+<!-- 					<snapshots> -->
+<!-- 						<enabled>false</enabled> -->
+<!-- 						<updatePolicy>never</updatePolicy> -->
+<!-- 					</snapshots> -->
+<!-- 					<id>repository.jboss.com</id> -->
+<!-- 					<name>Jboss Repository for Maven</name> -->
+<!-- 					<url> -->
+<!-- 						http://repository.jboss.com/maven2/ -->
+<!--          </url> -->
+<!-- 					<layout>default</layout> -->
+<!-- 				</repository> -->
+				<repository>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>always</updatePolicy>
+					</snapshots>
+					<id>maven2-snapshots.jboss.com</id>
+					<name>Jboss Repository for Maven Snapshots</name>
+					<url>http://snapshots.jboss.org/maven2</url>
+					<layout>default</layout>
+				</repository>
+				<repository>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>always</updatePolicy>
+					</snapshots>
+					<id>download.java.net</id>
+					<name>Java.net Repository for Maven</name>
+					<url>
+						http://download.java.net/maven/2/
+         </url>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+<!-- 				<pluginRepository> -->
+<!-- 					<id>maven2-snapshots.jboss.com</id> -->
+<!-- 					<name>Jboss Repository for Maven Snapshots</name> -->
+<!-- 					<url>http://snapshots.jboss.org/maven2</url> -->
+<!-- 					<releases> -->
+<!-- 						<enabled>false</enabled> -->
+<!-- 					</releases> -->
+<!-- 					<snapshots> -->
+<!-- 						<enabled>true</enabled> -->
+<!-- 						<updatePolicy>always</updatePolicy> -->
+<!-- 					</snapshots> -->
+<!-- 				</pluginRepository> -->
+				<pluginRepository>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+					<id>repository.jboss.com</id>
+					<name>Jboss Repository for Maven</name>
+					<url>
+						http://repository.jboss.com/
+         </url>
+					<layout>default</layout>
+				</pluginRepository>
+			</pluginRepositories>
+
+		</profile>
+	</profiles>
+	<activeProfiles>
+		<!--<activeProfile>csp-profile</activeProfile>-->
+		<activeProfile>magnolia-repositories</activeProfile>
+		<activeProfile>
+			jboss-public-repository
+		</activeProfile>
+<!-- 		<activeProfile> -->
+<!-- 			rosa-profile  -->
+<!-- 		</activeProfile> -->
+<!-- 		<activeProfile> -->
+<!-- 			developer.env  -->
+<!-- 		</activeProfile> -->
+ 		<activeProfile>RichFaces</activeProfile>
+		<!--<activeProfile>
+			apache-incubation 
+		</activeProfile>-->
+	</activeProfiles>
+	<servers>
+		<server>
+			<id>
+				localhost 
+			</id>
+			<username>
+				chlu
+			</username>
+			<password>
+				fd321
+			</password>
+		</server>
+        <server>
+            <id>mgnl-ee</id>
+            <username>meglur</username>
+            <password>haag123123</password>
+        </server>
+		<server>
+
+			<id>
+				itracker.website 
+			</id>
+			<username>
+				ranks,itracker
+			</username>
+			<password>masta123</password>
+			<!-- Default value is ~/.ssh/id_dsa -->
+			<!--<privateKey>${usr.home}/.ssh/id_dsa</privateKey>-->
+			<!-- (default is ~/.ssh/id_dsa) -->
+
+			<filePermissions>
+				777 
+			</filePermissions>
+			<directoryPermissions>
+				777 
+			</directoryPermissions>
+			<configuration>
+			</configuration>
+		</server>
+	</servers>
+	<pluginGroups>
+		<!--
+			define the sonatype plugin group, so the nexus plugins will work
+			without typing the groupId
+		-->
+		<pluginGroup>org.sonatype.plugins</pluginGroup>
+	</pluginGroups>
+</settings>

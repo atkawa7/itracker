@@ -2,24 +2,45 @@
 <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
 
 <Configure class="org.mortbay.jetty.webapp.WebAppContext">
-  <New id="mailSession" class="org.mortbay.jetty.plus.naming.Resource">
-    <Arg>itracker/mail/Session</Arg>
-    <Arg>
-      <New class="org.mortbay.naming.factories.MailSessionReference">
-        <Set name="user"></Set>
-        <Set name="password"></Set>
-        <Set name="properties">
-          <New class="java.util.Properties">
-            <Put name="mail.smtp.host">localhost</Put>
-	    <Put name="mail.smtp.port">2525</Put>
-            <Put name="mail.from">itracker@example.com</Put>
-            <Put name="mail.senderName">itracker</Put>
-            <Put name="mail.debug">true</Put>
-	    <Put name="mail.smtp.auth">false</Put>
-          </New>
-        </Set>
-      </New>
-    </Arg>
-  </New>
+    <New id="mailSession" class="org.mortbay.jetty.plus.naming.Resource">
+        <Arg>itracker/mail/Session</Arg>
+        <Arg>
+            <New class="org.mortbay.naming.factories.MailSessionReference">
+                <Set name="user"></Set>
+                <Set name="password"></Set>
+
+                <Set name="properties">
+                    <New class="java.util.Properties">
+                        <Put name="mail.smtp.host">localhost</Put>
+                        <Put name="mail.smtp.port">2525</Put>
+                        <Put name="mail.from">itracker@example.com</Put>
+                        <Put name="mail.senderName">itracker</Put>
+                        <Put name="mail.debug">false</Put>
+                        <Put name="mail.smtp.auth">false</Put>
+                    </New>
+                </Set>
+            </New>
+        </Arg>
+    </New>
+
+    <New id="DSTest" class="org.mortbay.jetty.plus.naming.Resource">
+        <!--<Arg></Arg>-->
+        <Arg>jdbc/itracker_ds</Arg>
+        <Arg>
+            <!--
+           <New class="com.mchange.v2.c3p0.ComboPooledDataSource">
+                       <Set name="driverClass">${main.dataSource.driverClass}</Set>
+                       <Set name="jdbcUrl">${main.dataSource.jdbcUrl}</Set>
+                       <Set name="user">${main.dataSource.user}</Set>
+                       <Set name="password">${main.dataSource.password}</Set>
+           </New> -->
+            <New class="com.mchange.v2.c3p0.ComboPooledDataSource">
+                <Set name="driverClass">${main.dataSource.driverClass}</Set>
+                <Set name="jdbcUrl">${main.dataSource.jdbcUrl}</Set>
+                <Set name="user">${main.dataSource.user}</Set>
+                <Set name="password">${main.dataSource.password}</Set>
+            </New>
+        </Arg>
+    </New>
 </Configure>
 
