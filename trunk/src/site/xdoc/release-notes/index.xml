@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>itracker release-notes</title>
+	</properties>
+
+	<body>
+		<section name="Itracker release-notes">
+			<table>
+				<tr>
+					<th>Name</th>
+					<th>release date</th>
+				</tr>
+				<tr>
+					<td>
+                        <a href="itracker-3.0-rc1.html" title="Release-notes to itracker 3.0-rc1">itracker-3.0-rc1
+						</a>
+					</td>
+					<td>2008-9-26
+					</td>
+				</tr>
+                <tr>
+                    <td>
+                        <a href="itracker-3.0-rc2.html" title="Release notes to itracker 3.0-rc2">itracker-3.0-rc2</a>
+                    </td>
+                    <td>2008-11-1</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="itracker-3.0-rc3.html" title="Release notes to itracker 3.0-rc3">itracker-3.0-rc3</a>
+                    </td>
+                    <td>2008-12-18</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="itracker-3.0-stable.html" title="Release notes to itracker 3.0 (stable)">itracker-3.0.0 (stable)</a>
+                    </td>
+                    <td>2009-1-14</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="itracker-3.0.1.html" title="Release notes to itracker 3.0.1 (fixes)">itracker-3.0.1 (fixes)</a>
+                    </td>
+                    <td>2009-3-21</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="itracker-3.0.2.html" title="Release notes to itracker 3.0.2 (fixes)">itracker-3.0.2 (fixes)</a>
+                    </td>
+                    <td>2012-5-1</td>
+                </tr>
+            </table>
+		</section>
+	</body>
+
+</document>

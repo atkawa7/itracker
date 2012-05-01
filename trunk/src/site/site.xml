@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="itracker">
+	<bannerLeft>
+		<name>itracker</name>
+		<src>
+			http://itracker.sourceforge.net/images/itrackerlogo.gif
+		</src>
+		<href>http://itracker.sourceforge.org/</href>
+	</bannerLeft>
+
+	<bannerRight>
+		<name>itracker</name>
+		<src>
+			http://sourceforge.net/sflogo.php?group_id=188184&amp;type=5
+		</src>
+	</bannerRight>
+
+	<publishDate format="dd MMM yyyy" position="right" />
+
+	<version position="right" />
+
+	<skin>
+		<groupId>org.itracker.site</groupId>
+		<artifactId>skin-itracker</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</skin>
+
+	<body>
+		<breadcrumbs>
+			<item name="Sourceforge" href="https://sourceforge.net/projects/itracker/" />
+			<item name="itracker"
+				href="http://www.itracker.org/" />
+		</breadcrumbs>
+
+		<menu name="itracker">
+			<item name="Home" href="/index.html" />
+			<item name="License" href="/license.html" />
+		</menu>
+
+		<menu name="Download">
+			<item name="Binaries" href="https://sourceforge.net/project/showfiles.php?group_id=54141" />
+			<!-- TODO
+			<item name="Installation 2.4 production" href="/download.html" />
+			<item name="Installation 3.0 development" href="/release-notes.html" />
+
+			<item name="License" href="/license.html" />			 -->
+		</menu>
+
+		<menu name="Documentation">
+		<!-- TODO
+			<item name="Features" />
+			<item name="Core Platform" />
+			<item name="Web Client" />
+			<item name="Installation 2.4 production"
+				href="/download.html" />
+				 
+			<item name="Installation 3.0 development"
+				href="/release-notes/index.html" >
+			</item>
+			-->
+
+		
+			<item name="3.0.2 Release Notes" href="/release-notes/itracker-3.0.2.html" />
+
+
+            <item name="Install" href="/install.html"/>
+		    <item name="Configuration" href="/configuration.html"/>
+	
+		    <item name="Data Migration from 2.4" href="/migration/migrate2.4-3.0.html" />
+            
+            <item name="Screenshots" href="/screenshots/screenshots.html"/>
+
+		</menu>
+<!-- 
+	TODO
+		<menu name="Subprojects">
+			<item name="Eclipse Plugin" />
+		</menu>
+ -->
+		<menu name="Getting Involved" collapse="true" >
+		<!-- 
+		TODO
+			<item name="Contribute" />
+			<item name="Development Procedure" />
+			<item name="SCM guidelinies" />
+			
+			 -->
+			<item name="Getting Started" href="/getting-started.html" />
+			<item name="Development Environment Setup"
+				href="/development_environment_setup.html" />
+			<item name="Coding guidelines" href="/coding-guidelines.html"/>
+			<item name="FAQ" href="/FAQ.html"/>
+			<item name="Wiki" href="http://itracker.wiki.sourceforge.net/" />
+
+		</menu>
+<!--
+	TODO 
+		<menu name="Support">
+			<item name="Free Support" />
+			<item name="Commercial Support" />
+		</menu>
+ -->
+		<menu>
+			<item name="Fisheye" target="_blank"
+				href="http://fisheye3.cenqua.com/browse/itracker" />
+		</menu>
+
+		<menu collapse="true" ref="reports" />
+
+	</body>
+
+</project>

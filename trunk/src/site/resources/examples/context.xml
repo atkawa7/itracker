@@ -1,0 +1,32 @@
+<Context path="itracker" reloadable="true" >
+ <ResourceLink name="itracker" global="itracker" type="javax.naming.Context"/>
+ <ResourceLink name="itracker/mail/Session" global="itracker/mail/Session" type="javax.mail.Session"/>
+</Context>
+
+<!--
+Example on GlobalNamingResources in server.xml:
+
+<Server>
+...
+<GlobalNamingResources>
+
+Mailsession for JNDI:
+<Resource name="itracker/mail/Session" 
+	      auth="Container" 
+	      type="javax.mail.Session" 
+	      mail.smtp.host="mail.example.com" 
+	      mail.smtp.auth="false" 
+	      mail.from="itracker@example.com"/>
+	      <!-
+	      If you want to use authentification:
+	      mail.smtp.user="itracker@example.com" 
+	      password="myPassword" ->
+	      
+How-to override application.properties values: 
+<Environment name="itracker/max_attachment_size" type="java.lang.Integer" value="3072"/>
+<Environment name="itracker/web_session_timeout" type="java.lang.Integer" value="300"/>
+...
+</GlobalNamingResources>
+...
+</Server>-->
+

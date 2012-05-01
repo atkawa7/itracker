@@ -1,0 +1,53 @@
+ ------
+ Getting Started
+ ------
+ Marco Glur, ranks@rosa.com
+ ------
+ 28 October 2008
+ ------
+ 
+How to get up and running developing for itracker 3.0 
+
+  [[1]] {{{/development_environment_setup.html}Setup your Developement Environment}} (recommended: Tomcat 6.x, Eclipse 3.3+ with Maven Integration-/SVN-Plugin)
+  
+  [[2]] Setup a local MySQL with a development database "itrackerdev" (configured in <<<applicatoin.properties>>>)
+  
+  [[3]] Get the Source Code from Subversion
+  
+  [[4]] Check all Eclipse settings (Runtime Environment, Server-Configuration, Maven Dependency Management etc).
+  
+  [[5]] Set the <<<\<!-- Datasource configuration -->>>> in <<<applicationContext.xml>>> (eventually create a {{{/examples/context.xml}META-INF/context.xml}})
+  
+  [[6]] Run the application (debug or start) on Tomcat
+  
+  [[7]] If it all works, then log in using "<<admin>>", "<<admin>>"
+  
+  [[8]] Start development by following the open bugs and tasks on SourceForge. 
+
+  []
+  Also read the this question in the {{{/FAQ.html}FAQ}}.
+
+Please stick to the following rules:
+
+
+  *Please be aware that itracker 2.4.x has been downloaded more than 50'000 times and we need to migrate them! 
+
+  *Only check in working/tested code, if possible. 
+
+  *Don't start anything you don't finish. 
+
+  *Currently don't start new features or tasks in the development, just register those on SourceForge for later releases
+
+  *Register bugs you see. 
+
+  *Currently please help to close bugs:
+  {{http://sourceforge.net/tracker2/?group_id=54141&atid=472807}}
+
+  *Whatever you do, please make this visible on SourceForge, so we know who is working on which part.
+
+[]
+  itracker 3.0 currently has a feature freeze, and we are working on the debugging. Please help getting it done! Thanks. 
+
+  If you have any questions, please ask on the dev mailing list but try not to discuss too much but to use your time to help the source code get finished. If you are able to donate 60 minutes a day, or even only 60 minutes a week, this is a great contribution towards finishing itracker 3. 
+
+  <<Thanks a lot for joining this home run>>.	

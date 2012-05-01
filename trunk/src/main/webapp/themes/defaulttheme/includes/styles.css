@@ -1,0 +1,341 @@
+body {
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	background: #fff;
+}
+.smallbody {
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	background: #fff;
+}
+
+hr {
+	border: none;
+	border-bottom: solid 1px black; 
+	height: 1px;
+	background: black;	
+}
+
+a:hover {
+	color: #000000;
+	text-decoration: none;
+}
+
+a:visited {
+	color: #5555FF;
+	text-decoration: none;
+} 
+
+a:link {
+	color: #5555FF;
+	text-decoration: none;
+}
+
+a.mailto:hover {
+	color: black;
+	text-decoration: underline;
+}
+
+a.mailto:link {
+	color: black;
+	text-decoration: underline;
+}
+
+a.mailto:visited {
+	color: black;
+	text-decoration: underline;
+}
+
+a.history:hover {
+	color: black;
+	text-decoration: underline;
+}
+
+a.history:link {
+	color: black;
+	text-decoration: underline;
+}
+
+a.history:visited {
+	color: black;
+	text-decoration: underline;
+}
+
+.pageHeader {
+	font-weight: bold;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: black;
+  background-color: white;
+	text-decoration: none;
+}
+.locales {
+    float: left;
+    text-align: left;
+}
+
+
+.headerText,
+.headerTextWelcome {
+	width: 250px;
+}
+.headerText, .headerTextWelcome, .headerTextPageTitle {
+	font-weight: bold;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: black;
+  	background-color: white;
+	text-decoration: none;
+}
+.headerTextWelcome {
+	text-align: right;
+}
+.headerTextPageTitle,
+.headerTextPageTitle h1 {
+	text-align: center;
+	font-size: 14px;
+	margin: 0;
+}
+.headerLinks {
+	font-weight: normal;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #9999FF;
+  	background-color: white;
+	text-decoration: none;
+}
+
+a.headerLinks:hover {
+	color: #5555FF;
+	text-decoration: none;
+}
+
+a.headerLinks:link {
+	color: #5555FF;
+	text-decoration: none;
+}
+
+a.headerLinks:visited {
+	color: #5555FF;
+	text-decoration: none;
+}
+
+.lookupBox {
+	font-weight: normal;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: black;
+  background-color: white;
+	text-decoration: none;
+}
+
+.footer {
+	clear:both;
+	font-weight: normal;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: black;
+    background-color: white;
+	text-decoration: none;
+		}
+	
+
+.listHeading {
+	font-weight: bold;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: white;
+  	background-color: #555555;
+	text-decoration: none;
+}
+tr.listHeading td, tr.listHeading th {
+	padding: 3px 6px;	
+}
+.listHeading .editColumnText,
+.listHeading .editColumnText a ,
+.listHeading .editColumnText span {
+	background: transparent;
+	font-weight: bold;
+	color: white
+}
+
+.listSubHeading {
+	font-weight: normal;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: black;
+  	background-color: #555555;
+	text-decoration: none;
+}
+
+a.listHeading:hover,
+a.listHeading:visited,
+a.listHeading:link {
+	color: #fff;
+	text-decoration: underline;
+}
+
+
+.listRowShaded {
+	font-weight: normal;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: black;
+  background-color: #DDDDFF;
+	text-decoration: none;
+}
+
+.listRowUnshaded {
+	font-weight: normal;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: black;
+  background-color: white;
+	text-decoration: none;
+}
+
+.listRowText {
+	font-weight: normal;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+.listRowSmall {
+	font-weight: normal;
+	font-size: 10px;
+}
+
+.listRowSmall ul, .listRowSmall li {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+a.listRow:hover {
+	color: black;
+	text-decoration: none;
+}
+
+a.listRow:visited {
+	color: black;
+	text-decoration: none;
+}
+
+a.listRow:link {
+	color: black;
+	text-decoration: none;
+}
+
+
+.tableNote {
+	font-weight: normal;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: black;
+	background-color: white;
+	text-decoration: none;
+}
+
+.editColumnTitle {
+	font-weight: bold;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: black;
+	background-color: white;
+	text-decoration: none;
+}
+
+.editColumnText {
+	font-weight: normal;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: black;
+	background-color: white;
+	text-decoration: none;
+}
+
+div.errors {
+	text-align: center;
+}
+
+.formError {
+	font-weight: normal;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: red;
+	background-color: white;
+	text-decoration: none;
+}
+
+table.maincontent,
+table.portalhomeMain {
+	width: 100%; 
+	border-spacing: 0; 
+	padding: 1px; 
+	margin: 0; 
+	border: none;
+}
+
+.historyName {
+  font-style: italic;
+	font-size: 10px;
+}
+
+.help {
+	font-weight: normal;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: black;
+  background-color: white;
+	text-decoration: none;
+  line-height: 1.5;
+  vertical-align: baseline;
+}
+
+.helpImage {
+}
+
+.button {
+  font-weight: bold;
+  text-align: left;
+  font-family : verdana, helvetica, sans serif;
+  font-size: 10px;
+  text-decoration: none;
+  color: #000000;
+
+  padding: 2px 5px 2px 5px;
+  background-color: #8888FF;
+  border-style: solid;
+  border-color: #DDDDDD #5555FF #5555FF #DDDDDD;
+  border-top-width: 2px;
+  border-left-width: 2px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  
+}
+.smalltext {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: small;
+}
+
+/**
+Calender Styles
+*********************/
+
+.cal_table {
+	background-color: white;
+	opacity: .8;
+	
+}
+.tinyscal {
+	position: absolute;
+}

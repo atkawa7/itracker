@@ -1,0 +1,60 @@
+<deployment xmlns="http://xml.apache.org/axis/wsdd/"
+            xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+    <service name="ITrackerIssueService" provider="java:EJB">
+        <parameter name="beanJndiName" value="itracker.webservice.IssueService"/>
+        <parameter name="homeInterfaceName" value="cowsultants.itracker.ejb.beans.webservice.IssueServiceHome"/>
+        <parameter name="remoteInterfaceName" value="cowsultants.itracker.ejb.beans.webservice.IssueService"/>
+        <parameter name="allowedMethods"  value="getAllIssues getIssue createIssue assignIssue updateIssue"/>
+        <parameter name="jndiURL" value="t3://localhost:7001"/>
+        <parameter name="jndiContextClass" value="weblogic.jndi.WLInitialContextFactory"/>
+    </service>
+    <service name="ITrackerProjectService" provider="java:EJB">
+        <parameter name="beanJndiName" value="itracker.webservice.ProjectService"/>
+        <parameter name="homeInterfaceName" value="cowsultants.itracker.ejb.beans.webservice.ProjectServiceHome"/>
+        <parameter name="remoteInterfaceName" value="cowsultants.itracker.ejb.beans.webservice.ProjectService"/>
+        <parameter name="allowedMethods"  value="getAllProjects getProject getProjectsAvailableForCreate getProjectPossibleOwners getCustomFields getSystemConfiguration"/>
+        <parameter name="jndiURL" value="t3://localhost:7001"/>
+        <parameter name="jndiContextClass" value="weblogic.jndi.WLInitialContextFactory"/>
+    </service>
+
+    <beanMapping qname="ns:genericmodel" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.GenericModel"/>
+
+    <beanMapping qname="ns:component" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.ComponentModel"/>
+    <beanMapping qname="ns:issue" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.IssueModel"/>
+    <beanMapping qname="ns:issueattachment" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.IssueAttachmentModel"/>
+    <beanMapping qname="ns:issuefield" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.IssueFieldModel"/>
+    <beanMapping qname="ns:issuehistory" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.IssueHistoryModel"/>
+    <beanMapping qname="ns:project" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.ProjectModel"/>
+    <beanMapping qname="ns:notification" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.NotificationModel"/>
+    <beanMapping qname="ns:version" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.VersionModel"/>
+
+    <beanMapping qname="ns:permission" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.PermissionModel"/>
+    <beanMapping qname="ns:user" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.UserModel"/>
+    <beanMapping qname="ns:preferences" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.UserPreferencesModel"/>
+
+    <beanMapping qname="ns:namevaluepair" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.NameValuePair"/>
+    <beanMapping qname="ns:customfield" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.CustomFieldModel"/>
+    <beanMapping qname="ns:customfieldvalue" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.CustomFieldValueModel"/>
+    <beanMapping qname="ns:systemconfig" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.SystemConfigurationModel"/>
+    <beanMapping qname="ns:config" xmlns:ns="urn:itracker"
+                 languageSpecificType="java:cowsultants.itracker.ejb.client.models.ConfigurationModel"/>
+
+</deployment>
+
