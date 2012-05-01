@@ -77,7 +77,7 @@
 			<item name="Eclipse Plugin" />
 		</menu>
  -->
-		<menu name="Getting Involved" collapse="true" >
+		<menu name="Getting Involved" >
 		<!-- 
 		TODO
 			<item name="Contribute" />
@@ -105,7 +105,7 @@
 				href="http://fisheye3.cenqua.com/browse/itracker" />
 		</menu>
 
-		<menu collapse="true" ref="reports" />
+		<menu ref="reports" />
 
 	</body>
 
