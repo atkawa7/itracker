@@ -18,46 +18,20 @@
 
 package org.itracker.services.implementations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.ResourceBundle;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.Configuration;
-import org.itracker.model.CustomField;
-import org.itracker.model.CustomFieldValue;
-import org.itracker.model.Language;
-import org.itracker.model.NameValuePair;
-import org.itracker.model.ProjectScript;
-import org.itracker.model.SystemConfiguration;
-import org.itracker.model.WorkflowScript;
-import org.itracker.persistence.dao.ConfigurationDAO;
-import org.itracker.persistence.dao.CustomFieldDAO;
-import org.itracker.persistence.dao.CustomFieldValueDAO;
-import org.itracker.persistence.dao.LanguageDAO;
-import org.itracker.persistence.dao.NoSuchEntityException;
-import org.itracker.persistence.dao.ProjectScriptDAO;
-import org.itracker.persistence.dao.WorkflowScriptDAO;
+import org.itracker.model.*;
+import org.itracker.persistence.dao.*;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NamingUtilites;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.jfree.util.Log;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import java.util.*;
 
 /**
  * Implementation of the ConfigurationService Interface.
@@ -133,7 +107,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 		    		}	
 		    	}
 			} catch (Exception e) {
-				logger.error("getProperty: exception looking up value for " + name, e);
+				logger.debug("getProperty: caught exception looking up value for " + name, e);
 			}
 
     	}
