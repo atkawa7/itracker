@@ -20,11 +20,6 @@
         </putList>
     </definition>
 
-    <definition name="t.test" extends="mainLayout">
-        <put name="title" value="Test Page"/>
-        <put name="body" value="/common/test.jsp"/>
-    </definition>
-
     <definition name="t.portalhome" extends="mainLayout">
         <put name="body" value="/portalhome.jsp"/>
     </definition>
