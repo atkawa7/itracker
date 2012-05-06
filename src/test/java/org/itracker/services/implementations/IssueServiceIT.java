@@ -3,40 +3,12 @@
  */
 package org.itracker.services.implementations;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.Component;
-import org.itracker.model.CustomField;
-import org.itracker.model.Issue;
-import org.itracker.model.IssueActivity;
-import org.itracker.model.IssueActivityType;
-import org.itracker.model.IssueAttachment;
-import org.itracker.model.IssueField;
-import org.itracker.model.IssueHistory;
-import org.itracker.model.IssueRelation;
-import org.itracker.model.IssueSearchQuery;
-import org.itracker.model.PermissionType;
-import org.itracker.model.User;
-import org.itracker.model.Version;
+import org.itracker.model.*;
 import org.itracker.model.CustomField.Type;
-import org.itracker.persistence.dao.IssueAttachmentDAO;
-import org.itracker.persistence.dao.IssueDAO;
-import org.itracker.persistence.dao.IssueHistoryDAO;
-import org.itracker.persistence.dao.IssueRelationDAO;
-import org.itracker.persistence.dao.UserDAO;
+import org.itracker.persistence.dao.*;
 import org.itracker.services.IssueService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.IssueException;
@@ -47,14 +19,17 @@ import org.itracker.services.util.IssueUtilities;
 import org.itracker.web.util.ServletContextUtils;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 /**
  * @author ranks
  * 
  */
-public class IssueServiceTest extends AbstractDependencyInjectionTest {
+public class IssueServiceIT extends AbstractDependencyInjectionTest {
 
 	private static final Logger logger = Logger
-			.getLogger(IssueServiceTest.class);
+			.getLogger(IssueServiceIT.class);
 	private IssueService issueService;
 	
 	private UserDAO userDAO;

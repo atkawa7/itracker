@@ -14,7 +14,7 @@ import org.junit.Test;
 import javax.mail.internet.InternetAddress;
 import java.util.List;
 
-public class NotificationServiceTest extends AbstractDependencyInjectionTest {
+public class NotificationServiceIT extends AbstractDependencyInjectionTest {
 
     private NotificationService notificationService;
 

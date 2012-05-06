@@ -1,9 +1,5 @@
 package org.itracker.services.authentication;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.User;
 import org.itracker.services.ConfigurationService;
@@ -12,7 +8,11 @@ import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.util.UserUtilities;
 import org.junit.Test;
 
-public class AuthenticatorForProjectPermissionTest extends AbstractDependencyInjectionTest {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class AuthenticatorForProjectPermissionIT extends AbstractDependencyInjectionTest {
 
     private UserService userService;
     private ConfigurationService configurationService;

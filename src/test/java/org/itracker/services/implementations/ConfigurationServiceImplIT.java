@@ -21,11 +21,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ConfigurationServiceImplTest extends
+public class ConfigurationServiceImplIT extends
         AbstractDependencyInjectionTest {
 
     private static final Logger log = Logger
-            .getLogger(ConfigurationServiceImplTest.class);
+            .getLogger(ConfigurationServiceImplIT.class);
 
     private ConfigurationDAO configurationDAO;
     private ProjectDAO projectDAO;

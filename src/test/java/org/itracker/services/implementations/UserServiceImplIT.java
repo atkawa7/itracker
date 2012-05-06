@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-public class UserServiceImplTest extends AbstractDependencyInjectionTest {
+public class UserServiceImplIT extends AbstractDependencyInjectionTest {
 
     private UserService userService;
     private ProjectDAO projectDAO;
