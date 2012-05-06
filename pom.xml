@@ -927,7 +927,7 @@
                             <version>${maven-clover-plugin.version}</version>
                             <configuration>
                             <licenseLocation>${itracker.clover.license}</licenseLocation>
-                            <Iconfiguration>
+                            </configuration>
 
                         </plugin>
                     </plugins>
