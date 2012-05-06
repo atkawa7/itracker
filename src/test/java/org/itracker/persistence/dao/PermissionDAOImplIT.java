@@ -1,7 +1,5 @@
 package org.itracker.persistence.dao;
 
-import java.util.List;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Permission;
 import org.itracker.model.Project;
@@ -9,7 +7,9 @@ import org.itracker.model.User;
 import org.junit.Test;
 import org.springframework.dao.DataAccessException;
 
-public class PermissionDAOImplTest extends AbstractDependencyInjectionTest {
+import java.util.List;
+
+public class PermissionDAOImplIT extends AbstractDependencyInjectionTest {
 
     @SuppressWarnings("unused")
 	private UserDAO userDAO;

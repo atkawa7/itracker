@@ -1,12 +1,12 @@
 package org.itracker.persistence.dao;
 
-import java.util.List;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Language;
 import org.junit.Test;
 
-public class LanguageDAOImplTest extends AbstractDependencyInjectionTest {
+import java.util.List;
+
+public class LanguageDAOImplIT extends AbstractDependencyInjectionTest {
 
     private LanguageDAO languageDAO;
 

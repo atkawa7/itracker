@@ -1,10 +1,5 @@
 package org.itracker.persistence.dao;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Issue;
 import org.itracker.model.IssueSearchQuery;
@@ -14,7 +9,12 @@ import org.itracker.services.UserService;
 import org.itracker.services.util.AuthenticationConstants;
 import org.junit.Test;
 
-public class IssueDAOImplTest extends AbstractDependencyInjectionTest {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class IssueDAOImplIT extends AbstractDependencyInjectionTest {
 
     private IssueDAO issueDAO;
     private UserDAO userDAO;

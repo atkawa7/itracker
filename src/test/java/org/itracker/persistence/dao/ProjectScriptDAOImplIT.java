@@ -1,12 +1,12 @@
 package org.itracker.persistence.dao;
 
-import java.util.List;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.ProjectScript;
 import org.junit.Test;
 
-public class ProjectScriptDAOImplTest extends AbstractDependencyInjectionTest {
+import java.util.List;
+
+public class ProjectScriptDAOImplIT extends AbstractDependencyInjectionTest {
 
 	private ProjectScriptDAO projectScriptDAO;
 	

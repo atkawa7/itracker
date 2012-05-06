@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class ProjectDAOImplTest extends AbstractDependencyInjectionTest {
+public class ProjectDAOImplIT extends AbstractDependencyInjectionTest {
 
     private ProjectDAO projectDAO;
 

@@ -1,12 +1,12 @@
 package org.itracker.persistence.dao;
 
-import java.util.List;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.IssueAttachment;
 import org.junit.Test;
 
-public class IssueAttachmentDAOImplTest extends AbstractDependencyInjectionTest {
+import java.util.List;
+
+public class IssueAttachmentDAOImplIT extends AbstractDependencyInjectionTest {
 	
 	private IssueAttachmentDAO issueAttachmentDAO;
 

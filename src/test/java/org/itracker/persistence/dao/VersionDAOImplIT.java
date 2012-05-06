@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class VersionDAOImplTest extends AbstractDependencyInjectionTest {
+public class VersionDAOImplIT extends AbstractDependencyInjectionTest {
 
     private VersionDAO versionDAO;
 

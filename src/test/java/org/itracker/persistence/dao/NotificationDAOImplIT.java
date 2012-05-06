@@ -1,13 +1,13 @@
 package org.itracker.persistence.dao;
 
-import java.util.List;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Notification;
 import org.itracker.model.Notification.Role;
 import org.junit.Test;
 
-public class NotificationDAOImplTest extends AbstractDependencyInjectionTest {
+import java.util.List;
+
+public class NotificationDAOImplIT extends AbstractDependencyInjectionTest {
 
     private NotificationDAO notificationDAO;
 

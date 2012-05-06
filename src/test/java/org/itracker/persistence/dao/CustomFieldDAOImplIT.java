@@ -1,12 +1,12 @@
 package org.itracker.persistence.dao;
 
-import java.util.List;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.CustomField;
 import org.junit.Test;
 
-public class CustomFieldDAOImplTest extends AbstractDependencyInjectionTest {
+import java.util.List;
+
+public class CustomFieldDAOImplIT extends AbstractDependencyInjectionTest {
 
     private CustomFieldDAO customFieldDAO;
 

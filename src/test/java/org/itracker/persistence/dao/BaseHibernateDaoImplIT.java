@@ -11,7 +11,7 @@ import org.springframework.dao.DataAccessException;
  *
  * @author rdjurin
  */
-public class BaseHibernateDaoImplTest extends AbstractDependencyInjectionTest {
+public class BaseHibernateDaoImplIT extends AbstractDependencyInjectionTest {
 
     BaseHibernateDAOImpl<Language> dao;
     LanguageDAO languageDAO;

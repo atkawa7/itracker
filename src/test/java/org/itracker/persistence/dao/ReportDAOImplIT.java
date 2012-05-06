@@ -1,12 +1,12 @@
 package org.itracker.persistence.dao;
 
-import java.util.List;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Report;
 import org.junit.Test;
 
-public class ReportDAOImplTest extends AbstractDependencyInjectionTest {
+import java.util.List;
+
+public class ReportDAOImplIT extends AbstractDependencyInjectionTest {
 	
 	private ReportDAO reportDAO;
 

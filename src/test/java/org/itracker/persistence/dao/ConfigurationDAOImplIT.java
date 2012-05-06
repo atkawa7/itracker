@@ -1,13 +1,13 @@
 package org.itracker.persistence.dao;
 
 
-import java.util.List;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Configuration;
 import org.junit.Test;
 
-public class ConfigurationDAOImplTest extends AbstractDependencyInjectionTest {
+import java.util.List;
+
+public class ConfigurationDAOImplIT extends AbstractDependencyInjectionTest {
 
     private ConfigurationDAO configurationDAO;
 

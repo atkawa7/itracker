@@ -4,7 +4,7 @@ import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.UserPreferences;
 import org.junit.Test;
 
-public class UserPreferencesDAOImplTest extends AbstractDependencyInjectionTest {
+public class UserPreferencesDAOImplIT extends AbstractDependencyInjectionTest {
 
     private UserPreferencesDAO userPreferencesDAO;
 
