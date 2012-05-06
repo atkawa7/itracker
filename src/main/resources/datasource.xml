@@ -34,5 +34,4 @@
     <bean id="dataSource" class="com.mchange.v2.c3p0.JndiRefForwardingDataSource">
         <property name="jndiName" value="java:comp/env/jdbc/itracker_ds"/>
     </bean>
-    <!--alias name="applicationDataSource" alias="dataSource" /-->
 </beans>
