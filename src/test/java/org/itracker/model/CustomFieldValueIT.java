@@ -1,6 +1,4 @@
 package org.itracker.model;
-import static org.itracker.Assert.assertEntityComparator;
-import static org.itracker.Assert.assertEntityComparatorEquals;
 
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.ConfigurationService;
@@ -8,7 +6,11 @@ import org.itracker.services.util.CustomFieldUtilities;
 import org.junit.Test;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
-public class CustomFieldValueTest extends AbstractDependencyInjectionSpringContextTests {
+import static org.itracker.Assert.assertEntityComparator;
+import static org.itracker.Assert.assertEntityComparatorEquals;
+
+// TODO makit unit-test?
+public class CustomFieldValueIT extends AbstractDependencyInjectionSpringContextTests {
 	private CustomFieldValue cust;
 	private ConfigurationService configurationService;
 	

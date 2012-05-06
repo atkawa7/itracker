@@ -1,14 +1,16 @@
 package org.itracker.model;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.exceptions.IssueException;
 import org.junit.Test;
-public class IssueFieldTest extends AbstractDependencyInjectionTest{
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+// TODO makit unit-test?
+public class IssueFieldIT extends AbstractDependencyInjectionTest{
 	private IssueField iss;
 	
 	@Test

@@ -1,14 +1,16 @@
 package org.itracker.model;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.exceptions.IssueException;
 import org.junit.Test;
 
-public class CustomFieldTest extends AbstractDependencyInjectionTest{
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+// TODO makit unit-test?
+public class CustomFieldIT extends AbstractDependencyInjectionTest{
 	private CustomField cust;
 	
 	@Test

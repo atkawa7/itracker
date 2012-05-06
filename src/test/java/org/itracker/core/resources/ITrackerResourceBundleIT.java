@@ -1,16 +1,12 @@
 package org.itracker.core.resources;
 
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Set;
-
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Language;
 import org.junit.Test;
 
-public class ITrackerResourceBundleTest extends AbstractDependencyInjectionTest {
+import java.util.*;
+
+public class ITrackerResourceBundleIT extends AbstractDependencyInjectionTest {
 	private ITrackerResourceBundle resourceBundle;
 	
 	@Override

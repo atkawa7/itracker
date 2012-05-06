@@ -2,8 +2,8 @@ package org.itracker.model;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.Date;
 
@@ -86,12 +86,14 @@ public class IssueAttachmentTest {
 
     }
 
-
+    /**
+     * TODO: does it still fail sometimes?
+     */
     @Test
     @Ignore
     public void testSizeComparator() {
-        IssueAttachment attA, attB;
-        Issue issueA, issueB;
+        final IssueAttachment attA, attB;
+        final Issue issueA, issueB;
         issueA = new Issue();
         issueB = new Issue();
 
@@ -99,23 +101,23 @@ public class IssueAttachmentTest {
         attB = new IssueAttachment(issueB, "bbb", "type", "desc", 200l);
 
 
-        assertEntityComparator("size comparator: attA, attB",
+        assertEntityComparator("size1 comparator: attA, attB",
                 IssueAttachment.SIZE_COMPARATOR, attA, attB);
-        assertEntityComparator("size comparator: attA, null",
+        assertEntityComparator("size1 comparator: attA, null",
                 IssueAttachment.SIZE_COMPARATOR, attA, null);
 
         attA.setSize(attB.getSize());
 
-        assertEntityComparator("size comparator: attA, attB",
+        assertEntityComparator("size2 comparator: attA, attB",
                 IssueAttachment.SIZE_COMPARATOR, attA, attB);
-        assertEntityComparator("size comparator: attA, null",
+        assertEntityComparator("size2 comparator: attA, null",
                 IssueAttachment.SIZE_COMPARATOR, attA, null);
 
         attA.setOriginalFileName(attB.getOriginalFileName());
 
-        assertEntityComparatorEquals("size comparator: attA, attB",
+        assertEntityComparatorEquals("size3 comparator: attA, attB",
                 IssueAttachment.SIZE_COMPARATOR, attA, attB);
-        assertEntityComparatorEquals("size comparator: attA, attA",
+        assertEntityComparatorEquals("size3 comparator: attA, attA",
                 IssueAttachment.SIZE_COMPARATOR, attA, attA);
     }
 

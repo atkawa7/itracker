@@ -1,13 +1,17 @@
 package org.itracker.core.resources;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.itracker.AbstractDependencyInjectionTest;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
+// TODO makit unit-test?
+public class ITrackerResourcesIT {
 	private String defaultLocaleString_;
 	private Locale defaultLocale_;
 	private ResourceBundle defaultResourceBundle_;
@@ -15,9 +19,9 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 	private Locale testLocale_;
 	private ITrackerResourceBundle testResourceBundle_;
 
-	@Override
+    @Before
 	public void onSetUp() throws Exception {
-		super.onSetUp();
+
 		defaultLocaleString_ = ITrackerResources.getDefaultLocale();
 		assertNotNull(defaultLocaleString_);
 		if (defaultLocaleString_.length() == 2) {
@@ -39,9 +43,8 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 		ITrackerResources.putBundle(testLocale_, testResourceBundle_);
 	}
 
-	@Override
+	@After
 	public void onTearDown() throws Exception {
-		super.onTearDown();
 		ITrackerResources.setDefaultLocale(defaultLocaleString_);
 	}
 
@@ -320,15 +323,15 @@ public class ITrackerResourcesTest extends AbstractDependencyInjectionTest {
 		assertEquals(originalString, ITrackerResources.unescapeUnicodeString(escapedString));
 	}
 
-	@Override
-	protected String[] getDataSetFiles() {
-        return new String[]{};
-	}
-
-	@Override
-	protected String[] getConfigLocations() {
-		return new String[]{"application-context.xml"};
-	}
+//	@Override
+//	protected String[] getDataSetFiles() {
+//        return new String[]{};
+//	}
+//
+//	@Override
+//	protected String[] getConfigLocations() {
+//		return new String[]{"application-context.xml"};
+//	}
 }
 
  	  	 
