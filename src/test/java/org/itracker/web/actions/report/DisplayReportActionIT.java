@@ -1,12 +1,5 @@
 package org.itracker.web.actions.report;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpSession;
-
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.util.TokenProcessor;
 import org.itracker.AbstractDependencyInjectionTest;
@@ -22,7 +15,13 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-public class DisplayReportActionTest extends AbstractDependencyInjectionTest {
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
+public class DisplayReportActionIT extends AbstractDependencyInjectionTest {
 
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;

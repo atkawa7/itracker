@@ -1,7 +1,5 @@
 package org.itracker.web.actions.admin.attachment;
 
-import java.util.List;
-
 import org.apache.struts.action.ActionForward;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.IssueAttachment;
@@ -12,7 +10,9 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-public class ListAttachmentsActionTest extends AbstractDependencyInjectionTest {
+import java.util.List;
+
+public class ListAttachmentsActionIT extends AbstractDependencyInjectionTest {
 
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;

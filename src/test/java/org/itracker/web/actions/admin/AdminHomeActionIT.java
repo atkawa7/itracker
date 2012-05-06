@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-public class AdminHomeActionTest extends AbstractDependencyInjectionTest {
+public class AdminHomeActionIT extends AbstractDependencyInjectionTest {
 
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;

@@ -1,10 +1,5 @@
 package org.itracker.web.actions.project;
 
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpSession;
-
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.util.TokenProcessor;
 import org.itracker.AbstractDependencyInjectionTest;
@@ -19,7 +14,11 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-public class EditIssueActionTest extends AbstractDependencyInjectionTest {
+import javax.servlet.http.HttpSession;
+import java.util.Map;
+import java.util.Set;
+
+public class EditIssueActionIT extends AbstractDependencyInjectionTest {
 
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
