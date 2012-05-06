@@ -20,7 +20,7 @@ import java.util.*;
  *
  * @author seas
  */
-public class ImportExportUtilitiesTest extends AbstractDependencyInjectionTest {
+public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
 
     public static final long TEST_TIMESTAMP_EXPORT1 = 50000l;
     public static final long TEST_TIMESTAMP_EXPORT2 = 8000000l;

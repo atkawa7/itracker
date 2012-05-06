@@ -5,24 +5,19 @@
 
 package org.itracker.services.util;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.Notification;
 import org.itracker.model.Notification.Role;
 import org.itracker.model.User;
 import org.junit.Test;
 
+import java.util.*;
+
 /**
  *
  * @author seas
  */
-public class NotificationUtilitiesTest extends AbstractDependencyInjectionTest {
+public class NotificationUtilitiesIT extends AbstractDependencyInjectionTest {
     
     @Test
     public void testGetRoleNameByLocale() {

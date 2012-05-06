@@ -3,15 +3,6 @@
  */
 package org.itracker.services.util;
 
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.core.resources.ITrackerResources;
@@ -22,12 +13,14 @@ import org.itracker.model.util.PropertiesFileHandler;
 import org.itracker.persistence.dao.LanguageDAO;
 import org.junit.Test;
 
+import java.util.*;
+
 /**
  *
  * @author Andrey Sergievskiy
  */
-public class UserUtilitiesTest extends AbstractDependencyInjectionTest {
-    private static final Logger log = Logger.getLogger(UserUtilitiesTest.class);
+public class UserUtilitiesIT extends AbstractDependencyInjectionTest {
+    private static final Logger log = Logger.getLogger(UserUtilitiesIT.class);
 
     private void doTestGetStatusName(final Locale locale,
             final int statusId, final String expected) {

@@ -4,11 +4,12 @@
  */
 package org.itracker.services.util;
 
-import java.util.Hashtable;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.junit.Test;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import java.util.Hashtable;
 
 // TODO: Add Javadocs here: what is the purpose of this class?
 
@@ -16,7 +17,7 @@ import org.junit.Test;
  *
  * @author seas
  */
-public class NamingUtilitiesTest extends AbstractDependencyInjectionTest {
+public class NamingUtilitiesIT extends AbstractDependencyInjectionTest {
 
     @Test
     public void testGetStringValue() {

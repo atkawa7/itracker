@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * @author seas
  */
-public class WorkflowUtilitiesTest extends AbstractDependencyInjectionTest {
+public class WorkflowUtilitiesIT extends AbstractDependencyInjectionTest {
 
     /**
      * Verifies WorkflowUtilities.getEventName

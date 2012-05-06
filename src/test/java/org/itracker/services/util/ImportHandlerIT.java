@@ -1,18 +1,12 @@
 package org.itracker.services.util;
 
 import junit.framework.TestCase;
-
-import org.itracker.model.AbstractEntity;
-import org.itracker.model.Component;
-import org.itracker.model.CustomField;
-import org.itracker.model.Project;
-import org.itracker.model.SystemConfiguration;
-import org.itracker.model.User;
+import org.itracker.model.*;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-public class ImportHandlerTest extends TestCase {
+public class ImportHandlerIT extends TestCase {
 
 	
 	@Test

@@ -17,7 +17,7 @@ import java.util.*;
  *
  * @author seas at andreysergievskiy.com
  */
-public class IssueUtilitiesTest extends AbstractDependencyInjectionTest {
+public class IssueUtilitiesIT extends AbstractDependencyInjectionTest {
 
     @Test
     public void testGetFieldType() {

@@ -4,18 +4,18 @@
  */
 package org.itracker.services.util;
 
-import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
 import org.itracker.model.NameValuePair;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 /**
  *
  * @author seas
  */
-public class SystemConfigurationUtilitiesTest
-        extends AbstractDependencyInjectionTest {
+public class SystemConfigurationUtilitiesTest {
 
     @Test
     public void testGetLanguageKey() {
@@ -161,21 +161,4 @@ public class SystemConfigurationUtilitiesTest
         assertEquals("value2", configuration2.getValue());
     }
 
-    /**
-     * Defines a set of datafiles to be uploaded into database.
-     * @return an array with datafiles.
-     */
-    protected String[] getDataSetFiles() {
-        return new String[]{
-                    "dataset/languagebean_dataset.xml"
-                };
-    }
-
-    /**
-     * Defines a simple configuration, required for running tests.
-     * @return an array of references to configuration files.
-     */
-    protected String[] getConfigLocations() {
-        return new String[]{"application-context.xml"};
-    }
 }

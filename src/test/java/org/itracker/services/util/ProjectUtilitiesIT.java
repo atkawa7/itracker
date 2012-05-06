@@ -18,7 +18,7 @@ import java.util.*;
 /**
  * @author seas
  */
-public class ProjectUtilitiesTest extends AbstractDependencyInjectionTest {
+public class ProjectUtilitiesIT extends AbstractDependencyInjectionTest {
 
     private static final Logger log = Logger.getLogger(ProjectUtilities.class);
 
