@@ -778,11 +778,10 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>changelog-maven-plugin</artifactId>
                 <configuration>
-
                     <type>range</type>
-                    <range>
-                        300
-                    </range>
+                    <ranges>
+                        <range>300</range>
+                    </ranges>
                 </configuration>
             </plugin>
             <plugin>
@@ -926,7 +925,7 @@
                             <artifactId>maven-clover-plugin</artifactId>
                             <version>${maven-clover-plugin.version}</version>
                             <configuration>
-                            <licenseLocation>${itracker.clover.license}</licenseLocation>
+                                <licenseLocation>${itracker.clover.license}</licenseLocation>
                             </configuration>
 
                         </plugin>
