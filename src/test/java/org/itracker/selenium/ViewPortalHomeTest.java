@@ -1,7 +1,8 @@
 package org.itracker.selenium;
 
-import java.io.IOException;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Check the content of PortalHome page with some data available.
@@ -33,6 +34,7 @@ public class ViewPortalHomeTest extends AbstractSeleniumTestCase {
         SeleniumManager.closeSession(selenium);
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
+
         assertFalse(selenium.isElementPresent("id"));
         assertTrue(selenium.isElementPresent("login"));
         assertTrue(selenium.isElementPresent("password"));
@@ -41,21 +43,22 @@ public class ViewPortalHomeTest extends AbstractSeleniumTestCase {
         selenium.type("password", "admin_test1");
         selenium.click("xpath=//.[@type='submit']");
         selenium.waitForPageToLoad(SE_TIMEOUT);
-        assertTrue(selenium.isElementPresent("id"));
-        assertTrue(selenium.isElementPresent("id=unassignedIssues"));
-        assertEquals(2, selenium.getXpathCount("//tr[starts-with(@id, 'unassignedIssue.')]"));
-        assertTrue(selenium.isElementPresent("xpath=//tr[starts-with(@id,'unassignedIssue.')]/td[3][text()='1']/../td[5][text()='test_name']/../td[11][text()='test_description']"));
-        assertTrue(selenium.isElementPresent("xpath=//tr[starts-with(@id,'unassignedIssue.')]/td[3][text()='2']/../td[5][text()='test_name']/../td[11][text()='test_description 2']"));
+
+        assertElementPresent("id");
+        assertElementPresent("id=unassignedIssues");
+        assertEquals("count //tr[starts-with(@id, 'unassignedIssue.')]", 2, selenium.getXpathCount("//tr[starts-with(@id, 'unassignedIssue.')]"));
+        assertElementPresent("xpath=//tr[starts-with(@id,'unassignedIssue.')]/td[3][text()='1']/../td[5][text()='test_name']/../td[11][text()='test_description']");
+        assertElementPresent("xpath=//tr[starts-with(@id,'unassignedIssue.')]/td[3][text()='2']/../td[5][text()='test_name']/../td[11][text()='test_description 2']");
         
-        assertTrue(selenium.isElementPresent("id=createdIssues"));
-        assertEquals(4, selenium.getXpathCount("//tr[starts-with(@id, 'createdIssue.')]"));
-        assertTrue(selenium.isElementPresent("xpath=//tr[starts-with(@id,'createdIssue.')]/td[3][text()='1']/../td[5][text()='test_name']/../td[11][text()='test_description']"));
-        assertTrue(selenium.isElementPresent("xpath=//tr[starts-with(@id,'createdIssue.')]/td[3][text()='2']/../td[5][text()='test_name']/../td[11][text()='test_description 2']"));
-        assertTrue(selenium.isElementPresent("xpath=//tr[starts-with(@id,'createdIssue.')]/td[3][text()='3']/../td[5][text()='test_name']/../td[11][text()='test_description 3']"));
-        assertTrue(selenium.isElementPresent("xpath=//tr[starts-with(@id,'createdIssue.')]/td[3][text()='4']/../td[5][text()='test_name']/../td[11][text()='test_description 4']"));
+        assertElementPresent("id=createdIssues");
+        assertEquals("count //tr[starts-with(@id, 'createdIssue.')]", 4, selenium.getXpathCount("//tr[starts-with(@id, 'createdIssue.')]"));
+        assertElementPresent("xpath=//tr[starts-with(@id,'createdIssue.')]/td[3][text()='1']/../td[5][text()='test_name']/../td[11][text()='test_description']");
+        assertElementPresent("xpath=//tr[starts-with(@id,'createdIssue.')]/td[3][text()='2']/../td[5][text()='test_name']/../td[11][text()='test_description 2']");
+        assertElementPresent("xpath=//tr[starts-with(@id,'createdIssue.')]/td[3][text()='3']/../td[5][text()='test_name']/../td[11][text()='test_description 3']");
+        assertElementPresent("xpath=//tr[starts-with(@id,'createdIssue.')]/td[3][text()='4']/../td[5][text()='test_name']/../td[11][text()='test_description 4']");
         
-        assertTrue(selenium.isElementPresent("id=watchedIssues"));
-        assertEquals(0, selenium.getXpathCount("//tr[starts-with(@id, 'watchedIssue.')]"));        
+        assertElementPresent("id=watchedIssues");
+        assertFalse("unexpected watchedIssue", selenium.isElementPresent("//tr[starts-with(@id, 'watchedIssue.')]"));
     }
     
     @Override

@@ -1,11 +1,12 @@
 package org.itracker.selenium;
 
-import java.io.IOException;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Check the content and the functionality of "Projects List" page.
- * 
+ *
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
  */
 public class ViewProjectListTest extends AbstractSeleniumTestCase {
@@ -17,8 +18,9 @@ public class ViewProjectListTest extends AbstractSeleniumTestCase {
      * 4. Check that "Projects" element is present at the "Project List" page.
      * 5. Check that there are two projects in a table at the page.
      * 6. Check that "test_name" project contains 4 open, 0 resolved
-     *    and 4 issues total.
+     * and 4 issues total.
      * 7. Check that "test_name2" project contains no issues at all.
+     *
      * @throws java.io.IOException
      */
     @Test
@@ -26,42 +28,44 @@ public class ViewProjectListTest extends AbstractSeleniumTestCase {
         closeSession();
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
-        assertTrue(selenium.isElementPresent("//.[@name='login']"));
-        assertTrue(selenium.isElementPresent("//.[@name='password']"));
-        assertTrue(selenium.isElementPresent("//.[@value='Login']"));
+
+        assertElementPresent("//.[@name='login']");
+        assertElementPresent("//.[@name='password']");
+        assertElementPresent("//.[@value='Login']");
         selenium.type("//.[@name='login']", "admin_test1");
         selenium.type("//.[@name='password']", "admin_test1");
         selenium.click("//.[@value='Login']");
         selenium.waitForPageToLoad(SE_TIMEOUT);
-        
-        assertTrue(selenium.isElementPresent("listprojects"));
+
+        assertElementPresent("listprojects");
         selenium.click("listprojects");
         selenium.waitForPageToLoad(SE_TIMEOUT);
-        
-        assertTrue(selenium.isElementPresent("projects"));
-        assertEquals(2, selenium.getXpathCount("//tr[starts-with(@id, 'project.')]"));
-        
+
+        assertElementPresent("projects");
+        assertEquals("projects count", 2,
+                selenium.getXpathCount("//tr[starts-with(@id, 'project.')]"));
+
         //// project "test_name"
         // Check the number of open issues.
-        assertEquals("4", selenium.getText("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[4]"));
-        
+        assertTextEquals("4", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[4]");
+
         // Check the number of resolved issues.
-        assertEquals("0", selenium.getText("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[5]"));
-        
+        assertTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[5]");
+
         // Check total number of issues.
-        assertEquals("4", selenium.getText("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[6]"));
-        
+        assertTextEquals("4", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[6]");
+
         //// project "test_name2"
         // Check the number of open issues.
-        assertEquals("0", selenium.getText("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[4]"));
-        
+        assertTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[4]");
+
         // Check the number of resolved issues.
-        assertEquals("0", selenium.getText("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[5]"));
-        
+        assertTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[5]");
+
         // Check total number of issues.
-        assertEquals("0", selenium.getText("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[6]"));
+        assertTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[6]");
     }
-    
+
     @Override
     protected String[] getDataSetFiles() {
         return new String[]{
@@ -78,6 +82,6 @@ public class ViewProjectListTest extends AbstractSeleniumTestCase {
 
     @Override
     protected String[] getConfigLocations() {
-        return new String[]{ "application-context.xml"};
+        return new String[]{"application-context.xml"};
     }
 }

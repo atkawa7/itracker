@@ -1,7 +1,8 @@
 package org.itracker.selenium;
 
-import java.io.IOException;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Verifies authorization to the system functionality.
@@ -27,6 +28,7 @@ public class LoginTest extends AbstractSeleniumTestCase {
         closeSession();
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
+
         assertTrue(selenium.isElementPresent("xpath=//.[@name='login']"));
         assertTrue(selenium.isElementPresent("xpath=//.[@name='password']"));
         assertTrue(selenium.isElementPresent("xpath=//.[@value='Login']"));
@@ -60,6 +62,7 @@ public class LoginTest extends AbstractSeleniumTestCase {
         selenium.type("xpath=//.[@name='password']", "wrong_password");
         selenium.click("xpath=//.[@value='Login']");
         selenium.waitForPageToLoad(SE_TIMEOUT);
+
         assertFalse(selenium.isElementPresent("xpath=//.[@name='id']"));
     }
     

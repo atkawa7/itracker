@@ -1,7 +1,8 @@
 package org.itracker.selenium;
 
-import java.io.IOException;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Verifies the functionality of per-project issues list page.
@@ -22,6 +23,7 @@ public class ViewProjectIssueListTest extends AbstractSeleniumTestCase {
         closeSession();
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
+
         assertTrue(selenium.isElementPresent("//.[@name='login']"));
         assertTrue(selenium.isElementPresent("//.[@name='password']"));
         assertTrue(selenium.isElementPresent("//.[@value='Login']"));

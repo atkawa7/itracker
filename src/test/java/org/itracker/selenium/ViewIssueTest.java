@@ -1,7 +1,8 @@
 package org.itracker.selenium;
 
-import java.io.IOException;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Verifies the functionality of View Issue page.
@@ -23,6 +24,7 @@ public class ViewIssueTest extends AbstractSeleniumTestCase {
         closeSession();
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
+
         assertTrue(selenium.isElementPresent("//.[@name='login']"));
         assertTrue(selenium.isElementPresent("//.[@name='password']"));
         assertTrue(selenium.isElementPresent("//.[@value='Login']"));
@@ -61,6 +63,7 @@ public class ViewIssueTest extends AbstractSeleniumTestCase {
         closeSession();
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
+
         assertTrue(selenium.isElementPresent("//.[@name='login']"));
         assertTrue(selenium.isElementPresent("//.[@name='password']"));
         assertTrue(selenium.isElementPresent("//.[@value='Login']"));

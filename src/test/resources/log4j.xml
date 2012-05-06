@@ -9,34 +9,47 @@
  -->
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
- 
-  <appender name="console" class="org.apache.log4j.ConsoleAppender">
-    <param name="Threshold" value="FATAL"/>
-    <param name="Target" value="System.out"/>
 
-    <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
-    </layout>
-  </appender>
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <param name="Threshold" value="FATAL"/>
+        <param name="Target" value="System.out"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+        </layout>
+    </appender>
     <appender name="file" class="org.apache.log4j.FileAppender">
-        <param name="File" value="itracker-test.log"/>
-        <param name="Append" value="false"/>
+        <param name="File" value="target/itracker-test.log"/>
+        <param name="Append" value="true"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ABSOLUTE}	%-5p %c - %m%n"/>
         </layout>
     </appender>
-	<category name="org.itracker">
-		<priority value="DEBUG"></priority>
-		<appender-ref ref="file"/>
-	</category>
+    <category name="org.itracker">
+        <priority value="INFO"></priority>
+        <appender-ref ref="file"/>
+    </category>
+    <!-- should mock a mail-session, throws exceptions -->
+    <category name="org.itracker.services.util.EmailService">
+        <priority value="FATAL"></priority>
+        <appender-ref ref="file"/>
+    </category>
+    <category name="org.itracker.selenium" additivity="false">
+        <priority value="INFO"></priority>
+        <appender-ref ref="file"/>
+    </category>
 
-	<category name="org.hibernate">
-		<priority value="WARN"></priority>
-		<appender-ref ref="file"/>
-	</category>
+    <category name="org.hibernate">
+        <priority value="FATAL"></priority>
+        <appender-ref ref="file"/>
+    </category>
 
+    <category name="com.dumbster">
+        <priority value="INFO"></priority>
+    </category>
     <root>
         <priority value="ERROR"/>
+        <appender-ref ref="file" />
         <appender-ref ref="console"/>
     </root>
 

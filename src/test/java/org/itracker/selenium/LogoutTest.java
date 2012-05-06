@@ -1,7 +1,8 @@
 package org.itracker.selenium;
 
-import java.io.IOException;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Verifies security issues - that user, leaving a system cannot
@@ -32,6 +33,7 @@ public class LogoutTest extends AbstractSeleniumTestCase {
         SeleniumManager.closeSession(selenium);
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath + "/portalhome.do");
+
         assertFalse(selenium.isElementPresent("id"));
         assertTrue(selenium.isElementPresent("login"));
         assertTrue(selenium.isElementPresent("password"));
@@ -40,15 +42,18 @@ public class LogoutTest extends AbstractSeleniumTestCase {
         selenium.type("password", "user_test1");
         selenium.click("xpath=//.[@type='submit']");
         selenium.waitForPageToLoad(SE_TIMEOUT);
+
         assertTrue(selenium.isElementPresent("id"));
         assertTrue(selenium.isElementPresent("logoff"));
         selenium.click("logoff");
         selenium.waitForPageToLoad(SE_TIMEOUT);
+
         assertFalse(selenium.isElementPresent("id"));
         assertTrue(selenium.isElementPresent("login"));
         assertTrue(selenium.isElementPresent("password"));
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath + "/portalhome.do");
+
         assertFalse(selenium.isElementPresent("id"));
         assertTrue(selenium.isElementPresent("login"));
         assertTrue(selenium.isElementPresent("password"));
