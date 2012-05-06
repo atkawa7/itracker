@@ -30,7 +30,6 @@ import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
 
-import javax.jws.soap.InitParam;
 
 
 /**
