@@ -17,7 +17,6 @@
         <form-bean name="userForm" type="org.itracker.web.forms.UserForm" />
     </form-beans>
 
-
     <global-forwards>
 
         <!-- check the old forwards and then remove them..
@@ -74,13 +73,13 @@
         -->
         <forward name="relateissue" module="/module-projects" path="/addissuerelation.do" />
         <forward name="searchissues" module="/module-searchissues" path="/searchissuesform.do" />
-        <forward name="selfregistration" module="/" path="/selfregisterform.do" />
+        <forward name="selfregistration" path="/selfregisterform.do" />
         <forward name="unauthorized" module="/" path="/unauthorized.do" />
         <forward name="viewactivity" module="/module-projects" path="/view_issue_activity.do" />
         <forward name="viewissue" module="/module-projects" path="/view_issue.do" />
         <forward name="editissue" module="/module-projects" path="/editissueform.do" />
         <forward name="watchissue" module="/module-projects" path="/watchissue.do" />
-     
+
     </global-forwards>
 
     <action-mappings>
@@ -88,24 +87,27 @@
                 name="watchIssueForm" scope="request" input="/index.jsp" validate="false" />
         <action path="/assignissue" type="org.itracker.web.actions.project.AssignIssueAction"
                 name="assignIssueForm" scope="request" input="/index.jsp" />
-        <action path="/portalhome" type="org.itracker.web.actions.PortalHomeAction">
-            <forward name="portalhome" path="/portalhome.jsp" />
+        <action path="/portalhome" input="t.portalhome" type="org.itracker.web.actions.PortalHomeAction">
+            <forward name="portalhome" path="t.portalhome" />
         </action>
 
         <action path="/selfregister" type="org.itracker.web.actions.user.SelfRegisterAction"
-                name="selfRegistrationForm" scope="request" input="/self_register.jsp"
-                validate="true" />
+                name="selfRegistrationForm" scope="request"
+                input="t.selfregisterform"
+                validate="true">
+                </action>
         <action path="/selfregisterform" type="org.itracker.web.actions.user.SelfRegisterFormAction"
                 name="preferencesForm" scope="request"
-                input="/self_register.jsp"
-                validate="false" />
+                input="t.selfregisterform"
+                validate="false" >
+                </action>
         <action path="/unauthorized" type="org.itracker.web.actions.UnauthorizedAction">
             <forward name="unauthorized" path="/unauthorized.jsp" module="/" />
         </action>
-        
-        
+
         <action path="/login" type="org.itracker.web.actions.user.LoginAction"
-                name="loginForm" scope="request" input="/login.jsp">
+                name="loginForm" scope="request" input="t.login">
+            <forward name="login" path="t.login" />
             <forward name="index" module="/" path="/index.jsp" redirect="true" />
         </action>
         
@@ -128,11 +130,10 @@
             <forward name="error_page" module="/" path="/themes/defaulttheme/error.jsp" />
         </action>
 
-        <action
+        <action path="/autologin"
                 attribute="loginForm"
-                input="/login.jsp"
+                input="t.login"
                 name="loginForm"
-                path="/autologin"
                 scope="request"
                 type="org.itracker.web.actions.user.LoginAction"
                 validate="false" />
@@ -151,4 +152,11 @@
         <set-property property="pathnames"
                       value="/WEB-INF/config/validator-rules.xml, /WEB-INF/config/validation.xml" />
     </plug-in>
+    <plug-in className="org.apache.struts.tiles.TilesPlugin">
+      <set-property
+          property="definitions-config"
+             value="/WEB-INF/config/tiles-defs.xml"/>
+        <set-property property="moduleAware" value="true" />
+      </plug-in>
+
 </struts-config>

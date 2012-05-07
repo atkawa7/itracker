@@ -13,7 +13,7 @@
     <tr>
         <td class="headerText"></td>
         <td class="headerTextPageTitle">
-            <h1 style="color:#fe4;">
+            <h1>
                 <c:set var="pageTitle"><it:message key="${pageTitleKey}" arg0="${pageTitleArg}"/></c:set>
                 <c:if test="${empty pageTitleKey or empty pageTitle}">
                     <c:set var="pageTitle"><tiles:getAsString name="title" ignore="false"/></c:set>

@@ -16,21 +16,21 @@
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 <logic:messagesPresent>
-  <center>
+
     <span class="formError">
      <html:messages id="error">
         <bean:write name="error"/><br/>
      </html:messages>
     </span>
-  </center>
+
   <br>
 </logic:messagesPresent>
 <logic:messagesNotPresent>
-  <center>
+
     <span class="formError">
         <it:message key="itracker.web.error.system"/><br/>
     </span>
-  </center>
+
 </logic:messagesNotPresent>
 
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/>

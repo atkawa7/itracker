@@ -1,11 +1,4 @@
 <%@ include file="/common/taglibs.jsp"%>
-
-<bean:define id="pageTitleKey" value="itracker.web.login.title"/>
-<bean:define id="pageTitleArg" value=""/>
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
-
 <html:form action="/login" focus="login" onsubmit="return validateLoginForm(this);">
 
   <input type="hidden" name="authtype" value="1">
@@ -16,16 +9,6 @@
 
   <html:javascript formName="loginForm"/>
 
-  <logic:messagesPresent>
-    <center>
-      <span class="formError">
-       <html:messages id="error">
-          <bean:write name="error"/><br/>
-       </html:messages>
-      </span>
-    </center>
-    <br>
-  </logic:messagesPresent>
   <table border="0" cellpadding="2" cellspacing="0">
     <tr>
       <td align="left" class="editColumnTitle"><it:message key="itracker.web.attr.login" />:</td>
@@ -42,7 +25,3 @@
   </table>
 <br>
 </html:form>
-
-<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body>
-</html>
-

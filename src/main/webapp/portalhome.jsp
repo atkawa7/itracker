@@ -3,24 +3,10 @@
 <bean:define id="pageTitleKey" value="itracker.web.index.title"/>
 <bean:define id="pageTitleArg" value=""/>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
-
-<logic:messagesPresent>
-    <center>
-        <span class="formError">
-            <html:messages id="error">
-                <bean:write name="error"/><br/>
-            </html:messages>
-        </span>
-    </center>
-    <br>
-</logic:messagesPresent>
-
 <!-- assigned issues -->
 
 <table class="portalhomeMain" cellspacing="0">
-<c:if test="${(! UserUtilities_PREF_HIDE_ASSIGNED) || allSections}">     
+<c:if test="${(! UserUtilities_PREF_HIDE_ASSIGNED) || allSections}">
 	<tr id="ownedIssues">
 	    <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.assigned"/>:</td>
 	</tr>
@@ -51,9 +37,9 @@
 	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
 	    <td style="text-align:right; white-space: nowrap" ><it:message key="itracker.web.attr.lastmodified"/></td>
 	</tr>
-	
+
 	<c:forEach items="${ownedIssues}" var="ownedIssue" step="1" varStatus="i">
-	    
+
 	    <c:choose>
 	    	<c:when test="${showAll || (i.count <=userPrefs.numItemsOnIndex)}">
 	    	<%--  --%>
@@ -61,24 +47,24 @@
 		        <tr class="${listRowClass}">
 				 	<td style="white-space: nowrap">
 				        <c:if test="${ownedIssue.userCanViewIssue}">
-				        	<it:formatImageAction 
-				        		forward="viewissue" module="/module-projects" 
-				        		paramName="id" 
-				        		paramValue="${ownedIssue.issue.id}" 
-				        		src="/themes/defaulttheme/images/view.gif" 
-				        		altKey="itracker.web.image.view.issue.alt" 
-				        		arg0="${ownedIssue.issue.id}" 
+				        	<it:formatImageAction
+				        		forward="viewissue" module="/module-projects"
+				        		paramName="id"
+				        		paramValue="${ownedIssue.issue.id}"
+				        		src="/themes/defaulttheme/images/view.gif"
+				        		altKey="itracker.web.image.view.issue.alt"
+				        		arg0="${ownedIssue.issue.id}"
 				        		textActionKey="itracker.web.image.view.texttag"/>
 				        </c:if>
 				        <c:if test="${ownedIssue.userCanEdit}">
-				            <it:formatImageAction 
-									forward="editissue" module="/module-projects" 
-									paramName="id" 
-									paramValue="${ownedIssue.issue.id}" 
-									caller="index" 
-									src="/themes/defaulttheme/images/edit.gif" 
-									altKey="itracker.web.image.edit.issue.alt" 
-									arg0="${ownedIssue.issue.id}" 
+				            <it:formatImageAction
+									forward="editissue" module="/module-projects"
+									paramName="id"
+									paramValue="${ownedIssue.issue.id}"
+									caller="index"
+									src="/themes/defaulttheme/images/edit.gif"
+									altKey="itracker.web.image.edit.issue.alt"
+									arg0="${ownedIssue.issue.id}"
 									textActionKey="itracker.web.image.edit.texttag"/>
 				        </c:if>
 				    </td>
@@ -99,7 +85,7 @@
 				</tr>
 	    	</c:when>
 	    	<c:otherwise>
-	    	
+
 			    <c:if test="${i.count == userPrefs.numItemsOnIndex + 1}">
 		    		<tr class="listRowUnshaded">
 			            <td class="moreissues" colspan="15"><html:link module="/" action="/portalhome?showAll=true" ><it:message key="itracker.web.index.moreissues"/></html:link></td>
@@ -109,7 +95,7 @@
 	    </c:choose>
 	</c:forEach>
 	</c:otherwise></c:choose>
-	<tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>	
+	<tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
 <%-- END c:if UserUtilities_PREF_HIDE_ASSIGNED --%>
 </c:if>
 
@@ -117,8 +103,8 @@
 <!-- unassigned issues -->
 
 
-<c:if test="${(! UserUtilities_PREF_HIDE_UNASSIGNED)  || allSections}">      
-    
+<c:if test="${(! UserUtilities_PREF_HIDE_UNASSIGNED)  || allSections}">
+
     <tr id="unassignedIssues">
         <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.unassigned"/>:</td>
     </tr>
@@ -149,7 +135,7 @@
 	    <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
 	    <td style="text-align:right; white-space: nowrap" ><it:message key="itracker.web.attr.lastmodified"/></td>
 	</tr>
-	
+
     <c:forEach items="${unassignedIssues}" var="unassignedIssue" step="1" varStatus="i">
 		<c:if test="${unassignedIssue.userCanViewIssue}">
 			<c:set var="iCount" value="${iCount +1}" />
@@ -167,8 +153,8 @@
 									altKey="itracker.web.image.watch.issue.alt"
 									arg0="${unassignedIssue.issue.id}"
 									textActionKey="itracker.web.image.watch.texttag" />
-							</c:if> 
-							<it:formatImageAction 
+							</c:if>
+							<it:formatImageAction
 								forward="viewissue" module="/module-projects"
 								paramName="id" paramValue="${unassignedIssue.issue.id}"
 								src="/themes/defaulttheme/images/view.gif"
@@ -176,10 +162,10 @@
 								arg0="${unassignedIssue.issue.id}"
 								textActionKey="itracker.web.image.view.texttag" />
 							<c:if test="${unassignedIssue.userCanEdit}">
-								<it:formatImageAction 
-									forward="editissue" module="/module-projects" 
+								<it:formatImageAction
+									forward="editissue" module="/module-projects"
 									paramName="id" paramValue="${unassignedIssue.issue.id}"
-									caller="index" 
+									caller="index"
 									src="/themes/defaulttheme/images/edit.gif"
 									altKey="itracker.web.image.edit.issue.alt"
 									arg0="${unassignedIssue.issue.id}"
@@ -211,10 +197,10 @@
 										value="${unassignedIssue.issue.id}" />
 									<html:hidden property="projectId"
 										value="${unassignedIssue.issue.project.id}" />
-									
+
 									<td><html:select property="userId"
 										styleClass="${listRowClass}" onchange="this.form.submit();">
-										<!-- Marky:  I commented out the original <C : tags and replaced them with my <C : tages. 
+										<!-- Marky:  I commented out the original <C : tags and replaced them with my <C : tages.
 I change code to test for unassigned attribute instead of owner, since owner is not set.-->
 										<c:choose>
 											<c:when test="${unassignedIssue.unassigned}">
@@ -236,7 +222,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
                                                    <c:when test="${unassignedIssue.issue.owner.id == possibleIssueOwner.id}">
                                                        selected
                                                    </c:when>
-                                                   <c:otherwise> 
+                                                   <c:otherwise>
                                                    </c:otherwise>
                                                </c:choose>>${possibleIssueOwner.firstName}
 												${possibleIssueOwner.lastName}</option>
@@ -304,13 +290,13 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 	</c:forEach>
 	</c:otherwise></c:choose>
    	<tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
-</c:if>  
+</c:if>
 
 
 <!-- created issues -->
 
-<c:if test="${(! UserUtilities_PREF_HIDE_CREATED)  || allSections}"> 
-    
+<c:if test="${(! UserUtilities_PREF_HIDE_CREATED)  || allSections}">
+
     <tr id="createdIssues">
         <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.created"/>:</td>
     </tr>
@@ -360,8 +346,8 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 				<tr id="createdIssue.${i.count}" class="${listRowClass}">
 					<td style="white-space: nowrap">
 						<c:if test="${createdIssue.userCanViewIssue}">
-							<it:formatImageAction 
-								forward="viewissue" module="/module-projects" 
+							<it:formatImageAction
+								forward="viewissue" module="/module-projects"
 								paramName="id"
 								paramValue="${createdIssue.issue.id}"
 								src="/themes/defaulttheme/images/view.gif"
@@ -370,18 +356,18 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 								textActionKey="itracker.web.image.view.texttag" />
 
 								<c:if test="${createdIssue.userCanEdit}">
-								    <it:formatImageAction 
-										forward="editissue" module="/module-projects" 
-	       								paramName="id" 
-	       								paramValue="${createdIssue.issue.id}" 
-	       								caller="index" 
-	       								src="/themes/defaulttheme/images/edit.gif" 
-	       								altKey="itracker.web.image.edit.issue.alt" 
-	       								arg0="${createdIssue.issue.id}" 
+								    <it:formatImageAction
+										forward="editissue" module="/module-projects"
+	       								paramName="id"
+	       								paramValue="${createdIssue.issue.id}"
+	       								caller="index"
+	       								src="/themes/defaulttheme/images/edit.gif"
+	       								altKey="itracker.web.image.edit.issue.alt"
+	       								arg0="${createdIssue.issue.id}"
 	       								textActionKey="itracker.web.image.edit.texttag"/>
-	       								
+
 	       						</c:if>
-						</c:if> 
+						</c:if>
 					</td>
 					<td></td>
 					<td style="text-align: left;">${createdIssue.issue.id}</td>
@@ -425,7 +411,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 
 
 <!-- watched issues -->
- 
+
 
 
 <%--
@@ -468,7 +454,7 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 	    <td style="text-align:right; white-space: nowrap" ><it:message key="itracker.web.attr.lastmodified"/></td>
 	</tr>
 
-    
+
 	<c:forEach items="${watchedIssues}" var="watchedIssue" step="1"
 		varStatus="i">
 
@@ -485,10 +471,10 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 						src="/themes/defaulttheme/images/unwatch.gif"
 						altKey="itracker.web.image.unwatch.issue.alt"
 						arg0="${watchedIssue.issue.id}"
-						textActionKey="itracker.web.image.unwatch.texttag" /> 
+						textActionKey="itracker.web.image.unwatch.texttag" />
 						<c:if test="${watchedIssue.userCanViewIssue}">
-							<it:formatImageAction 
-								forward="viewissue" module="/module-projects" 
+							<it:formatImageAction
+								forward="viewissue" module="/module-projects"
 								paramName="id"
 								paramValue="${watchedIssue.issue.id}"
 								src="/themes/defaulttheme/images/view.gif"
@@ -496,14 +482,14 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 								arg0="${watchedIssue.issue.id}"
 								textActionKey="itracker.web.image.view.texttag" />
 							<c:if test="${watchedIssue.userCanEdit}">
-       							<it:formatImageAction 
-									forward="editissue" module="/module-projects" 
-       								paramName="id" 
-       								paramValue="${watchedIssue.issue.id}" 
-       								caller="index" 
-       								src="/themes/defaulttheme/images/edit.gif" 
-       								altKey="itracker.web.image.edit.issue.alt" 
-       								arg0="${watchedIssue.issue.id}" 
+       							<it:formatImageAction
+									forward="editissue" module="/module-projects"
+       								paramName="id"
+       								paramValue="${watchedIssue.issue.id}"
+       								caller="index"
+       								src="/themes/defaulttheme/images/edit.gif"
+       								altKey="itracker.web.image.edit.issue.alt"
+       								arg0="${watchedIssue.issue.id}"
        								textActionKey="itracker.web.image.edit.texttag"/>
        						</c:if>
 						</c:if>
@@ -580,4 +566,3 @@ I change code to test for unassigned attribute instead of owner, since owner is 
 
 </table>
 
-<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
