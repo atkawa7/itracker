@@ -1,17 +1,22 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<%@ page import="java.util.*" %>
+<%@ page import="org.itracker.core.resources.ITrackerResources" %>
 <%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.services.util.*" %>
-<%@ page import="org.itracker.services.*" %>
-<%@ page import="org.itracker.core.resources.*" %>
-<%@ page import="org.itracker.web.util.*" %>
+<%@ page import="org.itracker.services.ReportService" %>
+<%@ page import="org.itracker.services.UserService" %>
+<%@ page import="org.itracker.services.util.IssueUtilities" %>
+<%@ page import="org.itracker.services.util.ProjectUtilities" %>
+<%@ page import="org.itracker.services.util.UserUtilities" %>
+<%@ page import="org.itracker.web.util.Constants" %>
+<%@ page import="org.itracker.web.util.LoginUtilities" %>
+<%@ page import="org.itracker.web.util.RequestHelper" %>
+<%@ page import="java.util.*" %>
 
-<bean:define id="pageTitleKey" value="itracker.web.search.title"/>
-<bean:define id="pageTitleArg" value=""/>
+<%--<bean:define id="pageTitleKey" value="itracker.web.search.title"/>--%>
+<%--<bean:define id="pageTitleArg" value=""/>--%>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
+<%--<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">--%>
+<%--<tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>--%>
 
 <%  // TODO : move redirect logic to the Action class. 
     final Map<Integer, Set<PermissionType>> permissions =
@@ -55,17 +60,6 @@
 %>
 
       <html:javascript formName="searchForm"/>
-
-      <logic:messagesPresent>
-        <center>
-          <span class="formError">
-           <html:messages id="error">
-              <bean:write name="error"/><br/>
-           </html:messages>
-          </span>
-        </center>
-        <br>
-      </logic:messagesPresent>
 
         <html:form action="/searchissues" onsubmit="return validateSearchForm(this);">
         <% if(query.getType().equals(IssueSearchQuery.TYPE_PROJECT)) { %>
@@ -350,6 +344,6 @@
     }
 %>
 
-<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/>
-</body>
-</html>
+<%--<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/>--%>
+<%--</body>--%>
+<%--</html>--%>

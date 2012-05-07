@@ -41,21 +41,19 @@
     <action-mappings>
         <action path="/searchissuesform"
                 type="org.itracker.web.actions.issuesearch.SearchIssuesFormAction"
-                name="searchForm" scope="request" input="/search_issues_form.jsp" validate="false"/>
+                name="searchForm" scope="request"
+                input="t.search_issues_form"
+                validate="false"></action>
         <action path="/searchissues" type="org.itracker.web.actions.issuesearch.SearchIssuesAction"
-                name="searchForm" scope="request" input="/search_issues_form.jsp" validate="true"/>
+                name="searchForm" scope="request"
+                input="t.search_issues_form"
+                validate="true"/>
         <action path="/displayreport" type="org.itracker.web.actions.report.DisplayReportAction"
-                name="displayReportForm" scope="request" input="/search_issues_form.jsp"
+                name="displayReportForm" scope="request"
+                input="t.search_issues_form"
                 validate="true">
-            <forward name="imagesurl" path="/servlets/ReportChartController"/>
+            <forward name="imagesurl" path="/servlets/ReportChartController"></forward>
         </action>
-        <action path="/viewissue" type="org.itracker.web.actions.project.ViewIssueAction">
-            <forward name="viewissue" path="/view_issue.jsp" module="/module-projects"/>
-        </action>
-        <action path="/view_issue_activity"
-                type="org.itracker.web.actions.project.ViewIssueActivityAction">
-            <forward name="viewissueactivity" path="/view_issue_activity.jsp" module="/module-projects"/>
-        </action>    
     </action-mappings>
 
     <message-resources factory="org.itracker.web.resources.ITrackerMessageResourcesFactory"
@@ -65,6 +63,13 @@
         <set-property property="pathnames"
                       value="/WEB-INF/config/validator-rules.xml,
                              /WEB-INF/config/validation-module-searchissues.xml"/>
+
+    </plug-in>
+    <plug-in className="org.apache.struts.tiles.TilesPlugin">
+        <set-property
+                property="definitions-config"
+                value="/WEB-INF/config/tiles-defs.xml, /WEB-INF/config/tiles-defs-search-issues.xml"/>
+        <set-property property="moduleAware" value="true"/>
     </plug-in>
 </struts-config>
 
