@@ -1,7 +1,6 @@
 package org.itracker.selenium;
 
 import org.junit.Test;
-import org.junit.Ignore;
 
 /**
  * Verifies the functionality of Edit Issue page.
@@ -172,10 +171,9 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
      * item there, we check that it has appeared at "View Issues"
      * page for test_name2 project.
      *
-     * @throws java.io.IOException
+     * @throws java.lang.Exception
      */
     @Test
-    @Ignore // fails due problem failed send message..?
     public void testMoveIssue1() throws Exception {
         log.info("running testMoveIssue1");
         closeSession();
@@ -224,9 +222,9 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
 //            //        assertTrue(smtpMessageBody1.contains("test_description (updated)"));
 //
 //
-//            assertTrue(selenium.isElementPresent("//td[@id='actions']/a[1]"));
-//            selenium.click("//td[@id='actions']/a[1]");
-//            selenium.waitForPageToLoad(SE_TIMEOUT);
+            assertTrue(selenium.isElementPresent("//td[@id='actions']/a[1]"));
+            selenium.click("//td[@id='actions']/a[1]");
+            selenium.waitForPageToLoad(SE_TIMEOUT);
 //        } finally {
 //            stopSMTP();
 //        }
