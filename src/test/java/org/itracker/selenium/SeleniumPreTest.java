@@ -18,18 +18,7 @@ import static org.junit.Assert.fail;
  */
 public class SeleniumPreTest {
 
-
     private static final Logger log = Logger.getLogger(SeleniumPreTest.class);
-    private String seleniumHost;
-    private Integer seleniumPort;
-    private String applicationHost;
-    private Integer applicationPort;
-
-
-    private final static String PROPERTY_SELENIUM_HOST = "selenium.host";
-    private final static String PROPERTY_SELENIUM_PORT = "selenium.port";
-    private final static String PROPERTY_APPLICATION_HOST = "application.host";
-    private final static String PROPERTY_APPLICATION_PORT = "application.port";
 
     public SeleniumPreTest() throws IOException {
 
@@ -38,23 +27,23 @@ public class SeleniumPreTest {
             final Properties properties = new Properties();
             properties.load(inputStream);
 
-            seleniumHost =
-                    properties.getProperty(PROPERTY_SELENIUM_HOST, "localhost");
-            seleniumPort =
-                    Integer.valueOf(properties.getProperty(PROPERTY_SELENIUM_PORT, "5555"));
-            applicationHost =
-                    properties.getProperty(PROPERTY_APPLICATION_HOST, "localhost");
-            applicationPort =
-                    Integer.valueOf(properties.getProperty(PROPERTY_APPLICATION_PORT, "8888"));
+    }
 
+    @Test
+    public void testSmtpPortAvailable() throws Exception {
+        connectSocket("localhost", AbstractSeleniumTestCase.SMTP_PORT);
     }
     @Test
-    public void testPortsAvailable() throws Exception {
-        connectSocket("localhost", AbstractSeleniumTestCase.SMTP_PORT);
+    public void testApplicationPortAvailable() throws Exception {
+        connectSocket(SeleniumManager.getApplicationHost(), SeleniumManager.getApplicationPort());
+    }
+    @Test
+    public void testJettyPortsAvailable() throws Exception {
         connectSocket("localhost", 9966);
-        // TODO wrong ports returned, 8080..
-//        connectSocket(SeleniumManager.getSeleniumHost(), SeleniumManager.getSeleniumPort());
-//        connectSocket(SeleniumManager.getApplicationHost(), SeleniumManager.getApplicationPort());
+    }
+    @Test
+    public void testSeleniumPortAvailable() throws Exception {
+        connectSocket(SeleniumManager.getSeleniumHost(), SeleniumManager.getSeleniumPort());
     }
 
     private void connectSocket(String host, int i) throws IOException {
@@ -65,7 +54,5 @@ public class SeleniumPreTest {
         } catch (IOException e) {
             log.info("OK port " + i + " on " + host);
         }
-//        new ServerSocket(i);
-
     }
 }

@@ -42,8 +42,6 @@ public abstract class AbstractDependencyInjectionTest extends
 
     @Override
     public void onSetUp() throws Exception {
-
-
         sessionFactory = (SessionFactory) applicationContext
                 .getBean("sessionFactory");
         Session session = sessionFactory.openSession();

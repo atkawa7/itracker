@@ -1,7 +1,13 @@
 package org.itracker.selenium;
 
+import org.itracker.services.ITrackerServices;
+import org.itracker.services.util.UserUtilities;
 import org.junit.Test;
-import org.junit.Ignore;
+import org.subethamail.wiser.WiserMessage;
+
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Verifies the ability retrieve/reset forgotten password.
@@ -108,7 +114,6 @@ public class ForgotPasswordTest extends AbstractSeleniumTestCase {
      * @throws java.lang.Exception
      */
     @Test
-    @Ignore // fails, errorpage due mail cannot be sent..?
     public void testRetrievingForgottenPassword() throws Exception {
         log.info("running testRetrievingForgottenPassword");
         SeleniumManager.closeSession(selenium);
@@ -119,48 +124,58 @@ public class ForgotPasswordTest extends AbstractSeleniumTestCase {
 
 //        startSMTP();
 //        try {
-            assertElementPresent("name=forgotpassword");
-            selenium.click("name=forgotpassword");//("link=Forgot My Password");
-            selenium.waitForPageToLoad(SE_TIMEOUT);
-            assertElementPresent("login");
-            selenium.type("login", "user_test1");
-            assertElementPresent("lastName");
-            selenium.type("lastName", "user lastname");
+        assertElementPresent("name=forgotpassword");
+        selenium.click("name=forgotpassword");//("link=Forgot My Password");
+        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent("login");
+        selenium.type("login", "user_test1");
+        assertElementPresent("lastName");
+        selenium.type("lastName", "user lastname");
 
-            assertElementPresent("//input[@type='submit']");
-//            assertEquals("smtpServer.receivedEmailSize", 0, smtpServer.getReceivedEmailSize());
-            selenium.click("//input[@type='submit']");
-            selenium.waitForPageToLoad(SE_TIMEOUT);
-//            try {
-//                Thread.currentThread().sleep(1000);
-//            } catch (InterruptedException e) {
-//                fail("Interrupted: " + e.getMessage());
-//            }
-            assertElementPresent("login");
-            assertElementPresent("password");
-//            assertEquals("smtpServer.receivedEmailSize", 1, smtpServer.getReceivedEmailSize());
-//            final SmtpMessage smtpMessage = (SmtpMessage) smtpServer.getReceivedEmail().next();
-//            final String smtpMessageBody = smtpMessage.getBody();
-//            assertTrue(smtpMessageBody.contains("Password: "));
-//            newPassword = smtpMessageBody
-//                    .replaceAll("\n", "").replaceFirst(".*Password: ", "");
-//
-//        } finally {
-//            stopSMTP();
-//        }
+        assertElementPresent("//input[@type='submit']");
 
-//        assertNotNull("null password from mail", newPassword);
+
+        int received = wiser.getMessages().size();
+        selenium.click("//input[@type='submit']");
+        selenium.waitForPageToLoad(SE_TIMEOUT);
+
+        assertElementPresent("login");
+        assertElementPresent("password");
+        assertEquals("wiser.receivedEmailSize", received + 1, wiser.getMessages().size());
+        final WiserMessage smtpMessage = wiser.getMessages().get(received);
+        final String smtpMessageBody = (String) smtpMessage.getMimeMessage().getContent();
+        log.debug("testRetrievingForgottenPassword, received:\n " + smtpMessageBody);
+
+        assertTrue(smtpMessageBody.contains("Password: "));
+        newPassword = extractPassword(smtpMessageBody);
+        String newPwEnc = ((ITrackerServices) applicationContext.getBean("itrackerServices"))
+                .getUserService().getUser(3).getPassword();
+
+        assertEquals("new password", newPwEnc, UserUtilities.encryptPassword(newPassword));
+
         SeleniumManager.closeSession(selenium);
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
         assertElementPresent("login");
         selenium.type("login", "user_test1");
         assertElementPresent("password");
-//        selenium.type("password", newPassword);
-//        assertElementPresent("//input[@type='submit']");
-//        selenium.click("//input[@type='submit']");
-//        selenium.waitForPageToLoad(SE_TIMEOUT);
-//        assertElementPresent("id");
+        selenium.type("password", newPassword);
+        assertElementPresent("//input[@type='submit']");
+        selenium.click("//input[@type='submit']");
+        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent("id");
+    }
+
+    private String extractPassword(String string) {
+        string = string.replaceAll("\n|\r", "");
+        Matcher match = Pattern.compile(".*Password: (\\w*).*").matcher(string);
+        if (match.matches()) {
+            MatchResult r = match.toMatchResult();
+            if (r.groupCount() > 0) {
+                return r.group(1);
+            }
+        }
+        return "";
     }
 
     @Override

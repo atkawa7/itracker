@@ -18,20 +18,9 @@
 
 package org.itracker.web.actions.user;
 
-import java.io.IOException;
-import java.util.Locale;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.User;
 import org.itracker.services.ConfigurationService;
@@ -39,6 +28,12 @@ import org.itracker.services.UserService;
 import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Locale;
 
 public class ForgotPasswordAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(ForgotPasswordAction.class);
@@ -63,10 +58,11 @@ public class ForgotPasswordAction extends ItrackerBaseAction {
                 Locale locale = null;
 				try {
 					user = userService.getUserByLogin(login);
-                    locale = ITrackerResources.getLocale(user.getPreferences().getUserLocale());
 					if(user == null) {
 						throw new PasswordException(PasswordException.UNKNOWN_USER);
 					}
+                    locale = ITrackerResources.getLocale(user.getPreferences().getUserLocale());
+
 					if(user.getLastName() == null || ! user.getLastName().equalsIgnoreCase(lastName)) {
 						throw new PasswordException(PasswordException.INVALID_NAME);
 					}

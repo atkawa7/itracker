@@ -53,7 +53,9 @@ public class ConfigurationServiceImplIT extends
             if (null == SimpleNamingContextBuilder.getCurrentContextBuilder()) {
                 SimpleNamingContextBuilder.emptyActivatedContextBuilder();
             }
-            return SimpleNamingContextBuilder.getCurrentContextBuilder().createInitialContextFactory(environment)
+            SimpleNamingContextBuilder builder = SimpleNamingContextBuilder.getCurrentContextBuilder();
+//            builder.bind("java:comp", new InitialContext());
+            return builder.createInitialContextFactory(environment)
                     .getInitialContext(environment);
         }
 
@@ -143,6 +145,7 @@ public class ConfigurationServiceImplIT extends
         val = configurationService.getProperties().getProperty(web_session_timeout);
         assertEquals("configurationService.properties#web_session_timeout", "300", valObj);
 
+        SimpleNamingContextBuilder.emptyActivatedContextBuilder().deactivate();
 
     }
 

@@ -12,17 +12,19 @@
         <clover.maven.charset>UTF-8</clover.maven.charset>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+        <itracker.it.skip>false</itracker.it.skip>
         <main.dataSource.jdbcUrl>jdbc:mysql://localhost:3306/itrackerdev</main.dataSource.jdbcUrl>
         <main.dataSource.user>root</main.dataSource.user>
         <main.dataSource.password></main.dataSource.password>
         <main.dataSource.driverClass>com.mysql.jdbc.Driver</main.dataSource.driverClass>
         <main.hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</main.hibernate.dialect>
 
-        <!--test.dataSource.jdbcUrl>jdbc:hsqldb:mem:itrackerdev-test</test.dataSource.jdbcUrl>
+        <test.dataSource.jdbcUrl>jdbc:hsqldb:mem:itrackerdev-test</test.dataSource.jdbcUrl>
         <test.dataSource.user>sa</test.dataSource.user>
         <test.dataSource.password></test.dataSource.password>
         <test.dataSource.driverClass>org.hsqldb.jdbcDriver</test.dataSource.driverClass>
-        <test.hibernate.dialect>org.hibernate.dialect.HSQLDialect</test.hibernate.dialect-->
+        <test.hibernate.dialect>org.hibernate.dialect.HSQLDialect</test.hibernate.dialect>
+
         <maven-findbugs-plugin.version>2.4.0</maven-findbugs-plugin.version>
         <maven-site-plugin.version>3.0</maven-site-plugin.version>
         <bsh.version>1.3.0</bsh.version>
@@ -30,6 +32,7 @@
         <maven-clover-plugin.version>3.7</maven-clover-plugin.version>
         <maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
         <maven-checkstyle-plugin.version>2.9.1</maven-checkstyle-plugin.version>
+        <maven-jetty-plugin.version>6.1.26</maven-jetty-plugin.version>
     </properties>
     <issueManagement>
         <system>SourceForge</system>
@@ -182,7 +185,7 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <skip>false</skip>
+                            <skip>${itracker.it.skip}</skip>
                             <excludes>
                                 <exclude>org/itracker/selenium/**/*.java</exclude>
                                 <exclude>org/itracker/**/*Test.java</exclude>
@@ -235,7 +238,7 @@
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
-                <version>6.1.7</version>
+                <version>${maven-jetty-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -331,7 +334,7 @@
                 <plugin>
                     <groupId>org.mortbay.jetty</groupId>
                     <artifactId>maven-jetty-plugin</artifactId>
-                    <version>6.1.10</version>
+                    <version>${maven-jetty-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <!--groupId>org.apache.maven.plugins</groupId-->
@@ -703,17 +706,17 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>dumbster</groupId>
-            <artifactId>dumbster</artifactId>
-            <version>1.6</version>
+            <groupId>org.subethamail</groupId>
+            <artifactId>subethasmtp</artifactId>
+            <version>3.1.6</version>
             <scope>test</scope>
         </dependency>
-        <!--		<dependency>
-              <groupId>commons-codec</groupId>
-              <artifactId>commons-codec</artifactId>
-              <version>1.3</version>
-              <scope>test</scope>
-          </dependency>-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.5.5</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -999,7 +1002,7 @@
         <profile>
             <id>selenium</id>
             <properties>
-                <selenium.firefox.binary>/Applications/Firefox4.app/Contents/MacOS/firefox</selenium.firefox.binary>
+                <selenium.firefox.binary>firefox</selenium.firefox.binary>
                 <selenium.host>localhost</selenium.host>
                 <selenium.port>5555</selenium.port>
                 <selenium.browser>*firefox</selenium.browser>
@@ -1149,7 +1152,7 @@
                     <plugin>
                         <groupId>org.mortbay.jetty</groupId>
                         <artifactId>maven-jetty-plugin</artifactId>
-                        <version>6.1.10</version>
+                        <version>${maven-jetty-plugin.version}</version>
                         <configuration>
 
                             <stopPort>9966</stopPort>
@@ -1157,7 +1160,18 @@
                             <webAppConfig>
                                 <contextPath>/${application.path}</contextPath>
                             </webAppConfig>
-
+                            <systemProperties>
+                                <!--java.naming.factory.initial=org.mortbay.naming.InitialContextFactory-->
+                                <systemProperty>
+                                    <name>java.naming.factory.initial</name>
+                                    <value>org.mortbay.naming.InitialContextFactory</value>
+                                </systemProperty>
+                                <systemProperty>
+                                    <name>java.naming.provider.url</name>
+                                    <value>rmi://localhost:8099</value>
+                                </systemProperty>
+                            </systemProperties>
+                            <daemon>true</daemon>
                             <jettyEnvXml>${project.build.testOutputDirectory}/jetty-env.xconf</jettyEnvXml>
                             <connectors>
                                 <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">

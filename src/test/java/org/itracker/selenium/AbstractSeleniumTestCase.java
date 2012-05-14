@@ -1,12 +1,11 @@
 package org.itracker.selenium;
 
-import com.dumbster.smtp.SimpleSmtpServer;
 import com.thoughtworks.selenium.Selenium;
 import org.apache.log4j.Logger;
 import org.itracker.AbstractDependencyInjectionTest;
+import org.subethamail.wiser.Wiser;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 
 /**
  * It is a base class for all Selenium-based test ca se.
@@ -16,15 +15,39 @@ import java.net.ServerSocket;
  *
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
  */
-public abstract class AbstractSeleniumTestCase extends AbstractDependencyInjectionTest {
+public abstract class AbstractSeleniumTestCase
+        extends AbstractDependencyInjectionTest {
     public final static String SE_TIMEOUT = "20000";
     public final static int SMTP_PORT = 2525;
-    protected SimpleSmtpServer smtpServer;
+    protected static final Wiser wiser;
+    //    protected SMTPServer smtp;
     protected Selenium selenium;
     protected String applicationHost;
     protected int applicationPort;
     protected String applicationPath;
     Logger log = Logger.getLogger(getClass());
+
+    static {
+        wiser = new Wiser(SMTP_PORT);
+        wiser.start();
+        Logger.getLogger(AbstractSeleniumTestCase.class).info("started wiser on " + SMTP_PORT);
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                if (null != wiser) {
+                    try {
+                        wiser.stop();
+                        Logger.getLogger(getClass()).info("stopped wiser " + wiser);
+                    } catch (RuntimeException e) {
+                        Logger.getLogger(getClass()).warn("could not stop running wiser: " + wiser);
+                        Logger.getLogger(getClass()).debug("exception caught", e);
+                    }
+
+                }
+            }
+        });
+    }
+
 
     public AbstractSeleniumTestCase() {
         try {
@@ -42,82 +65,68 @@ public abstract class AbstractSeleniumTestCase extends AbstractDependencyInjecti
 //    @Override
 //    public void onTearDown() throws Exception {
 //
-//            log.info("onTearDown: stopping smtp");
-//            stopSMTP();
-//            log.info("onTearDown: stopped smtp");
+//        super.onTearDown();
+//        log.info("onTearDown: stopping smtp");
+//        stopSMTP();
+//        log.info("onTearDown: stopped smtp");
 //
-//            super.onTearDown();
 //
 //    }
 //
 //    @Override
 //    public void onSetUp() throws Exception {
-//        super.onSetUp();
-//        log.info("onSetUp: starting smtp");
+//        log.debug("onSetUp: starting smtp");
 //        startSMTP();
 //        log.info("onSetUp: started smtp");
+//
+//        super.onSetUp();
 //    }
 
-    SimpleSmtpServer startSMTP() throws InterruptedException {
-        log.info("startSMTP: skip smtp until working");
-        if (true) return null;
-
-
-        log.info("Starting smtp");
-        if (null != smtpServer && !smtpServer.isStopped()) {
-            log.warn("Already running smtp");
-            stopSMTP();
-            log.info("Already running smtp stopped");
-        }
-        smtpServer = null;
-        try {
-            ServerSocket s = new ServerSocket(SMTP_PORT);
-            log.info("sleep 100");
-            Thread.currentThread().sleep(100);
-            log.info("close socket");
-            s.close();
-            log.info("sleep 100");
-            Thread.currentThread().sleep(100);
-        } catch (IOException ioe) {
-            fail("Socket " + SMTP_PORT + " is open: " + ioe.getMessage());
-        }
-        log.info("SimpleSmtpServer.start("+SMTP_PORT+")");
-        SimpleSmtpServer smtp = SimpleSmtpServer.start(SMTP_PORT);
-        log.info("sleep 300");
-        Thread.currentThread().sleep(300);
-
-        log.info("checking running smtp");
-//        assertNotNull("smtp is null", smtp);
-        if (smtp.isStopped()) {
-            throw new RuntimeException("Could not Start smtpServer");
-        }
-
-        log.info("got running smtp " + smtp);
-        smtpServer = smtp;
-        log.info("Started smtp");
-        return smtp;
+    protected Wiser startSMTP() throws InterruptedException {
+//        int c = 0;
+//        log.debug("Starting smtp");
+//        if (null != wiser && wiser.getServer().isRunning()) {
+//            log.warn("Already running smtp");
+//            stopSMTP();
+//            log.debug("Already running smtp stopped");
+//        }
+//        log.debug("Wiser.start(" + SMTP_PORT + ")");
+//
+//        wiser = new Wiser(SMTP_PORT);
+//        wiser.start();
+//        log.debug("sleep 500");
+//        Thread.currentThread().sleep(500);
+//        log.debug("checking running wiser");
+//
+//        if (!wiser.getServer().isRunning()) {
+//            throw new RuntimeException("Could not Start wiser");
+//        }
+//        log.debug("got running wiser " + wiser);
+//
+//        log.info("Started wiser");
+        return wiser;
     }
 
     void stopSMTP() {
-        log.info("stopSMTP: skip smtp until working");
-        if (true) return;
+//        log.info("stopSMTP: skip smtp until working");
+//        if (true) return;
 
-        log.info("Stopping smtp");
-//        assertNotNull("null smtp", smtpServer);
-        try {
-            smtpServer.stop();
-            Thread.currentThread().sleep(300);
-            if (!smtpServer.isStopped()) {
-                throw new RuntimeException("Could not Stop smtpServer");
-            }
-        } catch (Exception e) {
-            log.warn("failed to close smtp", e);
-//            fail("could not stop smtp: " + smtpServer + ": " + e.getMessage());
-        } finally {
-            smtpServer = null;
-        }
-
-        log.info("Stopped smtp");
+//        log.debug("Stopping smtp");
+////        assertNotNull("null smtp", wiser);
+//        try {
+//            wiser.stop();
+//            Thread.currentThread().sleep(500);
+//            if (wiser.getServer().isRunning()) {
+//                throw new RuntimeException("Could not Stop wiser");
+//            }
+//        } catch (Exception e) {
+//            log.warn("failed to close smtp", e);
+////            fail("could not stop smtp: " + wiser + ": " + e.getMessage());
+//        } finally {
+//            wiser = null;
+//        }
+//
+//        log.info("Stopped smtp");
     }
 
     final void assertElementPresent(String q) {

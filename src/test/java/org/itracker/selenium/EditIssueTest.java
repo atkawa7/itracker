@@ -1,6 +1,7 @@
 package org.itracker.selenium;
 
 import org.junit.Test;
+import org.subethamail.wiser.WiserMessage;
 
 /**
  * Verifies the functionality of Edit Issue page.
@@ -44,12 +45,18 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         // Click view issue link (usually it's named "View").
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]"));
+        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'project.')]" +
+                "/td[3][text()='test_name']/../td[1]/a[1]"));
+
         selenium.click("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]"));
-        selenium.click("//tr[starts-with(@id, 'issue.')]/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]");
+        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]"));
+
+        selenium.click("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]");
+
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         assertTrue(selenium.isElementPresent("//td[@id='actions']/a[2]"));
@@ -62,29 +69,26 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
 
         selenium.type("description", "test_description (updated)");
 
+        int received = wiser.getMessages().size();
+        selenium.click("//input[@type='submit']");
+        selenium.waitForPageToLoad(SE_TIMEOUT);
 
-//        startSMTP();
-//        try {
-            selenium.click("//input[@type='submit']");
-            selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertEquals("wiser.receivedEmailSize", received + 1, wiser.getMessages().size());
+        final WiserMessage smtpMessage = wiser.getMessages().get(received);
+        final String smtpMessageBody = (String) smtpMessage.getMimeMessage().getContent();
 
-//            assertEquals("smtpServer.receivedEmailSize", 1, smtpServer.getReceivedEmailSize());
-//            final Iterator<SmtpMessage> iter =
-//                    (Iterator<SmtpMessage>) smtpServer.getReceivedEmail();
-//            // Checking email notification for creator.
-//            final SmtpMessage smtpMessage = iter.next();
-//            final String smtpMessageBody = smtpMessage.getBody();
-//            assertTrue(smtpMessageBody.contains("test_description (updated)"));
+        assertTrue(smtpMessageBody.contains("test_description (updated)"));
 //
-//        } finally {
-//            stopSMTP();
-//        }
 
 
         assertTrue(selenium.isElementPresent("issues"));
         assertEquals(4, selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
-        assertFalse(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='1']/../td[11][text()='test_description']/../td[13][contains(text(),'A. admin lastname')]"));
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='1']/../td[11][text()='test_description (updated)']/../td[13][contains(text(),'A. admin lastname')]"));
+        assertFalse(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/.." +
+                "/td[13][contains(text(),'A. admin lastname')]"));
+        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description (updated)']/.." +
+                "/td[13][contains(text(),'A. admin lastname')]"));
     }
 
     /**
@@ -121,12 +125,18 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         // Click view issue link (usually it's named "View").
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]"));
+        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'project.')]" +
+                "/td[3][text()='test_name']/../td[1]/a[1]"));
+
         selenium.click("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[2]"));
-        selenium.click("//tr[starts-with(@id, 'issue.')]/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[2]");
+        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[2]"));
+
+        selenium.click("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[2]");
+
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         assertTrue(selenium.isElementPresent("description"));
@@ -135,28 +145,28 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
 
         selenium.type("description", "test_description (updated)");
 
-//        startSMTP();
-//        try {
-            selenium.click("//input[@type='submit']");
-            selenium.waitForPageToLoad(SE_TIMEOUT);
+        int received = wiser.getMessages().size();
 
-//            assertEquals("smtpServer.receivedEmailSize", 1, smtpServer.getReceivedEmailSize());
-//            final Iterator<SmtpMessage> iter =
-//                    (Iterator<SmtpMessage>) smtpServer.getReceivedEmail();
-//            // Checking email notification for creator.
-//            final SmtpMessage smtpMessage = iter.next();
-//            final String smtpMessageBody = smtpMessage.getBody();
-//            assertTrue(smtpMessageBody.contains("test_description (updated)"));
+        selenium.click("//input[@type='submit']");
+        selenium.waitForPageToLoad(SE_TIMEOUT);
+
+
+        assertEquals("wiser.receivedEmailSize", received + 1, wiser.getMessages().size());
+        final WiserMessage smtpMessage = wiser.getMessages().get(received);
+        final String smtpMessageBody = (String) smtpMessage.getMimeMessage().getContent();
+        log.debug("testEditIssue1FromIssueList, received:\n " + smtpMessageBody);
+
+        assertTrue(smtpMessageBody.contains("test_description (updated)"));
 //
-//        } finally {
-//            stopSMTP();
-//        }
-
-
+//
         assertTrue(selenium.isElementPresent("issues"));
         assertEquals(4, selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
-        assertFalse(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='1']/../td[11][text()='test_description']/../td[13][contains(text(),'A. admin lastname')]"));
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='1']/../td[11][text()='test_description (updated)']/../td[13][contains(text(),'A. admin lastname')]"));
+        assertFalse(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/.." +
+                "/td[13][contains(text(),'A. admin lastname')]"));
+        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description (updated)']/.." +
+                "/td[13][contains(text(),'A. admin lastname')]"));
     }
 
     /**
@@ -192,12 +202,20 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         // Click view issue link (usually it's named "View").
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]"));
-        selenium.click("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]");
+        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'project.')]" +
+                "/td[3][text()='test_name']/../td[1]/a[1]"));
+
+        selenium.click("//tr[starts-with(@id, 'project.')]" +
+                "/td[3][text()='test_name']/../td[1]/a[1]");
+
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]"));
-        selenium.click("//tr[starts-with(@id, 'issue.')]/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]");
+        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]"));
+
+        selenium.click("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]");
+
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         assertTrue(selenium.isElementPresent("//td[@id='actions']/a[3]"));
@@ -207,30 +225,23 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
         assertTrue(selenium.isElementPresent("projectId"));
         selenium.select("projectId", "label=test_name2");
 
+        int received = wiser.getMessages().size();
 
-//        startSMTP();
-//        try {
-            selenium.click("//input[@type='submit']");
-            selenium.waitForPageToLoad(SE_TIMEOUT);
+        selenium.click("//input[@type='submit']");
+        selenium.waitForPageToLoad(SE_TIMEOUT);
 
-//            assertEquals("smtpServer.getReceivedEmailSize :?", 0, smtpServer.getReceivedEmailSize()); // ? really no notification
-//            //        final Iterator<SmtpMessage> iter =
-//            //                (Iterator<SmtpMessage>)smtpServer.getReceivedEmail();
-//            //        // Checking email notification for creator.
-//            //        final SmtpMessage smtpMessage1 = iter.next();
-//            //        final String smtpMessageBody1 = smtpMessage1.getBody();
-//            //        assertTrue(smtpMessageBody1.contains("test_description (updated)"));
-//
-//
-            assertTrue(selenium.isElementPresent("//td[@id='actions']/a[1]"));
-            selenium.click("//td[@id='actions']/a[1]");
-            selenium.waitForPageToLoad(SE_TIMEOUT);
-//        } finally {
-//            stopSMTP();
-//        }
+        // no message sent?
+        assertEquals("wiser.receivedEmailSize", received, wiser.getMessages().size());
+
+        assertTrue(selenium.isElementPresent("//td[@id='actions']/a[1]"));
+        selenium.click("//td[@id='actions']/a[1]");
+        selenium.waitForPageToLoad(SE_TIMEOUT);
+
         assertTrue(selenium.isElementPresent("issues"));
         assertEquals(1, selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='1']/../td[11][text()='test_description']/../td[13][contains(text(),'A. admin lastname')]"));
+        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/.." +
+                "/td[13][contains(text(),'A. admin lastname')]"));
     }
 
     /**
@@ -268,12 +279,20 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         // Click view issue link (usually it's named "View").
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]"));
-        selenium.click("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]");
+        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'project.')]" +
+                "/td[3][text()='test_name']/../td[1]/a[1]"));
+
+        selenium.click("//tr[starts-with(@id, 'project.')]" +
+                "/td[3][text()='test_name']/../td[1]/a[1]");
+
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='2']/../td[11][text()='test_description 2']/../td[1]/a[1]"));
-        selenium.click("//tr[starts-with(@id, 'issue.')]/td[3][text()='2']/../td[11][text()='test_description 2']/../td[1]/a[1]");
+        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='2']/../td[11][text()='test_description 2']/../td[1]/a[1]"));
+
+        selenium.click("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='2']/../td[11][text()='test_description 2']/../td[1]/a[1]");
+
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         assertEquals("test_description 2", selenium.getText("description"));
@@ -289,27 +308,27 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
 
         selenium.type("description", "test_description 2 (updated)");
 
-//        startSMTP();
-//        try {
-            selenium.click("//input[@type='submit']");
-            selenium.waitForPageToLoad(SE_TIMEOUT);
-//            assertEquals("smtpServer.receivedEmailSize", 1, smtpServer.getReceivedEmailSize());
-//            final Iterator<SmtpMessage> iter =
-//                    (Iterator<SmtpMessage>) smtpServer.getReceivedEmail();
-//            // Checking email notification for creator.
-//            final SmtpMessage smtpMessage1 = iter.next();
-//            final String smtpMessageBody1 = smtpMessage1.getBody();
-//            assertTrue("smtpMessageBody1", smtpMessageBody1.contains("test_description 2 (updated)"));
-//
-//
-//        } finally {
-//            stopSMTP();
-//        }
+        int received = wiser.getMessages().size();
+
+        selenium.click("//input[@type='submit']");
+        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertEquals("wiser.receivedEmailSize", received + 1, wiser.getMessages().size());
+        final WiserMessage smtpMessage = wiser.getMessages().get(received);
+        final String smtpMessageBody = (String) smtpMessage.getMimeMessage().getContent();
+        log.debug("testEditIssue2FromViewIssue, received:\n " + smtpMessageBody);
+
+        assertTrue(smtpMessageBody.contains("test_description 2 (updated)"));
 
         assertTrue(selenium.isElementPresent("issues"));
         assertEquals(4, selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
-        assertFalse(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='2']/../td[11][text()='test_description 2']/../td[13][contains(text(),'A. admin lastname')]"));
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='2']/../td[11][text()='test_description 2 (updated)']/../td[13][contains(text(),'A. admin lastname')]"));
+
+        assertFalse(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='2']/../td[11][text()='test_description 2']/.." +
+                "/td[13][contains(text(),'A. admin lastname')]"));
+
+        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='2']/../td[11][text()='test_description 2 (updated)']/.." +
+                "/td[13][contains(text(),'A. admin lastname')]"));
     }
 
     @Override
