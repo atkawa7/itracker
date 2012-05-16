@@ -18,11 +18,6 @@
 
 package org.itracker.services.authentication;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.itracker.model.Permission;
 import org.itracker.model.User;
@@ -33,6 +28,11 @@ import org.itracker.services.util.UserUtilities;
 import org.jfree.util.Log;
 import org.springframework.dao.DataAccessException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * This class provides a default authentication scheme for ITracker.  It uses passwords
@@ -41,8 +41,8 @@ import org.springframework.dao.DataAccessException;
  */
 public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
 
-	private static final Logger logger = Logger.getLogger(DefaultAuthenticator.class);
-	
+    private static final Logger logger = Logger.getLogger(DefaultAuthenticator.class);
+
     /**
      * Checks the login of a user against the user profile provided in ITracker.  This is
      * the default authentication scheme provided by ITracker.
@@ -64,7 +64,7 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
             try {
                 user = getUserService().getUserByLogin(login);
             } catch (DataAccessException e) {
-            	logger.error("checkLogin: failed to get user by login: " + login, e);
+                logger.error("checkLogin: failed to get user by login: " + login, e);
                 throw new AuthenticatorException(AuthenticatorException.UNKNOWN_USER, e.getMessage());
             }
 
@@ -74,9 +74,9 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
 //                throw e;
 //            }
             if (user.getStatus() != UserUtilities.STATUS_ACTIVE) {
-            	AuthenticatorException e =  new AuthenticatorException(AuthenticatorException.INACTIVE_ACCOUNT);
-            	logger.info("checkLogin: user is inactive, user: " + user, e);
-                throw e; 
+                AuthenticatorException e = new AuthenticatorException(AuthenticatorException.INACTIVE_ACCOUNT);
+                logger.info("checkLogin: user is inactive, user: " + user, e);
+                throw e;
             }
 
             String userPassword;
@@ -107,14 +107,14 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
 
                 if (authType == AUTH_TYPE_PASSWORD_PLAIN) {
                     if (!userPassword.equals(UserUtilities.encryptPassword((String) authentication))) {
-                        throw new AuthenticatorException(AuthenticatorException.INVALID_PASSWORD);                        
+                        throw new AuthenticatorException(AuthenticatorException.INVALID_PASSWORD);
                     }
                 } else if (authType == AUTH_TYPE_PASSWORD_ENC) {
                     if (!userPassword.equals(authentication)) {
                         throw new AuthenticatorException(AuthenticatorException.INVALID_PASSWORD);
                     }
                 } else {
-                	logger.info("checkLogin: invalid authenticator type: " + authType);
+                    logger.info("checkLogin: invalid authenticator type: " + authType);
                     throw new AuthenticatorException(AuthenticatorException.INVALID_AUTHENTICATION_TYPE);
                 }
             } catch (ClassCastException cce) {
@@ -123,16 +123,16 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
             } catch (PasswordException pe) {
                 throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
             } catch (AuthenticatorException ae) {
-            	if (logger.isDebugEnabled()) {
-            		logger.debug("checkLogin: failed to authenticate " + login, ae);
-            	}
-            	throw ae;
+                if (logger.isDebugEnabled()) {
+                    logger.debug("checkLogin: failed to authenticate " + login, ae);
+                }
+                throw ae;
             }
 
             return user;
         }
 
-    	Log.info("checkLogin: no login was supplied: " + login + ", type: " + authType + ", source: " + reqSource);
+        Log.info("checkLogin: no login was supplied: " + login + ", type: " + authType + ", source: " + reqSource);
         throw new AuthenticatorException(AuthenticatorException.INVALID_DATA);
     }
 
@@ -180,7 +180,6 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
      * @param activeOnly      - Filter users who are active (Possible user status: DELETED, ACTIVE, LOCKED)
      * @param reqSource       - not used. TODO: Tagged for removal
      * @return List of users for the project with filters applied.
-     * @throws AuthenticatorException
      */
     public List<User> getUsersWithProjectPermission(Integer projectId,
                                                     int[] permissionTypes,

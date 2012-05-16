@@ -18,22 +18,8 @@
 
 package org.itracker.web.actions.admin.project;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.CustomField;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
@@ -44,6 +30,15 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectForm;
 import org.itracker.web.util.Constants;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 public class EditProjectFormAction extends ItrackerBaseAction {
@@ -57,13 +52,13 @@ public class EditProjectFormAction extends ItrackerBaseAction {
                                  HttpServletResponse response)
             throws ServletException, IOException {
 
-    	ActionMessages errors = new ActionMessages();
-   	
+        ActionMessages errors = new ActionMessages();
+
         try {
             ProjectService projectService = getITrackerServices().getProjectService();
-            
+
             HttpSession session = request.getSession(true);
-            
+
 
             Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
             User user = (User) session.getAttribute(Constants.USER_KEY);
@@ -71,21 +66,21 @@ public class EditProjectFormAction extends ItrackerBaseAction {
             ProjectForm projectForm = (ProjectForm) form;
 
             if (projectForm == null) {
-            	// this should not be
+                // this should not be
                 projectForm = new ProjectForm();
             }
 
             Project project;
             if (projectForm.getAction() != null && projectForm.getAction().equals("update")) {
-				project = null;
-            	if (null == projectForm.getId()) {
+                project = null;
+                if (null == projectForm.getId()) {
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-            	} else {
-            		project = projectService.getProject(projectForm.getId());
-            		if (null == project) {
-	                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-            		}
-            	}
+                } else {
+                    project = projectService.getProject(projectForm.getId());
+                    if (null == project) {
+                        errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
+                    }
+                }
 
             } else {
                 project = new Project();
@@ -103,7 +98,7 @@ public class EditProjectFormAction extends ItrackerBaseAction {
 
 
                 if (errors.isEmpty()) {
-                    
+
                     if (!UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
                         return mapping.findForward("unauthorized");
                     } else if (errors.isEmpty()) {
@@ -141,11 +136,11 @@ public class EditProjectFormAction extends ItrackerBaseAction {
                 request.setAttribute("projectForm", projectForm);
                 session.setAttribute(Constants.PROJECT_KEY, project);
                 saveToken(request);
-        		ActionForward af = new EditProjectFormActionUtil().init(mapping, request, projectForm);
-        		if (af != null) {
-        			return af;
-        		}
-               return mapping.getInputForward();
+                ActionForward af = new EditProjectFormActionUtil().init(mapping, request, projectForm);
+                if (af != null) {
+                    return af;
+                }
+                return mapping.getInputForward();
             }
 
         } catch (Exception e) {
@@ -154,7 +149,7 @@ public class EditProjectFormAction extends ItrackerBaseAction {
         }
 
         if (!errors.isEmpty()) {
-        	saveErrors(request, errors);
+            saveErrors(request, errors);
         }
 
         return mapping.findForward("error");

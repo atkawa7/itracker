@@ -18,21 +18,9 @@
 
 package org.itracker.web.actions.admin.configuration;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
 import org.itracker.model.Issue;
@@ -46,16 +34,23 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.List;
+
 //TODO: Action Cleanup
 public class RemoveConfigurationItemAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(RemoveConfigurationItemAction.class);
-	
+    private static final Logger log = Logger.getLogger(RemoveConfigurationItemAction.class);
+
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
 
-        if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
@@ -63,17 +58,17 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
 
             Integer configId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
-            if(configId == null || configId.intValue() <= 0) {
+            if (configId == null || configId.intValue() <= 0) {
                 throw new SystemConfigurationException("Invalid configuration id.");
             }
 
             Configuration configItem = configurationService.getConfigurationItem(configId);
-            if(configItem == null) {
+            if (configItem == null) {
                 throw new SystemConfigurationException("Invalid configuration id.");
             }
 
             String key = null;
-            if(configItem.getType() == SystemConfigurationUtilities.TYPE_SEVERITY) {
+            if (configItem.getType() == SystemConfigurationUtilities.TYPE_SEVERITY) {
                 key = ITrackerResources.KEY_BASE_SEVERITY + configItem.getValue();
 
                 // Need to promote all issues with the deleted severity.  The safest thing to do is
@@ -83,13 +78,13 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                     String newConfigValue = null;
 
                     List<Configuration> configItems = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_SEVERITY);
-                    for(int i = 0; i < configItems.size(); i++) {
-                        if(configItems.get(i) != null && configId.equals(configItems.get(i).getId())) {
-                            if(i == 0 && (i + 1) < configItems.size()) {
-                                newConfigValue = configItems.get(i+1).getValue();
+                    for (int i = 0; i < configItems.size(); i++) {
+                        if (configItems.get(i) != null && configId.equals(configItems.get(i).getId())) {
+                            if (i == 0 && (i + 1) < configItems.size()) {
+                                newConfigValue = configItems.get(i + 1).getValue();
                                 break;
-                            } else if(i > 0) {
-                                newConfigValue = configItems.get(i-1).getValue();
+                            } else if (i > 0) {
+                                newConfigValue = configItems.get(i - 1).getValue();
                                 break;
                             }
                         }
@@ -105,17 +100,17 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
 
                     IssueService issueService = getITrackerServices().getIssueService();
                     List<Issue> issues = issueService.getIssuesWithSeverity(currSeverity);
-                    for(int i = 0; i < issues.size(); i++) {
-                        if(issues.get(i) != null) {
+                    for (int i = 0; i < issues.size(); i++) {
+                        if (issues.get(i) != null) {
                             issues.get(i).setSeverity(newSeverity);
 
                             issues.set(i, issueService.systemUpdateIssue(issues.get(i), currUserId));
                         }
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     log.debug("Exception while promoting issues with severity " + configItem.getValue(), e);
                 }
-            } else if(configItem.getType() == SystemConfigurationUtilities.TYPE_STATUS) {
+            } else if (configItem.getType() == SystemConfigurationUtilities.TYPE_STATUS) {
                 key = ITrackerResources.KEY_BASE_STATUS + configItem.getValue();
 
                 // Need to demote all issues with the deleted severity.  The safest thing to do is
@@ -127,13 +122,13 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                     String newConfigValue = null;
 
                     List<Configuration> configItems = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_STATUS);
-                    for(int i = 0; i < configItems.size(); i++) {
-                        if(configItems.get(i) != null && configId.equals(configItems.get(i).getId())) {
-                            if(i == 0 && (i + 1) < configItems.size()) {
-                                newConfigValue = configItems.get(i+1).getValue();
+                    for (int i = 0; i < configItems.size(); i++) {
+                        if (configItems.get(i) != null && configId.equals(configItems.get(i).getId())) {
+                            if (i == 0 && (i + 1) < configItems.size()) {
+                                newConfigValue = configItems.get(i + 1).getValue();
                                 break;
-                            } else if(i > 0) {
-                                newConfigValue = configItems.get(i-1).getValue();
+                            } else if (i > 0) {
+                                newConfigValue = configItems.get(i - 1).getValue();
                                 break;
                             }
                         }
@@ -149,17 +144,17 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
 
                     IssueService issueService = getITrackerServices().getIssueService();
                     List<Issue> issues = issueService.getIssuesWithStatus(currStatus);
-                    for(int i = 0; i < issues.size(); i++) {
-                        if(issues.get(i) != null) {
+                    for (int i = 0; i < issues.size(); i++) {
+                        if (issues.get(i) != null) {
                             issues.get(i).setStatus(newStatus);
 
                             issues.set(i, issueService.systemUpdateIssue(issues.get(i), currUserId));
                         }
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     log.debug("Exception while promoting issues with status " + configItem.getValue(), e);
                 }
-            } else if(configItem.getType() == SystemConfigurationUtilities.TYPE_RESOLUTION) {
+            } else if (configItem.getType() == SystemConfigurationUtilities.TYPE_RESOLUTION) {
                 key = ITrackerResources.KEY_BASE_RESOLUTION + configItem.getValue();
 
                 // No need to edit any issues since the resolutions are stored as text in the issue
@@ -168,23 +163,23 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
             }
 
             configurationService.removeConfigurationItem(configItem.getId());
-            if(key != null) {
+            if (key != null) {
                 configurationService.removeLanguageKey(key);
                 ITrackerResources.clearKeyFromBundles(key, false);
             }
 
             return mapping.findForward("listconfiguration");
-        } catch(SystemConfigurationException sce) {
+        } catch (SystemConfigurationException sce) {
             log.debug(sce.getMessage(), sce);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidconfiguration"));
-        } catch(NumberFormatException nfe) {
-        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidconfiguration"));
+        } catch (NumberFormatException nfe) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidconfiguration"));
             log.debug("Invalid configuration item id " + request.getParameter("id") + " specified.");
-        } catch(Exception e) {
-        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+        } catch (Exception e) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
             log.error("System Error.", e);
         }
-        if(! errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             saveErrors(request, errors);
         }
         return mapping.findForward("error");

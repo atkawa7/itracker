@@ -18,25 +18,9 @@
 
 package org.itracker.web.actions.issuesearch;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.apache.struts.validator.ValidatorForm;
 import org.itracker.model.IssueSearchQuery;
 import org.itracker.model.PermissionType;
@@ -51,6 +35,13 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.SearchForm;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.*;
+
 public class SearchIssuesFormAction extends ItrackerBaseAction {
 
     private static final Logger log = Logger.getLogger(SearchIssuesFormAction.class);
@@ -61,7 +52,7 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
                                  HttpServletResponse response)
             throws ServletException, IOException {
 
-    	ActionMessages errors = new ActionMessages();
+        ActionMessages errors = new ActionMessages();
 
         HttpSession session = request.getSession();
 
@@ -193,53 +184,53 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
 
                     searchForm.setComponents(null);
                     if (null != query.getComponents() && query.getComponents().size() > 0) {
-	                    Integer[] componentsArray = new Integer[query.getComponents().size()];
-	                    query.getComponents().toArray(componentsArray);
-	                    searchForm.setComponents(componentsArray);
+                        Integer[] componentsArray = new Integer[query.getComponents().size()];
+                        query.getComponents().toArray(componentsArray);
+                        searchForm.setComponents(componentsArray);
                     }
 
                     searchForm.setCreator(null);
                     if (null != query.getCreator()) {
-                    	searchForm.setCreator(query.getCreator().getId());
+                        searchForm.setCreator(query.getCreator().getId());
                     }
                     searchForm.setOwner(null);
                     if (null != query.getOwner()) {
-                    	searchForm.setOwner(query.getOwner().getId());
+                        searchForm.setOwner(query.getOwner().getId());
                     }
                     searchForm.setOrderBy(query.getOrderBy());
                     searchForm.setProject(query.getProjectId());
 
                     searchForm.setProjects(null);
                     if (null != query.getProjects() && query.getProjects().size() > 0) {
-                    	Integer[] projectsArray = new Integer[query.getProjects().size()];
-                    	query.getProjects().toArray(projectsArray);
+                        Integer[] projectsArray = new Integer[query.getProjects().size()];
+                        query.getProjects().toArray(projectsArray);
                         searchForm.setProjects(projectsArray);
                     }
-                    
+
                     searchForm.setResolution(query.getResolution());
 
                     searchForm.setSeverities(null);
                     if (null != query.getSeverities() && query.getSeverities().size() > 0) {
-	                    Integer[] severitiesArray = new Integer[query.getSeverities().size()];
-	                    query.getSeverities().toArray(severitiesArray);
-	                    searchForm.setSeverities(severitiesArray);
+                        Integer[] severitiesArray = new Integer[query.getSeverities().size()];
+                        query.getSeverities().toArray(severitiesArray);
+                        searchForm.setSeverities(severitiesArray);
                     }
 
                     searchForm.setStatuses(null);
                     if (null != query.getStatuses() && query.getStatuses().size() > 0) {
-	                    Integer[] statusesArray = new Integer[query.getStatuses().size()];
-	                    query.getStatuses().toArray(statusesArray);
-	                    searchForm.setStatuses(statusesArray);
+                        Integer[] statusesArray = new Integer[query.getStatuses().size()];
+                        query.getStatuses().toArray(statusesArray);
+                        searchForm.setStatuses(statusesArray);
                     }
-                    
+
                     searchForm.setTargetVersion(query.getTargetVersion());
                     searchForm.setTextphrase(query.getText());
 
                     searchForm.setVersions(null);
                     if (query.getVersions() != null && query.getVersions().size() > 0) {
-	                    Integer[] versionsArray = new Integer[query.getVersions().size()];
-	                    query.getVersions().toArray(versionsArray);
-	                    searchForm.setVersions(versionsArray);
+                        Integer[] versionsArray = new Integer[query.getVersions().size()];
+                        query.getVersions().toArray(versionsArray);
+                        searchForm.setVersions(versionsArray);
                     }
 
                 }
@@ -261,7 +252,7 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
         }
 
         if (!errors.isEmpty()) {
-        	saveErrors(request, errors);
+            saveErrors(request, errors);
         }
 
         return mapping.findForward("error");

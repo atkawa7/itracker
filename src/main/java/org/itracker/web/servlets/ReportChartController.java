@@ -18,45 +18,44 @@
 
 package org.itracker.web.servlets;
 
-import java.io.IOException;
-import java.util.Map;
+import org.itracker.web.util.Constants;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.itracker.web.util.Constants;
+import java.io.IOException;
+import java.util.Map;
 
 
 public class ReportChartController extends GenericController {
-    
+
     /**
      *
      */
     private static final long serialVersionUID = 1L;
-    
+
     public ReportChartController() {
     }
-    
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if(! isLoggedIn(request, response)) {
+        if (!isLoggedIn(request, response)) {
             return;
         }
-        
+
         HttpSession session = request.getSession(false);
-        if(session == null) {
+        if (session == null) {
             return;
         }
-        
+
         Map<?, ?> imagesMap = (Map<?, ?>) session.getAttribute(Constants.REPORT_IMAGEMAP_KEY);
-        
-        if(imagesMap != null) {
+
+        if (imagesMap != null) {
             String imageName = request.getParameter("image");
-            if(imageName != null) {
-                byte[] imageData = (byte[])imagesMap.get(imageName);
-                
+            if (imageName != null) {
+                byte[] imageData = (byte[]) imagesMap.get(imageName);
+
                 response.setContentLength(imageData.length);
                 ServletOutputStream ouputStream = response.getOutputStream();
                 ouputStream.write(imageData, 0, imageData.length);

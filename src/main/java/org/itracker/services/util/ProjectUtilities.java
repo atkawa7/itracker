@@ -18,19 +18,13 @@
 
 package org.itracker.services.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Status;
 
+import java.util.*;
 
-public class ProjectUtilities  {
+
+public class ProjectUtilities {
     // Options use bitmasks and are stored as a single integer in the db
     public static final int OPTION_SURPRESS_HISTORY_HTML = 1;
     public static final int OPTION_ALLOW_ASSIGN_TO_CLOSE = 2;
@@ -40,26 +34,26 @@ public class ProjectUtilities  {
     public static final int OPTION_NO_ATTACHMENTS = 32;
     public static final int OPTION_LITERAL_HISTORY_HTML = 64;
 
-    /** 
-     * Cache of status names by Locale, loaded lazily on first request 
-     * from itracker.properties. 
-     * 
-     * The Map implementation is synchronized because it can be accessed 
-     * by multiple threads that will alter it in case of cache miss. 
+    /**
+     * Cache of status names by Locale, loaded lazily on first request
+     * from itracker.properties.
+     * <p/>
+     * The Map implementation is synchronized because it can be accessed
+     * by multiple threads that will alter it in case of cache miss.
      */
-    private static Map<Locale, Map<Status, String>> statusNames = 
+    private static Map<Locale, Map<Status, String>> statusNames =
             new Hashtable<Locale, Map<Status, String>>();
 
     /**
-     * Contains only static methods and isn't intended to be instantiated. 
+     * Contains only static methods and isn't intended to be instantiated.
      */
     private ProjectUtilities() {
     }
 
     /**
-     * Returns the localized name of the given status for the application 
-     * default locale. 
-     * 
+     * Returns the localized name of the given status for the application
+     * default locale.
+     *
      * @param status enum constant of which we want the localized name
      * @return name in the current locale
      */
@@ -68,16 +62,16 @@ public class ProjectUtilities  {
     }
 
     /**
-     * Returns the localized name of the given status for the given locale. 
-     * 
+     * Returns the localized name of the given status for the given locale.
+     *
      * @param status enum constant of which we want the localized name
      * @param locale desired locale
-     * @return name in the given locale or "MISSING RESOURCE " + resource key 
+     * @return name in the given locale or "MISSING RESOURCE " + resource key
      *         if no resource could be found
      */
     public static String getStatusName(Status status, Locale locale) {
         return ITrackerResources.getString(
-                ITrackerResources.KEY_BASE_PROJECT_STATUS + status.getCode(), 
+                ITrackerResources.KEY_BASE_PROJECT_STATUS + status.getCode(),
                 locale);
     }
 
@@ -89,23 +83,21 @@ public class ProjectUtilities  {
     }
 
     /**
-     * This method loads the status names in the cache if they're not 
-     * found in it. 
-     * 
+     * This method loads the status names in the cache if they're not
+     * found in it.
+     * <p/>
      * <p>The returned map is cached for future requests. </p>
-     * 
-     * @param locale
+     *
      * @return unmodifiable map of status names for the requested Locale
      */
     public static Map<Status, String> getStatusNames(Locale locale) {
         Map<Status, String> statuses = statusNames.get(locale);
 
 
-        
         if (statuses == null) {
             // No labels found for the requested Locale => load in cache.
             statuses = new EnumMap<Status, String>(Status.class);
-            
+
             for (Status status : Status.values()) {
                 statuses.put(status, getStatusName(status, locale));
 
@@ -124,31 +116,32 @@ public class ProjectUtilities  {
 
     public static Integer[] getOptions(int currentOptions) {
         List<Integer> options = new ArrayList<Integer>();
-        if(hasOption(OPTION_SURPRESS_HISTORY_HTML, currentOptions)) {
+        if (hasOption(OPTION_SURPRESS_HISTORY_HTML, currentOptions)) {
             options.add(OPTION_SURPRESS_HISTORY_HTML);
         }
-        if(hasOption(OPTION_ALLOW_ASSIGN_TO_CLOSE, currentOptions)) {
+        if (hasOption(OPTION_ALLOW_ASSIGN_TO_CLOSE, currentOptions)) {
             options.add(OPTION_ALLOW_ASSIGN_TO_CLOSE);
         }
-        if(hasOption(OPTION_PREDEFINED_RESOLUTIONS, currentOptions)) {
+        if (hasOption(OPTION_PREDEFINED_RESOLUTIONS, currentOptions)) {
             options.add(OPTION_PREDEFINED_RESOLUTIONS);
         }
-        if(hasOption(OPTION_ALLOW_SELF_REGISTERED_CREATE, currentOptions)) {
+        if (hasOption(OPTION_ALLOW_SELF_REGISTERED_CREATE, currentOptions)) {
             options.add(OPTION_ALLOW_SELF_REGISTERED_CREATE);
         }
-        if(hasOption(OPTION_ALLOW_SELF_REGISTERED_VIEW_ALL, currentOptions)) {
+        if (hasOption(OPTION_ALLOW_SELF_REGISTERED_VIEW_ALL, currentOptions)) {
             options.add(OPTION_ALLOW_SELF_REGISTERED_VIEW_ALL);
         }
-        if(hasOption(OPTION_NO_ATTACHMENTS, currentOptions)) {
+        if (hasOption(OPTION_NO_ATTACHMENTS, currentOptions)) {
             options.add(OPTION_NO_ATTACHMENTS);
         }
-        if(hasOption(OPTION_LITERAL_HISTORY_HTML, currentOptions)) {
+        if (hasOption(OPTION_LITERAL_HISTORY_HTML, currentOptions)) {
             options.add(OPTION_LITERAL_HISTORY_HTML);
         }
         Integer[] optionsArray = new Integer[options.size()];
         options.toArray(optionsArray);
         return optionsArray;
     }
+
     public static String getScriptPriorityLabelKey(Integer fieldId) {
         return ITrackerResources.getString(ITrackerResources.KEY_BASE_PRIORITY + fieldId + ITrackerResources.KEY_BASE_PRIORITY_LABEL);
     }

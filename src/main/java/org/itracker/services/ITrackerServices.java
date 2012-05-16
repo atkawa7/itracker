@@ -6,23 +6,22 @@ import org.itracker.services.util.EmailService;
  * Service layer is a bit messy. The are *Factories, which work mainly as data
  * access objects, and *Handlers, that work as the service layer. It's messy
  * because it was a straight EJB migration, and they were not refactored yet.
- * 
+ *
  * @author ricardo
- * 
  */
 public interface ITrackerServices {
 
-	IssueService getIssueService();
+    IssueService getIssueService();
 
-	UserService getUserService();
+    UserService getUserService();
 
-	ProjectService getProjectService();
+    ProjectService getProjectService();
 
-	ConfigurationService getConfigurationService();
+    ConfigurationService getConfigurationService();
 
-	ReportService getReportService();
+    ReportService getReportService();
 
-	EmailService getEmailService();
+    EmailService getEmailService();
 
-	NotificationService getNotificationService();
+    NotificationService getNotificationService();
 }

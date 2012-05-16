@@ -23,132 +23,134 @@ import org.itracker.core.resources.ITrackerResources;
 
 /**
  * The system configuration of a User.
- * 
+ * <p/>
  * <p>
  * User - UserPreferences is a 1-1 relationship.
  * </p>
- * 
+ *
  * @author ready
  */
 public class UserPreferences extends AbstractEntity {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	/** The User to whom these preferences belong. */
-	private User user;
+    /**
+     * The User to whom these preferences belong.
+     */
+    private User user;
 
-	private boolean saveLogin = false;
+    private boolean saveLogin = false;
 
-	private String userLocale = ITrackerResources.getDefaultLocale();
+    private String userLocale = ITrackerResources.getDefaultLocale();
 
-	private int numItemsOnIndex = 0; // all
+    private int numItemsOnIndex = 0; // all
 
-	private int numItemsOnIssueList = 0; // all
+    private int numItemsOnIssueList = 0; // all
 
-	private boolean showClosedOnIssueList = false;
+    private boolean showClosedOnIssueList = false;
 
-	private String sortColumnOnIssueList = "id";
+    private String sortColumnOnIssueList = "id";
 
-	private int hiddenIndexSections = 0;
+    private int hiddenIndexSections = 0;
 
-	private boolean rememberLastSearch = false;
+    private boolean rememberLastSearch = false;
 
-	private boolean useTextActions = false;
+    private boolean useTextActions = false;
 
-	public int getHiddenIndexSections() {
-		return hiddenIndexSections;
-	}
+    public int getHiddenIndexSections() {
+        return hiddenIndexSections;
+    }
 
-	public void setHiddenIndexSections(int hiddenIndexSections) {
-		this.hiddenIndexSections = hiddenIndexSections;
-	}
+    public void setHiddenIndexSections(int hiddenIndexSections) {
+        this.hiddenIndexSections = hiddenIndexSections;
+    }
 
-	public int getNumItemsOnIndex() {
-		return numItemsOnIndex;
-	}
+    public int getNumItemsOnIndex() {
+        return numItemsOnIndex;
+    }
 
-	public void setNumItemsOnIndex(int numItemsOnIndex) {
-		this.numItemsOnIndex = numItemsOnIndex;
-	}
+    public void setNumItemsOnIndex(int numItemsOnIndex) {
+        this.numItemsOnIndex = numItemsOnIndex;
+    }
 
-	public int getNumItemsOnIssueList() {
-		return numItemsOnIssueList;
-	}
+    public int getNumItemsOnIssueList() {
+        return numItemsOnIssueList;
+    }
 
-	public void setNumItemsOnIssueList(int numItemsOnIssueList) {
-		this.numItemsOnIssueList = numItemsOnIssueList;
-	}
+    public void setNumItemsOnIssueList(int numItemsOnIssueList) {
+        this.numItemsOnIssueList = numItemsOnIssueList;
+    }
 
-	public boolean getRememberLastSearch() {
-		return rememberLastSearch;
-	}
+    public boolean getRememberLastSearch() {
+        return rememberLastSearch;
+    }
 
-	public void setRememberLastSearch(boolean rememberLastSearch) {
-		this.rememberLastSearch = rememberLastSearch;
-	}
+    public void setRememberLastSearch(boolean rememberLastSearch) {
+        this.rememberLastSearch = rememberLastSearch;
+    }
 
-	public boolean getSaveLogin() {
-		return saveLogin;
-	}
+    public boolean getSaveLogin() {
+        return saveLogin;
+    }
 
-	public void setSaveLogin(boolean saveLogin) {
-		this.saveLogin = saveLogin;
-	}
+    public void setSaveLogin(boolean saveLogin) {
+        this.saveLogin = saveLogin;
+    }
 
-	public boolean getShowClosedOnIssueList() {
-		return showClosedOnIssueList;
-	}
+    public boolean getShowClosedOnIssueList() {
+        return showClosedOnIssueList;
+    }
 
-	public void setShowClosedOnIssueList(boolean showClosedOnIssueList) {
-		this.showClosedOnIssueList = showClosedOnIssueList;
-	}
+    public void setShowClosedOnIssueList(boolean showClosedOnIssueList) {
+        this.showClosedOnIssueList = showClosedOnIssueList;
+    }
 
-	public String getSortColumnOnIssueList() {
-		return sortColumnOnIssueList;
-	}
+    public String getSortColumnOnIssueList() {
+        return sortColumnOnIssueList;
+    }
 
-	public void setSortColumnOnIssueList(String sortColumnOnIssueList) {
-		this.sortColumnOnIssueList = sortColumnOnIssueList;
-	}
+    public void setSortColumnOnIssueList(String sortColumnOnIssueList) {
+        this.sortColumnOnIssueList = sortColumnOnIssueList;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public User getUser() {
+        return user;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	public String getUserLocale() {
-		return userLocale;
-	}
+    public String getUserLocale() {
+        return userLocale;
+    }
 
-	public void setUserLocale(String userLocale) {
-		this.userLocale = userLocale;
-	}
+    public void setUserLocale(String userLocale) {
+        this.userLocale = userLocale;
+    }
 
-	public boolean getUseTextActions() {
-		return useTextActions;
-	}
+    public boolean getUseTextActions() {
+        return useTextActions;
+    }
 
-	public void setUseTextActions(boolean useTextActions) {
-		this.useTextActions = useTextActions;
-	}
+    public void setUseTextActions(boolean useTextActions) {
+        this.useTextActions = useTextActions;
+    }
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("id", getId()).append("user", getUser())
-				.append("userLocale", getUserLocale()).append("useTextActions",
-						getUseTextActions()).append("saveLogin", getSaveLogin()).append(
-						"rememberLastSearch", getRememberLastSearch()).append(
-						"hiddenIndexSections", getHiddenIndexSections()).append(
-						"numItemsOnIndex", getNumItemsOnIndex()).append(
-						"numItemsOnIssueList", getNumItemsOnIssueList()).append(
-						"showClosedOnIssueList", getShowClosedOnIssueList())
-				.toString();
-	}
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("id", getId()).append("user", getUser())
+                .append("userLocale", getUserLocale()).append("useTextActions",
+                        getUseTextActions()).append("saveLogin", getSaveLogin()).append(
+                        "rememberLastSearch", getRememberLastSearch()).append(
+                        "hiddenIndexSections", getHiddenIndexSections()).append(
+                        "numItemsOnIndex", getNumItemsOnIndex()).append(
+                        "numItemsOnIssueList", getNumItemsOnIssueList()).append(
+                        "showClosedOnIssueList", getShowClosedOnIssueList())
+                .toString();
+    }
 
 }

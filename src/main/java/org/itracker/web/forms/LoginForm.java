@@ -18,80 +18,77 @@
 
 package org.itracker.web.forms;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
- * 
+ *
  * @author ready
- * 
  */
 public class LoginForm extends ValidatorForm {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String login = null;
-	private String password = null;
-	private boolean skip = false;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private String login = null;
+    private String password = null;
+    private boolean skip = false;
 
-	public String getLogin() {
-		return login;
-	}
+    public String getLogin() {
+        return login;
+    }
 
-	public void setLogin(String login) {
-		this.login = login;
-	}
+    public void setLogin(String login) {
+        this.login = login;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		login = null;
-		password = null;
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        login = null;
+        password = null;
 
-	}
+    }
 
-	/**
-	 * Skip login authentication.
-	 * 
-	 * @return
-	 */
-	public boolean isSkip() {
-		return skip;
-	}
+    /**
+     * Skip login authentication.
+     */
+    public boolean isSkip() {
+        return skip;
+    }
 
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		Boolean skipLogin = (Boolean) request.getSession().getAttribute(
-				"loginForwarded");
-		if (null == skipLogin) {
-			skipLogin = false;
-		}
-		skipLogin |= (null == getLogin() && null == getPassword());
-		
-		ActionErrors errors;
-		/*
-		 * SKIP credentials validation when forwarded to login.
-		 */
-		if (skipLogin == null || !skipLogin.booleanValue()) {
-			// log.debug("execute: forwarded, skip login.");
-			errors = super.validate(mapping, request);
-		} else {
-			request.getSession().removeAttribute("loginForwarded");
-			this.skip = true;
-			return new ActionErrors();
-		}
-		return errors;
-	}
+    public ActionErrors validate(ActionMapping mapping,
+                                 HttpServletRequest request) {
+        Boolean skipLogin = (Boolean) request.getSession().getAttribute(
+                "loginForwarded");
+        if (null == skipLogin) {
+            skipLogin = false;
+        }
+        skipLogin |= (null == getLogin() && null == getPassword());
+
+        ActionErrors errors;
+        /*
+           * SKIP credentials validation when forwarded to login.
+           */
+        if (skipLogin == null || !skipLogin.booleanValue()) {
+            // log.debug("execute: forwarded, skip login.");
+            errors = super.validate(mapping, request);
+        } else {
+            request.getSession().removeAttribute("loginForwarded");
+            this.skip = true;
+            return new ActionErrors();
+        }
+        return errors;
+    }
 
 }

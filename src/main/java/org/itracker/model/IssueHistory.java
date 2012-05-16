@@ -23,118 +23,120 @@ import org.itracker.services.util.IssueUtilities;
 
 /**
  * An issue history entry.
- * 
+ * <p/>
  * <p>
  * An IssueHistory can only belong to 1 Issue (composition).
  * </p>
- * 
+ * <p/>
  * <p>
  * PENDING : what's the difference with an IssueActivity ?
  * </p>
- * 
+ *
  * @author ready
  */
 public class IssueHistory extends AbstractEntity {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	private Issue issue;
+    private Issue issue;
 
-	private String description;
+    private String description;
 
-	private int status;
+    private int status;
 
-	/** The User who generated this history entry. */
-	private User creator;
+    /**
+     * The User who generated this history entry.
+     */
+    private User creator;
 
-	/**
-	 * Default constructor (required by Hibernate).
-	 * 
-	 * <p>
-	 * PENDING: should be <code>private</code> so that it can only be used by
-	 * Hibernate, to ensure that the fields which form an instance's identity
-	 * are always initialized/never <tt>null</tt>.
-	 * </p>
-	 */
-	public IssueHistory() {
-	}
+    /**
+     * Default constructor (required by Hibernate).
+     * <p/>
+     * <p>
+     * PENDING: should be <code>private</code> so that it can only be used by
+     * Hibernate, to ensure that the fields which form an instance's identity
+     * are always initialized/never <tt>null</tt>.
+     * </p>
+     */
+    public IssueHistory() {
+    }
 
-	public IssueHistory(Issue issue, User creator) {
-		setIssue(issue);
-		setUser(creator);
-		setStatus(IssueUtilities.HISTORY_STATUS_AVAILABLE);
-	}
+    public IssueHistory(Issue issue, User creator) {
+        setIssue(issue);
+        setUser(creator);
+        setStatus(IssueUtilities.HISTORY_STATUS_AVAILABLE);
+    }
 
-	public IssueHistory(Issue issue, User creator, String description,
-			int status) {
-		setIssue(issue);
-		setUser(creator);
-		setDescription(description);
-		setStatus(status);
-	}
+    public IssueHistory(Issue issue, User creator, String description,
+                        int status) {
+        setIssue(issue);
+        setUser(creator);
+        setDescription(description);
+        setStatus(status);
+    }
 
-	public Issue getIssue() {
-		return issue;
-	}
+    public Issue getIssue() {
+        return issue;
+    }
 
-	public void setIssue(Issue issue) {
-		if (issue == null) {
-			throw new IllegalArgumentException("null issue");
-		}
-		this.issue = issue;
-	}
+    public void setIssue(Issue issue) {
+        if (issue == null) {
+            throw new IllegalArgumentException("null issue");
+        }
+        this.issue = issue;
+    }
 
-	public User getUser() {
-		return creator;
-	}
+    public User getUser() {
+        return creator;
+    }
 
-	public void setUser(User creator) {
-		if (creator == null) {
-			throw new IllegalArgumentException("null creator");
-		}
-		this.creator = creator;
-	}
+    public void setUser(User creator) {
+        if (creator == null) {
+            throw new IllegalArgumentException("null creator");
+        }
+        this.creator = creator;
+    }
 
-	public int getStatus() {
-		return status;
-	}
+    public int getStatus() {
+        return status;
+    }
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("id", getId())
-				.append("issue", issue).append("creator", getUser()).append(
-						"createDate", getCreateDate()).toString();
-	}
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("id", getId())
+                .append("issue", issue).append("creator", getUser()).append(
+                        "createDate", getCreateDate()).toString();
+    }
 
-	public static enum Status  {
+    public static enum Status {
 
-		STATUS_REMOVED(-1),
+        STATUS_REMOVED(-1),
 
-		STATUS_AVAILABLE(1);
+        STATUS_AVAILABLE(1);
 
-		@SuppressWarnings("unused")
-		private final int code;
+        @SuppressWarnings("unused")
+        private final int code;
 
-		private Status(int code) {
-			this.code = code;
-		}
+        private Status(int code) {
+            this.code = code;
+        }
 
-	}
+    }
 
 }

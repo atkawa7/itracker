@@ -23,8 +23,6 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
      * 9. Being at "View Issues" page, right after saving updated issues,
      * check that no more issues with old description is here, but
      * new description has appeared.
-     *
-     * @throws java.io.IOException
      */
     @Test
     public void testEditIssue1FromViewIssue() throws Exception {
@@ -103,8 +101,6 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
      * 8. Being at "View Issues" page, right after saving updated issues,
      * check that no more issues with old description is here, but
      * new description has appeared.
-     *
-     * @throws java.io.IOException
      */
     @Test
     public void testEditIssue1FromIssueList() throws Exception {
@@ -180,8 +176,6 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
      * 7. Since test_name2 was an empty project, and now we have a single
      * item there, we check that it has appeared at "View Issues"
      * page for test_name2 project.
-     *
-     * @throws java.lang.Exception
      */
     @Test
     public void testMoveIssue1() throws Exception {
@@ -257,8 +251,6 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
      * 9. Being at "View Issues" page, right after saving updated issues,
      * check that no more issues with old description is here, but
      * new description has appeared.
-     *
-     * @throws java.io.IOException
      */
     @Test
     public void testEditIssue2FromViewIssue() throws Exception {

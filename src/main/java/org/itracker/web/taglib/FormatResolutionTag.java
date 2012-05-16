@@ -18,30 +18,29 @@
 
 package org.itracker.web.taglib;
 
-import java.util.Locale;
-import java.util.MissingResourceException;
-
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTagSupport;
-
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+import java.util.Locale;
+import java.util.MissingResourceException;
+
 
 /**
-  * Formats a resolution for a display.  If the project uses fixed resolutions,
-  * it prints the appropriate string for the current locale.  Currently the tag
-  * only supports non-editable resolution fields.
-  */
+ * Formats a resolution for a display.  If the project uses fixed resolutions,
+ * it prints the appropriate string for the current locale.  Currently the tag
+ * only supports non-editable resolution fields.
+ */
 public class FormatResolutionTag extends BodyTagSupport {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	public static final String DISPLAY_TYPE_EDIT = "edit";
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    public static final String DISPLAY_TYPE_EDIT = "edit";
     public static final String DISPLAY_TYPE_VIEW = "view";
 
     private String text = null;
@@ -70,9 +69,9 @@ public class FormatResolutionTag extends BodyTagSupport {
     }
 
     public int doAfterBody() throws JspException {
-        if(bodyContent != null) {
+        if (bodyContent != null) {
             String value = bodyContent.getString().trim();
-            if(value.length() > 0) {
+            if (value.length() > 0) {
                 text = value;
             }
         }
@@ -81,30 +80,30 @@ public class FormatResolutionTag extends BodyTagSupport {
 
     public int doEndTag() throws JspException {
         StringBuffer results = new StringBuffer();
-        if(text != null && ! text.trim().equals("")) {
+        if (text != null && !text.trim().equals("")) {
             Locale locale = null;
 
             HttpSession session = pageContext.getSession();
-            if(session != null) {
+            if (session != null) {
                 locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
             }
 
             try {
-    
+
                 projectOptions = ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS;
-            } catch(NumberFormatException nfe) {
+            } catch (NumberFormatException nfe) {
             }
 
-            if(ProjectUtilities.hasOption(ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS, projectOptions)) {
+            if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS, projectOptions)) {
                 try {
                     text = IssueUtilities.checkResolutionName(text, locale);
-                } catch(MissingResourceException mre) {
+                } catch (MissingResourceException mre) {
                     // Key didn't exist so just stick the key in as a real number.
                 }
             }
             results.append(text);
         }
-       // ResponseUtils.write(pageContext, results.toString());
+        // ResponseUtils.write(pageContext, results.toString());
         TagUtils.getInstance().write(pageContext, results.toString());
         clearState();
         return (EVAL_PAGE);

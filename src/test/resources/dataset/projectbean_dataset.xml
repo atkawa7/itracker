@@ -9,7 +9,7 @@
         <column>description</column>
         <column>status</column>
         <column>options</column>
-       
+
         <row>
             <value>2</value>
             <value>2006-01-01</value>
@@ -19,7 +19,7 @@
             <value>1</value>
             <value>0</value>
         </row>
-         <row>
+        <row>
             <value>3</value>
             <value>2006-01-01</value>
             <value>2006-01-01</value>
@@ -27,6 +27,6 @@
             <value>test_description2</value>
             <value>1</value>
             <value>0</value>
-        </row>       
+        </row>
     </table>
 </dataset>

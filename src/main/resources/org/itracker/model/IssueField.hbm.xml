@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 
-<!DOCTYPE hibernate-mapping PUBLIC 
-    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-    
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
 <hibernate-mapping auto-import="true" package="org.itracker.model">
-    
+
     <class name="IssueField" table="issuefieldbean">
-        
+
         <id name="id" unsaved-value="null">
             <column name="id" not-null="true"/>
             <generator class="native"/>
@@ -24,15 +24,15 @@
         <property name="stringValue">
             <column name="string_value"/>
         </property>
-        
+
         <property name="intValue">
             <column name="int_value"/>
         </property>
-        
+
         <property name="dateValue">
             <column name="date_value"/>
         </property>
-        
+
     </class>
-    
+
 </hibernate-mapping>

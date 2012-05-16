@@ -113,8 +113,6 @@ public class ConfigurationServiceImplIT extends
 
     /**
      * Test if the configurationServiceImpl does override property values by JNDI.
-     *
-     * @throws Exception
      */
     @Test
     public void testGetJndiOverriddenProperty() throws Exception {

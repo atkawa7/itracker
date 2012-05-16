@@ -8,7 +8,7 @@
     <formset>
         <form name="preferencesForm">
             <field property="email" depends="required,email">
-            	<msg name="email" key="itracker.web.error.validate.email"/>
+                <msg name="email" key="itracker.web.error.validate.email"/>
                 <arg0 key="itracker.web.attr.email"/>
             </field>
             <field property="firstName" depends="required">

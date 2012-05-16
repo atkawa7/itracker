@@ -18,21 +18,8 @@
 
 package org.itracker.web.actions.admin.project;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.Component;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
@@ -42,122 +29,129 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ComponentForm;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
 
 /**
  * Action for edit a component entity
- * 
- * @author ranks
  *
+ * @author ranks
  */
 public class EditComponentAction extends ItrackerBaseAction {
-	private static final Logger log = Logger
-			.getLogger(EditComponentAction.class);
+    private static final Logger log = Logger
+            .getLogger(EditComponentAction.class);
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-    	ActionMessages errors = new ActionMessages();
-    	
-		if (!isTokenValid(request)) {
-			log.debug("Invalid request token while editing component.");
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-			"itracker.web.error.transaction"));
-			saveErrors(request, errors);
-			return mapping.findForward("listprojectsadmin");
-		}
-		resetToken(request);
+    public ActionForward execute(ActionMapping mapping, ActionForm form,
+                                 HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        ActionMessages errors = new ActionMessages();
 
-		Component component = null;
-		Project project = null;
+        if (!isTokenValid(request)) {
+            log.debug("Invalid request token while editing component.");
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                    "itracker.web.error.transaction"));
+            saveErrors(request, errors);
+            return mapping.findForward("listprojectsadmin");
+        }
+        resetToken(request);
 
-		try {
-			ComponentForm componentForm = (ComponentForm) form;
-			ProjectService projectService = getITrackerServices()
-					.getProjectService();
+        Component component = null;
+        Project project = null;
 
-			HttpSession session = request.getSession(true);
-			Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
+        try {
+            ComponentForm componentForm = (ComponentForm) form;
+            ProjectService projectService = getITrackerServices()
+                    .getProjectService();
 
-			Integer projectId = componentForm.getProjectId();
+            HttpSession session = request.getSession(true);
+            Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
 
-			if (projectId == null) {
-				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-						"itracker.web.error.invalidproject"));
-			} else {
-				project = projectService.getProject(projectId);
-				if (project == null) {
-					errors.add(ActionMessages.GLOBAL_MESSAGE,
-							new ActionMessage(
-									"itracker.web.error.invalidproject"));
-				} else {
-					boolean authorised = UserUtilities.hasPermission(
-							userPermissionsMap, project.getId(),
-							UserUtilities.PERMISSION_PRODUCT_ADMIN);
+            Integer projectId = componentForm.getProjectId();
 
-					if (!authorised) {
-						return mapping.findForward("unauthorized");
-					} else {
-						String action = (String) request.getParameter("action");
-						if (log.isDebugEnabled()) {
-							log.debug("execute: action was " + action);
-						}
+            if (projectId == null) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                        "itracker.web.error.invalidproject"));
+            } else {
+                project = projectService.getProject(projectId);
+                if (project == null) {
+                    errors.add(ActionMessages.GLOBAL_MESSAGE,
+                            new ActionMessage(
+                                    "itracker.web.error.invalidproject"));
+                } else {
+                    boolean authorised = UserUtilities.hasPermission(
+                            userPermissionsMap, project.getId(),
+                            UserUtilities.PERMISSION_PRODUCT_ADMIN);
 
-						if ("create".equals(action)) {
-							if (log.isDebugEnabled()) {
-								log.debug("execute: create new component for " + project);
-							}
-							component = new Component(project, componentForm
-									.getName());
-							component.setDescription(componentForm
-									.getDescription());
-							if (log.isDebugEnabled()) {
-								log.debug("execute: adding " + component);
-							}
-							component = projectService.addProjectComponent(
-									project.getId(), component);
+                    if (!authorised) {
+                        return mapping.findForward("unauthorized");
+                    } else {
+                        String action = (String) request.getParameter("action");
+                        if (log.isDebugEnabled()) {
+                            log.debug("execute: action was " + action);
+                        }
 
-							if (log.isDebugEnabled()) {
-								log.debug("execute: added new component " + component);
-							}
-						} else if ("update".equals(action)) {
-							
-							component = projectService
-									.getProjectComponent(componentForm.getId());
-							if (log.isDebugEnabled()) {
-								log.debug("execute: update component " + component);
-							}
-							
-							component.setName(componentForm.getName());
-							component.setDescription(componentForm
-									.getDescription());
-							component.setProject(project);
-							
-							if (log.isDebugEnabled()) {
-								log.debug("execute: updating to " + component);
-							}
-							component = projectService
-									.updateProjectComponent(component);
-							
-							
-						}
-						session.removeAttribute(Constants.COMPONENT_KEY);
-						
-						return new ActionForward(mapping.findForward(
-								"editproject").getPath()
-								+ "?id=" + project.getId() + "&action=update");
-					}
-				}
-			}
-		} catch (RuntimeException ex) {
-			log.error("Exception processing form data", ex);
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-					"itracker.web.error.system"));
-		}
+                        if ("create".equals(action)) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("execute: create new component for " + project);
+                            }
+                            component = new Component(project, componentForm
+                                    .getName());
+                            component.setDescription(componentForm
+                                    .getDescription());
+                            if (log.isDebugEnabled()) {
+                                log.debug("execute: adding " + component);
+                            }
+                            component = projectService.addProjectComponent(
+                                    project.getId(), component);
 
-		if (!errors.isEmpty()) {
-			saveErrors(request, errors);
-		}
-		return mapping.findForward("error");
-	}
+                            if (log.isDebugEnabled()) {
+                                log.debug("execute: added new component " + component);
+                            }
+                        } else if ("update".equals(action)) {
+
+                            component = projectService
+                                    .getProjectComponent(componentForm.getId());
+                            if (log.isDebugEnabled()) {
+                                log.debug("execute: update component " + component);
+                            }
+
+                            component.setName(componentForm.getName());
+                            component.setDescription(componentForm
+                                    .getDescription());
+                            component.setProject(project);
+
+                            if (log.isDebugEnabled()) {
+                                log.debug("execute: updating to " + component);
+                            }
+                            component = projectService
+                                    .updateProjectComponent(component);
+
+
+                        }
+                        session.removeAttribute(Constants.COMPONENT_KEY);
+
+                        return new ActionForward(mapping.findForward(
+                                "editproject").getPath()
+                                + "?id=" + project.getId() + "&action=update");
+                    }
+                }
+            }
+        } catch (RuntimeException ex) {
+            log.error("Exception processing form data", ex);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                    "itracker.web.error.system"));
+        }
+
+        if (!errors.isEmpty()) {
+            saveErrors(request, errors);
+        }
+        return mapping.findForward("error");
+    }
 
 }

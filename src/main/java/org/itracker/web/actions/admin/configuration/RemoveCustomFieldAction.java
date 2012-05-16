@@ -18,19 +18,9 @@
 
 package org.itracker.web.actions.admin.configuration;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.services.ConfigurationService;
@@ -40,61 +30,65 @@ import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 public class RemoveCustomFieldAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(RemoveCustomFieldAction.class);
-	
+    private static final Logger log = Logger.getLogger(RemoveCustomFieldAction.class);
+
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        
-        if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+
+        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
-        
+
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
-            
+
             Integer valueId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
-            if(valueId == null || valueId.intValue() <= 0) {
+            if (valueId == null || valueId.intValue() <= 0) {
                 throw new SystemConfigurationException("Invalid custom field id.");
             }
-            
+
             CustomField customField = configurationService.getCustomField(valueId);
-            if(customField == null) {
+            if (customField == null) {
                 throw new SystemConfigurationException("Invalid custom field id.");
             }
             String key = CustomFieldUtilities.getCustomFieldLabelKey(customField.getId());
             boolean status = configurationService.removeCustomField(customField.getId());
-            if ( status ) {
-                if ( key != null )
+            if (status) {
+                if (key != null)
                     ITrackerResources.clearKeyFromBundles(key, false);
             } else {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
             }
-            
+
             configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
             if (!errors.isEmpty()) {
-            	saveErrors(request, errors);
-            	return mapping.getInputForward();
+                saveErrors(request, errors);
+                return mapping.getInputForward();
             }
             return mapping.findForward("listconfiguration");
-        } catch(SystemConfigurationException sce) {
+        } catch (SystemConfigurationException sce) {
             log.debug(sce.getMessage(), sce);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidcustomfield"));
-        } catch(NumberFormatException nfe) {
+        } catch (NumberFormatException nfe) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidcustomfield"));
             log.debug("Invalid custom field  id " + request.getParameter("id") + " specified.");
-        } catch(Exception e) {
+        } catch (Exception e) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
             log.error("System Error.", e);
         }
-        if(! errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             saveMessages(request, errors);
         }
         return mapping.findForward("error");
     }
-    
+
 }

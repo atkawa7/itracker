@@ -18,60 +18,54 @@
 
 package org.itracker.web.actions.admin.language;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
 
 /**
- * 
  * Please comment this one... what is it used for?
- * @author ready
  *
+ * @author ready
  */
 public class CreateLanguageKeyFormAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(CreateLanguageKeyFormAction.class);
-	
+    private static final Logger log = Logger.getLogger(CreateLanguageKeyFormAction.class);
+
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	ActionMessages errors = new ActionMessages();
+        ActionMessages errors = new ActionMessages();
 
-        if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
-		ConfigurationService configurationService = this.getITrackerServices().getConfigurationService();
-	    Map<String,List<String>> languages = configurationService.getAvailableLanguages();
-	    String baseLocale = ITrackerResources.BASE_LOCALE;
-	    
-		request.setAttribute("languages",languages);
-		request.setAttribute("languageKeys",languages.keySet().toArray());
-		request.setAttribute("baseLocale",baseLocale);
-		
+        ConfigurationService configurationService = this.getITrackerServices().getConfigurationService();
+        Map<String, List<String>> languages = configurationService.getAvailableLanguages();
+        String baseLocale = ITrackerResources.BASE_LOCALE;
+
+        request.setAttribute("languages", languages);
+        request.setAttribute("languageKeys", languages.keySet().toArray());
+        request.setAttribute("baseLocale", baseLocale);
+
         try {
             saveToken(request);
             return mapping.getInputForward();
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Exception while creating create language key form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
-        if(! errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             saveErrors(request, errors);
         }
 

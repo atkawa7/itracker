@@ -18,34 +18,28 @@
 
 package org.itracker.core.resources;
 
+import org.apache.log4j.Logger;
+import org.apache.oro.text.regex.*;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.MatchResult;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.PatternMatcherInput;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
-
 /**
-  * This class provides support for message replacement when there is a need for more than
-  * 10 arguements.  Currently the only additional formatting it accepts are number patterns.
-  */
+ * This class provides support for message replacement when there is a need for more than
+ * 10 arguements.  Currently the only additional formatting it accepts are number patterns.
+ */
 public class MessageFormat {
-    
-    private static final Logger logger = Logger.getLogger(MessageFormat.class); 
+
+    private static final Logger logger = Logger.getLogger(MessageFormat.class);
     private static final Perl5Matcher matcher = new Perl5Matcher();
     private static final PatternCompiler compiler = new Perl5Compiler();
     private static Pattern pattern;
 
     static {
         try {
-            pattern = compiler.compile("{(\\d+),?([\\w]*),?(.*?)}", Perl5Compiler.CASE_INSENSITIVE_MASK|Perl5Compiler.SINGLELINE_MASK);
-        } catch(MalformedPatternException mpe) {
+            pattern = compiler.compile("{(\\d+),?([\\w]*),?(.*?)}", Perl5Compiler.CASE_INSENSITIVE_MASK | Perl5Compiler.SINGLELINE_MASK);
+        } catch (MalformedPatternException mpe) {
             logger.error("Invalid pattern specified.  No formatting will be performed.", mpe);
             pattern = null;
         }
@@ -58,12 +52,12 @@ public class MessageFormat {
     public static String format(String message, Object[] options, Locale locale) {
         String output = message;
 
-        if(pattern != null) {
+        if (pattern != null) {
             int currentOffset = 0;
             StringBuffer buffer = new StringBuffer();
             PatternMatcherInput input = new PatternMatcherInput(message);
 
-            while(matcher.contains(input, pattern)) {
+            while (matcher.contains(input, pattern)) {
                 MatchResult result = null;
                 try {
                     result = matcher.getMatch();
@@ -73,16 +67,16 @@ public class MessageFormat {
                     buffer.append(message.substring(currentOffset, result.beginOffset(0)));
                     currentOffset = result.endOffset(0);
 
-                    if(options != null && optionNumber < options.length && options[optionNumber] != null) {
-                        if(numGroups > 2 && "number".equalsIgnoreCase(result.group(2))) {
+                    if (options != null && optionNumber < options.length && options[optionNumber] != null) {
+                        if (numGroups > 2 && "number".equalsIgnoreCase(result.group(2))) {
                             // Format the option value as a number
                             try {
                                 NumberFormat formatter = NumberFormat.getInstance(locale);
-                                if(numGroups > 3) {
+                                if (numGroups > 3) {
                                     formatter = new DecimalFormat(result.group(3));
                                 }
                                 buffer.append(formatter.format(Double.parseDouble(options[optionNumber].toString())));
-                            } catch(Exception e) {
+                            } catch (Exception e) {
                                 logger.debug("Unable to format " + options[optionNumber] + " as number.", e);
                                 buffer.append(options[optionNumber].toString());
                             }
@@ -90,13 +84,13 @@ public class MessageFormat {
                             buffer.append(options[optionNumber].toString());
                         }
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     logger.error("Unable to perform option replacement for option " + (result == null ? "NULL" : result.group(1)));
                     logger.debug("Invalid option has current offest of " + currentOffset + " in message '" + message + "'", e);
                 }
             }
 
-            if(buffer.length() > 0) {
+            if (buffer.length() > 0) {
                 buffer.append(message.substring(currentOffset));
                 output = buffer.toString();
             }

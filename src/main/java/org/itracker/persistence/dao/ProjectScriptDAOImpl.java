@@ -1,40 +1,40 @@
 package org.itracker.persistence.dao;
 
-import java.util.List;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.itracker.model.ProjectScript;
 
+import java.util.List;
+
 /**
- * ProjectScript DAO implementation. 
- * 
+ * ProjectScript DAO implementation.
+ *
  * @author johnny
  */
-public class ProjectScriptDAOImpl  extends BaseHibernateDAOImpl<ProjectScript> 
+public class ProjectScriptDAOImpl extends BaseHibernateDAOImpl<ProjectScript>
         implements ProjectScriptDAO {
-    
+
     /**
-     * 
+     *
      */
     public ProjectScriptDAOImpl() {
     }
 
     public ProjectScript findByPrimaryKey(Integer scriptId) {
         ProjectScript script;
-        
+
         try {
-            script = (ProjectScript)getSession().get(ProjectScript.class, scriptId);
+            script = (ProjectScript) getSession().get(ProjectScript.class, scriptId);
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
         return script;
     }
-    
+
     @SuppressWarnings("unchecked")
     public List<ProjectScript> findAll() {
         List<ProjectScript> scripts;
-        
+
         try {
             Query query = getSession().getNamedQuery("ProjectScriptsAllQuery");
             scripts = query.list();
@@ -43,11 +43,11 @@ public class ProjectScriptDAOImpl  extends BaseHibernateDAOImpl<ProjectScript>
         }
         return scripts;
     }
-    
+
     @SuppressWarnings("unchecked")
     public List<ProjectScript> findByProject(Integer projectId) {
         List<ProjectScript> scripts;
-        
+
         try {
             Query query = getSession().getNamedQuery(
                     "ProjectScriptsByProjectQuery");
@@ -60,10 +60,10 @@ public class ProjectScriptDAOImpl  extends BaseHibernateDAOImpl<ProjectScript>
     }
 
     @SuppressWarnings("unchecked")
-    public List<ProjectScript> findByProjectField(Integer projectId, 
-            Integer fieldId) {
+    public List<ProjectScript> findByProjectField(Integer projectId,
+                                                  Integer fieldId) {
         List<ProjectScript> scripts;
-        
+
         try {
             Query query = getSession().getNamedQuery(
                     "ProjectScriptsByProjectAndFieldQuery");

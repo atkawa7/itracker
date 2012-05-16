@@ -23,13 +23,13 @@ import org.apache.struts.util.MessageResourcesFactory;
 
 public class ITrackerMessageResourcesFactory extends MessageResourcesFactory {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	public MessageResources createResources(String config) {
-		return new ITrackerMessageResources(this, config, this.returnNull);
-	}
+    public MessageResources createResources(String config) {
+        return new ITrackerMessageResources(this, config, this.returnNull);
+    }
 
 }

@@ -19,15 +19,6 @@
 package org.itracker.web.servlets;
 
 
-import java.io.IOException;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
@@ -36,18 +27,26 @@ import org.itracker.model.IssueAttachment;
 import org.itracker.model.User;
 import org.itracker.services.IssueService;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
 /**
  * @deprecated Use org.itracker.web.actions.admin.attachment.DownloadAttachmentAction instead.
  */
 public class AttachmentDownloadController extends GenericController {
 
-	private static final Logger logger = Logger.getLogger(AttachmentDownloadController.class);
+    private static final Logger logger = Logger.getLogger(AttachmentDownloadController.class);
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	public AttachmentDownloadController() {
+    public AttachmentDownloadController() {
     }
 
     public void init(ServletConfig config) {
@@ -56,14 +55,14 @@ public class AttachmentDownloadController extends GenericController {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletOutputStream out = null;
 
-        if(! isLoggedInWithRedirect(request, response)) {
+        if (!isLoggedInWithRedirect(request, response)) {
             return;
         }
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         try {
-            IssueService issueService = getITrackerServices(request.getSession().getServletContext() ).getIssueService();
+            IssueService issueService = getITrackerServices(request.getSession().getServletContext()).getIssueService();
 
             Integer attachmentId = null;
             IssueAttachment attachment = null;
@@ -71,13 +70,13 @@ public class AttachmentDownloadController extends GenericController {
             try {
                 attachmentId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
                 attachment = issueService.getIssueAttachment(attachmentId);
-            } catch(NumberFormatException nfe) {
-                if(logger.isDebugEnabled()) {
+            } catch (NumberFormatException nfe) {
+                if (logger.isDebugEnabled()) {
                     logger.debug("Invalid attachmentId " + request.getParameter("id") + " specified.");
                 }
             }
 
-            if(attachment == null) {
+            if (attachment == null) {
                 ActionErrors errors = new ActionErrors();
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidattachment"));
                 saveMessages(request, errors);
@@ -85,13 +84,13 @@ public class AttachmentDownloadController extends GenericController {
                 return;
             }
 
-            if(! issueService.canViewIssue(attachment.getIssue().getId(), user)) {
+            if (!issueService.canViewIssue(attachment.getIssue().getId(), user)) {
                 forward("/themes/defaulttheme/unauthorized.jsp", request, response);
                 return;
             }
 
             byte[] fileData = issueService.getIssueAttachmentData(attachmentId);
-            if(fileData == null) {
+            if (fileData == null) {
                 ActionErrors errors = new ActionErrors();
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingattachmentdata"));
                 saveMessages(request, errors);
@@ -104,12 +103,12 @@ public class AttachmentDownloadController extends GenericController {
             out = response.getOutputStream();
             logger.debug("Displaying attachment " + attachment.getId() + " of type " + attachment.getType() + " to client.  Attachment size: " + fileData.length);
             out.write(fileData);
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             logger.info("Unable to display attachment.", ioe);
-        } catch(Exception e) {
-            logger.error( e.getMessage(), e );
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         } finally {
-            if(out != null) {
+            if (out != null) {
                 out.flush();
                 out.close();
             }

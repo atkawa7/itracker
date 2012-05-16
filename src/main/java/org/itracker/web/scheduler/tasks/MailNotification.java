@@ -1,22 +1,14 @@
 package org.itracker.web.scheduler.tasks;
 
-import java.util.Properties;
-
-import javax.mail.FetchProfile;
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.search.FlagTerm;
-
 import org.apache.log4j.Logger;
 import org.itracker.services.NotificationService;
 
+import javax.mail.*;
+import javax.mail.search.FlagTerm;
+import java.util.Properties;
+
 /**
  * @author rui (rui.silva@emation.pt)
- *  
  */
 public class MailNotification extends BaseJob {
 
@@ -31,24 +23,25 @@ public class MailNotification extends BaseJob {
 
     public MailNotification() {
     }
-    
+
     public void setNotificationService(NotificationService notificationService) {
-		this.notificationService = notificationService;
-	}
+        this.notificationService = notificationService;
+    }
+
     public NotificationService getNotificationService() {
-		return notificationService;
-	}
-    
+        return notificationService;
+    }
+
     /**
-     *  
+     *
      */
     @SuppressWarnings("unused")
-	private String getProjectId() {
+    private String getProjectId() {
         return projectId;
     }
 
     private void setProjectId(String id) {
-        projectId= id;
+        projectId = id;
     }
 
     /*
@@ -64,12 +57,12 @@ public class MailNotification extends BaseJob {
         folderName = args[3];
 
         setProjectId(args[4]);
-        
-        protocol =  args[5];
+
+        protocol = args[5];
 
         try {
             process();
-        } catch (MessagingException ex) {            
+        } catch (MessagingException ex) {
             logger.error("performTask: failed with messaging exception", ex);
         } catch (NotificationException ex) {
             logger.error("performTask: failed with notification exception", ex);
@@ -79,8 +72,6 @@ public class MailNotification extends BaseJob {
     /**
      * process() checks for new messages and calls processMsg() for every new
      * message
-     * @throws MessagingException
-     * @throws NotificationException
      */
     public void process() throws MessagingException, NotificationException {
 
@@ -125,9 +116,9 @@ public class MailNotification extends BaseJob {
             Message message = messages[i];
             if (search.match(message)) {
                 try {
-                    
+
                     // TODO: process message
-                    
+
                     message.setFlag(Flags.Flag.SEEN, true);
                     logger.info("Processed Message: " + message.getSubject() + " From: " + message.getFrom()[0]);
                 } catch (Exception e) {

@@ -18,42 +18,36 @@
 
 package org.itracker.web.actions.admin.language;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Language;
 import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 
 
 public class CreateLanguageKeyAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(CreateLanguageKeyAction.class);
-	
+    private static final Logger log = Logger.getLogger(CreateLanguageKeyAction.class);
+
 
     @SuppressWarnings("unchecked")
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        
-        if(! isTokenValid(request)) {
+
+        if (!isTokenValid(request)) {
             log.debug("Invalid request token while creating language key.");
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-			"itracker.web.error.transaction"));
-			saveErrors(request, errors);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                    "itracker.web.error.transaction"));
+            saveErrors(request, errors);
             return mapping.findForward("listlanguages");
         }
         resetToken(request);
@@ -65,15 +59,15 @@ public class CreateLanguageKeyAction extends ItrackerBaseAction {
             HashMap<String, String> items = (HashMap<String, String>) PropertyUtils.getSimpleProperty(form, "items");
 
             // Move to validation code
-            if(items != null) {
+            if (items != null) {
                 log.debug("Adding new language key: " + key);
-                for(Iterator<String> iter = items.keySet().iterator(); iter.hasNext(); ) {
+                for (Iterator<String> iter = items.keySet().iterator(); iter.hasNext(); ) {
                     String locale = iter.next();
                     log.debug("Checking translation for locale " + locale);
-                    if(locale != null) {
+                    if (locale != null) {
                         String value = items.get(locale);
                         log.debug("Locale value: " + value);
-                        if(value != null && ! value.equals("")) {
+                        if (value != null && !value.equals("")) {
                             log.debug("Adding new translation for locale " + locale + " for key " + key);
                             configurationService.updateLanguageItem(new Language(locale, key, value));
                         }
@@ -86,12 +80,12 @@ public class CreateLanguageKeyAction extends ItrackerBaseAction {
             }
 
             return mapping.findForward("listlanguages");
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
-        if(! errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             saveErrors(request, errors);
             saveToken(request);
             return mapping.getInputForward();

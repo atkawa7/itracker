@@ -18,24 +18,10 @@
 
 package org.itracker.web.actions.project;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.beanutils.converters.IntegerConverter;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.Status;
@@ -46,15 +32,24 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+import java.util.Set;
+
 
 public class AssignIssueAction extends ItrackerBaseAction {
 
-	private static final Logger log = Logger.getLogger(AssignIssueAction.class);
+    private static final Logger log = Logger.getLogger(AssignIssueAction.class);
 
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    	ActionMessages errors = new ActionMessages();
+        ActionMessages errors = new ActionMessages();
 
         try {
             IssueService issueService = getITrackerServices().getIssueService();
@@ -72,36 +67,36 @@ public class AssignIssueAction extends ItrackerBaseAction {
             Integer currUserId = currUser.getId();
 
             Project project = projectService.getProject(projectId);
-            if(project == null) {
+            if (project == null) {
                 return mapping.findForward("unauthorized");
             }
 
-            if(! userId.equals(currUserId) && ! UserUtilities.hasPermission(userPermissions, projectId, UserUtilities.PERMISSION_ASSIGN_OTHERS)) {
+            if (!userId.equals(currUserId) && !UserUtilities.hasPermission(userPermissions, projectId, UserUtilities.PERMISSION_ASSIGN_OTHERS)) {
                 return mapping.findForward("unauthorized");
-            } else if(! UserUtilities.hasPermission(userPermissions, projectId, UserUtilities.PERMISSION_ASSIGN_SELF)) {
+            } else if (!UserUtilities.hasPermission(userPermissions, projectId, UserUtilities.PERMISSION_ASSIGN_SELF)) {
                 return mapping.findForward("unauthorized");
             }
 
-            if(project.getStatus() != Status.ACTIVE) {
-            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
+            if (project.getStatus() != Status.ACTIVE) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.projectlocked"));
             } else {
-                issueService.assignIssue(issueId, userId, currUserId);                
+                issueService.assignIssue(issueId, userId, currUserId);
             }
-        } catch(RuntimeException e) {
-        	log.warn("execute: caught exception", e);
-        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+        } catch (RuntimeException e) {
+            log.warn("execute: caught exception", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         } catch (IllegalAccessException e) {
-        	log.warn("execute: caught exception", e);
-        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-		} catch (InvocationTargetException e) {
-        	log.warn("execute: caught exception", e);
-        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-		} catch (NoSuchMethodException e) {
-        	log.warn("execute: caught exception", e);
-        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-		}
+            log.warn("execute: caught exception", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+        } catch (InvocationTargetException e) {
+            log.warn("execute: caught exception", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+        } catch (NoSuchMethodException e) {
+            log.warn("execute: caught exception", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+        }
 
-        if(! errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             saveErrors(request, errors);
             saveToken(request);
         }

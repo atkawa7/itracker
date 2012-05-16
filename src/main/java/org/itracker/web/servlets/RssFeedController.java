@@ -248,7 +248,7 @@ public class RssFeedController extends GenericController {
 
             issue = issuesIt.next();
             current = new Item();
-             current.setUri("http://mgpro.local/itracker/servlets/issues/1/4");
+            current.setUri("http://mgpro.local/itracker/servlets/issues/1/4");
             current.setLink(getIssueURL(issue, null, req, getServletContext(), baseURL));
 
             Guid guid = new Guid();
@@ -349,7 +349,7 @@ public class RssFeedController extends GenericController {
         return
                 //HtmlUtils.htmlEscape(
                 baseUrl + TagUtils.getInstance().pageURL(req, forwardConfig.getPath(), conf)
-                +i.getId()
+                        + i.getId()
 //                        + "?id=" + i.getId() + (null == ih ? "" : "#history_" + ih.getId()
 ////                )
 //                )
@@ -365,7 +365,7 @@ public class RssFeedController extends GenericController {
         ForwardConfig forwardConfig = conf.findForwardConfig("listissues");
         return
 //                HtmlUtils.htmlEscape(
-                baseUrl + TagUtils.getInstance().pageURL(req, forwardConfig.getPath(), conf) +p.getId()
+                baseUrl + TagUtils.getInstance().pageURL(req, forwardConfig.getPath(), conf) + p.getId()
 //                        + "?id=" + p.getId() + (null == i ? "" : "#issue_"
 //                        + i.getId()
 ////                        )

@@ -18,234 +18,234 @@
 
 package org.itracker.model;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.itracker.persistence.dao.ProjectDAO;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Transformer;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.itracker.persistence.dao.ProjectDAO;
-
 public class IssueSearchQuery implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	public static final Integer TYPE_FULL = 1;
-	public static final Integer TYPE_PROJECT = 2;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    public static final Integer TYPE_FULL = 1;
+    public static final Integer TYPE_PROJECT = 2;
 
-	private List<Project> availableProjects = new ArrayList<Project>();
+    private List<Project> availableProjects = new ArrayList<Project>();
 
-	private List<Integer> projects = new ArrayList<Integer>();
-	private List<Integer> statuses = new ArrayList<Integer>();
-	private List<Integer> severities = new ArrayList<Integer>();
-	private List<Integer> components = new ArrayList<Integer>();
-	private List<Integer> versions = new ArrayList<Integer>();
-	private Integer targetVersion = null;
-	private User owner = null;
-	private User creator = null;
-	private String text = null;
-	private String resolution = null;
+    private List<Integer> projects = new ArrayList<Integer>();
+    private List<Integer> statuses = new ArrayList<Integer>();
+    private List<Integer> severities = new ArrayList<Integer>();
+    private List<Integer> components = new ArrayList<Integer>();
+    private List<Integer> versions = new ArrayList<Integer>();
+    private Integer targetVersion = null;
+    private User owner = null;
+    private User creator = null;
+    private String text = null;
+    private String resolution = null;
 
-	private String orderBy = null;
+    private String orderBy = null;
 
-	private Integer type = -1;
-	private Project project = null;
-	private Integer projectId = -1;
-	private String projectName = "";
+    private Integer type = -1;
+    private Project project = null;
+    private Integer projectId = -1;
+    private String projectName = "";
 
-	private List<Issue> results = null;
+    private List<Issue> results = null;
 
-	public IssueSearchQuery() {
-	}
+    public IssueSearchQuery() {
+    }
 
-	public List<Project> getAvailableProjects() {
-		return availableProjects;
-	}
+    public List<Project> getAvailableProjects() {
+        return availableProjects;
+    }
 
-	public void setAvailableProjects(List<Project> value) {
-		if (null != value) {
-			availableProjects = Collections.unmodifiableList(value);
-		} else {
-			availableProjects = Collections.EMPTY_LIST;
-		}
-	}
+    public void setAvailableProjects(List<Project> value) {
+        if (null != value) {
+            availableProjects = Collections.unmodifiableList(value);
+        } else {
+            availableProjects = Collections.EMPTY_LIST;
+        }
+    }
 
-	public Project getProject() {
-		return project;
-	}
+    public Project getProject() {
+        return project;
+    }
 
-	public void setProject(Project value) {
-		project = value;
-	}
+    public void setProject(Project value) {
+        project = value;
+    }
 
-	public Integer getProjectId() {
-		return (project == null ? projectId : project.getId());
-	}
+    public Integer getProjectId() {
+        return (project == null ? projectId : project.getId());
+    }
 
-	public void setProjectId(Integer value) {
-		projectId = value;
+    public void setProjectId(Integer value) {
+        projectId = value;
 
-	}
+    }
 
-	public String getProjectName() {
-		return (project == null ? projectName : project.getName());
-	}
+    public String getProjectName() {
+        return (project == null ? projectName : project.getName());
+    }
 
-	public void setProjectName(String value) {
-		projectName = value;
-	}
+    public void setProjectName(String value) {
+        projectName = value;
+    }
 
-	public List<Integer> getProjects() {
-		return projects;
-	}
+    public List<Integer> getProjects() {
+        return projects;
+    }
 
-	public void setProjects(List<Integer> value) {
-		if (value != null) {
-			projects = Collections.unmodifiableList(value);
-		} else {
-			projects = Collections.EMPTY_LIST;
-		}
-	}
+    public void setProjects(List<Integer> value) {
+        if (value != null) {
+            projects = Collections.unmodifiableList(value);
+        } else {
+            projects = Collections.EMPTY_LIST;
+        }
+    }
 
-	public List<Integer> getSeverities() {
-		return severities;
-	}
+    public List<Integer> getSeverities() {
+        return severities;
+    }
 
-	public void setSeverities(List<Integer> value) {
-		if (value != null) {
-			severities = Collections.unmodifiableList(value);
-		} else {
-			severities = Collections.EMPTY_LIST;
-		}
-	}
+    public void setSeverities(List<Integer> value) {
+        if (value != null) {
+            severities = Collections.unmodifiableList(value);
+        } else {
+            severities = Collections.EMPTY_LIST;
+        }
+    }
 
-	public List<Integer> getStatuses() {
-		return statuses;
-	}
+    public List<Integer> getStatuses() {
+        return statuses;
+    }
 
-	public void setStatuses(List<Integer> value) {
-		if (value != null) {
-			statuses = Collections.unmodifiableList(value);
-		} else {
-			statuses = Collections.EMPTY_LIST;
-		}
-	}
+    public void setStatuses(List<Integer> value) {
+        if (value != null) {
+            statuses = Collections.unmodifiableList(value);
+        } else {
+            statuses = Collections.EMPTY_LIST;
+        }
+    }
 
-	public List<Integer> getComponents() {
-		return components;
-	}
+    public List<Integer> getComponents() {
+        return components;
+    }
 
-	public void setComponents(List<Integer> value) {
-		
-		if (value != null) {
-			components = Collections.unmodifiableList(value);
-		} else {
-			components = Collections.EMPTY_LIST;
-		}
-	}
+    public void setComponents(List<Integer> value) {
 
-	public List<Integer> getVersions() {
-		return versions;
-	}
+        if (value != null) {
+            components = Collections.unmodifiableList(value);
+        } else {
+            components = Collections.EMPTY_LIST;
+        }
+    }
 
-	public void setVersions(List<Integer> value) {
-		if (value != null) {
-			versions = Collections.unmodifiableList(value);
-		} else {
-			versions = Collections.EMPTY_LIST;
-		}
-	}
+    public List<Integer> getVersions() {
+        return versions;
+    }
 
-	public Integer getTargetVersion() {
-		return targetVersion;
-	}
+    public void setVersions(List<Integer> value) {
+        if (value != null) {
+            versions = Collections.unmodifiableList(value);
+        } else {
+            versions = Collections.EMPTY_LIST;
+        }
+    }
 
-	public void setTargetVersion(Integer value) {
-		targetVersion = value;
-	}
+    public Integer getTargetVersion() {
+        return targetVersion;
+    }
 
-	public User getOwner() {
-		return owner;
-	}
+    public void setTargetVersion(Integer value) {
+        targetVersion = value;
+    }
 
-	public void setOwner(User value) {
-		owner = value;
-	}
+    public User getOwner() {
+        return owner;
+    }
 
-	public User getCreator() {
-		return creator;
-	}
+    public void setOwner(User value) {
+        owner = value;
+    }
 
-	public void setCreator(User value) {
-		creator = value;
-	}
+    public User getCreator() {
+        return creator;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public void setCreator(User value) {
+        creator = value;
+    }
 
-	public void setText(String value) {
-		text = value;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public String getResolution() {
-		return resolution;
-	}
+    public void setText(String value) {
+        text = value;
+    }
 
-	public void setResolution(String value) {
-		resolution = value;
-	}
+    public String getResolution() {
+        return resolution;
+    }
 
-	public String getOrderBy() {
-		return orderBy;
-	}
+    public void setResolution(String value) {
+        resolution = value;
+    }
 
-	public void setOrderBy(String value) {
-		orderBy = value;
-	}
+    public String getOrderBy() {
+        return orderBy;
+    }
 
-	public Integer getType() {
-		return type;
-	}
+    public void setOrderBy(String value) {
+        orderBy = value;
+    }
 
-	public void setType(Integer value) {
-		type = value;
-	}
+    public Integer getType() {
+        return type;
+    }
 
-	public List<Issue> getResults() {
-		return results;
-	}
+    public void setType(Integer value) {
+        type = value;
+    }
 
-	public void setResults(List<Issue> value) {
-		results = value;
-	}
+    public List<Issue> getResults() {
+        return results;
+    }
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("type", this.type).append(
-				"severities", severities).append("text", text).append(
-				"resoution", resolution).append("results", results).toString();
-	}
+    public void setResults(List<Issue> value) {
+        results = value;
+    }
 
-	/*
-	 * this class is coded to keep integer ids, instead of objects the following
-	 * methods exist to temporarily work around this.
-	 * 
-	 * the proper fix would be to always keep objects
-	 */
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("type", this.type).append(
+                "severities", severities).append("text", text).append(
+                "resoution", resolution).append("results", results).toString();
+    }
 
-	// from the list of project ids this objects has, return a list of
-	// projects
-	public Collection<?> getProjectsObjects(final ProjectDAO projectDAO) {
-		return CollectionUtils.collect(getProjects(), new Transformer() {
-			public Object transform(Object arg0) {
-				return projectDAO.findByPrimaryKey((Integer) arg0);
-			}
-		});
-	}
+    /*
+      * this class is coded to keep integer ids, instead of objects the following
+      * methods exist to temporarily work around this.
+      *
+      * the proper fix would be to always keep objects
+      */
+
+    // from the list of project ids this objects has, return a list of
+    // projects
+    public Collection<?> getProjectsObjects(final ProjectDAO projectDAO) {
+        return CollectionUtils.collect(getProjects(), new Transformer() {
+            public Object transform(Object arg0) {
+                return projectDAO.findByPrimaryKey((Integer) arg0);
+            }
+        });
+    }
 }

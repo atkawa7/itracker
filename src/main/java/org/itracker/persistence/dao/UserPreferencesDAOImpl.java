@@ -4,13 +4,13 @@ import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
 
 /**
- * 
+ *
  */
-public class UserPreferencesDAOImpl extends BaseHibernateDAOImpl<UserPreferences> 
+public class UserPreferencesDAOImpl extends BaseHibernateDAOImpl<UserPreferences>
         implements UserPreferencesDAO {
 
     private UserDAO userDAO;
-    
+
     public UserPreferences findByUserId(Integer userId) {
 
         User user = userDAO.findByPrimaryKey(userId);

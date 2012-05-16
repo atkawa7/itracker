@@ -1,15 +1,15 @@
 package org.itracker.persistence.dao;
 
-import java.util.List;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.itracker.model.IssueActivity;
 
+import java.util.List;
+
 /**
- * 
+ *
  */
-public class IssueActivityDAOImpl extends BaseHibernateDAOImpl<IssueActivity> 
+public class IssueActivityDAOImpl extends BaseHibernateDAOImpl<IssueActivity>
         implements IssueActivityDAO {
 
     public IssueActivityDAOImpl() {
@@ -18,18 +18,18 @@ public class IssueActivityDAOImpl extends BaseHibernateDAOImpl<IssueActivity>
     public IssueActivity findById(Integer activityId) {
         IssueActivity activity;
         try {
-            activity = (IssueActivity)getSession().get(IssueActivity.class, 
+            activity = (IssueActivity) getSession().get(IssueActivity.class,
                     activityId);
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
         return activity;
     }
-    
+
     @SuppressWarnings("unchecked")
     public List<IssueActivity> findByIssueId(Integer issueId) {
-        List<IssueActivity> activities; 
-        
+        List<IssueActivity> activities;
+
         try {
             Query query = getSession().getNamedQuery(
                     "IssueActivitiesByIssueQuery");
@@ -42,10 +42,10 @@ public class IssueActivityDAOImpl extends BaseHibernateDAOImpl<IssueActivity>
     }
 
     @SuppressWarnings("unchecked")
-    public List<IssueActivity> findByIssueIdAndNotification(Integer issueId, 
-            boolean notificationSent) {
-        List<IssueActivity> activities; 
-        
+    public List<IssueActivity> findByIssueIdAndNotification(Integer issueId,
+                                                            boolean notificationSent) {
+        List<IssueActivity> activities;
+
         try {
             Query query = getSession().getNamedQuery(
                     "IssueActivitiesByIssueAndNotificationQuery");

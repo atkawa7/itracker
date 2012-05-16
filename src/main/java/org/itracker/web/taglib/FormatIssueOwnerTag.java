@@ -18,16 +18,15 @@
 
 package org.itracker.web.taglib;
 
-import java.util.Locale;
-
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
-
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Issue;
 import org.itracker.web.util.Constants;
+
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.Locale;
 
 
 public class FormatIssueOwnerTag extends TagSupport {
@@ -38,70 +37,70 @@ public class FormatIssueOwnerTag extends TagSupport {
     private String emptyKey = "itracker.web.generic.unassigned";
     private String format;
     private Issue issue;
-    
+
     public String getFormat() {
         return format;
     }
-    
+
     public void setFormat(String value) {
         format = value;
     }
-    
+
     public Issue getIssue() {
         return issue;
     }
-    
+
     public void setIssue(Issue value) {
         issue = value;
     }
-    
+
     public String getEmptyKey() {
         return emptyKey;
     }
-    
+
     public void setEmptyKey(String value) {
         emptyKey = value;
     }
-    
+
     public int doStartTag() throws JspException {
         return SKIP_BODY;
     }
-    
+
     public int doEndTag() throws JspException {
         String value = "";
         Locale locale = null;
-        
+
         HttpSession session = pageContext.getSession();
-        if(session != null) {
+        if (session != null) {
             locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
         }
-        
-        if(issue == null || issue.getOwner() == null) {
+
+        if (issue == null || issue.getOwner() == null) {
             value = ITrackerResources.getString(emptyKey, locale);
         } else {
             try {
-                if("short".equalsIgnoreCase(format)) {
-                    value = (issue.getOwner().getFirstName().length() > 0 ? issue.getOwner().getFirstName().substring(0,1).toUpperCase() + "." : "") +
+                if ("short".equalsIgnoreCase(format)) {
+                    value = (issue.getOwner().getFirstName().length() > 0 ? issue.getOwner().getFirstName().substring(0, 1).toUpperCase() + "." : "") +
                             " " + issue.getOwner().getLastName();
                 } else {
                     value = issue.getOwner().getFirstName() + " " + issue.getOwner().getLastName();
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 value = ITrackerResources.getString(emptyKey, locale);
             }
         }
-        
+
         // ResponseUtils.write(pageContext, value);
         TagUtils.getInstance().write(pageContext, value);
         clearState();
         return EVAL_PAGE;
     }
-    
+
     public void release() {
         super.release();
         clearState();
     }
-    
+
     private void clearState() {
         emptyKey = "itracker.web.generic.unassigned";
         format = null;

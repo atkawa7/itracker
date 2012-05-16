@@ -18,38 +18,32 @@
 
 package org.itracker.web.actions.admin.configuration;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ImportForm;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 public class ImportDataFormAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(ImportDataFormAction.class);
-	
+    private static final Logger log = Logger.getLogger(ImportDataFormAction.class);
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
 
-        if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
         try {
             ImportForm importForm = (ImportForm) form;
-            if(importForm == null) {
+            if (importForm == null) {
                 importForm = new ImportForm();
             }
             importForm.setOptionreuseusers(Boolean.TRUE);
@@ -61,12 +55,12 @@ public class ImportDataFormAction extends ItrackerBaseAction {
             request.setAttribute("importForm", importForm);
             saveToken(request);
             return mapping.getInputForward();
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Exception while creating import data form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
-        if(! errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             saveErrors(request, errors);
         }
 

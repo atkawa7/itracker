@@ -20,17 +20,17 @@ package org.itracker.services.exceptions;
 
 
 /**
-  * This class is used to represent a variety of execptions that can occur
-  * while processing issues.
-  */
+ * This class is used to represent a variety of execptions that can occur
+ * while processing issues.
+ */
 public class IssueException extends Exception {
-    
+
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 3433495017849044287L;
-	public static final String TYPE_UNKNOWN = "itracker.web.error.system";
-	public static final String TYPE_CF_INVALID_LIST_OPTION = "itracker.web.error.validate.invalid";
+     *
+     */
+    private static final long serialVersionUID = 3433495017849044287L;
+    public static final String TYPE_UNKNOWN = "itracker.web.error.system";
+    public static final String TYPE_CF_INVALID_LIST_OPTION = "itracker.web.error.validate.invalid";
     public static final String TYPE_CF_PARSE_NUM = "itracker.web.error.validate.number";
     public static final String TYPE_CF_PARSE_DATE = "itracker.web.error.validate.date";
     public static final String TYPE_CF_REQ_FIELD = "itracker.web.error.validate.required";
@@ -38,64 +38,70 @@ public class IssueException extends Exception {
     private String type;
 
     /**
-      * Creates a new IssueException of unknown type.
-      */
+     * Creates a new IssueException of unknown type.
+     */
     public IssueException() {
         type = TYPE_UNKNOWN;
     }
 
     /**
-      * Creates a new IssueException of unknown type with a default message.
-      * @param message the exception error message
-      */
+     * Creates a new IssueException of unknown type with a default message.
+     *
+     * @param message the exception error message
+     */
     public IssueException(String message) {
         super(message);
         type = TYPE_UNKNOWN;
     }
 
     /**
-      * Creates a new IssueException of unknown type with a default message.
-      * @param message the exception error message
-      */
+     * Creates a new IssueException of unknown type with a default message.
+     *
+     * @param message the exception error message
+     */
     public IssueException(String message, Throwable cause) {
         super(message, cause);
         type = TYPE_UNKNOWN;
     }
-    
+
     /**
-      * Creates a new IssueException of specified type with a default message.
-      * @param message the exception error message
-      * @param type the exception type represented by a resource bundle key
-      */
+     * Creates a new IssueException of specified type with a default message.
+     *
+     * @param message the exception error message
+     * @param type    the exception type represented by a resource bundle key
+     */
     public IssueException(String message, String type) {
         super(message);
         this.type = type;
     }
 
     /**
-      * Creates a new IssueException of specified type with a default message.
-      * @param message the exception error message
-      * @param type the exception type represented by a resource bundle key
-      */
+     * Creates a new IssueException of specified type with a default message.
+     *
+     * @param message the exception error message
+     * @param type    the exception type represented by a resource bundle key
+     */
     public IssueException(String message, String type, Throwable cause) {
         super(message, cause);
         this.type = type;
     }
-    
+
     /**
-      * Returns the exception type which can be used to format a localized
-      * error message.
-      * @return String resource bundle key representing the exception type.
-      */
+     * Returns the exception type which can be used to format a localized
+     * error message.
+     *
+     * @return String resource bundle key representing the exception type.
+     */
     public String getType() {
         return type;
     }
 
     /**
-      * Sets the issue exception type.
-      * @param value a String code representing the type of issue exception
-      *              that occured.
-      */
+     * Sets the issue exception type.
+     *
+     * @param value a String code representing the type of issue exception
+     *              that occured.
+     */
     public void setType(String value) {
         type = value;
     }

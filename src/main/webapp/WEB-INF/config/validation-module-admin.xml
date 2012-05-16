@@ -34,93 +34,93 @@
             </field>
             <field property="fileDataFile" depends="requiredif">
                 <arg0 key="itracker.web.attr.file"/>
-                    <var>
-                        <var-name>field[0]</var-name>
-                        <var-value>fileData</var-value>
-                    </var>
-                    <var>
-                        <var-name>fieldTest[0]</var-name>
-                        <var-value>NULL</var-value>
-                    </var>
-                    <var>
-                        <var-name>field[1]</var-name>
-                        <var-value>fileDataFile</var-value>
-                    </var>
-                    <var>
-                        <var-name>fieldTest[1]</var-name>
-                        <var-value>NULL</var-value>
-                    </var>
-                    <var>
-                        <var-name>fieldJoin</var-name>
-                        <var-value>AND</var-value>
-                    </var>
+                <var>
+                    <var-name>field[0]</var-name>
+                    <var-value>fileData</var-value>
+                </var>
+                <var>
+                    <var-name>fieldTest[0]</var-name>
+                    <var-value>NULL</var-value>
+                </var>
+                <var>
+                    <var-name>field[1]</var-name>
+                    <var-value>fileDataFile</var-value>
+                </var>
+                <var>
+                    <var-name>fieldTest[1]</var-name>
+                    <var-value>NULL</var-value>
+                </var>
+                <var>
+                    <var-name>fieldJoin</var-name>
+                    <var-value>AND</var-value>
+                </var>
             </field>
             <field property="fileData" depends="requiredif">
                 <arg0 key="itracker.web.attr.contents"/>
-                    <var>
-                        <var-name>field[0]</var-name>
-                        <var-value>fileData</var-value>
-                    </var>
-                    <var>
-                        <var-name>fieldTest[0]</var-name>
-                        <var-value>NULL</var-value>
-                    </var>
-                    <var>
-                        <var-name>field[1]</var-name>
-                        <var-value>fileDataFile</var-value>
-                    </var>
-                    <var>
-                        <var-name>fieldTest[1]</var-name>
-                        <var-value>NULL</var-value>
-                    </var>
-                    <var>
-                        <var-name>fieldJoin</var-name>
-                        <var-value>AND</var-value>
-                    </var>
+                <var>
+                    <var-name>field[0]</var-name>
+                    <var-value>fileData</var-value>
+                </var>
+                <var>
+                    <var-name>fieldTest[0]</var-name>
+                    <var-value>NULL</var-value>
+                </var>
+                <var>
+                    <var-name>field[1]</var-name>
+                    <var-value>fileDataFile</var-value>
+                </var>
+                <var>
+                    <var-name>fieldTest[1]</var-name>
+                    <var-value>NULL</var-value>
+                </var>
+                <var>
+                    <var-name>fieldJoin</var-name>
+                    <var-value>AND</var-value>
+                </var>
             </field>
         </form>
 
         <form name="componentForm">
             <field property="name" depends="required,maxlength">
                 <arg0 key="itracker.web.attr.name"/>
-				<arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
-				<var>
-					<var-name>maxlength</var-name>
-					<var-value>30</var-value>
-				</var>
+                <arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>30</var-value>
+                </var>
             </field>
             <field property="description" depends="required,maxlength">
                 <arg0 key="itracker.web.attr.description"/>
-				<arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
-				<var>
-					<var-name>maxlength</var-name>
-					<var-value>255</var-value>
-				</var>             
+                <arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>255</var-value>
+                </var>
             </field>
         </form>
 
         <form name="versionForm">
             <field property="description" depends="required,maxlength">
                 <arg0 key="itracker.web.attr.description"/>
-				<arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
-				<var>
-					<var-name>maxlength</var-name>
-					<var-value>255</var-value>
-				</var>                   
+                <arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>255</var-value>
+                </var>
             </field>
             <field property="id" depends="required">
                 <arg0 key="itracker.web.attr.id"/>
             </field>
             <field property="number" depends="required,maxlength">
                 <arg0 key="itracker.web.attr.number"/>
-				<arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
-				<var>
-					<var-name>maxlength</var-name>
-					<var-value>255</var-value>
-				</var> 
+                <arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>255</var-value>
+                </var>
             </field>
         </form>
-        
+
         <form name="workflowScriptForm">
             <field property="name" depends="required">
                 <arg0 key="itracker.web.attr.name"/>
@@ -136,22 +136,22 @@
         <form name="projectForm">
             <field property="name" depends="required,maxlength">
                 <arg0 key="itracker.web.attr.name"/>
-				<arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
-				<var>
-					<var-name>maxlength</var-name>
-					<var-value>255</var-value>
-				</var>                 
+                <arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>255</var-value>
+                </var>
             </field>
             <field property="description" depends="required,maxlength">
                 <arg0 key="itracker.web.attr.description"/>
-				<arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
-				<var>
-					<var-name>maxlength</var-name>
-					<var-value>255</var-value>
-				</var>                 
+                <arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>255</var-value>
+                </var>
             </field>
         </form>
-        
+
         <form name="customFieldForm">
             <field property="fieldType" depends="required">
                 <arg0 key="itracker.web.attr.fieldtype"/>
@@ -165,11 +165,11 @@
             <field property="value" depends="mask">
                 <arg0 key="itracker.web.attr.value"/>
                 <var>
-					<var-name>mask</var-name>
-					<var-value>
-						[A-Za-z0-9\.:]*
-					</var-value>
-				</var>
+                    <var-name>mask</var-name>
+                    <var-value>
+                        [A-Za-z0-9\.:]*
+                    </var-value>
+                </var>
             </field>
 
             <field property="sortOrder" depends="integer">

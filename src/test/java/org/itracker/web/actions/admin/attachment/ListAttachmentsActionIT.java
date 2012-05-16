@@ -39,13 +39,13 @@ public class ListAttachmentsActionIT extends AbstractDependencyInjectionTest {
         assertEquals("itracker.web.admin.listattachments.title", request.getAttribute("pageTitleKey"));
         assertEquals("", request.getAttribute("pageTitleArg"));
         ListAttachmentsPTO pto = (ListAttachmentsPTO) request.getAttribute("pto");
-        assert(pto != null);
-        assert(pto.getAttachments() != null);
+        assert (pto != null);
+        assert (pto.getAttachments() != null);
         assertTrue(pto.isHasAttachments());
-        assertEquals(pto.getAttachments().size(),4);
+        assertEquals(pto.getAttachments().size(), 4);
     }
 
-	@Test
+    @Test
     public void testAttachmentDetails() throws Exception {
 
         ListAttachmentsAction listAttachmentsAction = new ListAttachmentsAction();

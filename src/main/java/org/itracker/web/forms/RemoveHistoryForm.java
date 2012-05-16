@@ -22,27 +22,27 @@ package org.itracker.web.forms;
  * please comment.
  */
 public class RemoveHistoryForm extends ITrackerForm {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	java.lang.Integer historyId;
-	java.lang.String caller;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    java.lang.Integer historyId;
+    java.lang.String caller;
 
-	public java.lang.String getCaller() {
-		return caller;
-	}
+    public java.lang.String getCaller() {
+        return caller;
+    }
 
-	public void setCaller(java.lang.String caller) {
-		this.caller = caller;
-	}
+    public void setCaller(java.lang.String caller) {
+        this.caller = caller;
+    }
 
-	public java.lang.Integer getHistoryId() {
-		return historyId;
-	}
+    public java.lang.Integer getHistoryId() {
+        return historyId;
+    }
 
-	public void setHistoryId(java.lang.Integer historyId) {
-		this.historyId = historyId;
-	}
+    public void setHistoryId(java.lang.Integer historyId) {
+        this.historyId = historyId;
+    }
 
 }

@@ -18,105 +18,104 @@
 
 package org.itracker.web.taglib;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
-
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.web.util.LoginUtilities;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class FormatDateTag extends TagSupport {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String emptyKey = "itracker.web.generic.unavailable";
-	private String format;
-	private Date date;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private String emptyKey = "itracker.web.generic.unavailable";
+    private String format;
+    private Date date;
 
-	public String getFormat() {
-		return format;
-	}
+    public String getFormat() {
+        return format;
+    }
 
-	public void setFormat(String value) {
-		format = value;
-	}
+    public void setFormat(String value) {
+        format = value;
+    }
 
-	public Date getDate() {
-		if (null == date)
-			return null;
-		return new Date(date.getTime());
-	}
+    public Date getDate() {
+        if (null == date)
+            return null;
+        return new Date(date.getTime());
+    }
 
-	public void setDate(Date value) {
-		if (null == value)
-			this.date = null;
-		else
-			date = new Date(value.getTime());
-	}
+    public void setDate(Date value) {
+        if (null == value)
+            this.date = null;
+        else
+            date = new Date(value.getTime());
+    }
 
-	public String getEmptyKey() {
-		return emptyKey;
-	}
+    public String getEmptyKey() {
+        return emptyKey;
+    }
 
-	public void setEmptyKey(String value) {
-		emptyKey = value;
-	}
+    public void setEmptyKey(String value) {
+        emptyKey = value;
+    }
 
-	public int doStartTag() throws JspException {
-		return SKIP_BODY;
-	}
+    public int doStartTag() throws JspException {
+        return SKIP_BODY;
+    }
 
-	public int doEndTag() throws JspException {
-		String value = "";
-		SimpleDateFormat sdf;
-		Locale locale = null;
-		if (pageContext.getRequest() instanceof HttpServletRequest) {
-			locale = LoginUtilities.getCurrentLocale((HttpServletRequest)pageContext.getRequest());
-		}
-		if (locale == null) {
-			locale = ITrackerResources.getLocale();
-		}
-		
-		if (date == null) {
-			value = ITrackerResources.getString(emptyKey, locale);
-		} else {
-			try {
-				if ("short".equalsIgnoreCase(format)) {
-					sdf = new SimpleDateFormat(ITrackerResources.getString(
-							"itracker.dateformat.short", locale), locale);
-				} else if ("notime".equalsIgnoreCase(format)) {
-					sdf = new SimpleDateFormat(ITrackerResources.getString(
-							"itracker.dateformat.dateonly", locale), locale);
-				} else {
-					sdf = new SimpleDateFormat(ITrackerResources.getString(
-							"itracker.dateformat.full", locale), locale);
-				}
-				value = sdf.format(date);
-			} catch (Exception e) {
-				value = ITrackerResources.getString(emptyKey, locale);
-			}
-		}
-		// ResponseUtils.write(pageContext, value);
-		TagUtils.getInstance().write(pageContext, value);
-		clearState();
-		return EVAL_PAGE;
-	}
+    public int doEndTag() throws JspException {
+        String value = "";
+        SimpleDateFormat sdf;
+        Locale locale = null;
+        if (pageContext.getRequest() instanceof HttpServletRequest) {
+            locale = LoginUtilities.getCurrentLocale((HttpServletRequest) pageContext.getRequest());
+        }
+        if (locale == null) {
+            locale = ITrackerResources.getLocale();
+        }
 
-	public void release() {
-		super.release();
-		clearState();
-	}
+        if (date == null) {
+            value = ITrackerResources.getString(emptyKey, locale);
+        } else {
+            try {
+                if ("short".equalsIgnoreCase(format)) {
+                    sdf = new SimpleDateFormat(ITrackerResources.getString(
+                            "itracker.dateformat.short", locale), locale);
+                } else if ("notime".equalsIgnoreCase(format)) {
+                    sdf = new SimpleDateFormat(ITrackerResources.getString(
+                            "itracker.dateformat.dateonly", locale), locale);
+                } else {
+                    sdf = new SimpleDateFormat(ITrackerResources.getString(
+                            "itracker.dateformat.full", locale), locale);
+                }
+                value = sdf.format(date);
+            } catch (Exception e) {
+                value = ITrackerResources.getString(emptyKey, locale);
+            }
+        }
+        // ResponseUtils.write(pageContext, value);
+        TagUtils.getInstance().write(pageContext, value);
+        clearState();
+        return EVAL_PAGE;
+    }
 
-	private void clearState() {
-		emptyKey = "itracker.web.generic.unavailable";
-		format = null;
-		date = null;
-	}
+    public void release() {
+        super.release();
+        clearState();
+    }
+
+    private void clearState() {
+        emptyKey = "itracker.web.generic.unavailable";
+        format = null;
+        date = null;
+    }
 
 }

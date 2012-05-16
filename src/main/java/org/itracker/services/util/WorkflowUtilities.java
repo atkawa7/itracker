@@ -18,15 +18,7 @@
 
 package org.itracker.services.util;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
+import bsh.Interpreter;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
@@ -37,34 +29,48 @@ import org.itracker.model.NameValuePair;
 import org.itracker.model.ProjectScript;
 import org.itracker.services.exceptions.WorkflowException;
 
-import bsh.Interpreter;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * Contains utilities used when displaying and processing workflow and field events
  */
-public class WorkflowUtilities  {
-    
-    /** Fires for each field when building the form.  Mainly used to build dynamic list options. */
+public class WorkflowUtilities {
+
+    /**
+     * Fires for each field when building the form.  Mainly used to build dynamic list options.
+     */
     public static final int EVENT_FIELD_ONPOPULATE = 1;
-    /** NOT CURRENTLY IMPLEMENTED.  Use the onPopulate event instead. In the future, this event may be implemented to allow for list sorting after list value population. */
+    /**
+     * NOT CURRENTLY IMPLEMENTED.  Use the onPopulate event instead. In the future, this event may be implemented to allow for list sorting after list value population.
+     */
     public static final int EVENT_FIELD_ONSORT = 2;
-    /** Fires to set the current value of a form field.  This will overwrite any data in the form field pulled from the database. */
+    /**
+     * Fires to set the current value of a form field.  This will overwrite any data in the form field pulled from the database.
+     */
     public static final int EVENT_FIELD_ONSETDEFAULT = 3;
-    /** Fires on validation of the form field. */
+    /**
+     * Fires on validation of the form field.
+     */
     public static final int EVENT_FIELD_ONVALIDATE = 4;
-    /** Fires after validation, but before the data is committed to the database. */
+    /**
+     * Fires after validation, but before the data is committed to the database.
+     */
     public static final int EVENT_FIELD_ONPRESUBMIT = 5;
-    /** Fires after all data is submitted to the db for all fields. Performed right before the response is sent. */
+    /**
+     * Fires after all data is submitted to the db for all fields. Performed right before the response is sent.
+     */
     public static final int EVENT_FIELD_ONPOSTSUBMIT = 6;
-    
+
     private static final Logger logger = Logger.getLogger(WorkflowUtilities.class);
-    
+
     public WorkflowUtilities() {
     }
-    
+
     /**
      * Returns a title of workflow event, according to selected locale.
-     * @param value is an identifier of incoming event.
+     *
+     * @param value  is an identifier of incoming event.
      * @param locale is a selected locale.
      * @return a name of event or something like "MISSING KEY: <resourceBundleKey>".
      */
@@ -73,14 +79,15 @@ public class WorkflowUtilities  {
 //        assert null != eventName : "event name should never be null.";
         return eventName;
     }
-    
+
     public static String getEventName(String value, Locale locale) {
         return ITrackerResources.getString(ITrackerResources.KEY_BASE_WORKFLOW_EVENT + value, locale);
     }
-    
+
     /**
      * Returns an array of pairs (eventName, eventId), where eventName
      * is an event title, according to selected locale.
+     *
      * @param locale is a selected locale.
      * @return an array of pairs (eventName, eventId), which is never null.
      */
@@ -94,154 +101,155 @@ public class WorkflowUtilities  {
         eventNames[5] = new NameValuePair(getEventName(EVENT_FIELD_ONPOSTSUBMIT, locale), Integer.toString(EVENT_FIELD_ONPOSTSUBMIT));
         return eventNames;
     }
-    
+
     /**
      * Select a list of NameValuePair objects from provided map object according
      * to fieldId selector. Typesafe version of #getListOptions(Map, Integer)
+     *
      * @param listOptions is a map, with stored NameValuePair objects lists
-     * associated with specific integer id.
-     * @param fieldId is a selector from map.
+     *                    associated with specific integer id.
+     * @param fieldId     is a selector from map.
      * @return a list of objects, which may be empty, but never null.
      */
     public static List<NameValuePair> getListOptions(Map<Integer, List<NameValuePair>> listOptions, int fieldId) {
         return getListOptions(listOptions, Integer.valueOf(fieldId));
     }
-    
+
     /**
      * Select a list of NameValuePair objects from provided map object according
      * to fieldId selector.
+     *
      * @param listOptions is a map, with stored NameValuePair objects lists
-     * associated with specific integer id.
-     * @param fieldId is a selector from map.
+     *                    associated with specific integer id.
+     * @param fieldId     is a selector from map.
      * @return a list of objects, which may be empty, but never null.
      */
     @SuppressWarnings("unchecked")
     public static List<NameValuePair> getListOptions(Map listOptions, Integer fieldId) {
         List<NameValuePair> options = new ArrayList<NameValuePair>();
-        
-        if(listOptions != null && listOptions.size() != 0 && fieldId != null) {
+
+        if (listOptions != null && listOptions.size() != 0 && fieldId != null) {
             Object mapOptions = listOptions.get(fieldId);
-            if(mapOptions != null) {
+            if (mapOptions != null) {
                 options = (List<NameValuePair>) mapOptions;
             }
         }
-        
+
         return options;
     }
-    
+
     /**
      * The most general way to run scripts. All matching of event and fields
      * are embedded within. As a result, currentValues parameter will
      * contain updated values and form will contain new default values
      * if appropriate.
+     *
      * @param projectScriptModels is a list of scripts.
-     * @param event is an event type.
-     * @param currentValues is a map of current values to fields.
-     * @param currentErrors is a container for errors.
-     * @param form contains default values of fields.
-     * @throws org.itracker.services.exceptions.WorkflowException
+     * @param event               is an event type.
+     * @param currentValues       is a map of current values to fields.
+     * @param currentErrors       is a container for errors.
+     * @param form                contains default values of fields.
      */
     public static void processFieldScripts(List<ProjectScript> projectScriptModels, int event, Map<Integer, List<NameValuePair>> currentValues, ActionMessages currentErrors, ValidatorForm form) throws WorkflowException {
-        if(projectScriptModels == null || projectScriptModels.size() == 0) {
+        if (projectScriptModels == null || projectScriptModels.size() == 0) {
             return;
         }
         logger.debug("Processing " + projectScriptModels.size() + " field scripts for project " + projectScriptModels.get(0).getProject().getId());
-        
+
         List<ProjectScript> scriptsToRun = new ArrayList<ProjectScript>();
-        for(int i = 0; i < projectScriptModels.size(); i++) {
-            if(projectScriptModels.get(i).getScript().getEvent() == event) {
+        for (int i = 0; i < projectScriptModels.size(); i++) {
+            if (projectScriptModels.get(i).getScript().getEvent() == event) {
                 int insertIndex = 0;
-                for(insertIndex = 0; insertIndex < scriptsToRun.size(); insertIndex++) {
-                    if(projectScriptModels.get(i).getPriority() < ((ProjectScript) scriptsToRun.get(insertIndex)).getPriority()) {
+                for (insertIndex = 0; insertIndex < scriptsToRun.size(); insertIndex++) {
+                    if (projectScriptModels.get(i).getPriority() < ((ProjectScript) scriptsToRun.get(insertIndex)).getPriority()) {
                         break;
                     }
                 }
-                scriptsToRun.add(insertIndex,projectScriptModels.get(i));
+                scriptsToRun.add(insertIndex, projectScriptModels.get(i));
             }
         }
         logger.debug(scriptsToRun.size() + " eligible scripts found for event " + event);
-        
+
         if (currentValues == null) {
             currentValues = new HashMap<Integer, List<NameValuePair>>();
         }
-        
+
         for (int i = 0; i < scriptsToRun.size(); i++) {
             ProjectScript currentScript = (ProjectScript) scriptsToRun.get(i);
             try {
                 logger.debug("Running script " + currentScript.getScript().getId() + " with priority " + currentScript.getPriority());
                 List<NameValuePair> currentValue = currentValues.get(currentScript.getFieldId());
-                
+
                 logger.debug("Before script current value for field " + IssueUtilities.getFieldName(currentScript.getFieldId()) + " (" + currentScript.getFieldId() + ") is " + (currentValue == null ? "NULL" : "'" + currentValue.toString() + "' (" + currentValue.getClass().getName() + "'"));
                 currentValue = processFieldScript(currentScript, event, currentScript.getFieldId(), currentValue, currentErrors, form);
                 logger.debug("After script current value for field " + IssueUtilities.getFieldName(currentScript.getFieldId()) + " (" + currentScript.getFieldId() + ") is " + (currentValue == null ? "NULL" : "'" + currentValue.toString() + "' (" + currentValue.getClass().getName() + "'"));
-                
+
                 currentValues.put(currentScript.getFieldId(), currentValue);
-            } catch(WorkflowException we) {
+            } catch (WorkflowException we) {
                 logger.error("Error processing script " + currentScript.getScript().getId() + ": " + we.getMessage());
             }
         }
     }
-    
+
     /**
      * Run appropriate script, selecting it from provided list by matching
      * event and field.
+     *
      * @param projectScripts is a list of provided scripts.
-     * @param event is an event type.
-     * @param fieldId is a field, associated with event.
-     * @param currentValue is a set of current values.
-     * @param currentErrors is a container for errors.
-     * @param form is a form, holder of default values.
+     * @param event          is an event type.
+     * @param fieldId        is a field, associated with event.
+     * @param currentValue   is a set of current values.
+     * @param currentErrors  is a container for errors.
+     * @param form           is a form, holder of default values.
      * @return new set of values.
-     * @throws org.itracker.services.exceptions.WorkflowException
      */
     public static List<NameValuePair> processFieldScripts(List<ProjectScript> projectScripts, int event, Integer fieldId, List<NameValuePair> currentValue, ActionErrors currentErrors, ValidatorForm form) throws WorkflowException {
-        if(projectScripts == null || projectScripts.size() == 0 || fieldId == null) {
+        if (projectScripts == null || projectScripts.size() == 0 || fieldId == null) {
             return null;
         }
         logger.debug("Processing " + projectScripts.size() + " field scripts for project " + projectScripts.get(0).getProject().getId());
-        
+
         List<ProjectScript> scriptsToRun = new LinkedList<ProjectScript>();
-        for(int i = 0; i < projectScripts.size(); i++) {
-            if(projectScripts.get(i).getScript().getEvent() == event && fieldId.equals(projectScripts.get(i).getFieldId())) {
+        for (int i = 0; i < projectScripts.size(); i++) {
+            if (projectScripts.get(i).getScript().getEvent() == event && fieldId.equals(projectScripts.get(i).getFieldId())) {
                 int insertIndex = 0;
-                for(insertIndex = 0; insertIndex < scriptsToRun.size(); insertIndex++) {
-                    if(projectScripts.get(i).getPriority() < ((ProjectScript) scriptsToRun.get(insertIndex)).getPriority()) {
+                for (insertIndex = 0; insertIndex < scriptsToRun.size(); insertIndex++) {
+                    if (projectScripts.get(i).getPriority() < ((ProjectScript) scriptsToRun.get(insertIndex)).getPriority()) {
                         break;
                     }
                 }
-                scriptsToRun.add(insertIndex,projectScripts.get(i));
+                scriptsToRun.add(insertIndex, projectScripts.get(i));
             }
         }
         logger.debug(scriptsToRun.size() + " eligible scripts found for event " + event + " on field " + fieldId);
-        
-        for(int i = 0; i < scriptsToRun.size(); i++) {
+
+        for (int i = 0; i < scriptsToRun.size(); i++) {
             ProjectScript currentScript = (ProjectScript) scriptsToRun.get(i);
             try {
                 logger.debug("Running script " + currentScript.getScript().getId() + " with priority " + currentScript.getPriority());
                 currentValue = processFieldScript(currentScript, event, fieldId, currentValue, currentErrors, form);
-            } catch(WorkflowException we) {
+            } catch (WorkflowException we) {
                 logger.error("Error processing script " + currentScript.getScript().getId() + ": " + we.getMessage());
             }
         }
-        
+
         return currentValue;
     }
-    
+
     /**
      * Run provided BEANSHELL script against form instance, taking into account
      * incoming event type, field raised an event and current values.
      * As a result, a set of new current values is returned and if
      * appropriate, default values are changed in form.
      * TODO: should issue, project, user, services be available too?
-     * 
+     *
      * @param projectScript is a script to run.
-     * @param event is an event type.
-     * @param fieldId is a field id associated with event.
+     * @param event         is an event type.
+     * @param fieldId       is a field id associated with event.
      * @param currentValues is a set of current values.
      * @param currentErrors is a container for occured errors.
-     * @param form is a form instance, holding values.
+     * @param form          is a form instance, holding values.
      * @return new current values.
-     * @throws org.itracker.services.exceptions.WorkflowException
      */
     public static List<NameValuePair> processFieldScript(ProjectScript projectScript, int event, Integer fieldId, List<NameValuePair> currentValues, ActionMessages currentErrors, ValidatorForm form) throws WorkflowException {
         if (projectScript == null) {
@@ -250,7 +258,7 @@ public class WorkflowUtilities  {
         if (currentErrors == null) {
             throw new WorkflowException("Errors was null.", WorkflowException.INVALID_ARGS);
         }
-        
+
         try {
             Interpreter bshInterpreter = new Interpreter();
             bshInterpreter.set("event", event);
@@ -264,82 +272,82 @@ public class WorkflowUtilities  {
             // TODO: is this necessary? It should stay the same list-object..
 //            currentValues = (List<NameValuePair>)bshInterpreter.get("currentValue");
             if (logger.isDebugEnabled()) {
-            	logger.debug("processFieldScript: Script returned current value of '" + currentValues + "' (" + (currentValues != null ? currentValues.getClass().getName() : "NULL") + ")");
+                logger.debug("processFieldScript: Script returned current value of '" + currentValues + "' (" + (currentValues != null ? currentValues.getClass().getName() : "NULL") + ")");
             }
             if (event == EVENT_FIELD_ONSETDEFAULT && form != null && currentValues != null) {
-            	if (logger.isDebugEnabled()) {
-            		logger.debug("processFieldScript: Setting current form field value for field " + IssueUtilities.getFieldName(projectScript.getFieldId()) + " to '" + currentValues + "'");
-            	}
+                if (logger.isDebugEnabled()) {
+                    logger.debug("processFieldScript: Setting current form field value for field " + IssueUtilities.getFieldName(projectScript.getFieldId()) + " to '" + currentValues + "'");
+                }
                 setFormProperty(form, projectScript.getFieldId(), currentValues);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error("processFieldScript: Error processing field script.", e);
             // TODO: error-handling..?
-            currentErrors.add(ActionMessages.GLOBAL_MESSAGE, 
-            		new ActionMessage("itracker.web.error.system.message", 
-            				new Object[]{ITrackerResources.getString("itracker.web.attr.script"), // Script
-            					e.getMessage()
-            }));
+            currentErrors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("itracker.web.error.system.message",
+                            new Object[]{ITrackerResources.getString("itracker.web.attr.script"), // Script
+                                    e.getMessage()
+                            }));
         }
         if (logger.isDebugEnabled()) {
-        	logger.debug("processFieldScript: returning " + currentValues + ", errors: " + currentErrors);
+            logger.debug("processFieldScript: returning " + currentValues + ", errors: " + currentErrors);
         }
         return currentValues;
     }
-    
+
     @SuppressWarnings("unchecked")
     private static void setFormProperty(ValidatorForm form, Integer fieldId, Object currentValue) {
         String fieldName = IssueUtilities.getFieldName(fieldId);
         int fieldType = IssueUtilities.getFieldType(fieldId);
-        if(fieldType == IssueUtilities.FIELD_TYPE_SINGLE) {
+        if (fieldType == IssueUtilities.FIELD_TYPE_SINGLE) {
             try {
-                Field formField = form.getClass().getField( fieldName );
-                if ( formField != null ) {
-                    formField.set( form , currentValue );
+                Field formField = form.getClass().getField(fieldName);
+                if (formField != null) {
+                    formField.set(form, currentValue);
                 } else {
-                    throw new IllegalArgumentException( "no field with name "
-                            + fieldName + " found in form " + form );
+                    throw new IllegalArgumentException("no field with name "
+                            + fieldName + " found in form " + form);
                 }
-            } catch ( NoSuchFieldException e ) {
+            } catch (NoSuchFieldException e) {
                 e.printStackTrace();
-            } catch ( IllegalAccessException e ) {
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-        } else if(fieldType == IssueUtilities.FIELD_TYPE_INDEXED) {
+        } else if (fieldType == IssueUtilities.FIELD_TYPE_INDEXED) {
             try {
                 Object indexedField = null;
                 Field formField = form.getClass().getField(fieldName);
-                indexedField = formField.get( form );
-                if ( indexedField instanceof List ) {
-                    ((List)indexedField).set( 0 , currentValue );
-                } else if ( indexedField instanceof Collection ) {
-                    ((Collection)indexedField).add( currentValue );
+                indexedField = formField.get(form);
+                if (indexedField instanceof List) {
+                    ((List) indexedField).set(0, currentValue);
+                } else if (indexedField instanceof Collection) {
+                    ((Collection) indexedField).add(currentValue);
                 } else {
-                    throw new IllegalArgumentException( "field with name "
-                            + fieldName + " found in form " + form + " is of unknown type" );
+                    throw new IllegalArgumentException("field with name "
+                            + fieldName + " found in form " + form + " is of unknown type");
                 }
-            } catch ( NoSuchFieldException e ) {
+            } catch (NoSuchFieldException e) {
                 e.printStackTrace();
-            } catch ( IllegalAccessException e ) {
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-        } else if(fieldType == IssueUtilities.FIELD_TYPE_MAP) {
+        } else if (fieldType == IssueUtilities.FIELD_TYPE_MAP) {
             try {
                 Object indexedField = null;
-                Field formField = form.getClass().getField( fieldName );
-                indexedField = formField.get( form );
-                if ( indexedField instanceof Map ) {
-                    ((Map)indexedField).put( fieldId.toString(), currentValue );
+                Field formField = form.getClass().getField(fieldName);
+                indexedField = formField.get(form);
+                if (indexedField instanceof Map) {
+                    ((Map) indexedField).put(fieldId.toString(), currentValue);
                 } else {
-                    throw new IllegalArgumentException( "field with name "
-                            + fieldName + " found in form " + form + " is of unknown type" );
+                    throw new IllegalArgumentException("field with name "
+                            + fieldName + " found in form " + form + " is of unknown type");
                 }
-            } catch ( NoSuchFieldException e ) {
+            } catch (NoSuchFieldException e) {
                 e.printStackTrace();
-            } catch ( IllegalAccessException e ) {
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
     }
-    
+
 }

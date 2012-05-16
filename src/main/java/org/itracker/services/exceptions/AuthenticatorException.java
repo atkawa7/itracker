@@ -19,27 +19,27 @@
 package org.itracker.services.exceptions;
 
 /**
-  * This class encapsulates the errors that may occur during a login
-  * or other types of actions typically performed by a pluggable
-  * authentication module.<br><br>
-  * A pluggable authentication module should set the type of error generated
-  * using the setType method, or the appropriate constructor.  If the type
-  * of error does not match one of the existing types and the error should
-  * be returned to the user, the module should use the CUSTOM_ERROR type,
-  * and then also populate the the messageKey attribute with a key that would
-  * be suitable for display to the user.<br><br>
-  * This class can also be used to send the user to a custom error page in the
-  * event of a failure.  If this is required, the page type should be set using
-  * the setErrorPageType method, and the appropriate value for the type is set
-  * using setErrorPageValue.  The currently supported types are either a URL
-  * or a Struts forward action mapping..
-  */
+ * This class encapsulates the errors that may occur during a login
+ * or other types of actions typically performed by a pluggable
+ * authentication module.<br><br>
+ * A pluggable authentication module should set the type of error generated
+ * using the setType method, or the appropriate constructor.  If the type
+ * of error does not match one of the existing types and the error should
+ * be returned to the user, the module should use the CUSTOM_ERROR type,
+ * and then also populate the the messageKey attribute with a key that would
+ * be suitable for display to the user.<br><br>
+ * This class can also be used to send the user to a custom error page in the
+ * event of a failure.  If this is required, the page type should be set using
+ * the setErrorPageType method, and the appropriate value for the type is set
+ * using setErrorPageValue.  The currently supported types are either a URL
+ * or a Struts forward action mapping..
+ */
 public class AuthenticatorException extends RuntimeException {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -7799413588815903874L;
-	public static final int INVALID_DATA = -1;
+     *
+     */
+    private static final long serialVersionUID = -7799413588815903874L;
+    public static final int INVALID_DATA = -1;
     public static final int UNKNOWN_USER = -2;
     public static final int INVALID_PASSWORD = -3;
     public static final int INACTIVE_ACCOUNT = -4;
@@ -77,7 +77,7 @@ public class AuthenticatorException extends RuntimeException {
         super(message, cause);
         this.type = type;
     }
-    
+
     public AuthenticatorException(String message, int type, String messageKey) {
         this(message, type);
         this.messageKey = messageKey;
@@ -93,7 +93,7 @@ public class AuthenticatorException extends RuntimeException {
 
     public String getMessage() {
         String message = super.getMessage();
-        if(message == null || message.equals("")) {
+        if (message == null || message.equals("")) {
             message = "Empty message, type: " + getTypeString();
         }
 
@@ -101,81 +101,85 @@ public class AuthenticatorException extends RuntimeException {
     }
 
     /**
-      * Returns a key that contains a custom error message to display to the user.
-      * @return a resource key that can be used to look up the custom error
-      *         message for this exception.
-      */
+     * Returns a key that contains a custom error message to display to the user.
+     *
+     * @return a resource key that can be used to look up the custom error
+     *         message for this exception.
+     */
     public String getMessageKey() {
         return messageKey;
     }
 
     /**
-      * Sets a key that contains a custom error message to display to the user.
-      * @param messageKey a resource key that can be used to look up the custom error
-      *         message for this exception.
-      */
+     * Sets a key that contains a custom error message to display to the user.
+     *
+     * @param messageKey a resource key that can be used to look up the custom error
+     *                   message for this exception.
+     */
     public void setMessageKey(String messageKey) {
         this.messageKey = messageKey;
     }
 
     /**
-      * Returns the type of error page that is has been set.
-      * Supported values are urls and Struts forward action mappings.
-      * @returns the type of error page that has been set
-      * @see AuthenticatorException#ERRORPAGE_TYPE_FORWARD
-      * @see AuthenticatorException#ERRORPAGE_TYPE_URL
-      */
+     * Returns the type of error page that is has been set.
+     * Supported values are urls and Struts forward action mappings.
+     *
+     * @see AuthenticatorException#ERRORPAGE_TYPE_FORWARD
+     * @see AuthenticatorException#ERRORPAGE_TYPE_URL
+     */
     public int getErrorPageType() {
         return errorPageType;
     }
 
     /**
-      * Sets the type of error page that should be used to display this exception.
-      * Supported values are urls and Struts forward action mappings.
-      * @param value the type of error page that has been set
-      * @see AuthenticatorException#ERRORPAGE_TYPE_FORWARD
-      * @see AuthenticatorException#ERRORPAGE_TYPE_URL
-      */
+     * Sets the type of error page that should be used to display this exception.
+     * Supported values are urls and Struts forward action mappings.
+     *
+     * @param value the type of error page that has been set
+     * @see AuthenticatorException#ERRORPAGE_TYPE_FORWARD
+     * @see AuthenticatorException#ERRORPAGE_TYPE_URL
+     */
     public void setErrorPageType(int value) {
         errorPageType = value;
     }
 
     /**
-      * Returns the error page that should be used to display this exception
-      * Supported values are urls and Struts forward action mappings.  The type that
-      * has been set must be identified using the setErrorPageType method.
-      * @returns the error page that has been set
-      * @see AuthenticatorException#setErrorPageType
-      */
+     * Returns the error page that should be used to display this exception
+     * Supported values are urls and Struts forward action mappings.  The type that
+     * has been set must be identified using the setErrorPageType method.
+     *
+     * @see AuthenticatorException#setErrorPageType
+     */
     public String getErrorPageValue() {
         return errorPageValue;
     }
 
     /**
-      * Returns the error page that should be used to display this exception
-      * Supported values are urls and Struts forward action mappings.  The type that
-      * has been set must be identified using the setErrorPageType method.
-      * @param value the error page that should be used to display this message
-      * @see AuthenticatorException#setErrorPageType
-      */
+     * Returns the error page that should be used to display this exception
+     * Supported values are urls and Struts forward action mappings.  The type that
+     * has been set must be identified using the setErrorPageType method.
+     *
+     * @param value the error page that should be used to display this message
+     * @see AuthenticatorException#setErrorPageType
+     */
     public void setErrorPageValue(String value) {
         errorPageValue = value;
     }
 
     private String getTypeString() {
-        if(type == INVALID_DATA) {
+        if (type == INVALID_DATA) {
             return "Invalid Data";
-        } else if(type == UNKNOWN_USER) {
+        } else if (type == UNKNOWN_USER) {
             return "Unknown User";
-        } else if(type == INVALID_PASSWORD) {
+        } else if (type == INVALID_PASSWORD) {
             return "Invalid Password";
-        } else if(type == INACTIVE_ACCOUNT) {
+        } else if (type == INACTIVE_ACCOUNT) {
             return "Inactive Account";
-        } else if(type == SYSTEM_ERROR) {
+        } else if (type == SYSTEM_ERROR) {
             return "System Error";
-        } else if(type == INVALID_AUTHENTICATION_TYPE) {
+        } else if (type == INVALID_AUTHENTICATION_TYPE) {
             return "Invalid Authentication Type";
-        } else if(type == CUSTOM_ERROR ) {
+        } else if (type == CUSTOM_ERROR) {
             return "Custom Error.  Check message key.";
         }
 

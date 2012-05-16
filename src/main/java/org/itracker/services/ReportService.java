@@ -18,43 +18,33 @@
 
 package org.itracker.services;
 
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.struts.action.ActionMapping;
 import org.itracker.model.Issue;
 import org.itracker.model.Report;
 import org.itracker.persistence.dao.ReportDAO;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Locale;
+
 public interface ReportService {
-       
+
     public List<Report> getAllReports() throws Exception;
-    
-    public int getNumberReports()throws Exception;
+
+    public int getNumberReports() throws Exception;
 
     public Report createReport(Report report);
-    
+
     public ReportDAO getReportDAO();
 
     /**
      * @deprecated needs to be moved to static method in a new web-report-utility class
-     * 
-     * @param reportDataArray
-     * @param reportModel
-     * @param userLocale
-     * @param reportOutput
-     * @param session
-     * @param request
-     * @param response
-     * @param mapping
      */
-	public void outputPDF(List<Issue> reportDataArray, Report reportModel,
-			Locale userLocale, String reportOutput, HttpSession session,
-			HttpServletRequest request, HttpServletResponse response,
-			ActionMapping mapping);
-    
+    public void outputPDF(List<Issue> reportDataArray, Report reportModel,
+                          Locale userLocale, String reportOutput, HttpSession session,
+                          HttpServletRequest request, HttpServletResponse response,
+                          ActionMapping mapping);
+
 }

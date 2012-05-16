@@ -18,22 +18,8 @@
 
 package org.itracker.web.actions.admin.user;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.NameValuePair;
 import org.itracker.model.Permission;
 import org.itracker.model.Project;
@@ -45,16 +31,25 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
 public class EditUserFormAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(EditUserFormAction.class);
-	
+    private static final Logger log = Logger.getLogger(EditUserFormAction.class);
+
     public ActionForward execute(ActionMapping mapping,
                                  ActionForm form,
                                  HttpServletRequest request,
                                  HttpServletResponse response)
             throws ServletException, IOException {
 
-    	ActionMessages errors = new ActionMessages();
+        ActionMessages errors = new ActionMessages();
 
         if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
@@ -81,11 +76,11 @@ public class EditUserFormAction extends ItrackerBaseAction {
 
 
         }
-        
+
         request.setAttribute("isUpdate", isUpdate);
         request.setAttribute("pageTitleKey", pageTitleKey);
         request.setAttribute("pageTitleArg", pageTitleArg);
-        
+
         try {
 
             UserService userService = getITrackerServices().getUserService();
@@ -151,7 +146,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
                         boolean allowPermissionUpdate = userService.allowPermissionUpdates(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
                         request.setAttribute("allowPermissionUpdate", allowPermissionUpdate);
 
-                        if(editUser.getId() > 0) {
+                        if (editUser.getId() > 0) {
                             request.setAttribute("isUpdate", true);
                         }
 
@@ -212,23 +207,23 @@ public class EditUserFormAction extends ItrackerBaseAction {
             }
 
             if (editUser == null) {
-                return mapping.findForward("unauthorized");    
+                return mapping.findForward("unauthorized");
             }
 
             if (errors.isEmpty()) {
 
                 String userStatus = UserUtilities.getStatusName(editUser.getStatus());
                 request.setAttribute("userStatus", userStatus);
-            	
-            	projects = projectService.getAllAvailableProjects();
-            	Collections.sort(projects, Project.PROJECT_COMPARATOR);
-            	request.setAttribute(Constants.PROJECTS_KEY, projects);
+
+                projects = projectService.getAllAvailableProjects();
+                Collections.sort(projects, Project.PROJECT_COMPARATOR);
+                request.setAttribute(Constants.PROJECTS_KEY, projects);
 
                 request.setAttribute("userForm", userForm);
                 session.setAttribute(Constants.EDIT_USER_KEY, editUser);
                 session.setAttribute(Constants.EDIT_USER_PERMS_KEY, userPermissions);
                 request.setAttribute("permissionNames", permissionNames);
-                request.setAttribute("permissionRowColIdxes", new Integer[]{0,1});
+                request.setAttribute("permissionRowColIdxes", new Integer[]{0, 1});
                 saveToken(request);
 
                 return mapping.findForward("edituserform");
@@ -241,7 +236,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
         }
 
         if (!errors.isEmpty()) {
-        	saveErrors(request, errors);
+            saveErrors(request, errors);
         }
 
         return mapping.findForward("error");

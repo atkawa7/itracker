@@ -1,15 +1,5 @@
 package org.itracker.persistence.dao;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -21,39 +11,41 @@ import org.itracker.model.Permission;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 
+import java.util.*;
+
 /**
- * 
+ *
  */
 public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
 
     public User findByPrimaryKey(Integer userId) {
         User user;
-        
+
         try {
-            user = (User)getSession().get(User.class, userId);
+            user = (User) getSession().get(User.class, userId);
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
         return user;
     }
-    
+
     public User findByLogin(String login) {
         User user;
-        
+
         try {
             Query query = getSession().getNamedQuery("UserByLoginQuery");
             query.setString("login", login);
-            user = (User)query.uniqueResult();
+            user = (User) query.uniqueResult();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
         return user;
     }
-    
-    @SuppressWarnings("unchecked") 
+
+    @SuppressWarnings("unchecked")
     public List<User> findAll() {
         List<User> users;
-        
+
         try {
             Query query = getSession().getNamedQuery("UsersAllQuery");
             users = query.list();
@@ -64,9 +56,9 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
     }
 
     @SuppressWarnings("unchecked")
-    public List<User> findActive() {        
+    public List<User> findActive() {
         List<User> users;
-        
+
         try {
             Query query = getSession().getNamedQuery("UsersActiveQuery");
             users = query.list();
@@ -79,7 +71,7 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
     @SuppressWarnings("unchecked")
     public List<User> findByStatus(int status) {
         List<User> users;
-        
+
         try {
             Query query = getSession().getNamedQuery("UsersByStatusQuery");
             query.setInteger("userStatus", status);
@@ -89,11 +81,11 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
         }
         return users;
     }
-    
+
     @SuppressWarnings("unchecked")
     public List<User> findSuperUsers() {
         List<User> users;
-        
+
         try {
             Query query = getSession().getNamedQuery("UsersSuperQuery");
             users = query.list();
@@ -106,7 +98,7 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
     @SuppressWarnings("unchecked")
     public List<User> findByRegistrationType(int registrationType) {
         List<User> users;
-        
+
         try {
             Query query = getSession().getNamedQuery("UsersByRegistrationTypeQuery");
             query.setInteger("registrationType", registrationType);
@@ -116,42 +108,42 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
         }
         return users;
     }
-    
+
     /**
      * Searches all permissions for the given user and sorts it by project. The
      * <code>HashMap</code> returned has the project ids as key (<code>Integer</code>)
-     * and a <code>HashSet</code> as values. The <code>HashSet</code> holds a set of 
+     * and a <code>HashSet</code> as values. The <code>HashSet</code> holds a set of
      * string representation of the permission
      *
-     * @param user The user of interest
+     * @param user          The user of interest
      * @param requestSource requested by
      * @return HashMap of permission keyed by project ids
      */
     @SuppressWarnings("unchecked")
     public Map<Integer, Set<PermissionType>> getUsersMapOfProjectsAndPermissionTypes(User user) {
-        
+
         // create hashMap to hold permission by project id as key
-        final Map<Integer, Set<PermissionType>> permissionsByProjectId = 
+        final Map<Integer, Set<PermissionType>> permissionsByProjectId =
                 new HashMap<Integer, Set<PermissionType>>();
-        
+
         try {
             // load user bean
             User userBean = (User) getSession().load(User.class, user.getId());
             // create criteria
             Criteria criteria = getSession().createCriteria(Permission.class);
-            criteria.add( Expression.eq ("user" , userBean) );
-            criteria.addOrder( Order.asc( "project" ));
+            criteria.add(Expression.eq("user", userBean));
+            criteria.addOrder(Order.asc("project"));
             // perform search
             List<Permission> permissionsList = criteria.list();
-            
+
             for (int i = 0; i < permissionsList.size(); i++) {
                 Permission permission = permissionsList.get(i);
 
                 // Super user has access to all projects, which is indicated by the "null" project. 
-                final Integer projectId = (permission.getProject() == null) 
-                    ? null : permission.getProject().getId(); 
+                final Integer projectId = (permission.getProject() == null)
+                        ? null : permission.getProject().getId();
 
-                Set<PermissionType> projectPermissions = permissionsByProjectId.get(projectId); 
+                Set<PermissionType> projectPermissions = permissionsByProjectId.get(projectId);
 
                 if (projectPermissions == null) {
                     // First permission for the project. 
@@ -169,7 +161,7 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
     }
 
     @SuppressWarnings("unchecked")
-	public List<User> findUsersForProjectByAllPermissionTypeList(Integer projectID, Integer[] permissionTypes) {
+    public List<User> findUsersForProjectByAllPermissionTypeList(Integer projectID, Integer[] permissionTypes) {
 
         List<User> users = new ArrayList<User>();
 
@@ -184,7 +176,7 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
             List<User> userList = userCriteria.getExecutableCriteria(getSession()).list();
 
             for (User user : userList) {
-                if( isSamePermission( user.getPermissions(), permissionTypes)) {
+                if (isSamePermission(user.getPermissions(), permissionTypes)) {
                     users.add(user);
                 }
             }
@@ -201,7 +193,7 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
 
         boolean retVal = true;
 
-        if( permissions.size() != permissionTypes.length ) {
+        if (permissions.size() != permissionTypes.length) {
             return false;
         }
 
@@ -214,14 +206,14 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
 
             Iterator<Integer> pTypesIt = Arrays.asList(permissionTypes).iterator();
             while (pTypesIt.hasNext()) {
-				
+
                 if (pTypesIt.next().equals(permission.getPermissionType())) {
                     found = true;
                     break;
                 }
             }
 
-            if( !found ) {
+            if (!found) {
                 retVal = false;
                 break;
             }

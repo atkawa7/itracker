@@ -18,15 +18,15 @@
 
 package org.itracker.services.util;
 
+import org.itracker.core.resources.ITrackerResources;
+
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import org.itracker.core.resources.ITrackerResources;
-
 
 /**
-  * This interface defines the tags used in the export XML.
-  */
+ * This interface defines the tags used in the export XML.
+ */
 public interface ImportExportTags {
     public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
     public static final String EXPORT_LOCALE_STRING = ITrackerResources.BASE_LOCALE;

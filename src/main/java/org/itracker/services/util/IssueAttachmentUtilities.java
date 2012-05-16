@@ -20,7 +20,7 @@ package org.itracker.services.util;
 
 import java.util.HashSet;
 
-public class IssueAttachmentUtilities  {
+public class IssueAttachmentUtilities {
     public static final String DEFAULT_ATTACHMENT_DIR = "./itracker/attachments";
 
     public IssueAttachmentUtilities() {
@@ -54,13 +54,13 @@ class MimeType {
         imageName = value;
     }
 
-	public HashSet<?> getSuffixes() {
-		return suffixes;
-	}
+    public HashSet<?> getSuffixes() {
+        return suffixes;
+    }
 
-	public void setSuffixes(HashSet<?> suffixes) {
-		this.suffixes = suffixes;
-	}
+    public void setSuffixes(HashSet<?> suffixes) {
+        this.suffixes = suffixes;
+    }
 }
 
 /*

@@ -16,14 +16,13 @@ import org.junit.Test;
 import java.util.*;
 
 /**
- *
  * @author Andrey Sergievskiy
  */
 public class UserUtilitiesIT extends AbstractDependencyInjectionTest {
     private static final Logger log = Logger.getLogger(UserUtilitiesIT.class);
 
     private void doTestGetStatusName(final Locale locale,
-            final int statusId, final String expected) {
+                                     final int statusId, final String expected) {
         final String actual =
                 UserUtilities.getStatusName(statusId, locale);
         assertEquals("UserUtilities.getStatusName(" + statusId + ", " +
@@ -83,7 +82,7 @@ public class UserUtilitiesIT extends AbstractDependencyInjectionTest {
     }
 
     private void doTestGetStatusNames(final Locale locale,
-            final NameValuePair[] expected) {
+                                      final NameValuePair[] expected) {
         final Map<String, String> actual = UserUtilities.getStatusNames(locale);
         for (final NameValuePair nvpExpected : expected) {
             final String key = nvpExpected.getName();
@@ -110,21 +109,21 @@ public class UserUtilitiesIT extends AbstractDependencyInjectionTest {
     @Test
     public void testGetStatusNames() {
         doTestGetStatusNames(null, new NameValuePair[]{
-                    new NameValuePair("-1", "Deleted"),
-                    new NameValuePair("1", "Active"),
-                    new NameValuePair("2", "Locked")
-                });
+                new NameValuePair("-1", "Deleted"),
+                new NameValuePair("1", "Active"),
+                new NameValuePair("2", "Locked")
+        });
         doTestGetStatusNames(ITrackerResources.getLocale(ITrackerResources.BASE_LOCALE),
                 new NameValuePair[]{
-                    new NameValuePair("-1", "Deleted"),
-                    new NameValuePair("1", "Active"),
-                    new NameValuePair("2", "Locked")
+                        new NameValuePair("-1", "Deleted"),
+                        new NameValuePair("1", "Active"),
+                        new NameValuePair("2", "Locked")
                 });
         doTestGetStatusNames(new Locale("test"),
                 new NameValuePair[]{
-                    new NameValuePair("-1", "test_value"),
-                    new NameValuePair("1", "Active"),
-                    new NameValuePair("2", "Locked")
+                        new NameValuePair("-1", "test_value"),
+                        new NameValuePair("1", "Active"),
+                        new NameValuePair("2", "Locked")
                 });
     }
 
@@ -155,14 +154,14 @@ public class UserUtilitiesIT extends AbstractDependencyInjectionTest {
     @Test
     public void testGetStatusNamesDefault() {
         doTestGetStatusNamesDefault(new NameValuePair[]{
-                    new NameValuePair("-1", "Deleted"),
-                    new NameValuePair("1", "Active"),
-                    new NameValuePair("2", "Locked")
-                });
+                new NameValuePair("-1", "Deleted"),
+                new NameValuePair("1", "Active"),
+                new NameValuePair("2", "Locked")
+        });
     }
 
     private void doTestGetPermissionName(final Locale locale,
-            final int permissionId, final String expected) {
+                                         final int permissionId, final String expected) {
         final String actual =
                 UserUtilities.getPermissionName(permissionId, locale);
         assertEquals("UserUtilities.getPermissionName(" + permissionId + ", " +
@@ -307,7 +306,7 @@ public class UserUtilitiesIT extends AbstractDependencyInjectionTest {
     }
 
     private void doTestGetPermissionNames(final Locale locale,
-            final NameValuePair[] expected) {
+                                          final NameValuePair[] expected) {
         final List<NameValuePair> actual = UserUtilities.getPermissionNames(locale);
         for (final NameValuePair nvpExpected : expected) {
             boolean found = false;
@@ -330,90 +329,90 @@ public class UserUtilitiesIT extends AbstractDependencyInjectionTest {
     @Test
     public void testGetPermissionNames() {
         doTestGetPermissionNames(null, new NameValuePair[]{
-                    new NameValuePair("Project Admin",
-                    Integer.toString(UserUtilities.PERMISSION_PRODUCT_ADMIN)),
-                    new NameValuePair("Create Issues",
-                    Integer.toString(UserUtilities.PERMISSION_CREATE)),
-                    new NameValuePair("Edit All Issues",
-                    Integer.toString(UserUtilities.PERMISSION_EDIT)),
-                    new NameValuePair("Close Issues",
-                    Integer.toString(UserUtilities.PERMISSION_CLOSE)),
-                    new NameValuePair("Assign Issues to Self",
-                    Integer.toString(UserUtilities.PERMISSION_ASSIGN_SELF)),
-                    new NameValuePair("Assign Issues to Others",
-                    Integer.toString(UserUtilities.PERMISSION_ASSIGN_OTHERS)),
-                    new NameValuePair("View All Issues",
-                    Integer.toString(UserUtilities.PERMISSION_VIEW_ALL)),
-                    new NameValuePair("View User's Own Issues",
-                    Integer.toString(UserUtilities.PERMISSION_VIEW_USERS)),
-                    new NameValuePair("Edit User's Own Issues",
-                    Integer.toString(UserUtilities.PERMISSION_EDIT_USERS)),
-                    new NameValuePair("Unassign Issues from Self",
-                    Integer.toString(UserUtilities.PERMISSION_UNASSIGN_SELF)),
-                    new NameValuePair("Can Be Assigned Any Issue",
-                    Integer.toString(UserUtilities.PERMISSION_ASSIGNABLE)),
-                    new NameValuePair("Create Issues for Others",
-                    Integer.toString(UserUtilities.PERMISSION_CREATE_OTHERS)),
-                    new NameValuePair("Full Issue Edit",
-                    Integer.toString(UserUtilities.PERMISSION_EDIT_FULL))
-                });
+                new NameValuePair("Project Admin",
+                        Integer.toString(UserUtilities.PERMISSION_PRODUCT_ADMIN)),
+                new NameValuePair("Create Issues",
+                        Integer.toString(UserUtilities.PERMISSION_CREATE)),
+                new NameValuePair("Edit All Issues",
+                        Integer.toString(UserUtilities.PERMISSION_EDIT)),
+                new NameValuePair("Close Issues",
+                        Integer.toString(UserUtilities.PERMISSION_CLOSE)),
+                new NameValuePair("Assign Issues to Self",
+                        Integer.toString(UserUtilities.PERMISSION_ASSIGN_SELF)),
+                new NameValuePair("Assign Issues to Others",
+                        Integer.toString(UserUtilities.PERMISSION_ASSIGN_OTHERS)),
+                new NameValuePair("View All Issues",
+                        Integer.toString(UserUtilities.PERMISSION_VIEW_ALL)),
+                new NameValuePair("View User's Own Issues",
+                        Integer.toString(UserUtilities.PERMISSION_VIEW_USERS)),
+                new NameValuePair("Edit User's Own Issues",
+                        Integer.toString(UserUtilities.PERMISSION_EDIT_USERS)),
+                new NameValuePair("Unassign Issues from Self",
+                        Integer.toString(UserUtilities.PERMISSION_UNASSIGN_SELF)),
+                new NameValuePair("Can Be Assigned Any Issue",
+                        Integer.toString(UserUtilities.PERMISSION_ASSIGNABLE)),
+                new NameValuePair("Create Issues for Others",
+                        Integer.toString(UserUtilities.PERMISSION_CREATE_OTHERS)),
+                new NameValuePair("Full Issue Edit",
+                        Integer.toString(UserUtilities.PERMISSION_EDIT_FULL))
+        });
         doTestGetPermissionNames(ITrackerResources.getLocale(ITrackerResources.BASE_LOCALE),
                 new NameValuePair[]{
-                    new NameValuePair("Project Admin",
-                    Integer.toString(UserUtilities.PERMISSION_PRODUCT_ADMIN)),
-                    new NameValuePair("Create Issues",
-                    Integer.toString(UserUtilities.PERMISSION_CREATE)),
-                    new NameValuePair("Edit All Issues",
-                    Integer.toString(UserUtilities.PERMISSION_EDIT)),
-                    new NameValuePair("Close Issues",
-                    Integer.toString(UserUtilities.PERMISSION_CLOSE)),
-                    new NameValuePair("Assign Issues to Self",
-                    Integer.toString(UserUtilities.PERMISSION_ASSIGN_SELF)),
-                    new NameValuePair("Assign Issues to Others",
-                    Integer.toString(UserUtilities.PERMISSION_ASSIGN_OTHERS)),
-                    new NameValuePair("View All Issues",
-                    Integer.toString(UserUtilities.PERMISSION_VIEW_ALL)),
-                    new NameValuePair("View User's Own Issues",
-                    Integer.toString(UserUtilities.PERMISSION_VIEW_USERS)),
-                    new NameValuePair("Edit User's Own Issues",
-                    Integer.toString(UserUtilities.PERMISSION_EDIT_USERS)),
-                    new NameValuePair("Unassign Issues from Self",
-                    Integer.toString(UserUtilities.PERMISSION_UNASSIGN_SELF)),
-                    new NameValuePair("Can Be Assigned Any Issue",
-                    Integer.toString(UserUtilities.PERMISSION_ASSIGNABLE)),
-                    new NameValuePair("Create Issues for Others",
-                    Integer.toString(UserUtilities.PERMISSION_CREATE_OTHERS)),
-                    new NameValuePair("Full Issue Edit",
-                    Integer.toString(UserUtilities.PERMISSION_EDIT_FULL))
+                        new NameValuePair("Project Admin",
+                                Integer.toString(UserUtilities.PERMISSION_PRODUCT_ADMIN)),
+                        new NameValuePair("Create Issues",
+                                Integer.toString(UserUtilities.PERMISSION_CREATE)),
+                        new NameValuePair("Edit All Issues",
+                                Integer.toString(UserUtilities.PERMISSION_EDIT)),
+                        new NameValuePair("Close Issues",
+                                Integer.toString(UserUtilities.PERMISSION_CLOSE)),
+                        new NameValuePair("Assign Issues to Self",
+                                Integer.toString(UserUtilities.PERMISSION_ASSIGN_SELF)),
+                        new NameValuePair("Assign Issues to Others",
+                                Integer.toString(UserUtilities.PERMISSION_ASSIGN_OTHERS)),
+                        new NameValuePair("View All Issues",
+                                Integer.toString(UserUtilities.PERMISSION_VIEW_ALL)),
+                        new NameValuePair("View User's Own Issues",
+                                Integer.toString(UserUtilities.PERMISSION_VIEW_USERS)),
+                        new NameValuePair("Edit User's Own Issues",
+                                Integer.toString(UserUtilities.PERMISSION_EDIT_USERS)),
+                        new NameValuePair("Unassign Issues from Self",
+                                Integer.toString(UserUtilities.PERMISSION_UNASSIGN_SELF)),
+                        new NameValuePair("Can Be Assigned Any Issue",
+                                Integer.toString(UserUtilities.PERMISSION_ASSIGNABLE)),
+                        new NameValuePair("Create Issues for Others",
+                                Integer.toString(UserUtilities.PERMISSION_CREATE_OTHERS)),
+                        new NameValuePair("Full Issue Edit",
+                                Integer.toString(UserUtilities.PERMISSION_EDIT_FULL))
                 });
         doTestGetPermissionNames(new Locale("test"),
                 new NameValuePair[]{
-                    new NameValuePair("Project Admin",
-                    Integer.toString(UserUtilities.PERMISSION_PRODUCT_ADMIN)),
-                    new NameValuePair("Create Issues",
-                    Integer.toString(UserUtilities.PERMISSION_CREATE)),
-                    new NameValuePair("Edit All Issues",
-                    Integer.toString(UserUtilities.PERMISSION_EDIT)),
-                    new NameValuePair("Close Issues",
-                    Integer.toString(UserUtilities.PERMISSION_CLOSE)),
-                    new NameValuePair("Assign Issues to Self",
-                    Integer.toString(UserUtilities.PERMISSION_ASSIGN_SELF)),
-                    new NameValuePair("Assign Issues to Others",
-                    Integer.toString(UserUtilities.PERMISSION_ASSIGN_OTHERS)),
-                    new NameValuePair("View All Issues",
-                    Integer.toString(UserUtilities.PERMISSION_VIEW_ALL)),
-                    new NameValuePair("View User's Own Issues",
-                    Integer.toString(UserUtilities.PERMISSION_VIEW_USERS)),
-                    new NameValuePair("Edit User's Own Issues",
-                    Integer.toString(UserUtilities.PERMISSION_EDIT_USERS)),
-                    new NameValuePair("Unassign Issues from Self",
-                    Integer.toString(UserUtilities.PERMISSION_UNASSIGN_SELF)),
-                    new NameValuePair("Can Be Assigned Any Issue",
-                    Integer.toString(UserUtilities.PERMISSION_ASSIGNABLE)),
-                    new NameValuePair("Create Issues for Others",
-                    Integer.toString(UserUtilities.PERMISSION_CREATE_OTHERS)),
-                    new NameValuePair("Full Issue Edit",
-                    Integer.toString(UserUtilities.PERMISSION_EDIT_FULL))
+                        new NameValuePair("Project Admin",
+                                Integer.toString(UserUtilities.PERMISSION_PRODUCT_ADMIN)),
+                        new NameValuePair("Create Issues",
+                                Integer.toString(UserUtilities.PERMISSION_CREATE)),
+                        new NameValuePair("Edit All Issues",
+                                Integer.toString(UserUtilities.PERMISSION_EDIT)),
+                        new NameValuePair("Close Issues",
+                                Integer.toString(UserUtilities.PERMISSION_CLOSE)),
+                        new NameValuePair("Assign Issues to Self",
+                                Integer.toString(UserUtilities.PERMISSION_ASSIGN_SELF)),
+                        new NameValuePair("Assign Issues to Others",
+                                Integer.toString(UserUtilities.PERMISSION_ASSIGN_OTHERS)),
+                        new NameValuePair("View All Issues",
+                                Integer.toString(UserUtilities.PERMISSION_VIEW_ALL)),
+                        new NameValuePair("View User's Own Issues",
+                                Integer.toString(UserUtilities.PERMISSION_VIEW_USERS)),
+                        new NameValuePair("Edit User's Own Issues",
+                                Integer.toString(UserUtilities.PERMISSION_EDIT_USERS)),
+                        new NameValuePair("Unassign Issues from Self",
+                                Integer.toString(UserUtilities.PERMISSION_UNASSIGN_SELF)),
+                        new NameValuePair("Can Be Assigned Any Issue",
+                                Integer.toString(UserUtilities.PERMISSION_ASSIGNABLE)),
+                        new NameValuePair("Create Issues for Others",
+                                Integer.toString(UserUtilities.PERMISSION_CREATE_OTHERS)),
+                        new NameValuePair("Full Issue Edit",
+                                Integer.toString(UserUtilities.PERMISSION_EDIT_FULL))
                 });
     }
 
@@ -443,33 +442,33 @@ public class UserUtilitiesIT extends AbstractDependencyInjectionTest {
     @Test
     public void testGetPermissionNamesDefault() {
         doTestGetPermissionNamesDefault(new NameValuePair[]{
-                    new NameValuePair("Project Admin",
-                    Integer.toString(UserUtilities.PERMISSION_PRODUCT_ADMIN)),
-                    new NameValuePair("Create Issues",
-                    Integer.toString(UserUtilities.PERMISSION_CREATE)),
-                    new NameValuePair("Edit All Issues",
-                    Integer.toString(UserUtilities.PERMISSION_EDIT)),
-                    new NameValuePair("Close Issues",
-                    Integer.toString(UserUtilities.PERMISSION_CLOSE)),
-                    new NameValuePair("Assign Issues to Self",
-                    Integer.toString(UserUtilities.PERMISSION_ASSIGN_SELF)),
-                    new NameValuePair("Assign Issues to Others",
-                    Integer.toString(UserUtilities.PERMISSION_ASSIGN_OTHERS)),
-                    new NameValuePair("View All Issues",
-                    Integer.toString(UserUtilities.PERMISSION_VIEW_ALL)),
-                    new NameValuePair("View User's Own Issues",
-                    Integer.toString(UserUtilities.PERMISSION_VIEW_USERS)),
-                    new NameValuePair("Edit User's Own Issues",
-                    Integer.toString(UserUtilities.PERMISSION_EDIT_USERS)),
-                    new NameValuePair("Unassign Issues from Self",
-                    Integer.toString(UserUtilities.PERMISSION_UNASSIGN_SELF)),
-                    new NameValuePair("Can Be Assigned Any Issue",
-                    Integer.toString(UserUtilities.PERMISSION_ASSIGNABLE)),
-                    new NameValuePair("Create Issues for Others",
-                    Integer.toString(UserUtilities.PERMISSION_CREATE_OTHERS)),
-                    new NameValuePair("Full Issue Edit",
-                    Integer.toString(UserUtilities.PERMISSION_EDIT_FULL))
-                });
+                new NameValuePair("Project Admin",
+                        Integer.toString(UserUtilities.PERMISSION_PRODUCT_ADMIN)),
+                new NameValuePair("Create Issues",
+                        Integer.toString(UserUtilities.PERMISSION_CREATE)),
+                new NameValuePair("Edit All Issues",
+                        Integer.toString(UserUtilities.PERMISSION_EDIT)),
+                new NameValuePair("Close Issues",
+                        Integer.toString(UserUtilities.PERMISSION_CLOSE)),
+                new NameValuePair("Assign Issues to Self",
+                        Integer.toString(UserUtilities.PERMISSION_ASSIGN_SELF)),
+                new NameValuePair("Assign Issues to Others",
+                        Integer.toString(UserUtilities.PERMISSION_ASSIGN_OTHERS)),
+                new NameValuePair("View All Issues",
+                        Integer.toString(UserUtilities.PERMISSION_VIEW_ALL)),
+                new NameValuePair("View User's Own Issues",
+                        Integer.toString(UserUtilities.PERMISSION_VIEW_USERS)),
+                new NameValuePair("Edit User's Own Issues",
+                        Integer.toString(UserUtilities.PERMISSION_EDIT_USERS)),
+                new NameValuePair("Unassign Issues from Self",
+                        Integer.toString(UserUtilities.PERMISSION_UNASSIGN_SELF)),
+                new NameValuePair("Can Be Assigned Any Issue",
+                        Integer.toString(UserUtilities.PERMISSION_ASSIGNABLE)),
+                new NameValuePair("Create Issues for Others",
+                        Integer.toString(UserUtilities.PERMISSION_CREATE_OTHERS)),
+                new NameValuePair("Full Issue Edit",
+                        Integer.toString(UserUtilities.PERMISSION_EDIT_FULL))
+        });
     }
 
     /**
@@ -509,11 +508,11 @@ public class UserUtilitiesIT extends AbstractDependencyInjectionTest {
         assertTrue("UserUtilities.hasPermission(permissionMap, " +
                 "PERMISSION_PRODUCT_ADMIN)",
                 UserUtilities.hasPermission(permissionMap,
-                UserUtilities.PERMISSION_PRODUCT_ADMIN));
+                        UserUtilities.PERMISSION_PRODUCT_ADMIN));
         assertFalse("UserUtilities.hasPermission(permissionMap, " +
                 "PERMISSION_ASSIGN_SELF)",
                 UserUtilities.hasPermission(permissionMap,
-                UserUtilities.PERMISSION_ASSIGN_SELF));
+                        UserUtilities.PERMISSION_ASSIGN_SELF));
     }
 
     /**
@@ -530,19 +529,19 @@ public class UserUtilitiesIT extends AbstractDependencyInjectionTest {
         assertTrue("UserUtilities.hasPermission(permissionMap, " +
                 "{PERMISSION_PRODUCT_ADMIN})",
                 UserUtilities.hasPermission(permissionMap,
-                new int[]{
-                    UserUtilities.PERMISSION_PRODUCT_ADMIN
-                }));
+                        new int[]{
+                                UserUtilities.PERMISSION_PRODUCT_ADMIN
+                        }));
         assertTrue("UserUtilities.hasPermission(permissionMap, " +
                 "{PERMISSION_USER_ADMIN, " +
                 "PERMISSION_PRODUCT_ADMIN, " +
                 "PERMISSION_CLOSE}",
                 UserUtilities.hasPermission(permissionMap,
-                new int[]{
-                    UserUtilities.PERMISSION_USER_ADMIN,
-                    UserUtilities.PERMISSION_PRODUCT_ADMIN,
-                    UserUtilities.PERMISSION_CLOSE
-                }));
+                        new int[]{
+                                UserUtilities.PERMISSION_USER_ADMIN,
+                                UserUtilities.PERMISSION_PRODUCT_ADMIN,
+                                UserUtilities.PERMISSION_CLOSE
+                        }));
     }
 
     /**
@@ -566,38 +565,40 @@ public class UserUtilitiesIT extends AbstractDependencyInjectionTest {
 
     @Override
     public void onSetUp() throws Exception {
-    	super.onSetUp();
-    	
+        super.onSetUp();
+
         try {
-	        // need to initialize translations from ITracker.properties explicitly
-	        LanguageDAO languageDAO = (LanguageDAO) applicationContext.getBean("languageDAO");
-	
-	        Properties localeProperties = new PropertiesFileHandler(
-	                "/org/itracker/core/resources/ITracker.properties").getProperties();
-	        for (Enumeration<?> propertiesEnumeration = localeProperties.propertyNames(); propertiesEnumeration.hasMoreElements();) {
-	            String key = (String) propertiesEnumeration.nextElement();
-	            String value = localeProperties.getProperty(key);
-	            languageDAO.saveOrUpdate(new Language(ITrackerResources.BASE_LOCALE, key, value));
-	        }
-	
-	        ITrackerResources.clearBundles();
-	        } catch (final Exception e) {
-	            log.warn(e);
-	        }
+            // need to initialize translations from ITracker.properties explicitly
+            LanguageDAO languageDAO = (LanguageDAO) applicationContext.getBean("languageDAO");
+
+            Properties localeProperties = new PropertiesFileHandler(
+                    "/org/itracker/core/resources/ITracker.properties").getProperties();
+            for (Enumeration<?> propertiesEnumeration = localeProperties.propertyNames(); propertiesEnumeration.hasMoreElements(); ) {
+                String key = (String) propertiesEnumeration.nextElement();
+                String value = localeProperties.getProperty(key);
+                languageDAO.saveOrUpdate(new Language(ITrackerResources.BASE_LOCALE, key, value));
+            }
+
+            ITrackerResources.clearBundles();
+        } catch (final Exception e) {
+            log.warn(e);
         }
-        
+    }
+
     /**
      * Defines a set of datafiles to be uploaded into database.
+     *
      * @return an array with datafiles.
      */
     protected String[] getDataSetFiles() {
         return new String[]{
-                    "dataset/languagebean_dataset.xml"
-                };
+                "dataset/languagebean_dataset.xml"
+        };
     }
 
     /**
      * Defines a simple configuration, required for running tests.
+     *
      * @return an array of references to configuration files.
      */
     protected String[] getConfigLocations() {

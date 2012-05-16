@@ -18,14 +18,14 @@
 
 package org.itracker.web.taglib;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
-
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 
 /**
  * @deprecated errors should be handled by Action classes, not JSPs!
@@ -33,10 +33,10 @@ import org.apache.struts.action.ActionMessages;
 @Deprecated
 public final class AddErrorTag extends TagSupport {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String name = Globals.ERROR_KEY;
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private String name = Globals.ERROR_KEY;
     private String key;
 
     public String getName() {
@@ -44,35 +44,35 @@ public final class AddErrorTag extends TagSupport {
     }
 
     public void setName(String value) {
-      	name = value;
+        name = value;
     }
 
     public String getKey() {
-      	return key;
+        return key;
     }
 
     public void setKey(String value) {
-    	  key = value;
+        key = value;
     }
 
     public int doStartTag() throws JspException {
-	      return (SKIP_BODY);
+        return (SKIP_BODY);
     }
 
     public int doEndTag() throws JspException {
         ActionErrors errors = null;
-	      HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 
-        if(request == null || getKey() == null) {
+        if (request == null || getKey() == null) {
             return EVAL_PAGE;
         }
 
         try {
             errors = (ActionErrors) request.getAttribute(getName());
-        } catch(ClassCastException cce) {
+        } catch (ClassCastException cce) {
         }
 
-        if(errors == null) {
+        if (errors == null) {
             errors = new ActionErrors();
         }
 

@@ -18,94 +18,92 @@
 
 package org.itracker.web.forms;
 
-import java.util.HashMap;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
- * 
+ *
  * @author ready
- * 
  */
 public class ConfigurationForm extends ValidatorForm {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	String action;
-	Integer id;
-	String value;
-	Integer order;
-	String key;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    String action;
+    Integer id;
+    String value;
+    Integer order;
+    String key;
 
-	// let's try to put String,String here:
-	HashMap<String, String> translations = new HashMap<String, String>();
+    // let's try to put String,String here:
+    HashMap<String, String> translations = new HashMap<String, String>();
 
-	/*
-	 * public void reset(ActionMapping mapping, HttpServletRequest request) {
-	 * action = null; id = null; value = null; order = null; key = null;
-	 * translations = null; }
-	 */
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = super.validate(mapping, request);
+    /*
+      * public void reset(ActionMapping mapping, HttpServletRequest request) {
+      * action = null; id = null; value = null; order = null; key = null;
+      * translations = null; }
+      */
+    public ActionErrors validate(ActionMapping mapping,
+                                 HttpServletRequest request) {
+        ActionErrors errors = super.validate(mapping, request);
 
-		return errors;
-	}
+        return errors;
+    }
 
-	public String getAction() {
-		return action;
-	}
+    public String getAction() {
+        return action;
+    }
 
-	public void setAction(String action) {
-		this.action = action;
-	}
+    public void setAction(String action) {
+        this.action = action;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public String getKey() {
-		return key;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+    public void setKey(String key) {
+        this.key = key;
+    }
 
-	public Integer getOrder() {
-		return order;
-	}
+    public Integer getOrder() {
+        return order;
+    }
 
-	public void setOrder(Integer order) {
-		this.order = order;
-	}
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
 
-	// let's try to put String,String here:
-	public HashMap<String, String> getTranslations() {
-		return translations;
-	}
+    // let's try to put String,String here:
+    public HashMap<String, String> getTranslations() {
+        return translations;
+    }
 
-	// let's try to put String,String here:
-	public void setTranslations(HashMap<String, String> translations) {
-		this.translations = translations;
-	}
+    // let's try to put String,String here:
+    public void setTranslations(HashMap<String, String> translations) {
+        this.translations = translations;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 
 }

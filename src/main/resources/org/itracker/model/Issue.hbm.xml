@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <!DOCTYPE hibernate-mapping PUBLIC
-    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="true" package="org.itracker.model">
 
@@ -14,15 +14,15 @@
         </id>
 
         <property name="description">
-            <column name="description"  not-null="true" />
+            <column name="description" not-null="true"/>
         </property>
 
         <property name="severity" index="issuebeanSeverityIdx">
-            <column name="severity" not-null="true" />
+            <column name="severity" not-null="true"/>
         </property>
 
         <property name="status" index="issuebeanStatusIdx">
-            <column name="status" not-null="true" />
+            <column name="status" not-null="true"/>
         </property>
 
         <property name="resolution" index="issuebeanResolutionIdx">
@@ -33,7 +33,7 @@
             <column name="project_id" not-null="true"/>
         </many-to-one>
 
-        <many-to-one name="creator" class="User" >
+        <many-to-one name="creator" class="User">
             <column name="creator_id" not-null="true"/>
         </many-to-one>
 
@@ -102,11 +102,11 @@
             <one-to-many class="IssueRelation"/>
         </bag>
 
-        <bag name="activities" table="issueactivitybean" cascade="all" lazy="false" inverse="true" >
+        <bag name="activities" table="issueactivitybean" cascade="all" lazy="false" inverse="true">
             <key>
-                <column name="issue_id" not-null="true" />
+                <column name="issue_id" not-null="true"/>
             </key>
-            <one-to-many class="IssueActivity" />
+            <one-to-many class="IssueActivity"/>
         </bag>
 
     </class>

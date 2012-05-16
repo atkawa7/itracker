@@ -22,8 +22,6 @@ public class ForgotPasswordTest extends AbstractSeleniumTestCase {
      * 4. Wait for page reload.
      * 5. Check that "Login is required" and "Last Name is required"
      * message appeared.
-     *
-     * @throws java.lang.Exception
      */
     @Test
     public void testIfBothRequired() throws Exception {
@@ -50,8 +48,6 @@ public class ForgotPasswordTest extends AbstractSeleniumTestCase {
      * 3. Click Login button.
      * 4. Wait for page reload.
      * 5. Check that "Login is required" message has appeared.
-     *
-     * @throws java.lang.Exception
      */
     @Test
     public void testIfLoginRequired() throws Exception {
@@ -78,8 +74,6 @@ public class ForgotPasswordTest extends AbstractSeleniumTestCase {
      * 3. Click Login button.
      * 4. Wait for page reload.
      * 5. Check that "Last Name is required" message has appeared.
-     *
-     * @throws java.lang.Exception
      */
     @Test
     public void testIfLastNameRequired() throws Exception {
@@ -110,8 +104,6 @@ public class ForgotPasswordTest extends AbstractSeleniumTestCase {
      * 10. Extract a new password from there.
      * 11. Redo a usual login procedure with a new password and make sure
      * you can authorize to the system with it.
-     *
-     * @throws java.lang.Exception
      */
     @Test
     public void testRetrievingForgottenPassword() throws Exception {

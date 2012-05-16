@@ -8,23 +8,23 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
-    
+
     <import resource="persistence-context.xml"/>
     <import resource="services-context.xml"/>
 
     <!-- Initialize ITracker Resources -->
     <bean id="itrackerservicesservletcontextutilsinit"
-        class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+          class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="staticMethod" value="org.itracker.web.util.ServletContextUtils.setITrackerServices"/>
-        <property name="arguments" ref="itrackerServices" />
+        <property name="arguments" ref="itrackerServices"/>
     </bean>
 
     <!-- please comment this: -->
     <bean id="applicationInitialization" init-method="init" class="org.itracker.core.ApplicationInitialization">
-        <constructor-arg ref="userService" />        
-        <constructor-arg ref="configurationService" />
-        <constructor-arg ref="reportService" />
-    </bean>       
+        <constructor-arg ref="userService"/>
+        <constructor-arg ref="configurationService"/>
+        <constructor-arg ref="reportService"/>
+    </bean>
 
     <!-- please comment this: -->
     <!-- bean id="schedulerController"
@@ -43,7 +43,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     <!-- Override properties specified in this file with properties from a properties file -->
     <!-- Usefull for db passwords, etc.. -->
     <bean id="applicationOverride"
-        class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
+          class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
         <property name="location" value="classpath:application.properties"/>
     </bean>
 

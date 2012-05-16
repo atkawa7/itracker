@@ -21,11 +21,11 @@ package org.itracker.services.exceptions;
 public class ProjectException extends Exception {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1993086866507036430L;
+     *
+     */
+    private static final long serialVersionUID = 1993086866507036430L;
 
-	public ProjectException() {
+    public ProjectException() {
     }
 
     public ProjectException(String message) {

@@ -1,29 +1,29 @@
 package org.itracker.persistence.dao;
 
-import java.util.List;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.itracker.model.IssueHistory;
 
-public class IssueHistoryDAOImpl extends BaseHibernateDAOImpl<IssueHistory> 
+import java.util.List;
+
+public class IssueHistoryDAOImpl extends BaseHibernateDAOImpl<IssueHistory>
         implements IssueHistoryDAO {
 
     public IssueHistoryDAOImpl() {
     }
-    
-    public IssueHistory findByPrimaryKey(Integer entryId) { 
+
+    public IssueHistory findByPrimaryKey(Integer entryId) {
         try {
-            return (IssueHistory)getSession().get(IssueHistory.class, entryId);
+            return (IssueHistory) getSession().get(IssueHistory.class, entryId);
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
-        }    
+        }
     }
 
     @SuppressWarnings("unchecked")
     public List<IssueHistory> findByIssueId(Integer issueId) {
         List<IssueHistory> history;
-        
+
         try {
             Query query = getSession().getNamedQuery(
                     "IssueHistoryByIssueQuery");

@@ -18,19 +18,8 @@
 
 package org.itracker.web.actions.preferences;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
@@ -45,30 +34,35 @@ import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 
 /**
-  * This class performas an update of the user's profile information based on their input.
-  * Only the users core profile information, password, and preferences are updated, no permissions
-  * can be updated from here.  Also each type of information is only updated, if it is allowed
-  * by the current systems plugable authentication.
-  */
+ * This class performas an update of the user's profile information based on their input.
+ * Only the users core profile information, password, and preferences are updated, no permissions
+ * can be updated from here.  Also each type of information is only updated, if it is allowed
+ * by the current systems plugable authentication.
+ */
 public class EditPreferencesAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(EditPreferencesAction.class);
-	
+    private static final Logger log = Logger.getLogger(EditPreferencesAction.class);
+
     public EditPreferencesAction() {
     }
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("Starting pref mod");
         ActionMessages errors = new ActionMessages();
-		//  TODO: Action Cleanup
+        //  TODO: Action Cleanup
 
-        if(! isTokenValid(request)) {
+        if (!isTokenValid(request)) {
             log.debug("Invalid request token while editing user preferences.");
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-			"itracker.web.error.transaction"));
-			saveErrors(request, errors);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                    "itracker.web.error.transaction"));
+            saveErrors(request, errors);
             return mapping.findForward("index");
         }
         resetToken(request);
@@ -80,7 +74,7 @@ public class EditPreferencesAction extends ItrackerBaseAction {
             // TODO: the following checks make no sense from my perspective.
             // This check should happen in the ExecuteAlways filter maybe
             // Shall we remove it?
-            
+
             HttpSession session = request.getSession();
 //            user = (User) session.getAttribute(Constants.USER_KEY);
 //            if(user == null) {
@@ -95,98 +89,98 @@ public class EditPreferencesAction extends ItrackerBaseAction {
 //                return mapping.findForward("unauthorized");
 //            }
             UserForm userForm = (UserForm) form;
-            
+
             if (LoginUtilities.getCurrentUser(request) != null) {
-            	user = LoginUtilities.getCurrentUser(request);
+                user = LoginUtilities.getCurrentUser(request);
             }
 
             if (log.isInfoEnabled()) {
-            	log.info("execute: found user " + user);
+                log.info("execute: found user " + user);
             }
             errors = form.validate(mapping, request);
 
 //            User existingUser = userService.getUser(user.getId());
             // edit user-object
-            if(errors.isEmpty()) {
-            	if (log.isDebugEnabled()){
-            		log.debug("execute: updating user-attributes.");
-            	}
-            		
-                if(userService.allowPasswordUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
-                    if(userForm.getPassword() != null && userForm.getPassword().trim().length() > 1) {
-                        if(userForm.getCurrPassword() == null || "".equals(userForm.getCurrPassword())) {
-                        	log.error("execute: current password was not set");
-                        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingpassword"));
+            if (errors.isEmpty()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("execute: updating user-attributes.");
+                }
+
+                if (userService.allowPasswordUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
+                    if (userForm.getPassword() != null && userForm.getPassword().trim().length() > 1) {
+                        if (userForm.getCurrPassword() == null || "".equals(userForm.getCurrPassword())) {
+                            log.error("execute: current password was not set");
+                            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingpassword"));
                         } else {
                             try {
                                 User passwordCheck = userService.checkLogin(user.getLogin(), userForm.getCurrPassword(), AuthenticationConstants.AUTH_TYPE_PASSWORD_PLAIN, AuthenticationConstants.REQ_SOURCE_WEB);
-                                if(passwordCheck == null) {
+                                if (passwordCheck == null) {
                                     throw new AuthenticatorException(AuthenticatorException.INVALID_DATA);
                                 }
                                 if (log.isDebugEnabled()) {
-                                	log.debug("execute: setting new user password");
+                                    log.debug("execute: setting new user password");
                                 }
                                 user.setPassword(UserUtilities.encryptPassword(userForm.getPassword()));
-                            } catch(AuthenticatorException ae) {
-                            	log.error("execute: current password was wrong, AuthenticatorException", ae);
-                            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.wrongpassword"));
+                            } catch (AuthenticatorException ae) {
+                                log.error("execute: current password was wrong, AuthenticatorException", ae);
+                                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.wrongpassword"));
                             } catch (PasswordException e) {
-                            	log.error("execute: current password was wrong", e);
-                            	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.wrongpassword"));
-							}
+                                log.error("execute: current password was wrong", e);
+                                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.wrongpassword"));
+                            }
                         }
                     }
                 } else {
 //                  itracker.web.error.noprofileupdates
-                	log.info("execute: passwords can not be changed in preferences due to incapable authenticator");
-                	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
-                	saveErrors(request, errors);
+                    log.info("execute: passwords can not be changed in preferences due to incapable authenticator");
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
+                    saveErrors(request, errors);
                     return mapping.findForward("error");
                 }
 
                 // TODO: should this check happen earlier?
-                if(userService.allowProfileUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
-                	if (log.isInfoEnabled()) {
-                		log.info("execute: allowing profile updates for " + user);
-                	}
-                	user.setFirstName(userForm.getFirstName());
-                	user.setLastName(userForm.getLastName());
-                	user.setEmail(userForm.getEmail());
+                if (userService.allowProfileUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
+                    if (log.isInfoEnabled()) {
+                        log.info("execute: allowing profile updates for " + user);
+                    }
+                    user.setFirstName(userForm.getFirstName());
+                    user.setLastName(userForm.getLastName());
+                    user.setEmail(userForm.getEmail());
                 } else {
-                	log.error("execute: profile updates are not allowed for " + user);
-                	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprofileupdates"));
-                	saveErrors(request, errors);
+                    log.error("execute: profile updates are not allowed for " + user);
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprofileupdates"));
+                    saveErrors(request, errors);
                     return mapping.findForward("error");
                 }
             } else {
-            	// validation errors
-            	if (log.isInfoEnabled()) {
-            		log.info("execute: got actions errors from validation: " + errors);
-            	}
+                // validation errors
+                if (log.isInfoEnabled()) {
+                    log.info("execute: got actions errors from validation: " + errors);
+                }
             }
 
-            if(errors.isEmpty()) {
+            if (errors.isEmpty()) {
                 log.debug("Passed required checks.  Updating user info for " + user.getLogin());
                 user = userService.updateUser(user);
 
                 UserPreferences userPrefs = user.getPreferences();
                 if (userPrefs == null) userPrefs = new UserPreferences();
-                
-                if(userService.allowPreferenceUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
+
+                if (userService.allowPreferenceUpdates(user, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
                     //userPrefs.setUser(existingUser);
-                	userPrefs.setUser(user);
+                    userPrefs.setUser(user);
 
                     userPrefs.setUserLocale(userForm.getUserLocale());
-                    
+
                     userPrefs.setSaveLogin(Boolean.valueOf(userForm.getSaveLogin()));
                     try {
                         userPrefs.setNumItemsOnIndex(Integer.valueOf(userForm.getNumItemsOnIndex()));
-                    } catch(NumberFormatException nfe) {
+                    } catch (NumberFormatException nfe) {
                         userPrefs.setNumItemsOnIndex(-1);
                     }
                     try {
                         userPrefs.setNumItemsOnIssueList(Integer.valueOf(userForm.getNumItemsOnIssueList()));
-                    } catch(NumberFormatException nfe) {
+                    } catch (NumberFormatException nfe) {
                         userPrefs.setNumItemsOnIssueList(-1);
                     }
                     userPrefs.setShowClosedOnIssueList(Boolean.valueOf(userForm.getShowClosedOnIssueList()));
@@ -194,8 +188,8 @@ public class EditPreferencesAction extends ItrackerBaseAction {
 
                     int hiddenSections = 0;
                     Integer[] hiddenSectionsArray = userForm.getHiddenIndexSections();
-                    if(hiddenSectionsArray != null) {
-                        for(int i = 0; i < hiddenSectionsArray.length; i++) {
+                    if (hiddenSectionsArray != null) {
+                        for (int i = 0; i < hiddenSectionsArray.length; i++) {
                             hiddenSections += hiddenSectionsArray[i].intValue();
                         }
                     }
@@ -212,38 +206,38 @@ public class EditPreferencesAction extends ItrackerBaseAction {
                 session.setAttribute(Constants.PREFERENCES_KEY, userPrefs);
                 session.setAttribute(Constants.LOCALE_KEY, ITrackerResources.getLocale(userPrefs.getUserLocale()));
 
-        		request.setAttribute(Constants.LOCALE_KEY, ITrackerResources.getLocale(userPrefs.getUserLocale()));
-        		
+                request.setAttribute(Constants.LOCALE_KEY, ITrackerResources.getLocale(userPrefs.getUserLocale()));
+
                 session.removeAttribute(Constants.EDIT_USER_KEY);
                 session.removeAttribute(Constants.EDIT_USER_PREFS_KEY);
             } else {
-            	// validation errors
-            	if (log.isInfoEnabled()) {
-            		log.info("execute: got actions errors from user manipulation: " + errors);
-            	}
-                
+                // validation errors
+                if (log.isInfoEnabled()) {
+                    log.info("execute: got actions errors from user manipulation: " + errors);
+                }
+
             }
-        } catch(RuntimeException e) {
+        } catch (RuntimeException e) {
             log.error("execute", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.save"));
         } catch (UserException e) {
             log.error("execute", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.save"));
-		}
+        }
 
-      	if(! errors.isEmpty()) {
-      		
-        	if (log.isInfoEnabled()) {
-        		log.info("execute: got actions errors: " + errors);
-        	}
-            
-        	saveErrors(request, errors);
+        if (!errors.isEmpty()) {
+
+            if (log.isInfoEnabled()) {
+                log.info("execute: got actions errors: " + errors);
+            }
+
+            saveErrors(request, errors);
             saveToken(request);
-      	}
-  		
-    	if (log.isDebugEnabled()) {
-    		log.debug("execute: done, forward to input forward");
-    	}
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("execute: done, forward to input forward");
+        }
         return mapping.getInputForward();
     }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <!DOCTYPE form-validation PUBLIC
-	"-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN"
-	"http://jakarta.apache.org/commons/dtds/validator_1_1_3.dtd">
+        "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN"
+        "http://jakarta.apache.org/commons/dtds/validator_1_1_3.dtd">
 
 <!--
 	
@@ -44,20 +44,20 @@
 
 <form-validation>
 
-	<global>
+    <global>
 
-		<validator name="required"
-			classname="org.apache.struts.validator.FieldChecks"
-			method="validateRequired"
-			methodParams="java.lang.Object,
+        <validator name="required"
+                   classname="org.apache.struts.validator.FieldChecks"
+                   method="validateRequired"
+                   methodParams="java.lang.Object,
                        org.apache.commons.validator.ValidatorAction,
                        org.apache.commons.validator.Field, 
                        org.apache.struts.action.ActionMessages,
                        org.apache.commons.validator.Validator,
                        javax.servlet.http.HttpServletRequest"
-			msg="itracker.web.error.validate.required">
+                   msg="itracker.web.error.validate.required">
 
-			<javascript><![CDATA[
+            <javascript><![CDATA[
             function validateRequired(form) {
                 var bValid = true;
                 var focusField = null;
@@ -116,22 +116,22 @@
                 }
                 return bValid;
             }]]>
-			</javascript>
+            </javascript>
 
-		</validator>
+        </validator>
 
-		<validator name="requiredif"
-			classname="org.apache.struts.validator.FieldChecks"
-			method="validateRequiredIf"
-			methodParams="java.lang.Object,
+        <validator name="requiredif"
+                   classname="org.apache.struts.validator.FieldChecks"
+                   method="validateRequiredIf"
+                   methodParams="java.lang.Object,
                                org.apache.commons.validator.ValidatorAction,
                                org.apache.commons.validator.Field, 
                                org.apache.struts.action.ActionMessages,
                                org.apache.commons.validator.Validator,
                                javax.servlet.http.HttpServletRequest"
-			msg="itracker.web.error.validate.required">
+                   msg="itracker.web.error.validate.required">
 
-			<javascript><![CDATA[
+            <javascript><![CDATA[
             function validateRequiredIf(form) {
                 var bValid = true;
                 var focusField = null;
@@ -190,15 +190,15 @@
                 }
                 return bValid;
             }]]>
-			</javascript>
+            </javascript>
 
-		</validator>
+        </validator>
 
-		<validator name="validwhen"
-			msg="itracker.web.error.validate.required"
-			classname="org.apache.struts.validator.validwhen.ValidWhen"
-			method="validateValidWhen"
-			methodParams="java.lang.Object,
+        <validator name="validwhen"
+                   msg="itracker.web.error.validate.required"
+                   classname="org.apache.struts.validator.validwhen.ValidWhen"
+                   method="validateValidWhen"
+                   methodParams="java.lang.Object,
                        org.apache.commons.validator.ValidatorAction,
                        org.apache.commons.validator.Field,
                        org.apache.struts.action.ActionMessages,
@@ -206,19 +206,19 @@
                        javax.servlet.http.HttpServletRequest">
 
 
-		</validator>
-		<validator name="minlength"
-			classname="org.apache.struts.validator.FieldChecks"
-			method="validateMinLength"
-			methodParams="java.lang.Object,
+        </validator>
+        <validator name="minlength"
+                   classname="org.apache.struts.validator.FieldChecks"
+                   method="validateMinLength"
+                   methodParams="java.lang.Object,
                        org.apache.commons.validator.ValidatorAction,
                        org.apache.commons.validator.Field, 
                        org.apache.struts.action.ActionMessages,
                        org.apache.commons.validator.Validator,
                        javax.servlet.http.HttpServletRequest"
-			depends="" msg="itracker.web.error.validate.minlength">
+                   depends="" msg="itracker.web.error.validate.minlength">
 
-			<javascript><![CDATA[
+            <javascript><![CDATA[
             function validateMinLength(form) {
                 var bValid = true;
                 var focusField = null;
@@ -244,23 +244,23 @@
                 }
                 return bValid;
             }]]>
-			</javascript>
+            </javascript>
 
-		</validator>
+        </validator>
 
 
-		<validator name="maxlength"
-			classname="org.apache.struts.validator.FieldChecks"
-			method="validateMaxLength"
-			methodParams="java.lang.Object,
+        <validator name="maxlength"
+                   classname="org.apache.struts.validator.FieldChecks"
+                   method="validateMaxLength"
+                   methodParams="java.lang.Object,
                        org.apache.commons.validator.ValidatorAction,
                        org.apache.commons.validator.Field, 
                        org.apache.struts.action.ActionMessages,
                        org.apache.commons.validator.Validator,
                        javax.servlet.http.HttpServletRequest"
-			depends="" msg="itracker.web.error.validate.maxlength">
+                   depends="" msg="itracker.web.error.validate.maxlength">
 
-			<javascript><![CDATA[
+            <javascript><![CDATA[
             function validateMaxLength(form) {
                 var bValid = true;
                 var focusField = null;
@@ -286,22 +286,22 @@
                 }
                 return bValid;
             }]]>
-			</javascript>
+            </javascript>
 
-		</validator>
+        </validator>
 
-		<validator name="email"
-			classname="org.apache.struts.validator.FieldChecks"
-			method="validateEmail"
-			methodParams="java.lang.Object,
+        <validator name="email"
+                   classname="org.apache.struts.validator.FieldChecks"
+                   method="validateEmail"
+                   methodParams="java.lang.Object,
                        org.apache.commons.validator.ValidatorAction,
                        org.apache.commons.validator.Field, 
                        org.apache.struts.action.ActionMessages,
                        org.apache.commons.validator.Validator,
                        javax.servlet.http.HttpServletRequest"
-			depends="" msg="itracker.web.error.validate.email">
+                   depends="" msg="itracker.web.error.validate.email">
 
-			<javascript><![CDATA[
+            <javascript><![CDATA[
             function validateEmail(form) {
                 var bValid = true;
                 var focusField = null;
@@ -378,12 +378,12 @@
                }
                return true;
             }]]>
-			</javascript>
+            </javascript>
 
-		</validator>
+        </validator>
 
-<!-- Standard Validators from validator-rules-compressed.xml -->
- 	<validator name="mask"
+        <!-- Standard Validators from validator-rules-compressed.xml -->
+        <validator name="mask"
                    classname="org.apache.struts.validator.FieldChecks"
                    method="validateMask"
                    methodParams="java.lang.Object,
@@ -665,6 +665,6 @@
                    depends=""
                    msg="errors.url"/>
 
-	</global>
+    </global>
 
 </form-validation>

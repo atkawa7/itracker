@@ -18,57 +18,56 @@
 
 package org.itracker.web.forms;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
- * 
+ *
  * @author ready
- * 
  */
 public class ForgotPasswordForm extends ValidatorForm {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	java.lang.String login;
-	String lastName;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    java.lang.String login;
+    String lastName;
 
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		login = null;
-		lastName = null;
-		String pageTitleKey = "itracker.web.forgotpass.title";
-		String pageTitleArg = "";
-		request.setAttribute("pageTitleKey", pageTitleKey);
-		request.setAttribute("pageTitleArg", pageTitleArg);
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        login = null;
+        lastName = null;
+        String pageTitleKey = "itracker.web.forgotpass.title";
+        String pageTitleArg = "";
+        request.setAttribute("pageTitleKey", pageTitleKey);
+        request.setAttribute("pageTitleArg", pageTitleArg);
 
-	}
+    }
 
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = super.validate(mapping, request);
+    public ActionErrors validate(ActionMapping mapping,
+                                 HttpServletRequest request) {
+        ActionErrors errors = super.validate(mapping, request);
 
-		return errors;
-	}
+        return errors;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public java.lang.String getLogin() {
-		return login;
-	}
+    public java.lang.String getLogin() {
+        return login;
+    }
 
-	public void setLogin(java.lang.String login) {
-		this.login = login;
-	}
+    public void setLogin(java.lang.String login) {
+        this.login = login;
+    }
 
 }

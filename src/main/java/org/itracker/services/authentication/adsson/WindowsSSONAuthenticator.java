@@ -3,11 +3,6 @@
  */
 package org.itracker.services.authentication.adsson;
 
-import java.rmi.RemoteException;
-import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
@@ -17,19 +12,23 @@ import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.UserUtilities;
 
+import javax.servlet.http.HttpServletRequest;
+import java.rmi.RemoteException;
+import java.util.Date;
+
 
 /**
  * Single Sign On class with Windows
- * 
+ * <p/>
  * Gets an authentication from jcifs web filter, gets user information from
  * active directory, creates or updates the user with that information if needed
- * 
+ *
  * @author Ricardo Trindade (ricardo.trindade@emation.pt)
  */
 public abstract class WindowsSSONAuthenticator extends DefaultAuthenticator {
 
-	private static final Logger logger = Logger.getLogger(WindowsSSONAuthenticator.class);
-	
+    private static final Logger logger = Logger.getLogger(WindowsSSONAuthenticator.class);
+
     private static String TEMPLATE_USER = "TemplateUser";
 
     /**
@@ -62,13 +61,13 @@ public abstract class WindowsSSONAuthenticator extends DefaultAuthenticator {
 
             // sometimes jcifs sends the username in the form of DOMAIN\USER
             if (theLogin.indexOf("\\") > 0) {
-            	theLogin = theLogin.substring(theLogin.indexOf("\\") + 1);
+                theLogin = theLogin.substring(theLogin.indexOf("\\") + 1);
             }
             if (!theLogin.equals(login)) {
-            	// should an exception be thrown here?
-            	AuthenticatorException ex = new AuthenticatorException("User obtained from authenticator does not match, got " + theLogin + ", expected " + login + ".",
-                        AuthenticatorException.CUSTOM_ERROR); 
-            	logger.warn("checkLogin: checking login for " + login + " but got " + theLogin + " in authentication " + authentication, ex);
+                // should an exception be thrown here?
+                AuthenticatorException ex = new AuthenticatorException("User obtained from authenticator does not match, got " + theLogin + ", expected " + login + ".",
+                        AuthenticatorException.CUSTOM_ERROR);
+                logger.warn("checkLogin: checking login for " + login + " but got " + theLogin + " in authentication " + authentication, ex);
                 throw ex;
             }
 
@@ -88,12 +87,6 @@ public abstract class WindowsSSONAuthenticator extends DefaultAuthenticator {
 
     /**
      * Checks if the user needs creating or updating, and if so, do it
-     * 
-     * @param login
-     * @param userService
-     * @return
-     * @throws RemoteException
-     * @throws UserException
      */
     private User updateOrCreateUser(String login, UserService userService) throws RemoteException, UserException,
             AuthenticatorException {
@@ -121,9 +114,6 @@ public abstract class WindowsSSONAuthenticator extends DefaultAuthenticator {
 
     /**
      * Updates parts of profile that are obtained from external source
-     * 
-     * @param model
-     * @return
      */
     private User updateUser(User oldUserModel, User newUserModel) {
         oldUserModel.setEmail(newUserModel.getEmail());
@@ -136,13 +126,6 @@ public abstract class WindowsSSONAuthenticator extends DefaultAuthenticator {
 
     /**
      * Create a user in the ITracker database
-     * 
-     * @param login
-     * @param userModel
-     * @param userService
-     * @return
-     * @throws UserException
-     * @throws RemoteException
      */
     private User createUser(String login, UserService userService) throws RemoteException, UserException,
             AuthenticatorException {
@@ -164,13 +147,9 @@ public abstract class WindowsSSONAuthenticator extends DefaultAuthenticator {
 
     /**
      * Set the default user permissions
-     * 
+     * <p/>
      * Default user permissions are the same as those of a user called
      * "TemplateUser"
-     * 
-     * @param userModel
-     * @param userService
-     * @throws RemoteException
      */
     private void setDefaultPermissions(User userModel, UserService userService) throws RemoteException,
             AuthenticatorException, UserException {
@@ -192,11 +171,9 @@ public abstract class WindowsSSONAuthenticator extends DefaultAuthenticator {
     /**
      * Checks if a given internal user needs updating, by comparing him with the
      * external user data source
-     * 
-     * @param localUser
-     *            The local User
-     * @param remoteUser
-     *            The remote User
+     *
+     * @param localUser  The local User
+     * @param remoteUser The remote User
      * @return true if the user needs updating, false otherwise
      */
     private boolean needsUpdate(User localUser, User remoteUser) {

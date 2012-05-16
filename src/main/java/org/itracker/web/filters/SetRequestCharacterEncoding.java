@@ -18,35 +18,30 @@
 
 package org.itracker.web.filters;
 
+import javax.servlet.*;
 import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 
 
 /**
-  * This class will set the chracter encoding of each request that uses the filter.  It
-  * will use the encoding specifried in the init parameter, or if that is not present,
-  * fall back to a default value of UTF-8.
-  */
+ * This class will set the chracter encoding of each request that uses the filter.  It
+ * will use the encoding specifried in the init parameter, or if that is not present,
+ * fall back to a default value of UTF-8.
+ */
 public class SetRequestCharacterEncoding implements Filter {
-    
+
     public static final String DEFAULT_ENCODING = "UTF-8";
 
     private FilterConfig filterConfig = null;
     private String encoding = null;
 
     /**
-      * Set the character encoding in the request.
-      * @param request the current ServletRequest object
-      * @param response the current ServletResponse object
-      * @param filterChain the current FilterChain
-      * @throws IOException if any io error occurs
-      * @throws ServletException any other servlet error occurs
+     * Set the character encoding in the request.
+     *
+     * @param request     the current ServletRequest object
+     * @param response    the current ServletResponse object
+     * @param filterChain the current FilterChain
+     * @throws IOException      if any io error occurs
+     * @throws ServletException any other servlet error occurs
      */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         request.setCharacterEncoding(getEncoding());
@@ -55,43 +50,44 @@ public class SetRequestCharacterEncoding implements Filter {
 
     /**
      * Initialize the filter.
+     *
      * @param filterConfig the current filter configuration
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-      	this.filterConfig = filterConfig;
+        this.filterConfig = filterConfig;
         setEncoding(filterConfig.getInitParameter("encoding"));
     }
 
     /**
-      * Returns the encoding of the request.
-      */
+     * Returns the encoding of the request.
+     */
     public String getEncoding() {
         return (encoding == null ? DEFAULT_ENCODING : encoding);
     }
 
     /**
-      * Sets the encoding of the request.
-      */
+     * Sets the encoding of the request.
+     */
     public void setEncoding(String value) {
-        if(value != null) {
+        if (value != null) {
             encoding = value;
         }
     }
 
     /**
-      * Reset the filter settings.
-      */
+     * Reset the filter settings.
+     */
     public void destroy() {
         encoding = null;
         filterConfig = null;
     }
 
-	public FilterConfig getFilterConfig() {
-		return filterConfig;
-	}
+    public FilterConfig getFilterConfig() {
+        return filterConfig;
+    }
 
-	public void setFilterConfig(FilterConfig filterConfig) {
-		this.filterConfig = filterConfig;
-	}
+    public void setFilterConfig(FilterConfig filterConfig) {
+        this.filterConfig = filterConfig;
+    }
 }
 

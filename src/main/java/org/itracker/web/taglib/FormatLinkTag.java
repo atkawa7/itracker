@@ -18,26 +18,25 @@
 
 package org.itracker.web.taglib;
 
-import java.net.MalformedURLException;
-import java.util.Locale;
-
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTagSupport;
-
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.util.HTMLUtilities;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+import java.net.MalformedURLException;
+import java.util.Locale;
+
 
 public final class FormatLinkTag extends BodyTagSupport {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	private String text = null;
+    private String text = null;
 
     private String action = null;
     private String forward = null;
@@ -52,35 +51,35 @@ public final class FormatLinkTag extends BodyTagSupport {
     private String queryString = null;
 
     public String getAction() {
-      	return action;
+        return action;
     }
 
     public void setAction(String value) {
-    	  action = value;
+        action = value;
     }
 
     public String getForward() {
-      	return forward;
+        return forward;
     }
 
     public void setForward(String value) {
-    	  forward = value;
+        forward = value;
     }
 
     public String getParamName() {
-      	return paramName;
+        return paramName;
     }
 
     public void setParamName(String value) {
-    	  paramName = value;
+        paramName = value;
     }
 
     public Object getParamValue() {
-      	return paramValue;
+        return paramValue;
     }
 
     public void setParamValue(Object value) {
-    	  paramValue = (value != null ? value.toString() : null);
+        paramValue = (value != null ? value.toString() : null);
     }
 
     public String getQueryString() {
@@ -92,51 +91,51 @@ public final class FormatLinkTag extends BodyTagSupport {
     }
 
     public String getTitleKey() {
-      	return titleKey;
+        return titleKey;
     }
 
     public void setTitleKey(String value) {
-    	  titleKey = value;
+        titleKey = value;
     }
 
     public Object getArg0() {
-      	return arg0;
+        return arg0;
     }
 
     public void setArg0(Object value) {
-    	  arg0 = (value != null ? value.toString() : null);
+        arg0 = (value != null ? value.toString() : null);
     }
 
     public String getCaller() {
-      	return caller;
+        return caller;
     }
 
     public void setCaller(String value) {
-    	  caller = value;
+        caller = value;
     }
 
     public String getTargetAction() {
-      	return targetAction;
+        return targetAction;
     }
 
     public void setTargetAction(String value) {
-    	  targetAction = value;
+        targetAction = value;
     }
 
     public String getTarget() {
-      	return target;
+        return target;
     }
 
     public void setTarget(String value) {
-    	  target = value;
+        target = value;
     }
 
     public String getStyleClass() {
-      	return styleClass;
+        return styleClass;
     }
 
     public void setStyleClass(String value) {
-    	  styleClass = value;
+        styleClass = value;
     }
 
     public int doStartTag() throws JspException {
@@ -145,9 +144,9 @@ public final class FormatLinkTag extends BodyTagSupport {
     }
 
     public int doAfterBody() throws JspException {
-        if(bodyContent != null) {
+        if (bodyContent != null) {
             String value = bodyContent.getString().trim();
-            if(value.length() > 0) {
+            if (value.length() > 0) {
                 text = value;
             }
         }
@@ -159,40 +158,40 @@ public final class FormatLinkTag extends BodyTagSupport {
         Locale locale = null;
 
         HttpSession session = pageContext.getSession();
-        if(session != null) {
+        if (session != null) {
             locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
         }
 
         StringBuffer buf = new StringBuffer("<a href=\"");
         try {
-            buf.append(TagUtils.getInstance().computeURL(pageContext, forward, null, null, action, null, null, null, false));            
-        } catch(MalformedURLException murle) {
+            buf.append(TagUtils.getInstance().computeURL(pageContext, forward, null, null, action, null, null, null, false));
+        } catch (MalformedURLException murle) {
             buf.append(HTMLUtilities.escapeTags(forward));
         }
-        if(queryString != null) {
+        if (queryString != null) {
             buf.append("?" + HTMLUtilities.escapeTags(queryString));
             hasParams = true;
         }
-        if(paramName != null && paramValue != null) {
+        if (paramName != null && paramValue != null) {
             buf.append((hasParams ? "&amp;" : "?") + paramName + "=" + paramValue);
             hasParams = true;
         }
-        if(caller != null) {
+        if (caller != null) {
             buf.append((hasParams ? "&amp;" : "?") + "caller=" + HTMLUtilities.escapeTags(caller));
             hasParams = true;
         }
-        if(targetAction != null) {
+        if (targetAction != null) {
             buf.append((hasParams ? "&amp;" : "?") + "action=" + HTMLUtilities.escapeTags(targetAction));
             hasParams = true;
         }
         buf.append("\"");
-        if(target != null) {
+        if (target != null) {
             buf.append(" target=\"" + HTMLUtilities.escapeTags(target) + "\"");
         }
-        if(titleKey != null) {
+        if (titleKey != null) {
             buf.append(" title=\"" + HTMLUtilities.escapeTags(ITrackerResources.getString(titleKey, locale, (arg0 == null ? "" : arg0))) + "\"");
         }
-        if(styleClass != null) {
+        if (styleClass != null) {
             buf.append(" class=\"" + HTMLUtilities.escapeTags(styleClass) + "\"");
         }
         buf.append(">");

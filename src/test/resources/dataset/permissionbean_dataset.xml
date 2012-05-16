@@ -48,7 +48,7 @@
         PERMISSION_CREATE
         PERMISSION_EDIT
         -->
-          <row>
+        <row>
             <value>4</value>
             <value>2006-01-01</value>
             <value>2006-01-01</value>

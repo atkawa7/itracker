@@ -18,11 +18,11 @@
 
 package org.itracker.web.taglib;
 
+import org.apache.struts.Globals;
+
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import org.apache.struts.Globals;
 
 /**
  * @deprecated errors should be handled by Action classes, not JSPs!
@@ -30,33 +30,33 @@ import org.apache.struts.Globals;
 @Deprecated
 public final class ClearErrorsTag extends TagSupport {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String name = Globals.ERROR_KEY;
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private String name = Globals.ERROR_KEY;
 
     public String getName() {
         return name;
     }
 
     public void setName(String value) {
-      	name = value;
+        name = value;
     }
 
     public int doStartTag() throws JspException {
-	      return (SKIP_BODY);
+        return (SKIP_BODY);
     }
 
     public int doEndTag() throws JspException {
         HttpSession session = pageContext.getSession();
 
-        if(session == null) {
+        if (session == null) {
             return EVAL_PAGE;
         }
 
         try {
             session.removeAttribute(getName());
-        } catch(ClassCastException cce) {
+        } catch (ClassCastException cce) {
         }
         return EVAL_PAGE;
     }

@@ -26,7 +26,7 @@
             <value>itracker.workflow.field.event.1</value>
             <value>test_value</value>
         </row>
-        
+
         <row>
             <value>999997</value>
             <value>2006-01-01</value>
@@ -44,7 +44,7 @@
             <value>test_key</value>
             <value>test_value</value>
         </row>
-        
+
         <row>
             <value>999996</value>
             <value>2006-01-01</value>
@@ -52,8 +52,8 @@
             <value>test</value>
             <value>itracker.user.permission.-1</value>
             <value>test_value</value>
-        </row>   
-        
+        </row>
+
         <row>
             <value>999801</value>
             <value>2006-01-01</value>
@@ -134,7 +134,7 @@
             <value>itracker.issuerelation.10</value>
             <value>test-dependent_c</value>
         </row>
-        
+
         <row>
             <value>999811</value>
             <value>2006-01-01</value>
@@ -239,7 +239,7 @@
             <value>itracker.activity.ISSUE_CREATED</value>
             <value>test-activity_issue_created</value>
         </row>
-        
+
         <row>
             <value>999701</value>
             <value>2006-01-01</value>
@@ -384,7 +384,7 @@
             <value>itracker.customfield.1.label</value>
             <value>test-field_custom</value>
         </row>
-        
+
         <row>
             <value>999731</value>
             <value>2006-01-01</value>
@@ -465,19 +465,17 @@
             <value>itracker.notification.role.VO</value>
             <value>test-notification_role_VO</value>
         </row>
-        
-        
-        
-        
-        <row>            
-        	<value>22222</value>
+
+
+        <row>
+            <value>22222</value>
             <value>2006-01-01</value>
             <value>2006-01-01</value>
             <value>en</value>
             <value>en_key</value>
             <value>en_value</value>
         </row>
-        
+
         <row>
             <value>5555555555555555</value>
             <value>2006-01-01</value>
@@ -486,7 +484,7 @@
             <value>itracker.customfield.4444.label</value>
             <value>hi</value>
         </row>
-        
+
         <row>
             <value>999995</value>
             <value>2006-01-01</value>
@@ -495,7 +493,7 @@
             <value>BASE_KEY</value>
             <value>BASE_VALUE</value>
         </row>
-        
-        
-       </table>
+
+
+    </table>
 </dataset>

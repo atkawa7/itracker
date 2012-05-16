@@ -18,82 +18,81 @@
 
 package org.itracker.web.forms;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
- * 
+ *
  * @author ready
- * 
  */
 public class WorkflowScriptForm extends ValidatorForm {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	String action;
-	Integer id;
-	String name;
-	Integer event;
-	String script;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    String action;
+    Integer id;
+    String name;
+    Integer event;
+    String script;
 
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		action = null;
-		id = null;
-		name = null;
-		event = null;
-		script = null;
-	}
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        action = null;
+        id = null;
+        name = null;
+        event = null;
+        script = null;
+    }
 
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = super.validate(mapping, request);
+    public ActionErrors validate(ActionMapping mapping,
+                                 HttpServletRequest request) {
+        ActionErrors errors = super.validate(mapping, request);
 
-		return errors;
-	}
+        return errors;
+    }
 
-	public String getAction() {
-		return action;
-	}
+    public String getAction() {
+        return action;
+    }
 
-	public void setAction(String action) {
-		this.action = action;
-	}
+    public void setAction(String action) {
+        this.action = action;
+    }
 
-	public Integer getEvent() {
-		return event;
-	}
+    public Integer getEvent() {
+        return event;
+    }
 
-	public void setEvent(Integer event) {
-		this.event = event;
-	}
+    public void setEvent(Integer event) {
+        this.event = event;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getScript() {
-		return script;
-	}
+    public String getScript() {
+        return script;
+    }
 
-	public void setScript(String script) {
-		this.script = script;
-	}
+    public void setScript(String script) {
+        this.script = script;
+    }
 
 }

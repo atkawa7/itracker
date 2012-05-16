@@ -7,7 +7,6 @@ import org.quartz.StatefulJob;
 /**
  * This class implements the periodic transmission of the meals and reservations
  * file.
- * 
  */
 public abstract class BaseJob implements StatefulJob {
 

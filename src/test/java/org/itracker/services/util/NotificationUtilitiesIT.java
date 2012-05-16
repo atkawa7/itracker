@@ -14,14 +14,13 @@ import org.junit.Test;
 import java.util.*;
 
 /**
- *
  * @author seas
  */
 public class NotificationUtilitiesIT extends AbstractDependencyInjectionTest {
-    
+
     @Test
     public void testGetRoleNameByLocale() {
-      
+
         final Locale localeTest = new Locale("test");
         assertEquals("test-notification_role_ANY",
                 NotificationUtilities.getRoleName(Role.ANY, localeTest));
@@ -44,9 +43,9 @@ public class NotificationUtilitiesIT extends AbstractDependencyInjectionTest {
         assertEquals("test-notification_role_VO",
                 NotificationUtilities.getRoleName(Role.VO, localeTest));
     }
-    
+
     private void doTestGetRoleNames(final Locale locale,
-            final Map<Role, String> expected) {
+                                    final Map<Role, String> expected) {
         final Map<Role, String> actual =
                 NotificationUtilities.getRoleNames(locale);
         for (final Map.Entry<Role, String> entry : expected.entrySet()) {
@@ -55,13 +54,13 @@ public class NotificationUtilitiesIT extends AbstractDependencyInjectionTest {
                 final String valueActual = actual.get(key);
                 assertEquals(
                         "NotificationUtilities.getRoleNames(" + locale + ")" +
-                        ".get(" + key + ")",
+                                ".get(" + key + ")",
                         entry.getValue(), valueActual);
             } else {
                 assertEquals(
                         "NotificationUtilities.getRoleNames(" + locale + ")" +
-                        ".get(" + key + ")." +
-                        "contains(" + key + ")",
+                                ".get(" + key + ")." +
+                                "contains(" + key + ")",
                         false);
             }
 
@@ -69,7 +68,7 @@ public class NotificationUtilitiesIT extends AbstractDependencyInjectionTest {
         assertEquals("NotificationUtilities.getRoleNames(" + locale + ").size()",
                 expected.size(), actual.size());
     }
-    
+
     @Test
     public void testGetRoleNames() {
         final Map<Role, String> expected = new HashMap<Role, String>();
@@ -83,32 +82,32 @@ public class NotificationUtilitiesIT extends AbstractDependencyInjectionTest {
         expected.put(Role.PO, "test-notification_role_PO");
         expected.put(Role.QA, "test-notification_role_QA");
         expected.put(Role.VO, "test-notification_role_VO");
-        
+
         {
             final Map<Role, String> expectedTest = new HashMap<Role, String>();
             expectedTest.putAll(expected);
             expectedTest.put(Role.QA, "");
             doTestGetRoleNames(new Locale("test"),
-                expected);
+                    expected);
         }
     }
-    
+
     private void doTestMappedRoles(final List<Notification> notifications,
-            final Map<User, Set<Notification.Role>> expected) {
+                                   final Map<User, Set<Notification.Role>> expected) {
         final Map<User, Set<Notification.Role>> actual =
                 NotificationUtilities.mappedRoles(notifications);
         assertEquals(expected.size(), actual.size());
         for (final Map.Entry<User, Set<Notification.Role>> entryExpected :
-            expected.entrySet()) {
-                assertTrue(actual.containsKey(entryExpected.getKey()));
-                final Set<Notification.Role> rolesActual =
-                        actual.get(entryExpected.getKey());
-                final Set<Notification.Role> rolesExpected =
-                        entryExpected.getValue();
-                assertEquals(rolesExpected, rolesActual);
-            }
+                expected.entrySet()) {
+            assertTrue(actual.containsKey(entryExpected.getKey()));
+            final Set<Notification.Role> rolesActual =
+                    actual.get(entryExpected.getKey());
+            final Set<Notification.Role> rolesExpected =
+                    entryExpected.getValue();
+            assertEquals(rolesExpected, rolesActual);
+        }
     }
-    
+
     @Test
     public void testMappedRoles() {
         final List<Notification> notifications = new Vector<Notification>();
@@ -159,19 +158,21 @@ public class NotificationUtilitiesIT extends AbstractDependencyInjectionTest {
         }
         doTestMappedRoles(notifications, expected);
     }
-    
+
     /**
      * Defines a set of datafiles to be uploaded into database.
+     *
      * @return an array with datafiles.
      */
     protected String[] getDataSetFiles() {
         return new String[]{
-                    "dataset/languagebean_dataset.xml"
-                };
+                "dataset/languagebean_dataset.xml"
+        };
     }
 
     /**
      * Defines a simple configuration, required for running tests.
+     *
      * @return an array of references to configuration files.
      */
     protected String[] getConfigLocations() {

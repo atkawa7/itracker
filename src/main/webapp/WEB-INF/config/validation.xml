@@ -16,33 +16,33 @@
         </form>
 
         <form name="loginForm">
-			<field property="login"
-				depends="validwhen">
-				<msg key="itracker.web.error.validate.required" name="validwhen" />
-				<arg0 key="itracker.web.attr.login" />
-				<var>
-					<var-name>test</var-name>
-					<var-value>
-						((password == null) or (*this* != null))
-					</var-value>
-				</var>
-			</field>
-			<field property="password"
-				depends="validwhen">
-				<msg key="itracker.web.error.validate.required" name="validwhen" />
-				<arg0 key="itracker.web.attr.password" />
-				<var>
-					<var-name>test</var-name>
-					<var-value>
-						((login == null) or (*this* != null))
-					</var-value>
-				</var>
-			</field>
+            <field property="login"
+                   depends="validwhen">
+                <msg key="itracker.web.error.validate.required" name="validwhen"/>
+                <arg0 key="itracker.web.attr.login"/>
+                <var>
+                    <var-name>test</var-name>
+                    <var-value>
+                        ((password == null) or (*this* != null))
+                    </var-value>
+                </var>
+            </field>
+            <field property="password"
+                   depends="validwhen">
+                <msg key="itracker.web.error.validate.required" name="validwhen"/>
+                <arg0 key="itracker.web.attr.password"/>
+                <var>
+                    <var-name>test</var-name>
+                    <var-value>
+                        ((login == null) or (*this* != null))
+                    </var-value>
+                </var>
+            </field>
         </form>
 
         <form name="selfRegistrationForm">
             <field property="email" depends="required,email">
-            	<msg name="email" key="itracker.web.error.validate.email"/>
+                <msg name="email" key="itracker.web.error.validate.email"/>
                 <arg0 key="itracker.web.attr.email"/>
             </field>
             <field property="firstName" depends="required">
@@ -65,7 +65,7 @@
 
         <form name="userForm">
             <field property="email" depends="required,email">
-            	<msg name="email" key="itracker.web.error.validate.email"/>
+                <msg name="email" key="itracker.web.error.validate.email"/>
                 <arg0 key="itracker.web.attr.email"/>
             </field>
             <field property="firstName" depends="required">

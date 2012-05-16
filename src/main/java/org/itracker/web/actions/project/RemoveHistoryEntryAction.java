@@ -18,57 +18,52 @@
 
 package org.itracker.web.actions.project;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.User;
 import org.itracker.services.IssueService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
 
 public class RemoveHistoryEntryAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(RemoveHistoryEntryAction.class);
+    private static final Logger log = Logger.getLogger(RemoveHistoryEntryAction.class);
 
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    	ActionMessages errors = new ActionMessages();
+        ActionMessages errors = new ActionMessages();
 
         try {
             IssueService issueService = getITrackerServices().getIssueService();
 
             Integer historyId = (Integer) PropertyUtils.getSimpleProperty(form, "historyId");
             String caller = (String) PropertyUtils.getSimpleProperty(form, "caller");
-            if(caller == null) {
+            if (caller == null) {
                 caller = "";
             }
 
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
-            if(! currUser.isSuperUser()) {
+            if (!currUser.isSuperUser()) {
                 return mapping.findForward("unauthorized");
             } else {
                 Integer issueId = issueService.removeIssueHistoryEntry(historyId, currUser.getId());
                 return new ActionForward(mapping.findForward("editissue").getPath() + "?id=" + issueId + "&caller=" + caller);
             }
-        } catch(Exception e) {
-        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+        } catch (Exception e) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
             log.error("System Error.", e);
         }
-        if(! errors.isEmpty()) {
-        	saveErrors(request, errors);
+        if (!errors.isEmpty()) {
+            saveErrors(request, errors);
         }
         return mapping.findForward("error");
     }

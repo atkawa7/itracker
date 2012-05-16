@@ -18,55 +18,50 @@
 
 package org.itracker.web.actions.admin.report;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.PermissionType;
 import org.itracker.services.ReportService;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
 public class RemoveReportAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(RemoveReportAction.class);
-    
+    private static final Logger log = Logger.getLogger(RemoveReportAction.class);
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	ActionMessages errors = new ActionMessages();
-        
+        ActionMessages errors = new ActionMessages();
+
         try {
             HttpSession session = request.getSession(true);
             Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
-            if(! UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_USER_ADMIN)) {
+            if (!UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_USER_ADMIN)) {
                 return mapping.findForward("unauthorized");
             }
-            
+
             ReportService reportService = getITrackerServices().getReportService();
-            
-            Integer reportId = new Integer((request.getParameter("id") == null ? "-1" : request.getParameter("id")));            
+
+            Integer reportId = new Integer((request.getParameter("id") == null ? "-1" : request.getParameter("id")));
             reportService.getReportDAO().delete(reportService.getReportDAO().findByPrimaryKey(reportId));
-            return mapping.findForward("listreportsadmin");            
-        } catch(NumberFormatException nfe) {
+            return mapping.findForward("listreportsadmin");
+        } catch (NumberFormatException nfe) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreport"));
             log.debug("Invalid report id " + request.getParameter("id") + " specified.");
-        } catch(Exception e) {
+        } catch (Exception e) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
             log.error("System Error.", e);
         }
-        if(! errors.isEmpty()) {
-        	saveErrors(request, errors);
+        if (!errors.isEmpty()) {
+            saveErrors(request, errors);
         }
         return mapping.findForward("error");
     }
-    
+
 }

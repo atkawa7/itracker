@@ -19,25 +19,24 @@
 package org.itracker.model;
 
 /**
- * Enumeration of Project, Component or Version statuses. 
- * 
+ * Enumeration of Project, Component or Version statuses.
+ *
  * @author johnny
  */
 public enum Status implements IntCodeEnum<Status> {
-    
-	
-	
-    DELETED(-1), 
-    
-    ACTIVE(1), 
-    
-    VIEWABLE(2), 
-    
+
+
+    DELETED(-1),
+
+    ACTIVE(1),
+
+    VIEWABLE(2),
+
     LOCKED(3);
-    
-    
+
+
     private final int code;
-    
+
     private Status(int code) {
         this.code = code;
     }
@@ -45,21 +44,25 @@ public enum Status implements IntCodeEnum<Status> {
     public int getCode() {
         return code;
     }
-    
+
     public Status fromCode(int code) {
         return Status.valueOf(code);
     }
-    
+
     public static Status valueOf(int code) {
         switch (code) {
-            case -1: return DELETED;
-            case 1 : return ACTIVE;
-            case 2 : return VIEWABLE;
-            case 3 : return LOCKED;
-            default : 
+            case -1:
+                return DELETED;
+            case 1:
+                return ACTIVE;
+            case 2:
+                return VIEWABLE;
+            case 3:
+                return LOCKED;
+            default:
                 throw new IllegalArgumentException(
                         "Unknown enum code : " + code);
         }
     }
-    
+
 }

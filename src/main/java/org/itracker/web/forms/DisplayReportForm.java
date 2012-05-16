@@ -18,77 +18,76 @@
 
 package org.itracker.web.forms;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
- * 
+ *
  * @author ready
- * 
  */
 public class DisplayReportForm extends ValidatorForm {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String type;
-	private Integer[] projectIds;
-	private Integer reportId;
-	private String reportOutput;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private String type;
+    private Integer[] projectIds;
+    private Integer reportId;
+    private String reportOutput;
 
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		type = null;
-		projectIds = null;
-		reportId = null;
-		reportOutput = null;
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        type = null;
+        projectIds = null;
+        reportId = null;
+        reportOutput = null;
 
-	}
+    }
 
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = super.validate(mapping, request);
+    public ActionErrors validate(ActionMapping mapping,
+                                 HttpServletRequest request) {
+        ActionErrors errors = super.validate(mapping, request);
 
-		return errors;
-	}
+        return errors;
+    }
 
-	public Integer[] getProjectIds() {
-		if (null == projectIds)
-			return null;
-		return projectIds.clone();
-	}
+    public Integer[] getProjectIds() {
+        if (null == projectIds)
+            return null;
+        return projectIds.clone();
+    }
 
-	public void setProjectIds(Integer[] projectIds) {
-		if (null == projectIds)
-			this.projectIds = null;
-		else
-			this.projectIds = projectIds.clone();
-	}
+    public void setProjectIds(Integer[] projectIds) {
+        if (null == projectIds)
+            this.projectIds = null;
+        else
+            this.projectIds = projectIds.clone();
+    }
 
-	public Integer getReportId() {
-		return reportId;
-	}
+    public Integer getReportId() {
+        return reportId;
+    }
 
-	public void setReportId(Integer reportId) {
-		this.reportId = reportId;
-	}
+    public void setReportId(Integer reportId) {
+        this.reportId = reportId;
+    }
 
-	public String getReportOutput() {
-		return reportOutput;
-	}
+    public String getReportOutput() {
+        return reportOutput;
+    }
 
-	public void setReportOutput(String reportOutput) {
-		this.reportOutput = reportOutput;
-	}
+    public void setReportOutput(String reportOutput) {
+        this.reportOutput = reportOutput;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 }

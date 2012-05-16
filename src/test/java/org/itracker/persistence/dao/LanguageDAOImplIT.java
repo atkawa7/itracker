@@ -24,55 +24,55 @@ public class LanguageDAOImplIT extends AbstractDependencyInjectionTest {
     public void testFindByKeyAndLocale() {
 
         Language language = languageDAO.findByKeyAndLocale(
-                "test_key", "test_locale" );
+                "test_key", "test_locale");
 
-        assertNotNull( language );
+        assertNotNull(language);
 
-        assertLanguageEquals( language, "test_locale",
-                              "test_key", "test_value" );
+        assertLanguageEquals(language, "test_locale",
+                "test_key", "test_value");
 
     }
 
     @Test
     public void testFindByKey() {
 
-        List<Language> languages = languageDAO.findByKey( "test_key" );
+        List<Language> languages = languageDAO.findByKey("test_key");
 
-        assertNotNull( languages );
+        assertNotNull(languages);
 
-        assertEquals( 2, languages.size() );
+        assertEquals(2, languages.size());
 
-        Language language = languages.get( 0 );
+        Language language = languages.get(0);
 
-        assertLanguageEquals( language, "test_locale",
-                              "test_key", "test_value" );
+        assertLanguageEquals(language, "test_locale",
+                "test_key", "test_value");
 
     }
 
     @Test
     public void testFindByLocale() {
 
-        List<Language> languages = languageDAO.findByLocale( "test_locale" );
+        List<Language> languages = languageDAO.findByLocale("test_locale");
 
-        assertNotNull( languages );
+        assertNotNull(languages);
 
-        assertEquals( 1, languages.size() );
+        assertEquals(1, languages.size());
 
-        Language language = languages.get( 0 );
+        Language language = languages.get(0);
 
-        assertLanguageEquals( language, "test_locale",
-                              "test_key", "test_value" );
+        assertLanguageEquals(language, "test_locale",
+                "test_key", "test_value");
 
     }
 
-    private void assertLanguageEquals( Language language,
-                                       String locale,
-                                       String key,
-                                       String value ) {
+    private void assertLanguageEquals(Language language,
+                                      String locale,
+                                      String key,
+                                      String value) {
 
-        assertEquals( locale, language.getLocale() );
-        assertEquals( key, language.getResourceKey() );
-        assertEquals( value, language.getResourceValue() );
+        assertEquals(locale, language.getLocale());
+        assertEquals(key, language.getResourceKey());
+        assertEquals(value, language.getResourceValue());
 
     }
 
@@ -80,17 +80,17 @@ public class LanguageDAOImplIT extends AbstractDependencyInjectionTest {
     public void onSetUp() throws Exception {
         super.onSetUp();
 
-        languageDAO = (LanguageDAO)applicationContext.getBean( "languageDAO" );
+        languageDAO = (LanguageDAO) applicationContext.getBean("languageDAO");
     }
 
     protected String[] getDataSetFiles() {
-        return new String[] {
+        return new String[]{
                 "dataset/languagebean_dataset.xml"
         };
     }
 
     protected String[] getConfigLocations() {
-        return new String[] { "application-context.xml" };
+        return new String[]{"application-context.xml"};
     }
 
 }

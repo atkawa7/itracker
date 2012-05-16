@@ -18,39 +18,38 @@
 
 package org.itracker.web.servlets;
 
-import java.io.IOException;
+import org.apache.log4j.Logger;
+import org.itracker.model.Report;
+import org.itracker.services.ReportService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-import org.apache.log4j.Logger;
-import org.itracker.model.Report;
-import org.itracker.services.ReportService;
- 
 
 public class ReportDownloadController extends GenericController {
- 
-	private static final Logger logger = Logger.getLogger(ReportDownloadController.class);
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
-	public ReportDownloadController() {
+    private static final Logger logger = Logger.getLogger(ReportDownloadController.class);
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    public ReportDownloadController() {
     }
 
     public void init(ServletConfig config) {
- 
+
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if(! isLoggedInWithRedirect(request, response)) {
+        if (!isLoggedInWithRedirect(request, response)) {
             return;
         }
-        
+
         // TODO: the 2-3 lines are most propably not used; commented, task added
         // Commented more not used lines, but added a task for testing. 
         // HttpSession session = request.getSession();
@@ -66,13 +65,13 @@ public class ReportDownloadController extends GenericController {
             try {
                 reportId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
                 report = reportService.getReportDAO().findByPrimaryKey(reportId);
-            } catch(NumberFormatException nfe) {
+            } catch (NumberFormatException nfe) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Invalid reportId " + request.getParameter("id") + " specified.");
                 }
             }
 
-            if(report == null) {
+            if (report == null) {
                 forward("/error.jsp", request, response);
                 return;
             }
@@ -81,7 +80,7 @@ public class ReportDownloadController extends GenericController {
             ServletOutputStream out = response.getOutputStream();
             //out.write(reportService.getReportFile(reportId));
             out.close();
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             logger.info("Unable to display report.", ioe);
         }
 

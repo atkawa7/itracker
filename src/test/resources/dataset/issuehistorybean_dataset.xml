@@ -1,4 +1,4 @@
-    <dataset>
+<dataset>
 
     <table name="issuehistorybean">
 
@@ -10,7 +10,7 @@
         <column>create_date</column>
         <column>last_modified</column>
 
-      
+
         <row>
             <value>1</value>
             <value>2</value>

@@ -137,8 +137,6 @@ public abstract class AbstractDependencyInjectionTest extends
     /**
      * must make sure, that the order is correct, so no constraints will be
      * violated.
-     *
-     * @return
      */
     protected abstract String[] getDataSetFiles();
 

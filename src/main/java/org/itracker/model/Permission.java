@@ -23,118 +23,117 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * A user permission on a project.
- * 
+ * <p/>
  * <p>
  * The permission type tells what kind of action the user is allowed perform.
  * </p>
- * 
+ *
  * @author ready
  */
 public class Permission extends AbstractEntity {
 
-	/**
-	 * Comparator for comparing the main properties type, user, project
-	 */
-	public static final PermissionPropertiesComparator PERMISSION_PROPERTIES_COMPARATOR = new PermissionPropertiesComparator();
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * Comparator for comparing the main properties type, user, project
+     */
+    public static final PermissionPropertiesComparator PERMISSION_PROPERTIES_COMPARATOR = new PermissionPropertiesComparator();
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * The type of permission granted. TODO: use PermissionType enum
-	 */
-	private Integer type;
+    /**
+     * The type of permission granted. TODO: use PermissionType enum
+     */
+    private Integer type;
 
-	/**
-	 * The project on which this permission is granted. May be <tt>null</tt>
-	 * to indicate the permission is granted on all projects.
-	 */
-	private Project project;
+    /**
+     * The project on which this permission is granted. May be <tt>null</tt>
+     * to indicate the permission is granted on all projects.
+     */
+    private Project project;
 
-	/** The user who's granted this permission. */
-	private User user;
+    /**
+     * The user who's granted this permission.
+     */
+    private User user;
 
-	/**
-	 * Default constructor (required by Hibernate).
-	 * 
-	 * <p>
-	 * PENDING: should be <code>private</code> so that it can only be used by
-	 * Hibernate, to ensure that the fields which form an instance's identity
-	 * are always initialized/never <tt>null</tt>.
-	 * </p>
-	 */
-	public Permission() {
-	}
+    /**
+     * Default constructor (required by Hibernate).
+     * <p/>
+     * <p>
+     * PENDING: should be <code>private</code> so that it can only be used by
+     * Hibernate, to ensure that the fields which form an instance's identity
+     * are always initialized/never <tt>null</tt>.
+     * </p>
+     */
+    public Permission() {
+    }
 
-	/**
-	 * Grants permissions on all projects to the given user.
-	 * 
-	 * @param type
-	 *            permission type
-	 * @param user
-	 *            grantee
-	 */
-	public Permission(Integer type, User user) {
-		this(type, user, null);
-	}
+    /**
+     * Grants permissions on all projects to the given user.
+     *
+     * @param type permission type
+     * @param user grantee
+     */
+    public Permission(Integer type, User user) {
+        this(type, user, null);
+    }
 
-	/**
-	 * Grants permissions on all projects to the given user.
-	 * 
-	 * @param type
-	 *            permission type
-	 * @param user
-	 *            grantee
-	 * @param project
-	 *            on which permission is granted, or <tt>null</tt> for all
-	 *            projects
-	 */
-	public Permission(Integer type, User user, Project project) {
-		setPermissionType(type);
-		setUser(user);
-		setProject(project);
-	}
+    /**
+     * Grants permissions on all projects to the given user.
+     *
+     * @param type    permission type
+     * @param user    grantee
+     * @param project on which permission is granted, or <tt>null</tt> for all
+     *                projects
+     */
+    public Permission(Integer type, User user, Project project) {
+        setPermissionType(type);
+        setUser(user);
+        setProject(project);
+    }
 
-	public Integer getPermissionType() {
-		return type;
-	}
+    public Integer getPermissionType() {
+        return type;
+    }
 
-	public void setPermissionType(Integer type) {
-		this.type = type;
-	}
+    public void setPermissionType(Integer type) {
+        this.type = type;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public User getUser() {
+        return user;
+    }
 
-	public void setUser(User user) {
-		if (user == null) {
-			throw new IllegalArgumentException("null user");
-		}
-		this.user = user;
-	}
+    public void setUser(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("null user");
+        }
+        this.user = user;
+    }
 
-	public Project getProject() {
-		return project;
-	}
+    public Project getProject() {
+        return project;
+    }
 
-	/** May be null to indicate a permission on all projects. */
-	public void setProject(Project project) {
-		this.project = project;
-	}
+    /**
+     * May be null to indicate a permission on all projects.
+     */
+    public void setProject(Project project) {
+        this.project = project;
+    }
 
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("id", getId()).append("type", getPermissionType())
-				.append("user", getUser()).append("project", getProject()).toString();
-	}
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("id", getId()).append("type", getPermissionType())
+                .append("user", getUser()).append("project", getProject()).toString();
+    }
 
-	
-	public static final class PermissionPropertiesComparator implements java.util.Comparator<Permission> {
-		public int compare(Permission lhs, Permission rhs) {
-			return new CompareToBuilder().append(lhs.type, rhs.type).append(lhs.user, rhs.user, User.NAME_COMPARATOR).append(lhs.project, rhs.project, Project.PROJECT_COMPARATOR).toComparison();
-	    }
-	}
+
+    public static final class PermissionPropertiesComparator implements java.util.Comparator<Permission> {
+        public int compare(Permission lhs, Permission rhs) {
+            return new CompareToBuilder().append(lhs.type, rhs.type).append(lhs.user, rhs.user, User.NAME_COMPARATOR).append(lhs.project, rhs.project, Project.PROJECT_COMPARATOR).toComparison();
+        }
+    }
 }

@@ -18,53 +18,52 @@
 
 package org.itracker.web.forms;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
- * 
+ *
  * @author ready
- * 
  */
 public class RemoveRelationForm extends ValidatorForm {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	java.lang.Integer relationId;
-	java.lang.String caller;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    java.lang.Integer relationId;
+    java.lang.String caller;
 
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		relationId = null;
-		caller = null;
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        relationId = null;
+        caller = null;
 
-	}
+    }
 
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = super.validate(mapping, request);
+    public ActionErrors validate(ActionMapping mapping,
+                                 HttpServletRequest request) {
+        ActionErrors errors = super.validate(mapping, request);
 
-		return errors;
-	}
+        return errors;
+    }
 
-	public java.lang.String getCaller() {
-		return caller;
-	}
+    public java.lang.String getCaller() {
+        return caller;
+    }
 
-	public void setCaller(java.lang.String caller) {
-		this.caller = caller;
-	}
+    public void setCaller(java.lang.String caller) {
+        this.caller = caller;
+    }
 
-	public java.lang.Integer getRelationId() {
-		return relationId;
-	}
+    public java.lang.Integer getRelationId() {
+        return relationId;
+    }
 
-	public void setRelationId(java.lang.Integer relationId) {
-		this.relationId = relationId;
-	}
+    public void setRelationId(java.lang.Integer relationId) {
+        this.relationId = relationId;
+    }
 
 }

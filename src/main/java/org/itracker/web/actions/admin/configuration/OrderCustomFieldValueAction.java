@@ -18,22 +18,9 @@
 
 package org.itracker.web.actions.admin.configuration;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.services.ConfigurationService;
@@ -42,114 +29,122 @@ import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 public class OrderCustomFieldValueAction extends ItrackerBaseAction {
-	private static final Logger log = Logger
-			.getLogger(OrderCustomFieldValueAction.class);
+    private static final Logger log = Logger
+            .getLogger(OrderCustomFieldValueAction.class);
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		ActionMessages errors = new ActionMessages();
+    public ActionForward execute(ActionMapping mapping, ActionForm form,
+                                 HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        ActionMessages errors = new ActionMessages();
 
-		if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request,
-				response)) {
-			return mapping.findForward("unauthorized");
-		}
+        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request,
+                response)) {
+            return mapping.findForward("unauthorized");
+        }
 
-		try {
-			ConfigurationService configurationService = getITrackerServices()
-					.getConfigurationService();
+        try {
+            ConfigurationService configurationService = getITrackerServices()
+                    .getConfigurationService();
 
-			Integer customFieldValueId = (Integer) PropertyUtils
-					.getSimpleProperty(form, "id");
-			String action = (String) PropertyUtils.getSimpleProperty(form,
-					"action");
-			if (customFieldValueId == null
-					|| customFieldValueId.intValue() <= 0) {
-				throw new SystemConfigurationException(
-						"Invalid custom field value id.");
-			}
+            Integer customFieldValueId = (Integer) PropertyUtils
+                    .getSimpleProperty(form, "id");
+            String action = (String) PropertyUtils.getSimpleProperty(form,
+                    "action");
+            if (customFieldValueId == null
+                    || customFieldValueId.intValue() <= 0) {
+                throw new SystemConfigurationException(
+                        "Invalid custom field value id.");
+            }
 
-			CustomFieldValue customFieldValue = configurationService
-					.getCustomFieldValue(customFieldValueId);
-			if (customFieldValue == null) {
-				throw new SystemConfigurationException(
-						"Invalid custom field value id.");
-			}
+            CustomFieldValue customFieldValue = configurationService
+                    .getCustomFieldValue(customFieldValueId);
+            if (customFieldValue == null) {
+                throw new SystemConfigurationException(
+                        "Invalid custom field value id.");
+            }
 
-			CustomField customField = configurationService
-					.getCustomField(customFieldValue.getCustomField().getId());
-			if (customField == null) {
-				throw new SystemConfigurationException(
-						"Invalid custom field id.");
-			}
-			List<CustomFieldValue> customFieldvalues = customField.getOptions();
-			// List<CustomFieldValue> newCustomFieldValueItems = new
-			// ArrayList<CustomFieldValue>();
+            CustomField customField = configurationService
+                    .getCustomField(customFieldValue.getCustomField().getId());
+            if (customField == null) {
+                throw new SystemConfigurationException(
+                        "Invalid custom field id.");
+            }
+            List<CustomFieldValue> customFieldvalues = customField.getOptions();
+            // List<CustomFieldValue> newCustomFieldValueItems = new
+            // ArrayList<CustomFieldValue>();
 
-			// newCustomFieldValueItems.addAll(customFieldvalues);
+            // newCustomFieldValueItems.addAll(customFieldvalues);
 
-			Collections.sort(customFieldvalues,
-					CustomFieldValue.SORT_ORDER_COMPARATOR);
-			Iterator<CustomFieldValue> valuesIt = customFieldvalues.iterator();
-			CustomFieldValue curCustomFieldValue, prevCustomFieldValue = null;
-			int i = 0;
-			while (valuesIt.hasNext()) {
-				curCustomFieldValue = (CustomFieldValue) valuesIt.next();
-				curCustomFieldValue.setSortOrder(i);
+            Collections.sort(customFieldvalues,
+                    CustomFieldValue.SORT_ORDER_COMPARATOR);
+            Iterator<CustomFieldValue> valuesIt = customFieldvalues.iterator();
+            CustomFieldValue curCustomFieldValue, prevCustomFieldValue = null;
+            int i = 0;
+            while (valuesIt.hasNext()) {
+                curCustomFieldValue = (CustomFieldValue) valuesIt.next();
+                curCustomFieldValue.setSortOrder(i);
 
-				// int todo_i = -1;
-				if (curCustomFieldValue.getId() == customFieldValueId) {
+                // int todo_i = -1;
+                if (curCustomFieldValue.getId() == customFieldValueId) {
 
-					if ("up".equals(action)) {
-						// todo_i = i - 1;
-						if (prevCustomFieldValue != null) {
-							curCustomFieldValue.setSortOrder(i - 1);
-							prevCustomFieldValue.setSortOrder(i);
-						}
-					} else {
-						// todo_i = i + 1;
-						CustomFieldValue value = valuesIt.next();
-						value.setSortOrder(i++);
-						curCustomFieldValue.setSortOrder(i);
-						curCustomFieldValue = value;
-					}
+                    if ("up".equals(action)) {
+                        // todo_i = i - 1;
+                        if (prevCustomFieldValue != null) {
+                            curCustomFieldValue.setSortOrder(i - 1);
+                            prevCustomFieldValue.setSortOrder(i);
+                        }
+                    } else {
+                        // todo_i = i + 1;
+                        CustomFieldValue value = valuesIt.next();
+                        value.setSortOrder(i++);
+                        curCustomFieldValue.setSortOrder(i);
+                        curCustomFieldValue = value;
+                    }
 
-				}
-				prevCustomFieldValue = curCustomFieldValue;
-				i++;
-			}
+                }
+                prevCustomFieldValue = curCustomFieldValue;
+                i++;
+            }
 
 //			configurationService.updateCustomFieldValues(customField.getId(),
 //					customFieldvalues);
-			
-			configurationService.updateCustomField(customField);
 
-			configurationService
-					.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
-			request.setAttribute("action", action);
-			return new ActionForward(mapping.findForward("editcustomfield")
-					.getPath()
-					+ "?id=" + customField.getId() + "&action=update");
-		} catch (SystemConfigurationException nfe) {
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-					"itracker.web.error.invalidcustomfieldvalue"));
-			log.debug("Invalid custom field value id "
-					+ request.getParameter("id") + " specified.");
-		} catch (NumberFormatException nfe) {
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-					"itracker.web.error.invalidcustomfieldvalue"));
-			log.debug("Invalid custom field value id "
-					+ request.getParameter("id") + " specified.");
-		} catch (Exception e) {
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-					"itracker.web.error.system"));
-			log.error("System Error.", e);
-		}
-		if (!errors.isEmpty()) {
-			saveErrors(request, errors);
-		}
-		return mapping.findForward("error");
-	}
+            configurationService.updateCustomField(customField);
+
+            configurationService
+                    .resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
+            request.setAttribute("action", action);
+            return new ActionForward(mapping.findForward("editcustomfield")
+                    .getPath()
+                    + "?id=" + customField.getId() + "&action=update");
+        } catch (SystemConfigurationException nfe) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                    "itracker.web.error.invalidcustomfieldvalue"));
+            log.debug("Invalid custom field value id "
+                    + request.getParameter("id") + " specified.");
+        } catch (NumberFormatException nfe) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                    "itracker.web.error.invalidcustomfieldvalue"));
+            log.debug("Invalid custom field value id "
+                    + request.getParameter("id") + " specified.");
+        } catch (Exception e) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                    "itracker.web.error.system"));
+            log.error("System Error.", e);
+        }
+        if (!errors.isEmpty()) {
+            saveErrors(request, errors);
+        }
+        return mapping.findForward("error");
+    }
 
 }

@@ -18,62 +18,61 @@
 
 package org.itracker.web.forms;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
- * 
+ *
  * @author ready
- * 
  */
 public class MoveIssueForm extends ValidatorForm {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String caller;
-	private Integer issueId;
-	private Integer projectId;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private String caller;
+    private Integer issueId;
+    private Integer projectId;
 
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		caller = null;
-		issueId = null;
-		projectId = null;
-	}
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        caller = null;
+        issueId = null;
+        projectId = null;
+    }
 
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = super.validate(mapping, request);
+    public ActionErrors validate(ActionMapping mapping,
+                                 HttpServletRequest request) {
+        ActionErrors errors = super.validate(mapping, request);
 
-		return errors;
-	}
+        return errors;
+    }
 
-	public String getCaller() {
-		return caller;
-	}
+    public String getCaller() {
+        return caller;
+    }
 
-	public void setCaller(String caller) {
-		this.caller = caller;
-	}
+    public void setCaller(String caller) {
+        this.caller = caller;
+    }
 
-	public Integer getIssueId() {
-		return issueId;
-	}
+    public Integer getIssueId() {
+        return issueId;
+    }
 
-	public void setIssueId(Integer issueId) {
-		this.issueId = issueId;
-	}
+    public void setIssueId(Integer issueId) {
+        this.issueId = issueId;
+    }
 
-	public Integer getProjectId() {
-		return projectId;
-	}
+    public Integer getProjectId() {
+        return projectId;
+    }
 
-	public void setProjectId(Integer projectId) {
-		this.projectId = projectId;
-	}
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
+    }
 
 }

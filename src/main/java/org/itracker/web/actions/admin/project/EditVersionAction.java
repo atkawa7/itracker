@@ -18,21 +18,8 @@
 
 package org.itracker.web.actions.admin.project;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.Version;
@@ -42,105 +29,112 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.VersionForm;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Action for edit a version.
- * 
- * @author ranks
  *
+ * @author ranks
  */
 public class EditVersionAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(EditVersionAction.class);
+    private static final Logger log = Logger.getLogger(EditVersionAction.class);
 
-	public EditVersionAction() {
-	}
+    public EditVersionAction() {
+    }
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-    	ActionMessages errors = new ActionMessages();
+    public ActionForward execute(ActionMapping mapping, ActionForm form,
+                                 HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        ActionMessages errors = new ActionMessages();
 
-		
-		if (!isTokenValid(request)) {
-			log.debug("Invalid request token while editing version.");
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-			"itracker.web.error.transaction"));
-			saveErrors(request, errors);
-			return mapping.findForward("listprojectsadmin");
-		}
-		resetToken(request);
 
-		Version version = null;
-		Project project = null;
+        if (!isTokenValid(request)) {
+            log.debug("Invalid request token while editing version.");
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                    "itracker.web.error.transaction"));
+            saveErrors(request, errors);
+            return mapping.findForward("listprojectsadmin");
+        }
+        resetToken(request);
 
-		try {
-			VersionForm versionForm = (VersionForm) form;
-			ProjectService projectService = getITrackerServices()
-					.getProjectService();
+        Version version = null;
+        Project project = null;
 
-			HttpSession session = request.getSession(true);
-			Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+        try {
+            VersionForm versionForm = (VersionForm) form;
+            ProjectService projectService = getITrackerServices()
+                    .getProjectService();
 
-			Integer projectId = versionForm.getProjectId();
+            HttpSession session = request.getSession(true);
+            Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
 
-			if (projectId == null) {
-				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-						"itracker.web.error.invalidproject"));
-			} else {
-				project = projectService.getProject(projectId);
+            Integer projectId = versionForm.getProjectId();
 
-				if (project == null) {
-					errors.add(ActionMessages.GLOBAL_MESSAGE,
-							new ActionMessage(
-									"itracker.web.error.invalidproject"));
-				} else {
-					boolean authorised = UserUtilities.hasPermission(
-							userPermissions, project.getId(),
-							UserUtilities.PERMISSION_PRODUCT_ADMIN);
+            if (projectId == null) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                        "itracker.web.error.invalidproject"));
+            } else {
+                project = projectService.getProject(projectId);
 
-					if (!authorised) {
-						return mapping.findForward("unauthorised");
-					} else {
+                if (project == null) {
+                    errors.add(ActionMessages.GLOBAL_MESSAGE,
+                            new ActionMessage(
+                                    "itracker.web.error.invalidproject"));
+                } else {
+                    boolean authorised = UserUtilities.hasPermission(
+                            userPermissions, project.getId(),
+                            UserUtilities.PERMISSION_PRODUCT_ADMIN);
 
-						String action = (String) request.getParameter("action");
+                    if (!authorised) {
+                        return mapping.findForward("unauthorised");
+                    } else {
 
-						if ("create".equals(action)) {
-							version = new Version(project, versionForm
-									.getNumber());
-							version
-									.setDescription(versionForm
-											.getDescription());
-							version = projectService.addProjectVersion(project
-									.getId(), version);
-						} else if ("update".equals(action)) {
-							version = projectService
-									.getProjectVersion(versionForm.getId());
+                        String action = (String) request.getParameter("action");
+
+                        if ("create".equals(action)) {
+                            version = new Version(project, versionForm
+                                    .getNumber());
+                            version
+                                    .setDescription(versionForm
+                                            .getDescription());
+                            version = projectService.addProjectVersion(project
+                                    .getId(), version);
+                        } else if ("update".equals(action)) {
+                            version = projectService
+                                    .getProjectVersion(versionForm.getId());
 //							version.setLastModifiedDate(new Date());
-							version.setNumber(versionForm.getNumber());
-							version.setProject(project);
-							version
-									.setDescription(versionForm
-											.getDescription());
-							version = projectService
-									.updateProjectVersion(version);
-						}
-						session.removeAttribute(Constants.VERSION_KEY);
+                            version.setNumber(versionForm.getNumber());
+                            version.setProject(project);
+                            version
+                                    .setDescription(versionForm
+                                            .getDescription());
+                            version = projectService
+                                    .updateProjectVersion(version);
+                        }
+                        session.removeAttribute(Constants.VERSION_KEY);
 
-						return new ActionForward(mapping.findForward(
-								"editproject").getPath()
-								+ "?id=" + project.getId() + "&action=update");
-					}
-				}
-			}
-		} catch (RuntimeException ex) {
-			log.error("Exception processing form data", ex);
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-					"itracker.web.error.system"));
-		}
+                        return new ActionForward(mapping.findForward(
+                                "editproject").getPath()
+                                + "?id=" + project.getId() + "&action=update");
+                    }
+                }
+            }
+        } catch (RuntimeException ex) {
+            log.error("Exception processing form data", ex);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                    "itracker.web.error.system"));
+        }
 
-		if (!errors.isEmpty()) {
-			saveErrors(request, errors);
-		}
-		return mapping.findForward("error");
-	}
+        if (!errors.isEmpty()) {
+            saveErrors(request, errors);
+        }
+        return mapping.findForward("error");
+    }
 
 }

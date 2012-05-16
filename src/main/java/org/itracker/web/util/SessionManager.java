@@ -24,15 +24,14 @@ import java.util.Iterator;
 
 /**
  * Seems to manage the Web Sessions...
- * 
- * @author ready
  *
+ * @author ready
  */
 public class SessionManager {
-    private static HashMap<String,Date> activeSessionsStarted = new HashMap<String,Date>();
-    private static HashMap<String,Date> activeSessionsLastAccess = new HashMap<String,Date>();
-    private static HashMap<String,Integer> activeSessionsReset = new HashMap<String,Integer>();
-    private static HashMap<String,String> renamedLogins = new HashMap<String,String>();
+    private static HashMap<String, Date> activeSessionsStarted = new HashMap<String, Date>();
+    private static HashMap<String, Date> activeSessionsLastAccess = new HashMap<String, Date>();
+    private static HashMap<String, Integer> activeSessionsReset = new HashMap<String, Integer>();
+    private static HashMap<String, String> renamedLogins = new HashMap<String, String>();
 
     public SessionManager() {
     }
@@ -57,7 +56,7 @@ public class SessionManager {
         Date now = new Date();
         activeSessionsLastAccess.put(login, now);
         if (activeSessionsStarted.get(login) == null) {
-          	activeSessionsStarted.put(login, now);
+            activeSessionsStarted.put(login, now);
         }
     }
 
@@ -86,7 +85,7 @@ public class SessionManager {
     }
 
     public static String checkRenamedLogin(String prevLogin) {
-        if(renamedLogins.containsKey(prevLogin)) {
+        if (renamedLogins.containsKey(prevLogin)) {
             return (String) renamedLogins.get(prevLogin);
         }
 
@@ -94,7 +93,7 @@ public class SessionManager {
     }
 
     public static void setAllSessionsNeedsReset() {
-        for(Iterator<String> iter = activeSessionsStarted.keySet().iterator(); iter.hasNext(); ) {
+        for (Iterator<String> iter = activeSessionsStarted.keySet().iterator(); iter.hasNext(); ) {
             activeSessionsReset.put((String) iter.next(), 1);
         }
     }

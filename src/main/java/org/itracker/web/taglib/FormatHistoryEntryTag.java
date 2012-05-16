@@ -18,45 +18,38 @@
 
 package org.itracker.web.taglib;
 
-import java.net.MalformedURLException;
-import java.util.Locale;
-
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTagSupport;
-
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.oro.text.regex.Perl5Substitution;
-import org.apache.oro.text.regex.Util;
+import org.apache.oro.text.regex.*;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.util.HTMLUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+import java.net.MalformedURLException;
+import java.util.Locale;
+
 
 /**
-  * Formats an ITracker Issue History entry.  Will rewrite the entry to include
-  * links to other issues automatically based on the strings provided in the
-  * resource bundles under the itracker.web.issuenames key.  This key can contain
-  * a pipe seperated list of names to look for and then matches in the pattern
-  * ([names])(\d+).
-  */
+ * Formats an ITracker Issue History entry.  Will rewrite the entry to include
+ * links to other issues automatically based on the strings provided in the
+ * resource bundles under the itracker.web.issuenames key.  This key can contain
+ * a pipe seperated list of names to look for and then matches in the pattern
+ * ([names])(\d+).
+ */
 public class FormatHistoryEntryTag extends BodyTagSupport {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private static Perl5Matcher matcher = new Perl5Matcher();
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private static Perl5Matcher matcher = new Perl5Matcher();
     private static PatternCompiler compiler = new Perl5Compiler();
 
     private String text = null;
     private String issueNamesKey = "itracker.web.issuenames";
-    private String forward ="viewissue";
+    private String forward = "viewissue";
     private String paramName = "id";
     private String paramValue = "$2";
     private String textPattern = "$1 $2";
@@ -64,27 +57,27 @@ public class FormatHistoryEntryTag extends BodyTagSupport {
     private int projectOptions = 0;
 
     public String getForward() {
-      	return forward;
+        return forward;
     }
 
     public void setForward(String value) {
-    	  forward = value;
+        forward = value;
     }
 
     public String getParamName() {
-      	return paramName;
+        return paramName;
     }
 
     public void setParamName(String value) {
-    	  paramName = value;
+        paramName = value;
     }
 
     public Object getParamValue() {
-      	return paramValue;
+        return paramValue;
     }
 
     public void setParamValue(Object value) {
-    	  paramValue = (value != null ? value.toString() : null);
+        paramValue = (value != null ? value.toString() : null);
     }
 
     public String getIssueNamesKey() {
@@ -104,19 +97,19 @@ public class FormatHistoryEntryTag extends BodyTagSupport {
     }
 
     public String getStyleClass() {
-      	return styleClass;
+        return styleClass;
     }
 
     public void setStyleClass(String value) {
-    	  styleClass = value;
+        styleClass = value;
     }
 
     public int getProjectOptions() {
-      	return projectOptions;
+        return projectOptions;
     }
 
     public void setProjectOptions(int value) {
-    	  projectOptions = value;
+        projectOptions = value;
     }
 
     public int doStartTag() throws JspException {
@@ -125,9 +118,9 @@ public class FormatHistoryEntryTag extends BodyTagSupport {
     }
 
     public int doAfterBody() throws JspException {
-        if(bodyContent != null) {
+        if (bodyContent != null) {
             String value = bodyContent.getString().trim();
-            if(value.length() > 0) {
+            if (value.length() > 0) {
                 text = value;
             }
         }
@@ -135,17 +128,17 @@ public class FormatHistoryEntryTag extends BodyTagSupport {
     }
 
     public int doEndTag() throws JspException {
-        if(text != null) {
+        if (text != null) {
             Locale locale = null;
 
             HttpSession session = pageContext.getSession();
-            if(session != null) {
+            if (session != null) {
                 locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
             }
 
-            if(ProjectUtilities.hasOption(ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML, projectOptions)) {
+            if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML, projectOptions)) {
                 text = HTMLUtilities.removeMarkup(text);
-            } else if(ProjectUtilities.hasOption(ProjectUtilities.OPTION_LITERAL_HISTORY_HTML, projectOptions)) {
+            } else if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_LITERAL_HISTORY_HTML, projectOptions)) {
                 text = HTMLUtilities.escapeTags(text);
             } else {
                 text = HTMLUtilities.newlinesToBreaks(text);
@@ -158,7 +151,7 @@ public class FormatHistoryEntryTag extends BodyTagSupport {
                 try {
                     //buf.append(RequestUtils.computeURL(pageContext, forward, null, null, null, null, null, false));
                     buf.append(TagUtils.getInstance().computeURL(pageContext, forward, null, null, null, null, null, null, false));
-                } catch(MalformedURLException murle) {
+                } catch (MalformedURLException murle) {
                     buf.append(forward);
                 }
                 buf.append("?" + paramName + "=" + paramValue + "\" ");
@@ -167,15 +160,15 @@ public class FormatHistoryEntryTag extends BodyTagSupport {
                 buf.append("</a>");
 
                 text = Util.substitute(matcher, pattern, new Perl5Substitution(buf.toString()), text, Util.SUBSTITUTE_ALL);
-            } catch(MalformedPatternException mpe) {
+            } catch (MalformedPatternException mpe) {
             }
 
-            if(ProjectUtilities.hasOption(ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML, projectOptions) ||
-               ProjectUtilities.hasOption(ProjectUtilities.OPTION_LITERAL_HISTORY_HTML, projectOptions)) {
+            if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML, projectOptions) ||
+                    ProjectUtilities.hasOption(ProjectUtilities.OPTION_LITERAL_HISTORY_HTML, projectOptions)) {
                 text = "<pre>" + text + "</pre>";
             }
 
-           // ResponseUtils.write(pageContext, text);
+            // ResponseUtils.write(pageContext, text);
             TagUtils.getInstance().write(pageContext, text);
         }
 
@@ -191,7 +184,7 @@ public class FormatHistoryEntryTag extends BodyTagSupport {
     private void clearState() {
         text = null;
         issueNamesKey = "itracker.web.issuenames";
-        forward ="viewissue";
+        forward = "viewissue";
         paramName = "id";
         paramValue = "$2";
         textPattern = "$1 $2";

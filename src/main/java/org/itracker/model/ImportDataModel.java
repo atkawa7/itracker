@@ -23,142 +23,142 @@ import org.apache.log4j.Logger;
 
 public class ImportDataModel extends AbstractEntity {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private static final Logger log = Logger.getLogger(ImportDataModel.class);
-	private AbstractEntity[] dataModels;
-	private boolean[] existingModel;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private static final Logger log = Logger.getLogger(ImportDataModel.class);
+    private AbstractEntity[] dataModels;
+    private boolean[] existingModel;
 
-	private boolean reuseConfig = true;
-	private boolean reuseFields = true;
-	private boolean reuseProjects = true;
-	private boolean reuseUsers = true;
-	private boolean createPasswords = true;
+    private boolean reuseConfig = true;
+    private boolean reuseFields = true;
+    private boolean reuseProjects = true;
+    private boolean reuseUsers = true;
+    private boolean createPasswords = true;
 
-	private int[][] verifyStatistics = new int[7][2];
+    private int[][] verifyStatistics = new int[7][2];
 
-	public ImportDataModel() {
-	}
+    public ImportDataModel() {
+    }
 
-	public AbstractEntity[] getData() {
-		return (dataModels == null ? new AbstractEntity[0] : dataModels.clone());
-	}
+    public AbstractEntity[] getData() {
+        return (dataModels == null ? new AbstractEntity[0] : dataModels.clone());
+    }
 
-	public boolean[] getExistingModel() {
-		return (existingModel == null ? new boolean[0] : existingModel.clone());
-	}
+    public boolean[] getExistingModel() {
+        return (existingModel == null ? new boolean[0] : existingModel.clone());
+    }
 
-	public boolean getExistingModel(int i) {
-		return (existingModel != null && i < existingModel.length ? existingModel[i]
-				: false);
-	}
+    public boolean getExistingModel(int i) {
+        return (existingModel != null && i < existingModel.length ? existingModel[i]
+                : false);
+    }
 
-	public void setExistingModel(int i, boolean value) {
-		if (existingModel != null && i < existingModel.length) {
-			existingModel[i] = value;
-		}
-	}
+    public void setExistingModel(int i, boolean value) {
+        if (existingModel != null && i < existingModel.length) {
+            existingModel[i] = value;
+        }
+    }
 
-	public void setData(AbstractEntity[] dataModels, boolean[] existingModel) {
-		if (dataModels != null && existingModel != null
-				&& dataModels.length == existingModel.length) {
-			this.dataModels = dataModels.clone();
-			this.existingModel = existingModel.clone();
-			this.verifyStatistics = new int[7][2];
-		} else {
-			throw new IllegalArgumentException("Data model must not be null and existing model must not be null nor empty.");
-		}
-	}
+    public void setData(AbstractEntity[] dataModels, boolean[] existingModel) {
+        if (dataModels != null && existingModel != null
+                && dataModels.length == existingModel.length) {
+            this.dataModels = dataModels.clone();
+            this.existingModel = existingModel.clone();
+            this.verifyStatistics = new int[7][2];
+        } else {
+            throw new IllegalArgumentException("Data model must not be null and existing model must not be null nor empty.");
+        }
+    }
 
-	public boolean getReuseConfig() {
-		return reuseConfig;
-	}
+    public boolean getReuseConfig() {
+        return reuseConfig;
+    }
 
-	public void setReuseConfig(boolean value) {
-		reuseConfig = value;
-	}
+    public void setReuseConfig(boolean value) {
+        reuseConfig = value;
+    }
 
-	public void setReuseConfig(Boolean value) {
-		reuseConfig = (value != null ? value.booleanValue() : true);
-	}
+    public void setReuseConfig(Boolean value) {
+        reuseConfig = (value != null ? value.booleanValue() : true);
+    }
 
-	public boolean getReuseFields() {
-		return reuseFields;
-	}
+    public boolean getReuseFields() {
+        return reuseFields;
+    }
 
-	public void setReuseFields(boolean value) {
-		reuseFields = value;
-	}
+    public void setReuseFields(boolean value) {
+        reuseFields = value;
+    }
 
-	public void setReuseFields(Boolean value) {
-		reuseFields = (value != null ? value.booleanValue() : true);
-	}
+    public void setReuseFields(Boolean value) {
+        reuseFields = (value != null ? value.booleanValue() : true);
+    }
 
-	public boolean getReuseProjects() {
-		return reuseProjects;
-	}
+    public boolean getReuseProjects() {
+        return reuseProjects;
+    }
 
-	public void setReuseProjects(boolean value) {
-		reuseProjects = value;
-	}
+    public void setReuseProjects(boolean value) {
+        reuseProjects = value;
+    }
 
-	public void setReuseProjects(Boolean value) {
-		reuseProjects = (value != null ? value.booleanValue() : true);
-	}
+    public void setReuseProjects(Boolean value) {
+        reuseProjects = (value != null ? value.booleanValue() : true);
+    }
 
-	public boolean getReuseUsers() {
-		return reuseUsers;
-	}
+    public boolean getReuseUsers() {
+        return reuseUsers;
+    }
 
-	public void setReuseUsers(boolean value) {
-		reuseUsers = value;
-	}
+    public void setReuseUsers(boolean value) {
+        reuseUsers = value;
+    }
 
-	public void setReuseUsers(Boolean value) {
-		reuseUsers = (value != null ? value.booleanValue() : true);
-	}
+    public void setReuseUsers(Boolean value) {
+        reuseUsers = (value != null ? value.booleanValue() : true);
+    }
 
-	public boolean getCreatePasswords() {
-		return createPasswords;
-	}
+    public boolean getCreatePasswords() {
+        return createPasswords;
+    }
 
-	public void setCreatePasswords(boolean value) {
-		createPasswords = value;
-	}
+    public void setCreatePasswords(boolean value) {
+        createPasswords = value;
+    }
 
-	public void setCreatePasswords(Boolean value) {
-		createPasswords = (value != null ? value.booleanValue() : true);
-	}
+    public void setCreatePasswords(Boolean value) {
+        createPasswords = (value != null ? value.booleanValue() : true);
+    }
 
-	public int[][] getImportStatistics() {
-		return verifyStatistics;
-	}
+    public int[][] getImportStatistics() {
+        return verifyStatistics;
+    }
 
-	public void addVerifyStatistic(int itemType, int category) {
-		try {
-			verifyStatistics[itemType][category]++;
-		} catch (RuntimeException e) {
-			log.error("addVerifyStatistic: faild with runtime exception", e);
-			throw e;
-		}
-	}
+    public void addVerifyStatistic(int itemType, int category) {
+        try {
+            verifyStatistics[itemType][category]++;
+        } catch (RuntimeException e) {
+            log.error("addVerifyStatistic: faild with runtime exception", e);
+            throw e;
+        }
+    }
 
-	public String statsToString() {
-		StringBuffer buf = new StringBuffer();
-		for (int i = 0; i < verifyStatistics.length; i++) {
-			buf.append(i + ":[" + verifyStatistics[i][0] + ", "
-					+ verifyStatistics[i][1] + "] ");
-		}
-		return buf.toString();
-	}
+    public String statsToString() {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < verifyStatistics.length; i++) {
+            buf.append(i + ":[" + verifyStatistics[i][0] + ", "
+                    + verifyStatistics[i][1] + "] ");
+        }
+        return buf.toString();
+    }
 
-	public String toString() {
-		return new ToStringBuilder(this).append("id", getId()).append(
-				"dataModels.length", getData().length).append("reuseUsers",
-				getReuseUsers()).append("reuseProjects", getReuseProjects()).append(
-				"reuseFields", getReuseFields()).append("reuseConfig", getReuseConfig())
-				.append("createPasswords", getCreatePasswords()).toString();
-	}
+    public String toString() {
+        return new ToStringBuilder(this).append("id", getId()).append(
+                "dataModels.length", getData().length).append("reuseUsers",
+                getReuseUsers()).append("reuseProjects", getReuseProjects()).append(
+                "reuseFields", getReuseFields()).append("reuseConfig", getReuseConfig())
+                .append("createPasswords", getCreatePasswords()).toString();
+    }
 }

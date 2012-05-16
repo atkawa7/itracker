@@ -6,10 +6,10 @@ import org.apache.struts.action.ActionMapping;
 public class MockActionMapping extends ActionMapping {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private ActionForward actionForward;
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private ActionForward actionForward;
 
     public ActionForward findForward(String name) {
 

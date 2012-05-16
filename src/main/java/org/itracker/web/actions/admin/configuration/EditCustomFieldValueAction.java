@@ -18,23 +18,9 @@
 
 package org.itracker.web.actions.admin.configuration;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
@@ -47,41 +33,50 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.CustomFieldValueForm;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
 public class EditCustomFieldValueAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(EditCustomFieldValueAction.class);
+    private static final Logger log = Logger.getLogger(EditCustomFieldValueAction.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
 
-        if(! isTokenValid(request)) {
+        if (!isTokenValid(request)) {
             log.debug("Invalid request token while editing configuration.");
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-				"itracker.web.error.transaction"));
-			saveErrors(request, errors);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                    "itracker.web.error.transaction"));
+            saveErrors(request, errors);
 //			return mapping.getInputForward();
             return mapping.findForward("listconfiguration");
         }
         resetToken(request);
         HttpSession session = request.getSession(true);
         CustomField customField = (CustomField) session.getAttribute(Constants.CUSTOMFIELD_KEY);
-        if(customField == null) {
+        if (customField == null) {
             return mapping.findForward("listconfiguration");
         }
 
         CustomFieldValueForm customFieldValueForm = (CustomFieldValueForm) form;
-        
+
         try {
 
             String action = customFieldValueForm.getAction();
-            
+
             if (action == null) {
                 return mapping.findForward("listconfiguration");
             }
-        
+
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
             CustomFieldValue customFieldValue = null;
-            
+
             if ("create".equals(action)) {
                 List<CustomFieldValue> currOptions = customField.getOptions();
                 int highestSortOrder = (currOptions.size() == 0 ? 1 : currOptions.get(currOptions.size() - 1).getSortOrder());
@@ -90,7 +85,7 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
                 customFieldValue.setValue(customFieldValueForm.getValue());
                 customFieldValue.setSortOrder(customFieldValueForm.getSortOrder());
                 customFieldValue = configurationService.createCustomFieldValue(customFieldValue);
-            } else if("update".equals(action)) {
+            } else if ("update".equals(action)) {
                 Integer id = (Integer) PropertyUtils.getSimpleProperty(form, "id");
                 customFieldValue = configurationService.getCustomFieldValue(id);
 
@@ -103,19 +98,19 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
                 throw new SystemConfigurationException("Invalid action " + action + " while editing custom field value.");
             }
 
-            if(customFieldValue == null) {
+            if (customFieldValue == null) {
                 throw new SystemConfigurationException("Unable to create new custom field value model.");
             }
-            
+
             HashMap<String, String> translations = customFieldValueForm.getTranslations();
             String key = CustomFieldUtilities.getCustomFieldOptionLabelKey(customField.getId(), customFieldValue.getId());
             log.debug("Processing label translations for custom field value " + customFieldValue.getId() + " with key " + key);
-            if(translations != null && key != null && ! key.equals("")) {
-                for(Iterator<String> iter = translations.keySet().iterator(); iter.hasNext(); ) {
+            if (translations != null && key != null && !key.equals("")) {
+                for (Iterator<String> iter = translations.keySet().iterator(); iter.hasNext(); ) {
                     String locale = (String) iter.next();
-                    if(locale != null) {
+                    if (locale != null) {
                         String translation = (String) translations.get(locale);
-                        if(translation != null && ! translation.equals("")) {
+                        if (translation != null && !translation.equals("")) {
                             log.debug("Adding new translation for locale " + locale + " for " + String.valueOf(customFieldValue.getId()));
                             configurationService.updateLanguageItem(new Language(locale, key, translation));
                         }
@@ -124,34 +119,34 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
                 String baseValue = (String) translations.get(ITrackerResources.BASE_LOCALE);
                 configurationService.updateLanguageItem(new Language(ITrackerResources.BASE_LOCALE, key, baseValue));
             }
-            if ( key != null )
+            if (key != null)
                 ITrackerResources.clearKeyFromBundles(key, true);
             // Now reset the cached versions in IssueUtilities
             configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
-            request.setAttribute("action",action);
+            request.setAttribute("action", action);
             String pageTitleKey = "";
             String pageTitleArg = "";
             pageTitleKey = "itracker.web.admin.editcustomfield.title.create";
             if (action == "update") {
-            	 pageTitleKey = "itracker.web.admin.editcustomfield.title.update";
+                pageTitleKey = "itracker.web.admin.editcustomfield.title.update";
             }
-            
+
             request.setAttribute("languages", configurationService.getAvailableLanguages());
-            request.setAttribute("pageTitleKey",pageTitleKey); 
-            request.setAttribute("pageTitleArg",pageTitleArg);     
-         
+            request.setAttribute("pageTitleKey", pageTitleKey);
+            request.setAttribute("pageTitleArg", pageTitleArg);
+
 //            session.removeAttribute(Constants.CUSTOMFIELDVALUE_KEY);
             saveToken(request);
             return new ActionForward(mapping.findForward("editcustomfield").getPath() + "?id=" + customField.getId() + "&action=update");
-        } catch(SystemConfigurationException sce) {
+        } catch (SystemConfigurationException sce) {
             log.error("Exception processing form data: " + sce.getMessage(), sce);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(sce.getKey()));
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
-        if(! errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             saveErrors(request, errors);
             saveToken(request);
             request.setAttribute("customFieldValueForm", form);

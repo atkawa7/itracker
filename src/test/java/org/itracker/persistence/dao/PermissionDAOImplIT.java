@@ -12,69 +12,69 @@ import java.util.List;
 public class PermissionDAOImplIT extends AbstractDependencyInjectionTest {
 
     @SuppressWarnings("unused")
-	private UserDAO userDAO;
+    private UserDAO userDAO;
     @SuppressWarnings("unused")
-	private ProjectDAO projectDAO;
-	private PermissionDAO permissionDAO;
+    private ProjectDAO projectDAO;
+    private PermissionDAO permissionDAO;
 
-	@Test
-	public void testFindByUserId() {
+    @Test
+    public void testFindByUserId() {
 
-		List<Permission> permissions = permissionDAO.findByUserId(2);
+        List<Permission> permissions = permissionDAO.findByUserId(2);
 
-		assertNotNull("permissions", permissions);
-		assertEquals(3, permissions.size());
+        assertNotNull("permissions", permissions);
+        assertEquals(3, permissions.size());
 
-	}
+    }
 
-// TODO: fix implementation or test
-	@Test
-	public void testFailedFindByUserId() {
+    // TODO: fix implementation or test
+    @Test
+    public void testFailedFindByUserId() {
 
-		try {
-			List<Permission> permissions = permissionDAO.findByUserId(-1);
-			fail("Should have thrown a DataAccessException. Size of list:"
-					+ permissions.size());
-		} catch (DataAccessException e) {
-			// Expected behavior
-		}
-	}
+        try {
+            List<Permission> permissions = permissionDAO.findByUserId(-1);
+            fail("Should have thrown a DataAccessException. Size of list:"
+                    + permissions.size());
+        } catch (DataAccessException e) {
+            // Expected behavior
+        }
+    }
 
-	@Test
-	public void testCreatePermission() {
+    @Test
+    public void testCreatePermission() {
 
-		Permission foundPermission = permissionDAO.findByUserId(2).get(1);
-		User foundUser = foundPermission.getUser();
-		Project foundProject = foundPermission.getProject();
+        Permission foundPermission = permissionDAO.findByUserId(2).get(1);
+        User foundUser = foundPermission.getUser();
+        Project foundProject = foundPermission.getProject();
 
-		assertNotNull(foundPermission);
-		assertNotNull(foundUser);
-		assertNotNull(foundProject);
-		assertEquals(2, foundPermission.getPermissionType().intValue());
-		assertEquals("admin_test1", foundUser.getLogin());
-		assertEquals("test_name", foundProject.getName());
+        assertNotNull(foundPermission);
+        assertNotNull(foundUser);
+        assertNotNull(foundProject);
+        assertEquals(2, foundPermission.getPermissionType().intValue());
+        assertEquals("admin_test1", foundUser.getLogin());
+        assertEquals("test_name", foundProject.getName());
 
-	}
+    }
 
-	@Override
-	public void onSetUp() throws Exception {
-		super.onSetUp();
-		userDAO = (UserDAO) applicationContext.getBean("userDAO");
-		projectDAO = (ProjectDAO) applicationContext.getBean("projectDAO");
-		permissionDAO = (PermissionDAO) applicationContext
-				.getBean("permissionDAO");
-	}
+    @Override
+    public void onSetUp() throws Exception {
+        super.onSetUp();
+        userDAO = (UserDAO) applicationContext.getBean("userDAO");
+        projectDAO = (ProjectDAO) applicationContext.getBean("projectDAO");
+        permissionDAO = (PermissionDAO) applicationContext
+                .getBean("permissionDAO");
+    }
 
-	protected String[] getDataSetFiles() {
-		return new String[] {
+    protected String[] getDataSetFiles() {
+        return new String[]{
                 "dataset/userpreferencesbean_dataset.xml",
                 "dataset/userbean_dataset.xml",
-				"dataset/projectbean_dataset.xml",
-				"dataset/permissionbean_dataset.xml" };
-	}
+                "dataset/projectbean_dataset.xml",
+                "dataset/permissionbean_dataset.xml"};
+    }
 
-	protected String[] getConfigLocations() {
-		return new String[] { "application-context.xml" };
-	}
+    protected String[] getConfigLocations() {
+        return new String[]{"application-context.xml"};
+    }
 
 }

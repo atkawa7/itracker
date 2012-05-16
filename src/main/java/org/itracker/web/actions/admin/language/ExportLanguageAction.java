@@ -18,22 +18,9 @@
 
 package org.itracker.web.actions.admin.language;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.NameValuePair;
 import org.itracker.services.ConfigurationService;
@@ -41,16 +28,23 @@ import org.itracker.services.util.HTMLUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 
 public class ExportLanguageAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(ExportLanguageAction.class);
+    private static final Logger log = Logger.getLogger(ExportLanguageAction.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	ActionMessages errors = new ActionMessages();
+        ActionMessages errors = new ActionMessages();
 
 
-        if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
@@ -58,12 +52,12 @@ public class ExportLanguageAction extends ItrackerBaseAction {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
 
             String locale = (String) PropertyUtils.getSimpleProperty(form, "locale");
-            if(locale != null && ! locale.equals("")) {
+            if (locale != null && !locale.equals("")) {
                 StringBuffer output = new StringBuffer("# ITracker language properties file for locale " + locale + "\n\n");
 
                 List<NameValuePair> items = configurationService.getDefinedKeysAsArray(locale);
-                for(int i = 0; i < items.size(); i++) {
-                    if(items.get(i).getName() != null && items.get(i).getValue() != null) {
+                for (int i = 0; i < items.size(); i++) {
+                    if (items.get(i).getName() != null && items.get(i).getValue() != null) {
                         output.append(ITrackerResources.escapeUnicodeString(items.get(i).getName(), false) + "=" + ITrackerResources.escapeUnicodeString(HTMLUtilities.escapeNewlines(items.get(i).getValue()), false) + "\n");
                     }
                 }
@@ -75,21 +69,21 @@ public class ExportLanguageAction extends ItrackerBaseAction {
                 return null;
             }
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidlocale"));
-        } catch(RuntimeException e) {
+        } catch (RuntimeException e) {
             log.error("Exception while exporting language.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         } catch (IllegalAccessException e) {
             log.error("Exception while exporting language.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-		} catch (InvocationTargetException e) {
+        } catch (InvocationTargetException e) {
             log.error("Exception while exporting language.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-		} catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             log.error("Exception while exporting language.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-		}
+        }
 
-        if(! errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             saveErrors(request, errors);
         }
 

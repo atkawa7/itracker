@@ -18,22 +18,17 @@
 
 package org.itracker.web.actions.admin.user;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.User;
 import org.itracker.services.UserService;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.SessionManager;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 public class LockUserAction extends ItrackerBaseAction {
@@ -42,7 +37,7 @@ public class LockUserAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
@@ -52,19 +47,19 @@ public class LockUserAction extends ItrackerBaseAction {
             Integer userId = Integer.valueOf((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
             User user = userService.getUser(userId);
             user.setStatus(UserUtilities.STATUS_LOCKED);
-            
-            if(user.getStatus() == UserUtilities.STATUS_LOCKED) {
-                userService.clearOwnedProjects(user);                
-                if(SessionManager.getSessionStart(user.getLogin()) != null) {
+
+            if (user.getStatus() == UserUtilities.STATUS_LOCKED) {
+                userService.clearOwnedProjects(user);
+                if (SessionManager.getSessionStart(user.getLogin()) != null) {
                     SessionManager.setSessionNeedsReset(user.getLogin());
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
-        if(! errors.isEmpty()) {
-        	saveErrors(request, errors);
+        if (!errors.isEmpty()) {
+            saveErrors(request, errors);
         }
         return mapping.findForward("listusers");
     }

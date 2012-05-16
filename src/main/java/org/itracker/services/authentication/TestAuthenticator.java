@@ -8,8 +8,7 @@ import org.itracker.services.exceptions.AuthenticatorException;
 /**
  * An authenticator that always returns the admin user.
  * Mainly for testing
- * 
- * 
+ *
  * @author Ricardo Trindade (ricardo.trindade@emation.pt)
  */
 public class TestAuthenticator extends DefaultAuthenticator {

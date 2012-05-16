@@ -1,15 +1,15 @@
 package org.itracker.persistence.dao;
 
-import java.util.List;
-
 import org.itracker.model.ProjectScript;
 
+import java.util.List;
+
 /**
- * Interface to define basic operations to deal with the 
+ * Interface to define basic operations to deal with the
  * <code>ProjectScript</code> entity
  */
 public interface ProjectScriptDAO extends BaseDAO<ProjectScript> {
-    
+
     /**
      * Find a <code>ProjectScript</code> by its primary key
      *
@@ -17,27 +17,24 @@ public interface ProjectScriptDAO extends BaseDAO<ProjectScript> {
      * @return project script or <tt>null</tt> if none exists with the given id
      */
     ProjectScript findByPrimaryKey(Integer scriptId);
-    
+
     /**
      * Finds all <code>ProjectScript</code>s
      *
      * @return all <code>ProjectScript</code>s
      */
     List<ProjectScript> findAll();
-    
+
     /**
-     * Finds all scripts applied to fields on a particular project. 
+     * Finds all scripts applied to fields on a particular project.
      *
-     * @param projectId
      * @return list of project scripts
      */
     List<ProjectScript> findByProject(Integer projectId);
-    
+
     /**
-     * Finds all scripts applied to fields on a particular project. 
+     * Finds all scripts applied to fields on a particular project.
      *
-     * @param projectId
-     * @param fieldId
      * @return list of project scripts
      */
     List<ProjectScript> findByProjectField(Integer projectId, Integer fieldId);

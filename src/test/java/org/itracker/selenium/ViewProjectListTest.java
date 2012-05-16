@@ -20,8 +20,6 @@ public class ViewProjectListTest extends AbstractSeleniumTestCase {
      * 6. Check that "test_name" project contains 4 open, 0 resolved
      * and 4 issues total.
      * 7. Check that "test_name2" project contains no issues at all.
-     *
-     * @throws java.io.IOException
      */
     @Test
     public void testViewProjectList() throws IOException {

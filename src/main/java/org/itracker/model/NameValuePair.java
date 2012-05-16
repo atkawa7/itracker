@@ -18,10 +18,10 @@
 
 package org.itracker.model;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import java.io.Serializable;
 import java.util.Comparator;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Class provides basic storage for name values pairs. The name is usually a key
@@ -30,80 +30,88 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class NameValuePair extends AbstractEntity {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	private String name = "";
+    private String name = "";
 
-	private String value = "";
+    private String value = "";
 
-	private static final class NameComparator implements Comparator<NameValuePair>, Serializable {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		public int compare(NameValuePair o1, NameValuePair o2) {
+    private static final class NameComparator implements Comparator<NameValuePair>, Serializable {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-			return o1.name.compareTo(o2.name);
-		};
-	}
-	private static final class ValueComparator implements Comparator<NameValuePair>, Serializable {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		public int compare(NameValuePair o1, NameValuePair o2) {
-			return o1.value.compareTo(o2.value);
-		};
-	}
-	public static final Comparator<NameValuePair> KEY_COMPARATOR = new NameComparator();
-	public static final Comparator<NameValuePair> VALUE_COMPARATOR = new ValueComparator();
+        public int compare(NameValuePair o1, NameValuePair o2) {
 
-	public NameValuePair(String name, String value) {
-		setName(name);
-		setValue(value);
-	}
+            return o1.name.compareTo(o2.name);
+        }
 
-	/**
-	 * Returns the name of the name/value pair.
-	 */
-	public String getName() {
-		return name;
-	}
+        ;
+    }
 
-	/**
-	 * Sets the name of the name/value pair.
-	 */
-	public void setName(String name) {
-		if (name == null) {
-			name = "";
-		}
-		this.name = name;
-	}
+    private static final class ValueComparator implements Comparator<NameValuePair>, Serializable {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-	/**
-	 * Returns the value of the name/value pair.
-	 */
-	public String getValue() {
-		return value;
-	}
+        public int compare(NameValuePair o1, NameValuePair o2) {
+            return o1.value.compareTo(o2.value);
+        }
 
-	/**
-	 * Sets the value of the name/value pair.
-	 */
-	public void setValue(String value) {
-		this.value = value;
-	}
+        ;
+    }
 
-	public int compareKeyTo(NameValuePair other) {
-		return KEY_COMPARATOR.compare(this, other);
-	}
+    public static final Comparator<NameValuePair> KEY_COMPARATOR = new NameComparator();
+    public static final Comparator<NameValuePair> VALUE_COMPARATOR = new ValueComparator();
 
-	public int compareValueTo(NameValuePair other) {
-		return VALUE_COMPARATOR.compare(this, other);
-	}
+    public NameValuePair(String name, String value) {
+        setName(name);
+        setValue(value);
+    }
+
+    /**
+     * Returns the name of the name/value pair.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name of the name/value pair.
+     */
+    public void setName(String name) {
+        if (name == null) {
+            name = "";
+        }
+        this.name = name;
+    }
+
+    /**
+     * Returns the value of the name/value pair.
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the value of the name/value pair.
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public int compareKeyTo(NameValuePair other) {
+        return KEY_COMPARATOR.compare(this, other);
+    }
+
+    public int compareValueTo(NameValuePair other) {
+        return VALUE_COMPARATOR.compare(this, other);
+    }
 
 
 //
@@ -128,10 +136,10 @@ public class NameValuePair extends AbstractEntity {
 //				.toHashCode();
 //	}
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("name", name).append("value",
-				value).toString();
-	}
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("name", name).append("value",
+                value).toString();
+    }
 
 }

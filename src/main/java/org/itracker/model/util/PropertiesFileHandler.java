@@ -18,18 +18,18 @@
 
 package org.itracker.model.util;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-
 public class PropertiesFileHandler {
     private Properties props;
     private final Logger logger;
-    
+
     public PropertiesFileHandler() {
-    	this.logger = Logger.getLogger(getClass());
+        this.logger = Logger.getLogger(getClass());
         props = new Properties();
     }
 
@@ -39,22 +39,22 @@ public class PropertiesFileHandler {
     }
 
     public void addProperties(String resource) {
-        if(resource == null || resource.equals("") || ! resource.endsWith(".properties")) {
-        	if (logger.isInfoEnabled()) {
-        		logger.info("addProperties: skip " +resource);
-        	}
+        if (resource == null || resource.equals("") || !resource.endsWith(".properties")) {
+            if (logger.isInfoEnabled()) {
+                logger.info("addProperties: skip " + resource);
+            }
             return;
         }
 
         try {
             InputStream is = getClass().getResourceAsStream(resource);
-            if(is != null) {
+            if (is != null) {
                 props.load(is);
             } else {
-            	logger.debug("No properties resource, " + resource + " was found.");
+                logger.debug("No properties resource, " + resource + " was found.");
             }
-        } catch(IOException ioe) {
-        	logger.warn("Could not load properties resource: " + resource, ioe);
+        } catch (IOException ioe) {
+            logger.warn("Could not load properties resource: " + resource, ioe);
         }
     }
 

@@ -1,12 +1,5 @@
 package org.itracker.web.actions.admin.user;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -17,21 +10,27 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.UserPTO;
 import org.itracker.web.util.SessionManager;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 
 public class ListUsersAction extends ItrackerBaseAction {
 
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		
+    public ActionForward execute(ActionMapping mapping, ActionForm form,
+                                 HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+
         UserService userService = this.getITrackerServices().getUserService();
         boolean allowProfileCreation =
                 userService.allowProfileCreation(null, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
-        request.setAttribute("allowProfileCreation",allowProfileCreation);
+        request.setAttribute("allowProfileCreation", allowProfileCreation);
 
         int activeSessions = SessionManager.getNumActiveSessions();
-        request.setAttribute("activeSessions",activeSessions);
+        request.setAttribute("activeSessions", activeSessions);
 
         List<User> users = userService.getAllUsers();
         Collections.sort(users, User.NAME_COMPARATOR);
@@ -42,15 +41,15 @@ public class ListUsersAction extends ItrackerBaseAction {
             userDTOList.add(aUserDTO);
         }
 
-        request.setAttribute("users",userDTOList);
-			 
+        request.setAttribute("users", userDTOList);
+
         String pageTitleKey = "itracker.web.admin.listusers.title";
         String pageTitleArg = "";
-        request.setAttribute("pageTitleKey",pageTitleKey);
-        request.setAttribute("pageTitleArg",pageTitleArg);
+        request.setAttribute("pageTitleKey", pageTitleKey);
+        request.setAttribute("pageTitleArg", pageTitleArg);
 
         return mapping.findForward("listusers");
-	}
+    }
 
-    
+
 }

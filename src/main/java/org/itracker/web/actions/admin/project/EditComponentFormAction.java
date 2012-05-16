@@ -18,22 +18,9 @@
 
 package org.itracker.web.actions.admin.project;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.Component;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
@@ -43,22 +30,30 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ComponentForm;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
 
 public class EditComponentFormAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(EditComponentFormAction.class);
-	
+    private static final Logger log = Logger.getLogger(EditComponentFormAction.class);
+
 
     @SuppressWarnings("unchecked")
-    public ActionForward execute(ActionMapping mapping, 
-            ActionForm form, 
-            HttpServletRequest request, 
-            HttpServletResponse response) 
+    public ActionForward execute(ActionMapping mapping,
+                                 ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
             throws ServletException, IOException {
-    	ActionMessages errors = new ActionMessages();
-        
-        String pageTitleKey = ""; 
+        ActionMessages errors = new ActionMessages();
+
+        String pageTitleKey = "";
         String pageTitleArg = "";
-        
+
 
         try {
             ProjectService projectService = getITrackerServices().getProjectService();
@@ -66,34 +61,34 @@ public class EditComponentFormAction extends ItrackerBaseAction {
             HttpSession session = request.getSession(true);
             String action = (String) request.getParameter("action");
             Map<Integer, Set<PermissionType>> userPermissions = (Map<Integer, Set<PermissionType>>) session.getAttribute(Constants.PERMISSIONS_KEY);
-             
+
             Component component = null;
             component = (Component) session.getAttribute(Constants.COMPONENT_KEY);
-      
+
             Project project = null;
-          
+
             ComponentForm componentForm = (ComponentForm) form;
-            if(componentForm == null) {
+            if (componentForm == null) {
                 componentForm = new ComponentForm();
             }
 
-            if("create".equals(action)) {
+            if ("create".equals(action)) {
                 Integer projectId = (Integer) PropertyUtils.getSimpleProperty(form, "projectId");
-                
-                if(action != null && action.equals("create")) {
-                	 pageTitleKey = "itracker.web.admin.editcomponent.title.create";
+
+                if (action != null && action.equals("create")) {
+                    pageTitleKey = "itracker.web.admin.editcomponent.title.create";
                 }
-                
-                if(projectId == null) {
-                	errors.add(ActionMessages.GLOBAL_MESSAGE, 
-                                new ActionMessage("itracker.web.error.invalidproject"));
+
+                if (projectId == null) {
+                    errors.add(ActionMessages.GLOBAL_MESSAGE,
+                            new ActionMessage("itracker.web.error.invalidproject"));
                 } else {
                     project = projectService.getProject(projectId);
-                    
-                    if(project == null) {
-                    	errors.add(ActionMessages.GLOBAL_MESSAGE, 
+
+                    if (project == null) {
+                        errors.add(ActionMessages.GLOBAL_MESSAGE,
                                 new ActionMessage("itracker.web.error.invalidproject"));
-                    } else if(! UserUtilities.hasPermission(userPermissions, 
+                    } else if (!UserUtilities.hasPermission(userPermissions,
                             project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
                         return mapping.findForward("unauthorized");
                     } else {
@@ -107,55 +102,55 @@ public class EditComponentFormAction extends ItrackerBaseAction {
             } else if ("update".equals(action)) {
                 Integer componentId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
                 component = projectService.getProjectComponent(componentId);
-                if(action != null && action.equals("update")) {
+                if (action != null && action.equals("update")) {
                     pageTitleKey = "itracker.web.admin.editcomponent.title.update";
                     pageTitleArg = component.getName();
-                 }  
-                if(component == null) {
-                	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidcomponent"));
+                }
+                if (component == null) {
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidcomponent"));
                 } else {
                     project = component.getProject();
-                    if(component == null) {
-                    	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
-                    } else if(! UserUtilities.hasPermission(userPermissions, component.getProject().getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
+                    if (component == null) {
+                        errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidproject"));
+                    } else if (!UserUtilities.hasPermission(userPermissions, component.getProject().getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
                         return mapping.findForward("unauthorized");
                     } else {
                         componentForm.setAction("update");
                         componentForm.setId(component.getId());
-                        
+
                         componentForm.setProjectId(project.getId());
                         componentForm.setName(component.getName());
                         componentForm.setDescription(component.getDescription());
                     }
                 }
             } else {
-            	errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                errors.add(ActionMessages.GLOBAL_MESSAGE,
                         new ActionMessage("itracker.web.error.invalidaction"));
             }
 
-            if(errors.isEmpty()) {
+            if (errors.isEmpty()) {
                 request.setAttribute("componentForm", componentForm);
                 session.setAttribute(Constants.COMPONENT_KEY, component);
                 saveToken(request);
-                request.setAttribute("pageTitleKey",pageTitleKey); 
-                request.setAttribute("pageTitleArg",pageTitleArg); 
-            		ActionForward af = new EditComponentFormActionUtil().init(mapping, request);
-            		if (af != null) return af;
+                request.setAttribute("pageTitleKey", pageTitleKey);
+                request.setAttribute("pageTitleArg", pageTitleArg);
+                ActionForward af = new EditComponentFormActionUtil().init(mapping, request);
+                if (af != null) return af;
                 return mapping.getInputForward();
             }
-        } catch(Exception e) {
-            pageTitleKey = "itracker.web.error.title";         
-       
-            request.setAttribute("pageTitleKey",pageTitleKey); 
-            request.setAttribute("pageTitleArg",pageTitleArg); 
-            
+        } catch (Exception e) {
+            pageTitleKey = "itracker.web.error.title";
+
+            request.setAttribute("pageTitleKey", pageTitleKey);
+            request.setAttribute("pageTitleArg", pageTitleArg);
+
             log.error("Exception while creating edit component form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
-        if(! errors.isEmpty()) {
-        	saveErrors(request, errors);
-            
+        if (!errors.isEmpty()) {
+            saveErrors(request, errors);
+
             return mapping.findForward("error");
         }
         return mapping.getInputForward();

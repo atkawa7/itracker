@@ -18,163 +18,151 @@
 
 package org.itracker.services.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
+import org.itracker.model.*;
 
-import org.itracker.model.Component;
-import org.itracker.model.CustomFieldValue;
-import org.itracker.model.NameValuePair;
-import org.itracker.model.User;
-import org.itracker.model.Version;
+import java.util.*;
 
 public class Convert {
-	/**
-	 * Converts an array of CustomFieldValueModels to NameValuePairs
-	 * 
-	 * @param options
-	 *            the array of CustomFieldValueModels to convert
-	 * @return the new NameValuePair array
-	 */
-	public static List<NameValuePair> customFieldOptionsToNameValuePairs(
-			List<CustomFieldValue> options) {
-		return customFieldOptionsToNameValuePairs(options, null);
-		
-	}
-	/**
-	 * Converts an array of CustomFieldValueModels to NameValuePairs
-	 * 
-	 * @param options
-	 *            the array of CustomFieldValueModels to convert
-	 * @return the new NameValuePair array
-	 */
-	public static List<NameValuePair> customFieldOptionsToNameValuePairs(
-			List<CustomFieldValue> options, Locale locale) {
-		List<NameValuePair> returnValues = new ArrayList<NameValuePair>();
-		String name;
-		if (options != null) {
-			returnValues = new ArrayList<NameValuePair>();
-			for (int i = 0; i < options.size(); i++) {
-				name = CustomFieldUtilities.getCustomFieldOptionName(options.get(i), locale);
-				returnValues
-						.add(new NameValuePair(name, options.get(i).getValue()));
-			}
-		}
+    /**
+     * Converts an array of CustomFieldValueModels to NameValuePairs
+     *
+     * @param options the array of CustomFieldValueModels to convert
+     * @return the new NameValuePair array
+     */
+    public static List<NameValuePair> customFieldOptionsToNameValuePairs(
+            List<CustomFieldValue> options) {
+        return customFieldOptionsToNameValuePairs(options, null);
 
-		return returnValues;
-	}
-	/**
-	 * Converts an array of UserModels to NameValuePairs
-	 * 
-	 * @param options
-	 *            the array of UserModels to convert
-	 * @return the new NameValuePair array
-	 */
-	public static List<NameValuePair> usersToNameValuePairs(List<User> users) {
-		List<NameValuePair> returnValues = new ArrayList<NameValuePair>();
+    }
 
-		if (users != null) {
-			returnValues = new ArrayList<NameValuePair>();
-			for (int i = 0; i < users.size(); i++) {
-				returnValues.add(new NameValuePair(users.get(i).getFirstName()
-						+ " " + users.get(i).getLastName(), users.get(i)
-						.getId().toString()));
-			}
-		}
+    /**
+     * Converts an array of CustomFieldValueModels to NameValuePairs
+     *
+     * @param options the array of CustomFieldValueModels to convert
+     * @return the new NameValuePair array
+     */
+    public static List<NameValuePair> customFieldOptionsToNameValuePairs(
+            List<CustomFieldValue> options, Locale locale) {
+        List<NameValuePair> returnValues = new ArrayList<NameValuePair>();
+        String name;
+        if (options != null) {
+            returnValues = new ArrayList<NameValuePair>();
+            for (int i = 0; i < options.size(); i++) {
+                name = CustomFieldUtilities.getCustomFieldOptionName(options.get(i), locale);
+                returnValues
+                        .add(new NameValuePair(name, options.get(i).getValue()));
+            }
+        }
 
-		return returnValues;
-	}
+        return returnValues;
+    }
 
-	/**
-	 * Converts an array of ComponentModels to NameValuePairs
-	 * 
-	 * @param options
-	 *            the array of ComponentModels to convert
-	 * @return the new NameValuePair array
-	 */
-	public static List<NameValuePair> componentsToNameValuePairs(
-			List<Component> components) {
-		NameValuePair[] returnValues = new NameValuePair[0];
+    /**
+     * Converts an array of UserModels to NameValuePairs
+     *
+     * @param options the array of UserModels to convert
+     * @return the new NameValuePair array
+     */
+    public static List<NameValuePair> usersToNameValuePairs(List<User> users) {
+        List<NameValuePair> returnValues = new ArrayList<NameValuePair>();
 
-		if (components != null) {
-			returnValues = new NameValuePair[components.size()];
-			for (int i = 0; i < components.size(); i++) {
-				returnValues[i] = new NameValuePair(
-						components.get(i).getName(), components.get(i).getId()
-								.toString());
-			}
-		}
+        if (users != null) {
+            returnValues = new ArrayList<NameValuePair>();
+            for (int i = 0; i < users.size(); i++) {
+                returnValues.add(new NameValuePair(users.get(i).getFirstName()
+                        + " " + users.get(i).getLastName(), users.get(i)
+                        .getId().toString()));
+            }
+        }
 
-		return Arrays.asList(returnValues);
-	}
+        return returnValues;
+    }
 
-	/**
-	 * Converts an array of VersionModels to NameValuePairs
-	 * 
-	 * @param options
-	 *            the array of VersionModels to convert
-	 * @return the new NameValuePair array
-	 */
-	public static List<NameValuePair> versionsToNameValuePairs(
-			List<Version> versions) {
-		NameValuePair[] returnValues = new NameValuePair[0];
+    /**
+     * Converts an array of ComponentModels to NameValuePairs
+     *
+     * @param options the array of ComponentModels to convert
+     * @return the new NameValuePair array
+     */
+    public static List<NameValuePair> componentsToNameValuePairs(
+            List<Component> components) {
+        NameValuePair[] returnValues = new NameValuePair[0];
 
-		if (versions != null) {
-			returnValues = new NameValuePair[versions.size()];
-			for (int i = 0; i < versions.size(); i++) {
-				returnValues[i] = new NameValuePair(
-						versions.get(i).getNumber(), versions.get(i).getId()
-								.toString());
-			}
-		}
+        if (components != null) {
+            returnValues = new NameValuePair[components.size()];
+            for (int i = 0; i < components.size(); i++) {
+                returnValues[i] = new NameValuePair(
+                        components.get(i).getName(), components.get(i).getId()
+                        .toString());
+            }
+        }
 
-		return Arrays.asList(returnValues);
-	}
+        return Arrays.asList(returnValues);
+    }
 
-	public static String[] stringToArray(String input) {
-		if (input == null || "".equals(input)) {
-			return new String[0];
-		}
+    /**
+     * Converts an array of VersionModels to NameValuePairs
+     *
+     * @param options the array of VersionModels to convert
+     * @return the new NameValuePair array
+     */
+    public static List<NameValuePair> versionsToNameValuePairs(
+            List<Version> versions) {
+        NameValuePair[] returnValues = new NameValuePair[0];
 
-		List<String> tokenList = new ArrayList<String>();
-		StringTokenizer tokenizer = new StringTokenizer(input, " ");
-		while (tokenizer.hasMoreElements()) {
-			boolean quotedToken = false;
-			String tokenString = tokenizer.nextToken();
-			if (tokenString.startsWith("\"")) {
-				quotedToken = true;
-				tokenString = tokenString.substring(1);
-				if (tokenString.endsWith("\"") && !tokenString.endsWith("\\\"")) {
-					quotedToken = false;
-					tokenString = tokenString.substring(0, tokenString.length() - 1);
-				}
-			}
+        if (versions != null) {
+            returnValues = new NameValuePair[versions.size()];
+            for (int i = 0; i < versions.size(); i++) {
+                returnValues[i] = new NameValuePair(
+                        versions.get(i).getNumber(), versions.get(i).getId()
+                        .toString());
+            }
+        }
 
-			if (quotedToken) {
-				boolean getNext = true;
+        return Arrays.asList(returnValues);
+    }
 
-				StringBuffer token = new StringBuffer(tokenString);
-				while (getNext) {
-					try {
-						token.append(tokenizer.nextToken("\""));
-						if (!token.toString().endsWith("\\\"")) {
-							getNext = false;
-						}
-					} catch (NoSuchElementException e) {
-						break;
-					}
-				}
-				tokenString = token.toString();
-			}
+    public static String[] stringToArray(String input) {
+        if (input == null || "".equals(input)) {
+            return new String[0];
+        }
 
-			tokenList.add(tokenString);
-		}
+        List<String> tokenList = new ArrayList<String>();
+        StringTokenizer tokenizer = new StringTokenizer(input, " ");
+        while (tokenizer.hasMoreElements()) {
+            boolean quotedToken = false;
+            String tokenString = tokenizer.nextToken();
+            if (tokenString.startsWith("\"")) {
+                quotedToken = true;
+                tokenString = tokenString.substring(1);
+                if (tokenString.endsWith("\"") && !tokenString.endsWith("\\\"")) {
+                    quotedToken = false;
+                    tokenString = tokenString.substring(0, tokenString.length() - 1);
+                }
+            }
 
-		String[] stringArray = (String[]) tokenList.toArray(new String[] {});
+            if (quotedToken) {
+                boolean getNext = true;
 
-		return stringArray;
-	}
+                StringBuffer token = new StringBuffer(tokenString);
+                while (getNext) {
+                    try {
+                        token.append(tokenizer.nextToken("\""));
+                        if (!token.toString().endsWith("\\\"")) {
+                            getNext = false;
+                        }
+                    } catch (NoSuchElementException e) {
+                        break;
+                    }
+                }
+                tokenString = token.toString();
+            }
+
+            tokenList.add(tokenString);
+        }
+
+        String[] stringArray = (String[]) tokenList.toArray(new String[]{});
+
+        return stringArray;
+    }
 }

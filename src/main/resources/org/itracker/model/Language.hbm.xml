@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
-<!DOCTYPE hibernate-mapping PUBLIC 
-    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-    
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
 <hibernate-mapping auto-import="true" package="org.itracker.model">
-    
+
     <class name="Language" table="languagebean">
         <id name="id" unsaved-value="null">
             <generator class="native"/>
@@ -22,17 +22,17 @@
         <property name="resourceValue">
             <column name="resource_value" not-null="true" length="512"/>
         </property>
-        
+
         <property name="createDate" update="false">
             <column name="create_date" sql-type="timestamp" not-null="true"/>
         </property>
-        
+
         <property name="lastModifiedDate">
             <column name="last_modified" sql-type="timestamp" not-null="true"/>
         </property>
-        
+
     </class>
-    
+
     <!-- Named queries (loaded, validated and cached at application startup). -->
 
     <query name="LanguagesByKeyAndLocaleQuery">
@@ -42,17 +42,17 @@
           and language.locale = :locale
         ]]>
     </query>
-    
+
     <query name="LanguagesByLocaleQuery"><![CDATA[
     select language 
     from Language as language
     where language.locale = :locale ]]>
     </query>
-    
+
     <query name="LanguagesByKeyQuery"><![CDATA[
     select language 
     from Language as language
     where language.resourceKey = :key ]]>
     </query>
-    
+
 </hibernate-mapping>

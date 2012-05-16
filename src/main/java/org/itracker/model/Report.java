@@ -18,126 +18,126 @@
 
 package org.itracker.model;
 
-import java.io.InputStream;
-import java.util.Comparator;
-
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import java.io.InputStream;
+import java.util.Comparator;
+
 /**
  * This is a POJO Business Domain Object.
- * 
+ * <p/>
  * <p>
  * Hibernate Bean.
  * </p>
- * 
+ *
  * @author ready
  */
 public class Report extends AbstractEntity {
 
-	public static final Comparator<Report> NAME_COMPARATOR = new NameComparator();
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    public static final Comparator<Report> NAME_COMPARATOR = new NameComparator();
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	private String name;
+    private String name;
 
-	private String nameKey;
+    private String nameKey;
 
-	private String description;
+    private String description;
 
-	private int dataType;
+    private int dataType;
 
-	private int reportType;
+    private int reportType;
 
-	// private byte[] fileData;
+    // private byte[] fileData;
 
-	private String className;
+    private String className;
 
-	/**
-	 * Default constructor (required by Hibernate).
-	 * 
-	 * <p>
-	 * PENDING: should be <code>private</code> so that it can only be used by
-	 * Hibernate, to ensure that the fields which form an instance's identity
-	 * are always initialized/never <tt>null</tt>.
-	 * </p>
-	 */
-	public Report() {
-	}
+    /**
+     * Default constructor (required by Hibernate).
+     * <p/>
+     * <p>
+     * PENDING: should be <code>private</code> so that it can only be used by
+     * Hibernate, to ensure that the fields which form an instance's identity
+     * are always initialized/never <tt>null</tt>.
+     * </p>
+     */
+    public Report() {
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getNameKey() {
-		return nameKey;
-	}
+    public String getNameKey() {
+        return nameKey;
+    }
 
-	public void setNameKey(String nameKey) {
-		this.nameKey = nameKey;
-	}
+    public void setNameKey(String nameKey) {
+        this.nameKey = nameKey;
+    }
 
-	public String getClassName() {
-		return className;
-	}
+    public String getClassName() {
+        return className;
+    }
 
-	public void setClassName(String className) {
-		this.className = className;
-	}
+    public void setClassName(String className) {
+        this.className = className;
+    }
 
-	public int getDataType() {
-		return dataType;
-	}
+    public int getDataType() {
+        return dataType;
+    }
 
-	public void setDataType(int dataType) {
-		this.dataType = dataType;
-	}
+    public void setDataType(int dataType) {
+        this.dataType = dataType;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public InputStream getReportDefinition() {
-		return getClass().getResourceAsStream("/reports/" + getClassName());
-	}
+    public InputStream getReportDefinition() {
+        return getClass().getResourceAsStream("/reports/" + getClassName());
+    }
 
-	/*
-	 * public void setFileData(byte[] fileData) { this.fileData = (fileData !=
-	 * null && fileData.length > 0 ? fileData : new byte[0]); }
-	 */
+    /*
+      * public void setFileData(byte[] fileData) { this.fileData = (fileData !=
+      * null && fileData.length > 0 ? fileData : new byte[0]); }
+      */
 
-	public int getReportType() {
-		return reportType;
-	}
+    public int getReportType() {
+        return reportType;
+    }
 
-	public void setReportType(int reportType) {
-		this.reportType = reportType;
-	}
+    public void setReportType(int reportType) {
+        this.reportType = reportType;
+    }
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("id", getId()).append("name",
-				getName()).append("description", getDescription()).append(
-				"nameKey", getNameKey()).append("reportType", getReportType())
-				.append("dataType", getDataType()).toString();
-	}
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("id", getId()).append("name",
+                getName()).append("description", getDescription()).append(
+                "nameKey", getNameKey()).append("reportType", getReportType())
+                .append("dataType", getDataType()).toString();
+    }
 
-	private static final class NameComparator implements Comparator<Report> {
-		public int compare(Report o1, Report o2) {
-			return new CompareToBuilder().append(o1.getName(), o2.getName())
-					.append(o1.getNameKey(), o2.getNameKey()).append(
-							o1.getId(), o2.getId()).toComparison();
-		}
-	}
+    private static final class NameComparator implements Comparator<Report> {
+        public int compare(Report o1, Report o2) {
+            return new CompareToBuilder().append(o1.getName(), o2.getName())
+                    .append(o1.getNameKey(), o2.getNameKey()).append(
+                            o1.getId(), o2.getId()).toComparison();
+        }
+    }
 
 }

@@ -18,10 +18,6 @@
 
 package org.itracker.web.forms;
 
-import java.util.HashMap;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -30,93 +26,94 @@ import org.apache.struts.validator.ValidatorForm;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.web.util.LoginUtilities;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
- * 
+ *
  * @author ready
- * 
  */
 public class CustomFieldValueForm extends ValidatorForm {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String action;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private String action;
 
-	private Integer id;
+    private Integer id;
 
-	private String value;
-	private Integer sortOrder;
-	// let's try to put String,String here:
-	private HashMap<String, String> translations = new HashMap<String, String>();
+    private String value;
+    private Integer sortOrder;
+    // let's try to put String,String here:
+    private HashMap<String, String> translations = new HashMap<String, String>();
 
-	// private Map<String, String> translations;
+    // private Map<String, String> translations;
 
-	public String getAction() {
-		return action;
-	}
+    public String getAction() {
+        return action;
+    }
 
-	public void setAction(String action) {
-		this.action = action;
-	}
+    public void setAction(String action) {
+        this.action = action;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	// let's try to put String,String here:
-	public HashMap<String, String> getTranslations() {
-		return translations;
-	}
+    // let's try to put String,String here:
+    public HashMap<String, String> getTranslations() {
+        return translations;
+    }
 
-	// let's try to put String,String here:
-	public void setTranslations(HashMap<String, String> translations) {
-		this.translations = translations;
-	}
+    // let's try to put String,String here:
+    public void setTranslations(HashMap<String, String> translations) {
+        this.translations = translations;
+    }
 
-	/**
-	 * get localization in base locale
-	 * @return
-	 */
-	private String getBaseTranslation() {
-		return translations.get(ITrackerResources.BASE_LOCALE);
-	}
-	
-	public String getValue() {
-		return value;
-	}
+    /**
+     * get localization in base locale
+     */
+    private String getBaseTranslation() {
+        return translations.get(ITrackerResources.BASE_LOCALE);
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	public void setSortOrder(Integer sortOrder) {
-		this.sortOrder = sortOrder;
-	}
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
 
-	public Integer getSortOrder() {
-		return sortOrder;
-	}
-	
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = super.validate(mapping, request);
+    }
 
-		// TODO: setup request env for validation output
-		if (null == getBaseTranslation() || "".equals(getBaseTranslation().trim())) {
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.validate.required", 
-					ITrackerResources.getString("itracker.web.attr.baselocale", LoginUtilities.getCurrentLocale(request))));
-		}
-		return errors;
-	}
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
+    public Integer getSortOrder() {
+        return sortOrder;
+    }
+
+    public ActionErrors validate(ActionMapping mapping,
+                                 HttpServletRequest request) {
+        ActionErrors errors = super.validate(mapping, request);
+
+        // TODO: setup request env for validation output
+        if (null == getBaseTranslation() || "".equals(getBaseTranslation().trim())) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.validate.required",
+                    ITrackerResources.getString("itracker.web.attr.baselocale", LoginUtilities.getCurrentLocale(request))));
+        }
+        return errors;
+    }
 
 
 }

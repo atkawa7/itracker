@@ -18,131 +18,129 @@
 
 package org.itracker.web.forms;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
 import org.itracker.model.CustomField;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
- * 
+ *
  * @author ready
- * 
  */
 public class ProjectScriptForm extends ValidatorForm {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	String action;
-	Integer delId;
-	Integer projectId;
-	// Integer[] fieldId;
-	// Integer[] priority;
-	HashMap<String, String> id = new HashMap<String, String>();
-	HashMap<String, String> fieldId = new HashMap<String, String>();
-	HashMap<String, String> priority = new HashMap<String, String>();
-	HashMap<String, String> scriptDescs = new HashMap<String, String>();
-	HashMap<String, String> scriptItems = new HashMap<String, String>();
-	List<CustomField> customFields = new ArrayList<CustomField>();
-	HashMap<String, String> priorityList = new HashMap<String, String>();
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    String action;
+    Integer delId;
+    Integer projectId;
+    // Integer[] fieldId;
+    // Integer[] priority;
+    HashMap<String, String> id = new HashMap<String, String>();
+    HashMap<String, String> fieldId = new HashMap<String, String>();
+    HashMap<String, String> priority = new HashMap<String, String>();
+    HashMap<String, String> scriptDescs = new HashMap<String, String>();
+    HashMap<String, String> scriptItems = new HashMap<String, String>();
+    List<CustomField> customFields = new ArrayList<CustomField>();
+    HashMap<String, String> priorityList = new HashMap<String, String>();
 
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		action = null;
-		delId = null;
-		projectId = null;
-	}
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        action = null;
+        delId = null;
+        projectId = null;
+    }
 
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = super.validate(mapping, request);
+    public ActionErrors validate(ActionMapping mapping,
+                                 HttpServletRequest request) {
+        ActionErrors errors = super.validate(mapping, request);
 
-		return errors;
-	}
+        return errors;
+    }
 
-	public String getAction() {
-		return action;
-	}
+    public String getAction() {
+        return action;
+    }
 
-	public void setAction(String action) {
-		this.action = action;
-	}
+    public void setAction(String action) {
+        this.action = action;
+    }
 
-	public List<CustomField> getCustomFields() {
-		return customFields;
-	}
+    public List<CustomField> getCustomFields() {
+        return customFields;
+    }
 
-	public void setCustomFields(List<CustomField> customFields) {
-		this.customFields = customFields;
-	}
+    public void setCustomFields(List<CustomField> customFields) {
+        this.customFields = customFields;
+    }
 
-	public Integer getDelId() {
-		return delId;
-	}
+    public Integer getDelId() {
+        return delId;
+    }
 
-	public HashMap<String, String> getFieldId() {
-		return fieldId;
-	}
+    public HashMap<String, String> getFieldId() {
+        return fieldId;
+    }
 
-	public void setFieldId(HashMap<String, String> fieldId) {
-		this.fieldId = fieldId;
-	}
+    public void setFieldId(HashMap<String, String> fieldId) {
+        this.fieldId = fieldId;
+    }
 
-	public void setId(Integer delId) {
-		this.delId = delId;
-	}
+    public void setId(Integer delId) {
+        this.delId = delId;
+    }
 
-	public HashMap<String, String> getId() {
-		return id;
-	}
+    public HashMap<String, String> getId() {
+        return id;
+    }
 
-	public void setId(HashMap<String, String> id) {
-		this.id = id;
-	}
+    public void setId(HashMap<String, String> id) {
+        this.id = id;
+    }
 
-	public Integer getProjectId() {
-		return projectId;
-	}
+    public Integer getProjectId() {
+        return projectId;
+    }
 
-	public void setProjectId(Integer projectId) {
-		this.projectId = projectId;
-	}
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
+    }
 
-	public HashMap<String, String> getPriority() {
-		return priority;
-	}
+    public HashMap<String, String> getPriority() {
+        return priority;
+    }
 
-	public void setPriority(HashMap<String, String> priority) {
-		this.priority = priority;
-	}
+    public void setPriority(HashMap<String, String> priority) {
+        this.priority = priority;
+    }
 
-	public HashMap<String, String> getPriorityList() {
-		return priorityList;
-	}
+    public HashMap<String, String> getPriorityList() {
+        return priorityList;
+    }
 
-	public void setPriorityList(HashMap<String, String> priorityList) {
-		this.priorityList = priorityList;
-	}
+    public void setPriorityList(HashMap<String, String> priorityList) {
+        this.priorityList = priorityList;
+    }
 
-	public HashMap<String, String> getScriptDescs() {
-		return scriptDescs;
-	}
+    public HashMap<String, String> getScriptDescs() {
+        return scriptDescs;
+    }
 
-	public void setScriptDescs(HashMap<String, String> scriptDescs) {
-		this.scriptDescs = scriptDescs;
-	}
+    public void setScriptDescs(HashMap<String, String> scriptDescs) {
+        this.scriptDescs = scriptDescs;
+    }
 
-	public HashMap<String, String> getScriptItems() {
-		return scriptItems;
-	}
+    public HashMap<String, String> getScriptItems() {
+        return scriptItems;
+    }
 
-	public void setScriptItems(HashMap<String, String> scriptItems) {
-		this.scriptItems = scriptItems;
-	}
+    public void setScriptItems(HashMap<String, String> scriptItems) {
+        this.scriptItems = scriptItems;
+    }
 }

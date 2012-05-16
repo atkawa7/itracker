@@ -18,21 +18,9 @@
 
 package org.itracker.web.actions.admin.configuration;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.Configuration;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.SystemConfigurationException;
@@ -40,48 +28,54 @@ import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class OrderConfigurationItemAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(OrderConfigurationItemAction.class);
-	
+    private static final Logger log = Logger.getLogger(OrderConfigurationItemAction.class);
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        
-        if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+
+        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
-        
+
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
-            
+
             Integer configId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
             String action = (String) PropertyUtils.getSimpleProperty(form, "action");
-            if(configId == null || configId.intValue() <= 0) {
+            if (configId == null || configId.intValue() <= 0) {
                 throw new SystemConfigurationException("Invalid configuration id.");
             }
-            
+
             Configuration configItem = configurationService.getConfigurationItem(configId);
-            if(configItem == null) {
+            if (configItem == null) {
                 throw new SystemConfigurationException("Invalid configuration id.");
             }
-            
+
             int configType = configItem.getType();
             List<Configuration> configItems = configurationService.getConfigurationItemsByType(configType);
             List<Configuration> newConfigItems = new ArrayList<Configuration>();
-            
-            for(int i = 0; i < configItems.size(); i++) {
+
+            for (int i = 0; i < configItems.size(); i++) {
                 newConfigItems.add(configItems.get(i));
             }
-            for(int i = 0; i < configItems.size(); i++) {
-                if ( configItems.get(i) != null ) {
+            for (int i = 0; i < configItems.size(); i++) {
+                if (configItems.get(i) != null) {
                     Configuration firstConfiguration = new Configuration();
                     Configuration secondConfiguration = new Configuration();
                     Configuration curConfiguration = (Configuration) configItems.get(i);
                     int todo_i = -1;
-                    if ( curConfiguration.getId().equals(configId) ) {
-                        if ("up".equals(action) ){
+                    if (curConfiguration.getId().equals(configId)) {
+                        if ("up".equals(action)) {
                             todo_i = i - 1;
                         } else {
                             todo_i = i + 1;
@@ -107,38 +101,38 @@ public class OrderConfigurationItemAction extends ItrackerBaseAction {
                         secondConfiguration.setValue(curConfiguration.getValue());
                         secondConfiguration.setVersion(curConfiguration.getVersion());
 
-                        newConfigItems.set(todo_i,firstConfiguration);
-                        newConfigItems.set(i,secondConfiguration);
+                        newConfigItems.set(todo_i, firstConfiguration);
+                        newConfigItems.set(i, secondConfiguration);
                     }
                 }
             }
-            
-            newConfigItems = configurationService.updateConfigurationItems(newConfigItems,configType);
-            
+
+            newConfigItems = configurationService.updateConfigurationItems(newConfigItems, configType);
+
             // Only resolutions and severities can be reordered at this point.  Statuses
             // and some basic workflow depend on the actual value of the status, so
             // the order must equal the value of the status for it to work correctly.
-            if(configType == SystemConfigurationUtilities.TYPE_RESOLUTION) {
+            if (configType == SystemConfigurationUtilities.TYPE_RESOLUTION) {
                 configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_RESOLUTION);
-            } else if(configType == SystemConfigurationUtilities.TYPE_SEVERITY) {
+            } else if (configType == SystemConfigurationUtilities.TYPE_SEVERITY) {
                 configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_SEVERITY);
             }
-            
+
             return mapping.findForward("listconfiguration");
-        } catch(SystemConfigurationException nfe) {
+        } catch (SystemConfigurationException nfe) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidconfiguration"));
             log.debug("Invalid configuration item id " + request.getParameter("id") + " specified.");
-        } catch(NumberFormatException nfe) {
+        } catch (NumberFormatException nfe) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidconfiguration"));
             log.debug("Invalid configuration item id " + request.getParameter("id") + " specified.");
-        } catch(Exception e) {
+        } catch (Exception e) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
             log.error("System Error.", e);
         }
-        if(! errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             saveErrors(request, errors);
         }
         return mapping.findForward("error");
     }
-    
+
 }

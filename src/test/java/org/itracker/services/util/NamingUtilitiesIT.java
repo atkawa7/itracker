@@ -14,7 +14,6 @@ import java.util.Hashtable;
 // TODO: Add Javadocs here: what is the purpose of this class?
 
 /**
- *
  * @author seas
  */
 public class NamingUtilitiesIT extends AbstractDependencyInjectionTest {
@@ -24,26 +23,28 @@ public class NamingUtilitiesIT extends AbstractDependencyInjectionTest {
         final Hashtable<String, String> hashtable = new Hashtable<String, String>();
         hashtable.put("key", "value");
         try {
-        final InitialContext context = new InitialContext(hashtable);
-        final String value = NamingUtilites.getStringValue(context, "key", "value");
-        assertEquals("value", value);
+            final InitialContext context = new InitialContext(hashtable);
+            final String value = NamingUtilites.getStringValue(context, "key", "value");
+            assertEquals("value", value);
         } catch (final NamingException e) {
             assertTrue(e.getMessage(), false);
         }
     }
-    
+
     /**
      * Defines a set of datafiles to be uploaded into database.
+     *
      * @return an array with datafiles.
      */
     protected String[] getDataSetFiles() {
         return new String[]{
-                    "dataset/languagebean_dataset.xml"
-                };
+                "dataset/languagebean_dataset.xml"
+        };
     }
 
     /**
      * Defines a simple configuration, required for running tests.
+     *
      * @return an array of references to configuration files.
      */
     protected String[] getConfigLocations() {

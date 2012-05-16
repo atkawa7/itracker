@@ -18,23 +18,11 @@
 
 package org.itracker.web.actions.admin.workflow;
 
-import java.io.IOException;
-import java.util.Arrays;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.itracker.model.WorkflowScript;
+import org.apache.struts.action.*;
 import org.itracker.model.NameValuePair;
+import org.itracker.model.WorkflowScript;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.UserUtilities;
@@ -43,17 +31,24 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.WorkflowScriptForm;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Arrays;
+
 public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(EditWorkflowScriptFormAction.class);
-	
+    private static final Logger log = Logger.getLogger(EditWorkflowScriptFormAction.class);
+
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
-        
+
         String pageTitleKey = "";
         String pageTitleArg = "";
 
-        if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
@@ -61,14 +56,14 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
 
         try {
             WorkflowScriptForm workflowScriptForm = (WorkflowScriptForm) form;
-            
-            if(workflowScriptForm == null) {
+
+            if (workflowScriptForm == null) {
                 workflowScriptForm = new WorkflowScriptForm();
             }
             String action = (String) request.getParameter("action");
             action = (String) PropertyUtils.getSimpleProperty(workflowScriptForm, "action");
 
-            if(action != null && action.equals("update")) {
+            if (action != null && action.equals("update")) {
                 isUpdate = true;
                 pageTitleKey = "itracker.web.admin.editworkflowscript.title.update";
             } else {
@@ -78,12 +73,12 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
             WorkflowScript workflowScript = new WorkflowScript();
             if ("update".equals(action)) {
                 ConfigurationService configurationService = getITrackerServices().getConfigurationService();
-                
+
 
                 Integer id = (Integer) PropertyUtils.getSimpleProperty(workflowScriptForm, "id");
                 workflowScript = configurationService.getWorkflowScript(id);
 
-                if(workflowScript == null) {
+                if (workflowScript == null) {
                     throw new SystemConfigurationException("Invalid workflow script id " + id);
                 }
 
@@ -92,44 +87,44 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
                 workflowScriptForm.setName(workflowScript.getName());
                 workflowScriptForm.setEvent(workflowScript.getEvent());
                 workflowScriptForm.setScript(workflowScript.getScript());
-               
+
                 pageTitleArg = workflowScript.getName();
-                  
+
             }
 
             if (workflowScript == null) {
-                return mapping.findForward("unauthorized");    
+                return mapping.findForward("unauthorized");
             }
 
-            if(errors.isEmpty()) {
-		        HttpSession session = request.getSession(true);
+            if (errors.isEmpty()) {
+                HttpSession session = request.getSession(true);
                 request.setAttribute("workflowScriptForm", workflowScriptForm);
                 session.setAttribute(Constants.WORKFLOW_SCRIPT_KEY, workflowScript);
-                request.setAttribute("action",action);
+                request.setAttribute("action", action);
                 saveToken(request);
-                
-                request.setAttribute("pageTitleKey",pageTitleKey); 
-                request.setAttribute("pageTitleArg",pageTitleArg);
 
-                NameValuePair[] eventTypes = WorkflowUtilities.getEvents( getLocale(request) );
-                request.setAttribute("nameValuePair", Arrays.asList(eventTypes) );
+                request.setAttribute("pageTitleKey", pageTitleKey);
+                request.setAttribute("pageTitleArg", pageTitleArg);
+
+                NameValuePair[] eventTypes = WorkflowUtilities.getEvents(getLocale(request));
+                request.setAttribute("nameValuePair", Arrays.asList(eventTypes));
 
                 return mapping.getInputForward();
             }
-        } catch(SystemConfigurationException sce) {
-        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidworkflowscript"));
-        } catch(Exception e) {
+        } catch (SystemConfigurationException sce) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidworkflowscript"));
+        } catch (Exception e) {
             log.error("Exception while creating edit workflowScript form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
-        if(! errors.isEmpty()) {
-        	saveErrors(request, errors);
+        if (!errors.isEmpty()) {
+            saveErrors(request, errors);
         }
 
-        request.setAttribute("pageTitleKey",pageTitleKey); 
-        request.setAttribute("pageTitleArg",pageTitleArg); 
-        request.setAttribute("isUpdate", isUpdate); 
+        request.setAttribute("pageTitleKey", pageTitleKey);
+        request.setAttribute("pageTitleArg", pageTitleArg);
+        request.setAttribute("isUpdate", isUpdate);
         return mapping.findForward("error");
     }
 

@@ -16,8 +16,6 @@
  */
 package org.itracker.web.util;
 
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
@@ -32,9 +30,11 @@ import org.itracker.services.ITrackerServices;
 import org.itracker.services.IssueService;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.web.forms.IssueForm;
- 
+
+import java.io.IOException;
+
 public class AttachmentUtilities {
-    
+
     private static final Logger logger = Logger.getLogger(AttachmentUtilities.class);
     private static boolean initialized = false;
     private static final String CONTENT_TYPE = "multipart/form-data";
@@ -46,17 +46,13 @@ public class AttachmentUtilities {
     private static long maxTotalFileSize = MAX_TOTAL_FILE_SIZE_KB * 1024L;
     private static long spaceLeft = 0;
 
-    
+
     /**
-     * 
      * @deprecated use {@link AttachmentUtilities#validate(FormFile, ITrackerServices)} instead for more detailed messages
-     * @param file
-     * @param services
-     * @return
      */
     public static boolean checkFile(FormFile file, ITrackerServices services) {
-    	
-    	return validate(file, services).isEmpty();
+
+        return validate(file, services).isEmpty();
 //    	
 //    	
 //        if(! initialized) {
@@ -92,139 +88,133 @@ public class AttachmentUtilities {
 ////            out.close();
 //        return true;
     }
+
     /**
      * Adds an attachment to issue.
-     * @param issue
-     * @param project
-     * @param user
-     * @param form
-     * @param services
-     * @param messages
-     * @return updated issue 
-     * @throws Exception
+     *
+     * @return updated issue
      */
-	public static Issue addAttachment(Issue issue, Project project, User user,
-			IssueForm form, ITrackerServices services, ActionMessages messages)  {
+    public static Issue addAttachment(Issue issue, Project project, User user,
+                                      IssueForm form, ITrackerServices services, ActionMessages messages) {
 
-		if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS,
-				project.getOptions())) {
-			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.validate.attachment.disabled", project.getName()));
-			return issue;
-		}
+        if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS,
+                project.getOptions())) {
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.validate.attachment.disabled", project.getName()));
+            return issue;
+        }
 
-		FormFile file = form.getAttachment();
+        FormFile file = form.getAttachment();
 
-		if (file == null || file.getFileName().trim().length() < 1) {
-			logger.info("addAttachment: skipping file " + file);
-			return issue;
-		}
+        if (file == null || file.getFileName().trim().length() < 1) {
+            logger.info("addAttachment: skipping file " + file);
+            return issue;
+        }
 
-		String origFileName = file.getFileName();
-		String contentType = file.getContentType();
-		int fileSize = file.getFileSize();
+        String origFileName = file.getFileName();
+        String contentType = file.getContentType();
+        int fileSize = file.getFileSize();
 
-		String attachmentDescription = form.getAttachmentDescription();
+        String attachmentDescription = form.getAttachmentDescription();
 
-		if (null == contentType || 0 >= contentType.length()) {
-			logger.info("addAttachment: got no mime-type, using default plain-text");
-			contentType = "text/plain";
-		}
+        if (null == contentType || 0 >= contentType.length()) {
+            logger.info("addAttachment: got no mime-type, using default plain-text");
+            contentType = "text/plain";
+        }
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("addAttachment: adding file, name: " + origFileName
-					+ " of type " + file.getContentType() + ", description: "
-					+ form.getAttachmentDescription() + ". filesize: " + fileSize);
-		}
-		ActionMessages validation = AttachmentUtilities.validate(file, services);
-		if (validation.isEmpty()) {
-		
+        if (logger.isDebugEnabled()) {
+            logger.debug("addAttachment: adding file, name: " + origFileName
+                    + " of type " + file.getContentType() + ", description: "
+                    + form.getAttachmentDescription() + ". filesize: " + fileSize);
+        }
+        ActionMessages validation = AttachmentUtilities.validate(file, services);
+        if (validation.isEmpty()) {
+
 //		if (AttachmentUtilities.checkFile(file, getITrackerServices())) {
-			int lastSlash = Math.max(origFileName.lastIndexOf('/'),
-					origFileName.lastIndexOf('\\'));
-			if (lastSlash > -1) {
-				origFileName = origFileName.substring(lastSlash + 1);
-			}
-
-			IssueAttachment attachmentModel = new IssueAttachment(issue,
-					origFileName, contentType, attachmentDescription, fileSize,
-					user);
-			
-			attachmentModel.setIssue(issue);
-//			issue.getAttachments().add(attachmentModel);
-			byte[] fileData;
-			try {
-				fileData = file.getFileData();
-			} catch (IOException e) {
-				logger.error("addAttachment: failed to get file data", e);
-				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-				return issue;
-			}
-			if(services.getIssueService()
-					.addIssueAttachment(attachmentModel, fileData)) {
-				return services.getIssueService().getIssue(issue.getId());
-			}
-			
-
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("addAttachment: failed to validate: " + origFileName + ", " + validation);
-			}
-			messages.add(validation);
-		}
-		return issue;
-	}
-    
-    public static ActionMessages validate(FormFile file, ITrackerServices services) {
-    	ActionMessages msg = new ActionMessages();
-        if(! initialized) {
-            if(! init(services)) {
-            	msg.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-            	return msg;
+            int lastSlash = Math.max(origFileName.lastIndexOf('/'),
+                    origFileName.lastIndexOf('\\'));
+            if (lastSlash > -1) {
+                origFileName = origFileName.substring(lastSlash + 1);
             }
-         }
 
-         if(file == null) {
-             return msg;
-         }
+            IssueAttachment attachmentModel = new IssueAttachment(issue,
+                    origFileName, contentType, attachmentDescription, fileSize,
+                    user);
 
-         long origFileSize = file.getFileSize();
-         if(origFileSize > maxFileSize) {
-             logger.info("Cannot save attachment.  File is " + (origFileSize / 1024L) + " kB and max file size is set to " + (maxFileSize / 1024L) + "kB.");
+            attachmentModel.setIssue(issue);
+//			issue.getAttachments().add(attachmentModel);
+            byte[] fileData;
+            try {
+                fileData = file.getFileData();
+            } catch (IOException e) {
+                logger.error("addAttachment: failed to get file data", e);
+                messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+                return issue;
+            }
+            if (services.getIssueService()
+                    .addIssueAttachment(attachmentModel, fileData)) {
+                return services.getIssueService().getIssue(issue.getId());
+            }
 
- 			 msg.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.validate.attachment.size", (Math.round((maxFileSize / 1024L) * 100) / 100) + " " + ITrackerResources.getString("itracker.web.generic.kilobyte")));
 
- 			 return msg;
-         }
+        } else {
+            if (logger.isDebugEnabled()) {
+                logger.debug("addAttachment: failed to validate: " + origFileName + ", " + validation);
+            }
+            messages.add(validation);
+        }
+        return issue;
+    }
 
-         if((spaceLeft - origFileSize) < 0) {
-             logger.info("Cannot save attachment.  Total allocated disk space already used.");
- 			 msg.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.validate.attachment.quota", (Math.round((maxTotalFileSize / 1024L) * 100) / 100) + " " + ITrackerResources.getString("itracker.web.generic.kilobyte")));
+    public static ActionMessages validate(FormFile file, ITrackerServices services) {
+        ActionMessages msg = new ActionMessages();
+        if (!initialized) {
+            if (!init(services)) {
+                msg.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+                return msg;
+            }
+        }
 
-         }
-         spaceLeft = spaceLeft - origFileSize;
+        if (file == null) {
+            return msg;
+        }
 
-         return msg;
-     }
+        long origFileSize = file.getFileSize();
+        if (origFileSize > maxFileSize) {
+            logger.info("Cannot save attachment.  File is " + (origFileSize / 1024L) + " kB and max file size is set to " + (maxFileSize / 1024L) + "kB.");
 
-    
+            msg.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.validate.attachment.size", (Math.round((maxFileSize / 1024L) * 100) / 100) + " " + ITrackerResources.getString("itracker.web.generic.kilobyte")));
+
+            return msg;
+        }
+
+        if ((spaceLeft - origFileSize) < 0) {
+            logger.info("Cannot save attachment.  Total allocated disk space already used.");
+            msg.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.validate.attachment.quota", (Math.round((maxTotalFileSize / 1024L) * 100) / 100) + " " + ITrackerResources.getString("itracker.web.generic.kilobyte")));
+
+        }
+        spaceLeft = spaceLeft - origFileSize;
+
+        return msg;
+    }
+
 
     private static boolean init(ITrackerServices services) {
-        if(! initialized) {
+        if (!initialized) {
             try {
                 ConfigurationService configurationService = services.getConfigurationService();
                 IssueService issueService = services.getIssueService();
-                
+
                 maxFileSize = configurationService.getLongProperty("max_attachment_size", MAX_FILE_SIZE_KB) * 1024L;
                 maxTotalFileSize = configurationService.getLongProperty("max_total_attachment_size", MAX_TOTAL_FILE_SIZE_KB) * 1024L;
                 spaceLeft = maxTotalFileSize - issueService.getAllIssueAttachmentSize();
 
-                if(logger.isDebugEnabled()) {
+                if (logger.isDebugEnabled()) {
                     logger.debug("Attachment Properties: MaxAttachmentSize set to " + (maxFileSize / 1024L) + " kB");
                     logger.debug("Attachment Properties: MaxTotalAttachmentsSize set to " + (maxTotalFileSize / 1024L) + " kB");
                     logger.debug("Attachment Properties: Current space left is " + (spaceLeft / 1024L) + " kB");
                 }
                 initialized = true;
-            } catch(Exception e) {
+            } catch (Exception e) {
                 logger.error("Exception initializing AttachmentUtilities.", e);
                 throw new Error("Failed to initialize AttachmentUtilities.", e);
             }
@@ -232,12 +222,12 @@ public class AttachmentUtilities {
         return initialized;
     }
 
-	public static String getCONTENT_TYPE() {
-		return CONTENT_TYPE;
-	}
+    public static String getCONTENT_TYPE() {
+        return CONTENT_TYPE;
+    }
 
-	public static String getCHAR_ENCODING() {
-		return CHAR_ENCODING;
-	}
+    public static String getCHAR_ENCODING() {
+        return CHAR_ENCODING;
+    }
 
 }

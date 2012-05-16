@@ -45,14 +45,14 @@ public class ComponentDAOImplIT extends AbstractDependencyInjectionTest {
     }
 
     protected String[] getDataSetFiles() {
-        return new String[] {
+        return new String[]{
                 "dataset/projectbean_dataset.xml",
                 "dataset/componentbean_dataset.xml"
         };
     }
 
     protected String[] getConfigLocations() {
-        return new String[] { "application-context.xml" };
+        return new String[]{"application-context.xml"};
     }
 
 }

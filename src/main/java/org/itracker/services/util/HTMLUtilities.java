@@ -19,16 +19,10 @@
 package org.itracker.services.util;
 
 import org.apache.log4j.Logger;
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.oro.text.regex.Perl5Substitution;
-import org.apache.oro.text.regex.Util;
+import org.apache.oro.text.regex.*;
 
 public class HTMLUtilities {
-    
+
     private static final Logger logger = Logger.getLogger(HTMLUtilities.class);
     private static Perl5Matcher matcher = new Perl5Matcher();
     private static PatternCompiler compiler = new Perl5Compiler();
@@ -37,7 +31,7 @@ public class HTMLUtilities {
     static {
         try {
             pattern = compiler.compile("<[\\w/].*?>", Perl5Compiler.CASE_INSENSITIVE_MASK);
-        } catch(MalformedPatternException mpe) {
+        } catch (MalformedPatternException mpe) {
             logger.error("Invalid pattern in HTMLUtilities. " + mpe.getMessage());
         }
     }
@@ -47,7 +41,7 @@ public class HTMLUtilities {
         int len = input.length();
         char c;
 
-        for(int i = 0; i < len; i++) {
+        for (int i = 0; i < len; i++) {
             c = input.charAt(i);
             if (c == '\'') {
                 sb.append("''");
@@ -59,15 +53,15 @@ public class HTMLUtilities {
     }
 
     public static String handleQuotes(String input) {
-        if(input == null || "".equals(input) || input.indexOf('"') == -1) {
+        if (input == null || "".equals(input) || input.indexOf('"') == -1) {
             return input;
         }
 
         StringBuffer buf = new StringBuffer();
 
         char[] chars = input.toCharArray();
-        for(int i = 0; i < chars.length; i++) {
-            if(chars[i] == '"') {
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] == '"') {
                 buf.append("&quot;");
             } else {
                 buf.append(chars[i]);
@@ -77,17 +71,17 @@ public class HTMLUtilities {
         return buf.toString();
     }
 
-     public static String escapeNewlines(String input) {
-        if(input == null || "".equals(input) || input.indexOf('\n') == -1) {
+    public static String escapeNewlines(String input) {
+        if (input == null || "".equals(input) || input.indexOf('\n') == -1) {
             return input;
         }
 
         StringBuffer buf = new StringBuffer();
         char[] chars = input.toCharArray();
-        for(int i = 0; i < chars.length; i++) {
-            if(chars[i] == '\r') {
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] == '\r') {
                 continue;
-            } else if(chars[i] == '\n') {
+            } else if (chars[i] == '\n') {
                 buf.append("\\n");
             } else {
                 buf.append(chars[i]);
@@ -96,17 +90,17 @@ public class HTMLUtilities {
         return buf.toString();
     }
 
-     public static String newlinesToBreaks(String input) {
-        if(input == null || "".equals(input) || input.indexOf('\n') == -1) {
+    public static String newlinesToBreaks(String input) {
+        if (input == null || "".equals(input) || input.indexOf('\n') == -1) {
             return input;
         }
 
         StringBuffer buf = new StringBuffer();
         char[] chars = input.toCharArray();
-        for(int i = 0; i < chars.length; i++) {
-            if(chars[i] == '\r') {
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] == '\r') {
                 continue;
-            } else if(chars[i] == '\n') {
+            } else if (chars[i] == '\n') {
                 buf.append("<br>");
             } else {
                 buf.append(chars[i]);
@@ -118,7 +112,7 @@ public class HTMLUtilities {
     public static String removeMarkup(String input) {
         String output = (input == null ? "" : input);
 
-        if(pattern != null && matcher != null && output != null && ! output.equals("")) {
+        if (pattern != null && matcher != null && output != null && !output.equals("")) {
             output = Util.substitute(matcher, pattern, new Perl5Substitution(), output, Util.SUBSTITUTE_ALL);
         } else {
             logger.debug("Failed removing markup.  Pattern = " + pattern + "   Output = " + output);
@@ -132,7 +126,7 @@ public class HTMLUtilities {
         int len = input.length();
         char c;
 
-        for(int i = 0; i < len; i++) {
+        for (int i = 0; i < len; i++) {
             c = input.charAt(i);
             if (c == '"') {
                 sb.append("&quot;");
@@ -144,7 +138,7 @@ public class HTMLUtilities {
                 sb.append("&gt;");
             } else {
                 int ci = 0xffff & c;
-                if (ci < 160 ) {
+                if (ci < 160) {
                     // nothing special only 7 Bit
                     sb.append(c);
                 } else {
@@ -158,28 +152,25 @@ public class HTMLUtilities {
 
         return sb.toString();
     }
-    
+
     /**
      * format a itracker date format for scal datepicker
-     * 
+     *
      * @see http://scal.fieldguidetoprogrammers.com
-     * 
-     * @param format
-     * @return
      */
     public static final String getJSDateFormat(String format) {
-    	
-    	
-    	String f = format.replace('m', 'n'); 
-    		
-    		
-    	f = format.toLowerCase();
-    	
-    	return f;
 
-    	
+
+        String f = format.replace('m', 'n');
+
+
+        f = format.toLowerCase();
+
+        return f;
+
+
     }
-    
+
 }
 
  

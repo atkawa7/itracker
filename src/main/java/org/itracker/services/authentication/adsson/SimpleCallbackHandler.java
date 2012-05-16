@@ -3,18 +3,13 @@
  */
 package org.itracker.services.authentication.adsson;
 
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.NameCallback;
-import javax.security.auth.callback.PasswordCallback;
-import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.security.auth.callback.*;
 
 /**
  * Callback class for Active Directory authentication Gets username and password
  * from class constructor
- * 
+ *
  * @author ricardo
- * 
  */
 public class SimpleCallbackHandler implements CallbackHandler {
 

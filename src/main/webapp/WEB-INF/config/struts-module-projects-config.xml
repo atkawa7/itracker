@@ -76,8 +76,8 @@
             <forward name="index" module="/" path="/index.jsp" redirect="true"/>
             <forward name="editissue" path="/editissueform.do" redirect="true"/>
             <forward name="viewissue" path="/view_issue.jsp" redirect="true"/>
-         </action>
-                
+        </action>
+
         <action path="/unauthorized" type="org.itracker.web.actions.UnauthorizedAction">
             <forward name="unauthorized" path="/unauthorized.jsp" module="/" redirect="true"/>
         </action>

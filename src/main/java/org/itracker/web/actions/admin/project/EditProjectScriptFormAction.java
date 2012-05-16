@@ -18,24 +18,9 @@
 
 package org.itracker.web.actions.admin.project;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.WorkflowScript;
@@ -47,19 +32,28 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectScriptForm;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class EditProjectScriptFormAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(EditProjectScriptFormAction.class);
-	
+    private static final Logger log = Logger.getLogger(EditProjectScriptFormAction.class);
+
     public EditProjectScriptFormAction() {
     }
-    
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    	ActionMessages errors = new ActionMessages();
-    	
-        if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        ActionMessages errors = new ActionMessages();
+
+        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
         boolean isUpdate = false;
@@ -67,56 +61,56 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
         String pageTitleArg = "";
         String action = "";
         Project project = null;
-        
+
         try {
             ProjectScriptForm projectScriptForm = (ProjectScriptForm) form;
             final ProjectService projectService = getITrackerServices().getProjectService();
             final ConfigurationService configurationService = getITrackerServices().getConfigurationService();
-            
-            if(projectScriptForm == null) {
+
+            if (projectScriptForm == null) {
                 projectScriptForm = new ProjectScriptForm();
             }
             final List<ProjectScript> projectScripts;
             final List<WorkflowScript> workflowScripts = configurationService.getWorkflowScripts();
-            
-            
+
+
             action = request.getParameter("action");
-            if ( action == null )
+            if (action == null)
                 action = (String) PropertyUtils.getSimpleProperty(projectScriptForm, "action");
             projectScriptForm.setAction(action);
-            
+
             Integer projectId = (Integer) PropertyUtils.getSimpleProperty(projectScriptForm, "projectId");
             projectScriptForm.setProjectId(projectId);
             project = projectService.getProject(projectId);
             projectScripts = project.getScripts();
-            
+
 //            if(action != null && action.equals("update")) {
 //                isUpdate = true;
 //                pageTitleKey = "itracker.web.admin.editprojectscript.title.update";
-                
+
 //            } else {
-                pageTitleKey = "itracker.web.admin.editprojectscript.title.create";
+            pageTitleKey = "itracker.web.admin.editprojectscript.title.create";
 //            }
-            HashMap<String,String> scriptDescs = new HashMap<String,String>();
-            HashMap<String,String> scriptItems = new HashMap<String,String>();
-            HashMap<String,String> ids = new HashMap<String,String>();
-            HashMap<String,String> fieldIds = new HashMap<String,String>();
-            HashMap<String,String> priorities = new HashMap<String,String>();
+            HashMap<String, String> scriptDescs = new HashMap<String, String>();
+            HashMap<String, String> scriptItems = new HashMap<String, String>();
+            HashMap<String, String> ids = new HashMap<String, String>();
+            HashMap<String, String> fieldIds = new HashMap<String, String>();
+            HashMap<String, String> priorities = new HashMap<String, String>();
 //            Integer[] Ids = new Integer[workflowScripts.size()];
 //            Integer[] fieldIds = new Integer[workflowScripts.size()];
 //            Integer[] priorities = new Integer[workflowScripts.size()];
             int i = 0;
 //            if ("update".equals(action)) {
-            for ( Iterator<WorkflowScript> wfsIterator = workflowScripts.iterator(); wfsIterator.hasNext(); i++) {
+            for (Iterator<WorkflowScript> wfsIterator = workflowScripts.iterator(); wfsIterator.hasNext(); i++) {
                 WorkflowScript workflowScript = (WorkflowScript) wfsIterator.next();
                 scriptDescs.put(String.valueOf(workflowScript.getId()), workflowScript.getName());
                 String idstr = "0";
                 String sdstr = "";
                 String fidstr = "";
                 String pristr = "";
-                for ( Iterator<ProjectScript> psIterator = projectScripts.iterator(); psIterator.hasNext(); ) {
+                for (Iterator<ProjectScript> psIterator = projectScripts.iterator(); psIterator.hasNext(); ) {
                     ProjectScript chkprojectScript = psIterator.next();
-                    if ( workflowScript.getId().equals(chkprojectScript.getScript()) ) {
+                    if (workflowScript.getId().equals(chkprojectScript.getScript())) {
                         idstr = String.valueOf(chkprojectScript.getId());
                         fidstr = String.valueOf(chkprojectScript.getFieldId());
                         pristr = String.valueOf(chkprojectScript.getPriority());
@@ -144,48 +138,48 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
             projectScriptForm.setId(ids);
             projectScriptForm.setFieldId(fieldIds);
             projectScriptForm.setPriority(priorities);
-            
+
             projectScriptForm.setCustomFields(configurationService.getCustomFields());
             String prioritySizeStr = ProjectUtilities.getScriptPrioritySize();
             int prioritySize = Integer.parseInt(prioritySizeStr);
-            
-            HashMap<String,String> priorityList = new HashMap<String,String>();
-            for ( int j = 1; j <= prioritySize; j++ ) {
+
+            HashMap<String, String> priorityList = new HashMap<String, String>();
+            for (int j = 1; j <= prioritySize; j++) {
                 priorityList.put(String.valueOf(j), ProjectUtilities.getScriptPriorityLabelKey(j));
             }
             projectScriptForm.setPriorityList(priorityList);
-            
-            if(errors.isEmpty()) {
+
+            if (errors.isEmpty()) {
                 HttpSession session = request.getSession(true);
                 request.setAttribute("projectScriptForm", projectScriptForm);
                 session.setAttribute(Constants.PROJECT_SCRIPT_KEY, project);
-                request.setAttribute("action",action);
+                request.setAttribute("action", action);
                 saveToken(request);
-                request.setAttribute("pageTitleKey",pageTitleKey);
-                request.setAttribute("pageTitleArg",pageTitleArg);
+                request.setAttribute("pageTitleKey", pageTitleKey);
+                request.setAttribute("pageTitleArg", pageTitleArg);
                 return mapping.getInputForward();
             }
-        } catch(RuntimeException e) {
-            log.error("Exception while the "+ action + " of ProjectScript form.", e);
+        } catch (RuntimeException e) {
+            log.error("Exception while the " + action + " of ProjectScript form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         } catch (IllegalAccessException e) {
-            log.error("Exception while the "+ action + " of ProjectScript form.", e);
+            log.error("Exception while the " + action + " of ProjectScript form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-		} catch (InvocationTargetException e) {
-            log.error("Exception while the "+ action + " of ProjectScript form.", e);
+        } catch (InvocationTargetException e) {
+            log.error("Exception while the " + action + " of ProjectScript form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-		} catch (NoSuchMethodException e) {
-            log.error("Exception while the "+ action + " of ProjectScript form.", e);
+        } catch (NoSuchMethodException e) {
+            log.error("Exception while the " + action + " of ProjectScript form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-		}
-        
-        if(! errors.isEmpty()) {
-        	saveErrors(request, errors);
         }
-        request.setAttribute("pageTitleKey",pageTitleKey);
-        request.setAttribute("pageTitleArg",pageTitleArg);
-        request.setAttribute("isUpdate",isUpdate);
+
+        if (!errors.isEmpty()) {
+            saveErrors(request, errors);
+        }
+        request.setAttribute("pageTitleKey", pageTitleKey);
+        request.setAttribute("pageTitleArg", pageTitleArg);
+        request.setAttribute("isUpdate", isUpdate);
         return mapping.findForward("error");
     }
-    
+
 }

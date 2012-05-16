@@ -18,132 +18,132 @@
 
 package org.itracker.model;
 
-import java.util.Comparator;
-
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import java.util.Comparator;
+
 /**
  * Models a language entry.
- * 
+ *
  * @author ready
  */
 public class Language extends AbstractEntity {
 
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	private String locale;
+    private String locale;
 
-	private String resourceKey;
+    private String resourceKey;
 
-	private String resourceValue;
+    private String resourceValue;
 
-	/**
-	 * Default constructor (required by Hibernate).
-	 * 
-	 * <p>
-	 * PENDING: should be <code>private</code> so that it can only be used by
-	 * Hibernate, to ensure that the fields which form an instance's identity
-	 * are always initialized/never <tt>null</tt>.
-	 * </p>
-	 */
-	public Language() {
-	}
+    /**
+     * Default constructor (required by Hibernate).
+     * <p/>
+     * <p>
+     * PENDING: should be <code>private</code> so that it can only be used by
+     * Hibernate, to ensure that the fields which form an instance's identity
+     * are always initialized/never <tt>null</tt>.
+     * </p>
+     */
+    public Language() {
+    }
 
-	public Language(String locale, String key) {
-		setLocale(locale);
-		setResourceKey(key);
-	}
+    public Language(String locale, String key) {
+        setLocale(locale);
+        setResourceKey(key);
+    }
 
-	/**
-	 * Convenience constructor to set the value too.
-	 */
-	public Language(String locale, String key, String value) {
-		this(locale, key);
-		setResourceValue(value);
-	}
+    /**
+     * Convenience constructor to set the value too.
+     */
+    public Language(String locale, String key, String value) {
+        this(locale, key);
+        setResourceValue(value);
+    }
 
-	public String getLocale() {
-		return locale;
-	}
+    public String getLocale() {
+        return locale;
+    }
 
-	public void setLocale(String locale) {
-		if (locale == null) {
-			throw new IllegalArgumentException("null locale");
-		}
-		this.locale = locale;
-	}
+    public void setLocale(String locale) {
+        if (locale == null) {
+            throw new IllegalArgumentException("null locale");
+        }
+        this.locale = locale;
+    }
 
-	public String getResourceKey() {
-		return resourceKey;
-	}
+    public String getResourceKey() {
+        return resourceKey;
+    }
 
-	public void setResourceKey(String resourceKey) {
-		if (resourceKey == null) {
-			throw new IllegalArgumentException("null resourceKey");
-		}
-		this.resourceKey = resourceKey;
-	}
+    public void setResourceKey(String resourceKey) {
+        if (resourceKey == null) {
+            throw new IllegalArgumentException("null resourceKey");
+        }
+        this.resourceKey = resourceKey;
+    }
 
-	public String getResourceValue() {
-		return resourceValue;
-	}
+    public String getResourceValue() {
+        return resourceValue;
+    }
 
-	public void setResourceValue(String resourceValue) {
-		this.resourceValue = resourceValue;
-	}
+    public void setResourceValue(String resourceValue) {
+        this.resourceValue = resourceValue;
+    }
 
-	// @Override
-	// public boolean equals(Object obj) {
-	// if (this == obj) {
-	// return true;
-	// }
-	//        
-	// if (obj instanceof Language) {
-	// final Language other = (Language)obj;
-	//            
-	// return this.resourceKey.equals(other.resourceKey)
-	// && this.locale.equals(other.locale);
-	// }
-	// return false;
-	// }
-	//
-	// @Override
-	// public int hashCode() {
-	// return this.resourceKey.hashCode() + this.locale.hashCode();
-	// }
-	//    
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("id", getId()).append("resourceKey",
-				getResourceKey()).append("locale", getLocale()).append("value", getResourceValue()).toString();
-	}
-	
-	public static final Comparator<Language> KEY_COMPARATOR = new LanguageKeyComparator();
+    // @Override
+    // public boolean equals(Object obj) {
+    // if (this == obj) {
+    // return true;
+    // }
+    //
+    // if (obj instanceof Language) {
+    // final Language other = (Language)obj;
+    //
+    // return this.resourceKey.equals(other.resourceKey)
+    // && this.locale.equals(other.locale);
+    // }
+    // return false;
+    // }
+    //
+    // @Override
+    // public int hashCode() {
+    // return this.resourceKey.hashCode() + this.locale.hashCode();
+    // }
+    //
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("id", getId()).append("resourceKey",
+                getResourceKey()).append("locale", getLocale()).append("value", getResourceValue()).toString();
+    }
 
-	private static class LanguageKeyComparator implements Comparator<Language> {
+    public static final Comparator<Language> KEY_COMPARATOR = new LanguageKeyComparator();
 
-		public int compare(Language o1, Language o2) {
-			return new CompareToBuilder().append(o1.getResourceKey(), o2.getResourceKey()).append(o1.getLocale(), o2.getLocale()).append(o1.getId(), o2.getId()).toComparison();
-		}
+    private static class LanguageKeyComparator implements Comparator<Language> {
 
-	}
-	
-	public static final Comparator<Language> VALUE_COMPARATOR = new LanguageValueComparator();
+        public int compare(Language o1, Language o2) {
+            return new CompareToBuilder().append(o1.getResourceKey(), o2.getResourceKey()).append(o1.getLocale(), o2.getLocale()).append(o1.getId(), o2.getId()).toComparison();
+        }
 
-	private static class LanguageValueComparator implements Comparator<Language> {
+    }
 
-		public int compare(Language o1, Language o2) {
-			return new CompareToBuilder()
-			.append(o1.getResourceValue(), o2.getResourceValue())
-			.append(o1.getResourceKey(), o2.getResourceKey())
-			.append(o1.getId(), o2.getId()).toComparison();
-		}
+    public static final Comparator<Language> VALUE_COMPARATOR = new LanguageValueComparator();
 
-	}
-	
+    private static class LanguageValueComparator implements Comparator<Language> {
+
+        public int compare(Language o1, Language o2) {
+            return new CompareToBuilder()
+                    .append(o1.getResourceValue(), o2.getResourceValue())
+                    .append(o1.getResourceKey(), o2.getResourceKey())
+                    .append(o1.getId(), o2.getId()).toComparison();
+        }
+
+    }
+
 }

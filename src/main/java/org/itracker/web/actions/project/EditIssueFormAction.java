@@ -18,29 +18,9 @@
 
 package org.itracker.web.actions.project;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.itracker.model.Issue;
-import org.itracker.model.NameValuePair;
-import org.itracker.model.PermissionType;
-import org.itracker.model.Project;
-import org.itracker.model.Status;
-import org.itracker.model.User;
+import org.apache.struts.action.*;
+import org.itracker.model.*;
 import org.itracker.services.IssueService;
 import org.itracker.services.UserService;
 import org.itracker.services.util.IssueUtilities;
@@ -49,111 +29,121 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * This class populates an IssueForm object for display by the edit issue page.
  */
 public class EditIssueFormAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(EditIssueFormAction.class);
+    private static final Logger log = Logger.getLogger(EditIssueFormAction.class);
 
-	/* (non-Javadoc)
-	 * @see org.apache.struts.action.Action#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		if (log.isDebugEnabled()) {
-			log.debug("execute: called with mapping: " + mapping + ", form: "
-					+ form + ", request: " + request + ", response: "
-					+ response);
-		}
-		ActionMessages errors = new ActionMessages();
+    /* (non-Javadoc)
+      * @see org.apache.struts.action.Action#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+      */
+    @Override
+    public ActionForward execute(ActionMapping mapping, ActionForm form,
+                                 HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        if (log.isDebugEnabled()) {
+            log.debug("execute: called with mapping: " + mapping + ", form: "
+                    + form + ", request: " + request + ", response: "
+                    + response);
+        }
+        ActionMessages errors = new ActionMessages();
 
-		try {
-			IssueService issueService = getITrackerServices().getIssueService();
-			UserService userService = getITrackerServices().getUserService();
-			Integer issueId = new Integer(
-					(request.getParameter("id") == null ? "-1" : (request
-							.getParameter("id"))));
+        try {
+            IssueService issueService = getITrackerServices().getIssueService();
+            UserService userService = getITrackerServices().getUserService();
+            Integer issueId = new Integer(
+                    (request.getParameter("id") == null ? "-1" : (request
+                            .getParameter("id"))));
 
-			Issue issue = issueService.getIssue(issueId);
-			Project project = issueService.getIssueProject(issueId);
+            Issue issue = issueService.getIssue(issueId);
+            Project project = issueService.getIssueProject(issueId);
 
-			if (issue == null) {
-				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-						"itracker.web.error.invalidissue"));
-				saveErrors(request, errors);
-				return mapping.findForward("error");
-			} else if (project == null) {
-				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-						"itracker.web.error.invalidproject"));
-			} else if (project.getStatus() != Status.ACTIVE) {
-				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-						"itracker.web.error.projectlocked"));
-			} else {
-				HttpSession session = request.getSession(true);
-				User currUser = (User) session.getAttribute(Constants.USER_KEY);
-				Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+            if (issue == null) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                        "itracker.web.error.invalidissue"));
+                saveErrors(request, errors);
+                return mapping.findForward("error");
+            } else if (project == null) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                        "itracker.web.error.invalidproject"));
+            } else if (project.getStatus() != Status.ACTIVE) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                        "itracker.web.error.projectlocked"));
+            } else {
+                HttpSession session = request.getSession(true);
+                User currUser = (User) session.getAttribute(Constants.USER_KEY);
+                Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
 
-				Locale locale = getLocale(request);
-				// (Locale) session
-				// .getAttribute(Constants.LOCALE_KEY);
+                Locale locale = getLocale(request);
+                // (Locale) session
+                // .getAttribute(Constants.LOCALE_KEY);
 
-				List<NameValuePair> ownersList = UserUtilities
-						.getAssignableIssueOwnersList(issue, project, currUser,
-								locale, userService, userPermissions);
+                List<NameValuePair> ownersList = UserUtilities
+                        .getAssignableIssueOwnersList(issue, project, currUser,
+                                locale, userService, userPermissions);
 
-				if (!IssueUtilities.canEditIssue(issue, currUser.getId(),
-						userPermissions)) {
-					log
-							.debug("Unauthorized user requested access to edit issue for project "
-									+ project.getId());
-					return mapping.findForward("unauthorized");
-				}
+                if (!IssueUtilities.canEditIssue(issue, currUser.getId(),
+                        userPermissions)) {
+                    log
+                            .debug("Unauthorized user requested access to edit issue for project "
+                                    + project.getId());
+                    return mapping.findForward("unauthorized");
+                }
 
-				IssueForm issueForm = (IssueForm) form;
-				if (issueForm == null) {
-					issueForm = new IssueForm();
-				}
-				Map<Integer, List<NameValuePair>> listOptions = EditIssueActionUtil.getListOptions(
-						request, issue, ownersList, userPermissions, issue
-								.getProject(), currUser);
+                IssueForm issueForm = (IssueForm) form;
+                if (issueForm == null) {
+                    issueForm = new IssueForm();
+                }
+                Map<Integer, List<NameValuePair>> listOptions = EditIssueActionUtil.getListOptions(
+                        request, issue, ownersList, userPermissions, issue
+                        .getProject(), currUser);
 
-				EditIssueActionUtil.setupIssueForm(issueForm, issue, listOptions, request, errors);
+                EditIssueActionUtil.setupIssueForm(issueForm, issue, listOptions, request, errors);
 
-				EditIssueActionUtil.setupJspEnv(mapping, issueForm, request,
-						issue, issueService, userService, userPermissions,
-						listOptions, errors);
+                EditIssueActionUtil.setupJspEnv(mapping, issueForm, request,
+                        issue, issueService, userService, userPermissions,
+                        listOptions, errors);
 
-				log.debug("Forwarding to edit issue form for issue "
-						+ issue.getId());
+                log.debug("Forwarding to edit issue form for issue "
+                        + issue.getId());
 
-				// TODO: Sort attachments
-				// Collections.sort(attachments,
-				// IssueAttachment.CREATE_DATE_COMPARATOR);
+                // TODO: Sort attachments
+                // Collections.sort(attachments,
+                // IssueAttachment.CREATE_DATE_COMPARATOR);
 
-				saveToken(request);
-				if(issue == null){
-					return mapping.findForward("error");
-				}
-				if (errors.isEmpty()) {
-					log.info("EditIssueFormAction: Forward: InputForward");
-					saveErrors(request, errors);
-					return mapping.getInputForward();
-				}
-			}
-		} catch (Exception e) {
-			log.error("Exception while creating edit issue form.", e);
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-					"itracker.web.error.system"));
-		}
+                saveToken(request);
+                if (issue == null) {
+                    return mapping.findForward("error");
+                }
+                if (errors.isEmpty()) {
+                    log.info("EditIssueFormAction: Forward: InputForward");
+                    saveErrors(request, errors);
+                    return mapping.getInputForward();
+                }
+            }
+        } catch (Exception e) {
+            log.error("Exception while creating edit issue form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                    "itracker.web.error.system"));
+        }
 
-		if (!errors.isEmpty()) {
-			saveErrors(request, errors);
-		}
+        if (!errors.isEmpty()) {
+            saveErrors(request, errors);
+        }
 
-		log.info("EditIssueFormAction: Forward: Error");
-		return mapping.findForward("error");
-	}
-	
+        log.info("EditIssueFormAction: Forward: Error");
+        return mapping.findForward("error");
+    }
+
 }

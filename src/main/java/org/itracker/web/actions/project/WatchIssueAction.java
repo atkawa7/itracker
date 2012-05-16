@@ -18,28 +18,9 @@
 
 package org.itracker.web.actions.project;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.itracker.model.Issue;
-import org.itracker.model.Notification;
-import org.itracker.model.PermissionType;
-import org.itracker.model.Project;
-import org.itracker.model.User;
+import org.apache.struts.action.*;
+import org.itracker.model.*;
 import org.itracker.model.Notification.Role;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
@@ -47,16 +28,25 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 public class WatchIssueAction extends ItrackerBaseAction {
 
 
-	private static final Logger log = Logger.getLogger(WatchIssueAction.class);
+    private static final Logger log = Logger.getLogger(WatchIssueAction.class);
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    	ActionMessages errors = new ActionMessages();
+        ActionMessages errors = new ActionMessages();
 
         try {
             IssueService issueService = getITrackerServices().getIssueService();
@@ -64,8 +54,8 @@ public class WatchIssueAction extends ItrackerBaseAction {
             Integer issueId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
             Issue issue = issueService.getIssue(issueId);
             Project project = issueService.getIssueProject(issueId);
-            
-            if(project == null) {
+
+            if (project == null) {
                 return mapping.findForward("unauthorized");
             }
 
@@ -73,7 +63,7 @@ public class WatchIssueAction extends ItrackerBaseAction {
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
             Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
 
-            if(! UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_VIEW_ALL)) {
+            if (!UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_VIEW_ALL)) {
                 return mapping.findForward("unauthorized");
             }
 
@@ -81,42 +71,42 @@ public class WatchIssueAction extends ItrackerBaseAction {
             notification.setUser(currUser);
             notification.setIssue(issue);
             notification.setRole(Role.IP);
-            
+
             boolean UserHasIssueNotification = false;
             List<Notification> notifications = issue.getNotifications();
-            
-            for ( Iterator<Notification> nIterator = notifications.iterator(); nIterator.hasNext(); ) {
+
+            for (Iterator<Notification> nIterator = notifications.iterator(); nIterator.hasNext(); ) {
                 Notification issue_notification = nIterator.next();
-                if(issue_notification.getUser().getId().equals(currUser.getId())) {
+                if (issue_notification.getUser().getId().equals(currUser.getId())) {
                     notification = issue_notification;
                     UserHasIssueNotification = true;
                     nIterator.remove();
                     break;
                 }
             }
-            if ( UserHasIssueNotification ) {
+            if (UserHasIssueNotification) {
                 issue.setNotifications(notifications);
                 notificationService.removeIssueNotification(notification.getId());
             } else {
-            	notificationService.addIssueNotification(notification);
+                notificationService.addIssueNotification(notification);
             }
             String caller = request.getParameter("caller");
-            if("editissue".equals(caller)) {
+            if ("editissue".equals(caller)) {
                 return new ActionForward(mapping.findForward("editissue").getPath() + "?id=" + issueId);
-            } else if("viewissue".equals(caller)) {
+            } else if ("viewissue".equals(caller)) {
                 return new ActionForward(mapping.findForward("viewissue").getPath() + "?id=" + issueId);
                 //index was the old name for portalhome, we have to clean the naming in this area... 
-            } else if("index".equals(caller)) {
+            } else if ("index".equals(caller)) {
                 return mapping.findForward("index");
             } else {
                 return new ActionForward(mapping.findForward("listissues").getPath() + "?projectId=" + project.getId());
             }
-        } catch(Exception e) {
-        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.login.system"));
+        } catch (Exception e) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.login.system"));
             log.error("System Error.", e);
         }
-        if(! errors.isEmpty()) {
-        	saveErrors(request, errors);
+        if (!errors.isEmpty()) {
+            saveErrors(request, errors);
         }
         return mapping.findForward("error");
     }

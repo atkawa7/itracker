@@ -18,25 +18,14 @@
 
 package org.itracker.web.actions.user;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.Notification;
-import org.itracker.model.User;
 import org.itracker.model.Notification.Role;
 import org.itracker.model.Notification.Type;
+import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.ITrackerServices;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.AuthenticationConstants;
@@ -44,23 +33,26 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.LoginUtilities;
-import org.itracker.web.util.RequestHelper;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class SelfRegisterAction extends ItrackerBaseAction {
-	private static final Logger log = Logger
-			.getLogger(SelfRegisterAction.class);
+    private static final Logger log = Logger
+            .getLogger(SelfRegisterAction.class);
 
 
+    public ActionForward execute(ActionMapping mapping, ActionForm form,
+                                 HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+        ActionMessages errors = new ActionMessages();
 
-		ActionMessages errors = new ActionMessages();
+        resetToken(request);
 
-		resetToken(request);
-
-		try {
+        try {
 //			itracker.web.selfreg.title
 
 //			String pageTitleKey = "itracker.web.selfreg.title";
@@ -68,40 +60,40 @@ public class SelfRegisterAction extends ItrackerBaseAction {
 //			request.setAttribute("pageTitleKey", pageTitleKey);
 //			request.setAttribute("pageTitleArg", pageTitleArg);
 //			
-			ConfigurationService configurationService = getITrackerServices()
-					.getConfigurationService();
+            ConfigurationService configurationService = getITrackerServices()
+                    .getConfigurationService();
 
-			boolean allowSelfRegister = configurationService
-					.getBooleanProperty("allow_self_register", false);
+            boolean allowSelfRegister = configurationService
+                    .getBooleanProperty("allow_self_register", false);
 
-			if (!allowSelfRegister) {
-				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-						"itracker.web.error.notenabled"));
-			} else {
-				UserForm regForm = (UserForm) form;
+            if (!allowSelfRegister) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                        "itracker.web.error.notenabled"));
+            } else {
+                UserForm regForm = (UserForm) form;
 
-				User user = new User(regForm.getLogin(), UserUtilities
-						.encryptPassword(regForm.getPassword()), regForm
-						.getFirstName(), regForm.getLastName(), regForm
-						.getEmail(), UserUtilities.REGISTRATION_TYPE_SELF,
-						false);
+                User user = new User(regForm.getLogin(), UserUtilities
+                        .encryptPassword(regForm.getPassword()), regForm
+                        .getFirstName(), regForm.getLastName(), regForm
+                        .getEmail(), UserUtilities.REGISTRATION_TYPE_SELF,
+                        false);
 
-				if (!user.hasRequiredData()) {
-					errors.add(ActionMessages.GLOBAL_MESSAGE,
-							new ActionMessage(
-									"itracker.web.error.missingfields"));
-				} else {
+                if (!user.hasRequiredData()) {
+                    errors.add(ActionMessages.GLOBAL_MESSAGE,
+                            new ActionMessage(
+                                    "itracker.web.error.missingfields"));
+                } else {
                     UserService userService = getITrackerServices().getUserService();
 
 
-					try {
-						if (userService
-								.allowRegistration(
-										user,
-										regForm.getPassword(),
-										AuthenticationConstants.AUTH_TYPE_PASSWORD_PLAIN,
-										AuthenticationConstants.REQ_SOURCE_WEB)) {
-							user = userService.createUser(user);
+                    try {
+                        if (userService
+                                .allowRegistration(
+                                        user,
+                                        regForm.getPassword(),
+                                        AuthenticationConstants.AUTH_TYPE_PASSWORD_PLAIN,
+                                        AuthenticationConstants.REQ_SOURCE_WEB)) {
+                            user = userService.createUser(user);
 
                             // TODO: remove this hack, this should be handled central, there are other
                             // instances of this hack
@@ -111,44 +103,43 @@ public class SelfRegisterAction extends ItrackerBaseAction {
                                 user.setPreferences(userPrefs);
                                 userPrefs.setUser(user);
                             }
-                            user.getPreferences().setUserLocale( String.valueOf(LoginUtilities.getCurrentLocale(request)) );
+                            user.getPreferences().setUserLocale(String.valueOf(LoginUtilities.getCurrentLocale(request)));
 
 
+                            Notification notification = new Notification();
+                            notification.setUser(user);
+                            notification.setRole(Role.ANY);
+                            getITrackerServices().getNotificationService()
+                                    .sendNotification(notification,
+                                            Type.SELF_REGISTER,
+                                            getBaseURL(request));
+                        } else {
+                            errors
+                                    .add(
+                                            ActionMessages.GLOBAL_MESSAGE,
+                                            new ActionMessage(
+                                                    "itracker.web.error.register.unauthorized"));
+                        }
+                    } catch (UserException ue) {
+                        errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                new ActionMessage(
+                                        "itracker.web.error.existinglogin"));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.info("Error during self registration.  " + e.getMessage());
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                    "itracker.web.error.register.system"));
+        }
 
-							Notification notification = new Notification();
-							notification.setUser(user);
-							notification.setRole(Role.ANY);
-							getITrackerServices().getNotificationService()
-									.sendNotification(notification,
-											Type.SELF_REGISTER,
-											getBaseURL(request));
-						} else {
-							errors
-									.add(
-											ActionMessages.GLOBAL_MESSAGE,
-											new ActionMessage(
-													"itracker.web.error.register.unauthorized"));
-						}
-					} catch (UserException ue) {
-						errors.add(ActionMessages.GLOBAL_MESSAGE,
-								new ActionMessage(
-										"itracker.web.error.existinglogin"));
-					}
-				}
-			}
-		} catch (Exception e) {
-			log.info("Error during self registration.  " + e.getMessage());
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-					"itracker.web.error.register.system"));
-		}
+        if (!errors.isEmpty()) {
+            saveErrors(request, errors);
+            saveToken(request);
+            return mapping.getInputForward();
+        }
 
-		if (!errors.isEmpty()) {
-			saveErrors(request, errors);
-			saveToken(request);
-			return mapping.getInputForward();
-		}
-
-		return mapping.findForward("login");
-	}
+        return mapping.findForward("login");
+    }
 
 }

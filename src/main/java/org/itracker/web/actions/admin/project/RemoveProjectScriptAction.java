@@ -19,19 +19,9 @@
 package org.itracker.web.actions.admin.project;
 
 //import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.services.ProjectService;
@@ -39,19 +29,25 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
 
 public class RemoveProjectScriptAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(RemoveProjectScriptAction.class);
-	
+    private static final Logger log = Logger.getLogger(RemoveProjectScriptAction.class);
+
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    	ActionMessages errors = new ActionMessages();
-        
-        if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        ActionMessages errors = new ActionMessages();
+
+        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
-        
+
 /*        if(! isTokenValid(request)) {
             logger.debug("Invalid request token while editing workflow script.");
             return new ActionForward(
@@ -60,33 +56,33 @@ public class RemoveProjectScriptAction extends ItrackerBaseAction {
         }
 */
         resetToken(request);
-        
+
         try {
             ProjectService projectService = getITrackerServices().getProjectService();
             String id = request.getParameter("delId");
-            
+
             ProjectScript projectScript = projectService.getProjectScript(Integer.valueOf(id));
             Project project = projectScript.getProject();
             boolean status = projectService.removeProjectScript(project.getId(), Integer.valueOf(id));
-            if ( ! status ) {
+            if (!status) {
                 log.debug("Error deleting script.  Redisplaying form for correction.");
             }
             HttpSession session = request.getSession(true);
             session.removeAttribute(Constants.PROJECT_SCRIPT_KEY);
-            request.setAttribute("action","update");
+            request.setAttribute("action", "update");
             saveToken(request);
             return new ActionForward(
                     mapping.findForward("editproject").getPath()
-                    + "?id=" + project.getId() +"&action=update");
-        } catch(Exception e) {
+                            + "?id=" + project.getId() + "&action=update");
+        } catch (Exception e) {
             log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
-        
-        if(! errors.isEmpty()) {
-        	saveErrors(request, errors);
+
+        if (!errors.isEmpty()) {
+            saveErrors(request, errors);
         }
         return mapping.findForward("error");
     }
-    
+
 }

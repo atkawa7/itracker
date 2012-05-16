@@ -18,62 +18,61 @@
 
 package org.itracker.web.forms;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
- * 
+ *
  * @author ready
- * 
  */
 public class AssignIssueForm extends ValidatorForm {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	String issueId;
-	String projectId;
-	String userId;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    String issueId;
+    String projectId;
+    String userId;
 
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		issueId = null;
-		projectId = null;
-		userId = null;
-	}
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        issueId = null;
+        projectId = null;
+        userId = null;
+    }
 
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = super.validate(mapping, request);
+    public ActionErrors validate(ActionMapping mapping,
+                                 HttpServletRequest request) {
+        ActionErrors errors = super.validate(mapping, request);
 
-		return errors;
-	}
+        return errors;
+    }
 
-	public String getIssueId() {
-		return issueId;
-	}
+    public String getIssueId() {
+        return issueId;
+    }
 
-	public void setIssueId(String issueId) {
-		this.issueId = issueId;
-	}
+    public void setIssueId(String issueId) {
+        this.issueId = issueId;
+    }
 
-	public String getProjectId() {
-		return projectId;
-	}
+    public String getProjectId() {
+        return projectId;
+    }
 
-	public void setProjectId(String projectId) {
-		this.projectId = projectId;
-	}
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getUserId() {
+        return userId;
+    }
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
 }

@@ -7,13 +7,13 @@ import java.io.IOException;
 /**
  * Verifies security issues - that user, leaving a system cannot
  * access its content anymore.
- * 
+ *
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
  */
 public class LogoutTest extends AbstractSeleniumTestCase {
     /**
      * Verifies the successfull login case with valid login/password.
-     * 
+     * <p/>
      * 0. Exit all available http sessions.
      * 1. Open some page inside the system.
      * 2. Verify, that browser was forwarded to login page.
@@ -26,7 +26,6 @@ public class LogoutTest extends AbstractSeleniumTestCase {
      * 8. After page refresh, verify that it's login page.
      * 9. Again, try to access some page inside the system.
      * 10. Verify, that browser has been forwarded to login page again.
-     * @throws java.io.IOException
      */
     @Test
     public void testLoginAndLogout() throws IOException {
@@ -58,7 +57,7 @@ public class LogoutTest extends AbstractSeleniumTestCase {
         assertTrue(selenium.isElementPresent("login"));
         assertTrue(selenium.isElementPresent("password"));
     }
-    
+
     @Override
     protected String[] getDataSetFiles() {
         return new String[]{
@@ -71,6 +70,6 @@ public class LogoutTest extends AbstractSeleniumTestCase {
 
     @Override
     protected String[] getConfigLocations() {
-        return new String[]{ "application-context.xml"};
+        return new String[]{"application-context.xml"};
     }
 }

@@ -18,31 +18,9 @@
 
 package org.itracker.services.implementations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.apache.log4j.Logger;
-import org.itracker.model.Issue;
-import org.itracker.model.Permission;
-import org.itracker.model.PermissionType;
-import org.itracker.model.Project;
-import org.itracker.model.User;
-import org.itracker.model.UserPreferences;
-import org.itracker.persistence.dao.NoSuchEntityException;
-import org.itracker.persistence.dao.PermissionDAO;
-import org.itracker.persistence.dao.ProjectDAO;
-import org.itracker.persistence.dao.ReportDAO;
-import org.itracker.persistence.dao.UserDAO;
-import org.itracker.persistence.dao.UserPreferencesDAO;
+import org.itracker.model.*;
+import org.itracker.persistence.dao.*;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
@@ -53,6 +31,8 @@ import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
+
+import java.util.*;
 
 /**
  * Implements the UserService interface. See that interface for method
@@ -65,8 +45,7 @@ public class UserServiceImpl implements UserService {
     private static final String DEFAULT_AUTHENTICATOR =
             "org.itracker.services.authentication.DefaultAuthenticator";
 
-    
-    
+
     private String authenticatorClassName = null;
     private Class<?> authenticatorClass = null;
     private boolean allowSelfRegister = false;
@@ -79,7 +58,7 @@ public class UserServiceImpl implements UserService {
     private UserPreferencesDAO userPreferencesDAO = null;
     private ProjectService projectService;
     private ConfigurationService configurationService;
-    
+
     /**
      * @param configurationService
      * @param projectService
@@ -88,12 +67,12 @@ public class UserServiceImpl implements UserService {
      * @param userPreferencesDAO
      */
     public UserServiceImpl(ConfigurationService configurationService,
-            ProjectService projectService,
-            UserDAO userDAO,
-            PermissionDAO permissionDAO,
-            UserPreferencesDAO userPreferencesDAO) {
-    	
-        
+                           ProjectService projectService,
+                           UserDAO userDAO,
+                           PermissionDAO permissionDAO,
+                           UserPreferencesDAO userPreferencesDAO) {
+
+
         this.configurationService = configurationService;
         this.projectService = projectService;
         this.userDAO = userDAO;
@@ -109,15 +88,9 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(ex);
         }
     }
+
     /**
      * @deprecated use constructor without projectDA= und reportDAO instead
-     * @param configurationService
-     * @param projectService
-     * @param userDAO
-     * @param projectDAO
-     * @param reportDAO
-     * @param permissionDAO
-     * @param userPreferencesDAO
      */
     public UserServiceImpl(ConfigurationService configurationService,
                            ProjectService projectService,
@@ -126,7 +99,7 @@ public class UserServiceImpl implements UserService {
                            ReportDAO reportDAO,
                            PermissionDAO permissionDAO,
                            UserPreferencesDAO userPreferencesDAO) {
-    	this(configurationService, projectService, userDAO, permissionDAO, userPreferencesDAO);
+        this(configurationService, projectService, userDAO, permissionDAO, userPreferencesDAO);
     }
 
     public User getUser(Integer userId) {
@@ -256,59 +229,59 @@ public class UserServiceImpl implements UserService {
                 authenticator.updateProfile(user, AuthenticationConstants.UPDATE_TYPE_CORE, null,
                         AuthenticationConstants.AUTH_TYPE_UNKNOWN, AuthenticationConstants.REQ_SOURCE_UNKNOWN);
             } else {
-            	logger.warn("updateUser: no authenticator, throwing AuthenticatorException");
+                logger.warn("updateUser: no authenticator, throwing AuthenticatorException");
                 throw new AuthenticatorException("Unable to create new authenticator.",
                         AuthenticatorException.SYSTEM_ERROR);
             }
         } catch (IllegalAccessException ex) {
-        	logger.error("updateUser: IllegalAccessException caught, throwing AuthenticatorException", ex);
+            logger.error("updateUser: IllegalAccessException caught, throwing AuthenticatorException", ex);
             throw new AuthenticatorException(
                     "Authenticator class " + authenticatorClassName + " can not be instantiated.",
                     AuthenticatorException.SYSTEM_ERROR, ex);
         } catch (InstantiationException ex) {
-        	logger.error("updateUser: InstantiationException caught, throwing AuthenticatorException", ex);
+            logger.error("updateUser: InstantiationException caught, throwing AuthenticatorException", ex);
             throw new AuthenticatorException(
                     "Authenticator class " + authenticatorClassName + " can not be instantiated.",
                     AuthenticatorException.SYSTEM_ERROR, ex);
         } catch (ClassCastException ex) {
-        	logger.error("updateUser: ClassCastException caught, throwing AuthenticatorException", ex);
+            logger.error("updateUser: ClassCastException caught, throwing AuthenticatorException", ex);
             throw new AuthenticatorException(
                     "Authenticator class " + authenticatorClassName
                             + " does not extend the PluggableAuthenticator class.",
                     AuthenticatorException.SYSTEM_ERROR, ex);
         } catch (AuthenticatorException ex) {
-        	logger.error("updateUser: AuthenticatorException caught, throwing AuthenticatorException", ex);
+            logger.error("updateUser: AuthenticatorException caught, throwing AuthenticatorException", ex);
             throw new UserException("Unable to update user.", ex);
         }
-        
+
         // detach, so we can compare the new loaded with changed user
         Integer id = user.getId();
         userDAO.detach(user);
-        
+
         User existinguser = userDAO.findByPrimaryKey(id);
         userDAO.refresh(existinguser);
-        
+
         existinguser.setLogin(user.getLogin());
         existinguser.setFirstName(user.getFirstName());
         existinguser.setLastName(user.getLastName());
         existinguser.setEmail(user.getEmail());
         existinguser.setSuperUser(user.isSuperUser());
-        
+
         existinguser.setStatus(user.getStatus());
-        
+
 //        existinguser.setLastModifiedDate(new Timestamp(new Date().getTime()));
 
 //        // Only set the password if it is a new value...
         if (user.getPassword() != null && (!user.getPassword().equals(""))) {
 //                && (!user.getPassword().equals(user.getPassword()))) {
-        	if (logger.isInfoEnabled()) {
-        		logger.info("updateUser: setting new password for " + user.getLogin());
-        	}
+            if (logger.isInfoEnabled()) {
+                logger.info("updateUser: setting new password for " + user.getLogin());
+            }
             existinguser.setPassword(user.getPassword());
         }
 
         userDAO.saveOrUpdate(existinguser);
-        
+
 //        user = userDAO.findByPrimaryKey(id);
 //        userDAO.refresh(user);
         return existinguser;
@@ -349,15 +322,15 @@ public class UserServiceImpl implements UserService {
             if (userPrefs.isNew()) {
                 newUserPrefs.setCreateDate(new Date());
                 newUserPrefs.setLastModifiedDate(userPrefs.getCreateDate());
-                
+
                 // first time create UserPreferences
                 user.setPreferences(newUserPrefs);
                 userDAO.saveOrUpdate(user);
             } else {
-            	this.userPreferencesDAO.saveOrUpdate(newUserPrefs);
-            	newUserPrefs = userPreferencesDAO.findByUserId(user.getId());
-            	user.setUserPreferences(newUserPrefs);
-            }          
+                this.userPreferencesDAO.saveOrUpdate(newUserPrefs);
+                newUserPrefs = userPreferencesDAO.findByUserId(user.getId());
+                user.setUserPreferences(newUserPrefs);
+            }
 
             try {
                 PluggableAuthenticator authenticator =
@@ -515,7 +488,7 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
-        	newPermissions.addAll(getUserPermissionsLocal(getUser(userId)));
+            newPermissions.addAll(getUserPermissionsLocal(getUser(userId)));
             setUserPermissions(userId, newPermissions);
             successful = true;
         } catch (AuthenticatorException ae) {
@@ -525,42 +498,42 @@ public class UserServiceImpl implements UserService {
 
         return successful;
     }
-    
+
     /**
      * private util for collection searching (contains)
      */
     private static final Permission find(Collection<Permission> permissions, Permission permission) {
-    	
-    	Iterator<Permission> permssionsIt = permissions.iterator();
-    	while (permssionsIt.hasNext()) {
-			Permission permission2 = (Permission) permssionsIt.next();
-			if (Permission.PERMISSION_PROPERTIES_COMPARATOR.compare(permission, permission2) == 0) {
-				// found in list, return the found object
-				return permission2;
-			}
-		}
-    	return null;
+
+        Iterator<Permission> permssionsIt = permissions.iterator();
+        while (permssionsIt.hasNext()) {
+            Permission permission2 = (Permission) permssionsIt.next();
+            if (Permission.PERMISSION_PROPERTIES_COMPARATOR.compare(permission, permission2) == 0) {
+                // found in list, return the found object
+                return permission2;
+            }
+        }
+        return null;
     }
-    
+
     /**
-     * @param userId - id of update-user
+     * @param userId         - id of update-user
      * @param newPermissions - set of new permissions for this user
      */
     public boolean setUserPermissions(final Integer userId, final List<Permission> newPermissions) {
 
         boolean hasChanges = false;
         // rewriting this method
-        
+
         TreeSet<Permission> pSet = new TreeSet<Permission>(Permission.PERMISSION_PROPERTIES_COMPARATOR);
         pSet.addAll(newPermissions);
-        
+
 
         User usermodel = this.getUser(userId);
-        
+
         Set<Permission> current = new TreeSet<Permission>(Permission.PERMISSION_PROPERTIES_COMPARATOR);
-        
+
         current.addAll(usermodel.getPermissions());
-        
+
         // setup permissions to be removed
         Set<Permission> remove = new TreeSet<Permission>(Permission.PERMISSION_PROPERTIES_COMPARATOR);
         remove.addAll(current);
@@ -574,32 +547,32 @@ public class UserServiceImpl implements UserService {
         Permission p;
         Iterator<Permission> pIt = remove.iterator();
         while (pIt.hasNext()) {
-			p = find(usermodel.getPermissions(), (Permission) pIt.next());
-			if (null == p) {
-				continue;
-			}
-			if (usermodel.getPermissions().contains(p)) {
-				usermodel.getPermissions().remove(p);
-				permissionDAO.delete(p);
-				hasChanges = true;
-			}
-		}
-        
+            p = find(usermodel.getPermissions(), (Permission) pIt.next());
+            if (null == p) {
+                continue;
+            }
+            if (usermodel.getPermissions().contains(p)) {
+                usermodel.getPermissions().remove(p);
+                permissionDAO.delete(p);
+                hasChanges = true;
+            }
+        }
+
         pIt = add.iterator();
         while (pIt.hasNext()) {
-			p = pIt.next();
-			if (null == find(usermodel.getPermissions(), p) && !usermodel.getPermissions().contains(p)) {
-				p.setUser(usermodel);
-				usermodel.getPermissions().add(p);
-				permissionDAO.save(p);
-				hasChanges = true;
-			}
-		}
-        
-        if (hasChanges) {
-        	userDAO.saveOrUpdate(usermodel);
+            p = pIt.next();
+            if (null == find(usermodel.getPermissions(), p) && !usermodel.getPermissions().contains(p)) {
+                p.setUser(usermodel);
+                usermodel.getPermissions().add(p);
+                permissionDAO.save(p);
+                hasChanges = true;
+            }
         }
-        
+
+        if (hasChanges) {
+            userDAO.saveOrUpdate(usermodel);
+        }
+
         return hasChanges;
     }
 
@@ -610,13 +583,13 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
-            for (Iterator<Permission> delIterator = newPermissions.iterator(); delIterator.hasNext();) {
+            for (Iterator<Permission> delIterator = newPermissions.iterator(); delIterator.hasNext(); ) {
                 Permission permission = (Permission) delIterator.next();
                 permissionDAO.delete(permission);
             }
-            
+
             successful = true;
-            
+
         } catch (AuthenticatorException ae) {
             logger.warn("Error setting user (" + userId + ") permissions.  AuthenticatorException.", ae);
             successful = false;
@@ -701,12 +674,13 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsersWithAnyProjectPermission(Integer projectId, int[] permissionTypes) {
         return getUsersWithAnyProjectPermission(projectId, permissionTypes, true);
     }
+
     public Collection<User> getUsersWithAnyProjectPermission(Integer projectId, Integer[] permissionTypes) {
-    	int[] perm = new int[permissionTypes.length];
-    	
-    	for (int i = 0; i < permissionTypes.length; i++) {
-			perm[i] = permissionTypes[i];
-		}
+        int[] perm = new int[permissionTypes.length];
+
+        for (int i = 0; i < permissionTypes.length; i++) {
+            perm[i] = permissionTypes[i];
+        }
 
         return getUsersWithAnyProjectPermission(projectId, perm, true);
     }
@@ -731,7 +705,7 @@ public class UserServiceImpl implements UserService {
 
                 userList = authenticator.getUsersWithProjectPermission(projectId, permissionTypes, requireAll, activeOnly,
                         AuthenticationConstants.REQ_SOURCE_UNKNOWN);
-                
+
             }
 
             if (logger.isDebugEnabled()) {
@@ -983,7 +957,7 @@ public class UserServiceImpl implements UserService {
             }
 
             logger.error("Unable to create new authenticator.");
-            throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR); 
+            throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
         } catch (IllegalAccessException iae) {
             logger.error("Authenticator class " + authenticatorClassName + " can not be instantiated.");
             throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
@@ -996,9 +970,6 @@ public class UserServiceImpl implements UserService {
             throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
         }
     }
-
-
-    
 
 
 }

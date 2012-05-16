@@ -1,21 +1,20 @@
 package org.itracker.persistence.dao;
 
-import java.util.List;
-
-import org.itracker.model.IssueRelation;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.itracker.model.IssueRelation;
+
+import java.util.List;
 
 /**
- * 
+ *
  */
-public class IssueRelationDAOImpl extends BaseHibernateDAOImpl<IssueRelation> 
+public class IssueRelationDAOImpl extends BaseHibernateDAOImpl<IssueRelation>
         implements IssueRelationDAO {
 
     public IssueRelation findByPrimaryKey(Integer relationId) {
         try {
-            return (IssueRelation)getSession().get(IssueRelation.class, relationId);
+            return (IssueRelation) getSession().get(IssueRelation.class, relationId);
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);
         }
@@ -24,7 +23,7 @@ public class IssueRelationDAOImpl extends BaseHibernateDAOImpl<IssueRelation>
     @SuppressWarnings("unchecked")
     public List<IssueRelation> findByIssue(Integer issueId) {
         List<IssueRelation> relations;
-        
+
         try {
             Query query = getSession().getNamedQuery(
                     "IssueRelationsByIssueQuery");
@@ -35,5 +34,5 @@ public class IssueRelationDAOImpl extends BaseHibernateDAOImpl<IssueRelation>
         }
         return relations;
     }
-    
+
 }

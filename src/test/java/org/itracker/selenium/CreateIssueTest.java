@@ -27,8 +27,6 @@ public class CreateIssueTest extends AbstractSeleniumTestCase {
      * check if new issue has appeared.
      * 6. Go to "Portal Home" page and check if new issue has appeared
      * in "Unassigned" area and "Created" area.
-     *
-     * @throws java.io.IOException
      */
     @Test
     public void testCreateUnassignedIssue() throws Exception {
@@ -116,8 +114,6 @@ public class CreateIssueTest extends AbstractSeleniumTestCase {
 
     /**
      * TODO
-     *
-     * @throws java.io.IOException
      */
     @Test
     public void testCreateAssignedIssue() throws Exception {

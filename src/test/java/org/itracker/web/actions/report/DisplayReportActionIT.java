@@ -38,7 +38,7 @@ public class DisplayReportActionIT extends AbstractDependencyInjectionTest {
                 "dataset/issuebean_dataset.xml",
                 "dataset/issueattachmentbean_dataset.xml",
                 "dataset/issueactivitybean_dataset.xml"
-                };
+        };
     }
 
     protected String[] getConfigLocations() {

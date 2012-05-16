@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
 /**
- *
  * @author seas
  */
 public class SystemConfigurationUtilitiesTest {
@@ -22,7 +22,7 @@ public class SystemConfigurationUtilitiesTest {
         {
             final Configuration configuration =
                     new Configuration(SystemConfigurationUtilities.TYPE_STATUS,
-                    "value");
+                            "value");
             final String languageKey =
                     SystemConfigurationUtilities.getLanguageKey(configuration);
             assertEquals(ITrackerResources.KEY_BASE_STATUS + "value",
@@ -31,7 +31,7 @@ public class SystemConfigurationUtilitiesTest {
         {
             final Configuration configuration =
                     new Configuration(SystemConfigurationUtilities.TYPE_SEVERITY,
-                    "value");
+                            "value");
             final String languageKey =
                     SystemConfigurationUtilities.getLanguageKey(configuration);
             assertEquals(ITrackerResources.KEY_BASE_SEVERITY + "value",
@@ -40,7 +40,7 @@ public class SystemConfigurationUtilitiesTest {
         {
             final Configuration configuration =
                     new Configuration(SystemConfigurationUtilities.TYPE_RESOLUTION,
-                    "value");
+                            "value");
             final String languageKey =
                     SystemConfigurationUtilities.getLanguageKey(configuration);
             assertEquals(ITrackerResources.KEY_BASE_RESOLUTION + "value",
@@ -48,9 +48,9 @@ public class SystemConfigurationUtilitiesTest {
         }
         {
             @SuppressWarnings("unused")
-			final Configuration configuration =
+            final Configuration configuration =
                     new Configuration(SystemConfigurationUtilities.TYPE_STATUS,
-                    "value");
+                            "value");
             final String languageKey =
                     SystemConfigurationUtilities.getLanguageKey(null);
             assertEquals("",
@@ -59,14 +59,14 @@ public class SystemConfigurationUtilitiesTest {
         {
             final Configuration configuration =
                     new Configuration(SystemConfigurationUtilities.ACTION_CREATE,
-                    "value");
+                            "value");
             final String languageKey =
                     SystemConfigurationUtilities.getLanguageKey(configuration);
             assertEquals("",
                     languageKey);
         }
     }
-    
+
     @Test
     public void testGetVersionAsLong() {
         {
@@ -91,7 +91,7 @@ public class SystemConfigurationUtilitiesTest {
         }
         try {
             @SuppressWarnings("unused")
-			final long versionNumber =
+            final long versionNumber =
                     SystemConfigurationUtilities.getVersionAsLong("1.2.3.4");
             assertTrue(false);
         } catch (final IllegalArgumentException e) {
@@ -103,7 +103,7 @@ public class SystemConfigurationUtilitiesTest {
             assertEquals(1000000, versionNumber);
         }
     }
-    
+
     @Test
     public void testGetLocalType() {
         assertEquals(SystemConfigurationUtilities.LOCALE_TYPE_INVALID,
@@ -112,46 +112,46 @@ public class SystemConfigurationUtilitiesTest {
                 SystemConfigurationUtilities.getLocaleType(""));
         assertEquals(SystemConfigurationUtilities.LOCALE_TYPE_BASE,
                 SystemConfigurationUtilities.getLocaleType(
-                ITrackerResources.BASE_LOCALE));
+                        ITrackerResources.BASE_LOCALE));
         assertEquals(SystemConfigurationUtilities.LOCALE_TYPE_LOCALE,
                 SystemConfigurationUtilities.getLocaleType(
-                "en_US"));
+                        "en_US"));
         assertEquals(SystemConfigurationUtilities.LOCALE_TYPE_LOCALE,
                 SystemConfigurationUtilities.getLocaleType(
-                "ru_RU"));
+                        "ru_RU"));
         assertEquals(SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE,
                 SystemConfigurationUtilities.getLocaleType(
-                "en"));
+                        "en"));
         assertEquals(SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE,
                 SystemConfigurationUtilities.getLocaleType(
-                "ru"));
+                        "ru"));
         assertEquals(SystemConfigurationUtilities.LOCALE_TYPE_INVALID,
                 SystemConfigurationUtilities.getLocaleType(
-                "euro"));
+                        "euro"));
     }
-    
+
     @Test
     public void testGetLocalePart() {
         assertEquals("en_US",
                 SystemConfigurationUtilities.getLocalePart(
-                "en_US", SystemConfigurationUtilities.LOCALE_TYPE_LOCALE));
+                        "en_US", SystemConfigurationUtilities.LOCALE_TYPE_LOCALE));
         assertEquals(null,
                 SystemConfigurationUtilities.getLocalePart(
-                "enUS", SystemConfigurationUtilities.LOCALE_TYPE_LOCALE));
+                        "enUS", SystemConfigurationUtilities.LOCALE_TYPE_LOCALE));
         assertEquals("en",
                 SystemConfigurationUtilities.getLocalePart(
-                "en_US", SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE));
+                        "en_US", SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE));
     }
-    
+
     @Test
     public void testNvpArrayToConfigurationArray() {
-        final NameValuePair[] nvp = new NameValuePair[] {
-            new NameValuePair("name1", "value1"),
-            new NameValuePair("name2", "value2")
+        final NameValuePair[] nvp = new NameValuePair[]{
+                new NameValuePair("name1", "value1"),
+                new NameValuePair("name2", "value2")
         };
         final Configuration[] configurations =
                 SystemConfigurationUtilities.nvpArrayToConfigurationArray(
-                SystemConfigurationUtilities.TYPE_STATUS, nvp);
+                        SystemConfigurationUtilities.TYPE_STATUS, nvp);
         assertEquals(2, configurations.length);
         final Configuration configuration1 = configurations[0];
         assertEquals("name1", configuration1.getName());

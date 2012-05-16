@@ -23,11 +23,11 @@ import java.util.MissingResourceException;
 public class ITrackerDirtyResourceException extends MissingResourceException {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -3430187720352326979L;
+     *
+     */
+    private static final long serialVersionUID = -3430187720352326979L;
 
-	public ITrackerDirtyResourceException(String message, String className, String key) {
+    public ITrackerDirtyResourceException(String message, String className, String key) {
         super(message, className, key);
     }
 }

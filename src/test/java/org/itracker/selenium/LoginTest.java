@@ -6,22 +6,21 @@ import java.io.IOException;
 
 /**
  * Verifies authorization to the system functionality.
- * 
+ *
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
  */
 public class LoginTest extends AbstractSeleniumTestCase {
 
-    
+
     /**
      * Verifies the successfull login case with valid login/password.
-     * 
+     * <p/>
      * 1. Opens login page of an application.
      * 2. Enters correct login and password into appropriate input fields.
      * 3. Clicks "Login" button.
      * 4. Waits for page reload.
      * 5. Verifies if page contains ticket id input field, which means we
      * are inside an application.
-     * @throws java.io.IOException
      */
     @Test
     public void testLoginSuccessDefaultAdmin() throws IOException {
@@ -38,17 +37,16 @@ public class LoginTest extends AbstractSeleniumTestCase {
         selenium.waitForPageToLoad(SE_TIMEOUT);
         assertTrue(selenium.isElementPresent("xpath=//.[@name='id']"));
     }
-    
+
     /**
      * Verifies login failure case with invalid login/password.
-     * 
+     * <p/>
      * 1. Opens login page of an application.
      * 2. Enters incorrect login and password into appropriate input fields.
      * 3. Clicks "Login" button.
      * 4. Waits for page reload.
      * 5. Verifies if page contains ticket id input field, which means we
      * are inside an application.
-     * @throws java.io.IOException
      */
     @Test
     public void testLoginFailure() throws IOException {
@@ -65,7 +63,7 @@ public class LoginTest extends AbstractSeleniumTestCase {
 
         assertFalse(selenium.isElementPresent("xpath=//.[@name='id']"));
     }
-    
+
     @Override
     protected String[] getDataSetFiles() {
         return new String[]{
@@ -78,6 +76,6 @@ public class LoginTest extends AbstractSeleniumTestCase {
 
     @Override
     protected String[] getConfigLocations() {
-        return new String[]{ "application-context.xml"};
+        return new String[]{"application-context.xml"};
     }
 }

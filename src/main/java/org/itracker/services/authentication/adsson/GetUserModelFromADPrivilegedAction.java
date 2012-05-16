@@ -3,33 +3,27 @@
  */
 package org.itracker.services.authentication.adsson;
 
-import java.security.PrivilegedAction;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import org.apache.log4j.Logger;
+import org.itracker.model.User;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.PartialResultException;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
-
-import org.apache.log4j.Logger;
-import org.itracker.model.User;
+import javax.naming.directory.*;
+import java.security.PrivilegedAction;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 //TODO: Add Javadocs here
 
 /**
- * 
  * @author ricardo
  */
 public class GetUserModelFromADPrivilegedAction implements PrivilegedAction<Object> {
 
     private static String ITRACKER_SUPER_USERS_GROUP = "ITracker Super Users";
-    
+
     private final Logger logger;
     private String login;
     private String providerUrl;
@@ -53,7 +47,7 @@ public class GetUserModelFromADPrivilegedAction implements PrivilegedAction<Obje
 
     private User getUserInfo(String login) throws NamingException {
         // Set up environment for creating initial context
-        Hashtable<String,String> env = new Hashtable<String,String>(11);
+        Hashtable<String, String> env = new Hashtable<String, String>(11);
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         // Must use fully qualified hostname
         env.put(Context.PROVIDER_URL, providerUrl);
@@ -97,7 +91,7 @@ public class GetUserModelFromADPrivilegedAction implements PrivilegedAction<Obje
         }
 
         if (attributes.get("mail") != null) {
-            mail = (String) attributes.get("Mail").get(); 
+            mail = (String) attributes.get("Mail").get();
         }
         if (attributes.get("givenName") != null)
             firstName = (String) attributes.get("givenName").get();
@@ -122,11 +116,11 @@ public class GetUserModelFromADPrivilegedAction implements PrivilegedAction<Obje
         logger.info("About to check if user " + login + " is a super user");
         logger.debug("User attributes for user " + login + " " + attributes);
         if (attributes.get("memberOf") != null) {
-            for (Enumeration<?> groups = attributes.get("memberOf").getAll(); groups.hasMoreElements();) {
+            for (Enumeration<?> groups = attributes.get("memberOf").getAll(); groups.hasMoreElements(); ) {
                 String group = (String) groups.nextElement();
                 logger.info(login + " belongs to NT Group " + group);
                 if (group.indexOf(ITRACKER_SUPER_USERS_GROUP) > 0) {
-                	user.setSuperUser(true);
+                    user.setSuperUser(true);
                     logger.info("User " + user.getLogin() + " was made an administrator ");
                 }
             }

@@ -19,69 +19,64 @@
 package org.itracker.web.actions.admin.workflow;
 
 //import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import bsh.ParseException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.model.WorkflowScript;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 
-import bsh.ParseException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 
 public class EditWorkflowScriptAction extends ItrackerBaseAction {
-	private static final Logger log = Logger.getLogger(EditWorkflowScriptAction.class);
-	
-   
+    private static final Logger log = Logger.getLogger(EditWorkflowScriptAction.class);
+
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        if(! hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
-        if(! isTokenValid(request)) {
+        if (!isTokenValid(request)) {
             log.debug("Invalid request token while editing workflow script.");
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-			"itracker.web.error.transaction"));
-			saveErrors(request, errors);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                    "itracker.web.error.transaction"));
+            saveErrors(request, errors);
             return mapping.findForward("listworkflow");
         }
         resetToken(request);
 
         WorkflowScript workflowScript = null;
-        
+
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
 
             String scriptData = (String) PropertyUtils.getSimpleProperty(form, "script");
-            if ( scriptData != null && scriptData.trim().length() > 0 ) {
+            if (scriptData != null && scriptData.trim().length() > 0) {
                 //ByteArrayInputStream sbis = new ByteArrayInputStream(scriptData.getBytes());
                 //Parser parser = new Parser(sbis);
 //                try {
 //                    while(!parser.Line()) {
-                        // do nothing, if script is syntactically correct
-                        // no exception is thrown
+                // do nothing, if script is syntactically correct
+                // no exception is thrown
 //                    }
 //                } catch(Throwable t) {
 //                    throw new ParseException(t.getMessage());
 //                }
             }
 
-            log.info("Kimba:  using this module action 1" );
+            log.info("Kimba:  using this module action 1");
             workflowScript = new WorkflowScript();
             workflowScript.setId((Integer) PropertyUtils.getSimpleProperty(form, "id"));
             workflowScript.setName((String) PropertyUtils.getSimpleProperty(form, "name"));
@@ -89,8 +84,8 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
             workflowScript.setScript(scriptData);
 
             String action = (String) PropertyUtils.getSimpleProperty(form, "action");
-            log.info("Kimba:  using this module action 2"+action );
-            if("create".equals(action)) {
+            log.info("Kimba:  using this module action 2" + action);
+            if ("create".equals(action)) {
                 workflowScript = configurationService.createWorkflowScript(workflowScript);
             } else if ("update".equals(action)) {
                 workflowScript = configurationService.updateWorkflowScript(workflowScript);
@@ -102,23 +97,23 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
 
             HttpSession session = request.getSession(true);
             session.removeAttribute(Constants.WORKFLOW_SCRIPT_KEY);
-            request.setAttribute("action",action);
+            request.setAttribute("action", action);
             saveToken(request);
 //            return mapping.findForward("listworkflow");
-            return new ActionForward(mapping.findForward("listworkflow").getPath() + "?id=" + workflowScript.getId() +"&action=update");
-        } catch(ParseException pe) {
+            return new ActionForward(mapping.findForward("listworkflow").getPath() + "?id=" + workflowScript.getId() + "&action=update");
+        } catch (ParseException pe) {
             log.debug("Error parseing script.  Redisplaying form for correction.", pe);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidscriptdata", pe.getMessage()));
             saveErrors(request, errors);
             saveToken(request);
             return mapping.getInputForward();
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
 
-        if(! errors.isEmpty()) {
-        	saveErrors(request, errors);
+        if (!errors.isEmpty()) {
+            saveErrors(request, errors);
         }
         return mapping.findForward("error");
     }

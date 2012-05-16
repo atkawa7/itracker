@@ -25,12 +25,12 @@ import org.itracker.core.resources.ITrackerResources;
 
 public class ITrackerMessageResources extends MessageResources {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	public ITrackerMessageResources(MessageResourcesFactory factory, String config) {
+    public ITrackerMessageResources(MessageResourcesFactory factory, String config) {
         super(factory, config);
     }
 

@@ -23,14 +23,14 @@ import java.io.IOException;
 public class ByteLimitExceededException extends IOException {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	public ByteLimitExceededException() {
+    public ByteLimitExceededException() {
     }
 
-    public ByteLimitExceededException( String message ) {
-        super( message );
+    public ByteLimitExceededException(String message) {
+        super(message);
     }
 }

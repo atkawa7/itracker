@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.util.Properties;
 
 import static org.junit.Assert.fail;
+
 /**
  * Created by IntelliJ IDEA.
  * User: masta
@@ -22,10 +23,10 @@ public class SeleniumPreTest {
 
     public SeleniumPreTest() throws IOException {
 
-            final InputStream inputStream = SeleniumManager.class
-                    .getResourceAsStream("SeleniumManager.properties");
-            final Properties properties = new Properties();
-            properties.load(inputStream);
+        final InputStream inputStream = SeleniumManager.class
+                .getResourceAsStream("SeleniumManager.properties");
+        final Properties properties = new Properties();
+        properties.load(inputStream);
 
     }
 
@@ -33,14 +34,17 @@ public class SeleniumPreTest {
     public void testSmtpPortAvailable() throws Exception {
         connectSocket("localhost", AbstractSeleniumTestCase.SMTP_PORT);
     }
+
     @Test
     public void testApplicationPortAvailable() throws Exception {
         connectSocket(SeleniumManager.getApplicationHost(), SeleniumManager.getApplicationPort());
     }
+
     @Test
     public void testJettyPortsAvailable() throws Exception {
         connectSocket("localhost", 9966);
     }
+
     @Test
     public void testSeleniumPortAvailable() throws Exception {
         connectSocket(SeleniumManager.getSeleniumHost(), SeleniumManager.getSeleniumPort());
