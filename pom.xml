@@ -25,14 +25,24 @@
         <test.dataSource.driverClass>org.hsqldb.jdbcDriver</test.dataSource.driverClass>
         <test.hibernate.dialect>org.hibernate.dialect.HSQLDialect</test.hibernate.dialect>
 
+        <bsh.version>1.3.0</bsh.version>
         <maven-findbugs-plugin.version>2.4.0</maven-findbugs-plugin.version>
         <maven-site-plugin.version>3.0</maven-site-plugin.version>
-        <bsh.version>1.3.0</bsh.version>
         <mysql-connector-java.version>5.1.6</mysql-connector-java.version>
         <maven-clover-plugin.version>3.7</maven-clover-plugin.version>
         <maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
-        <maven-checkstyle-plugin.version>2.9.1</maven-checkstyle-plugin.version>
+        <maven-checkstyle-plugin.version>2.8</maven-checkstyle-plugin.version>
         <maven-jetty-plugin.version>6.1.26</maven-jetty-plugin.version>
+        <maven-taglist-plugin.version>2.4</maven-taglist-plugin.version>
+        <maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
+        <maven-changes-plugin.version>2.7</maven-changes-plugin.version>
+        <maven-changelog-plugin.version>2.2</maven-changelog-plugin.version>
+        <maven-surefire-report-plugin.version>2.12</maven-surefire-report-plugin.version>
+        <cobertura-maven-plugin.version>2.0</cobertura-maven-plugin.version>
+        <maven-javadoc-plugin.version>2.8.1</maven-javadoc-plugin.version>
+        <maven-war-plugin.version>2.1.1</maven-war-plugin.version>
+        <maven-compiler-plugin.version>2.0.2</maven-compiler-plugin.version>
+        <maven-deploy-plugin.version>2.7</maven-deploy-plugin.version>
     </properties>
     <issueManagement>
         <system>SourceForge</system>
@@ -156,7 +166,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -200,7 +209,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.0</version>
+                <version>${cobertura-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>clean</id>
@@ -212,29 +221,15 @@
                 <configuration>
                     <instrumentation>
                         <excludes>
-                            <exclude>org/itracker/**/*Test.class</exclude>
-                            <exclude>org/itracker/**/*IT.class</exclude>
-                            <!--<exclude>org/itracker/web/**/*.class</exclude>-->
+                            <exclude>org/itracker/web/**/*.class</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
+                <version>${maven-war-plugin.version}</version>
             </plugin>
-            <!--<plugin>-->
-            <!--<artifactId>maven-clean-plugin</artifactId>-->
-            <!--<configuration>-->
-            <!--<filesets>-->
-            <!--<fileset>-->
-            <!--<directory>${basedir}</directory>-->
-            <!--<includes>-->
-            <!--<include>*.log</include>-->
-            <!--</includes>-->
-            <!--</fileset>-->
-            <!--</filesets>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
@@ -303,17 +298,12 @@
                 </configuration>
             </plugin>
             <plugin>
-                <!--groupId>org.apache.maven.plugins</groupId-->
                 <artifactId>maven-resources-plugin</artifactId>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -337,7 +327,6 @@
                     <version>${maven-jetty-plugin.version}</version>
                 </plugin>
                 <plugin>
-                    <!--groupId>org.apache.maven.plugins</groupId-->
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>2.3</version>
                     <configuration>
@@ -349,13 +338,11 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>cobertura-maven-plugin</artifactId>
-                    <version>2.0</version>
+                    <version>${cobertura-maven-plugin.version}</version>
                     <configuration>
                         <instrumentation>
                             <excludes>
-                                <exclude>org/itracker/**/*Test.class</exclude>
-                                <exclude>org/itracker/**/*IT.class</exclude>
-                                <!--<exclude>org/itracker/web/**/*.class</exclude>-->
+                                <exclude>org/itracker/web/**/*.java</exclude>
                             </excludes>
                         </instrumentation>
                     </configuration>
@@ -375,11 +362,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>2.1.1</version>
+                    <version>${maven-war-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.0.2</version>
+                    <version>${maven-compiler-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>netbeans-freeform-maven-plugin</artifactId>
@@ -391,46 +378,74 @@
                     <artifactId>maven-site-plugin</artifactId>
                     <version>${maven-site-plugin.version}</version>
                     <configuration>
+                        <outputEncoding>UTF-8</outputEncoding>
                         <reportPlugins>
                             <!--<plugin>-->
                             <!--<groupId>org.apache.maven.plugins</groupId>-->
                             <!--<artifactId>maven-project-info-reports-plugin</artifactId>-->
                             <!--<version>2.4</version>-->
                             <!--</plugin>-->
+
                             <plugin>
-                                <artifactId>maven-pmd-plugin</artifactId>
-                                <version>2.4</version>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>cobertura-maven-plugin</artifactId>
+                                <version>${cobertura-maven-plugin.version}</version>
                                 <configuration>
-                                    <targetJdk>1.5</targetJdk>
+                                    <instrumentation>
+                                        <excludes>
+                                            <exclude>org/itracker/**/*Test.java</exclude>
+                                            <exclude>org/itracker/**/*IT.java</exclude>
+                                            <exclude>org/itracker/web/**/*.java</exclude>
+                                        </excludes>
+                                    </instrumentation>
                                 </configuration>
                             </plugin>
                             <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-checkstyle-plugin</artifactId>
-                                <version>${maven-checkstyle-plugin.version}</version>
+                                <artifactId>maven-pmd-plugin</artifactId>
+                                <version>${maven-pmd-plugin.version}</version>
+                                <configuration>
+                                    <targetJdk>1.5</targetJdk>
+                                    <outputEncoding>UTF-8</outputEncoding>
+                                    <sourceEncoding>UTF-8</sourceEncoding>
+                                </configuration>
                             </plugin>
                             <plugin>
-                                <groupId>org.codehaus.mojo</groupId>
-                                <artifactId>taglist-maven-plugin</artifactId>
+                                <artifactId>maven-checkstyle-plugin</artifactId>
+                                <version>${maven-checkstyle-plugin.version}</version>
+                                <configuration>
+                                    <encoding>UTF-8</encoding>
+                                </configuration>
                             </plugin>
                             <plugin>
                                 <artifactId>maven-jxr-plugin</artifactId>
+                                <version>${maven-jxr-plugin.version}</version>
                             </plugin>
                             <plugin>
                                 <artifactId>maven-changes-plugin</artifactId>
+                                <version>${maven-changes-plugin.version}</version>
                             </plugin>
                             <plugin>
                                 <artifactId>maven-changelog-plugin</artifactId>
+                                <version>${maven-changelog-plugin.version}</version>
                             </plugin>
                             <plugin>
                                 <artifactId>maven-surefire-report-plugin</artifactId>
+                                <version>${maven-surefire-report-plugin.version}</version>
                             </plugin>
                             <plugin>
                                 <groupId>org.apache.maven.plugins</groupId>
                                 <artifactId>maven-javadoc-plugin</artifactId>
-                                <version>2.8.1</version>
+                                <version>${maven-javadoc-plugin.version}</version>
+                                <configuration>
+                                    <encoding>UTF-8</encoding>
+                                </configuration>
                             </plugin>
 
+                            <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>taglist-maven-plugin</artifactId>
+                                <version>${maven-taglist-plugin.version}</version>
+                            </plugin>
                             <plugin>
                                 <groupId>org.codehaus.mojo</groupId>
                                 <artifactId>findbugs-maven-plugin</artifactId>
@@ -444,6 +459,26 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>${maven-checkstyle-plugin.version}</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy-plugin.version}</version>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>${maven-pmd-plugin.version}</version>
+                    <configuration>
+                        <outputEncoding>UTF-8</outputEncoding>
+                        <sourceEncoding>UTF-8</sourceEncoding>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -729,15 +764,16 @@
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${maven-findbugs-plugin.version}</version>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>${cobertura-maven-plugin.version}</version>
                 <configuration>
-                    <xmlOutput>false</xmlOutput>
-                    <xmlOutputDirectory>findbugs</xmlOutputDirectory>
-                    <threshold>Normal</threshold>
-                    <effort>Default</effort>
-                    <!--Fails:-->
-                    <!--<pluginList>/libs/fb-contrib/fb-contrib-2.8.0.jar</pluginList>-->
+                    <instrumentation>
+                        <excludes>
+                            <exclude>org/itracker/**/*Test.java</exclude>
+                            <exclude>org/itracker/**/*IT.java</exclude>
+                            <exclude>org/itracker/web/**/*.java</exclude>
+                        </excludes>
+                    </instrumentation>
                 </configuration>
             </plugin>
             <plugin>
@@ -746,40 +782,48 @@
                 <version>${maven-checkstyle-plugin.version}</version>
 
                 <configuration>
-                    <!--<instrumentation>-->
-                    <!--<excludes>-->
-                    <!--<exclude>org/itracker/**/*Test.class</exclude>-->
-                    <!--<exclude>org/itracker/web/**/*Action.class</exclude>-->
-                    <!--</excludes>-->
-                    <!--</instrumentation>-->
+                    <excludes>
+                        <exclude>org/itracker/**/*Test.java</exclude>
+                        <exclude>org/itracker/**/*IT.java</exclude>
+                        <exclude>org/itracker/web/**/*Action.java</exclude>
+                    </excludes>
                     <enableRSS>true</enableRSS>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
 
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
+                <version>${maven-pmd-plugin.version}</version>
                 <configuration>
                     <targetJdk>1.5</targetJdk>
+                    <outputEncoding>UTF-8</outputEncoding>
+                    <sourceEncoding>UTF-8</sourceEncoding>
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${maven-checkstyle-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>taglist-maven-plugin</artifactId>
-                <version>2.4</version>
-            </plugin>
-            <plugin>
                 <artifactId>maven-jxr-plugin</artifactId>
+                <version>${maven-jxr-plugin.version}</version>
             </plugin>
             <plugin>
                 <artifactId>maven-changes-plugin</artifactId>
+                <version>${maven-changes-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${maven-surefire-report-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>changelog-maven-plugin</artifactId>
+                <version>${maven-changelog-plugin.version}</version>
                 <configuration>
                     <type>range</type>
                     <ranges>
@@ -788,10 +832,26 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-surefire-report-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
+                <version>${maven-taglist-plugin.version}</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${maven-findbugs-plugin.version}</version>
+                <configuration>
+                    <xmlOutput>false</xmlOutput>
+                    <xmlOutputDirectory>findbugs</xmlOutputDirectory>
+                    <threshold>Normal</threshold>
+                    <effort>Default</effort>
+                    <encoding>UTF-8</encoding>
+                    <!--Fails:-->
+                    <!--<pluginList>/libs/fb-contrib/fb-contrib-2.8.0.jar</pluginList>-->
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -805,7 +865,6 @@
                     <pluginList>/libs/fb-contrib/fb-contrib-2.8.0.jar</pluginList>
                 </configuration>
             </plugin>
-
         </plugins>
     </reporting>
 
@@ -818,6 +877,9 @@
     <profiles>
         <profile>
             <id>developer.env</id>
+            <properties>
+                <itracker.it.skip>true</itracker.it.skip>
+            </properties>
             <build>
                 <pluginManagement>
                     <plugins>
@@ -839,19 +901,12 @@
                                                 <exclude>**/*Test.java</exclude>
                                                 <exclude>**/*IT.java</exclude>
                                             </excludes>
-
-
-                                            <!--<contextFilters>-->
-                                            <!--<logIsDebugEnabled>-->
-                                            <!--[\s]*if[\s]*\([\s]*(logger|log|_log|LOG|_LOG)\.isDebugEnabled.*-->
-                                            <!--</logIsDebugEnabled>-->
-                                            <!--<logDebug>[\s]*(logger|log|_log|LOG|_LOG)\.debug[\s]*\(.*</logDebug>-->
-                                            <!--</contextFilters>-->
-
+                                            <generateXml>true</generateXml>
+                                            <includesTestSourceRoots>true</includesTestSourceRoots>
+                                            <includesAllSourceRoots>true</includesAllSourceRoots>
                                             <contextFilters>static, logIsDebugEnabled, logDebug</contextFilters>
                                             <licenseLocation>${itracker.clover.license}</licenseLocation>
                                             <jdk>1.5</jdk>
-                                            <!--<contextFilters>static, logIsDebugEnabled, logDebug</contextFilters>-->
                                         </configuration>
                                     </plugin>
 
@@ -865,29 +920,30 @@
                                         <version>${maven-pmd-plugin.version}</version>
                                         <configuration>
                                             <targetJdk>1.5</targetJdk>
+                                            <outputEncoding>UTF-8</outputEncoding>
+                                            <sourceEncoding>UTF-8</sourceEncoding>
                                         </configuration>
                                     </plugin>
                                     <plugin>
                                         <groupId>org.apache.maven.plugins</groupId>
                                         <artifactId>maven-checkstyle-plugin</artifactId>
                                         <version>${maven-checkstyle-plugin.version}</version>
-                                    </plugin>
-                                    <plugin>
-                                        <groupId>org.codehaus.mojo</groupId>
-                                        <artifactId>taglist-maven-plugin</artifactId>
+                                        <configuration>
+                                            <encoding>UTF-8</encoding>
+                                        </configuration>
                                     </plugin>
                                     <plugin>
                                         <artifactId>maven-jxr-plugin</artifactId>
+                                        <version>${maven-jxr-plugin.version}</version>
                                     </plugin>
                                     <plugin>
                                         <artifactId>maven-changelog-plugin</artifactId>
+                                        <version>${maven-changelog-plugin.version}</version>
                                     </plugin>
                                     <plugin>
-                                        <groupId>org.apache.maven.plugins</groupId>
                                         <artifactId>maven-changes-plugin</artifactId>
-                                        <version>2.7</version>
+                                        <version>${maven-changes-plugin.version}</version>
                                         <configuration>
-
                                             <type>range</type>
                                             <range>
                                                 300
@@ -896,13 +952,21 @@
                                     </plugin>
                                     <plugin>
                                         <artifactId>maven-surefire-report-plugin</artifactId>
+                                        <version>${maven-surefire-report-plugin.version}</version>
                                     </plugin>
                                     <plugin>
-                                        <groupId>org.apache.maven.plugins</groupId>
                                         <artifactId>maven-javadoc-plugin</artifactId>
-                                        <version>2.8.1</version>
+                                        <version>${maven-javadoc-plugin.version}</version>
+                                        <configuration>
+                                            <encoding>UTF-8</encoding>
+                                        </configuration>
                                     </plugin>
 
+                                    <plugin>
+                                        <groupId>org.codehaus.mojo</groupId>
+                                        <artifactId>taglist-maven-plugin</artifactId>
+                                        <version>${maven-taglist-plugin.version}</version>
+                                    </plugin>
                                     <plugin>
                                         <groupId>org.codehaus.mojo</groupId>
                                         <artifactId>findbugs-maven-plugin</artifactId>
@@ -913,8 +977,6 @@
                                             <xmlOutputDirectory>findbugs</xmlOutputDirectory>
                                             <threshold>Normal</threshold>
                                             <effort>Default</effort>
-                                            <!--<pluginList>/libs/fb-contrib/fb-contrib-2.8.0.jar</pluginList>-->
-
                                         </configuration>
                                     </plugin>
                                 </reportPlugins>
@@ -928,17 +990,27 @@
                             <artifactId>maven-clover-plugin</artifactId>
                             <version>${maven-clover-plugin.version}</version>
                             <configuration>
+                                <jdk>1.5</jdk>
+
+                                <includes>
+                                    <include>org/itracker/**/*.java</include>
+                                </includes>
+                                <excludes>
+                                    <exclude>**/*Test.java</exclude>
+                                    <exclude>**/*IT.java</exclude>
+                                </excludes>
+                                <generateXml>true</generateXml>
+                                <includesTestSourceRoots>true</includesTestSourceRoots>
+                                <includesAllSourceRoots>true</includesAllSourceRoots>
+                                <useSurefireTestResults>true</useSurefireTestResults>
+
+                                <contextFilters>static, logIsDebugEnabled, logDebug</contextFilters>
                                 <licenseLocation>${itracker.clover.license}</licenseLocation>
                             </configuration>
-
                         </plugin>
                     </plugins>
                 </pluginManagement>
                 <plugins>
-                    <plugin>
-                        <artifactId>maven-site-plugin</artifactId>
-
-                    </plugin>
                     <plugin>
                         <groupId>com.atlassian.maven.plugins</groupId>
                         <artifactId>maven-clover-plugin</artifactId>
@@ -948,32 +1020,17 @@
                                 <goals>
                                     <goal>instrument</goal>
                                 </goals>
+                                <configuration>
+                                </configuration>
                             </execution>
                         </executions>
-                        <configuration>
-                            <jdk>1.5</jdk>
-                            <includes>
-                                <include>org/itracker/**/*.java</include>
-                            </includes>
-                            <excludes>
-                                <exclude>**/*Test.java</exclude>
-                                <exclude>**/*IT.java</exclude>
-                            </excludes>
-                            <generateXml>true</generateXml>
-                            <includesTestSourceRoots>false</includesTestSourceRoots>
-                            <includesAllSourceRoots>true</includesAllSourceRoots>
-                            <!--<useSurefireTestResults>false</useSurefireTestResults>-->
 
-                            <!--<contextFilters>static, logIsDebugEnabled, logDebug</contextFilters>-->
-                            <licenseLocation>${itracker.clover.license}</licenseLocation>
-                        </configuration>
                     </plugin>
                 </plugins>
 
             </build>
             <reporting>
                 <plugins>
-
                     <plugin>
                         <groupId>com.atlassian.maven.plugins</groupId>
                         <artifactId>maven-clover-plugin</artifactId>
@@ -988,11 +1045,11 @@
                                 <exclude>**/*IT.java</exclude>
                             </excludes>
                             <generateXml>true</generateXml>
-                            <includesTestSourceRoots>false</includesTestSourceRoots>
+                            <includesTestSourceRoots>true</includesTestSourceRoots>
                             <includesAllSourceRoots>true</includesAllSourceRoots>
-                            <!--<useSurefireTestResults>false</useSurefireTestResults>-->
+                            <useSurefireTestResults>true</useSurefireTestResults>
 
-                            <!--<contextFilters>static, logIsDebugEnabled, logDebug</contextFilters>-->
+                            <contextFilters>static, logIsDebugEnabled, logDebug</contextFilters>
                             <licenseLocation>${itracker.clover.license}</licenseLocation>
                         </configuration>
                     </plugin>
@@ -1095,8 +1152,8 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <copy overwrite="true" file="${pom.build.testOutputDirectory}/log4j.xml"
-                                              todir="${project.build.outputDirectory}/"/>
+                                        <copy overwrite="true" file="${project.build.testOutputDirectory}/log4j.xml"
+                                              todir="${project.build.testOutputDirectory}/"/>
                                     </tasks>
                                 </configuration>
                             </execution>
@@ -1290,5 +1347,3 @@
         </profile>
     </profiles>
 </project>
-
-
