@@ -27,12 +27,12 @@ public class ViewProjectListTest extends AbstractSeleniumTestCase {
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        assertElementPresent("//.[@name='login']");
-        assertElementPresent("//.[@name='password']");
-        assertElementPresent("//.[@value='Login']");
-        selenium.type("//.[@name='login']", "admin_test1");
-        selenium.type("//.[@name='password']", "admin_test1");
-        selenium.click("//.[@value='Login']");
+        assertElementPresent("//*[@name='login']");
+        assertElementPresent("//*[@name='password']");
+        assertElementPresent("//*[@value='Login']");
+        selenium.type("//*[@name='login']", "admin_test1");
+        selenium.type("//*[@name='password']", "admin_test1");
+        selenium.click("//*[@value='Login']");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         assertElementPresent("listprojects");

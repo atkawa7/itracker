@@ -36,10 +36,10 @@ public class LogoutTest extends AbstractSeleniumTestCase {
         assertFalse(selenium.isElementPresent("id"));
         assertTrue(selenium.isElementPresent("login"));
         assertTrue(selenium.isElementPresent("password"));
-        assertTrue(selenium.isElementPresent("xpath=//.[@type='submit']"));
+        assertTrue(selenium.isElementPresent("xpath=//*[@type='submit']"));
         selenium.type("login", "user_test1");
         selenium.type("password", "user_test1");
-        selenium.click("xpath=//.[@type='submit']");
+        selenium.click("xpath=//*[@type='submit']");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         assertTrue(selenium.isElementPresent("id"));
