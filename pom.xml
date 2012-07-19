@@ -23,22 +23,23 @@
         <test.dataSource.user>sa</test.dataSource.user>
         <test.dataSource.password></test.dataSource.password>
         <test.dataSource.driverClass>org.hsqldb.jdbcDriver</test.dataSource.driverClass>
-        <test.hibernate.dialect>org.hibernate.dialect.HSQLDialect</test.hibernate.dialect>
+        <test.hibernate.dialect>org.hiberna te.dialect.HSQLDialect</test.hibernate.dialect>
 
         <bsh.version>1.3.0</bsh.version>
+        <mysql-connector-java.version>5.1.6</mysql-connector-java.version>
         <maven-findbugs-plugin.version>2.4.0</maven-findbugs-plugin.version>
         <maven-site-plugin.version>3.0</maven-site-plugin.version>
-        <mysql-connector-java.version>5.1.6</mysql-connector-java.version>
+        
         <maven-clover-plugin.version>3.7</maven-clover-plugin.version>
         <maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
         <maven-checkstyle-plugin.version>2.8</maven-checkstyle-plugin.version>
-        <maven-jetty-plugin.version>6.1.26</maven-jetty-plugin.version>
+        <maven-jetty-plugin.version>8.1.3.v20120416</maven-jetty-plugin.version>
         <maven-taglist-plugin.version>2.4</maven-taglist-plugin.version>
         <maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
         <maven-changes-plugin.version>2.7</maven-changes-plugin.version>
         <maven-changelog-plugin.version>2.2</maven-changelog-plugin.version>
         <maven-surefire-report-plugin.version>2.12</maven-surefire-report-plugin.version>
-        <cobertura-maven-plugin.version>2.0</cobertura-maven-plugin.version>
+        <maven-cobertura-plugin.version>2.0</maven-cobertura-plugin.version>
         <maven-javadoc-plugin.version>2.8.1</maven-javadoc-plugin.version>
         <maven-war-plugin.version>2.1.1</maven-war-plugin.version>
         <maven-compiler-plugin.version>2.0.2</maven-compiler-plugin.version>
@@ -209,7 +210,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
-                <version>${cobertura-maven-plugin.version}</version>
+                <version>${maven-cobertura-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>clean</id>
@@ -232,7 +233,7 @@
             </plugin>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
+                <artifactId>jetty-maven-plugin</artifactId>
                 <version>${maven-jetty-plugin.version}</version>
             </plugin>
             <plugin>
@@ -323,7 +324,7 @@
                 </plugin>
                 <plugin>
                     <groupId>org.mortbay.jetty</groupId>
-                    <artifactId>maven-jetty-plugin</artifactId>
+                    <artifactId>jetty-maven-plugin</artifactId>
                     <version>${maven-jetty-plugin.version}</version>
                 </plugin>
                 <plugin>
@@ -338,7 +339,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>cobertura-maven-plugin</artifactId>
-                    <version>${cobertura-maven-plugin.version}</version>
+                    <version>${maven-cobertura-plugin.version}</version>
                     <configuration>
                         <instrumentation>
                             <excludes>
@@ -389,7 +390,7 @@
                             <plugin>
                                 <groupId>org.codehaus.mojo</groupId>
                                 <artifactId>cobertura-maven-plugin</artifactId>
-                                <version>${cobertura-maven-plugin.version}</version>
+                                <version>${maven-cobertura-plugin.version}</version>
                                 <configuration>
                                     <instrumentation>
                                         <excludes>
@@ -765,7 +766,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
-                <version>${cobertura-maven-plugin.version}</version>
+                <version>${maven-cobertura-plugin.version}</version>
                 <configuration>
                     <instrumentation>
                         <excludes>
@@ -1058,6 +1059,8 @@
         </profile>
         <profile>
             <id>selenium</id>
+            
+            
             <properties>
                 <selenium.firefox.binary>firefox</selenium.firefox.binary>
                 <selenium.host>localhost</selenium.host>
@@ -1208,7 +1211,7 @@
                     </plugin>
                     <plugin>
                         <groupId>org.mortbay.jetty</groupId>
-                        <artifactId>maven-jetty-plugin</artifactId>
+                        <artifactId>jetty-maven-plugin</artifactId>
                         <version>${maven-jetty-plugin.version}</version>
                         <configuration>
 
@@ -1221,17 +1224,18 @@
                                 <!--java.naming.factory.initial=org.mortbay.naming.InitialContextFactory-->
                                 <systemProperty>
                                     <name>java.naming.factory.initial</name>
-                                    <value>org.mortbay.naming.InitialContextFactory</value>
+                                    <value>org.eclipse.jetty.jndi.InitialContextFactory</value>
                                 </systemProperty>
                                 <systemProperty>
                                     <name>java.naming.provider.url</name>
                                     <value>rmi://localhost:8099</value>
                                 </systemProperty>
                             </systemProperties>
+                            <useProvidedScope>false</useProvidedScope>
                             <daemon>true</daemon>
-                            <jettyEnvXml>${project.build.testOutputDirectory}/jetty-env.xconf</jettyEnvXml>
+                            <jettyXml>${project.build.testOutputDirectory}/jetty-env.xconf</jettyXml>
                             <connectors>
-                                <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
                                     <port>${application.port}</port>
                                     <maxIdleTime>60000</maxIdleTime>
                                 </connector>
@@ -1258,6 +1262,11 @@
                             </execution>
                         </executions>
                         <dependencies>
+                            <dependency>
+                                <groupId>c3p0</groupId>
+                                <artifactId>c3p0</artifactId>
+                                <version>0.9.1.2</version>
+                            </dependency>
                             <dependency>
                                 <groupId>hsqldb</groupId>
                                 <artifactId>hsqldb</artifactId>
