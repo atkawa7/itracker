@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+ <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
 
-<Configure class="org.eclipse.jetty.server.Server">
+<Configure id="wac" class="org.eclipse.jetty.webapp.WebAppContext">
     <New id="mailSession" class="org.eclipse.jetty.plus.jndi.Resource">
-        <Arg>itracker/mail/Session</Arg>
+        <Arg>java:comp/env/itracker/mail/Session</Arg>
         <Arg>
             <New class="org.eclipse.jetty.jndi.factories.MailSessionReference">
                 <Set name="user"></Set>
@@ -23,8 +23,8 @@
         </Arg>
     </New>
 
-    <New id="DSTest" class="org.eclipse.jetty.plus.jndi.Resource">
-        <Arg>jdbc/itracker_ds</Arg>
+    <New id="itracker_ds" class="org.eclipse.jetty.plus.jndi.Resource">
+        <Arg>java:comp/env/jdbc/itracker_ds</Arg>
         <Arg>
             <New class="com.mchange.v2.c3p0.ComboPooledDataSource">
                 <Set name="driverClass">${main.dataSource.driverClass}</Set>
@@ -35,10 +35,9 @@
             </New>
         </Arg>
     </New>
-
-    <!-- TODO -->
+   
     <New class="org.eclipse.jetty.plus.jndi.EnvEntry">
-        <Arg></Arg>
+        <Arg><Ref id='wac'/></Arg>
         <Arg>system_base_url</Arg>
         <Arg>http://localhost/itracker</Arg>
         <Arg type="java.lang.Boolean">true</Arg>
