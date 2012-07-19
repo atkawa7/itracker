@@ -1309,6 +1309,7 @@
                                     <goal>test</goal>
                                 </goals>
                                 <configuration>
+                                    <test>${itracker.selenium.test}</test>
                                     <skip>false</skip>
                                     <forkMode>none</forkMode>
                                     <includes>

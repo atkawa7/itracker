@@ -91,8 +91,7 @@ public class SeleniumManager {
         if (log.isDebugEnabled()) {
             log.debug("closeSession: " + selenium);
         }
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
-                + applicationPath + "/logoff.do");
+        selenium.deleteAllVisibleCookies();
 
     }
 

@@ -130,11 +130,11 @@ public abstract class AbstractSeleniumTestCase
     }
 
     final void assertElementPresent(String q) {
-        assertTrue(selenium.getLocation() + "#" + q + " expected present", selenium.isElementPresent(q));
+        assertTrue(selenium.getLocation() + " " + q + " expected present", selenium.isElementPresent(q));
     }
 
     final void assertTextEquals(String expected, String q) {
-        assertEquals(selenium.getLocation() + "#" + q, expected, selenium.getText(q));
+        assertEquals(selenium.getLocation() + " " + q, expected, selenium.getText(q));
     }
 
     /**
@@ -142,6 +142,5 @@ public abstract class AbstractSeleniumTestCase
      */
     protected void closeSession() {
         SeleniumManager.closeSession(selenium);
-        assertElementPresent("login");
     }
 }
