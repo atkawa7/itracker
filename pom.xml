@@ -23,7 +23,7 @@
         <test.dataSource.user>sa</test.dataSource.user>
         <test.dataSource.password></test.dataSource.password>
         <test.dataSource.driverClass>org.hsqldb.jdbcDriver</test.dataSource.driverClass>
-        <test.hibernate.dialect>org.hiberna te.dialect.HSQLDialect</test.hibernate.dialect>
+        <test.hibernate.dialect>org.hibernate.dialect.HSQLDialect</test.hibernate.dialect>
 
         <bsh.version>1.3.0</bsh.version>
         <mysql-connector-java.version>5.1.6</mysql-connector-java.version>
@@ -725,7 +725,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>2.20.0</version>
+            <version>2.25.0</version>
             <exclusions>
                 <exclusion>
                     <artifactId>xercesImpl</artifactId>
