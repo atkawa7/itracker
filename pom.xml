@@ -33,7 +33,7 @@
             
         <maven-findbugs-plugin.version>2.4.0</maven-findbugs-plugin.version>
         <maven-site-plugin.version>3.0</maven-site-plugin.version>
-        
+        <maven-project-info-reports-plugin.version>2.4</maven-project-info-reports-plugin.version>
         <maven-tomcat-plugin.version>2.0-beta-1</maven-tomcat-plugin.version>
         <maven-clover-plugin.version>3.7</maven-clover-plugin.version>
         <maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
@@ -386,11 +386,12 @@
                     <configuration>
                         <outputEncoding>UTF-8</outputEncoding>
                         <reportPlugins>
-                            <!--<plugin>-->
-                            <!--<groupId>org.apache.maven.plugins</groupId>-->
-                            <!--<artifactId>maven-project-info-reports-plugin</artifactId>-->
-                            <!--<version>2.4</version>-->
-                            <!--</plugin>-->
+                            <plugin>
+                                <artifactId>maven-project-info-reports-plugin</artifactId>
+                                <version>${maven-project-info-reports-plugin.version}</version>
+                                <configuration>
+                                </configuration>
+                            </plugin>
 
                             <plugin>
                                 <groupId>org.codehaus.mojo</groupId>
@@ -793,6 +794,10 @@
         <plugins>
 
             <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${maven-project-info-reports-plugin.version}</version>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
                 <version>${maven-cobertura-plugin.version}</version>
@@ -1043,11 +1048,10 @@
                                         </configuration>
                                     </plugin>
 
-                                    <!--<plugin>-->
-                                    <!--<groupId>org.apache.maven.plugins</groupId>-->
-                                    <!--<artifactId>maven-project-info-reports-plugin</artifactId>-->
-                                    <!--<version>2.4</version>-->
-                                    <!--</plugin>-->
+                                    <plugin>
+                                        <artifactId>maven-project-info-reports-plugin</artifactId>
+                                        <version>${maven-project-info-reports-plugin.version}</version>
+                                    </plugin>
                                     <plugin>
                                         <artifactId>maven-pmd-plugin</artifactId>
                                         <version>${maven-pmd-plugin.version}</version>
