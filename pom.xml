@@ -707,7 +707,7 @@
         <dependency>
             <groupId>hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>1.8.0.10</version>
+            <version>${hsqldb.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -1217,7 +1217,7 @@
                 <dependency>
                     <groupId>hsqldb</groupId>
                     <artifactId>hsqldb</artifactId>
-                    <version>1.8.0.7</version>
+                    <version>${hsqldb.version}</version>
                 </dependency>
             </dependencies>
             <repositories>
@@ -1313,7 +1313,7 @@
                             <dependency>
                                 <groupId>hsqldb</groupId>
                                 <artifactId>hsqldb</artifactId>
-                                <version>1.8.0.7</version>
+                                <version>${hsqldb.version}</version>
                             </dependency>
                         </dependencies>
                     </plugin>
@@ -1400,7 +1400,7 @@
                                 </goals>
                             </execution>
                         </executions>
-                        <!--dependencies>
+                        <dependencies>
                             <dependency>
                                 <groupId>c3p0</groupId>
                                 <artifactId>c3p0</artifactId>
@@ -1409,9 +1409,9 @@
                             <dependency>
                                 <groupId>hsqldb</groupId>
                                 <artifactId>hsqldb</artifactId>
-                                <version>1.8.0.7</version>
+                                <version>${hsqldb.version}</version>
                             </dependency>
-                        </dependencies-->
+                        </dependencies>
                     </plugin>
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
