@@ -1295,7 +1295,7 @@
                     <scope>test</scope>
                 </dependency>
             </dependencies>
-            <repositories>
+            <!--repositories>
                 <repository>
                     <id>mortbay-repo</id>
                     <name>mortbay-repo</name>
@@ -1308,7 +1308,7 @@
                     <name>mortbay-repo</name>
                     <url>http://www.mortbay.org/maven2/snapshot</url>
                 </pluginRepository>
-            </pluginRepositories>
+            </pluginRepositories-->
             <build>
                 <plugins>
                     <plugin>
