@@ -10,23 +10,17 @@ Development Environment Setup
 
  This guide explains how to use Maven in Eclipse, IDEA and NetBeans.
 
- * {{{#Eclipse}Eclipse}}
-
- * {{{#IDEA}IDEA}}
-
- * {{{#NetBeans}NetBeans}}
- 
- * {{{#Tomcat}Tomcat integration}}
+%{toc}
 
 * {Eclipse}
 
 ** {using maven integration plugin for eclipse}
 
   This will not work for older Eclipse versions (pre 3.4 Ganymede).\
-  Install the eclipse-plugin 'Eclipse Maven Integration' from update site {{http://m2eclipse.codehaus.org/update/}}.\
+  Install the eclipse-plugin 'Eclipse Maven Integration' from eclipse marketplace site {{http://marketplace.eclipse.org}}.\
   Check out itracker from SVN, usually trunk-version.\
   Import the checked out project using maven import-wizzard: File > Import ... > General > Maven Projects\
-  More information: {{http://m2eclipse.codehaus.org/}}
+  More information: {{http://marketplace.eclipse.org/content/maven-integration-eclipse/}}
 
 ** {maven generated (<old path>)}
 
