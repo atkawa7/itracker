@@ -31,7 +31,9 @@
                 <Set name="jdbcUrl">${main.dataSource.jdbcUrl}</Set>
                 <Set name="user">${main.dataSource.user}</Set>
                 <Set name="password">${main.dataSource.password}</Set>
-                <Set name="maxPoolSize">20</Set>
+                <Set name="maxPoolSize">100</Set>
+                <Set name="maxIdleTime" >300</Set>
+                <Set name="loginTimeout" >5</Set>
             </New>
         </Arg>
     </New>
