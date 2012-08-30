@@ -509,7 +509,6 @@
                             <groupId>org.apache.maven.wagon</groupId>
                             <artifactId>wagon-ssh</artifactId>
                             <version>${maven-wagon-ssh-plugin.version}</version>
-                            
                         </dependency>
                      </dependencies>
                 </plugin>
@@ -528,8 +527,15 @@
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>${maven-deploy-plugin.version}</version>
                     <configuration>
-                        <skip>true</skip>
+                        <skip>false</skip>
                     </configuration>
+                    <dependencies>                    
+                        <dependency>
+                            <groupId>org.apache.maven.wagon</groupId>
+                            <artifactId>wagon-ssh</artifactId>
+                            <version>${maven-wagon-ssh-plugin.version}</version>
+                        </dependency>
+                     </dependencies>
                 </plugin>
                 <plugin>
                     <artifactId>maven-pmd-plugin</artifactId>
@@ -972,6 +978,17 @@
             <id>itracker.website</id>
             <url>scp://shell.sourceforge.net/home/project-web/itracker/htdocs</url>
         </site>
+
+        <repository>
+          <id>itracker.releases</id>
+          <name>itracker Release Repository</name>
+          <url>scp://shell.sourceforge.net/home/project-web/itracker/htdocs/maven2/releases</url>
+        </repository>
+        <snapshotRepository>
+          <id>itracker.snapshots</id>
+          <name>itracker Release Repository</name>
+          <url>scp://shell.sourceforge.net/home/project-web/itracker/htdocs/maven2/snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
     <profiles>
         <profile>
