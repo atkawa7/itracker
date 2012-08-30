@@ -29,6 +29,8 @@
         <hsqldb.version>1.8.0.10</hsqldb.version>       
         <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
         <derby.version>10.9.1.0</derby.version>
+        <mail.version>1.4.4</mail.version>
+        <c3p0.version>0.9.1.2</c3p0.version>
             
         <maven-findbugs-plugin.version>2.4.0</maven-findbugs-plugin.version>
         <maven-site-plugin.version>3.0</maven-site-plugin.version>
@@ -617,6 +619,16 @@
                 <version>${derby.version}</version>
                 <scope>provided</scope>
             </dependency>
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mail</artifactId>
+                <version>${mail.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>c3p0</groupId>
+                <artifactId>c3p0</artifactId>
+                <version>${c3p0.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -700,14 +712,6 @@
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.4</version>
@@ -762,7 +766,6 @@
         <dependency>
             <groupId>c3p0</groupId>
             <artifactId>c3p0</artifactId>
-            <version>0.9.1.2</version>
         </dependency>
         <dependency>
             <groupId>quartz</groupId>
@@ -788,7 +791,6 @@
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
-            <version>1.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -831,10 +833,6 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.5.5</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
         </dependency>
     </dependencies>
     <reporting>
@@ -1046,12 +1044,54 @@
                                 <dependency>
                                     <groupId>javax.mail</groupId>
                                     <artifactId>mail</artifactId>
-                                    <version>1.4.4</version>
+                                    <version>${mail.version}</version>
                                 </dependency>
                                 <dependency>
                                     <groupId>c3p0</groupId>
                                     <artifactId>c3p0</artifactId>
-                                    <version>0.9.1.2</version>
+                                    <version>${c3p0.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>hsqldb</groupId>
+                                    <artifactId>hsqldb</artifactId>
+                                    <version>${hsqldb.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>mysql</groupId>
+                                    <artifactId>mysql-connector-java</artifactId>
+                                    <version>${mysql-connector-java.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>postgresql</groupId>
+                                    <artifactId>postgresql</artifactId>
+                                    <version>${postgresql.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.apache.derby</groupId>
+                                    <artifactId>derby</artifactId>
+                                    <version>${derby.version}</version>
+                                </dependency>
+                            </dependencies>
+                        </plugin>
+                        <plugin>
+                          <groupId>org.apache.tomcat.maven</groupId>
+                          <artifactId>tomcat7-maven-plugin</artifactId>
+                            <version>${maven-tomcat-plugin.version}</version>
+                            <configuration>
+                                <port>${application.port}</port>
+                                <contextFile>${project.build.directory}/tomcat-itracker/context.xml</contextFile>
+
+                            </configuration>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>javax.mail</groupId>
+                                    <artifactId>mail</artifactId>
+                                    <version>${mail.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>c3p0</groupId>
+                                    <artifactId>c3p0</artifactId>
+                                    <version>${c3p0.version}</version>
                                 </dependency>
                                 <dependency>
                                     <groupId>hsqldb</groupId>
@@ -1478,12 +1518,10 @@
                             <dependency>
                                 <groupId>c3p0</groupId>
                                 <artifactId>c3p0</artifactId>
-                                <version>0.9.1.2</version>
                             </dependency>
                             <dependency>
                                 <groupId>hsqldb</groupId>
                                 <artifactId>hsqldb</artifactId>
-                                <version>${hsqldb.version}</version>
                             </dependency>
                         </dependencies>
                     </plugin>
