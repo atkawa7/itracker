@@ -1531,10 +1531,12 @@
                             <dependency>
                                 <groupId>c3p0</groupId>
                                 <artifactId>c3p0</artifactId>
+                                <version>${c3p0.version}</version>
                             </dependency>
                             <dependency>
                                 <groupId>hsqldb</groupId>
                                 <artifactId>hsqldb</artifactId>
+                                <version>${hsqldb.version}</version>
                             </dependency>
                         </dependencies>
                     </plugin>
