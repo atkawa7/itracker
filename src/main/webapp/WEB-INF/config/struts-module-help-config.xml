@@ -35,14 +35,26 @@
     <!-- ==================================== Action Mappings    -->
     <action-mappings>
         <action path="/show_help" type="org.itracker.web.actions.ShowHelpAction">
-            <forward module="/module-help" name="show_help" path="/show_help.jsp"/>
+            <forward module="/module-help" name="show_help" path="t.show_help"/>
         </action>
     </action-mappings>
 
+    <!-- ==================================== Controllers    -->
+    <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor">
+        <set-property property="inputForward" value="false"/>
+    </controller>
+
+    <!-- ==================================== Plug-ins    -->
     <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
         <set-property property="pathnames"
-                      value="/WEB-INF/config/validator-rules.xml, 
+                      value="/WEB-INF/config/validator-rules.xml,
                              /WEB-INF/config/validation-module-help.xml"/>
+    </plug-in>
+    <plug-in className="org.apache.struts.tiles.TilesPlugin">
+        <set-property
+                property="definitions-config"
+                value="/WEB-INF/config/tiles-defs.xml, /WEB-INF/config/tiles-defs-help.xml"/>
+        <set-property property="moduleAware" value="true"/>
     </plug-in>
 </struts-config>
 

@@ -39,7 +39,7 @@ public class ForgotPasswordTest extends AbstractSeleniumTestCase {
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         assertEquals("Login is required\n Last Name is required",
-                selenium.getText("//span[@class='formError']"));
+                selenium.getText("//div[@class='formError']"));
     }
 
     /**
@@ -65,7 +65,7 @@ public class ForgotPasswordTest extends AbstractSeleniumTestCase {
         selenium.click("//input[@type='submit']");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertEquals("Login is required", selenium.getText("//span[@class='formError']"));
+        assertEquals("Login is required", selenium.getText("//div[@class='formError']"));
     }
 
     /**
@@ -88,7 +88,7 @@ public class ForgotPasswordTest extends AbstractSeleniumTestCase {
         selenium.click("//input[@type='submit']");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertEquals("Last Name is required", selenium.getText("//span[@class='formError']"));
+        assertEquals("Last Name is required", selenium.getText("//div[@class='formError']"));
     }
 
     /**

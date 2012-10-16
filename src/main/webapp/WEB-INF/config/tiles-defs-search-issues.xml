@@ -4,9 +4,6 @@
         "http://struts.apache.org/dtds/tiles-config_1_3.dtd">
 
 <tiles-definitions>
-    <definition name="test">
-
-    </definition>
     <!-- search -->
     <definition name="t.search_issues_form" extends="mainLayout">
         <put name="body" value="/module-searchissues/search_issues_form.jsp"/>

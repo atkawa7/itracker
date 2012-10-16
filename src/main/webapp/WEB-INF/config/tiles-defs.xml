@@ -26,6 +26,9 @@
     <definition name="t.login" extends="mainLayout">
         <put name="body" value="/login.jsp"/>
     </definition>
+    <definition name="t.forgotpassword" extends="mainLayout">
+        <put name="body" value="/forgot_password.jsp"/>
+    </definition>
     <definition name="t.selfregisterform" extends="mainLayout">
         <put name="body" value="/self_register.jsp"/>
     </definition>

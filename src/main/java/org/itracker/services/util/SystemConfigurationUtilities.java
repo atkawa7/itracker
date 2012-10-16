@@ -123,6 +123,8 @@ public class SystemConfigurationUtilities {
             log.debug("getVersionAsLong: transforming " + version);
         }
         if (version != null) {
+            // support -SNAPSHOT versions
+            version = version.split("-")[0];
             StringTokenizer token = new StringTokenizer(version, ".");
             try {
                 if (token.countTokens() > 0 && token.countTokens() <= 3) {

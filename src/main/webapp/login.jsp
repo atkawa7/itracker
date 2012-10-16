@@ -4,7 +4,7 @@
   <input type="hidden" name="authtype" value="1">
     <%-- TODO is this AUTH_REDIRECT_KEY still needed? --%>
   <logic:notEmpty name="authredirect" scope="request">
-      <input type="hidden" name="authredirect" value="<bean:write name="authredirect" scope="request"/>">
+      <input type="hidden" name="authredirect" value="<bean:write name="authredirect" scope="request" />">
   </logic:notEmpty>
 
   <html:javascript formName="loginForm"/>
@@ -18,10 +18,8 @@
       <td align="left" class="editColumnTitle"><it:message key="itracker.web.attr.password"/>:</td>
       <td align="left"><html:password property="password" styleClass="editColumnText" redisplay="false"/></td>
     </tr>
-    <tr><td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="10"/></td></tr>
     <tr>
       <td colspan="2" align="left"><html:submit styleClass="button" altKey="itracker.web.button.login.alt" titleKey="itracker.web.button.login.alt"><it:message key="itracker.web.button.login"/></html:submit></td>
     </tr>
   </table>
-<br>
 </html:form>

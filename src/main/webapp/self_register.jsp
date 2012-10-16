@@ -44,10 +44,6 @@
                     <td align="right" class="editColumnTitle"><it:message key="itracker.web.attr.email"/>:</td>
                     <td align="left"><html:text property="email" styleClass="editColumnText"/></td>
                 </tr>
-                <tr>
-                    <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15"
-                                              width="1"/></td>
-                </tr>
             </table>
 
             <table border="0" cellspacing="0" cellspacing="1" width="100%" align="left">

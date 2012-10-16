@@ -87,7 +87,7 @@
                 name="watchIssueForm" scope="request" input="/index.jsp" validate="false"/>
         <action path="/assignissue" type="org.itracker.web.actions.project.AssignIssueAction"
                 name="assignIssueForm" scope="request" input="/index.jsp"/>
-        <action path="/portalhome" input="t.portalhome" type="org.itracker.web.actions.PortalHomeAction">
+        <action path="/portalhome" type="org.itracker.web.actions.PortalHomeAction">
             <forward name="portalhome" path="t.portalhome"/>
         </action>
 
@@ -108,19 +108,21 @@
         <action path="/login" type="org.itracker.web.actions.user.LoginAction"
                 name="loginForm" scope="request" input="t.login">
             <forward name="login" path="t.login"/>
-            <forward name="index" module="/" path="/index.jsp" redirect="true"/>
+            <forward name="index" module="/" path="/portalhome.do" redirect="true"/>
         </action>
 
         <action path="/forgotpasswordform" type="org.itracker.web.actions.user.ForgotPasswordFormAction"
-                name="forgotPasswordForm" scope="request" input="/forgot_password.jsp" validate="false"/>
+                name="forgotPasswordForm" scope="request" input="t.forgotpassword" validate="false"/>
 
         <action path="/forgotpassword" type="org.itracker.web.actions.user.ForgotPasswordAction"
-                name="forgotPasswordForm" scope="request" input="/forgot_password.jsp" validate="true">
+                name="forgotPasswordForm" scope="request" input="t.forgotpassword" validate="true">
             <forward name="forgotpassword" module="/" path="/forgotpasswordform.do"/>
             <forward name="success" module="/" path="/portalhome.do" redirect="true"/>
         </action>
 
-        <action path="/logoff" type="org.itracker.web.actions.user.LogoffAction"/>
+        <action path="/logoff" type="org.itracker.web.actions.user.LogoffAction">
+            <forward name="login" path="t.login"/>
+        </action>
 
         <action path="/listprojects" type="org.itracker.web.actions.ListProjectsAction">
             <forward name="listprojects" path="/module-projects/list_projects.jsp"/>
@@ -139,10 +141,9 @@
                 validate="false"/>
     </action-mappings>
 
-    <controller>
+    <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor">
         <set-property property="inputForward" value="false"/>
     </controller>
-    <message-resources factory="web.resources.ITrackerMessageResourcesFactory" parameter="UNUSED" null="false"/>
 
     <message-resources factory="org.itracker.web.resources.ITrackerMessageResourcesFactory"
                        parameter="org.itracker.core.resources.ITracker" null="false"/>

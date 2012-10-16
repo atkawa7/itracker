@@ -56,15 +56,22 @@
         </action>
     </action-mappings>
 
+    <!-- ==================================== Controller    -->
+    <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor">
+        <set-property property="inputForward" value="false"/>
+    </controller>
+
+    <!-- ==================================== Message-resources    -->
     <message-resources factory="org.itracker.web.resources.ITrackerMessageResourcesFactory"
                        parameter="org.itracker.core.resources.ITracker" null="false"/>
 
+    <!-- ==================================== Plug-ins    -->
     <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
         <set-property property="pathnames"
                       value="/WEB-INF/config/validator-rules.xml,
                              /WEB-INF/config/validation-module-searchissues.xml"/>
-
     </plug-in>
+
     <plug-in className="org.apache.struts.tiles.TilesPlugin">
         <set-property
                 property="definitions-config"
