@@ -1,5 +1,5 @@
 <%@ include file="/common/taglibs.jsp" %>
-
+<%@ page pageEncoding="UTF-8" %>
 
 <p class="help">
     <b><it:message key="itracker.web.helpabout.itrackerversion"/>:</b> <bean:write name="version"/><br/>

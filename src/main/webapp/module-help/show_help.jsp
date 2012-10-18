@@ -1,4 +1,5 @@
 <%@ include file="/common/taglibs.jsp"%>
+<%@ page pageEncoding="UTF-8" %>
 
 
     <table border="0" cellspacing="1"  cellspacing="0"  width="100%">

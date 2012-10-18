@@ -1,7 +1,6 @@
 <%@ include file="/common/taglibs.jsp" %>
 <%@ page pageEncoding="UTF-8" %>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <a name="top"></a><span class="pageHeader">Alltägliche Aufgaben</span><br/>
 <ul>
     <li><a href="#create">Einen Eintrag anlegen</a></li>
@@ -13,8 +12,8 @@
 </ul>
 
 <hr width="75%" noshade height="1"/>
-<a name="create"></a><span class="editColumnTitle">Einen Eintrag anlegen</span> <a href="#top"
-                                                                                   class="headerLinks">[top]</a><br/>
+<a name="create"></a><span class="editColumnTitle">Einen Eintrag anlegen</span>
+<a href="#top" class="headerLinks">[top]</a><br/>
 
 <p class="help">
     Um einen neuen Eintrag anzulegen, müssen Sie zuerst die "Projekt Liste" im
@@ -27,7 +26,8 @@
 </p>
 
 <hr width="75%" noshade height="1"/>
-<a name="edit"></a><span class="editColumnTitle">Einen Eintrag bearbeiten</span> <a href="#top" class="headerLinks">[top]</a><br/>
+<a name="edit"></a><span class="editColumnTitle">Einen Eintrag bearbeiten</span>
+<a href="#top" class="headerLinks">[top]</a><br/>
 
 <p class="help">
     Es gibt mehrere Wege, einen bestehenden Eintrag zu bearbeiten.<br/>
@@ -50,8 +50,8 @@
 </p>
 
 <hr width="75%" noshade height="1"/>
-<a name="list"></a><span class="editColumnTitle">Einträge auflisten</span> <a href="#top"
-                                                                              class="headerLinks">[top]</a><br/>
+<a name="list"></a><span class="editColumnTitle">Einträge auflisten</span>
+<a href="#top" class="headerLinks">[top]</a><br/>
 
 <p class="help">
     Um die Einträge für ein Projekt aufzulisten, müssen Sie zuerst die "Projekt Liste"
@@ -66,8 +66,8 @@
 
 
 <hr width="75%" noshade height="1"/>
-<a name="search"></a><span class="editColumnTitle">Einträge suchen</span> <a href="#top"
-                                                                             class="headerLinks">[top]</a><br/>
+<a name="search"></a><span class="editColumnTitle">Einträge suchen</span>
+<a href="#top" class="headerLinks">[top]</a><br/>
 
 <p class="help">
     Hier können Sie Einträge über verschiedene Projekte hinweg suchen. Die Suche kann nach Wichtigkeit
@@ -85,7 +85,8 @@
 </p>
 
 <hr width="75%" noshade height="1"/>
-<a name="report"></a><span class="editColumnTitle">Reports Erstellen</span> <a href="#top" class="headerLinks">[top]</a><br/>
+<a name="report"></a><span class="editColumnTitle">Reports Erstellen</span>
+<a href="#top" class="headerLinks">[top]</a><br/>
 
 <p class="help">
     Kreuzen Sie in den Kästchen neben den Projekten diejenigen an, die Sie in dem Report
@@ -97,7 +98,8 @@
 </p>
 
 <hr width="75%" noshade height="1"/>
-<a name="prefs"></a><span class="editColumnTitle">Voreinstellungen bearbeiten</span> <a href="#top" class="headerLinks">[top]</a><br/>
+<a name="prefs"></a><span class="editColumnTitle">Voreinstellungen bearbeiten</span>
+<a href="#top" class="headerLinks">[top]</a><br/>
 
 <p class="help">
     Über den Punkt "Meine Einstellungen" im Haputmenü können Sie ihre Voreinstellungen ändern.

@@ -1,6 +1,6 @@
 <%@ include file="/common/taglibs.jsp" %>
+<%@ page pageEncoding="UTF-8" %>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <a name="top"></a><span class="pageHeader">Common Tasks</span><br/>
 <ul>
     <li><a href="#create">Creating an Issue</a></li>
@@ -12,7 +12,8 @@
 </ul>
 
 <hr width="75%" noshade height="1"/>
-<a name="create"></a><span class="editColumnTitle">Creating an Issue</span> <a href="#top" class="headerLinks">[top]</a><br/>
+<a name="create"></a><span class="editColumnTitle">Creating an Issue</span>
+<a href="#top" class="headerLinks">[top]</a><br/>
 
 <p class="help">
     To create a new issue, first go to the project list screen by clicking "Project List"
@@ -26,8 +27,8 @@
 </p>
 
 <hr width="75%" noshade height="1"/>
-<a name="edit"></a><span class="editColumnTitle">Editing an Issue</span> <a href="#top"
-                                                                            class="headerLinks">[top]</a><br/>
+<a name="edit"></a><span class="editColumnTitle">Editing an Issue</span>
+<a href="#top" class="headerLinks">[top]</a><br/>
 
 <p class="help">
     There are a couple ways to edit an existing issue.<br/>
@@ -50,7 +51,8 @@
 </p>
 
 <hr width="75%" noshade height="1"/>
-<a name="list"></a><span class="editColumnTitle">Listing Issues</span> <a href="#top" class="headerLinks">[top]</a><br/>
+<a name="list"></a><span class="editColumnTitle">Listing Issues</span>
+<a href="#top" class="headerLinks">[top]</a><br/>
 
 <p class="help">
     To list the issues for a project, first go to the project list screen by clicking
@@ -63,8 +65,8 @@
 
 
 <hr width="75%" noshade height="1"/>
-<a name="search"></a><span class="editColumnTitle">Searching for Issues</span> <a href="#top"
-                                                                                  class="headerLinks">[top]</a><br/>
+<a name="search"></a><span class="editColumnTitle">Searching for Issues</span>
+<a href="#top" class="headerLinks">[top]</a><br/>
 
 <p class="help">
     This lets you search for issues across projects based on their severity and status codes.
@@ -83,8 +85,8 @@
 </p>
 
 <hr width="75%" noshade height="1"/>
-<a name="report"></a><span class="editColumnTitle">Running Reports</span> <a href="#top"
-                                                                             class="headerLinks">[top]</a><br/>
+<a name="report"></a><span class="editColumnTitle">Running Reports</span>
+<a href="#top" class="headerLinks">[top]</a><br/>
 
 <p class="help">
     To run the reports, first select the checkboxes beside the projects you want included in
@@ -95,8 +97,8 @@
 </p>
 
 <hr width="75%" noshade height="1"/>
-<a name="prefs"></a><span class="editColumnTitle">Editing Preferences</span> <a href="#top"
-                                                                                class="headerLinks">[top]</a><br/>
+<a name="prefs"></a><span class="editColumnTitle">Editing Preferences</span>
+<a href="#top" class="headerLinks">[top]</a><br/>
 
 <p class="help">
     To edit your preferences, click on the My Preferences Link in the top menu. This
