@@ -62,78 +62,15 @@ public abstract class AbstractSeleniumTestCase
         }
     }
 
-//    @Override
-//    public void onTearDown() throws Exception {
-//
-//        super.onTearDown();
-//        log.info("onTearDown: stopping smtp");
-//        stopSMTP();
-//        log.info("onTearDown: stopped smtp");
-//
-//
-//    }
-//
-//    @Override
-//    public void onSetUp() throws Exception {
-//        log.debug("onSetUp: starting smtp");
-//        startSMTP();
-//        log.info("onSetUp: started smtp");
-//
-//        super.onSetUp();
-//    }
-
-    protected Wiser startSMTP() throws InterruptedException {
-//        int c = 0;
-//        log.debug("Starting smtp");
-//        if (null != wiser && wiser.getServer().isRunning()) {
-//            log.warn("Already running smtp");
-//            stopSMTP();
-//            log.debug("Already running smtp stopped");
-//        }
-//        log.debug("Wiser.start(" + SMTP_PORT + ")");
-//
-//        wiser = new Wiser(SMTP_PORT);
-//        wiser.start();
-//        log.debug("sleep 500");
-//        Thread.currentThread().sleep(500);
-//        log.debug("checking running wiser");
-//
-//        if (!wiser.getServer().isRunning()) {
-//            throw new RuntimeException("Could not Start wiser");
-//        }
-//        log.debug("got running wiser " + wiser);
-//
-//        log.info("Started wiser");
-        return wiser;
-    }
-
-    void stopSMTP() {
-//        log.info("stopSMTP: skip smtp until working");
-//        if (true) return;
-
-//        log.debug("Stopping smtp");
-////        assertNotNull("null smtp", wiser);
-//        try {
-//            wiser.stop();
-//            Thread.currentThread().sleep(500);
-//            if (wiser.getServer().isRunning()) {
-//                throw new RuntimeException("Could not Stop wiser");
-//            }
-//        } catch (Exception e) {
-//            log.warn("failed to close smtp", e);
-////            fail("could not stop smtp: " + wiser + ": " + e.getMessage());
-//        } finally {
-//            wiser = null;
-//        }
-//
-//        log.info("Stopped smtp");
-    }
-
     final void assertElementPresent(String q) {
         assertTrue(selenium.getLocation() + " " + q + " expected present", selenium.isElementPresent(q));
     }
 
-    final void assertTextEquals(String expected, String q) {
+    final void assertElementNotPresent(String q) {
+        assertFalse(selenium.getLocation() + " " + q + " expected NOT present", selenium.isElementPresent(q));
+    }
+
+    final void assertElementTextEquals(String expected, String q) {
         assertEquals(selenium.getLocation() + " " + q, expected, selenium.getText(q));
     }
 
@@ -142,5 +79,26 @@ public abstract class AbstractSeleniumTestCase
      */
     protected void closeSession() {
         SeleniumManager.closeSession(selenium);
+    }
+
+    /**
+     * Assert being on login page and enter the credentials.
+     * <p>Success will be asserted with <code>itracker</code> Cookie present.</p>
+     */
+    protected final void loginUser(final String username, final String password) {
+
+        log.debug("loginUser called with " + username + ", " + password);
+
+        assertElementPresent("//*[@name='login']");
+        assertElementPresent("//*[@name='password']");
+        assertElementPresent("//*[@value='Login']");
+        selenium.type("//*[@name='login']", username);
+        selenium.type("//*[@name='password']", password);
+        selenium.click("//*[@value='Login']");
+        selenium.waitForPageToLoad(SE_TIMEOUT);
+
+        assertNotNull("Login failed: 'itracker' Cookie was not found", selenium.getCookieByName("itracker"));
+
+        log.debug("loginUser, logged in " + username + ", cookies: " + selenium.getCookie());
     }
 }

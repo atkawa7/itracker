@@ -28,13 +28,8 @@ public class LoginTest extends AbstractSeleniumTestCase {
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        assertTrue(selenium.isElementPresent("xpath=//*[@name='login']"));
-        assertTrue(selenium.isElementPresent("xpath=//*[@name='password']"));
-        assertTrue(selenium.isElementPresent("xpath=//*[@value='Login']"));
-        selenium.type("xpath=//*[@name='login']", "admin_test1");
-        selenium.type("xpath=//*[@name='password']", "admin_test1");
-        selenium.click("xpath=//*[@value='Login']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        loginUser("admin_test1", "admin_test1");
+
         assertTrue(selenium.isElementPresent("xpath=//*[@name='id']"));
     }
 
@@ -53,15 +48,15 @@ public class LoginTest extends AbstractSeleniumTestCase {
         closeSession();
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
-        assertTrue(selenium.isElementPresent("xpath=//*[@name='login']"));
-        assertTrue(selenium.isElementPresent("xpath=//*[@name='password']"));
-        assertTrue(selenium.isElementPresent("xpath=//*[@value='Login']"));
-        selenium.type("xpath=//*[@name='login']", "wrong_login");
-        selenium.type("xpath=//*[@name='password']", "wrong_password");
-        selenium.click("xpath=//*[@value='Login']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertFalse(selenium.isElementPresent("xpath=//*[@name='id']"));
+        try {
+            loginUser("wrong_login", "wrong_password");
+        } catch (Exception e) {
+
+        } finally {
+            assertFalse(selenium.isElementPresent("xpath=//*[@name='id']"));
+        }
+
     }
 
     @Override

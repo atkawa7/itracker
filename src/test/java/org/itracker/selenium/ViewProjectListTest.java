@@ -27,13 +27,7 @@ public class ViewProjectListTest extends AbstractSeleniumTestCase {
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        assertElementPresent("//*[@name='login']");
-        assertElementPresent("//*[@name='password']");
-        assertElementPresent("//*[@value='Login']");
-        selenium.type("//*[@name='login']", "admin_test1");
-        selenium.type("//*[@name='password']", "admin_test1");
-        selenium.click("//*[@value='Login']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        loginUser("admin_test1", "admin_test1");
 
         assertElementPresent("listprojects");
         selenium.click("listprojects");
@@ -45,23 +39,23 @@ public class ViewProjectListTest extends AbstractSeleniumTestCase {
 
         //// project "test_name"
         // Check the number of open issues.
-        assertTextEquals("4", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[4]");
+        assertElementTextEquals("4", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[4]");
 
         // Check the number of resolved issues.
-        assertTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[5]");
+        assertElementTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[5]");
 
         // Check total number of issues.
-        assertTextEquals("4", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[6]");
+        assertElementTextEquals("4", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[6]");
 
         //// project "test_name2"
         // Check the number of open issues.
-        assertTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[4]");
+        assertElementTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[4]");
 
         // Check the number of resolved issues.
-        assertTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[5]");
+        assertElementTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[5]");
 
         // Check total number of issues.
-        assertTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[6]");
+        assertElementTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[6]");
     }
 
     @Override

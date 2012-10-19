@@ -31,39 +31,33 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        assertTrue(selenium.isElementPresent("//*[@name='login']"));
-        assertTrue(selenium.isElementPresent("//*[@name='password']"));
-        assertTrue(selenium.isElementPresent("//*[@value='Login']"));
-        selenium.type("//*[@name='login']", "admin_test1");
-        selenium.type("//*[@name='password']", "admin_test1");
-        selenium.click("//*[@value='Login']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        loginUser("admin_test1", "admin_test1");
 
         selenium.click("listprojects");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         // Click view issue link (usually it's named "View").
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'project.')]" +
-                "/td[3][text()='test_name']/../td[1]/a[1]"));
+        assertElementPresent("//tr[starts-with(@id, 'project.')]" +
+                "/td[3][text()='test_name']/../td[1]/a[1]");
 
         selenium.click("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]"));
+        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]");
 
         selenium.click("//tr[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]");
 
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue(selenium.isElementPresent("//td[@id='actions']/a[2]"));
+        assertElementPresent("//td[@id='actions']/a[2]");
         selenium.click("//td[@id='actions']/a[2]");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue(selenium.isElementPresent("description"));
-        assertTrue(selenium.isElementPresent("ownerId"));
-        assertTrue(selenium.isElementPresent("//input[@type='submit']"));
+        assertElementPresent("description");
+        assertElementPresent("ownerId");
+        assertElementPresent("//input[@type='submit']");
 
         selenium.type("description", "test_description (updated)");
 
@@ -79,14 +73,14 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
 //
 
 
-        assertTrue(selenium.isElementPresent("issues"));
+        assertElementPresent("issues");
         assertEquals(4, selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
-        assertFalse(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+        assertElementNotPresent("//tr[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='1']/../td[11][text()='test_description']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]"));
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[13][contains(text(),'A. admin lastname')]");
+        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='1']/../td[11][text()='test_description (updated)']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]"));
+                "/td[13][contains(text(),'A. admin lastname')]");
     }
 
     /**
@@ -109,35 +103,29 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        assertTrue(selenium.isElementPresent("//*[@name='login']"));
-        assertTrue(selenium.isElementPresent("//*[@name='password']"));
-        assertTrue(selenium.isElementPresent("//*[@value='Login']"));
-        selenium.type("//*[@name='login']", "admin_test1");
-        selenium.type("//*[@name='password']", "admin_test1");
-        selenium.click("//*[@value='Login']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        loginUser("admin_test1", "admin_test1");
 
         selenium.click("listprojects");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         // Click view issue link (usually it's named "View").
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'project.')]" +
-                "/td[3][text()='test_name']/../td[1]/a[1]"));
+        assertElementPresent("//tr[starts-with(@id, 'project.')]" +
+                "/td[3][text()='test_name']/../td[1]/a[1]");
 
         selenium.click("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[2]"));
+        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[2]");
 
         selenium.click("//tr[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[2]");
 
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue(selenium.isElementPresent("description"));
-        assertTrue(selenium.isElementPresent("ownerId"));
-        assertTrue(selenium.isElementPresent("//input[@type='submit']"));
+        assertElementPresent("description");
+        assertElementPresent("ownerId");
+        assertElementPresent("//input[@type='submit']");
 
         selenium.type("description", "test_description (updated)");
 
@@ -155,14 +143,14 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
         assertTrue(smtpMessageBody.contains("test_description (updated)"));
 //
 //
-        assertTrue(selenium.isElementPresent("issues"));
+        assertElementPresent("issues");
         assertEquals(4, selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
-        assertFalse(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+        assertElementNotPresent("//tr[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='1']/../td[11][text()='test_description']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]"));
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[13][contains(text(),'A. admin lastname')]");
+        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='1']/../td[11][text()='test_description (updated)']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]"));
+                "/td[13][contains(text(),'A. admin lastname')]");
     }
 
     /**
@@ -196,27 +184,27 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         // Click view issue link (usually it's named "View").
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'project.')]" +
-                "/td[3][text()='test_name']/../td[1]/a[1]"));
+        assertElementPresent("//tr[starts-with(@id, 'project.')]" +
+                "/td[3][text()='test_name']/../td[1]/a[1]");
 
         selenium.click("//tr[starts-with(@id, 'project.')]" +
                 "/td[3][text()='test_name']/../td[1]/a[1]");
 
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]"));
+        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]");
 
         selenium.click("//tr[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]");
 
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue(selenium.isElementPresent("//td[@id='actions']/a[3]"));
+        assertElementPresent("//td[@id='actions']/a[3]");
         selenium.click("//td[@id='actions']/a[3]");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue(selenium.isElementPresent("projectId"));
+        assertElementPresent("projectId");
         selenium.select("projectId", "label=test_name2");
 
         int received = wiser.getMessages().size();
@@ -227,15 +215,15 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
         // no message sent?
         assertEquals("wiser.receivedEmailSize", received, wiser.getMessages().size());
 
-        assertTrue(selenium.isElementPresent("//td[@id='actions']/a[1]"));
+        assertElementPresent("//td[@id='actions']/a[1]");
         selenium.click("//td[@id='actions']/a[1]");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue(selenium.isElementPresent("issues"));
+        assertElementPresent("issues");
         assertEquals(1, selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='1']/../td[11][text()='test_description']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]"));
+                "/td[13][contains(text(),'A. admin lastname')]");
     }
 
     /**
@@ -259,28 +247,22 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        assertTrue(selenium.isElementPresent("//*[@name='login']"));
-        assertTrue(selenium.isElementPresent("//*[@name='password']"));
-        assertTrue(selenium.isElementPresent("//*[@value='Login']"));
-        selenium.type("//*[@name='login']", "admin_test1");
-        selenium.type("//*[@name='password']", "admin_test1");
-        selenium.click("//*[@value='Login']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        loginUser("admin_test1", "admin_test1");
 
         selenium.click("listprojects");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
         // Click view issue link (usually it's named "View").
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'project.')]" +
-                "/td[3][text()='test_name']/../td[1]/a[1]"));
+        assertElementPresent("//tr[starts-with(@id, 'project.')]" +
+                "/td[3][text()='test_name']/../td[1]/a[1]");
 
         selenium.click("//tr[starts-with(@id, 'project.')]" +
                 "/td[3][text()='test_name']/../td[1]/a[1]");
 
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='2']/../td[11][text()='test_description 2']/../td[1]/a[1]"));
+        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='2']/../td[11][text()='test_description 2']/../td[1]/a[1]");
 
         selenium.click("//tr[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='2']/../td[11][text()='test_description 2']/../td[1]/a[1]");
@@ -290,13 +272,13 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
         assertEquals("test_description 2", selenium.getText("description"));
         assertEquals("admin firstname admin lastname", selenium.getText("ownerName"));
 
-        assertTrue(selenium.isElementPresent("//td[@id='actions']/a[2]"));
+        assertElementPresent("//td[@id='actions']/a[2]");
         selenium.click("//td[@id='actions']/a[2]");
         selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertTrue("no description", selenium.isElementPresent("description"));
-        assertTrue("no owner", selenium.isElementPresent("ownerId"));
-        assertTrue("no submit", selenium.isElementPresent("//input[@type='submit']"));
+        assertElementPresent("description");
+        assertElementPresent("ownerId");
+        assertElementPresent("//input[@type='submit']");
 
         selenium.type("description", "test_description 2 (updated)");
 
@@ -311,16 +293,16 @@ public class EditIssueTest extends AbstractSeleniumTestCase {
 
         assertTrue(smtpMessageBody.contains("test_description 2 (updated)"));
 
-        assertTrue(selenium.isElementPresent("issues"));
+        assertElementPresent("issues");
         assertEquals(4, selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
 
-        assertFalse(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+        assertElementNotPresent("//tr[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='2']/../td[11][text()='test_description 2']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]"));
+                "/td[13][contains(text(),'A. admin lastname')]");
 
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
+        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='2']/../td[11][text()='test_description 2 (updated)']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]"));
+                "/td[13][contains(text(),'A. admin lastname')]");
     }
 
     @Override

@@ -39,14 +39,7 @@ public class CreateIssueTest extends AbstractSeleniumTestCase {
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        assertTrue(selenium.isElementPresent("//*[@name='login']"));
-        assertTrue(selenium.isElementPresent("//*[@name='password']"));
-        assertTrue(selenium.isElementPresent("//*[@value='Login']"));
-        selenium.type("//*[@name='login']", "admin_test1");
-        selenium.type("//*[@name='password']", "admin_test1");
-        selenium.click("//*[@value='Login']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
-
+        loginUser("admin_test1", "admin_test1");
 
         // Click "Projects List".
         selenium.click("listprojects");
@@ -127,13 +120,7 @@ public class CreateIssueTest extends AbstractSeleniumTestCase {
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        assertTrue(selenium.isElementPresent("//*[@name='login']"));
-        assertTrue(selenium.isElementPresent("//*[@name='password']"));
-        assertTrue(selenium.isElementPresent("//*[@value='Login']"));
-        selenium.type("//*[@name='login']", "admin_test1");
-        selenium.type("//*[@name='password']", "admin_test1");
-        selenium.click("//*[@value='Login']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        loginUser("admin_test1", "admin_test1");
 
         // Clicking "Project List" link.
         selenium.click("listprojects");

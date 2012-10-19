@@ -1168,6 +1168,10 @@
                 <selenium.host>localhost</selenium.host>
                 <selenium.port>5555</selenium.port>
                 <selenium.browser>*firefox</selenium.browser>
+                <selenium.browserLogLevel>warn</selenium.browserLogLevel>
+                <selenium.speed>0</selenium.speed>
+                <selenium.useXPathLibrary>javascript-xpath</selenium.useXPathLibrary>
+
                 <application.host>localhost</application.host>
                 <application.port>8888</application.port>
                 <application.path>itracker</application.path>
