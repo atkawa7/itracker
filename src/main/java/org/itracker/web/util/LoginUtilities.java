@@ -25,11 +25,14 @@ import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
 import org.itracker.services.UserService;
 import org.itracker.services.util.AuthenticationConstants;
+import org.itracker.services.util.UserUtilities;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.*;
 
 public class LoginUtilities {
@@ -268,56 +271,9 @@ public class LoginUtilities {
             currUser = (User) request.getSession().getAttribute("currUser");
         }
 
-
-//		try {
-//			ITrackerServices iTrackerServices = ServletContextUtils.getItrackerServices();
-//			// autologin
-//			if (null == currUser && 
-//					checkAutoLogin(request, iTrackerServices.getConfigurationService().getBooleanProperty(
-//					"allow_save_login", true))) {			
-//				if (Boolean.valueOf(String.valueOf(request.getAttribute("processLogin")))) {
-//					currUser = LoginUtilities.processAutoLogin(request, iTrackerServices);
-//				}
-//			}
-//		} catch (Exception e) {
-//			currUser = null;
-//			if (logger.isInfoEnabled()) {
-//				logger.info("getCurrentUser: could not authenticate from request.");
-//				if (logger.isDebugEnabled()) {
-//					logger.debug("getCurrentUser: exception caught", e);
-//				}
-//			}
-//		}
         return currUser;
     }
 
-    //	public static final User processAutoLogin(HttpServletRequest request, ITrackerServices iTrackerServices) {
-//		
-//		UserService userService = iTrackerServices.getUserService();
-//		final int authType = LoginUtilities.getRequestAuthType(request);
-//		final User user;
-//		final String login;
-//		if (authType == AuthenticationConstants.AUTH_TYPE_PASSWORD_ENC) {
-//			login = (String) request
-//					.getAttribute(Constants.AUTH_LOGIN_KEY);
-//			String authenticator = (String) request
-//					.getAttribute(Constants.AUTH_VALUE_KEY);
-//
-//			logger
-//					.debug("Attempting login with encrypted password for user "
-//							+ login);
-//			user = userService.checkLogin(login, authenticator,
-//					AuthenticationConstants.AUTH_TYPE_PASSWORD_ENC,
-//					AuthenticationConstants.REQ_SOURCE_WEB);
-//			if (user != null) {
-//				return user;
-//			}
-//		}
-//
-//		throw new AuthenticatorException(
-//				AuthenticatorException.UNKNOWN_USER);
-//		
-//	}
     public static final Boolean allowSaveLogin(HttpServletRequest request) {
         return Boolean.valueOf((String) request.getAttribute("allowSaveLogin"));
     }
@@ -444,5 +400,32 @@ public class LoginUtilities {
     public static int getConfiguredSessionTimeout() {
         return (ServletContextUtils.getItrackerServices().getConfigurationService()
                 .getIntegerProperty("web_session_timeout", DEFAULT_SESSION_TIMEOUT));
+    }
+
+    public static final boolean hasPermission(int permissionNeeded,
+                                              HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+
+        return hasPermission(new int[] {permissionNeeded}, request, response);
+
+    }
+
+    public static final boolean hasPermission(int[] permissionsNeeded,
+                                    HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        try {
+            getCurrentUser(request);
+
+            HttpSession session = request.getSession(false);
+            Map<Integer, Set<PermissionType>> permissions = (session == null) ? null
+                    : RequestHelper.getUserPermissions(session);
+            if (!UserUtilities.hasPermission(permissions, permissionsNeeded)) {
+                return false;
+            }
+            return true;
+        } catch (RuntimeException re) {
+            logger.debug("hasPermission: failed to check permission", re);
+            return false;
+        }
     }
 }
