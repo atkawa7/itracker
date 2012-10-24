@@ -11,7 +11,7 @@
 		<section name="Configuration">
 			<p>There are some properties which you're able to configure for your
 			itracker (
-			<code>WEB-INF/configuration.properties
+			<code>classpath:configuration.properties
 			</code>
 			)
 			</p>

@@ -61,7 +61,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
      * Creates a new instance using the given configuration.
      *
      * @param configurationProperties itracker configuration properties
-     *                                (see /WEB-INF/configuration.properties)
+     *                                (see classpath:configuration.properties)
      */
     public ConfigurationServiceImpl(Properties configurationProperties,
                                     ConfigurationDAO configurationDAO, CustomFieldDAO customFieldDAO,

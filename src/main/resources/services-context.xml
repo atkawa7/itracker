@@ -65,13 +65,8 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     </bean>
 
     <bean id="configurationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="location" value="/WEB-INF/configuration.properties"/>
+        <property name="location" value="classpath:configuration.properties"/>
     </bean>
-
-    <!-- 
-    <util:properties id="configurationProperties" location="/WEB-INF/configuration.properties"/>
-    -->
-
 
     <bean id="configurationServiceTarget"
           class="org.itracker.services.implementations.ConfigurationServiceImpl">
