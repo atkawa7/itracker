@@ -4,6 +4,9 @@ import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
 import com.thoughtworks.selenium.SeleniumException;
 import org.apache.log4j.Logger;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverBackedSelenium;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -107,16 +110,23 @@ public class SeleniumManager {
     public static Selenium getSelenium() throws IOException {
         if (null == selenium) {
             log.info("starting new selenium");
+            final String seleniumUrl = "http://" + applicationHost + ":" + applicationPort + "/"
+                    + applicationPath;
+            if (seleniumBrowser.equals("htmlunit")) {
+                // TODO FIXME not working yet due to javascript issues
+                WebDriver driver = new HtmlUnitDriver(true);
+                selenium = new WebDriverBackedSelenium(driver, seleniumUrl);
+            } else {
+                selenium = new DefaultSelenium(seleniumHost, seleniumPort,
+                        seleniumBrowser,
+                        seleniumUrl);
+            }
 
-            selenium = new DefaultSelenium(seleniumHost, seleniumPort,
-                    seleniumBrowser,
-                    "http://" + applicationHost + ":" + applicationPort + "/"
-                            + applicationPath);
             selenium.start();
-
             selenium.setBrowserLogLevel(seleniumBrowserLogLevel);
             selenium.setSpeed(seleniumSpeed);
             selenium.useXpathLibrary(seleniumUseXPathLibrary);
+
         }
         return selenium;
     }
@@ -129,8 +139,6 @@ public class SeleniumManager {
             log.debug("closeSession: " + selenium);
         }
         selenium.deleteAllVisibleCookies();
-        log.info("closeSession, captured traffic: " + selenium.captureNetworkTraffic("plain"));
-
     }
 
     public static String getSeleniumHost() {
