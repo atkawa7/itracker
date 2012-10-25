@@ -51,7 +51,7 @@
         <maven-compiler-plugin.version>2.0.2</maven-compiler-plugin.version>
         <maven-deploy-plugin.version>2.7</maven-deploy-plugin.version>
         <maven-wagon-ssh-plugin.version>2.2</maven-wagon-ssh-plugin.version>
-        
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
@@ -203,7 +203,7 @@
                 <version>2.12</version>
                 <executions>
                     <execution>
-                    <id>integration-test</id>
+                        <id>integration-test</id>
                         <goals>
                             <goal>integration-test</goal>
                             <goal>verify</goal>
@@ -229,7 +229,7 @@
                         </goals>
                     </execution>
                 </executions>
-                
+
                 <configuration>
                     <!--reportSets>
                         <reportSet>
@@ -495,7 +495,7 @@
                                 <artifactId>maven-surefire-report-plugin</artifactId>
                                 <version>${maven-surefire-report-plugin.version}</version>
                             </plugin>
-                            
+
                             <plugin>
                                 <groupId>org.apache.maven.plugins</groupId>
                                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -523,7 +523,7 @@
                             <artifactId>wagon-ssh</artifactId>
                             <version>${maven-wagon-ssh-plugin.version}</version>
                         </dependency>
-                     </dependencies>
+                    </dependencies>
                 </plugin>
 
                 <plugin>
@@ -542,13 +542,13 @@
                     <configuration>
                         <skip>false</skip>
                     </configuration>
-                    <dependencies>                    
+                    <dependencies>
                         <dependency>
                             <groupId>org.apache.maven.wagon</groupId>
                             <artifactId>wagon-ssh</artifactId>
                             <version>${maven-wagon-ssh-plugin.version}</version>
                         </dependency>
-                     </dependencies>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <artifactId>maven-pmd-plugin</artifactId>
@@ -674,6 +674,22 @@
                     <artifactId>commons-logging</artifactId>
                     <groupId>commons-logging</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>xalan</artifactId>
+                    <groupId>xalan</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>antlr</artifactId>
+                    <groupId>antlr</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>commons-beanutils</artifactId>
+                    <groupId>commons-beanutils</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>xml-apis</artifactId>
+                    <groupId>xml-apis</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -782,6 +798,22 @@
                     <artifactId>commons-logging</artifactId>
                     <groupId>commons-logging</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>commons-collections</artifactId>
+                    <groupId>commons-collections</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>junit</artifactId>
+                    <groupId>junit</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>commons-lang</artifactId>
+                    <groupId>commons-lang</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>xercesImpl</artifactId>
+                    <groupId>xerces</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -815,6 +847,20 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate</artifactId>
             <version>3.2.7.ga</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>antlr</artifactId>
+                    <groupId>antlr</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>commons-collections</artifactId>
+                    <groupId>commons-collections</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>antlr</groupId>
@@ -829,7 +875,7 @@
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.1</version>
+            <version>2.6</version>
         </dependency>
         <dependency>
             <artifactId>commons-logging</artifactId>
@@ -840,6 +886,7 @@
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>2.25.0</version>
+            <scope>test</scope>
             <exclusions>
                 <exclusion>
                     <artifactId>xercesImpl</artifactId>
@@ -853,6 +900,45 @@
                     <artifactId>commons-collections</artifactId>
                     <groupId>commons-collections</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>commons-codec</artifactId>
+                    <groupId>commons-codec</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>htmlunit</artifactId>
+                    <groupId>net.sourceforge.htmlunit</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>httpclient</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>commons-io</artifactId>
+                    <groupId>commons-io</groupId>
+                </exclusion>
+
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-server</artifactId>
+            <version>2.25.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
+            <version>2.10</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-collections</artifactId>
+                    <groupId>commons-collections</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>xml-apis</artifactId>
+                    <groupId>xml-apis</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -860,12 +946,28 @@
             <artifactId>subethasmtp</artifactId>
             <version>3.1.6</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>activation</artifactId>
+                    <groupId>javax.activation</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.5.5</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <reporting>
@@ -890,11 +992,11 @@
                     <reportSet>
                         <id>integration-tests</id>
                         <reports>
-                          <report>failsafe-report-only</report>
+                            <report>failsafe-report-only</report>
                         </reports>
                     </reportSet>
                 </reportSets>
-            </plugin>        
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
@@ -903,12 +1005,12 @@
                     <reportSet>
                         <id>selenium-tests</id>
                         <reports>
-                          <report>failsafe-selenium-report-only</report>
+                            <report>failsafe-selenium-report-only</report>
                         </reports>
                     </reportSet>
                 </reportSets>
-            </plugin>                   
-                       
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -925,7 +1027,7 @@
                 </configuration>
             </plugin>
 
-            <plugin>                
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
                 <version>${maven-cobertura-plugin.version}</version>
@@ -937,7 +1039,7 @@
                     <check />
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>${maven-pmd-plugin.version}</version>
@@ -1003,22 +1105,22 @@
         </site>
 
         <repository>
-          <id>itracker.releases</id>
-          <name>itracker Release Repository</name>
-          <url>scp://shell.sourceforge.net/home/project-web/itracker/htdocs/maven2/releases</url>
+            <id>itracker.releases</id>
+            <name>itracker Release Repository</name>
+            <url>scp://shell.sourceforge.net/home/project-web/itracker/htdocs/maven2/releases</url>
         </repository>
         <snapshotRepository>
-          <id>itracker.snapshots</id>
-          <name>itracker Release Repository</name>
-          <url>scp://shell.sourceforge.net/home/project-web/itracker/htdocs/maven2/snapshots</url>
+            <id>itracker.snapshots</id>
+            <name>itracker Release Repository</name>
+            <url>scp://shell.sourceforge.net/home/project-web/itracker/htdocs/maven2/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
     <profiles>
         <profile>
             <id>itracker.tomcat</id>
-            
+
             <properties>
-                       
+
                 <application.port>8888</application.port>
                 <mail.smtp.host>mail.example.com</mail.smtp.host>
                 <mail.smtp.auth>false</mail.smtp.auth>
@@ -1032,7 +1134,7 @@
                 <main.dataSource.password>${test.dataSource.password}</main.dataSource.password>
                 <main.dataSource.driverClass>${test.dataSource.driverClass}</main.dataSource.driverClass>
                 <main.hibernate.dialect>${test.hibernate.dialect}</main.hibernate.dialect-->
- 
+
                 <!--main.dataSource.user>itracker</main.dataSource.user>
                 <main.dataSource.password><your password></main.dataSource.password-->
             </properties>
@@ -1072,8 +1174,8 @@
                 <pluginManagement>
                     <plugins>
                         <plugin>
-                          <groupId>org.apache.tomcat.maven</groupId>
-                          <artifactId>tomcat6-maven-plugin</artifactId>
+                            <groupId>org.apache.tomcat.maven</groupId>
+                            <artifactId>tomcat6-maven-plugin</artifactId>
                             <version>${maven-tomcat-plugin.version}</version>
                             <configuration>
                                 <port>${application.port}</port>
@@ -1114,8 +1216,8 @@
                             </dependencies>
                         </plugin>
                         <plugin>
-                          <groupId>org.apache.tomcat.maven</groupId>
-                          <artifactId>tomcat7-maven-plugin</artifactId>
+                            <groupId>org.apache.tomcat.maven</groupId>
+                            <artifactId>tomcat7-maven-plugin</artifactId>
                             <version>${maven-tomcat-plugin.version}</version>
                             <configuration>
                                 <port>${application.port}</port>
@@ -1161,7 +1263,7 @@
         </profile>
         <profile>
             <id>selenium</id>
-            
+
             <properties>
                 <!--itracker.it.skip>true</itracker.it.skip-->
                 <selenium.firefox.binary>firefox</selenium.firefox.binary>
@@ -1255,7 +1357,7 @@
                                 <configuration>
                                     <tasks>
                                         <copy overwrite="true" file="${project.build.testOutputDirectory}/log4j.xml"
-                                              todir="${project.build.testOutputDirectory}/" />
+                                              todir="${project.build.testOutputDirectory}/"/>
                                     </tasks>
                                 </configuration>
                             </execution>
@@ -1414,57 +1516,57 @@
                             </execution-->
                         </executions>
                     </plugin>
-                    
+
 
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <version>2.12</version>
                         <executions>
-                          <execution>
-                            <id>integration-test</id>
-                            <configuration>
-                                <!--skipTests>false</skipTests-->
-                                <excludes>
-                                    <exclude>org/itracker/selenium/**/*PreTest.java</exclude>
-                                    <!--exclude>org/itracker/**/NamingUtilitiesIT.java</exclude-->
-                                </excludes>
-                                <forkMode>none</forkMode>
-                            </configuration>
-                          </execution>
-                          
-                          <execution>
-                            <id>selenium-integration-test</id>
-                            <goals>
-                              <goal>integration-test</goal>
-                              <goal>verify</goal>
-                            </goals>
-                            <configuration>
-                                <skipTests>false</skipTests>
-                                <skipITs>false</skipITs>
-                                <properties>
-                                    <itracker.it.skip>true</itracker.it.skip>
-                                </properties>
-                                <!--reportsDirectory>${project.build.directory}/failsafe-selenium-reports</reportsDirectory-->
-                                <includes>
-                                    <include>org/itracker/selenium/**/*.java</include>
-                                </includes>
-                                <excludes>
-                                    <exclude>org/itracker/selenium/**/*PreTest.java</exclude>
-                                </excludes>
-                            </configuration>
-                          </execution>
-                          
+                            <execution>
+                                <id>integration-test</id>
+                                <configuration>
+                                    <!--skipTests>false</skipTests-->
+                                    <excludes>
+                                        <exclude>org/itracker/selenium/**/*PreTest.java</exclude>
+                                        <!--exclude>org/itracker/**/NamingUtilitiesIT.java</exclude-->
+                                    </excludes>
+                                    <forkMode>none</forkMode>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>selenium-integration-test</id>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                                <configuration>
+                                    <skipTests>false</skipTests>
+                                    <skipITs>false</skipITs>
+                                    <properties>
+                                        <itracker.it.skip>true</itracker.it.skip>
+                                    </properties>
+                                    <!--reportsDirectory>${project.build.directory}/failsafe-selenium-reports</reportsDirectory-->
+                                    <includes>
+                                        <include>org/itracker/selenium/**/*.java</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>org/itracker/selenium/**/*PreTest.java</exclude>
+                                    </excludes>
+                                </configuration>
+                            </execution>
+
                         </executions>
                         <dependencies>
                             <dependency>
                                 <groupId>org.eclipse.jetty</groupId>
-	                            <artifactId>jetty-plus</artifactId>
+                                <artifactId>jetty-plus</artifactId>
                                 <version>${maven-jetty-plugin.version}</version>
                             </dependency>
                         </dependencies>
                     </plugin>
-                    
+
                 </plugins>
             </build>
         </profile>
@@ -1484,13 +1586,13 @@
 
                 <main.dataSource.jdbcUrl>jdbc:mysql://localhost:3306/itrackerdev</main.dataSource.jdbcUrl>
                 <main.dataSource.user>root</main.dataSource.user>
-                <main.dataSource.password />
+                <main.dataSource.password/>
                 <main.dataSource.driverClass>com.mysql.jdbc.Driver</main.dataSource.driverClass>
                 <main.hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</main.hibernate.dialect>
 
                 <test.dataSource.jdbcUrl>jdbc:mysql://localhost:3306/itrackerdev</test.dataSource.jdbcUrl>
                 <test.dataSource.user>root</test.dataSource.user>
-                <test.dataSource.password />
+                <test.dataSource.password/>
                 <test.dataSource.driverClass>com.mysql.jdbc.Driver</test.dataSource.driverClass>
                 <test.hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</test.hibernate.dialect>
             </properties>

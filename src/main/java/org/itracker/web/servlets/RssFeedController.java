@@ -20,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.feed.RssChannelHttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpResponse;
 
-import javax.annotation.Nullable;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -339,7 +338,7 @@ public class RssFeedController extends GenericController {
     }
 
 
-    private String getIssueURL(Issue i, @Nullable IssueHistory ih, HttpServletRequest req, ServletContext context, String baseUrl) {
+    private String getIssueURL(Issue i, IssueHistory ih, HttpServletRequest req, ServletContext context, String baseUrl) {
         ModuleConfig conf = ModuleUtils.getInstance().getModuleConfig(
                 "/module-projects",
                 req,
@@ -356,7 +355,7 @@ public class RssFeedController extends GenericController {
                 ;
     }
 
-    private String getProjectURL(Project p, @Nullable Issue i, HttpServletRequest req, ServletContext context, String baseUrl) {
+    private String getProjectURL(Project p, Issue i, HttpServletRequest req, ServletContext context, String baseUrl) {
         ModuleConfig conf = ModuleUtils.getInstance().getModuleConfig(
                 "/module-projects",
                 req,
