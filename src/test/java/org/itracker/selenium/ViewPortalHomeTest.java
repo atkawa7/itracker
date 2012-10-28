@@ -34,14 +34,7 @@ public class ViewPortalHomeTest extends AbstractSeleniumTestCase {
         selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        assertFalse(selenium.isElementPresent("id"));
-        assertTrue(selenium.isElementPresent("login"));
-        assertTrue(selenium.isElementPresent("password"));
-        assertTrue(selenium.isElementPresent("xpath=//*[@type='submit']"));
-        selenium.type("login", "admin_test1");
-        selenium.type("password", "admin_test1");
-        selenium.click("xpath=//*[@type='submit']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        loginUser("admin_test1", "admin_test1");
 
         assertElementPresent("id");
         assertElementPresent("id=unassignedIssues");
