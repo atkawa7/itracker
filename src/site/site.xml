@@ -30,6 +30,8 @@
 			<item name="Sourceforge" href="https://sourceforge.net/projects/itracker/" />
 			<item name="itracker"
 				href="http://www.itracker.org/" />
+            <item name="staging"
+         				href="http://www.itracker.org/staging/" />
 		</breadcrumbs>
 
 		<menu name="itracker">
