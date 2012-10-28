@@ -1308,7 +1308,7 @@
 
                 <main.hibernate.dialect>org.hibernate.dialect.HSQLDialect</main.hibernate.dialect>
 
-                <main.dataSource.jdbcUrl>jdbc:hsqldb:mem:itrackerdev-test</main.dataSource.jdbcUrl>
+                <main.dataSource.jdbcUrl>jdbc:hsqldb:mem:target/itrackerdev-jetty</main.dataSource.jdbcUrl>
                 <main.dataSource.user>sa</main.dataSource.user>
                 <main.dataSource.password />
                 <main.dataSource.driverClass>org.hsqldb.jdbcDriver</main.dataSource.driverClass>
