@@ -40,7 +40,7 @@
 		</menu>
 
 		<menu name="Download">
-			<item name="Binaries" href="https://sourceforge.net/project/showfiles.php?group_id=54141" />
+			<item name="Binaries" href="http://sourceforge.net/projects/itracker/files/" />
 			<!-- TODO
 			<item name="Installation 2.4 production" href="/download.html" />
 			<item name="Installation 3.0 development" href="/release-notes.html" />
@@ -62,7 +62,7 @@
 			-->
 
 		
-			<item name="3.0.2 Release Notes" href="/release-notes/itracker-3.0.2.html" />
+			<item name="3.1.1 Release Notes" href="/release-notes/itracker-3.1.1.html" />
 
 
             <item name="Install" href="/install.html"/>
@@ -92,7 +92,7 @@
 				href="/development_environment_setup.html" />
 			<item name="Coding guidelines" href="/coding-guidelines.html"/>
 			<item name="FAQ" href="/FAQ.html"/>
-			<item name="Wiki" href="http://itracker.wiki.sourceforge.net/" />
+			<item name="Wiki" href="http://sourceforge.net/p/itracker/wiki/" />
 
 		</menu>
 <!--
@@ -102,10 +102,6 @@
 			<item name="Commercial Support" />
 		</menu>
  -->
-		<menu>
-			<item name="Fisheye" target="_blank"
-				href="http://fisheye3.cenqua.com/browse/itracker" />
-		</menu>
 
 		<menu ref="reports" />
 
