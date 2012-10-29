@@ -35,7 +35,7 @@
         <maven-findbugs-plugin.version>2.4.0</maven-findbugs-plugin.version>
         <maven-site-plugin.version>3.0</maven-site-plugin.version>
         <maven-project-info-reports-plugin.version>2.4</maven-project-info-reports-plugin.version>
-        <maven-tomcat-plugin.version>2.0-beta-1</maven-tomcat-plugin.version>
+        <maven-tomcat-plugin.version>2.0</maven-tomcat-plugin.version>
         <maven-clover-plugin.version>3.7</maven-clover-plugin.version>
         <maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
         <maven-checkstyle-plugin.version>2.8</maven-checkstyle-plugin.version>
@@ -341,8 +341,18 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>tomcat-maven-plugin</artifactId>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat6-maven-plugin</artifactId>
+                <configuration>
+                    <server>localhost</server>
+                    <url>http://localhost:8080/manager</url>
+                    <path>/itracker</path>
+                    <update>true</update>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
                 <configuration>
                     <server>localhost</server>
                     <url>http://localhost:8080/manager</url>
@@ -423,11 +433,6 @@
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>2.2</version>
-                </plugin>
-                <plugin>
-                    <artifactId>tomcat-maven-plugin</artifactId>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <version>1.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
@@ -555,6 +560,19 @@
                     <version>${maven-pmd-plugin.version}</version>
                     <configuration>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.tomcat.maven</groupId>
+                    <artifactId>tomcat6-maven-plugin</artifactId>
+                    <configuration>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>javax.mail</groupId>
+                            <artifactId>mail</artifactId>
+                            <version>1.4.4</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.tomcat.maven</groupId>
@@ -1005,10 +1023,9 @@
             </exclusions>
         </dependency>
     </dependencies>
+
     <reporting>
-
         <plugins>
-
             <plugin>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>${maven-project-info-reports-plugin.version}</version>
@@ -1152,12 +1169,11 @@
             <url>scp://shell.sourceforge.net/home/project-web/itracker/htdocs/maven2/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
+
     <profiles>
         <profile>
             <id>itracker.tomcat</id>
-
             <properties>
-
                 <application.port>8888</application.port>
                 <mail.smtp.host>mail.example.com</mail.smtp.host>
                 <mail.smtp.auth>false</mail.smtp.auth>
@@ -1208,94 +1224,88 @@
                         <targetPath>${project.build.directory}/tomcat-itracker</targetPath>
                     </resource>
                 </resources>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.tomcat.maven</groupId>
-                            <artifactId>tomcat6-maven-plugin</artifactId>
-                            <version>${maven-tomcat-plugin.version}</version>
-                            <configuration>
-                                <port>${application.port}</port>
-                                <contextFile>${project.build.directory}/tomcat-itracker/context.xml</contextFile>
-
-                            </configuration>
-                            <dependencies>
-                                <dependency>
-                                    <groupId>javax.mail</groupId>
-                                    <artifactId>mail</artifactId>
-                                    <version>${mail.version}</version>
-                                </dependency>
-                                <dependency>
-                                    <groupId>c3p0</groupId>
-                                    <artifactId>c3p0</artifactId>
-                                    <version>${c3p0.version}</version>
-                                </dependency>
-                                <dependency>
-                                    <groupId>hsqldb</groupId>
-                                    <artifactId>hsqldb</artifactId>
-                                    <version>${hsqldb.version}</version>
-                                </dependency>
-                                <dependency>
-                                    <groupId>mysql</groupId>
-                                    <artifactId>mysql-connector-java</artifactId>
-                                    <version>${mysql-connector-java.version}</version>
-                                </dependency>
-                                <dependency>
-                                    <groupId>postgresql</groupId>
-                                    <artifactId>postgresql</artifactId>
-                                    <version>${postgresql.version}</version>
-                                </dependency>
-                                <dependency>
-                                    <groupId>org.apache.derby</groupId>
-                                    <artifactId>derby</artifactId>
-                                    <version>${derby.version}</version>
-                                </dependency>
-                            </dependencies>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.tomcat.maven</groupId>
-                            <artifactId>tomcat7-maven-plugin</artifactId>
-                            <version>${maven-tomcat-plugin.version}</version>
-                            <configuration>
-                                <port>${application.port}</port>
-                                <contextFile>${project.build.directory}/tomcat-itracker/context.xml</contextFile>
-
-                            </configuration>
-                            <dependencies>
-                                <dependency>
-                                    <groupId>javax.mail</groupId>
-                                    <artifactId>mail</artifactId>
-                                    <version>${mail.version}</version>
-                                </dependency>
-                                <dependency>
-                                    <groupId>c3p0</groupId>
-                                    <artifactId>c3p0</artifactId>
-                                    <version>${c3p0.version}</version>
-                                </dependency>
-                                <dependency>
-                                    <groupId>hsqldb</groupId>
-                                    <artifactId>hsqldb</artifactId>
-                                    <version>${hsqldb.version}</version>
-                                </dependency>
-                                <dependency>
-                                    <groupId>mysql</groupId>
-                                    <artifactId>mysql-connector-java</artifactId>
-                                    <version>${mysql-connector-java.version}</version>
-                                </dependency>
-                                <dependency>
-                                    <groupId>postgresql</groupId>
-                                    <artifactId>postgresql</artifactId>
-                                    <version>${postgresql.version}</version>
-                                </dependency>
-                                <dependency>
-                                    <groupId>org.apache.derby</groupId>
-                                    <artifactId>derby</artifactId>
-                                    <version>${derby.version}</version>
-                                </dependency>
-                            </dependencies>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat6-maven-plugin</artifactId>
+                        <configuration>
+                            <port>${application.port}</port>
+                            <contextFile>${project.build.directory}/tomcat-itracker/context.xml</contextFile>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>javax.mail</groupId>
+                                <artifactId>mail</artifactId>
+                                <version>${mail.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>c3p0</groupId>
+                                <artifactId>c3p0</artifactId>
+                                <version>${c3p0.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>hsqldb</groupId>
+                                <artifactId>hsqldb</artifactId>
+                                <version>${hsqldb.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>mysql</groupId>
+                                <artifactId>mysql-connector-java</artifactId>
+                                <version>${mysql-connector-java.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>postgresql</groupId>
+                                <artifactId>postgresql</artifactId>
+                                <version>${postgresql.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.apache.derby</groupId>
+                                <artifactId>derby</artifactId>
+                                <version>${derby.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat7-maven-plugin</artifactId>
+                        <configuration>
+                            <port>${application.port}</port>
+                            <contextFile>${project.build.directory}/tomcat-itracker/context.xml</contextFile>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>javax.mail</groupId>
+                                <artifactId>mail</artifactId>
+                                <version>${mail.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>c3p0</groupId>
+                                <artifactId>c3p0</artifactId>
+                                <version>${c3p0.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>hsqldb</groupId>
+                                <artifactId>hsqldb</artifactId>
+                                <version>${hsqldb.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>mysql</groupId>
+                                <artifactId>mysql-connector-java</artifactId>
+                                <version>${mysql-connector-java.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>postgresql</groupId>
+                                <artifactId>postgresql</artifactId>
+                                <version>${postgresql.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.apache.derby</groupId>
+                                <artifactId>derby</artifactId>
+                                <version>${derby.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
             </build>
         </profile>
         <profile>
