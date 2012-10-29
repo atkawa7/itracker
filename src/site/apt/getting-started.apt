@@ -8,11 +8,11 @@
 
 Getting Started
 
-* How to get up and running developing for itracker
+*How to get up and running developing for itracker
 
   [[1]] {{{/development_environment_setup.html} Setup your Developement Environment}} (recommended: Tomcat 6.x, Eclipse 3.3+ with Maven Integration-/SVN-Plugin)
   
-  [[2]] Run with in-memory development database (configured in <<</src/main/tomcat/context.xml>>>) to run in Tomcat from maven (<<<mvn packge tomcat6:run -Pitracker.tomcat>>>)
+  [[2]] Run with main (development) database (configured in <<</src/main/tomcat/context.xml>>>) to run in Tomcat from maven (<<<mvn packge tomcat6:run -Pitracker.tomcat>>>)
 
     * or alternatively Setup a local MySQL with an existing tomcat installation (IDE) and add links to the JNDI datasource and mailsession using a {{{./examples/context.xml}META-INF/context.xml}}
   
@@ -32,7 +32,7 @@ Getting Started
 
   Also read the this question in the {{{./FAQ.html}FAQ}}.
 
-* Please stick to the following rules:
+*Please stick to the following rules:
 
   * Only check in working/tested code, if possible.
 
