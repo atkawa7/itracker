@@ -47,6 +47,23 @@ public interface ConfigurationService {
 
     Configuration getConfigurationItem(Integer id);
 
+
+    /**
+     * The JNDI context where the configuration.properties values can be overridden.
+     * @return
+     */
+    String getJndiPropertiesOverridePrefix();
+
+    void setJndiPropertiesOverridePrefix(String jndiPropertiesOverridePrefix);
+
+    /**
+     * The JNDI lookup name for the mail-session.
+     * @return
+     */
+    String getMailSessionLookupName();
+
+    void setMailSessionLookupName(String mailSessionLookupName);
+
     /**
      * Returns all the configuration items of a particular type.  The name values
      * for all the items will not be initialized.

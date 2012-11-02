@@ -18,6 +18,7 @@
 
 package org.itracker.services.implementations;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
@@ -39,12 +40,10 @@ import java.util.*;
  * @see ConfigurationService
  */
 
-// TODO: Cleanup this file, go through all issues, todos, etc.
-
 public class ConfigurationServiceImpl implements ConfigurationService {
 
     private static final Logger logger = Logger.getLogger(ConfigurationServiceImpl.class.getName());
-    // TODO make final static?
+
     private final Properties props;
     private ConfigurationDAO configurationDAO;
     private CustomFieldDAO customFieldDAO;
@@ -56,6 +55,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     private static final Long _START_TIME_MILLIS = System.currentTimeMillis();
     private String jndiPropertiesOverridePrefix;
+    private String mailSessionLookupName;
 
     /**
      * Creates a new instance using the given configuration.
@@ -74,8 +74,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         props.setProperty("start_time_millis", String.valueOf(_START_TIME_MILLIS));
 
         // initialize naming context prefix for properties overrides
-        this.jndiPropertiesOverridePrefix = props.getProperty(
-                "jndi_override_prefix", null);
+        if (StringUtils.isEmpty(jndiPropertiesOverridePrefix)) {
+            jndiPropertiesOverridePrefix = "java:comp/env/itracker";
+        }
+        if (StringUtils.isEmpty(mailSessionLookupName)) {
+            mailSessionLookupName = "java:comp/env/itracker/mail/Session";
+        }
 
         this.configurationDAO = configurationDAO;
         this.customFieldDAO = customFieldDAO;
@@ -84,6 +88,22 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
         this.projectScriptDAO = projectScriptDAO;
         this.workflowScriptDAO = workflowScriptDAO;
+    }
+
+    public String getJndiPropertiesOverridePrefix() {
+        return jndiPropertiesOverridePrefix;
+    }
+
+    public void setJndiPropertiesOverridePrefix(String jndiPropertiesOverridePrefix) {
+        this.jndiPropertiesOverridePrefix = jndiPropertiesOverridePrefix;
+    }
+
+    public String getMailSessionLookupName() {
+        return mailSessionLookupName;
+    }
+
+    public void setMailSessionLookupName(String mailSessionLookupName) {
+        this.mailSessionLookupName = mailSessionLookupName;
     }
 
     public String getProperty(String name) {

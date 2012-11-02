@@ -18,32 +18,6 @@
     </form-beans>
 
     <global-forwards>
-
-        <!-- check the old forwards and then remove them..
-        <forward name="error_old" path="/themes/defaulttheme/error.jsp" />
-         <forward name="help_old" path="/themes/defaulttheme/help/show_help.jsp" />
-         <forward name="forgotpassword_old" path="/module-portalhome-unauthenticated/forgot_password.jsp" />
-
-       <forward name="listreports_old" path="/module-reports/list_reports.jsp" />
-       <forward name="login_old" path="/module-portalhome-unauthenticated/login.jsp" />
-       <forward name="relateissue_old" path="/module-projects/relate_issue.jsp" />
-       <forward name="unauthorized_old" path="/module-portalhome-unauthenticated/unauthorized.jsp" />
-       <forward name="listattachments_old" path="/themes/defaulttheme/admin/admin_attachment/list_attachments.jsp" />
-       <forward name="listconfiguration_old" path="/themes/defaulttheme/admin/admin_configuration/list_configuration.jsp" />
-       <forward name="listlanguages_old" path="/themes/defaulttheme/admin/admin_language/list_languages.jsp" />
-       <forward name="listprojectsadmin_old" path="/themes/defaulttheme/admin/admin_project/list_projects.jsp" />
-       <forward name="listreportsadmin_old" path="/themes/defaulttheme/admin/admin_report/list_reports.jsp" />
-       <forward name="listtasks_old" path="/themes/defaulttheme/admin/admin_scheduler/list_tasks.jsp" />
-       <forward name="listusers_old" path="/themes/defaulttheme/admin/admin_user/list_users.jsp" />
-       <forward name="listworkflow_old" path="/themes/defaulttheme/admin/admin_workflow/list_workflow.jsp" />
-      <forward name="viewissue_old" path="/module-projects/view_issue.jsp" />
-      <forward name="viewactivity_old" path="/module-projects/view_issue_activity.jsp" />
-       <forward name="downloadreport" path="/servlets/ReportDownloadController" />
-        -->
-
-        <!-- here come the really used forwards.. -->
-
-
         <forward name="autologin" path="/autologin.do"/>
         <forward name="arrivalforward" path="/portalhome.do"/>
         <forward name="adminindex" module="/module-admin" path="/adminhome.do"/>

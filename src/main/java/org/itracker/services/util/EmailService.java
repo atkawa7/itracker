@@ -135,12 +135,7 @@ public class EmailService {
         String smtpCharset = configurationService.getProperty(
                 "notification_smtp_charset", DEFAULT_SMTP_CHARSET);
 
-        String mailSessionLookupName = configurationService.getProperty(
-                "mail_session_jndi_lookup", "none");
-
-        logger
-                .info("init: looking for Session in JNDI, lookup name from configuration: "
-                        + mailSessionLookupName);
+        String mailSessionLookupName = configurationService.getMailSessionLookupName();
 
         try {
             InitialContext ctx = new InitialContext();
