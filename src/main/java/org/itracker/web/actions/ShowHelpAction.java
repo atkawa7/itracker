@@ -23,8 +23,6 @@ public class ShowHelpAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                  HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-//        super.executeAlways(mapping,form,request,response);
-        //  TODO: Action Cleanup
 
         String helpPage = "";
         String helpParam = request.getParameter("page");
@@ -32,18 +30,19 @@ public class ShowHelpAction extends ItrackerBaseAction {
         Locale locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
         log.debug("Requesting Help Page: " + helpParam);
         if ("ct".equals(helpParam)) {
-            helpPage = ITrackerResources.getString("itracker.web.helppage.commontasks", locale);
+            helpPage = "commontasks";
         } else if ("ab".equals(helpParam)) {
             setupHelpAboutPageAttributes(request);
-            helpPage = ITrackerResources.getString("itracker.web.helppage.about", locale);
+            helpPage = "about";
         } else {
-            helpPage = ITrackerResources.getString("itracker.web.helppage.index", locale);
+            helpPage = "index";
+
         }
         log.debug("Redirecting to Help Page: " + helpPage);
-        request.setAttribute("helpPage", helpPage);
+        request.setAttribute("helpPage", ITrackerResources.getString("itracker.web.helppage." + helpPage, locale));
 
         String pageTitleKey = "itracker.web.showhelp.title";
-        String pageTitleArg = "";
+        String pageTitleArg = ITrackerResources.getString("itracker.web.help" + helpPage+".title", locale);
         request.setAttribute("pageTitleKey", pageTitleKey);
         request.setAttribute("pageTitleArg", pageTitleArg);
 
@@ -64,9 +63,7 @@ public class ShowHelpAction extends ItrackerBaseAction {
         long startTimeMillis = Long.parseLong(configurationService.getProperty("start_time_millis", ""));
         SimpleDateFormat dateFormat = new SimpleDateFormat(ITrackerResources.getString("itracker.dateformat.full"));
         String startTime = dateFormat.format(new Date(startTimeMillis));
-        String versionNumber = configurationService.getProperty("version", "Unknown");
         request.setAttribute("starttime", startTime);
-        request.setAttribute("version", versionNumber);
         request.setAttribute("javaVersion", System.getProperty("java.version"));
         request.setAttribute("javaVendor", System.getProperty("java.vendor"));
     }

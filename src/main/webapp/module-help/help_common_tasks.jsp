@@ -1,7 +1,6 @@
 <%@ include file="/common/taglibs.jsp" %>
 <%@ page pageEncoding="UTF-8" %>
 
-<a name="top"></a><span class="pageHeader">Common Tasks</span><br/>
 <ul>
     <li><a href="#create">Creating an Issue</a></li>
     <li><a href="#edit">Editing an Issue</a></li>

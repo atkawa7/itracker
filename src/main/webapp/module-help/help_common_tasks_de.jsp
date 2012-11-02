@@ -1,7 +1,6 @@
 <%@ include file="/common/taglibs.jsp" %>
 <%@ page pageEncoding="UTF-8" %>
 
-<a name="top"></a><span class="pageHeader">Alltägliche Aufgaben</span><br/>
 <ul>
     <li><a href="#create">Einen Eintrag anlegen</a></li>
     <li><a href="#edit">Einen Eintrag bearbeiten</a></li>
@@ -102,12 +101,12 @@
 <a href="#top" class="headerLinks">[top]</a><br/>
 
 <p class="help">
-    Über den Punkt "Meine Einstellungen" im Haputmenü können Sie ihre Voreinstellungen ändern.
+    Über den Punkt "Meine Einstellungen" im Hauptmenü können Sie ihre Voreinstellungen ändern.
     Auf der Seite mit den Einstellungen können Sie sowohl persönliche Informationen ändern,
     als auch Einstellungen, die die Darstellung von ITracker beeinflussen.<br/>
     <br/>
     Wenn Sie "Login speichern" ausgewählt haben, wird ein permanenter Cookie mit ihrem
-    Benutzernamen im Klartext und dem verschlüsselten Password auf Ihrem Rechner gespeichert.
+    Benutzernamen und dem verschlüsselten Password auf Ihrem Rechner gespeichert.
     Dies kann ein
     Sicherheitsrisiko darstellen, wenn andere Personen Zugriff auf Ihren Rechner haben.
     Wählen Sie diesen Punkt also nur aus, wenn Sie sicher sind, dass Sie das wollen.<br/>
