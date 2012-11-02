@@ -1,22 +1,21 @@
-<%@ taglib uri="/tags/itracker" prefix="it" %>
+<%@ include file="/common/taglibs.jsp" %>
 
    <table border="0" width="100%" cellpadding="1" class="footer">
       <tr>
       	<td class="footer_ruler" colspan="2">
-      	   <hr>
-      	   </td>
+      	   <hr />
+      	</td>
       </tr>
       <tr>
-        <td align="left" width="" style="text-align: left;" nowrap>
- 
-           <it:message key="itracker.web.attr.copyright"/> 2002, 2003, 2004 by Jason Carroll, donated it to public domain,
-        	<br/>
-        	2005 by <a href="http://www.itracker.org" target="_blank">itracker.org</a> Version
-        	3.0, licensed under LGPL. </td>
-        <td align="right" width="50%" style="text-align: right;" valign="top">
-          <it:message key="itracker.web.attr.gendate"/>: <it:formatDate date="${currentDate}"/>
-        </td>
+          <td align="left" width="" style="text-align: left;" nowrap>
+
+             <it:message key="itracker.web.footer.powered" /> <a href="http://www.itracker.org" target="_blank">itracker </a> <c:out  value="${currentVersion}" />,
+              <it:message key="itracker.web.footer.licensing" /> <a href="http://www.gnu.org/licenses/lgpl.html">LGPL</a></td>
+          <td align="right" width="50%" style="text-align: right;" valign="top">
+            <c:set var="gendate"><it:formatDate date="${currentDate}"/></c:set>
+            <it:message key="itracker.web.footer.gendate" arg0="${gendate}"/>
+          </td>
       </tr>
     </table>
-    
+
 

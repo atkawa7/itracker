@@ -276,7 +276,8 @@ public class ExecuteAlwaysFilter implements Filter {
         boolean allowForgotPassword = true;
         boolean allowSelfRegister = false;
         boolean allowSaveLogin = true;
-        String alternateLogo = null;
+        String siteTitle = null;
+        String siteLogo = null;
 
         allowForgotPassword = configurationService.getBooleanProperty(
                 "allow_forgot_password", true);
@@ -284,8 +285,11 @@ public class ExecuteAlwaysFilter implements Filter {
                 "allow_self_register", false);
         allowSaveLogin = configurationService.getBooleanProperty(
                 "allow_save_login", true);
-        alternateLogo = configurationService
-                .getProperty("alternate_logo", null);
+        siteTitle = configurationService
+                        .getProperty("site_title", "itracker.org");
+        siteLogo = configurationService
+                .getProperty("site_logo", null);
+
         Locale locale = LoginUtilities.getCurrentLocale(request);
 
         // TODO: this should be configured per-instance. Request server-name
@@ -303,7 +307,8 @@ public class ExecuteAlwaysFilter implements Filter {
         request.setAttribute("allowSelfRegister", Boolean
                 .valueOf(allowSelfRegister));
         request.setAttribute("allowSaveLogin", Boolean.valueOf(allowSaveLogin));
-        request.setAttribute("alternateLogo", alternateLogo);
+        request.setAttribute("siteLogo", siteLogo);
+        request.setAttribute("siteTitle", siteTitle);
         request.setAttribute("baseURL", baseURL);
         // TODO: remove deprecated currLocale attribute
         request.setAttribute("currLocale", locale);
@@ -314,9 +319,12 @@ public class ExecuteAlwaysFilter implements Filter {
 
 
         request.setAttribute("locales", configurationService.getAvailableLanguages());
-
-
         request.setAttribute(Constants.LOCALE_KEY, locale);
+
+        request.setAttribute("contextPath", request.getContextPath());
+
+        request.setAttribute("currentDate", new java.util.Date());
+        request.setAttribute("currentVersion", configurationService.getProperty("version", "Unknown"));
 
 
     }
@@ -328,9 +336,6 @@ public class ExecuteAlwaysFilter implements Filter {
                 UserUtilities.PERMISSION_USER_ADMIN));
         request.setAttribute("hasPermissionProductAdmin", UserUtilities.hasPermission(permissions,
                 UserUtilities.PERMISSION_PRODUCT_ADMIN));
-        request.setAttribute("contextPath", request.getContextPath());
-
-        request.setAttribute("currentDate", new java.util.Date());
     }
 
 

@@ -1,17 +1,12 @@
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ include file="/common/taglibs.jsp" %>
 
-<%@ taglib uri="/tags/itracker" prefix="it"%>
-<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
-<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
-<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
-<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<c:if test="${ empty siteTitle}">
+    <c:set var="siteTitle" value="itracker.org" />
+</c:if>
 
 <html>
 <head>
-<title><it:message key="itracker.web.generic.itracker" />: <it:message
+<title><c:out value="${ siteTitle }" />: <it:message
 	key="${pageTitleKey}" arg0="${pageTitleArg}" /></title>
 <link rel="STYLESHEET" type="text/css"
 	href="${contextPath}/themes/defaulttheme/includes/styles.css" />
@@ -35,39 +30,52 @@
 
 <table border="0" cellspacing="1" cellspacing="0" width="100%">
 	<tr>
-		<td class="headerText"><%-- TODO: temp. removed logo code, fix again <% if(alternateLogo != null && ! alternateLogo.equals("")) { %>
-               <!--  <img src="<%= alternateLogo %>"> itracker.org<br>
-          <% } else { %>
-                <!--  <html:img page="/themes/defaulttheme/images/logo.gif"/> itracker.org<br>
-          <% } %> --%></td>
+		<td class="headerText">
+            <c:choose>
+                <c:when test="${ not empty siteLogo }">
+                    <html:img title="${ siteTitle }"  src="${ siteLogo }"/>
+                </c:when>
+                <c:otherwise>
+                    <c:out value="${ siteTitle }" />
+                </c:otherwise>
+            </c:choose>
+        </td>
 		<td class="headerTextPageTitle">
-		<h1><it:message key="${pageTitleKey}" arg0="${pageTitleArg}" /></h1>
+		<h1><it:message key="${ pageTitleKey }" arg0="${ pageTitleArg }" /></h1>
 		</td>
-		<td class="headerTextWelcome"><it:message
-			key="itracker.web.header.welcome" /> <c:choose>
-			<c:when test="${ currUser != null}">${ currUser.firstName } ${ currUser.lastName } (<em>${
-				currUser.login }</em>)</c:when>
-			<c:otherwise>
-				<em><it:message key="itracker.web.header.guest" /></em>
-			</c:otherwise>
-		</c:choose></td>
+        <td class="headerTextWelcome"><it:message
+                key="itracker.web.header.welcome"/>
+            <c:choose>
+                 <c:when test="${ currUser != null}">
+                     <html:link module="/module-preferences"
+                         forward="editpreferences" styleClass="headerTextWelcome"
+                         title="${currUser.login}">
+                         ${ currUser.firstName } ${ currUser.lastName }</html:link>
+                </c:when>
+                <c:otherwise>
+                    <em><it:message key="itracker.web.header.guest"/></em>
+                </c:otherwise>
+            </c:choose>
+        </td>
 	</tr>
 	<tr>
 		<td colspan="3" class="top_ruler">
-		<hr />
+            <hr/>
 		</td>
 	</tr>
 </table>
 <table border="0" cellspacing="0" cellspacing="0" width="100%">
 	<tr>
-		<td class="headerLinks" align="left"><c:if
+        <td class="headerLinks" align="left">
+            <c:if
 			test="${currUser != null}">
 
 			<form name="lookupForm"
 				action="<html:rewrite module="/module-projects" forward="viewissue"/>">
 			<input type="text" name="id" size="5" class="lookupBox"
 				onchange="document.lookupForm.submit();"></form>
-		</c:if></td>
+            </c:if>
+        </td>
 		<td class="headerLinks" align="right"><c:if
 			test="${currUser != null}">
 

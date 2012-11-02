@@ -1,34 +1,37 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
-
-<%@ taglib uri="/tags/itracker" prefix="it" %>
-<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
-<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
-<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
-<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ include file="/common/taglibs.jsp" %>
 
 <table border="0" cellspacing="1" cellspacing="0" width="100%">
     <tr>
-        <td class="headerText"></td>
+        <td class="headerText">
+            <c:choose>
+                <c:when test="${ not empty siteLogo }">
+                    <html:img title="${ siteTitle }"  src="${ siteLogo }"/>
+                </c:when>
+                <c:otherwise>
+                    <c:out value="${ siteTitle }" />
+                </c:otherwise>
+            </c:choose>
+        </td>
         <td class="headerTextPageTitle">
             <h1>
-                <c:set var="pageTitle"><it:message key="${pageTitleKey}" arg0="${pageTitleArg}"/></c:set>
-                <c:if test="${empty pageTitleKey or empty pageTitle}">
-                    <c:set var="pageTitle"><tiles:getAsString name="title" ignore="false"/></c:set>
-                </c:if>
+                <tiles:getAsString name="title" />
                 <c:out value="${pageTitle}"/>
             </h1>
         </td>
         <td class="headerTextWelcome"><it:message
-                key="itracker.web.header.welcome"/> <c:choose>
-            <c:when test="${ currUser != null}">${ currUser.firstName } ${ currUser.lastName } (<em>${
-            currUser.login }</em>)</c:when>
-            <c:otherwise>
-                <em><it:message key="itracker.web.header.guest"/></em>
-            </c:otherwise>
-        </c:choose></td>
+                key="itracker.web.header.welcome"/>
+            <c:choose>
+                 <c:when test="${ currUser != null}">
+                     <html:link module="/module-preferences"
+                         forward="editpreferences" styleClass="headerTextWelcome"
+                         title="${currUser.login}">
+                         ${ currUser.firstName } ${ currUser.lastName }</html:link>
+                </c:when>
+                <c:otherwise>
+                    <em><it:message key="itracker.web.header.guest"/></em>
+                </c:otherwise>
+            </c:choose>
+        </td>
     </tr>
     <tr>
         <td colspan="3" class="top_ruler">
@@ -38,32 +41,34 @@
 </table>
 <table border="0" cellspacing="0" cellspacing="0" width="100%">
     <tr>
-        <td class="headerLinks" align="left"><c:if
+        <td class="headerLinks" align="left">
+            <c:if
                 test="${currUser != null}">
 
-            <form name="lookupForm"
-                  action="<html:rewrite module="/module-projects" forward="viewissue"/>">
-                <input type="text" name="id" size="5" class="lookupBox"
-                       onchange="document.lookupForm.submit();"></form>
-        </c:if></td>
+                <form name="lookupForm"
+                      action="<html:rewrite module="/module-projects" forward="viewissue"/>">
+                    <input type="text" name="id" size="5" class="lookupBox"
+                           onchange="document.lookupForm.submit();"></form>
+            </c:if>
+        </td>
         <td class="headerLinks" align="right"><c:if
                 test="${currUser != null}">
 
             <html:link styleClass="headerLinks"
                        titleKey="itracker.web.header.menu.home.alt" module="/"
                        action="/portalhome">
-                <it:message key="itracker.web.header.menu.home"/>
+				<it:message key="itracker.web.header.menu.home" />
             </html:link>
 
             | <html:link linkName="listprojects" styleClass="headerLinks"
                          titleKey="itracker.web.header.menu.projectlist.alt"
                          module="/module-projects" action="/list_projects">
-            <it:message key="itracker.web.header.menu.projectlist"/>
+				<it:message key="itracker.web.header.menu.projectlist" />
         </html:link>
             | <html:link forward="searchissues" module="/module-searchissues"
                          styleClass="headerLinks"
                          titleKey="itracker.web.header.menu.search.alt">
-            <it:message key="itracker.web.header.menu.search"/>
+				<it:message key="itracker.web.header.menu.search" />
         </html:link>
             <%-- TODO: fix reports-section
                    <c:if
@@ -82,14 +87,14 @@
                 <html:link styleClass="headerLinks"
                            titleKey="itracker.web.header.menu.admin.alt"
                            module="/module-admin" action="/adminhome">
-                    <it:message key="itracker.web.header.menu.admin"/>
+					<it:message key="itracker.web.header.menu.admin" />
                 </html:link>
             </c:if>
             <c:if test="${hasPermissionProductAdmin}">
                 | <html:link styleClass="headerLinks"
                              titleKey="itracker.web.header.menu.projectadmin.alt"
                              module="/module-admin" action="/listprojectsadmin">
-                <it:message key="itracker.web.header.menu.projectadmin"/>
+					<it:message key="itracker.web.header.menu.projectadmin" />
             </html:link>
             </c:if>
 
@@ -97,16 +102,16 @@
             | <html:link module="/module-preferences"
                          forward="editpreferences" styleClass="headerLinks"
                          titleKey="itracker.web.header.menu.preferences.alt">
-            <it:message key="itracker.web.header.menu.preferences"/>
+				<it:message key="itracker.web.header.menu.preferences" />
         </html:link>
             | <html:link forward="help" styleClass="headerLinks"
                          titleKey="itracker.web.header.menu.help.alt" module="/module-help">
-            <it:message key="itracker.web.header.menu.help"/>
+				<it:message key="itracker.web.header.menu.help" />
         </html:link>
             | <html:link linkName="logoff" action="/logoff"
                          styleClass="headerLinks"
                          titleKey="itracker.web.header.menu.logout.alt" module="/">
-            <it:message key="itracker.web.header.menu.logout"/>
+				<it:message key="itracker.web.header.menu.logout" />
         </html:link>
         </c:if> <c:if test="${currUser == null}">
 
@@ -131,21 +136,21 @@
             <html:link linkName="index" forward="index"
                        styleClass="headerLinks"
                        titleKey="itracker.web.login.title">
-                <it:message key="itracker.web.login.title"/>
+                <it:message key="itracker.web.login.title" />
             </html:link>
             <c:if test="${allowForgotPassword}">
                 | <html:link linkName="forgotpassword" forward="forgotpassword"
                              styleClass="headerLinks"
                              titleKey="itracker.web.header.menu.forgotpass.alt">
-                <it:message key="itracker.web.header.menu.forgotpass"/>
+					<it:message key="itracker.web.header.menu.forgotpass" />
             </html:link>
             </c:if>
-             <nitrox:var name="allowSelfRegister" type="java.lang.Boolean"/>
+			<%-- <nitrox:var name="allowSelfRegister" type="java.lang.Boolean"/> --%>
             <c:if test="${allowSelfRegister}">
                 | <html:link forward="selfregistration"
                              styleClass="headerLinks"
                              titleKey="itracker.web.header.menu.selfreg.alt">
-                <it:message key="itracker.web.header.menu.selfreg"/>
+					<it:message key="itracker.web.header.menu.selfreg" />
             </html:link>
             </c:if>
         </c:if></td>
