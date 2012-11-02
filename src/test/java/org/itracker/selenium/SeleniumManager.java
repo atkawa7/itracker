@@ -4,12 +4,17 @@ import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
 import com.thoughtworks.selenium.SeleniumException;
 import org.apache.log4j.Logger;
+import org.openqa.selenium.SeleneseCommandExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.remote.CommandExecutor;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -109,12 +114,17 @@ public class SeleniumManager {
 
     public static Selenium getSelenium() throws IOException {
         if (null == selenium) {
-            log.info("starting new selenium");
-            final String seleniumUrl = "http://" + applicationHost + ":" + applicationPort + "/"
-                    + applicationPath;
+            final String seleniumUrl = "http://" + applicationHost + ":" + applicationPort;
+            log.info("getSelenium: starting new selenium on URL " + seleniumUrl);
             if (seleniumBrowser.equals("htmlunit")) {
                 // TODO FIXME not working yet due to javascript issues
                 WebDriver driver = new HtmlUnitDriver(true);
+                selenium = new WebDriverBackedSelenium(driver, seleniumUrl);
+            } else if (seleniumBrowser.equals("safari")) {
+                DesiredCapabilities capabilities = new DesiredCapabilities();
+                capabilities.setBrowserName("safari");
+                CommandExecutor executor = new SeleneseCommandExecutor(new URL("http://" + seleniumHost + ":"+ seleniumPort +"/"), new URL(seleniumUrl), capabilities);
+                WebDriver driver = new RemoteWebDriver(executor, capabilities);
                 selenium = new WebDriverBackedSelenium(driver, seleniumUrl);
             } else {
                 selenium = new DefaultSelenium(seleniumHost, seleniumPort,

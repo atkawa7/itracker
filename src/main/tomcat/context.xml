@@ -2,10 +2,11 @@
     <Resource name="itracker/mail/Session"
               auth="Container" 
               type="javax.mail.Session" 
-              
+
               mail.smtp.host="${mail.smtp.host}" 
               mail.smtp.auth="${mail.smtp.auth}" 
               mail.from="${mail.from}"
+              mail.mime.charset="UTF-8"
               mail.transport.protocol.rfc822="${mail.transport.protocol.rfc822}"
               mail.smtp.starttls.enable="${mail.smtp.starttls.enable}" />
 

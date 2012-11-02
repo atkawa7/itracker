@@ -8,37 +8,43 @@
 
 	<body>
 		<section name="Install itracker">
+            <p>The basic default setup assuming Tomcat 6.x or 7.x servlet container and a Mysql 5.x database. The database connection will
+            be used from a JNDI env entry <code>java:comp/env/jdbc/itracker_ds</code>.</p>
 			<ol>
 				<li>
-					First you have to download and install Apache Tomcat-6 you can do
+					download and install Apache Tomcat 6.x or 7.x, you can do
 					this here:
-					<a href="http://tomcat.apache.org/download-60.cgi">Download Tomcat-6</a>
-					If you need more instructions about Tomcat-6 take a look at this
+					<a href="http://tomcat.apache.org/whichversion.html">Download Tomcat</a>
+					If you need more instructions about Tomcat take a look at this
 					site:
-					<a href="http://tomcat.apache.org/">Information Tomcat-6</a>
+					<a href="http://tomcat.apache.org/">Apache Tomcat</a>
 				</li>
 
 				<li>
-					itracker assumes the mail and activation libs are provided
-					in the application class-path either by the JVM or application
-					server. Best practice is to install	the required files to the 
-					Tomcat lib folder if necessary:
-					<ol><li>download and extract java activation framework available from sun.com</li>
-					<li>copy the jar file <code>activation.jar</code> to the webserver library (eg <code>$TOMCAT6_HOME/lib/</code>)</li>
-					<li>download and extract javamail available from sun.com</li>
-					<li>copy the jar files <code>mail-api.jar</code> and <code>javamail.jar</code> to the webserver library</li>
-					<li>restart Tomcat to apply this changes</li></ol>
-				</li>
-				
-				<li>
-					After installing Tomcat-6 you have to set up an empty MySQL
+					After installing Tomcat you have to set up an empty MySQL
 					database for your itracker.
 					<em><strong>The database must support UTF-8 charset for itracker to function properly.</strong></em>
 					If you need more instructions about
 					MySQL:
-					<a href="http://www.mysql.com/">www.mysql.com</a>
-					.
+					<a href="http://www.mysql.com/">www.mysql.com</a>.
 				</li>
+
+                <li>
+                    Tomcat context should be configured to have access on the datasource via JNDI
+                    see <a href="./examples/context.xml">this example</a> for a start.
+                </li>
+
+                <li>
+                    itracker assumes the mail and activation libs are provided
+                    in the application class-path either by the JVM or application
+                    server. Best practice is to install	the required files to the
+                    Tomcat lib folder if necessary:
+                    <ol><li>download and extract java activation framework available from oracle.com</li>
+                    <li>copy the jar file <code>activation.jar</code> to the webserver library (eg <code>$TOMCAT_HOME/lib/</code>)</li>
+                    <li>download and extract javamail available from sun.com</li>
+                    <li>copy the jar files <code>mail-api.jar</code> and <code>javamail.jar</code> to the webserver library</li>
+                    <li>restart Tomcat to apply this changes</li></ol>
+                </li>
 
 				<li>
 					If you have all this requirements resolved, download the binary
