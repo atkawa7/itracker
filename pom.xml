@@ -564,6 +564,7 @@
                 <plugin>
                     <groupId>org.apache.tomcat.maven</groupId>
                     <artifactId>tomcat6-maven-plugin</artifactId>
+                    <version>${maven-tomcat-plugin.version}</version>
                     <configuration>
                     </configuration>
                     <dependencies>
