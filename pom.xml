@@ -1455,7 +1455,7 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <tasks unless="maven.test.skip">
+                                    <target unless="maven.test.skip">
                                         <property name="plugin_classpath" refid="maven.plugin.classpath" />
                                         <concat destfile="${project.build.directory}/temp.bsh">
                                             <![CDATA[
@@ -1489,7 +1489,7 @@
                                             <arg value="-port" />
                                             <arg value="8887" />
                                         </java>
-                                    </tasks>
+                                    </target>
                                 </configuration>
                             </execution>
                             <execution>
@@ -1499,10 +1499,10 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <tasks>
+                                    <target>
                                         <copy overwrite="true" file="${project.build.testOutputDirectory}/log4j.xml"
                                               todir="${project.build.testOutputDirectory}/"/>
-                                    </tasks>
+                                    </target>
                                 </configuration>
                             </execution>
                         </executions>
