@@ -1,5 +1,5 @@
  ------
- Development Environment Setup
+ itracker Development Environment Setup
  ------
  Chris Lim, christopher.a.lim@gmail.com
  ------
@@ -77,13 +77,14 @@ Development Environment Setup
 
 **Run Tomcat
 
-  To run itracker directly from Maven using tomcat6 or 7 plugin (default database) use the command \
+  To run itracker directly from Maven using tomcat6 or 7 plugin (default 'main' database) use the command \
   <<<mvn package tomcat6:run -Pitracker.tomcat>>>  \
   or <<<mvn package tomcat7:run -Pitracker.tomcat>>>
 
   Configure the file <<<src/main/tomcat/context.xml>>> to change the runtime environment
   which are filtered and copied for runtime to <<<target/tomcat-itracker/>>> or set the appropriate properties in maven POM.
 
+  open browser at {{{http://localhost:8888/itracker}http://localhost:8888}}
 
 ** Run Jetty
 
@@ -91,7 +92,5 @@ Development Environment Setup
 
   Configure files in <<<$\{jetty.configSrc\}>>> (<<<src/main/jetty/jetty.xml>>> and <<<src/main/jetty/jetty-env.xml>>>)
   which are filtered and copied for runtime to <<<target/jetty-itracker/>>>  or set the appropriate properties in maven POM.
-
-  []
 
   open browser at {{{http://localhost:8888/itracker}http://localhost:8888}}

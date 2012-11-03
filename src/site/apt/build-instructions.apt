@@ -1,0 +1,68 @@
+ ------
+ itracker Build Instructions
+ ------
+ Marco Glur, ranks@rosa.com
+ ------
+ 2 November 2012
+ ------
+
+Building itracker from Sources
+
+  If you want to check-out the itracker sources yourself, eg. to patch, configure or run/deploy directly from maven,
+  you will find some essential information on how-to make the build work.
+
+%{toc}
+
+  There are some relevant build properties available, depending on your needs, you find more details in the pom.xml:
+
+  * <<Tomcat run>> with profile <<<itracker.tomcat>>>:
+
+    * <<<main.dataSource.jdbcUrl>>> and <<<main.dataSource.driverClass>>> to run in tomcat against a different database\
+      this is applied to <<</src/main/tomcat/context.xml>>> for runtime.
+
+    * <<<mail.smtp.host>>> (and other mail settings) to use a custom mail-server\
+      this is applied to <<</src/main/tomcat/context.xml>>> for runtime.
+
+    * <<<application.port>>> to run on an http-port other than 8888.
+
+    * {{{http://tomcat.apache.org/maven-plugin-2.0/tomcat6-maven-plugin/run-mojo.html}reference}}
+
+    []
+
+    start the build, eg: \
+    <<<mvn package tomcat6:run -Pitracker.tomcat>>>\
+    <<<mvn package tomcat7:run -Dapplication.port=8080 -Pitracker.tomcat>>>
+
+
+  * Tomcat deploy:
+
+    * <<<tomcat.deploy.path>>> override the deployment-path
+
+    * <<<tomcat.deploy.server>>> override the server for credentials to be used
+
+    * <<<tomcat.deploy.url>>> the tomcat-manager URL
+
+    * {{{http://tomcat.apache.org/maven-plugin-2.0/tomcat6-maven-plugin/deploy-mojo.html}deploy reference}}
+
+    []
+
+    eg:\
+    <<<mvn package tomcat6:deploy -Dtomcat.deploy.server=itracker-host -Dtomcat.deploy.url=http://itracker:8080/manager>>>
+
+  * Jetty run
+
+    * Running Jetty using a in-memory database, eg:\
+    <<<mvn package jetty:run -Dapplication.port:9000 -Dmain.dataSource.jdbcUrl=jdbc:hsqldb:mem:/tmp/itrackerdev-jetty -Pitracker.jetty>>>
+
+    * Using an external jetty-xml path to load jetty.xml and jettyEnv.xml files:\
+    <<<mvn package jetty:run -Djetty.configSrc=/var/itracker/jetty>>>
+
+  * Run selenium tests, eg:\
+    <<<mvn clean verify -Pselenium -Dselenium.browser=firefox>>>
+
+  []
+
+  It is not recommended to change files under <<</src>>> in the local workspace,
+  since you have to merge them when updating from the repo.\
+  Consider configuring your local customizations in maven <<<settings.xml>>>,
+  using profiles and repositories according to your demands.

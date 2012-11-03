@@ -26,8 +26,8 @@
 
                 <ul>
                     <li>
-                        Configurable <code>configurationService.jndiPropertiesOverridePrefix</code> from <code>WEB-INF/classes/application.properties</code>,
-                        useful for overriding values in <code><a href="#Configuration">configuration.properties</a></code> from <code>java:comp/env/itracker</code>.<br/>
+                        Configurable <code>configurationServiceTarget.jndiPropertiesOverridePrefix</code> from <code>WEB-INF/classes/application.properties</code>,
+                        useful for overriding values in <code><a href="#Configuration_Properties">configuration.properties</a></code> from <code>java:comp/env/itracker</code>.<br/>
                         <em>eg. override <code>system_base_url</code> value with <code>java:comp/env/itracker/system_base_url</code> using the web.xml or context.xml.</em>
                     </li>
                     <li>
@@ -37,7 +37,7 @@
                     <li>
                         <strong>Mailsession</strong> (notifications, password, ..)):
                         <code>java:comp/env/itracker/mail/Session</code><br/>
-                        <em>You can also override the lookup name by setting <code>mail_session_jndi_lookup</code> but
+                        <em>You can also override the lookup name by setting <code>configurationServiceTarget.mailSessionLookupName</code> but
                             usually you want to rather configure a mail-session accordingly for your web context.</em>
                     </li>
 
@@ -50,7 +50,7 @@
 			itracker (
 			<code>classpath:configuration.properties
 			</code>
-			)
+			) or override the properties with env-entries under <code>java:comp/env/itracker/</code>
 			</p>
 			<ul>
 

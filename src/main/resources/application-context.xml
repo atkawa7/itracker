@@ -41,7 +41,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     </bean>
  -->
     <!-- Override properties specified in this file with properties from a properties file -->
-    <!-- Usefull for db passwords, etc.. -->
+    <!-- Usefull for customizing beans properties such as JNDI lookup names, etc.. -->
     <bean id="applicationOverride"
           class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
         <property name="location" value="classpath:application.properties"/>

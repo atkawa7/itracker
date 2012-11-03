@@ -67,6 +67,7 @@
 
             <item name="Install" href="/install.html"/>
 		    <item name="Configuration" href="/configuration.html"/>
+            <item name="Build Instructions" href="/build-instructions.html" />
 	
 		    <item name="Data Migration from 2.4" href="/migration/migrate2.4-3.0.html" />
             

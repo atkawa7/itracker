@@ -59,16 +59,20 @@
 					You can update configurations in tomcat/webapps/itracker folder:
 					<ul>
 						<li>
-							Database Connection configuration you will find in
+							Database connection configuration you will find in
 							<code>WEB-INF/classes/application.properties
-							</code>
+							</code>, by default a JNDI resource for looking up
+                            the datasource will be used at <code>java:comp/env/jndi/itracker_ds</code>,
+                            but you can still replace the datasource to be in-app by changing the
+                            <code>WEB-INF/classes/datasource.xml</code>.
 						</li>
 						<li>
-							The Application settings are in this file:
+							The basic application settings are in this file:
 							<code>
 								<a href="configuration.html">WEB-INF/configuration.properties
 								</a>
-							</code>
+							</code>, or override specific values using the JNDI env entries at
+                            <code>java:comp/env/itracker</code>
 						</li>
 					</ul>
 				</li>

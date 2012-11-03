@@ -1,5 +1,5 @@
  ------
- Getting Started
+ itracker Getting Started
  ------
  Marco Glur, ranks@rosa.com
  ------
@@ -20,7 +20,7 @@ Getting Started
   
   [[4]] Check all IDE settings (Runtime Environment, Server-Configuration, Maven Dependency Management etc).
   
-  [[5]] Set the <<<application-context.xml>>> and <<<datasource.xml>>> (eventually create a {{{./examples/context.xml}META-INF/context.xml}})
+  [[5]] Set the <<<application-context.xml>>> and <<<configuration.properties>>> (eventually create a {{{./examples/context.xml}META-INF/context.xml}} for webapplication JNDI context)
   
   [[6]] Run the application (debug or start) on Tomcat
   
