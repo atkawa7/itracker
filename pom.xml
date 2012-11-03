@@ -45,12 +45,18 @@
         <maven-changes-plugin.version>2.7</maven-changes-plugin.version>
         <maven-changelog-plugin.version>2.2</maven-changelog-plugin.version>
         <maven-surefire-report-plugin.version>2.12</maven-surefire-report-plugin.version>
+        <maven-failsafe-plugin.version>2.12</maven-failsafe-plugin.version>
         <maven-cobertura-plugin.version>2.5.1</maven-cobertura-plugin.version>
         <maven-javadoc-plugin.version>2.8.1</maven-javadoc-plugin.version>
         <maven-war-plugin.version>2.1.1</maven-war-plugin.version>
         <maven-compiler-plugin.version>2.0.2</maven-compiler-plugin.version>
         <maven-deploy-plugin.version>2.7</maven-deploy-plugin.version>
         <maven-wagon-ssh-plugin.version>2.2</maven-wagon-ssh-plugin.version>
+
+        <tomcat.deploy.server>localhost</tomcat.deploy.server>
+        <tomcat.deploy.url>http://localhost:8080/manager</tomcat.deploy.url>
+        <tomcat.deploy.path>/${project.artifactId}</tomcat.deploy.path>
+        <tomcat.deploy.charset>UTF-8</tomcat.deploy.charset>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -200,7 +206,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.12</version>
                 <executions>
                     <execution>
                         <id>integration-test</id>
@@ -344,9 +349,10 @@
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat6-maven-plugin</artifactId>
                 <configuration>
-                    <server>localhost</server>
-                    <url>http://localhost:8080/manager</url>
-                    <path>/itracker</path>
+                    <server>${tomcat.deploy.server}</server>
+                    <url>${tomcat.deploy.url}</url>
+                    <path>${tomcat.deploy.path}</path>
+                    <charset>${tomcat.deploy.charset}</charset>
                     <update>true</update>
                 </configuration>
             </plugin>
@@ -354,9 +360,10 @@
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <configuration>
-                    <server>localhost</server>
-                    <url>http://localhost:8080/manager</url>
-                    <path>/itracker</path>
+                    <server>${tomcat.deploy.server}</server>
+                    <url>${tomcat.deploy.url}</url>
+                    <path>${tomcat.deploy.path}</path>
+                    <charset>${tomcat.deploy.charset}</charset>
                     <update>true</update>
                 </configuration>
             </plugin>
@@ -1035,12 +1042,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.12</version>
+                <version>${maven-surefire-report-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.12</version>
+                <version>${maven-surefire-report-plugin.version}</version>
                 <reportSets>
                     <reportSet>
                         <id>integration-tests</id>
@@ -1053,7 +1060,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.12</version>
+                <version>${maven-surefire-report-plugin.version}</version>
                 <reportSets>
                     <reportSet>
                         <id>selenium-tests</id>
@@ -1313,7 +1320,6 @@
             <id>itracker.jetty</id>
 
             <properties>
-                <application.host>localhost</application.host>
                 <application.port>8888</application.port>
                 <application.path>itracker</application.path>
 
@@ -1659,7 +1665,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.12</version>
                         <executions>
                             <execution>
                                 <id>integration-test</id>
