@@ -1,13 +1,13 @@
 package org.itracker.selenium;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
-import java.util.Properties;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -23,11 +23,6 @@ public class SeleniumPreTest {
 
     public SeleniumPreTest() throws IOException {
 
-        final InputStream inputStream = SeleniumManager.class
-                .getResourceAsStream("SeleniumManager.properties");
-        final Properties properties = new Properties();
-        properties.load(inputStream);
-
     }
 
     @Test
@@ -35,14 +30,21 @@ public class SeleniumPreTest {
         connectSocket("localhost", AbstractSeleniumTestCase.SMTP_PORT);
     }
 
+
     @Test
-    public void testApplicationPortAvailable() throws Exception {
-        connectSocket(SeleniumManager.getApplicationHost(), SeleniumManager.getApplicationPort());
+    public void testLocalhost() throws Exception {
+        // only run the selenium on localhost..
+        // remote-host for selenium could run externally, not tested to work.
+        // Selenium starts locally from maven anyways.
+        assertEquals("application.host", "localhost", SeleniumManager.getApplicationHost());
+        connectSocket("localhost", SeleniumManager.getSeleniumPort());
     }
 
     @Test
     public void testJettyPortsAvailable() throws Exception {
-        connectSocket("localhost", 9966);
+        connectSocket(SeleniumManager.getApplicationHost(), SeleniumManager.getApplicationPort());
+        // Stop-port
+        connectSocket(SeleniumManager.getApplicationHost(), 9966);
     }
 
     @Test
@@ -50,13 +52,25 @@ public class SeleniumPreTest {
         connectSocket(SeleniumManager.getSeleniumHost(), SeleniumManager.getSeleniumPort());
     }
 
-    private void connectSocket(String host, int i) throws IOException {
+    /**
+     * Port should be open for a remote-service, or available on localhost.
+     *
+     * @param host the host
+     * @param i the port
+     * @throws Exception when failed
+     */
+    private void connectSocket(String host, int i) throws Exception {
+        final boolean localhost = StringUtils.equalsIgnoreCase("localhost", host);
         try {
             log.info("checking port " + i + " on " + host);
             new Socket(host, i);
-            fail("Socket is open cannot run selenium tests." + host + ":" + i);
+            if (localhost) {
+                fail("Socket is open cannot run selenium tests on " + host + ":" + i);
+            }
         } catch (IOException e) {
-            log.info("OK port " + i + " on " + host);
+            if (!localhost) {
+                fail("Remote socket is not open, cannot run selenium tests on" + host + ":" + i);
+            }
         }
     }
 }

@@ -16,20 +16,26 @@ Coding Guidelines
 
   Java source-files are encoded in Unicode (UTF-8).
 
-*JSP
-
-  How-to started in {{{http://itracker.wiki.sourceforge.net/Table+of+all+itracker+Pages}ITracker WIKI}}
-  
 *Site
   
-  Introduction on {{{site.html}how-to create new apt}} (almost plain text) document and integrate it.
+  Introduction on {{{./site.html}how-to create new apt}} (almost plain text) document and integrate it.
 
 *Testing
 
-  {{{http://itracker.wiki.sourceforge.net/Testing}Testing}} is described in the ITracker WIKI
+  Separate tests for itracker are available for execution when building with maven. They must all pass before checking in code changes,
+  and will be checked later on a build server to work consistently in the trunk.
+
+   * Unit Tests are executed unless skipped, they don't need a database to be executed.\
+   <<<mvn clean package>>>
+
+   * Integration Tests can be executed with the 'verify' phase, they run against an in-memory database unless configured differently.\
+   <<<mvn clean verify>>>
+
+   * Frontend Tests with Selenium running against an in-memory database in a Jenkins deployed itracker-application.\
+   <<<mvn clean verify -Dselenium>>> (local ports need to be available: 5555, 8888, 9966, 2525)\
+   <If you cancel the build running Selenium Tests, some processes might be left and blocking some ports, you must find and kill them manually.>
   
 *Patches HOW-TO
   
   When submitting a patch-file (diff), using eclipse and Subclipse-plugin, please always check, that the paths are relative to project-dir.
   A guide is available {{{http://stackoverflow.com/questions/257739/subclipse-is-there-a-way-to-make-teamcreate-patch-use-relative-paths}here}}.
-  If you use an older version of SVN than 1.5, please make a manual search-replace in your favorite text editor.
