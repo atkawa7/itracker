@@ -37,11 +37,11 @@
             </New>
         </Arg>
     </New>
-   
+    <!-- TODO not working yet -->
     <New class="org.eclipse.jetty.plus.jndi.EnvEntry">
         <Arg><Ref id='wac'/></Arg>
-        <Arg>system_base_url</Arg>
-        <Arg>http://localhost/itracker</Arg>
+        <Arg>itracker/system_base_url</Arg>
+        <Arg>http://${application.host}/itracker</Arg>
         <Arg type="java.lang.Boolean">true</Arg>
     </New>
 </Configure>
