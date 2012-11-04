@@ -6,14 +6,14 @@ import org.junit.Test;
 
 import java.util.*;
 
-public class ITrackerResourceBundleIT extends AbstractDependencyInjectionTest {
+public class ItrackerResourceBundleIT extends AbstractDependencyInjectionTest {
     private ITrackerResourceBundle resourceBundle;
 
     @Override
     public void onSetUp() throws Exception {
         super.onSetUp();
         Object[][] data = {{"itracker.web.attr.admin", "itracker.web.attr.administer"}, {"Admin", "Administer"}};
-        resourceBundle = new ITrackerResourceBundle(Locale.ENGLISH, data);
+        resourceBundle = (ITrackerResourceBundle)ITrackerResourceBundle.getBundle(Locale.ENGLISH);
         assertNotNull(resourceBundle);
     }
 

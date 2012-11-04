@@ -3,7 +3,7 @@ package org.itracker.services.exceptions;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-public class ITrackerDirtyResourceExceptionTest extends TestCase {
+public class ItrackerDirtyResourceExceptionTest extends TestCase {
 
     @Test
     public void testConstructor() {
