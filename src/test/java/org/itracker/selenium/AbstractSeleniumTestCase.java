@@ -25,6 +25,7 @@ public abstract class AbstractSeleniumTestCase
     protected String applicationHost;
     protected int applicationPort;
     protected String applicationPath;
+    protected String applicationURL;
     Logger log = Logger.getLogger(getClass());
 
     static {
@@ -56,6 +57,8 @@ public abstract class AbstractSeleniumTestCase
             applicationHost = SeleniumManager.getApplicationHost();
             applicationPort = SeleniumManager.getApplicationPort();
             applicationPath = SeleniumManager.getApplicationPath();
+            applicationURL = "http://" + applicationHost + ":" + applicationPort + "/"
+                    + applicationPath;
         } catch (final IOException e) {
             log.error(e);
             fail(e.getMessage());

@@ -1,5 +1,6 @@
 package org.itracker.selenium;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.itracker.model.User;
 import org.itracker.persistence.dao.UserDAO;
@@ -36,8 +37,7 @@ public class CreateIssueTest extends AbstractSeleniumTestCase {
         final String descriptionValue = "Issue to be unassigned.";
         final String historyValue = "Issue to be unassigned history.";
 
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
-                + applicationPath);
+        selenium.open(applicationURL);
 
         loginUser("admin_test1", "admin_test1");
 
@@ -79,9 +79,16 @@ public class CreateIssueTest extends AbstractSeleniumTestCase {
 
 
         log.debug("testCreateUnassignedIssue, received:\n" + smtpMessageBody);
-        assertTrue(smtpMessageBody.contains(descriptionValue));
-        assertTrue(smtpMessageBody.contains(historyValue));
+        final String systemURL = "http://" + SeleniumManager.getApplicationHost() + "/"
+                        + SeleniumManager.getApplicationPath();
+        // TODO: not yet working in jetty-env.xml and from request..
+        assertTrue("System URL not contained in Message body, " + applicationURL + ", " + smtpMessageBody,
+                StringUtils.containsIgnoreCase(smtpMessageBody, applicationURL));
 
+        assertTrue("Description not contained in Message body, " + descriptionValue,
+                smtpMessageBody.contains(descriptionValue));
+        assertTrue("History not contained in Message body," + historyValue,
+                smtpMessageBody.contains(historyValue));
 
         // Check that the total number of issues is 5 now (4 from db + 1 our).
         assertTrue(selenium.isElementPresent("issues"));
@@ -89,8 +96,7 @@ public class CreateIssueTest extends AbstractSeleniumTestCase {
         assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
                 "/td[11][text()='" + descriptionValue + "']"));
 
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
-                + applicationPath + "/portalhome.do");
+        selenium.open(applicationURL + "/portalhome.do");
 
         // Check that just created issue has appeared in "Unassigned" area.
         assertTrue(selenium.isElementPresent("//tr[starts-with(@id,'unassignedIssue.')]" +
@@ -117,8 +123,7 @@ public class CreateIssueTest extends AbstractSeleniumTestCase {
         log.info(" running testCreateAssignedIssue");
         closeSession();
 
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
-                + applicationPath);
+        selenium.open(applicationURL);
 
         loginUser("admin_test1", "admin_test1");
 
@@ -177,8 +182,7 @@ public class CreateIssueTest extends AbstractSeleniumTestCase {
                 selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
         assertElementPresent("//tr[starts-with(@id, 'issue.')]/td[11][text()='" + descriptionValue + "']");
 
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
-                + applicationPath + "/portalhome.do");
+        selenium.open(applicationURL + "/portalhome.do");
 
         // Checking that our new issue has not appeared in "Unassigned" area.
         assertFalse("still unassigned issue " + descriptionValue,

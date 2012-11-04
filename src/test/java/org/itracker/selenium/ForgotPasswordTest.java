@@ -114,8 +114,6 @@ public class ForgotPasswordTest extends AbstractSeleniumTestCase {
 
         final String newPassword;
 
-//        startSMTP();
-//        try {
         assertElementPresent("name=forgotpassword");
         selenium.click("name=forgotpassword");//("link=Forgot My Password");
         selenium.waitForPageToLoad(SE_TIMEOUT);
