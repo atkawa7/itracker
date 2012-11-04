@@ -8,7 +8,6 @@ import org.itracker.model.CustomField.Type;
 import org.itracker.persistence.dao.*;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.SystemConfigurationUtilities;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
@@ -34,15 +33,28 @@ public class ConfigurationServiceImplIT extends
     private CustomFieldDAO customFieldDAO;
     private CustomFieldValueDAO customFieldValueDAO;
     private LanguageDAO languageDAO;
-    private Properties configurationProperties;
+    Properties configurationProperties;
 
     /**
      * Object to be Tested: configuration-service
      */
-    private ConfigurationService configurationService;
+    ConfigurationService configurationService;
+
+    static {
+        try {
+            namingContext =
+                    SimpleNamingContextBuilder.emptyActivatedContextBuilder();
+        } catch (NamingException e) {
+
+        }
+    }
+
+    public static SimpleNamingContextBuilder namingContext;
+
 
     public static final class TestInitialContextFactory implements
             InitialContextFactory {
+
 
         public TestInitialContextFactory() {
 
@@ -117,35 +129,28 @@ public class ConfigurationServiceImplIT extends
     @Test
     public void testGetJndiOverriddenProperty() throws Exception {
 
+        try {
+            final String web_session_timeout = "web_session_timeout";
+            namingContext.bind("java:comp/env/itracker/" + web_session_timeout, "300");
 
-        final String web_session_timeout = "web_session_timeout";
 
-        // initialize new initialContextFactoryBuilder
-        SimpleNamingContextBuilder.emptyActivatedContextBuilder();
-        SimpleNamingContextBuilder.getCurrentContextBuilder().bind("java:comp/env/itracker/web_session_timeout", "300");
+            Context ctx = new InitialContext();
 
-        Context ctx = new InitialContext();
+            // basic assertions
+            assertEquals("java:comp/env/itracker/web_session_timeout", "300", ctx.lookup("java:comp/env/itracker/" + web_session_timeout));
 
-        // basic assertions
-        assertEquals("java:comp/env/itracker/web_session_timeout", "300", ctx.lookup("java:comp/env/itracker/web_session_timeout"));
-        String val = configurationProperties.getProperty(web_session_timeout);
-        assertEquals("configurationProperties#web_session_timeout", "30", val);
+            String val = configurationProperties.getProperty(web_session_timeout);
+            assertEquals("configurationProperties#web_session_timeout", "30", val);
 
-        // check getProperty() in configurationService for jndi overridden value
-        val = configurationService.getProperty(web_session_timeout);
-        assertEquals("configurationService.web_session_timeout", "300", val);
+            // check getProperty() in configurationService for jndi overridden value
+            val = configurationService.getProperty(web_session_timeout);
+            assertEquals("configurationService.web_session_timeout", "300", val);
 
-        // check getProperties().get() in configurationService for jndi overridden value
-        Object valObj = configurationService.getProperties().get(web_session_timeout);
-        assertEquals("configurationService.properties#web_session_timeout", "300", valObj);
-
-        // check getProperties().getProperty() in configurationService for jndi overridden value
-        val = configurationService.getProperties().getProperty(web_session_timeout);
-        assertEquals("configurationService.properties#web_session_timeout", "300", valObj);
-
-        SimpleNamingContextBuilder.emptyActivatedContextBuilder().deactivate();
-
+        } finally {
+            namingContext.deactivate();
+        }
     }
+
 
     @Test
     public void testGetBooleanProperty() {
@@ -291,7 +296,7 @@ public class ConfigurationServiceImplIT extends
 
     @Test
     public void testRemoveConfigurationItems() {
-        //test method removeConfigurationItems(int type)
+
         Configuration conf = new Configuration(123, "1", "1", 2);
         configurationDAO.save(conf);
         Integer id = conf.getId();
@@ -302,7 +307,6 @@ public class ConfigurationServiceImplIT extends
         conf = configurationDAO.findByPrimaryKey(id);
         assertNull("removed item", conf);
 
-        //test method removeConfigurationItems(Configuration configuration)
         Configuration conf1 = new Configuration(234, "1", "1", 2);
         configurationDAO.save(conf1);
         Integer id1 = conf1.getId();
@@ -771,15 +775,14 @@ public class ConfigurationServiceImplIT extends
     @Override
     public void onTearDown() throws Exception {
         super.onTearDown();
-        SystemConfigurationUtilities.initializeAllLanguages(configurationService, false);
-        configurationService.initializeConfiguration();
+        //SystemConfigurationUtilities.initializeAllLanguages(configurationService, false);
+        //configurationService.initializeConfiguration();
     }
 
     @Override
     public void onSetUp() throws Exception {
 
         super.onSetUp();
-
         configurationService = (ConfigurationService) applicationContext
                 .getBean("configurationService");
         configurationProperties = (Properties) applicationContext

@@ -31,7 +31,6 @@ import org.itracker.services.util.SystemConfigurationUtilities;
 import org.jfree.util.Log;
 
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import java.util.*;
 
 /**
@@ -75,10 +74,10 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
         // initialize naming context prefix for properties overrides
         if (StringUtils.isEmpty(jndiPropertiesOverridePrefix)) {
-            jndiPropertiesOverridePrefix = "java:comp/env/itracker";
+            jndiPropertiesOverridePrefix = props.getProperty("jndi_override_prefix", "java:comp/env/itracker");
         }
         if (StringUtils.isEmpty(mailSessionLookupName)) {
-            mailSessionLookupName = "java:comp/env/itracker/mail/Session";
+            mailSessionLookupName = configurationProperties.getProperty("mail_session_jndi_lookup", "java:comp/env/itracker/mail/Session");
         }
 
         this.configurationDAO = configurationDAO;
@@ -95,6 +94,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     public void setJndiPropertiesOverridePrefix(String jndiPropertiesOverridePrefix) {
+        if (null != jndiPropertiesOverridePrefix) {
+            return;
+        }
         this.jndiPropertiesOverridePrefix = jndiPropertiesOverridePrefix;
     }
 
@@ -108,19 +110,19 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     public String getProperty(String name) {
         String value = null;
-        if (null != jndiPropertiesOverridePrefix) {
+        if (null != getJndiPropertiesOverridePrefix()) {
 
             if (logger.isDebugEnabled()) {
 
                 logger.debug("getProperty: looking up '" + name
                         + "' from jndi context "
-                        + jndiPropertiesOverridePrefix);
+                        + getJndiPropertiesOverridePrefix());
 
 
-            }
+    }
             try {
                 value = NamingUtilites.getStringValue(new InitialContext(),
-                        jndiPropertiesOverridePrefix + "/" + name, null);
+                        getJndiPropertiesOverridePrefix() + "/" + name, null);
                 if (null == value) {
                     if (logger.isDebugEnabled()) {
                         logger.debug("getProperty: value not found in jndi: " + name);
@@ -145,6 +147,11 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         String val = getProperty(name);
         return (val == null) ? defaultValue : val;
     }
+
+    private String getItrackerVersion() {
+       return props.getProperty("version");
+    }
+
 
     public boolean getBooleanProperty(String name, boolean defaultValue) {
         String value = getProperty(name);
@@ -171,54 +178,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             return defaultValue;
         }
 
-    }
-
-    /**
-     * returns a proxy to the properties, supplying jndi awareness
-     */
-    public Properties getProperties() {
-        Properties p = new Properties(props) {
-
-            /**
-             *
-             */
-            private static final long serialVersionUID = -9126991683132905153L;
-
-            @Override
-            public synchronized Object get(Object key) {
-                if (null != super.getProperty(
-                        "jndi_override_prefix", null)) {
-                    if (logger.isInfoEnabled()) {
-                        logger.info("get: looking for override for " + key
-                                + " in jndi properties override: "
-                                + super.getProperty(
-                                "jndi_override_prefix", null));
-                    }
-                    Object val = null;
-                    try {
-                        val = NamingUtilites.lookup(new InitialContext(),
-                                super.getProperty(
-                                        "jndi_override_prefix", null) + "/" + String.valueOf(key));
-                    } catch (NamingException e) {
-                        if (logger.isDebugEnabled()) {
-                            logger.debug("get: failed to create initial context", e);
-                        }
-                    }
-                    if (null != val) {
-                        if (logger.isDebugEnabled()) {
-                            logger.debug("get: returning " + val);
-                        }
-                        return val;
-                    }
-
-                }
-                if (logger.isDebugEnabled()) {
-                    logger.debug("get: get value of " + key + " from super");
-                }
-                return super.get(key);
-            }
-        };
-        return p;
     }
 
     public Configuration getConfigurationItem(Integer id) {
@@ -261,7 +220,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         configurationItem.setOrder(configuration.getOrder());
         configurationItem.setValue(configuration.getValue());
         configurationItem.setCreateDate(new Date());
-        configurationItem.setVersion(this.getProperty("version"));
+        configurationItem.setVersion(getItrackerVersion());
         configurationDAO.saveOrUpdate(configurationItem);
 
         return configurationItem;
@@ -384,7 +343,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     public boolean configurationItemUpToDate(Configuration configuration) {
 
-        long currentVersion = 0;
+        long currentVersion = SystemConfigurationUtilities.getVersionAsLong(getItrackerVersion());
 
         if (configuration != null && configuration.getVersion() != null) {
 
@@ -1129,7 +1088,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
         if (locale != null && items != null) {
             Configuration configItem = new Configuration(SystemConfigurationUtilities.TYPE_LOCALE, locale
-                    .toString(), props.getProperty("version"));
+                    .toString(), getItrackerVersion());
             updateLanguage(locale, items, configItem);
 
         }
@@ -1192,7 +1151,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
         // Now set the system version
 
-        config.setVersion(props.getProperty("version"));
+        config.setVersion(getItrackerVersion());
 
         return config;
 
@@ -1203,7 +1162,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         boolean result = false;
 
         Configuration localeConfig = new Configuration(SystemConfigurationUtilities.TYPE_LOCALE, locale,
-                props.getProperty("version"));
+                getItrackerVersion());
 
         if (!configurationItemUpToDate(localeConfig) || forceReload) {
 
@@ -1289,8 +1248,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                         int resolutionNumber = Integer.parseInt(resolutionString);
 
                         createConfigurationItem(new Configuration(
-                                SystemConfigurationUtilities.TYPE_RESOLUTION, resolutionString, props
-                                .getProperty("version"), resolutionNumber));
+                                SystemConfigurationUtilities.TYPE_RESOLUTION, resolutionString, getItrackerVersion(),
+                                resolutionNumber));
 
                     } catch (RuntimeException e) {
 
@@ -1312,7 +1271,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                         int severityNumber = Integer.parseInt(severityString);
 
                         createConfigurationItem(new Configuration(SystemConfigurationUtilities.TYPE_SEVERITY,
-                                severityString, props.getProperty("version"), severityNumber));
+                                severityString, getItrackerVersion(), severityNumber));
 
                     } catch (RuntimeException e) {
 
@@ -1333,7 +1292,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                         int statusNumber = Integer.parseInt(statusString);
 
                         createConfigurationItem(new Configuration(SystemConfigurationUtilities.TYPE_STATUS,
-                                statusString, props.getProperty("version"), statusNumber));
+                                statusString, getItrackerVersion(), statusNumber));
                     } catch (RuntimeException e) {
                         logger.error("Unable to load status value: " + key, e);
                         throw e;
@@ -1341,7 +1300,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                 }
             }
             createConfigurationItem(new Configuration(SystemConfigurationUtilities.TYPE_INITIALIZED, "1",
-                    props.getProperty("version")));
+                    getItrackerVersion()));
         }
 
 

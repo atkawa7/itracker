@@ -33,8 +33,6 @@ public interface ConfigurationService {
 
     public static final String PNAME_SYSTEM_BASE_URL = "system_base_url";
 
-    Properties getProperties();
-
     String getProperty(String name);
 
     String getProperty(String name, String defaultValue);
