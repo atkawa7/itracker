@@ -194,11 +194,7 @@
                             <forkMode>none</forkMode>
                             <excludes>
                                 <exclude>org/itracker/selenium/**/*.java</exclude>
-                                <exclude>org/itracker/**/*IT.java</exclude>
                             </excludes>
-                            <includes>
-                                <include>org/itracker/**/*Test.java</include>
-                            </includes>
                         </configuration>
                     </execution>
                 </executions>
@@ -213,13 +209,16 @@
                             <goal>integration-test</goal>
                             <goal>verify</goal>
                         </goals>
+                        <configuration>
+                            <forkMode>none</forkMode>
+                            <excludes>
+                                <exclude>org/itracker/selenium/**/*.java</exclude>
+                            </excludes>
+                            <skipITs>${itracker.it.skip}</skipITs>
+                        </configuration>
+
                     </execution>
                 </executions>
-                <configuration>
-                    <skipTests>${itracker.it.skip}</skipTests>
-                    <skipITs>true</skipITs>
-                    <!--forkMode>none</forkMode-->
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -411,9 +410,7 @@
                     <version>${maven-failsafe-plugin.version}</version>
                     <configuration>
                         <systemPropertyVariables>
-                            <!--<port>${port}</port>-->
                         </systemPropertyVariables>
-                        <skip>${itracker.it.skip}</skip>
                         <additionalClasspathElements>
                             <additionalClasspathElement>${project.build.outputDirectory}</additionalClasspathElement>
                             <additionalClasspathElement>${project.build.testOutputDirectory}</additionalClasspathElement>
@@ -1417,6 +1414,7 @@
                 <selenium.browserLogLevel>warn</selenium.browserLogLevel>
                 <selenium.speed>0</selenium.speed>
                 <selenium.useXPathLibrary>javascript-xpath</selenium.useXPathLibrary>
+                <selenium.test></selenium.test>
 
                 <application.host>localhost</application.host>
                 <application.port>8888</application.port>
@@ -1636,28 +1634,9 @@
                                     <forkMode>none</forkMode>
                                     <includes>
                                         <include>org/itracker/**/*PreTest.java</include>
-                                        <include>org/itracker/**/SeleniumManager.java</include>
                                     </includes>
                                 </configuration>
                             </execution>
-                            <!--execution>
-                                <id>selenium-testing</id>
-                                <phase>integration-test</phase>
-                                <goals>
-                                    <goal>test</goal>
-                                </goals>
-                                <configuration>
-                                    <test>${itracker.selenium.test}</test>
-                                    <skip>false</skip>
-                                    <forkMode>none</forkMode>
-                                    <includes>
-                                        <include>org/itracker/selenium/**/*.java</include>
-                                    </includes>
-                                    <excludes>
-                                        <exclude>org/itracker/selenium/**/*PreTest.java</exclude>
-                                    </excludes>
-                                </configuration>
-                            </execution-->
                         </executions>
                     </plugin>
 
@@ -1669,12 +1648,6 @@
                             <execution>
                                 <id>integration-test</id>
                                 <configuration>
-                                    <!--skipTests>false</skipTests-->
-                                    <excludes>
-                                        <exclude>org/itracker/selenium/**/*PreTest.java</exclude>
-                                        <!--exclude>org/itracker/**/NamingUtilitiesIT.java</exclude-->
-                                    </excludes>
-                                    <forkMode>none</forkMode>
                                 </configuration>
                             </execution>
 
@@ -1686,10 +1659,12 @@
                                 </goals>
                                 <configuration>
                                     <skipTests>false</skipTests>
+                                    <!-- TODO: should change selenium tests to integration-tests. -->
                                     <skipITs>false</skipITs>
                                     <properties>
-                                        <itracker.it.skip>true</itracker.it.skip>
+                                        <!-- test-ng related configurations -->
                                     </properties>
+                                    <test>${selenium.test}</test>
                                     <!--reportsDirectory>${project.build.directory}/failsafe-selenium-reports</reportsDirectory-->
                                     <includes>
                                         <include>org/itracker/selenium/**/*.java</include>
@@ -1707,12 +1682,38 @@
                                 <artifactId>jetty-plus</artifactId>
                                 <version>${maven-jetty-plugin.version}</version>
                             </dependency>
+                            <dependency>
+                                <groupId>org.eclipse.jetty</groupId>
+                                <artifactId>jetty-jndi</artifactId>
+                                <version>${maven-jetty-plugin.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.eclipse.jetty</groupId>
+                                <artifactId>jetty-plus</artifactId>
+                                <version>${maven-jetty-plugin.version}</version>
+                            </dependency>
                         </dependencies>
                     </plugin>
 
                 </plugins>
             </build>
+            <dependencies>
+
+                <dependency>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-server</artifactId>
+                    <version>${maven-jetty-plugin.version}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-jndi</artifactId>
+                    <version>${maven-jetty-plugin.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
         </profile>
+
         <profile>
             <!-- special profile for selenium testcases development -->
             <!-- it allows running some particular test you define -->
