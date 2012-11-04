@@ -6,9 +6,10 @@
  2 November 2012
  ------
 
-%{toc}
 
-*Building itracker from Sources
+Building itracker from Sources
+
+%{toc}
 
   If you want to check-out the itracker sources yourself, eg. to patch, configure or run/deploy directly from maven,
   you will find some essential information on how-to make the build work.
