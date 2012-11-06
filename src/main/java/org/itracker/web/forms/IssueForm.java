@@ -36,6 +36,7 @@ import org.itracker.web.actions.project.EditIssueActionUtil;
 import org.itracker.web.ptos.CreateIssuePTO;
 import org.itracker.web.util.AttachmentUtilities;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.RequestHelper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -301,10 +302,18 @@ public class IssueForm extends ITrackerForm {
                     errors.add(ActionMessages.GLOBAL_MESSAGE,
                             new ActionMessage(
                                     "itracker.web.error.projectlocked"));
-                } else if (errors.isEmpty()) {
+                } else if (errors.isEmpty() && !"editIssueForm".equals(mapping.getName())) {
                     if (log.isDebugEnabled()) {
                         log.debug("validate: validation had errors for " + issue + ": " + errors);
                     }
+
+                    if (UserUtilities.hasPermission(RequestHelper.getUserPermissions(request.getSession()),
+                            issue.getProject().getId(),
+                            UserUtilities.PERMISSION_EDIT_FULL)) {
+                        validateProjectFields(issue.getProject(), request, errors);
+                    }
+
+
                     validateProjectScripts(issue.getProject(), errors, this);
                     validateAttachment(this.getAttachment(), getITrackerServices(), errors);
                 }
@@ -346,14 +355,11 @@ public class IssueForm extends ITrackerForm {
 
     private static void validateProjectFields(Project project,
                                               HttpServletRequest request, ActionErrors errors) {
+
         List<CustomField> projectFields = project.getCustomFields();
         if (null != projectFields && projectFields.size() > 0) {
-            HttpSession session = request.getSession();
 
-            Locale locale = ITrackerResources.getLocale();
-            if (session != null) {
-                locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
-            }
+            Locale locale = LoginUtilities.getCurrentLocale(request);
 
             ResourceBundle bundle = ITrackerResources.getBundle(locale);
             Iterator<CustomField> it = projectFields.iterator();
