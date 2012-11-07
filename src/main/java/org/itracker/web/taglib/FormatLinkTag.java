@@ -18,6 +18,7 @@
 
 package org.itracker.web.taglib;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.util.HTMLUtilities;
@@ -189,6 +190,13 @@ public final class FormatLinkTag extends BodyTagSupport {
             buf.append(" target=\"" + HTMLUtilities.escapeTags(target) + "\"");
         }
         if (titleKey != null) {
+            if (StringUtils.contains(titleKey, ".delete.")) {
+               if (StringUtils.isEmpty(styleClass)) {
+                   styleClass = "deleteButton";
+               } else {
+                   styleClass += " deleteButton";
+               }
+            }
             buf.append(" title=\"" + HTMLUtilities.escapeTags(ITrackerResources.getString(titleKey, locale, (arg0 == null ? "" : arg0))) + "\"");
         }
         if (styleClass != null) {

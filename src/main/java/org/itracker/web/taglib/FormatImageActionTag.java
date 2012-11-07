@@ -18,6 +18,7 @@
 
 package org.itracker.web.taglib;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.UserPreferences;
@@ -195,13 +196,33 @@ public final class FormatImageActionTag extends TagSupport {
         if (target != null) {
             buf.append(" target=\"" + target + "\"");
         }
-        if (useTextActions) {
+        if (null != altKey) {
             buf.append(" title=\""
-                    + ITrackerResources.getString(altKey, locale,
-                    (arg0 == null ? "" : arg0)) + "\"");
-            buf.append(" class=\"action\">");
-            buf.append(ITrackerResources.getString(textActionKey, locale));
+                    + HTMLUtilities.escapeTags(
+                    ITrackerResources.getString(altKey, locale,
+                    (arg0 == null ? "" : arg0))) + "\"");
+        }
+        String styleClass = null;
+        if (StringUtils.contains(altKey, ".delete.")) {
+               styleClass = "deleteButton";
+        }
+
+        if (useTextActions) {
+            if (StringUtils.contains(altKey, ".delete.")) {
+               if (StringUtils.isEmpty(styleClass)) {
+                   styleClass = "action";
+               } else {
+                   styleClass += " action";
+               }
+            }
+
+            buf.append(" class=\"").append(HTMLUtilities.escapeTags( styleClass )).append("\">");
+            buf.append(HTMLUtilities.escapeTags( ITrackerResources.getString(textActionKey, locale) ));
         } else {
+
+            if (!StringUtils.isEmpty(styleClass)) {
+                buf.append(" class=\"").append(HTMLUtilities.escapeTags( styleClass )).append("\"");
+            }
             buf.append(">");
             buf.append("<img src=\"");
             try {
@@ -214,11 +235,11 @@ public final class FormatImageActionTag extends TagSupport {
             buf.append("\"");
             if (altKey != null) {
                 buf.append(" alt=\""
-                        + ITrackerResources.getString(altKey, locale,
-                        (arg0 == null ? "" : arg0)) + "\"");
+                        + HTMLUtilities.escapeTags( ITrackerResources.getString(altKey, locale,
+                        (arg0 == null ? "" : arg0)) ) + "\"");
                 buf.append(" title=\""
-                        + ITrackerResources.getString(altKey, locale,
-                        (arg0 == null ? "" : arg0)) + "\"");
+                        + HTMLUtilities.escapeTags( ITrackerResources.getString(altKey, locale,
+                        (arg0 == null ? "" : arg0)) ) + "\"");
             } else {
                 buf.append(" alt=\"\"");
             }

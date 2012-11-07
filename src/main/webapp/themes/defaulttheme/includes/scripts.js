@@ -1,4 +1,12 @@
 
+
+
+document.observe("dom:loaded", function() {
+    $$('.deleteButton').each(function(elem) {
+        elem.observe("click", function(event) { if (!confirm(elem.title + "?")) { event.stop() }; });
+    });
+});
+
 /**
   * Toggle checked flag of checkboxes with name field name, inside same form as clicked-element.
   *
@@ -17,6 +25,7 @@
 			}
 		}
 	}
+
 	
 
     function toggleCalendar(cal) {
