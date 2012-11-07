@@ -7,7 +7,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp" />
 
-<table border="0" cellspacing="0" cellspacing="1" width="100%">
+<table border="0" cellspacing="0" cellpadding="1" width="100%" class="shadeList">
 	<tr>
 		<td class="editColumnTitle" colspan="7"><it:message
 			key="itracker.web.attr.attachments" />:</td>

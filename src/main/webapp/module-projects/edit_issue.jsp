@@ -511,7 +511,7 @@
 <c:if test="${ not hasNoViewAttachmentOption }">
 <tr>
     <td colspan="4">
-        <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
+        <table style="border: none; padding: 1px; border-spacing: 0; width: 100%" class="shadeList">
             <tr>
                 <td class="editColumnTitle" colspan="4"><it:message key="itracker.web.attr.attachments"/>:</td>
             </tr>

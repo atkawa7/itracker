@@ -29,7 +29,7 @@
         	<c:set var="isUpdate" value="true" />
         </c:if>
 
-       <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
+       <table border="0" cellspacing="0"  cellpadding="1"  width="100%" class="shadeList">
           <c:set var="maxLength" value="2" />
           <c:set var="maxSize" value="2" />
           <c:set var="locMsg" value="itracker.web.attr.language" />

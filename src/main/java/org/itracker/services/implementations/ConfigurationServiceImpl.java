@@ -209,7 +209,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     /**
      * Creates a <code>Configuration</code>.
      *
-     * @param model The <code>Configuration</code> to store
+     * @param configuration The <code>Configuration</code> to store
      * @return the <code>Configuration</code> after saving
      */
     public Configuration createConfigurationItem(Configuration configuration) {
@@ -230,7 +230,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     /**
      * Updates a <code>ConfigurationItem</code>
      *
-     * @param model The model containing the data
+     * @param configuration The model containing the data
      * @return the <code>Configuration</code> after save
      */
     public Configuration updateConfigurationItem(Configuration configuration) {
@@ -246,7 +246,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     /**
      * Updates the configuration items
      *
-     * @param models the <code>ConfigurationModels</code> to update
+     * @param configurations the <code>ConfigurationModels</code> to update
      * @param type   The type of the <code>ConfigurationItem</code>s to update
      * @return an array with the saved models
      */
@@ -456,7 +456,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     /**
      * remove a project script by its id
      *
-     * @param id the id of the project script to remove
+     * @param projectScript_id the id of the project script to remove
      */
     public void removeProjectScript(Integer projectScript_id) {
         if (projectScript_id != null) {
@@ -483,7 +483,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     /**
      * Creates a workflow script.
      *
-     * @param model The <code>WorkflowScript</code> carring the data
+     * @param workflowScript The <code>WorkflowScript</code> carring the data
      * @return The <code>WorkflowScript</code> after inserting
      */
     public WorkflowScript createWorkflowScript(WorkflowScript workflowScript) {
@@ -520,7 +520,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     /**
      * remove a workflow script by its id
      *
-     * @param id the id of the workflow script to remove
+     * @param workflowScript_id the id of the workflow script to remove
      */
     public void removeWorkflowScript(Integer workflowScript_id) {
         if (workflowScript_id != null) {
@@ -674,7 +674,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     /**
      * Updates a <code>CustomFieldValue</code>.
      *
-     * @param model The model to update
+     * @param customFieldValue The model to update
      * @return The <code>CustomFieldValue</code> after saving
      */
     public CustomFieldValue updateCustomFieldValue(CustomFieldValue customFieldValue) {
@@ -890,7 +890,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     /**
      * Removes the <code>Language</code> passed as parameter
      *
-     * @param model The <code>Language</code> to remove
+     * @param language The <code>Language</code> to remove
      */
     public void removeLanguageItem(Language language) {
 
@@ -931,7 +931,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
         Collection<Language> items = languageDAO.findByLocale(locale);
         for (Iterator<Language> iter = items.iterator(); iter.hasNext(); ) {
-            Language item = (Language) iter.next();
+            Language item = iter.next();
             keys.put(item.getResourceKey(), item.getResourceValue());
         }
 

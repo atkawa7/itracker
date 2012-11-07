@@ -47,10 +47,6 @@ public class SystemConfigurationUtilitiesTest {
                     languageKey);
         }
         {
-            @SuppressWarnings("unused")
-            final Configuration configuration =
-                    new Configuration(SystemConfigurationUtilities.TYPE_STATUS,
-                            "value");
             final String languageKey =
                     SystemConfigurationUtilities.getLanguageKey(null);
             assertEquals("",
@@ -58,11 +54,11 @@ public class SystemConfigurationUtilitiesTest {
         }
         {
             final Configuration configuration =
-                    new Configuration(SystemConfigurationUtilities.ACTION_CREATE,
+                    new Configuration(SystemConfigurationUtilities.TYPE_LOCALE,
                             "value");
             final String languageKey =
                     SystemConfigurationUtilities.getLanguageKey(configuration);
-            assertEquals("",
+            assertEquals("itracker.locale.name.value",
                     languageKey);
         }
     }

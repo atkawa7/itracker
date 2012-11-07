@@ -6,7 +6,7 @@
 
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
-      <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
+      <table style="border: none; padding: 1px; border-spacing: 0; width: 100%" class="shadeList">
         <tr>
           <td id="issues" class="editColumnTitle" colspan="14"><it:message key="itracker.web.attr.issues"/>:</td>
           <td align="right" style="white-space: nowrap">

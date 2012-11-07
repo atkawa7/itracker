@@ -159,7 +159,7 @@
         <br/>
         <br/>
 
-        <table border="0" cellspacing="0"  cellspacing="1"  width="100%" align="center">
+        <table border="0" cellspacing="0"  cellpadding="1"  width="100%" align="center" >
           <tr>
             <td class="editColumnTitle" colspan="8"><it:message key="itracker.web.attr.permissions"/>:</td>
           </tr>

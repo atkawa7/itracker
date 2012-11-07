@@ -40,6 +40,7 @@ public class ConfigurationForm extends ValidatorForm {
     String value;
     Integer order;
     String key;
+    String typeKey;
 
     // let's try to put String,String here:
     HashMap<String, String> translations = new HashMap<String, String>();
@@ -78,6 +79,14 @@ public class ConfigurationForm extends ValidatorForm {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getTypeKey() {
+        return typeKey;
+    }
+
+    public void setTypeKey(String typeKey) {
+        this.typeKey = typeKey;
     }
 
     public Integer getOrder() {

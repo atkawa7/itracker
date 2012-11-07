@@ -17,7 +17,7 @@
   <br>
 </logic:messagesPresent> 
 
-<table border="0" cellspacing="0"  cellpadding="1"  width="100%">
+<table border="0" cellspacing="0"  cellpadding="1"  width="100%" class="shadeList">
   <tr>
     <td id="projects" class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.projects"/>:</td>
   </tr>

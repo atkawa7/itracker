@@ -17,7 +17,7 @@
   <br>
 </logic:messagesPresent>
 
-<table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
+<table style="border: none; padding: 1px; border-spacing: 0; width: 100%" class="shadeList">
   <tr>
     <td class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.users"/>: (<it:message key="itracker.web.admin.listusers.numactive" arg0="${activeSessions}"/>)</td>
     <c:if test="${allowProfileCreation}">

@@ -18,7 +18,7 @@
                              <%--styleClass="headerLinks"--%>
                              <%--titleKey="itracker.web.header.menu.selfreg.alt"> Test 3</html:link>--%>
 
-<table class="portalhomeMain" cellspacing="0">
+<table class="portalhomeMain shadeList" cellspacing="0">
 <c:if test="${(! UserUtilities_PREF_HIDE_ASSIGNED) || allSections}">
 	<tr id="ownedIssues">
 	    <td class="editColumnTitle" colspan="15"><it:message key="itracker.web.index.assigned"/>:</td>

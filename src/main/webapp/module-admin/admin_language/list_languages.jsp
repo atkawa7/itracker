@@ -18,7 +18,7 @@
       </logic:messagesPresent>
       
       
-<table border="0" cellspacing="0" cellspacing="1" width="100%">
+<table border="0" cellspacing="0" cellpadding="1" width="100%" class="shadeList">
   <tr>
     <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
     <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
@@ -38,13 +38,18 @@
     </td>
   </tr>
   <c:set var="key" value="itracker.locale.name" />
-  
+
+    <c:set var="i" value="0" />
   <c:forEach items="${ languageKeys }" var="language">
+
+      <c:set var="styleClass" value="${ (i % 2 == 1) ? 'listRowShaded' : 'listRowUnshaded' }" />
+      <c:set var="i" value="${ i + 1 }" />
+
   	<c:set var="locales" value="${ languages[language] }" />
   	<c:set var="languageName" value="${ it:ITrackerResources_GetString(key, language) }" />
   	<c:set var="keyL" >${ key }.${ language }</c:set>
     <c:set var="localizedName" value="${ it:ITrackerResources_GetString(keyL, 'BASE' ) }" />
-          <tr class="listRowUnshaded">
+          <tr class="${ styleClass }">
             <td></td>
             <td colspan="2">
 	      ${ languageName }
@@ -58,10 +63,14 @@
             </td>
           </tr>
     <c:forEach items="${ locales }" var="locale">
+
+        <c:set var="styleClass" value="${ (i % 2 == 1) ? 'listRowShaded' : 'listRowUnshaded' }" />
+        <c:set var="i" value="${ i + 1 }" />
+
     	<c:set var="localeName" value="${ it:ITrackerResources_GetString(key, locale) }" />
 		<c:set var="keyL" >${ key }.${ locale }</c:set>
     	<c:set var="localizedName" value="${ it:ITrackerResources_GetString(keyL, 'BASE' ) }" />
-            <tr class="listRowUnshaded">
+            <tr class="${ styleClass }">
               <td></td>
               <td></td>
               <td>

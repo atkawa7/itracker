@@ -15,7 +15,7 @@
   <br>
 </logic:messagesPresent>
 
-<table border="0" cellspacing="0"  cellspacing="1"  width="100%">
+<table border="0" cellspacing="0"  cellpadding="1"  width="100%" class="shadeList">
   <tr>
     <td class="editColumnTitle" colspan="8"><it:message key="itracker.web.attr.workflowscripts"/>:</td>
     <td align="right">

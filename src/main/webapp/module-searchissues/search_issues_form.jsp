@@ -240,7 +240,7 @@
         <hr width="75%" height="1" noshade="noshade"/>
         <br/>
 
-        <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
+        <table border="0" cellspacing="0"  cellpadding="1"  width="100%" class="shadeList">
           <tr>
             <td class="editColumnTitle" colspan="8"><it:message key="itracker.web.attr.issues"/>:</td>
             <td class="listRowText" colspan="2" align="right"><it:message key="itracker.web.generic.totalissues" arg0="<%= Integer.toString(issues.size()) %>"/></td>

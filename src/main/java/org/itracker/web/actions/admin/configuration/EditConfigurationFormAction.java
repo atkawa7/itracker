@@ -52,7 +52,8 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
         }
         if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request,
                 response)) {
-            log.warn("execute: user has not permissue user-admin: " + LoginUtilities.getCurrentUser(request) + ", forwarding to unauthorized!");
+            log.warn("execute: user has not permissue user-admin: " + LoginUtilities.getCurrentUser(request)
+                    + ", forwarding to unauthorized!");
 
             return mapping.findForward("unauthorized");
         }
@@ -81,15 +82,15 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
                             "Invalid configuration item id " + id);
                 }
                 configurationForm.setId(id);
-
-                if (configItem.getType() == SystemConfigurationUtilities.TYPE_STATUS) {
-                    configurationForm.setValue(configItem.getValue());
-                }
+                configurationForm.setValue(configItem.getValue());
+                configurationForm.setKey(SystemConfigurationUtilities
+                                                .getLanguageKey(configItem));
+                configurationForm.setTypeKey(SystemConfigurationUtilities.getTypeLanguageKey(configItem));
+                configurationForm.setOrder(configItem.getOrder());
 
                 HashMap<String, String> translations = new HashMap<String, String>();
                 List<Language> languageItems = configurationService
-                        .getLanguageItemsByKey(SystemConfigurationUtilities
-                                .getLanguageKey(configItem));
+                        .getLanguageItemsByKey(configurationForm.getKey());
 
                 for (int i = 0; i < languageItems.size(); i++) {
                     translations.put(languageItems.get(i).getLocale(),

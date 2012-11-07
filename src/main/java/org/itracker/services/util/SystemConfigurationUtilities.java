@@ -31,7 +31,6 @@ import java.util.StringTokenizer;
 
 public class SystemConfigurationUtilities {
 
-    public static final String DEFAULT_DATASOURCE = "java:/ITrackerDS";
     private static final Logger log = Logger.getLogger(SystemConfigurationUtilities.class);
 
     public static final int TYPE_INITIALIZED = -1;
@@ -55,24 +54,50 @@ public class SystemConfigurationUtilities {
      * static part based on the type of configuration item, and the unique value
      * of the configuration item.
      *
-     * @param model the Configuration to return the key for
+     * @param configuration the Configuration to return the key for
      * @return the key for the item
      */
     public static String getLanguageKey(Configuration configuration) {
         if (configuration != null) {
             int type = configuration.getType();
-            if (type == SystemConfigurationUtilities.TYPE_STATUS) {
-                return ITrackerResources.KEY_BASE_STATUS
-                        + configuration.getValue();
-            } else if (type == SystemConfigurationUtilities.TYPE_SEVERITY) {
-                return ITrackerResources.KEY_BASE_SEVERITY
-                        + configuration.getValue();
-            } else if (type == SystemConfigurationUtilities.TYPE_RESOLUTION) {
-                return ITrackerResources.KEY_BASE_RESOLUTION
-                        + configuration.getValue();
+            String key = "itracker." + getTypeName(configuration.getType()) + ".";
+
+            if (type == TYPE_LOCALE) {
+                key += "name.";
             }
+
+            key += configuration.getValue();
+
+            if (type == TYPE_CUSTOMFIELD) {
+                key += ".label";
+            }
+            return key;
         }
         return "";
+    }
+
+    public static String getTypeName(int type) {
+        switch (type) {
+            case SystemConfigurationUtilities.TYPE_LOCALE:
+                    return "locale";
+            case SystemConfigurationUtilities.TYPE_STATUS:
+                    return "status";
+            case SystemConfigurationUtilities.TYPE_SEVERITY:
+                    return "severity";
+            case SystemConfigurationUtilities.TYPE_RESOLUTION:
+                    return "resolution";
+            case SystemConfigurationUtilities.TYPE_CUSTOMFIELD:
+                    return "customfield";
+        }
+
+        return "unknown";
+    }
+
+
+    public static String getTypeLanguageKey(Configuration configuration) {
+        final String base = "itracker.web.attr.";
+
+        return base + getTypeName(configuration.getType());
     }
 
     /**

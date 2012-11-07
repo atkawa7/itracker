@@ -15,6 +15,10 @@ hr {
 	background: black;	
 }
 
+.pre {
+    font: monospace;
+}
+
 a:hover {
 	color: #000000;
 	text-decoration: none;
@@ -199,6 +203,13 @@ a.listHeading:link {
 	text-decoration: none;
 }
 
+.shadeList .listRowShaded:hover {
+    background-color: #cfc;
+}
+.shadeList .listRowUnshaded:hover {
+    background-color: #efe;
+}
+
 .listRowText {
 	font-weight: normal;
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
@@ -338,4 +349,13 @@ Calender Styles
 }
 .tinyscal {
 	position: absolute;
+}
+
+#configurationForm .systemDefault,
+#customFieldForm .systemDefault {
+    font-style: italic;
+    font-weight: bold;
+    color: #666;
+    float: right;
+    margin-right: 2%;
 }
