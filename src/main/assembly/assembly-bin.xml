@@ -27,5 +27,9 @@
                 <include>*.sql</include>
             </includes>
         </fileSet>
+        <fileSet>
+          <directory>${project.build.directory}/site</directory>
+          <outputDirectory>docs</outputDirectory>
+        </fileSet>
     </fileSets>
 </assembly>
