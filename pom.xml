@@ -123,7 +123,7 @@
     </licenses>
     <scm>
         <connection>scm:svn:http://svn.code.sf.net/p/itracker/code/itracker/trunk/</connection>
-        <developerConnection>scm:svn:http://svn.code.sf.net/p/itracker/code/itracker/trunk/</developerConnection>
+        <developerConnection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/trunk/</developerConnection>
         <url>http://svn.code.sf.net/p/itracker/code/itracker/trunk/</url>
     </scm>
     <organization>
