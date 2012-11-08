@@ -21,7 +21,9 @@ Building itracker from Sources
 
   There are some relevant build properties available, depending on your needs, you find more details in the pom.xml:
 
-  * <<Tomcat run>> with profile <<<itracker.tomcat>>>:
+* Tomcat Plugin
+
+** <<Tomcat run>> with profile <<<itracker.tomcat>>>:
 
     * <<<main.dataSource.jdbcUrl>>> and <<<main.dataSource.driverClass>>> to run in tomcat against a different database\
       this is applied to <<</src/main/tomcat/context.xml>>> for runtime.
@@ -40,7 +42,7 @@ Building itracker from Sources
     <<<mvn package tomcat7:run -Dapplication.port=8080 -Pitracker.tomcat>>>
 
 
-  * Tomcat deploy:
+** Tomcat deploy:
 
     * <<<tomcat.deploy.path>>> override the deployment-path
 
@@ -55,7 +57,8 @@ Building itracker from Sources
     eg:\
     <<<mvn package tomcat6:deploy -Dtomcat.deploy.server=itracker-host -Dtomcat.deploy.url=http://itracker:8080/manager>>>
 
-  * Jetty run
+
+* Jetty Plugin
 
     * Running Jetty using a in-memory database, eg:\
     <<<mvn package jetty:run -Dapplication.port:9000 -Dmain.dataSource.jdbcUrl=jdbc:hsqldb:mem:/tmp/itrackerdev-jetty -Pitracker.jetty>>>
@@ -66,7 +69,7 @@ Building itracker from Sources
 
   []
 
-*Testing
+* Testing
 
   Separate tests for itracker are available for execution when building with maven. They must all pass before checking in code changes,
   and will be checked later on a build server to work consistently in the trunk.
@@ -88,6 +91,16 @@ Building itracker from Sources
 
     <If you cancel the build running Selenium Tests, some processes might be left and blocking some ports, you must find and kill them manually.>
 
-
   []
 
+* Site
+
+  The site target takes more memory due to intensive reporting, it can be assigned by calling \
+  <<<export MAVEN_OPTS="-Xms512m -Xmx1224m -XX:PermSize=256m -XX:MaxPermSize=512m">>>\
+  on the command line.
+
+  <<<mvn site>>>
+
+Release a final Version
+
+  Follow the {{{./release-instructions.html}release instructions}}.

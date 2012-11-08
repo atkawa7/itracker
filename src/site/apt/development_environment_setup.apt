@@ -46,7 +46,13 @@ Development Environment Setup
 
 *NetBeans
 
-  TODO
+  NetBeans includes full Maven support since 6.7, including Maven 3 support in 7.0+. You can open any Maven project in the IDE and start coding immediately. For more information see the {{{http://wiki.netbeans.org/Maven}NetBeans.org wiki page}}.
+
+** For older NetBeans
+
+  run <<<mvn netbeans-freeform:generate-netbeans-project>>>
+
+  More details: {{{http://maven.apache.org/guides/mini/guide-ide-netbeans/guide-ide-netbeans.html}this guide}}.
 
 *Maven
 
