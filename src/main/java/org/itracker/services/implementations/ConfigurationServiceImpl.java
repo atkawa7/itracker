@@ -343,7 +343,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     public boolean configurationItemUpToDate(Configuration configuration) {
 
-        long currentVersion = SystemConfigurationUtilities.getVersionAsLong(getItrackerVersion());
+        long currentVersion = 0;
 
         if (configuration != null && configuration.getVersion() != null) {
 
@@ -1041,7 +1041,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             if (!ITrackerResources.BASE_LOCALE.equalsIgnoreCase(Baselocalestring)) {
 
                 if (Baselocalestring.length() == 2) {
-//                languages.put(Baselocalestring, new ArrayList());
                     List<String> languageList = new ArrayList<String>();
                     for (int j = 0; j < locales.size(); j++) {
                         String localestring = locales.get(j).getValue();
@@ -1144,10 +1143,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         }
 
         config.setStatuses(statuses);
-
-        // Now load the CustomFields
-
-//        config.setCustomFields(IssueUtilities.getCustomFields(locale));
 
         // Now set the system version
 
