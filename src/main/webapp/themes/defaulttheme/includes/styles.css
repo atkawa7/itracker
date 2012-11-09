@@ -272,15 +272,12 @@ a.listRow:link {
 	text-decoration: none;
 }
 
-div.errors {
-	text-align: center;
-}
-
+div.error,
+div.errors,
 .formError {
 	font-weight: normal;
-	text-align: left;
+	text-align: center;
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-	font-size: 10px;
 	color: red;
 	background-color: white;
 	text-decoration: none;

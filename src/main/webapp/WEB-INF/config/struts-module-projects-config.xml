@@ -72,14 +72,14 @@
         </action>
 
         <action path="/watchissue" type="org.itracker.web.actions.project.WatchIssueAction"
-                name="watchIssueForm" scope="request" input="/index.jsp" validate="false">
-            <forward name="index" module="/" path="/index.jsp" redirect="true"/>
+                name="watchIssueForm" scope="request" input="/list_issues.do" validate="false">
+            <forward name="index" module="/" path="/portalhome.do" redirect="true"/>
             <forward name="editissue" path="/editissueform.do" redirect="true"/>
-            <forward name="viewissue" path="/view_issue.jsp" redirect="true"/>
+            <forward name="viewissue" path="/view_issue.do" redirect="true"/>
         </action>
 
         <action path="/unauthorized" type="org.itracker.web.actions.UnauthorizedAction">
-            <forward name="unauthorized" path="/unauthorized.jsp" module="/" redirect="true"/>
+            <forward name="unauthorized" path="/unauthorized.do" module="/" redirect="true"/>
         </action>
 
         <action path="/moveissueform" type="org.itracker.web.actions.project.MoveIssueFormAction"
@@ -125,11 +125,11 @@
         </action>
 
         <action path="/error" type="org.itracker.web.actions.ErrorAction">
-            <forward name="error_page" module="/" path="/themes/defaulttheme/error.jsp"/>
+            <forward name="error_page" path="/error" module="/"/>
         </action>
 
         <action path="/downloadAttachment" type="org.itracker.web.actions.admin.attachment.DownloadAttachmentAction">
-            <forward name="error_page" path="/themes/defaulttheme/error.jsp" module="/"/>
+            <forward name="error_page" path="/error" module="/"/>
         </action>
 
     </action-mappings>

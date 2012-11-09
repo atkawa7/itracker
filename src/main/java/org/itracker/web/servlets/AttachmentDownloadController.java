@@ -80,12 +80,12 @@ public class AttachmentDownloadController extends GenericController {
                 ActionErrors errors = new ActionErrors();
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidattachment"));
                 saveMessages(request, errors);
-                forward("/themes/defaulttheme/error.jsp", request, response);
+                forward("/error.do", request, response);
                 return;
             }
 
             if (!issueService.canViewIssue(attachment.getIssue().getId(), user)) {
-                forward("/themes/defaulttheme/unauthorized.jsp", request, response);
+                forward("/unauthorized.do", request, response);
                 return;
             }
 
@@ -94,7 +94,7 @@ public class AttachmentDownloadController extends GenericController {
                 ActionErrors errors = new ActionErrors();
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingattachmentdata"));
                 saveMessages(request, errors);
-                forward("/themes/defaulttheme/error.jsp", request, response);
+                forward("/error.do", request, response);
                 return;
             }
 

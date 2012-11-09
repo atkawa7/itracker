@@ -122,14 +122,6 @@
                                                                               class="${loc}_loc">${loc}</a></span></c:forEach>
                 </c:forEach></div>
             </c:if>
-            <%--<c:if test="${locales and (fn:length(locales) gt 1)}">
-            <div id="locales"><c:forEach items="${locales}" var="locMap">
-               <span><a href="?loc=${locMap.key}" class="${locMap.key}_loc">${locMap.key}</a><c:forEach items="${locMap.value}" var="loc"> <a href="?loc=${loc}" class="${loc}_loc">${loc}</a></c:forEach> </span>
-
-
-            </c:forEach>
-            </div>
-            </c:if--%>
 
 
             <%-- TODO: localization separated from page title? --%>
@@ -158,12 +150,17 @@
 </table>
 
 
+<tiles:useAttribute name="isErrorPage" id="isErrorPage" ignore="true" />
+
+<logic:notEqual value="true" name="isErrorPage" >
 <logic:messagesPresent>
 
     <div id="pageErrors" class="formError">
         <html:messages id="error">
            <div><bean:write name="error"/></div>
         </html:messages>
+        <br />
     </div>
 
 </logic:messagesPresent>
+</logic:notEqual>

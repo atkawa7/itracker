@@ -4,20 +4,25 @@
         "http://struts.apache.org/dtds/tiles-config_1_3.dtd">
 <tiles-definitions>
 
+
     <definition name="mainLayout" path="/themes/defaulttheme/defaultlayout.jsp">
         <put name="title" value="iTracker"/>
         <put name="theme" value="defaulttheme" />
         <put name="header" value="includes/default.header.jsp"/>
-        <!--<put name="menu"   value="mainMenu" />-->
         <put name="footer" value="includes/default.footer.jsp"/>
-        <put name="body" value=".portal.body"/>
+        <put name="body" value="/portalhome.jsp"/>
     </definition>
 
-    <definition name="t.error" path="/themes/defaulttheme/error.jsp">
+    <definition name="t.error"  extends="mainLayout">
+        <put name="body" value="/error.jsp" />
+        <put name="isErrorPage" value="true" type="string" />
+    </definition>
+    <definition name="t.unauthorized" extends="mainLayout">
+        <put name="body" value="/unauthorized.jsp" />
     </definition>
 
     <definition name="t.portalhome" extends="mainLayout">
-        <put name="body" value="/portalhome.jsp"/>
+
     </definition>
     <definition name="t.login" extends="mainLayout">
         <put name="body" value="/login.jsp"/>

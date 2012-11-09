@@ -4,12 +4,12 @@
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp" />
 
 <logic:messagesPresent>
-	<span class="formError"> <html:messages
+	<div class="formError"> <html:messages
 		id="error">
-		<bean:write name="error" />
-		<br />
-	</html:messages> </span>
-	<br>
+		<bean:write name="error" /> <br />
+	</html:messages> </div>
+    <br />
+
 </logic:messagesPresent>
 
 <table>

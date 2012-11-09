@@ -72,7 +72,7 @@ public class ReportDownloadController extends GenericController {
             }
 
             if (report == null) {
-                forward("/error.jsp", request, response);
+                forward("/error.do", request, response);
                 return;
             }
 

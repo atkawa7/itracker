@@ -2,7 +2,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 
-<c:set var="themePath">/themes/<tiles:getAsString name="theme" /></c:set>
+<c:set var="themePath">/themes/defaulttheme</c:set>
 <c:if test="${ empty siteTitle}">
     <c:set var="siteTitle" value="itracker.org" />
 </c:if>
@@ -50,19 +50,19 @@
 
 </head>
 <body>
-<%--<h1><tiles:getAsString name="title" ></tiles:getAsString></h1>--%>
-<%--<h1><tiles:getAsString name="title"></tiles:getAsString></h1>--%>
-<%--<c:set var="pageTitle" scope="request"><tiles:getAsString name="title"></tiles:getAsString></c:set>--%>
 
-<tiles:useAttribute name="header" id="headerPath" ></tiles:useAttribute>
-<tiles:insert page="${themePath}/${headerPath}">
+<tiles:useAttribute name="isErrorPage" id="isErrorPage" ignore="true" ></tiles:useAttribute>
+<logic:empty name="isErrorPage"><c:set var="isErrorPage" value="false" />
+</logic:empty>
+<tiles:insert attribute="header" flush="false">
     <tiles:put name="title" beanName="pageTitle" />
+    <tiles:put name="isErrorPage" beanName="isErrorPage" />
 </tiles:insert>
 
 <tiles:insert attribute="body" />
 
 <tiles:useAttribute name="footer" id="footerPath" ></tiles:useAttribute>
-<tiles:insert page="${themePath}/${footerPath}"/>
+<tiles:insert attribute="footer" />
 </body>
 
 </html>
