@@ -7,7 +7,6 @@
 
     <definition name="mainLayout" path="/themes/defaulttheme/defaultlayout.jsp">
         <put name="title" value="iTracker"/>
-        <put name="theme" value="defaulttheme" />
         <put name="header" value="includes/default.header.jsp"/>
         <put name="footer" value="includes/default.footer.jsp"/>
         <put name="body" value="/portalhome.jsp"/>
