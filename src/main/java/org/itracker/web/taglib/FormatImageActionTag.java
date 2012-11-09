@@ -217,13 +217,14 @@ public final class FormatImageActionTag extends TagSupport {
             }
 
             if (!StringUtils.isEmpty(styleClass)) {
-               buf.append(" class=\"").append( styleClass ).append("\">");
+                buf.append(" class=\"").append( styleClass ).append("\"");
             }
+            buf.append(">");
             buf.append(HTMLUtilities.escapeTags( ITrackerResources.getString(textActionKey, locale) ));
         } else {
 
             if (!StringUtils.isEmpty(styleClass)) {
-                buf.append(" class=\"").append(styleClass ).append("\"");
+                buf.append(" class=\"").append( styleClass ).append("\"");
             }
             buf.append(">");
             buf.append("<img src=\"");
