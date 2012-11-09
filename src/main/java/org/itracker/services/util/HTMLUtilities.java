@@ -122,6 +122,9 @@ public class HTMLUtilities {
     }
 
     public static String escapeTags(String input) {
+        if (null == input) {
+            return "";
+        }
         StringBuffer sb = new StringBuffer(input.length());
         int len = input.length();
         char c;

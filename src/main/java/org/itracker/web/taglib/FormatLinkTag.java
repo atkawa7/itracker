@@ -200,7 +200,7 @@ public final class FormatLinkTag extends BodyTagSupport {
             buf.append(" title=\"" + HTMLUtilities.escapeTags(ITrackerResources.getString(titleKey, locale, (arg0 == null ? "" : arg0))) + "\"");
         }
         if (styleClass != null) {
-            buf.append(" class=\"" + HTMLUtilities.escapeTags(styleClass) + "\"");
+            buf.append(" class=\"" + styleClass + "\"");
         }
         buf.append(">");
         buf.append(HTMLUtilities.escapeTags(text));
