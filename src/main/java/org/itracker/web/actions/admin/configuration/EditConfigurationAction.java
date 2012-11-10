@@ -18,7 +18,6 @@
 
 package org.itracker.web.actions.admin.configuration;
 
-import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
@@ -63,7 +62,6 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                     "itracker.web.error.transaction"));
             saveErrors(request, errors);
             return mapping.getInputForward();
-            // return mapping.findForward("listconfiguration");
         }
         resetToken(request);
         HttpSession session = request.getSession(true);
@@ -92,7 +90,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
 
                 try {
                     List<Configuration> resolutions = configurationService
-                            .getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_RESOLUTION);
+                            .getConfigurationItemsByType(Configuration.Type.resolution);
                     if (resolutions.size() < 1) {
                         // fix for no existing resolution
                         value = Math.max(value, 0);
@@ -121,7 +119,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
 
                 try {
                     List<Configuration> severities = configurationService
-                            .getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_SEVERITY);
+                            .getConfigurationItemsByType(Configuration.Type.severity);
                     if (severities.size() < 1) {
                         // fix for no existing severity
                         value = Math.max(value, 0);
@@ -148,7 +146,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                 try {
                     int value = Integer.parseInt(formValue);
                     List<Configuration> statuses = configurationService
-                            .getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_STATUS);
+                            .getConfigurationItemsByType(Configuration.Type.status);
                     for (int i = 0; i < statuses.size(); i++) {
                         if (value == Integer.parseInt(statuses.get(i)
                                 .getValue())) {
@@ -191,7 +189,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                             int newStatus = Integer.parseInt(formValue);
 
                             List<Configuration> statuses = configurationService
-                                    .getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_STATUS);
+                                    .getConfigurationItemsByType(Configuration.Type.status);
                             for (int i = 0; i < statuses.size(); i++) {
                                 if (newStatus == Integer.parseInt(statuses.get(
                                         i).getValue())) {
@@ -212,7 +210,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                             Integer currUserId = (currUser == null ? Integer
                                     .valueOf(-1) : currUser.getId());
 
-                            IssueService issueService = getITrackerServices()
+                            IssueService issueService = ServletContextUtils.getItrackerServices()
                                     .getIssueService();
 
                             List<Issue> issues = issueService
