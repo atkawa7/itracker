@@ -18,6 +18,7 @@
 
 package org.itracker.web.actions.admin.configuration;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
@@ -32,6 +33,7 @@ import org.itracker.services.exceptions.SystemConfigurationException;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -67,10 +69,10 @@ public class EditConfigurationAction extends ItrackerBaseAction {
         HttpSession session = request.getSession(true);
 
         try {
-            ConfigurationService configurationService = getITrackerServices()
+            final ConfigurationService configurationService = ServletContextUtils.getItrackerServices()
                     .getConfigurationService();
 
-            String action = (String) PropertyUtils.getSimpleProperty(form,
+            final String action = (String) PropertyUtils.getSimpleProperty(form,
                     "action");
             String formValue = (String) PropertyUtils.getSimpleProperty(form,
                     "value");
@@ -104,7 +106,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                         String version = configurationService
                                 .getProperty("version");
                         configItem = new Configuration(
-                                SystemConfigurationUtilities.TYPE_RESOLUTION,
+                                Configuration.Type.resolution,
                                 Integer.toString(++value), version, ++order);
                     }
                 } catch (NumberFormatException nfe) {
@@ -133,7 +135,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                         String version = configurationService
                                 .getProperty("version");
                         configItem = new Configuration(
-                                SystemConfigurationUtilities.TYPE_SEVERITY,
+                                Configuration.Type.severity,
                                 Integer.toString(++value), version, ++order);
                     }
                 } catch (NumberFormatException nfe) {
@@ -159,7 +161,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                     String version = configurationService
                             .getProperty("version");
                     configItem = new Configuration(
-                            SystemConfigurationUtilities.TYPE_STATUS,
+                            Configuration.Type.status,
                             formValue, version, value);
                 } catch (NumberFormatException nfe) {
                     throw new SystemConfigurationException("Invalid value "
@@ -180,7 +182,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                 initialLanguageKey = SystemConfigurationUtilities
                         .getLanguageKey(configItem);
 
-                if (configItem.getType() == SystemConfigurationUtilities.TYPE_STATUS
+                if (configItem.getType() == Configuration.Type.status
                         && formValue != null && !formValue.equals("")) {
                     if (!configItem.getValue().equalsIgnoreCase(formValue)) {
                         try {
@@ -215,17 +217,18 @@ public class EditConfigurationAction extends ItrackerBaseAction {
 
                             List<Issue> issues = issueService
                                     .getIssuesWithStatus(currStatus);
+                            Issue issue;
                             for (int i = 0; i < issues.size(); i++) {
                                 if (issues.get(i) != null) {
                                     issues.get(i).setStatus(newStatus);
+                                    // TODO, set correct activity?
                                     // IssueActivity activity = new
                                     // IssueActivity();
                                     // activity.setActivityType(IssueActivityType.SYSTEM_UPDATE);
                                     // activity.setDescription(ITrackerResources.getString("itracker.activity.system.status"));
                                     // issues.get(i).getActivities().add(activity);
-                                    // TODO: is this inteded?
-                                    issues.add(issueService.updateIssue(issues
-                                            .get(i), currUserId));
+                                    issue = issueService.updateIssue(issues .get(i), currUserId);
+                                    issues.add(issue);
 
                                     // TODO: need to fix this RJST
                                     // activity.setIssue(issues.get(i));

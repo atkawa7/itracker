@@ -75,7 +75,8 @@ public class IssueUtilitiesIT extends AbstractDependencyInjectionTest {
     @Test
     public void testGetFieldNameByLocale() {
         final List<CustomField> customFields = new Vector<CustomField>();
-        final CustomField customField1 = new CustomField("key", Type.STRING);
+        final CustomField customField1 = new CustomField();
+        customField1.setFieldType(Type.STRING);
         customField1.setId(1);
         customFields.add(customField1);
         assertEquals("test-field_custom",
@@ -367,7 +368,7 @@ public class IssueUtilitiesIT extends AbstractDependencyInjectionTest {
     public void testSetStatuses() {
         final List<Configuration> statuses_ = IssueUtilities.getStatuses();
         final List<Configuration> statuses = new Vector<Configuration>();
-        final Configuration configuration = new Configuration(0,
+        final Configuration configuration = new Configuration(Configuration.Type.status,
                 new NameValuePair("key", "100"));
         statuses.add(configuration);
         IssueUtilities.setStatuses(statuses);
@@ -413,16 +414,16 @@ public class IssueUtilitiesIT extends AbstractDependencyInjectionTest {
     @Test
     public void testGetSeverities() {
         final List<Configuration> severities = new Vector<Configuration>();
-        final Configuration severity1 = new Configuration(0,
+        final Configuration severity1 = new Configuration(Configuration.Type.severity,
                 new NameValuePair("1", "1"));
         severities.add(severity1);
-        final Configuration severity2 = new Configuration(0,
+        final Configuration severity2 = new Configuration(Configuration.Type.severity,
                 new NameValuePair("2", "2"));
         severities.add(severity2);
-        final Configuration severity3 = new Configuration(0,
+        final Configuration severity3 = new Configuration(Configuration.Type.severity,
                 new NameValuePair("3", "3"));
         severities.add(severity3);
-        final Configuration severity4 = new Configuration(0,
+        final Configuration severity4 = new Configuration(Configuration.Type.severity,
                 new NameValuePair("4", "4"));
         severities.add(severity4);
         IssueUtilities.setSeverities(severities);
@@ -437,7 +438,7 @@ public class IssueUtilitiesIT extends AbstractDependencyInjectionTest {
     @Test
     public void testSetSeverities() {
         final List<Configuration> severities = new Vector<Configuration>();
-        final Configuration severity = new Configuration(0,
+        final Configuration severity = new Configuration(Configuration.Type.severity,
                 new NameValuePair("88", "1"));
         severities.add(severity);
         IssueUtilities.setSeverities(severities);
@@ -488,7 +489,7 @@ public class IssueUtilitiesIT extends AbstractDependencyInjectionTest {
     @Test
     public void testGetResolutionsByLocale() {
         final List<Configuration> resolutions = new Vector<Configuration>();
-        final Configuration resolution = new Configuration(0,
+        final Configuration resolution = new Configuration(Configuration.Type.resolution,
                 new NameValuePair("one", "1"));
         resolutions.add(resolution);
         IssueUtilities.setResolutions(resolutions);
@@ -500,7 +501,7 @@ public class IssueUtilitiesIT extends AbstractDependencyInjectionTest {
     @Test
     public void testSetResolutions() {
         final List<Configuration> resolutions = new Vector<Configuration>();
-        final Configuration resolution = new Configuration(0,
+        final Configuration resolution = new Configuration(Configuration.Type.resolution,
                 new NameValuePair("key", "1"));
         resolutions.add(resolution);
         IssueUtilities.setResolutions(resolutions);
@@ -533,7 +534,8 @@ public class IssueUtilitiesIT extends AbstractDependencyInjectionTest {
     @Test
     public void testGetCustomFields() {
         final List<CustomField> expected = new Vector<CustomField>();
-        final CustomField customField1 = new CustomField("key", Type.STRING);
+        final CustomField customField1 = new CustomField();
+        customField1.setFieldType(Type.STRING);
         customField1.setId(1);
         expected.add(customField1);
         IssueUtilities.setCustomFields(expected);
@@ -543,7 +545,8 @@ public class IssueUtilitiesIT extends AbstractDependencyInjectionTest {
     @Test
     public void testSetCustomFields() {
         final List<CustomField> expected = new Vector<CustomField>();
-        final CustomField customField1 = new CustomField("key", Type.STRING);
+        final CustomField customField1 = new CustomField();
+        customField1.setFieldType(Type.STRING);
         customField1.setId(1);
         expected.add(customField1);
         IssueUtilities.setCustomFields(expected);

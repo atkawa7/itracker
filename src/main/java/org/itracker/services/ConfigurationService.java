@@ -68,9 +68,28 @@ public interface ConfigurationService {
      *
      * @param type the type of configuration items to retrieve
      * @return an array of ConfigurationModels
+     * @deprecated use getConfigurationItemsByType(Configuration.Type type)
      */
     List<Configuration> getConfigurationItemsByType(int type);
 
+    /**
+     * Returns all the configuration items of a particular type.  The name values
+     * for all the items will not be initialized.
+     *
+     * @param type the type of configuration items to retrieve
+     * @return an array of ConfigurationModels
+     */
+    List<Configuration> getConfigurationItemsByType(Configuration.Type type);
+
+    /**
+     * Returns all the configuration items of a particular type.  The name values
+     * for all the items will not be initialized.
+     *
+     * @param type the type of configuration items to retrieve
+     * @param locale the locale to use when setting the configuration items name values
+     * @return an array of ConfigurationModels
+     */
+    List<Configuration> getConfigurationItemsByType(Configuration.Type type, Locale locale);
     /**
      * Returns all the configuration items of a particular type.  In addition, all
      * of the configuration items name values will be initialized to the values
@@ -79,30 +98,40 @@ public interface ConfigurationService {
      * @param type   the type of configuration items to retrieve
      * @param locale the locale to use when setting the configuration items name values
      * @return an array of ConfigurationModels
+     * @deprecated use getConfigurationItemsByType(Configuration.Type type, Locale locale)
      */
     List<Configuration> getConfigurationItemsByType(int type, Locale locale);
 
     /**
-     * This method will create a new Configuration for persistance in the database.
+     * Creates a <code>Configuration</code>.
      *
-     * @param model the model to create the bean from
+     * @param configuration The <code>Configuration</code> to store
+     * @return the <code>Configuration</code> after saving
      */
     Configuration createConfigurationItem(Configuration configuration);
 
     /**
-     * This method updates a configuration item in the database.  It does not include any updates
-     * to language items that would be used to display the localized value of the item.
+     * This method updates a configuration item in the database.
+     * <p>Version will be fixed to current initialized version.</p>
      *
-     * @param model a Configuration of the item to update
+     * @param configuration a Configuration of the item to update
      * @return a Configuration with the updated item
      */
     Configuration updateConfigurationItem(Configuration configuration);
 
-    List<Configuration> updateConfigurationItems(List<Configuration> configurations, int type);
+    /**
+     * Updates the configuration items.
+     * <p>Version will be fixed to current initialized version.</p>
+     *
+     * @param configurations the <code>ConfigurationModels</code> to update
+     * @param type           The type of the <code>ConfigurationItem</code>s to update
+     * @return an array with the saved models
+     */
+    List<Configuration> updateConfigurationItems(List<Configuration> configurations, Configuration.Type type);
 
     boolean configurationItemExists(Configuration configuration);
 
-    boolean configurationItemUpToDate(Configuration configuration);
+    boolean isConfigurationItemUpToDate(Configuration configuration);
 
     /**
      * This method will remove the configuration item with the supplied id.
@@ -116,15 +145,24 @@ public interface ConfigurationService {
      * will remove all items of that type such as all system status values.
      *
      * @param type the type of configuration information to remove
+     * @deprecated use removeConfigurationItems(Configuration.Type type)
      */
     void removeConfigurationItems(int type);
+
+    /**
+     * This method will remove all configuration items that match the supplied type.  This
+     * will remove all items of that type such as all system status values.
+     *
+     * @param type the type of configuration information to remove
+     */
+    void removeConfigurationItems(Configuration.Type type);
 
     /**
      * This method will remove all configuration items that match the supplied models
      * type and value.  This effectively eliminates all previous versions of the item.
      * It is normally called prior to a create to remove any older copies of this item.
      *
-     * @param model the model to determine the type and value from
+     * @param configuration the model to determine the type and value from
      */
     void removeConfigurationItems(Configuration configuration);
 
@@ -139,8 +177,16 @@ public interface ConfigurationService {
      * configuration item type.
      *
      * @param type the type of configuration item to reset in any caches
+     * @deprecated use resetConfigurationCache(Configuration.Type type)
      */
     void resetConfigurationCache(int type);
+    /**
+     * This method will reset any caches in the system of configuration items for the specified
+     * configuration item type.
+     *
+     * @param type the type of configuration item to reset in any caches
+     */
+    void resetConfigurationCache(Configuration.Type type);
 
     /**
      * This method will return the requested project script.
@@ -160,14 +206,14 @@ public interface ConfigurationService {
     /**
      * This method will create a new project script for persistance in the database.
      *
-     * @param model the model to create the script from
+     * @param projectScript the model to create the script from
      */
     ProjectScript createProjectScript(ProjectScript projectScript);
 
     /**
      * This method updates a project script in the database.
      *
-     * @param model a ProjectScript of the item to update
+     * @param projectScript a ProjectScript of the item to update
      * @return a ProjectScript with the updated item
      */
     ProjectScript updateProjectScript(ProjectScript projectScript);
@@ -197,14 +243,14 @@ public interface ConfigurationService {
     /**
      * This method will create a new workflow script for persistance in the database.
      *
-     * @param model the model to create the script from
+     * @param workflowScript the model to create the script from
      */
     WorkflowScript createWorkflowScript(WorkflowScript workflowScript);
 
     /**
      * This method updates a workflow script in the database.
      *
-     * @param model a WorkflowScript of the item to update
+     * @param workflowScript a WorkflowScript of the item to update
      * @return a WorkflowScript with the updated item
      */
     WorkflowScript updateWorkflowScript(WorkflowScript workflowScript);
@@ -232,20 +278,10 @@ public interface ConfigurationService {
     List<CustomField> getCustomFields();
 
     /**
-     * This method will return all the custom fields defined in the system.  It will
-     * also initialize all of the field labels using the supplied locale.
-     *
-     * @param locale the locale to use to initialize the labels
-     * @return an array of CustomFieldModels
-     * @deprecated use {@link CustomFieldUtilities} to retrieve localization to custom fields
-     */
-    List<CustomField> getCustomFields(Locale locale);
-
-    /**
      * This method will create a new CustomField for persistance in the database.  If the
      * field includes a set of option values, those will be created also.
      *
-     * @param model the model to create the field from
+     * @param customField the model to create the field from
      */
     CustomField createCustomField(CustomField customField);
 
@@ -254,7 +290,7 @@ public interface ConfigurationService {
      * to language items that would be used to display the localized label for the field.
      * If any options are included, the list will be used to replace any existing options.
      *
-     * @param model a CustomField of the item to update
+     * @param customField a CustomField of the item to update
      * @return a CustomField with the updated item
      */
     CustomField updateCustomField(CustomField customField);
@@ -262,7 +298,7 @@ public interface ConfigurationService {
     /**
      * Removes a single custom field from the database.
      *
-     * @param customFieldValueId the id of the custom field to remove
+     * @param customFieldId the id of the custom field to remove
      */
     boolean removeCustomField(Integer customFieldId);
 
@@ -277,7 +313,7 @@ public interface ConfigurationService {
     /**
      * This method will create a new CustomFieldValue for persistance in the database.
      *
-     * @param model the model to create the field from
+     * @param customFieldValue the model to create the field from
      */
     CustomFieldValue createCustomFieldValue(CustomFieldValue customFieldValue);
 
@@ -285,7 +321,7 @@ public interface ConfigurationService {
      * This method updates a custom field value in the database.  It does not include any updates
      * to language items that would be used to display the localized label for the field value.
      *
-     * @param model a CustomFieldValue of the item to update
+     * @param customFieldValue a CustomFieldValue of the item to update
      * @return a CustomFieldValue with the updated item
      */
     CustomFieldValue updateCustomFieldValue(CustomFieldValue customFieldValue);
@@ -298,7 +334,7 @@ public interface ConfigurationService {
      * new values.
      *
      * @param customFieldId the id of the custom field to update
-     * @param models        an array of CustomFieldValueModels to update
+     * @param customFieldValues        an array of CustomFieldValueModels to update
      * @return a array of CustomFieldValueModels with the updated items
      */
     List<CustomFieldValue> updateCustomFieldValues(Integer customFieldId,
@@ -338,7 +374,7 @@ public interface ConfigurationService {
     /**
      * Updates a translations for a particular key and locale.
      *
-     * @param model A Language for the key to update
+     * @param language A Language for the key to update
      * @return a Language with the updated translation
      */
     Language updateLanguageItem(Language language);
@@ -397,7 +433,7 @@ public interface ConfigurationService {
 
     /**
      * This method will load the some default system configuration data into the database.  The values
-     * it loads are determined from the base ITracker.properties file so the language intiialization
+     * it loads are determined from the base ITracker.properties file so the language initialization
      * <b>must</b> be performed before this method is called.
      */
     void initializeConfiguration();

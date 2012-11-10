@@ -15,30 +15,30 @@ public class SystemConfigurationTest {
     public void testAddRESOLUTIONConfiguration() {
         assertEquals("Resolutions size 0", 0, conf.getResolutions().size());
         Configuration con = new Configuration();
-        con.setType(SystemConfigurationUtilities.TYPE_RESOLUTION);
+        con.setType(Configuration.Type.resolution);
         conf.addConfiguration(con);
         assertEquals("Resolutions size 1", 1, conf.getResolutions().size());
-        assertEquals("Resolutions type TYPE_RESOLUTION", SystemConfigurationUtilities.TYPE_RESOLUTION, conf.getResolutions().get(0).getType());
+        assertEquals("Resolutions type TYPE_RESOLUTION", Configuration.Type.resolution, conf.getResolutions().get(0).getType());
     }
 
     @Test
     public void testAddSEVERITYConfiguration() {
         assertEquals("SEVERITY size 0", 0, conf.getSeverities().size());
         Configuration con = new Configuration();
-        con.setType(SystemConfigurationUtilities.TYPE_SEVERITY);
+        con.setType(Configuration.Type.severity);
         conf.addConfiguration(con);
         assertEquals("SEVERITY size 1", 1, conf.getSeverities().size());
-        assertEquals("SEVERITY type TYPE_SEVERITY", SystemConfigurationUtilities.TYPE_SEVERITY, conf.getSeverities().get(0).getType());
+        assertEquals("SEVERITY type TYPE_SEVERITY", Configuration.Type.severity, conf.getSeverities().get(0).getType());
     }
 
     @Test
     public void testAddSTATUSConfiguration() {
         assertEquals("STATUS size 0", 0, conf.getStatuses().size());
         Configuration con = new Configuration();
-        con.setType(SystemConfigurationUtilities.TYPE_STATUS);
+        con.setType(Configuration.Type.status);
         conf.addConfiguration(con);
         assertEquals("STATUS size 1", 1, conf.getStatuses().size());
-        assertEquals("STATUS type TYPE_STATUS", SystemConfigurationUtilities.TYPE_STATUS, conf.getStatuses().get(0).getType());
+        assertEquals("STATUS type TYPE_STATUS", Configuration.Type.status, conf.getStatuses().get(0).getType());
     }
 
     @Test

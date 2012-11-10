@@ -108,7 +108,8 @@ public class ConfigurationServiceImplIT extends
         assertEquals("value", "Test Value", config.getValue());
         assertEquals("version", "Version 1.0", config.getVersion());
         assertEquals("order", 1, config.getOrder());
-        assertEquals("type", 1, config.getType());
+        assertEquals("type", (Object)1, config.getType().getCode());
+        assertEquals("type", Configuration.Type.locale, config.getType());
 
     }
 
@@ -217,39 +218,70 @@ public class ConfigurationServiceImplIT extends
 
     @Test
     public void testGetConfigurationItemsByType() {
-        List<Configuration> configs = configurationService.getConfigurationItemsByType(1);
+        List<Configuration> configs = configurationService.getConfigurationItemsByType(Configuration.Type.locale);
         assertNotNull(configs);
-        assertEquals("configs of type ", 2, configs.size());
-        assertEquals("config type", 1, configs.get(0).getType());
-        assertEquals("configs of type 2", 2, configs.size());
+        assertEquals("configs(locale)", 2, configs.size());
+        assertEquals("configs(locale)[0].type", Configuration.Type.locale, configs.get(0).getType());
 
+        configs = configurationService.getConfigurationItemsByType(Configuration.Type.status);
+        assertNotNull(configs);
+        assertEquals("configs(status)", 1, configs.size());
+        assertEquals("configs(status)[0].type", Configuration.Type.status, configs.get(0).getType());
+
+        configs = configurationService.getConfigurationItemsByType(Configuration.Type.severity);
+        assertNotNull(configs);
+        assertEquals("configs(severity)", 1, configs.size());
+        assertEquals("configs(severity)[0].type", Configuration.Type.severity, configs.get(0).getType());
+
+        configs = configurationService.getConfigurationItemsByType(Configuration.Type.resolution);
+        assertNotNull(configs);
+        assertEquals("configs(resolution)", 1, configs.size());
+        assertEquals("configs(resolution)[0].type", Configuration.Type.resolution, configs.get(0).getType());
+
+
+
+        configs = configurationService.getConfigurationItemsByType(Configuration.Type.locale, Locale.UK);
+        assertNotNull(configs);
+        assertEquals("configs(1, en_UK).size", 2, configs.size());
+
+        configs = configurationService.getConfigurationItemsByType(Configuration.Type.status, Locale.UK);
+        assertNotNull(configs);
+        assertEquals("configs(2, en_UK).size", 1, configs.size());
+
+        configs = configurationService.getConfigurationItemsByType(Configuration.Type.severity, Locale.UK);
+        assertNotNull(configs);
+        assertEquals("configs(3, en_UK).size", 1, configs.size());
+
+        configs = configurationService.getConfigurationItemsByType(Configuration.Type.resolution, Locale.UK);
+        assertNotNull(configs);
+        assertEquals("configs(4, en_UK).size", 1, configs.size());
+
+
+        // old checks
         configs = configurationService.getConfigurationItemsByType(2);
         assertNotNull(configs);
-        assertEquals("configs of type ", 1, configs.size());
-        assertEquals("configs of type 2", 1, configs.size());
-        assertEquals("config type", 2, configs.get(0).getType());
+        assertEquals("configs(2)", 1, configs.size());
+        assertEquals("configs(2)[0].type", Configuration.Type.status, configs.get(0).getType());
 
         //SystemConfigurationUtilities.TYPE_LOCALE, value is 1
         configs = configurationService.getConfigurationItemsByType(1, Locale.UK);
         assertNotNull(configs);
-        assertEquals("configs of type", 2, configs.size());
-        assertEquals("configs of type 2", 2, configs.size());
+        assertEquals("configs(1, en_UK).size", 2, configs.size());
 
         //SystemConfigurationUtilities.TYPE_STATUS, value is 2
         configs = configurationService.getConfigurationItemsByType(2, Locale.UK);
         assertNotNull(configs);
-        assertEquals("configs of type ", 1, configs.size());
-        assertEquals("configs of type 1", 1, configs.size());
+        assertEquals("configs(2, en_UK).size", 1, configs.size());
 
         //SystemConfigurationUtilities.TYPE_SEVERITY, value is 3
         configs = configurationService.getConfigurationItemsByType(3, Locale.UK);
         assertNotNull(configs);
-        assertEquals("configs of type 1", 1, configs.size());
+        assertEquals("configs(3, en_UK).size", 1, configs.size());
 
         //SystemConfigurationUtilities.TYPE_RESOLUTION, value is 4
         configs = configurationService.getConfigurationItemsByType(4, Locale.UK);
         assertNotNull(configs);
-        assertEquals("configs of type 1", 1, configs.size());
+        assertEquals("configs(4, en_UK).size", 1, configs.size());
 
     }
 
@@ -274,7 +306,7 @@ public class ConfigurationServiceImplIT extends
         items.add(conf);
 
         // FIXME: What's the purpose of passing type here?
-        configurationService.updateConfigurationItems(items, 1);
+        configurationService.updateConfigurationItems(items, Configuration.Type.locale);
         conf = configurationDAO.findByPrimaryKey(2000);
         assertEquals("new order value", 987, conf.getOrder());
 
@@ -282,7 +314,7 @@ public class ConfigurationServiceImplIT extends
 
     @Test
     public void testRemoveConfigurationItem() {
-        Configuration conf = new Configuration(1, "1", "1", 2);
+        Configuration conf = new Configuration(Configuration.Type.status, "1", "1", 1);
         configurationDAO.save(conf);
         Integer id = conf.getId();
         assertNotNull(id);
@@ -297,17 +329,17 @@ public class ConfigurationServiceImplIT extends
     @Test
     public void testRemoveConfigurationItems() {
 
-        Configuration conf = new Configuration(123, "1", "1", 2);
+        Configuration conf = new Configuration(Configuration.Type.status, "1", "1", 123);
         configurationDAO.save(conf);
         Integer id = conf.getId();
         assertNotNull(id);
         assertNotNull(configurationDAO.findByPrimaryKey(id));
 
-        configurationService.removeConfigurationItems(123);
+        configurationService.removeConfigurationItems(Configuration.Type.status);
         conf = configurationDAO.findByPrimaryKey(id);
         assertNull("removed item", conf);
 
-        Configuration conf1 = new Configuration(234, "1", "1", 2);
+        Configuration conf1 = new Configuration(Configuration.Type.status, "1", "1", 234);
         configurationDAO.save(conf1);
         Integer id1 = conf1.getId();
         assertNotNull(id1);
@@ -353,18 +385,18 @@ public class ConfigurationServiceImplIT extends
     @Test
     public void testConfigurationItemExists() {
         // searched by type and value ( + needs version!!)
-        Configuration conf = new Configuration(1, "Test Value", "1");
+        Configuration conf = new Configuration(Configuration.Type.locale, "Test Value", "1");
         assertTrue("conf type: 1, value: Test Value", configurationService.configurationItemExists(conf));
 
-        conf = new Configuration(1, "Unknown Value", "1");
+        conf = new Configuration(Configuration.Type.locale, "Unknown Value", "1");
         assertFalse("conf type: 1, value: Unknown Value", configurationService.configurationItemExists(conf));
     }
 
     @Test
     public void testConfigurationItemUpToDate() {
 
-        Configuration configuration = new Configuration(1, "Test Value", "Version 1.0", 1);
-        assertTrue(configurationService.configurationItemUpToDate(configuration));
+        Configuration configuration = new Configuration(Configuration.Type.locale, "Test Value", "Version 1.0", 1);
+        assertTrue(configurationService.isConfigurationItemUpToDate(configuration));
 
     }
 
@@ -501,12 +533,12 @@ public class ConfigurationServiceImplIT extends
 
     @Test
     public void testCreateCustomField() {
-        CustomField customField = new CustomField("my_field", Type.STRING);
+        CustomField customField = new CustomField();
+        customField.setFieldType(Type.STRING);
         customField = configurationService.createCustomField(customField);
         assertNotNull(customField);
         assertNotNull(customField.getId());
         assertNotNull(customField.getId());
-//		assertEquals("field name", "my_field", customField.getName());
         assertEquals("field type", Type.STRING, customField.getFieldType());
     }
 
@@ -525,21 +557,23 @@ public class ConfigurationServiceImplIT extends
     @Test
     public void testRemoveCustomField() throws Exception {
         //test CustomField which type is String
-        CustomField customField = new CustomField("my_field", Type.STRING);
+        CustomField customField = new CustomField();
+        customField.setFieldType(Type.STRING);
         customFieldDAO.save(customField);
         Integer id = customField.getId();
-        assertNotNull(id);
-        assertNotNull(customFieldDAO.findByPrimaryKey(id));
+        assertNotNull("id", id);
+        assertNotNull("customFieldDAO.findByPrimaryKey(id)", customFieldDAO.findByPrimaryKey(id));
 
         configurationService.removeCustomField(id);
-        assertNull("customFieldDAO.findByPrimaryKey(id)", customFieldDAO.findByPrimaryKey(id));
+        assertNull("customFieldDAO.findByPrimaryKey(removed id)", customFieldDAO.findByPrimaryKey(id));
 
 
         //test CustomField which type is List
-        CustomField customField1 = new CustomField("List CustomField", Type.LIST);
+        CustomField customField1 = new CustomField();
+        customField1.setFieldType(Type.LIST);
         customFieldDAO.save(customField1);
         Integer id1 = customField1.getId();
-        assertNotNull(id1);
+        assertNotNull("id1", id1);
         assertNotNull("customFieldDAO.findByPrimaryKey(id1)", customFieldDAO.findByPrimaryKey(id1));
 
         configurationService.removeCustomField(id1);
@@ -561,8 +595,8 @@ public class ConfigurationServiceImplIT extends
         );
 
         customFieldValue = configurationService.createCustomFieldValue(customFieldValue);
-        assertNotNull(customFieldValue);
-        assertNotNull(customFieldValue.getId());
+        assertNotNull("customFieldValue", customFieldValue);
+        assertNotNull("customFieldValue.id", customFieldValue.getId());
         assertEquals("custom field value", "my_value", customFieldValue.getValue());
 
     }
@@ -609,8 +643,8 @@ public class ConfigurationServiceImplIT extends
                 customFieldDAO.findByPrimaryKey(1), "my_value");
         customFieldValueDAO.save(customFieldValue);
         Integer id = customFieldValue.getId();
-        assertNotNull(id);
-        assertNotNull(customFieldValueDAO.findByPrimaryKey(id));
+        assertNotNull("id", id);
+        assertNotNull("customFieldValueDAO.findByPrimaryKey(id)", customFieldValueDAO.findByPrimaryKey(id));
 
         configurationService.removeCustomFieldValue(id);
         try {
@@ -674,7 +708,7 @@ public class ConfigurationServiceImplIT extends
         Language language = new Language("ua", "my_key", "my_value");
         languageDAO.save(language);
         Integer id = language.getId();
-        assertNotNull(id);
+        assertNotNull("id", id);
 
         configurationService.removeLanguageItem(language);
         language = languageDAO.findById(id);
@@ -684,7 +718,7 @@ public class ConfigurationServiceImplIT extends
     @Test
     public void testGetSortedKeys() {
         String[] keys = configurationService.getSortedKeys();
-        assertNotNull(keys);
+        assertNotNull("keys", keys);
         assertEquals("total keys", 2, keys.length); // search is done on a base locale
     }
 
@@ -692,11 +726,11 @@ public class ConfigurationServiceImplIT extends
 
     public void testGetDefinedKeys() {
         Map<String, String> keyMap = configurationService.getDefinedKeys("test_locale");
-        assertNotNull(keyMap);
+        assertNotNull("keyMap", keyMap);
         assertEquals("total keys", 1, keyMap.size());
 
         keyMap = configurationService.getDefinedKeys("undefined_locale");
-        assertNotNull(keyMap);
+        assertNotNull("keyMap (undefined_locale)", keyMap);
         assertEquals("total keys", 0, keyMap.size());
 
     }
@@ -704,7 +738,7 @@ public class ConfigurationServiceImplIT extends
     @Test
     public void testGetDefinedKeysAsArray() {
         List<NameValuePair> keyMap = configurationService.getDefinedKeysAsArray("test_locale");
-        assertNotNull(keyMap);
+        assertNotNull("keyMap", keyMap);
         assertEquals("total keys", 1, keyMap.size());
 
         keyMap = configurationService.getDefinedKeysAsArray("undefined_locale");

@@ -31,6 +31,73 @@ import java.util.Comparator;
  */
 public class Configuration extends AbstractEntity implements Comparable<Entity> {
 
+    public static enum Type implements IntCodeEnum<Type> {
+        initialized(-1),
+        locale(1),
+        status(2),
+        severity(3),
+        resolution(4),
+        customfield(5);
+
+
+        private final Integer code;
+
+        private Type(Integer code) {
+            this.code = code;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public Type fromCode(Integer code) {
+            return Type.valueOf(code);
+        }
+
+        public static Type valueOf(Integer code) {
+            for (Type val: values()) {
+                if (val.code == code) {
+                    return val;
+                }
+            }
+            throw new IllegalArgumentException("Unknown code : " + code);
+        }
+        /**
+         * Returns the key for a particular configuration item. This is made up of a
+         * static part based on the type of configuration item, and the unique value
+         * of the configuration item.
+         *
+         * @param configuration the Configuration to return the key for
+         * @return the key for the item
+         */
+        public String getLanguageKey(final Configuration configuration) {
+            if (configuration != null) {
+                final Type type = configuration.getType();
+                String key = "itracker." + type.name() + ".";
+
+                if (type == Type.locale) {
+                    key += "name.";
+                }
+
+                key += configuration.getValue();
+
+                if (type == Type.customfield) {
+                    key += ".label";
+                }
+                return key;
+            }
+            return "";
+        }
+        public String getTypeLanguageKey() {
+            final String base = "itracker.web.attr.";
+
+            return base + name();
+        }
+
+
+
+    }
+
     public static final ConfigurationOrderComparator CONFIGURATION_ORDER_COMPARATOR = new ConfigurationOrderComparator();
     /**
      *
@@ -63,7 +130,7 @@ public class Configuration extends AbstractEntity implements Comparable<Entity> 
     /**
      * The real type of the value stored as a string.
      */
-    private int type;
+    private Type type;
 
     /**
      * The configuration value as a string.
@@ -91,27 +158,27 @@ public class Configuration extends AbstractEntity implements Comparable<Entity> 
     public Configuration() {
     }
 
-    public Configuration(int type, String value) {
+    public Configuration(Type type, String value) {
         setType(type);
         setValue(value);
     }
 
-    public Configuration(int type, NameValuePair pair) {
+    public Configuration(Type type, NameValuePair pair) {
         this(type, pair.getValue());
         setName(pair.getName());
     }
 
-    public Configuration(int type, String value, String version) {
+    public Configuration(Type type, String value, String version) {
         this(type, value);
         setVersion(version);
     }
 
-    public Configuration(int type, String value, int order) {
+    public Configuration(Type type, String value, int order) {
         this(type, value);
         setOrder(order);
     }
 
-    public Configuration(int type, String value, String version, int order) {
+    public Configuration(Type type, String value, String version, int order) {
         this(type, value, version);
         setOrder(order);
     }
@@ -132,11 +199,11 @@ public class Configuration extends AbstractEntity implements Comparable<Entity> 
         this.order = order;
     }
 
-    public int getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
@@ -161,94 +228,6 @@ public class Configuration extends AbstractEntity implements Comparable<Entity> 
         }
         this.version = version;
     }
-
-    // /**
-    // * Compares by natural key (type and value).
-    // */
-    // public int compareTo(Configuration other) {
-    // final int typeComparison = this.type - other.type;
-    //
-    // if (typeComparison == 0) {
-    // return this.value.compareTo(other.value);
-    // }
-    // return typeComparison;
-    // }
-
-    // /**
-    // * Compares configuration items by order, value.
-    // */
-    // public int compareTo(Configuration other) {
-    // final int orderComparison = this.order - other.order;
-    //
-    // if (orderComparison == 0) {
-    // return this.value.compareTo(other.value);
-    // }
-    // return orderComparison;
-    // }
-    //
-    // /**
-    // * Compares by natural key (type and value).
-    // */
-    // @Override
-    // public boolean equals(Object obj) {
-    // if (this == obj) {
-    // return true;
-    // }
-    //
-    // if (obj instanceof Configuration) {
-    // final Configuration other = (Configuration)obj;
-    //
-    // return (this.type == other.type)
-    // && this.value.equals(other.value);
-    // }
-    // return false;
-    // }
-    //
-    // /**
-    // * Natural key (type and value) hash code.
-    // */
-    // @Override
-    // public int hashCode() {
-    // return this.type + this.value.hashCode();
-    // }
-
-    // /**
-    // * Compares by natural key (name and version).
-    // */
-    // public int compareTo(Configuration other) {
-    // final int nameComparison = this.name.compareTo(other.name);
-    //
-    // if (nameComparison == 0) {
-    // return this.version.compareTo(other.version);
-    // }
-    // return nameComparison;
-    // }
-    //
-    // /**
-    // * Compares by natural key (name and version).
-    // */
-    // @Override
-    // public boolean equals(Object obj) {
-    // if (this == obj) {
-    // return true;
-    // }
-    //
-    // if (obj instanceof Configuration) {
-    // final Configuration other = (Configuration)obj;
-    //
-    // return this.name.equals(other.name)
-    // && this.version.equals(other.version);
-    // }
-    // return false;
-    // }
-    //
-    // /**
-    // * Natural key (name and version) hash code.
-    // */
-    // @Override
-    // public int hashCode() {
-    // return this.name.hashCode() + this.version.hashCode();
-    // }
 
     /**
      * String composed of system ID and natural key (name and version).

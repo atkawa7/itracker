@@ -128,7 +128,7 @@ public class EditLanguageAction extends ItrackerBaseAction {
                     languageItem.setResourceValue(localeString + "," + locale);
                     configurationService.updateLanguageItem(languageItem);
 
-                    Configuration localeConfig = new Configuration(SystemConfigurationUtilities.TYPE_LOCALE, locale);
+                    Configuration localeConfig = new Configuration(Configuration.Type.locale, locale);
                     if (configurationService.configurationItemExists(localeConfig)) {
                         errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidlocale"));
                     } else {

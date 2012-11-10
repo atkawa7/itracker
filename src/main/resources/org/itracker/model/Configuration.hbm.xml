@@ -17,12 +17,18 @@
 
             <property name="type" index="configurationbeanTypeIdx">
                 <column name="item_type" not-null="true"/>
+                <type name="org.itracker.persistence.dao.EnumCodeUserType">
+                    <param name="enumClassName">org.itracker.model.Configuration$Type</param>
+                </type>
             </property>
 
             <property name="value" index="configurationbeanValIdx">
                 <column name="item_value" not-null="true"/>
             </property>
 
+            <property name="version" index="configurationbeanVersionIdx">
+                <column name="item_version" not-null="true"/>
+            </property>
         </natural-id>
 
         <!--natural-id mutable="false"-->
@@ -31,9 +37,6 @@
             <column name="item_name" not-null="true"/>
         </property-->
 
-        <property name="version" index="configurationbeanVersionIdx">
-            <column name="item_version" not-null="true"/>
-        </property>
 
         <!--/natural-id-->
 

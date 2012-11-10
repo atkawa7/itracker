@@ -32,17 +32,8 @@ import org.itracker.services.util.UserUtilities;
 
 
 /**
- * TODO: Add Javadocs here: please comment this for documentation reasons. What is this Class used for?
- * <p/>
- * It seems like this gets started when the application starts up...
- * <p/>
- * What's the general idea?
- * <p/>
- * Why is processAttachmentFiles commented and therefore not used currently?
- * Where does itracker store its attachments?
- * What's the idea behind the attachment_dir ?
+ * This gets started when the Spring application-context starts up...
  *
- * @author ready
  */
 
 public class ApplicationInitialization {
@@ -68,18 +59,8 @@ public class ApplicationInitialization {
             logger.info("Checking and initializing default system configuration in the database.");
             configurationService.initializeConfiguration();
 
-//            logger.info("Checking for issue attachment files.");
-//            processAttachmentFiles(configurationService.getProperty("attachment_dir", IssueAttachmentUtilities.DEFAULT_ATTACHMENT_DIR));
-
             logger.info("Setting up cached configuration entries");
             configurationService.resetConfigurationCache();
-
-            // Preinitialize all of the PDF fonts available. Do it in a
-            // separate thread to speed up the rest of the startup.
-            // TODO: I think this should be removed... why do we need to pre-init ? (rjst)
-            // old code to pre-init fonts for jfree reports. make sure we can delete it
-            // BaseFontFactory fontFactory = BaseFontFactory.getFontFactory();
-            // fontFactory.registerDefaultFontPath();
 
             // check for and create admin user, if so configured
             createAdminUser(configurationService);

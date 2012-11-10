@@ -119,7 +119,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                         + getJndiPropertiesOverridePrefix());
 
 
-    }
+            }
             try {
                 value = NamingUtilites.getStringValue(new InitialContext(),
                         getJndiPropertiesOverridePrefix() + "/" + name, null);
@@ -149,7 +149,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     private String getItrackerVersion() {
-       return props.getProperty("version");
+        return props.getProperty("version");
     }
 
 
@@ -185,33 +185,35 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         return configItem;
     }
 
+    @Deprecated
     public List<Configuration> getConfigurationItemsByType(int type) {
+        return getConfigurationItemsByType(Configuration.Type.valueOf(type));
+    }
+    public List<Configuration> getConfigurationItemsByType(Configuration.Type type) {
         List<Configuration> configItems = configurationDAO.findByType(type);
         Collections.sort(configItems, new Configuration.ConfigurationOrderComparator());
         return configItems;
     }
 
+    @Deprecated
     public List<Configuration> getConfigurationItemsByType(int type, Locale locale) {
+         return getConfigurationItemsByType(Configuration.Type.valueOf(type), locale);
+    }
+    public List<Configuration> getConfigurationItemsByType(Configuration.Type type, Locale locale) {
         List<Configuration> items = getConfigurationItemsByType(type);
 
         for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getType() == SystemConfigurationUtilities.TYPE_STATUS) {
+            if (items.get(i).getType() == Configuration.Type.status) {
                 items.get(i).setName(IssueUtilities.getStatusName(items.get(i).getValue(), locale));
-            } else if (items.get(i).getType() == SystemConfigurationUtilities.TYPE_SEVERITY) {
+            } else if (items.get(i).getType() == Configuration.Type.severity) {
                 items.get(i).setName(IssueUtilities.getSeverityName(items.get(i).getValue(), locale));
-            } else if (items.get(i).getType() == SystemConfigurationUtilities.TYPE_RESOLUTION) {
+            } else if (items.get(i).getType() == Configuration.Type.resolution) {
                 items.get(i).setName(IssueUtilities.getResolutionName(items.get(i).getValue(), locale));
             }
         }
         return items;
     }
 
-    /**
-     * Creates a <code>Configuration</code>.
-     *
-     * @param configuration The <code>Configuration</code> to store
-     * @return the <code>Configuration</code> after saving
-     */
     public Configuration createConfigurationItem(Configuration configuration) {
 
         Configuration configurationItem = new Configuration();
@@ -227,15 +229,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     }
 
-    /**
-     * Updates a <code>ConfigurationItem</code>
-     *
-     * @param configuration The model containing the data
-     * @return the <code>Configuration</code> after save
-     */
+
     public Configuration updateConfigurationItem(Configuration configuration) {
         // find item by primary key
         Configuration configurationItem = configurationDAO.findByPrimaryKey(configuration.getId());
+
+        configurationItem.setVersion(getInitializedVersionString());
 
         // update now
         configurationDAO.saveOrUpdate(configurationItem);
@@ -243,37 +242,25 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         return configurationItem;
     }
 
-    /**
-     * Updates the configuration items
-     *
-     * @param configurations the <code>ConfigurationModels</code> to update
-     * @param type   The type of the <code>ConfigurationItem</code>s to update
-     * @return an array with the saved models
-     */
-    public List<Configuration> updateConfigurationItems(List<Configuration> configurations, int type) {
+    @Deprecated
+    public List<Configuration> updateConfigurationItems(List<Configuration> configurations, Configuration.Type type) {
 
-        // remove all items
-//        removeConfigurationItems(type);
         List<Configuration> configurationItems = new ArrayList<Configuration>();
-        for (Iterator<Configuration> iterator = configurations.iterator(); iterator.hasNext(); ) {
+        for (Configuration configurationItem:configurations ) {
+            if (type == configurationItem.getType()) {
+                // create a new item
+                Configuration curConfiguration = configurationDAO.findByPrimaryKey(configurationItem.getId());
 
-            // create a new item
-            Configuration configurationItem = (Configuration) iterator.next();
-            Configuration curConfiguration = configurationDAO.findByPrimaryKey(configurationItem.getId());
+                curConfiguration.setName(configurationItem.getName());
+                curConfiguration.setOrder(configurationItem.getOrder());
+                curConfiguration.setType(configurationItem.getType());
+                curConfiguration.setValue(configurationItem.getValue());
+                curConfiguration.setVersion(getInitializedVersionString());
 
-//            curConfiguration.setCreateDate(configurationItem.getCreateDate());
-//            curConfiguration.setLastModifiedDate(configurationItem.getLastModifiedDate());
-            curConfiguration.setName(configurationItem.getName());
-            curConfiguration.setOrder(configurationItem.getOrder());
-            curConfiguration.setType(configurationItem.getType());
-            curConfiguration.setValue(configurationItem.getValue());
-            curConfiguration.setVersion(configurationItem.getVersion());
-
-            // set Modified date
-//            curConfiguration.setLastModifiedDate(new Date());
-            // save or update
-            this.configurationDAO.saveOrUpdate(curConfiguration);
-            configurationItems.add(curConfiguration);
+                // save or update
+                this.configurationDAO.saveOrUpdate(curConfiguration);
+                configurationItems.add(curConfiguration);
+            }
         }
         // sort array
         Collections.sort(configurationItems);
@@ -299,8 +286,17 @@ public class ConfigurationServiceImpl implements ConfigurationService {
      * Removes all <code>Configuration</code>s of the give <code>type</code>
      *
      * @param type the type of <code>Configuration</code> to remove
+     * @deprecated
      */
     public void removeConfigurationItems(int type) {
+        removeConfigurationItems(Configuration.Type.valueOf(type));
+    }
+    /**
+     * Removes all <code>Configuration</code>s of the give <code>type</code>
+     *
+     * @param type the type of <code>Configuration</code> to remove
+     */
+    public void removeConfigurationItems(Configuration.Type type) {
 
         // find the configuration beans by its type
         Collection<Configuration> currentItems = configurationDAO.findByType(type);
@@ -314,8 +310,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     public void removeConfigurationItems(Configuration configuration) {
-        // TODO: never used, therefore commented, task added:
-        // Vector currentIds = new Vector();
         Collection<Configuration> currentItems = configurationDAO.findByTypeAndValue(configuration.getType(), configuration.getValue());
         for (Iterator<Configuration> iter = currentItems.iterator(); iter.hasNext(); ) {
             Configuration configItem = (Configuration) iter.next();
@@ -341,9 +335,31 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     }
 
-    public boolean configurationItemUpToDate(Configuration configuration) {
+    public String getInitializedVersionString() {
+        List<Configuration> initialized = getConfigurationItemsByType(Configuration.Type.initialized);
+        if (null == initialized || initialized.isEmpty()) {
+            return "0";
+        }
+        Collections.sort(initialized, new Comparator<Configuration>() {
+            public int compare(Configuration configuration, Configuration configuration1) {
+                return configuration.getVersion().compareTo(configuration1.getVersion());
+            }
+        });
 
-        long currentVersion = 0;
+        return initialized.get(initialized.size() - 1).getVersion();
+    }
+
+    public boolean isConfigurationItemUpToDate(Configuration configuration) {
+
+        if (null == configuration) {
+            return false;
+        }
+
+        if (StringUtils.endsWith(configuration.getVersion(), "-SNAPSHOT")) {
+            return false;
+        }
+
+        long currentVersion = SystemConfigurationUtilities.getVersionAsLong(getInitializedVersionString());
 
         if (configuration != null && configuration.getVersion() != null) {
 
@@ -353,7 +369,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
                 Configuration configItem = (Configuration) iter.next();
 
-                if (configItem != null) {
+                if (null != configItem) {
 
                     currentVersion = Math.max(SystemConfigurationUtilities.getVersionAsLong(configItem.getVersion()),
                             currentVersion);
@@ -376,40 +392,39 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     public void resetConfigurationCache() {
 
-        IssueUtilities.setResolutions(getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_RESOLUTION));
-
-        IssueUtilities.setSeverities(getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_SEVERITY));
-
-        IssueUtilities.setStatuses(getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_STATUS));
-
+        IssueUtilities.setResolutions(getConfigurationItemsByType(Configuration.Type.resolution));
+        IssueUtilities.setSeverities(getConfigurationItemsByType(Configuration.Type.severity));
+        IssueUtilities.setStatuses(getConfigurationItemsByType(Configuration.Type.status));
         IssueUtilities.setCustomFields(getCustomFields());
 
     }
 
-    public void resetConfigurationCache(int type) {
-
-        if (type == SystemConfigurationUtilities.TYPE_RESOLUTION) {
-
-            IssueUtilities.setResolutions(getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_RESOLUTION));
-
-        } else if (type == SystemConfigurationUtilities.TYPE_SEVERITY) {
-
-            IssueUtilities.setSeverities(getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_SEVERITY));
-
-        } else if (type == SystemConfigurationUtilities.TYPE_STATUS) {
-
-            IssueUtilities.setStatuses(getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_STATUS));
-
-        } else if (type == SystemConfigurationUtilities.TYPE_CUSTOMFIELD) {
-
-            IssueUtilities.setCustomFields(getCustomFields());
+    public void resetConfigurationCache(Configuration.Type type) {
+        switch (type) {
+            case resolution:
+                IssueUtilities.setResolutions(getConfigurationItemsByType(type));
+                break;
+            case severity:
+                IssueUtilities.setSeverities(getConfigurationItemsByType(Configuration.Type.severity));
+            break;
+            case status:
+                IssueUtilities.setStatuses(getConfigurationItemsByType(Configuration.Type.status));
+                break;
+            case customfield:
+                IssueUtilities.setCustomFields(getCustomFields());
+                break;
+            default:
+                logger.warn("resetConfigurationCache: unsupported type " + type);
 
         }
+    }
+
+    public void resetConfigurationCache(int type) {
+        resetConfigurationCache(Configuration.Type.valueOf(type));
 
     }
 
     public ProjectScript getProjectScript(Integer scriptId) {
-
         ProjectScript projectScript = this.projectScriptDAO.findByPrimaryKey(scriptId);
         return projectScript;
 
@@ -429,9 +444,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editprojectScript.setPriority(projectScript.getPriority());
         editprojectScript.setProject(projectScript.getProject());
         editprojectScript.setScript(projectScript.getScript());
-//        moved date stuff to BaseHibernateDAO
-//        editprojectScript.setCreateDate(new Date());
-//        editprojectScript.setLastModifiedDate(editprojectScript.getCreateDate());
 
         // save entity
         this.projectScriptDAO.save(editprojectScript);
@@ -447,8 +459,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editprojectScript.setPriority(projectScript.getPriority());
         editprojectScript.setProject(projectScript.getProject());
         editprojectScript.setScript(projectScript.getScript());
-//      moved date stuff to BaseHibernateDAO
-//        editprojectScript.setLastModifiedDate(new Date());
         this.projectScriptDAO.saveOrUpdate(editprojectScript);
         return editprojectScript;
     }
@@ -493,11 +503,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editworkflowScript.setName(workflowScript.getName());
         editworkflowScript.setScript(workflowScript.getScript());
         editworkflowScript.setEvent(workflowScript.getEvent());
-//      moved date stuff to BaseHibernateDAO
-//        editworkflowScript.setLastModifiedDate(new Date());
-//        editworkflowScript.setCreateDate(new Date());
-//        editworkflowScript.setLastModifiedDate(editworkflowScript.getCreateDate());
-
         // save entity
         workflowScriptDAO.save(editworkflowScript);
 
@@ -511,8 +516,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editworkflowScript.setName(workflowScript.getName());
         editworkflowScript.setScript(workflowScript.getScript());
         editworkflowScript.setEvent(workflowScript.getEvent());
-//      moved date stuff to BaseHibernateDAO
-//        editworkflowScript.setLastModifiedDate(new Date());
         workflowScriptDAO.saveOrUpdate(editworkflowScript);
         return editworkflowScript;
     }
@@ -546,24 +549,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     }
 
-    public List<CustomField> getCustomFields(Locale locale) {
-
-        if (true)
-            return null;
-        // skip this code.
-        List<CustomField> fields = getCustomFields();
-
-        for (int i = 0; i < fields.size(); i++) {
-
-//            fields.get(i).setLabels(locale);
-
-        }
-        Collections.sort(fields, new CustomField.NameComparator());
-
-        return fields;
-
-    }
-
     /**
      * Creates a custom field
      *
@@ -575,20 +560,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         addcustomField.setDateFormat(customField.getDateFormat());
         addcustomField.setFieldType(customField.getFieldType());
         addcustomField.setOptions(customField.getOptions());
-//        addcustomField.setName(customField.getName());
         addcustomField.setRequired(customField.isRequired());
         this.customFieldDAO.save(addcustomField);
 
-/*        if (addcustomField.getOptions() !=  null && addcustomField.getOptions().size() > 0) {
-           removeCustomFieldValues(addcustomField.getId());
-           List<CustomFieldValue> newOptions = addcustomField.getOptions();
-
-           for (int i = 0; i < newOptions.size(); i++) {
-               newOptions.get(i).getCustomField().setId(addcustomField.getId());
-               createCustomFieldValue(newOptions.get(i));
-           }
-       }
-*/
         return addcustomField;
     }
 
@@ -598,22 +572,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editcustomField.setDateFormat(customField.getDateFormat());
         editcustomField.setFieldType(customField.getFieldType());
         editcustomField.setOptions(customField.getOptions());
-//        editcustomField.setName(customField.getName());
         editcustomField.setRequired(customField.isRequired());
-//      moved date stuff to BaseHibernateDAO
-//        editcustomField.setLastModifiedDate(new Date());
-
         this.customFieldDAO.saveOrUpdate(editcustomField);
 
-/*        if (editcustomField.getOptions() != null && editcustomField.getOptions().size() > 0) {
-           removeCustomFieldValues(editcustomField.getId());
-           List<CustomFieldValue> newOptions = editcustomField.getOptions();
-
-           for (int i = 0; i < newOptions.size(); i++) {
-               createCustomFieldValue(newOptions.get(i));
-           }
-       }
-*/
         return editcustomField;
     }
 
@@ -664,7 +625,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         CustomFieldValue addcustomFieldValue = new CustomFieldValue();
         addcustomFieldValue.setCustomField(customFieldValue.getCustomField());
         addcustomFieldValue.setValue(customFieldValue.getValue());
-//        addcustomFieldValue.setName(customFieldValue.getName());
         this.customFieldValueDAO.save(addcustomFieldValue);
 
         return addcustomFieldValue;
@@ -679,14 +639,10 @@ public class ConfigurationServiceImpl implements ConfigurationService {
      */
     public CustomFieldValue updateCustomFieldValue(CustomFieldValue customFieldValue) {
         CustomFieldValue editcustomFieldValue = this.customFieldValueDAO.findByPrimaryKey(customFieldValue.getId());
-//      moved date stuff to BaseHibernateDAO
-//        editcustomFieldValue.setCreateDate(customFieldValue.getCreateDate());
         editcustomFieldValue.setCustomField(customFieldValue.getCustomField());
         editcustomFieldValue.setValue(customFieldValue.getValue());
-//      moved date stuff to BaseHibernateDAO
-//        editcustomFieldValue.setLastModifiedDate(new Date());
-//        editcustomFieldValue.setName(customFieldValue.getName());
         this.customFieldValueDAO.saveOrUpdate(editcustomFieldValue);
+
         return editcustomFieldValue;
     }
 
@@ -696,10 +652,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         if (customFieldId != null) {
             try {
                 CustomField customField = customFieldDAO.findByPrimaryKey(customFieldId);
-                if (customFieldValues == null || customFieldValues.size() == 0) {
-                    // Collection<CustomFieldValue> currValues = customField.getOptions();
-                    // boolean status = currValues.removeAll(currValues);
-                } else {
+                if (customFieldValues != null && !customFieldValues.isEmpty()) {
                     for (Iterator<CustomFieldValue> iterator = customFieldValues.iterator(); iterator.hasNext(); ) {
 
                         // create a new item
@@ -707,22 +660,15 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                         CustomFieldValue curCustomFieldValue = customFieldValueDAO.findByPrimaryKey(customFieldValueItem.getId());
 
                         curCustomFieldValue.setCreateDate(customFieldValueItem.getCreateDate());
-//                      moved date stuff to BaseHibernateDAO
-//                        curCustomFieldValue.setLastModifiedDate(customFieldValueItem.getLastModifiedDate());
-//                        curCustomFieldValue.setName(customFieldValueItem.getName());
                         curCustomFieldValue.setValue(customFieldValueItem.getValue());
                         curCustomFieldValue.setCustomField(customFieldValueItem.getCustomField());
                         curCustomFieldValue.setSortOrder(customFieldValueItem.getSortOrder());
 
-                        // set Modified date
-//                        curCustomFieldValue.setLastModifiedDate(new Date());
                         // save or update
                         this.customFieldValueDAO.saveOrUpdate(curCustomFieldValue);
                         customFieldValueItems.add(curCustomFieldValue);
 
                     }
-                    // sort array
-//                    Collections.sort(customFieldValueItems);
                     customField.setOptions(customFieldValueItems);
                     return customFieldValueItems;
 
@@ -731,7 +677,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             }
         }
 
-//        Arrays.sort(customFieldValues, new CustomFieldValue());
         return customFieldValues;
     }
 
@@ -747,8 +692,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         // find custom field value by id
         CustomFieldValue customFieldValue = this.customFieldValueDAO.findByPrimaryKey(customFieldValueId);
 
-        // remove from parent field
-//        customFieldValue.getCustomField().getOptions().remove(customFieldValue);
         // delete it
         try {
             this.customFieldValueDAO.delete(customFieldValue);
@@ -842,17 +785,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             languageItem.setLocale(language.getLocale());
             languageItem.setResourceKey(language.getResourceKey());
             languageItem.setResourceValue(language.getResourceValue());
-//          moved date stuff to BaseHibernateDAO
-//            languageItem.setLastModifiedDate(new Timestamp(new Date().getTime()));
         } catch (NoSuchEntityException fe) {
             logger.debug("NoSuchEntityException: Language, now populating Language");
             languageItem = new Language();
             languageItem.setLocale(language.getLocale());
             languageItem.setResourceKey(language.getResourceKey());
             languageItem.setResourceValue(language.getResourceValue());
-//          moved date stuff to BaseHibernateDAO
-//            languageItem.setCreateDate(new Timestamp(new Date().getTime()));
-//            languageItem.setLastModifiedDate(languageItem.getCreateDate());
         }
         logger.debug("Start saveOrUpdate Language");
         languageDAO.saveOrUpdate(languageItem);
@@ -986,33 +924,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             language.put(item.getResourceKey(), item.getResourceValue());
 
         }
-//        if (locale != null && !"".equals(locale.getLanguage())) {
-//            
-//            Collection<Language> languageItems = languageDAO.findByLocale(locale.getLanguage());
-//            
-//            for (Iterator<Language> iterator = languageItems.iterator(); iterator.hasNext();) {
-//                
-//                Language item = (Language) iterator.next();
-//                
-//                language.put(item.getResourceKey(), item.getResourceValue());
-//                
-//            }
-//            
-//            if (!"".equals(locale.getCountry())) {
-//                
-//                Collection<Language> countryItems = languageDAO.findByLocale(locale.toString());
-//                
-//                for (Iterator<Language> iterator = countryItems.iterator(); iterator.hasNext();) {
-//                    
-//                    Language item = (Language) iterator.next();
-//                    
-//                    language.put(item.getResourceKey(), item.getResourceValue());
-//                    
-//                }
-//                
-//            }
-//            
-//        }
 
         Language[] languageArray = new Language[language.size()];
 
@@ -1086,7 +997,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     public void updateLanguage(Locale locale, List<Language> items) {
 
         if (locale != null && items != null) {
-            Configuration configItem = new Configuration(SystemConfigurationUtilities.TYPE_LOCALE, locale
+            Configuration configItem = new Configuration(Configuration.Type.locale, locale
                     .toString(), getItrackerVersion());
             updateLanguage(locale, items, configItem);
 
@@ -1156,29 +1067,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     public boolean initializeLocale(String locale, boolean forceReload) {
         boolean result = false;
 
-        Configuration localeConfig = new Configuration(SystemConfigurationUtilities.TYPE_LOCALE, locale,
+        Configuration localeConfig = new Configuration(Configuration.Type.locale, locale,
                 getItrackerVersion());
 
-        if (!configurationItemUpToDate(localeConfig) || forceReload) {
+        if (!isConfigurationItemUpToDate(localeConfig) || forceReload) {
 
             logger.debug("Loading database with locale " + locale);
-
-//            PropertiesFileHandler localePropertiesHandler = new PropertiesFileHandler(
-//                    "/org/itracker/core/resources/ITracker"
-//                    + (ITrackerResources.BASE_LOCALE.equals(locale) ? "" : "_" + locale) + ".properties");
-
-//            if (localePropertiesHandler.hasProperties()) {
-
-//                Properties localeProperties = localePropertiesHandler.getProperties();
-
-//                logger.debug("Locale " + locale + " contains " + localeProperties.size() + " properties.");
-
-//                for (Enumeration<?> propertiesEnumeration = localeProperties.propertyNames();
-//                propertiesEnumeration.hasMoreElements();) {
-//                    String key = (String) propertiesEnumeration.nextElement();
-//                    String value = localeProperties.getProperty(key);
-//                    updateLanguageItem(new Language(locale, key, value));
-//                }
 
             removeConfigurationItems(localeConfig);
 //                
@@ -1197,17 +1091,14 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     public void initializeConfiguration() {
 
-        // Need to eventually add in code that detects the current version of
-        // the config and update
+        // TODO when current version is outdated?
+        long current = SystemConfigurationUtilities.getVersionAsLong(getItrackerVersion());
 
-        // if necessary
+        long initialized = SystemConfigurationUtilities.getVersionAsLong(getInitializedVersionString());
 
+        if (0 == initialized) {
 
-        List<Configuration> initialized = getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_INITIALIZED);
-
-        if (initialized == null || initialized.size() != 1) {
-
-            logger.debug("System does not appear to be initialized, initializing system configuration.");
+            logger.info("System does not appear to be initialized, initializing system configuration.");
 
             ResourceBundle baseLanguage = ITrackerResources.getBundle(ITrackerResources.getLocale(ITrackerResources.BASE_LOCALE));
             getLanguage(ITrackerResources.getLocale(ITrackerResources.BASE_LOCALE));
@@ -1224,14 +1115,14 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
             logger.debug("Removing previous incomplete initialization information.");
 
-            removeConfigurationItems(SystemConfigurationUtilities.TYPE_STATUS);
+            removeConfigurationItems(Configuration.Type.status);
 
-            removeConfigurationItems(SystemConfigurationUtilities.TYPE_SEVERITY);
+            removeConfigurationItems(Configuration.Type.severity);
 
-            removeConfigurationItems(SystemConfigurationUtilities.TYPE_RESOLUTION);
-            Enumeration<String> keys = baseLanguage.getKeys();
-            while (keys.hasMoreElements()) {
-                String key = keys.nextElement();
+            removeConfigurationItems(Configuration.Type.resolution);
+
+            Set<String> keys = baseLanguage.keySet();
+            for (final String key:keys) {
                 if (key.startsWith(ITrackerResources.KEY_BASE_RESOLUTION)) {
 
                     try {
@@ -1243,7 +1134,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                         int resolutionNumber = Integer.parseInt(resolutionString);
 
                         createConfigurationItem(new Configuration(
-                                SystemConfigurationUtilities.TYPE_RESOLUTION, resolutionString, getItrackerVersion(),
+                                Configuration.Type.resolution, resolutionString, getItrackerVersion(),
                                 resolutionNumber));
 
                     } catch (RuntimeException e) {
@@ -1265,7 +1156,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
                         int severityNumber = Integer.parseInt(severityString);
 
-                        createConfigurationItem(new Configuration(SystemConfigurationUtilities.TYPE_SEVERITY,
+                        createConfigurationItem(new Configuration(Configuration.Type.severity,
                                 severityString, getItrackerVersion(), severityNumber));
 
                     } catch (RuntimeException e) {
@@ -1286,7 +1177,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
                         int statusNumber = Integer.parseInt(statusString);
 
-                        createConfigurationItem(new Configuration(SystemConfigurationUtilities.TYPE_STATUS,
+                        createConfigurationItem(new Configuration(Configuration.Type.status,
                                 statusString, getItrackerVersion(), statusNumber));
                     } catch (RuntimeException e) {
                         logger.error("Unable to load status value: " + key, e);
@@ -1294,7 +1185,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                     }
                 }
             }
-            createConfigurationItem(new Configuration(SystemConfigurationUtilities.TYPE_INITIALIZED, "1",
+
+
+            createConfigurationItem(new Configuration(Configuration.Type.initialized, "1",
                     getItrackerVersion()));
         }
 

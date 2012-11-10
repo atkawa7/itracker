@@ -28,6 +28,7 @@ import org.itracker.services.ConfigurationService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.ImportExportException;
+import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.ImportExportUtilities;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
@@ -131,7 +132,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
             List<Configuration> statuses = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_STATUS, ImportExportUtilities.EXPORT_LOCALE);
             List<Configuration> severities = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_SEVERITY, ImportExportUtilities.EXPORT_LOCALE);
             List<Configuration> resolutions = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_RESOLUTION, ImportExportUtilities.EXPORT_LOCALE);
-            List<CustomField> fields = configurationService.getCustomFields(ImportExportUtilities.EXPORT_LOCALE);
+            List<CustomField> fields = configurationService.getCustomFields();
 
             for (int i = 0; i < severities.size(); i++) {
                 maxSeverityValue = Math.max(maxSeverityValue, Integer.parseInt(severities.get(i).getValue()));
@@ -149,7 +150,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                     // through the issues and update the old value to the new one since they are all stored
                     // as strings/ints, not the id to the config item.
                     Configuration configItem = (Configuration) importData[i];
-                    if (configItem.getType() == SystemConfigurationUtilities.TYPE_STATUS) {
+                    if (configItem.getType() == Configuration.Type.status) {
                         boolean found = false;
                         for (int j = 0; j < statuses.size(); j++) {
                             if (model.getReuseConfig() && statuses.get(j).getName().equalsIgnoreCase(configItem.getName())) {
@@ -167,7 +168,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                         if (!found) {
                             model.addVerifyStatistic(ImportExportUtilities.IMPORT_STAT_STATUSES, ImportExportUtilities.IMPORT_STAT_NEW);
                         }
-                    } else if (configItem.getType() == SystemConfigurationUtilities.TYPE_SEVERITY) {
+                    } else if (configItem.getType() == Configuration.Type.severity) {
                         boolean found = false;
                         if (model.getReuseConfig()) {
                             for (int j = 0; j < severities.size(); j++) {
@@ -186,7 +187,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                             configItem.setValue(Integer.toString(maxSeverityValue));
                             model.addVerifyStatistic(ImportExportUtilities.IMPORT_STAT_SEVERITIES, ImportExportUtilities.IMPORT_STAT_NEW);
                         }
-                    } else if (configItem.getType() == SystemConfigurationUtilities.TYPE_RESOLUTION) {
+                    } else if (configItem.getType() == Configuration.Type.resolution) {
                         boolean found = false;
                         if (model.getReuseConfig()) {
                             for (int j = 0; j < resolutions.size(); j++) {

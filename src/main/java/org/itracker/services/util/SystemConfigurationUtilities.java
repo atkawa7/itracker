@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
 import org.itracker.model.NameValuePair;
+import org.itracker.persistence.dao.AbstractEnumUserType;
 import org.itracker.services.ConfigurationService;
 
 import java.util.HashSet;
@@ -33,12 +34,13 @@ public class SystemConfigurationUtilities {
 
     private static final Logger log = Logger.getLogger(SystemConfigurationUtilities.class);
 
-    public static final int TYPE_INITIALIZED = -1;
-    public static final int TYPE_LOCALE = 1;
-    public static final int TYPE_STATUS = 2;
-    public static final int TYPE_SEVERITY = 3;
-    public static final int TYPE_RESOLUTION = 4;
-    public static final int TYPE_CUSTOMFIELD = 5;
+
+    public static final int TYPE_INITIALIZED = Configuration.Type.initialized.getCode();
+    public static final int TYPE_LOCALE = Configuration.Type.locale.getCode();
+    public static final int TYPE_STATUS = Configuration.Type.status.getCode();
+    public static final int TYPE_SEVERITY = Configuration.Type.severity.getCode();
+    public static final int TYPE_RESOLUTION = Configuration.Type.resolution.getCode();
+    public static final int TYPE_CUSTOMFIELD = Configuration.Type.customfield.getCode();
 
     public static final int ACTION_CREATE = 1;
     public static final int ACTION_UPDATE = 2;
@@ -59,45 +61,20 @@ public class SystemConfigurationUtilities {
      */
     public static String getLanguageKey(Configuration configuration) {
         if (configuration != null) {
-            int type = configuration.getType();
-            String key = "itracker." + getTypeName(configuration.getType()) + ".";
-
-            if (type == TYPE_LOCALE) {
-                key += "name.";
-            }
-
-            key += configuration.getValue();
-
-            if (type == TYPE_CUSTOMFIELD) {
-                key += ".label";
-            }
-            return key;
+            return configuration.getType().getLanguageKey(configuration);
         }
         return "";
     }
 
     public static String getTypeName(int type) {
-        switch (type) {
-            case SystemConfigurationUtilities.TYPE_LOCALE:
-                    return "locale";
-            case SystemConfigurationUtilities.TYPE_STATUS:
-                    return "status";
-            case SystemConfigurationUtilities.TYPE_SEVERITY:
-                    return "severity";
-            case SystemConfigurationUtilities.TYPE_RESOLUTION:
-                    return "resolution";
-            case SystemConfigurationUtilities.TYPE_CUSTOMFIELD:
-                    return "customfield";
-        }
 
-        return "unknown";
+        return Configuration.Type.valueOf(type).name();
+
     }
 
 
     public static String getTypeLanguageKey(Configuration configuration) {
-        final String base = "itracker.web.attr.";
-
-        return base + getTypeName(configuration.getType());
+        return configuration.getType().getTypeLanguageKey();
     }
 
     /**
@@ -136,8 +113,7 @@ public class SystemConfigurationUtilities {
             }
         }
 
-        for (Iterator<String> iter = definedLocales.iterator(); iter.hasNext(); ) {
-            String locale = iter.next();
+        for (String locale: definedLocales ) {
             configurationService.initializeLocale(locale, forceReload);
         }
     }
@@ -148,6 +124,9 @@ public class SystemConfigurationUtilities {
             log.debug("getVersionAsLong: transforming " + version);
         }
         if (version != null) {
+            if ("0".equals(version)) {
+                return 0;
+            }
             // support -SNAPSHOT versions
             version = version.split("-")[0];
             StringTokenizer token = new StringTokenizer(version, ".");
@@ -211,7 +190,7 @@ public class SystemConfigurationUtilities {
         return null;
     }
 
-    public static Configuration[] nvpArrayToConfigurationArray(int configType,
+    public static Configuration[] nvpArrayToConfigurationArray(Configuration.Type configType,
                                                                NameValuePair[] names) {
         if (names == null) {
             return new Configuration[0];

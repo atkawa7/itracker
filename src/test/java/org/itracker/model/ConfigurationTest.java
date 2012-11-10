@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static junit.framework.Assert.assertEquals;
 import static org.itracker.Assert.assertEntityComparator;
 import static org.itracker.Assert.assertEntityComparatorEquals;
 import static org.junit.Assert.*;
@@ -11,13 +12,26 @@ import static org.junit.Assert.*;
 public class ConfigurationTest {
     private Configuration conf;
 
+
+    @Test
+    public void testType() {
+        Configuration.Type type = Configuration.Type.status;
+        assertEquals("status.name", "status", type.name());
+        assertEquals("status.code", (Object)2, type.getCode());
+        assertEquals("Configuration.Type.valueOf(2)",
+                type, Configuration.Type.valueOf(type.getCode()));
+        assertEquals("Configuration.Type.valueOf('status')", type, Configuration.Type.valueOf("status"));
+
+    }
+
+
     @Test
     public void testSetValue() {
         try {
             conf.setValue(null);
             fail("did not throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
-            assertTrue(true);
+            // OK
         }
     }
 
@@ -27,7 +41,7 @@ public class ConfigurationTest {
             conf.setVersion(null);
             fail("did not throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
-            assertTrue(true);
+            // OK
         }
     }
 

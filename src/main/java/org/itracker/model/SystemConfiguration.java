@@ -104,26 +104,26 @@ public class SystemConfiguration extends AbstractEntity {
         if (configuration != null) {
             Configuration[] newArray;
 
-            if (configuration.getType() == SystemConfigurationUtilities.TYPE_RESOLUTION) {
+            if (configuration.getType() == Configuration.Type.resolution) {
                 newArray = new Configuration[getResolutions().size() + 1];
                 if (getResolutions().size() > 0) {
-                    System.arraycopy((Object) resolutions, 0,
-                            (Object) newArray, 0, resolutions.size());
+                    System.arraycopy(resolutions, 0,
+                            newArray, 0, resolutions.size());
                 }
                 newArray[getResolutions().size()] = configuration;
                 setResolutions(Arrays.asList(newArray));
-            } else if (configuration.getType() == SystemConfigurationUtilities.TYPE_SEVERITY) {
+            } else if (configuration.getType() == Configuration.Type.severity) {
                 newArray = new Configuration[getSeverities().size() + 1];
                 if (getSeverities().size() > 0) {
-                    System.arraycopy((Object) severities, 0, (Object) newArray,
+                    System.arraycopy(severities, 0, newArray,
                             0, severities.size());
                 }
                 newArray[getSeverities().size()] = configuration;
                 setSeverities(Arrays.asList(newArray));
-            } else if (configuration.getType() == SystemConfigurationUtilities.TYPE_STATUS) {
+            } else if (configuration.getType() == Configuration.Type.status) {
                 newArray = new Configuration[getStatuses().size() + 1];
                 if (getStatuses().size() > 0) {
-                    System.arraycopy((Object) statuses, 0, (Object) newArray,
+                    System.arraycopy(statuses, 0, newArray,
                             0, statuses.size());
                 }
                 newArray[getStatuses().size()] = configuration;

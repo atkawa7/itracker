@@ -6,6 +6,7 @@ import org.itracker.model.Configuration;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Properties;
 
 public class ConfigurationDAOImplIT extends AbstractDependencyInjectionTest {
 
@@ -17,7 +18,8 @@ public class ConfigurationDAOImplIT extends AbstractDependencyInjectionTest {
 
         assertNotNull(configuration);
 
-        assertEquals(1, configuration.getType());
+        assertEquals("configuration.type.code", (Object)1, configuration.getType().getCode());
+        assertEquals("configuration.type", Configuration.Type.locale, configuration.getType());
         assertEquals("Test Value", configuration.getValue());
         assertEquals("Version 1.0", configuration.getVersion());
         assertEquals(1, configuration.getOrder());
@@ -25,30 +27,43 @@ public class ConfigurationDAOImplIT extends AbstractDependencyInjectionTest {
 
     @Test
     public void testFindByType() {
-        List<Configuration> configurations = configurationDAO.findByType(1);
+        final List<Configuration> configurations = configurationDAO.findByType(Configuration.Type.locale);
+        assertEquals("configurationDAO.findByType(Configuration.Type.status).size", 2, configurations.size());
 
-        assertEquals(2, configurations.size());
+        final Configuration configuration = configurations.get(0);
+        assertEquals("configuration.id", 2000, configuration.getId().intValue());
+        assertEquals("configuration.value", "Test Value", configuration.getValue());
 
-        Configuration configuration = configurations.get(0);
+        assertEquals("configuration.version", "Version 1.0", configuration.getVersion());
+        assertEquals("configuration.order", 1, configuration.getOrder());
 
-        // assertEquals(2000, configuration.getId().intValue());
-        assertEquals("Test Value", configuration.getValue());
-        assertEquals("Version 1.0", configuration.getVersion());
-        assertEquals(1, configuration.getOrder());
+        // old code checks
+
+        List<Configuration> configurations1 = configurationDAO.findByType(1);
+        assertEquals("configurationDAO.findByType(1).size", 2, configurations1.size());
     }
 
     @Test
     public void testFindByTypeAndValue() {
-        List<Configuration> configurations = configurationDAO.findByTypeAndValue(1, "Test Value");
 
-        assertEquals(1, configurations.size());
+        Configuration configuration = configurationDAO.findByTypeValueKey(Configuration.Type.locale, "Test Value");
 
-        Configuration configuration = configurations.get(0);
+        assertNotNull("configurationDAO.findByTypeValueKey(Configuration.Type.locale, 'Test Value')", configuration);
+
 
         // assertEquals(2000, configuration.getId().intValue());
         assertEquals("Test Value", configuration.getValue());
         assertEquals("Version 1.0", configuration.getVersion());
         assertEquals(1, configuration.getOrder());
+
+        // old code checks
+        List<Configuration> configurations = configurationDAO.findByTypeAndValue(1, "Test Value");
+        assertEquals("configurationDAO.findByTypeAndValue(1, 'Test Value').size", 1, configurations.size());
+        configurations = configurationDAO.findByTypeAndValue(Configuration.Type.locale, "Test Value");
+        assertEquals("configurationDAO.findByTypeAndValue(Configuration.Type.locale, 'Test Value').size", 1, configurations.size());
+
+        Configuration configuration1 = configurations.get(0);
+        assertEquals(configuration1, configuration);
     }
 
     @Override

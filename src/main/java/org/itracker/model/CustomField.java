@@ -122,13 +122,6 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
      */
     private boolean sortOptionsByName;
 
-    /*
-      * This class used to have a <code>fields</code> attribute, which was a
-      * Collection<IssueField>. This has been removed because the association
-      * CustomField - IssueField doesn't need to be navigatable in this
-      * direction.
-      */
-
     /**
      * Default constructor (required by Hibernate).
      * <p/>
@@ -141,24 +134,6 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
     public CustomField() {
     }
 
-    @Deprecated
-    public CustomField(String name, Type type) {
-//		setName(name);
-        setFieldType(type);
-    }
-
-//	/**
-//	 * 
-//	 * @deprecated this can not be in the entity, replace by Utility or service.
-//	 * @return
-//	 */
-//	public String getName() {
-//		return name;
-//	}
-//
-//	public void setName(String name) {
-//		this.name = name;
-//	}
 
     public Type getFieldType() {
         return type;
@@ -245,45 +220,6 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
         this.sortOptionsByName = sortOptionsByName;
     }
 
-//	/**
-//	 * Sets this custom fields names based on the supplied local string.
-//	 * 
-//	 * @deprecated this can not be in the entity, replace by Utility or service.
-//	 * @param locale
-//	 *            the name of the locale to use for the names
-//	 */
-//	public void setLabels(String locale) {
-//		Locale loc = ITrackerResources.getLocale(locale);
-//		setLabels(loc);
-//	}
-
-//	/**
-//	 * Sets this custom fields names based on the supplied locale.
-//	 * @deprecated this can not be in the entity, replace by Utility or service.
-//	 * @param locale
-//	 *            the locale to use for the names
-//	 */
-//	public void setLabels(Locale locale) {
-//		setName(CustomFieldUtilities.getCustomFieldName(getId(), locale));
-//
-//		final Iterator<CustomFieldValue> iter = this.getOptions().iterator();
-//
-//		while (iter.hasNext()) {
-//			CustomFieldValue option = iter.next();
-//
-//			option.setName(CustomFieldUtilities.getCustomFieldOptionName(
-//					this.getId(), option.getId(), locale));
-//		}
-//
-//		if (isSortOptionsByName()) {
-//			// Specify ordering other than the natural ordering of
-//			// CustomFieldValue.
-//			Collections.sort(this.getOptions(), CustomFieldValue.NAME_COMPARATOR);
-//		} else {
-//			Collections.sort(this.getOptions(), CustomFieldValue.SORT_ORDER_COMPARATOR);
-//		}
-//	}
-
     @Override
     public String toString() {
 
@@ -292,31 +228,6 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
                 .append("type", getFieldType())
                 .append("sortOptionsByName", isSortOptionsByName()).toString();
     }
-
-    //
-    // public int compareTo(CustomField other) {
-    // return this.name.compareTo(other.name);
-    // }
-    //
-    // @Override
-    // public boolean equals(Object obj) {
-    // if (this == obj) {
-    // return true;
-    // }
-    //
-    // if (obj instanceof CustomField) {
-    // final CustomField other = (CustomField)obj;
-    //
-    // return this.name.equals(other.name);
-    // }
-    // return false;
-    // }
-    //
-    // @Override
-    // public int hashCode() {
-    // return this.name.hashCode();
-    // }
-    //
 
     /**
      * Checks if the given value is assignable to this custom field.
@@ -386,34 +297,29 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 
         STRING(1), INTEGER(2), DATE(3), LIST(4);
 
-        private final int code;
+        private final Integer code;
 
-        private Type(int code) {
+        private Type(Integer code) {
             this.code = code;
         }
 
-        public int getCode() {
+        public Integer getCode() {
             return code;
         }
 
-        public Type fromCode(int code) {
+        public Type fromCode(Integer code) {
             return Type.valueOf(code);
         }
 
-        public static Type valueOf(int code) {
-            switch (code) {
-                case 1:
-                    return STRING;
-                case 2:
-                    return INTEGER;
-                case 3:
-                    return DATE;
-                case 4:
-                    return LIST;
-                default:
-                    throw new IllegalArgumentException("Unknown code : " + code);
+        public static Type valueOf(Integer code) {
+            for (Type val: values()) {
+                if (val.code == code) {
+                    return val;
+                }
             }
+            throw new IllegalArgumentException("Unknown code : " + code);
         }
+
 
     }
 

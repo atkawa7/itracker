@@ -33,16 +33,16 @@ public enum IssueActivityType implements IntCodeEnum<IssueActivityType> {
 
     RELATION_REMOVED(14);
 
-    final int code;
+    final Integer code;
 
-    private IssueActivityType(int code) {
+    private IssueActivityType(Integer code) {
         this.code = code;
     }
 
     /**
      * @deprecated
      */
-    public static final IssueActivityType forCode(int type) {
+    public static final IssueActivityType forCode(Integer type) {
         switch (type) {
             case 1:
                 return ISSUE_CREATED;
@@ -76,7 +76,7 @@ public enum IssueActivityType implements IntCodeEnum<IssueActivityType> {
         return null;
     }
 
-    public IssueActivityType fromCode(int code) {
+    public IssueActivityType fromCode(Integer code) {
         switch (code) {
             case 1:
                 return ISSUE_CREATED;
@@ -110,7 +110,7 @@ public enum IssueActivityType implements IntCodeEnum<IssueActivityType> {
         return null;
     }
 
-    public int getCode() {
+    public Integer getCode() {
         return this.code;
     }
 }

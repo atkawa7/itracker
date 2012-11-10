@@ -68,7 +68,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
             }
 
             String key = null;
-            if (configItem.getType() == SystemConfigurationUtilities.TYPE_SEVERITY) {
+            if (configItem.getType() == Configuration.Type.severity) {
                 key = ITrackerResources.KEY_BASE_SEVERITY + configItem.getValue();
 
                 // Need to promote all issues with the deleted severity.  The safest thing to do is
@@ -110,7 +110,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                 } catch (Exception e) {
                     log.debug("Exception while promoting issues with severity " + configItem.getValue(), e);
                 }
-            } else if (configItem.getType() == SystemConfigurationUtilities.TYPE_STATUS) {
+            } else if (configItem.getType() == Configuration.Type.status) {
                 key = ITrackerResources.KEY_BASE_STATUS + configItem.getValue();
 
                 // Need to demote all issues with the deleted severity.  The safest thing to do is
@@ -154,12 +154,12 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                 } catch (Exception e) {
                     log.debug("Exception while promoting issues with status " + configItem.getValue(), e);
                 }
-            } else if (configItem.getType() == SystemConfigurationUtilities.TYPE_RESOLUTION) {
+            } else if (configItem.getType() == Configuration.Type.resolution) {
                 key = ITrackerResources.KEY_BASE_RESOLUTION + configItem.getValue();
 
                 // No need to edit any issues since the resolutions are stored as text in the issue
             } else {
-                throw new SystemConfigurationException("Unsupported configuration item type " + configItem.getType() + " found.");
+                throw new SystemConfigurationException("Unsupported configuration item type " + configItem.getType().name() + " found.");
             }
 
             configurationService.removeConfigurationItem(configItem.getId());

@@ -155,19 +155,19 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                 String value = atts.getValue(ATTR_VALUE);
                 String order = atts.getValue(ATTR_ORDER);
 
-                childModel = new Configuration(SystemConfigurationUtilities.TYPE_RESOLUTION, value, Integer.parseInt(order));
+                childModel = new Configuration(Configuration.Type.resolution, value, Integer.parseInt(order));
                 tagBuffer = new StringBuffer();
             } else if (TAG_SEVERITY.equals(qName)) {
                 String value = atts.getValue(ATTR_VALUE);
                 String order = atts.getValue(ATTR_ORDER);
 
-                childModel = new Configuration(SystemConfigurationUtilities.TYPE_SEVERITY, value, Integer.parseInt(order));
+                childModel = new Configuration(Configuration.Type.severity, value, Integer.parseInt(order));
                 tagBuffer = new StringBuffer();
             } else if (TAG_STATUS.equals(qName)) {
                 String value = atts.getValue(ATTR_VALUE);
                 String order = atts.getValue(ATTR_ORDER);
 
-                childModel = new Configuration(SystemConfigurationUtilities.TYPE_STATUS, value, Integer.parseInt(order));
+                childModel = new Configuration(Configuration.Type.status, value, Integer.parseInt(order));
                 tagBuffer = new StringBuffer();
             } else if (TAG_USER.equals(qName)) {
                 String id = atts.getValue(ATTR_SYSTEMID);

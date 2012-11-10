@@ -21,7 +21,7 @@ public class SystemConfigurationUtilitiesTest {
     public void testGetLanguageKey() {
         {
             final Configuration configuration =
-                    new Configuration(SystemConfigurationUtilities.TYPE_STATUS,
+                    new Configuration(Configuration.Type.status,
                             "value");
             final String languageKey =
                     SystemConfigurationUtilities.getLanguageKey(configuration);
@@ -30,7 +30,7 @@ public class SystemConfigurationUtilitiesTest {
         }
         {
             final Configuration configuration =
-                    new Configuration(SystemConfigurationUtilities.TYPE_SEVERITY,
+                    new Configuration(Configuration.Type.severity,
                             "value");
             final String languageKey =
                     SystemConfigurationUtilities.getLanguageKey(configuration);
@@ -39,7 +39,7 @@ public class SystemConfigurationUtilitiesTest {
         }
         {
             final Configuration configuration =
-                    new Configuration(SystemConfigurationUtilities.TYPE_RESOLUTION,
+                    new Configuration(Configuration.Type.resolution,
                             "value");
             final String languageKey =
                     SystemConfigurationUtilities.getLanguageKey(configuration);
@@ -54,7 +54,7 @@ public class SystemConfigurationUtilitiesTest {
         }
         {
             final Configuration configuration =
-                    new Configuration(SystemConfigurationUtilities.TYPE_LOCALE,
+                    new Configuration(Configuration.Type.locale,
                             "value");
             final String languageKey =
                     SystemConfigurationUtilities.getLanguageKey(configuration);
@@ -147,7 +147,7 @@ public class SystemConfigurationUtilitiesTest {
         };
         final Configuration[] configurations =
                 SystemConfigurationUtilities.nvpArrayToConfigurationArray(
-                        SystemConfigurationUtilities.TYPE_STATUS, nvp);
+                        Configuration.Type.status, nvp);
         assertEquals(2, configurations.length);
         final Configuration configuration1 = configurations[0];
         assertEquals("name1", configuration1.getName());

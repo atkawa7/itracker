@@ -12,7 +12,6 @@ public class ItrackerResourceBundleIT extends AbstractDependencyInjectionTest {
     @Override
     public void onSetUp() throws Exception {
         super.onSetUp();
-        Object[][] data = {{"itracker.web.attr.admin", "itracker.web.attr.administer"}, {"Admin", "Administer"}};
         resourceBundle = (ITrackerResourceBundle)ITrackerResourceBundle.getBundle(Locale.ENGLISH);
         assertNotNull(resourceBundle);
     }

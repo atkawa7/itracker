@@ -34,6 +34,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.itracker.model.Configuration.Type;
+import org.itracker.web.util.LoginUtilities;
 
 
 public class OrderConfigurationItemAction extends ItrackerBaseAction {
@@ -43,7 +45,7 @@ public class OrderConfigurationItemAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
 
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
@@ -61,7 +63,7 @@ public class OrderConfigurationItemAction extends ItrackerBaseAction {
                 throw new SystemConfigurationException("Invalid configuration id.");
             }
 
-            int configType = configItem.getType();
+            Type configType = configItem.getType();
             List<Configuration> configItems = configurationService.getConfigurationItemsByType(configType);
             List<Configuration> newConfigItems = new ArrayList<Configuration>();
 
@@ -112,11 +114,12 @@ public class OrderConfigurationItemAction extends ItrackerBaseAction {
             // Only resolutions and severities can be reordered at this point.  Statuses
             // and some basic workflow depend on the actual value of the status, so
             // the order must equal the value of the status for it to work correctly.
-            if (configType == SystemConfigurationUtilities.TYPE_RESOLUTION) {
-                configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_RESOLUTION);
-            } else if (configType == SystemConfigurationUtilities.TYPE_SEVERITY) {
-                configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_SEVERITY);
+            switch (configType) {
+                case resolution:
+                case severity:
+                    configurationService.resetConfigurationCache(configType);
             }
+
 
             return mapping.findForward("listconfiguration");
         } catch (SystemConfigurationException nfe) {

@@ -448,25 +448,29 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
         final SystemConfiguration config = new SystemConfiguration();
         config.setId(1);
         config.setVersion("1/1");
-        final CustomField customField1 = new CustomField("field1", Type.STRING);
+        final CustomField customField1 = new CustomField();
+        customField1.setFieldType(Type.STRING);
         customField1.setId(1);
         config.getCustomFields().add(customField1);
-        final CustomField customField2 = new CustomField("field2", Type.LIST);
+        final CustomField customField2 = new CustomField();
+        customField2.setFieldType(Type.LIST);
         customField2.setId(2);
         CustomFieldValue customFieldValue = new CustomFieldValue();
         customFieldValue.setId(2);
         customFieldValue.setValue("value2");
-        customFieldValue.setCustomField(new CustomField("field3", Type.LIST));
+        final CustomField customField3 = new CustomField();
+        customField3.setFieldType(Type.LIST);
+        customFieldValue.setCustomField(new CustomField());
 
         customField2.getOptions().add(customFieldValue);
         config.getCustomFields().add(customField2);
 
 
-        config.getResolutions().add(new Configuration(1, "resolution"));
+        config.getResolutions().add(new Configuration(Configuration.Type.resolution, "resolution"));
 
-        config.getSeverities().add(new Configuration(2, "severity"));
+        config.getSeverities().add(new Configuration(Configuration.Type.severity, "severity"));
 
-        config.getStatuses().add(new Configuration(3, "status"));
+        config.getStatuses().add(new Configuration(Configuration.Type.status, "status"));
 
         final String expected = readXmlString("org/itracker/services/util/testGetConfigurationXMLExpected.xml");
 

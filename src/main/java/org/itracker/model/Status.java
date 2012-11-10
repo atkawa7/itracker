@@ -35,21 +35,21 @@ public enum Status implements IntCodeEnum<Status> {
     LOCKED(3);
 
 
-    private final int code;
+    private final Integer code;
 
-    private Status(int code) {
+    private Status(Integer code) {
         this.code = code;
     }
 
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public Status fromCode(int code) {
+    public Status fromCode(Integer code) {
         return Status.valueOf(code);
     }
 
-    public static Status valueOf(int code) {
+    public static Status valueOf(Integer code) {
         switch (code) {
             case -1:
                 return DELETED;

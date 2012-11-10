@@ -9,14 +9,14 @@ package org.itracker.model;
  * by the java.lang.Enum class through the enum.name() and enum.valueOf(String)
  * methods. <br>
  * The enum.ordinal() position could be used, but isn't the best approach for
- * this use case because we don't have any constrol on it :
+ * this use case because we don't have any control on it :
  * it is zero-based and changes if the position of the enum constant changes.
  * <br>
  * Using the enum name isn't satisfactory either because we would have
  * to update the database if we ever need to rename an enum constant. </p>
  * <p/>
  * <p>This class allows to migrate to Java 5 enums retaining full backwards
- * compatiblity with iTracker 2, in which all enumerations were simply defined
+ * compatibility with iTracker 2, in which all enumerations were simply defined
  * as <code>static final int</code> fields. </p>
  * <p/>
  * <p>This interface allows to handle all such enums consistently
@@ -33,7 +33,7 @@ public interface IntCodeEnum<E extends Enum<E>> {
      *
      * @return unique constant as defined in iTracker 2
      */
-    int getCode();
+    Integer getCode();
 
     /**
      * Returns a java.lang.Enum constant matching the given integer value.
@@ -47,11 +47,25 @@ public interface IntCodeEnum<E extends Enum<E>> {
      * for all enums in our application for EnumCodeUserType to use
      * in a type-safe way! </p>
      *
+     * <p>You should instead implement a static valueOf(int) wrapped by this method:
+     * <pre>
+     * static final E valueOf(Integer code) {
+     *     for (E val: values()) {
+     *         if (val.code == code) {
+     *             return val;
+     *         }
+     *     }
+     *     throw new IllegalArgumentException("Unknown code : " + code);
+     * }
+     *
+     * </pre>
+     * </p>
+     *
      * @param code unique enum constant as defined in iTracker 2
      * @return java.lang.Enum constant instance for the given code
      * @throws IllegalArgumentException no matching enum constant for
      *                                  the given <code>code</code>
      */
-    /* static */ E fromCode(int code);
+     E fromCode(Integer code);
 
 }
