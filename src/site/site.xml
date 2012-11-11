@@ -41,28 +41,12 @@
 
 		<menu name="Download">
 			<item name="Binaries" href="http://sourceforge.net/projects/itracker/files/" />
-			<!-- TODO
-			<item name="Installation 2.4 production" href="/download.html" />
-			<item name="Installation 3.0 development" href="/release-notes.html" />
 
-			<item name="License" href="/license.html" />			 -->
 		</menu>
 
 		<menu name="Documentation">
-		<!-- TODO
-			<item name="Features" />
-			<item name="Core Platform" />
-			<item name="Web Client" />
-			<item name="Installation 2.4 production"
-				href="/download.html" />
-				 
-			<item name="Installation 3.0 development"
-				href="/release-notes/index.html" >
-			</item>
-			-->
-
 		
-			<item name="3.1.1 Release Notes" href="/release-notes/itracker-3.1.1.html" />
+			<item name="3.1.2 Release Notes" href="/release-notes/itracker-3.1.2.html" />
 
 
             <item name="Install" href="/install.html"/>
@@ -74,20 +58,9 @@
             <item name="Screenshots" href="/screenshots/screenshots.html"/>
 
 		</menu>
-<!-- 
-	TODO
-		<menu name="Subprojects">
-			<item name="Eclipse Plugin" />
-		</menu>
- -->
+
 		<menu name="Getting Involved" >
-		<!-- 
-		TODO
-			<item name="Contribute" />
-			<item name="Development Procedure" />
-			<item name="SCM guidelinies" />
-			
-			 -->
+
 			<item name="Getting Started" href="/getting-started.html" />
 			<item name="Development Environment Setup"
 				href="/development_environment_setup.html" />
