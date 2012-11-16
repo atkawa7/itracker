@@ -18,7 +18,6 @@
 
 package org.itracker.web.actions.admin.configuration;
 
-import com.sun.xml.internal.ws.api.message.Attachment;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
@@ -27,7 +26,6 @@ import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.services.exceptions.ImportExportException;
 import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.exceptions.ProjectException;
 import org.itracker.services.exceptions.UserException;
@@ -40,7 +38,6 @@ import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
-import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
