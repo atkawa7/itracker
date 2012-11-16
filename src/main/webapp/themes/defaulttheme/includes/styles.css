@@ -15,8 +15,11 @@ hr {
 	background: black;	
 }
 
-.pre {
+pre, .pre {
     font: monospace;
+    border: solid thin #666;
+    color: #666;
+    padding: 0.5em;
 }
 
 a:hover {

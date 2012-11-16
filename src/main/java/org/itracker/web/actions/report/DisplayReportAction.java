@@ -18,28 +18,50 @@
 
 package org.itracker.web.actions.report;
 
+import com.lowagie.text.pdf.BaseFont;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.data.JRHibernateListDataSource;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.export.*;
+import net.sf.jasperreports.engine.fonts.FontFamily;
+import net.sf.jasperreports.engine.fonts.SimpleFontFamily;
+import net.sf.jasperreports.engine.util.JRProperties;
+import net.sf.jasperreports.engine.xml.JRChartFactory;
+import net.sf.jasperreports.view.JRViewer;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
+import org.apache.struts.util.RequestUtils;
+import org.itracker.core.resources.ITrackerResourceBundle;
+import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
 import org.itracker.services.ReportService;
 import org.itracker.services.exceptions.ImportExportException;
 import org.itracker.services.exceptions.ReportException;
-import org.itracker.services.util.ImportExportTags;
-import org.itracker.services.util.ImportExportUtilities;
-import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.ReportUtilities;
+import org.itracker.services.util.*;
 import org.itracker.web.actions.base.ItrackerBaseAction;
-import org.itracker.web.util.Constants;
+import org.itracker.web.util.*;
+import org.jfree.chart.servlet.ServletUtilities;
+import org.xml.sax.InputSource;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
+import javax.swing.*;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.*;
+import java.rmi.server.ExportException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -51,19 +73,20 @@ public class DisplayReportAction extends ItrackerBaseAction {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
-        //  TODO: Action Cleanup
 
         try {
             HttpSession session = request.getSession(false);
-            Locale userLocale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
-            IssueSearchQuery isqm = (IssueSearchQuery) session.getAttribute(Constants.SEARCH_QUERY_KEY);
+            Locale userLocale = LoginUtilities.getCurrentLocale(request);
 
             List<Issue> reportingIssues = new ArrayList<Issue>();
             String reportType = (String) PropertyUtils.getSimpleProperty(form, "type");
             log.info("execute: report type was " + reportType);
 
-            Integer[] projectIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "projectIds");
-            // TODO All Issues this is huge, remove if possible
+            final Integer[] projectIds = (Integer[]) PropertyUtils.getSimpleProperty(form, "projectIds");
+            final IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
+            final ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
+            final ReportService reportService = ServletContextUtils.getItrackerServices().getReportService();
+
             if ("all".equalsIgnoreCase(reportType)) {
                 // Export all of the issues in the system
                 User currUser = (User) session.getAttribute(Constants.USER_KEY);
@@ -71,8 +94,6 @@ public class DisplayReportAction extends ItrackerBaseAction {
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.unauthorized"));
                     throw new ReportException();
                 }
-
-                IssueService issueService = getITrackerServices().getIssueService();
                 reportingIssues = issueService.getAllIssues();
                 Collections.sort(reportingIssues, Issue.ID_COMPARATOR);
             } else if ("project".equalsIgnoreCase(reportType)) {
@@ -81,10 +102,6 @@ public class DisplayReportAction extends ItrackerBaseAction {
                     // issues for them, check which ones the user can see, and then create a new array of issues
                     List<Issue> reportDataList = new ArrayList<Issue>();
 
-                    IssueService issueService = getITrackerServices().getIssueService();
-
-                    User currUser = (User) session.getAttribute(Constants.USER_KEY);
-                    Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
                     Iterator<Issue> issuesIt = null;
                     Issue currentIssue = null;
                     List<Issue> issues;
@@ -93,9 +110,8 @@ public class DisplayReportAction extends ItrackerBaseAction {
                         issuesIt = issues.iterator();
                         while (issuesIt.hasNext()) {
                             currentIssue = issuesIt.next();
-                            if (IssueUtilities.canViewIssue(currentIssue, currUser, userPermissions)) {
-                                reportDataList.add(currentIssue);
-                            }
+                            reportDataList.add(currentIssue);
+
                         }
                     }
                     reportingIssues = reportDataList;
@@ -106,79 +122,59 @@ public class DisplayReportAction extends ItrackerBaseAction {
                 }
             } else {
                 // This must be a regular search, look for a search query result.
-                reportingIssues = (isqm == null || isqm.getResults() == null ? new ArrayList<Issue>() : isqm.getResults());
+                // must be loaded with current session (lazy loading)
+                IssueSearchQuery isqm = (IssueSearchQuery) session.getAttribute(Constants.SEARCH_QUERY_KEY);
+                for (Issue issue : isqm.getResults()) {
+                    reportingIssues.add(issueService.getIssue(issue.getId()));
+                }
             }
 
             log.debug("Report data contains " + reportingIssues.size() + " elements.");
 
-            if (reportingIssues.size() == 0) {
+            if (reportingIssues.isEmpty()) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noreportdata"));
                 throw new ReportException();
             }
 
             Integer reportId = (Integer) PropertyUtils.getSimpleProperty(form, "reportId");
             String reportOutput = (String) PropertyUtils.getSimpleProperty(form, "reportOutput");
-            if (reportId == null || reportId.intValue() == 0) {
+            if (null == reportId) {
                 log.debug("Invalid report id: " + reportId + " requested.");
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreport"));
                 throw new ReportException();
-            } else if (reportId.intValue() == ReportUtilities.REPORT_EXPORT_XML) {
+            } else if (ReportUtilities.REPORT_EXPORT_XML == reportId.intValue()) {
                 log.debug("Issue export requested.");
 
-                ConfigurationService configurationService = getITrackerServices().getConfigurationService();
                 SystemConfiguration config = configurationService.getSystemConfiguration(ImportExportTags.EXPORT_LOCALE);
 
-                if (!exportIssues(reportingIssues, config, request, response)) {
+                if (!ImportExportUtilities.exportIssues(reportingIssues, config, request, response)) {
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-                    throw new ReportException();
+                    return mapping.getInputForward();
                 }
                 return null;
             } else if (reportId.intValue() > 0) {
                 log.debug("Defined report (" + reportId + ") requested.");
 
-                ReportService reportService = getITrackerServices().getReportService();
                 Report reportModel = reportService.getReportDAO().findByPrimaryKey(reportId);
 
-                // probably useless. the dao throws when the report doesn't exists
-                if (reportModel == null) {
-                    log.debug("Invalid report id: " + reportId + " requested.");
-                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreport"));
-                    throw new ReportException();
-                }
+                log.debug("Report " + reportModel + " found.");
 
-                log.debug("Report " + reportModel.toString() + " found.");
+                Project project = null;
+                log.debug("Processing report.");
+                outputReport(reportingIssues, project, reportModel, userLocale, reportOutput, response);
+                return null;
 
-                if (ReportUtilities.REPORT_OUTPUT_PDF.equals(reportOutput)) {
-                    log.debug("Processing PDF report.");
-                    reportService.outputPDF(reportingIssues, reportModel, userLocale, reportOutput, session, request, response, mapping);
-                    return null;
-                } else if (ReportUtilities.REPORT_OUTPUT_XLS.equals(reportOutput)) {
-                    log.debug("Processing XLS report.");
-                    //report.outputXLS(request, response, mapping);
-                    throw new RuntimeException("not working");
-                    //return null;
-                } else if (ReportUtilities.REPORT_OUTPUT_CSV.equals(reportOutput)) {
-                    log.debug("Processing CSV report.");
-                    //report.outputCSV(request, response, mapping);
-                    throw new RuntimeException("not working");
-                    //return null;
-                } else if (ReportUtilities.REPORT_OUTPUT_HTML.equals(reportOutput)) {
-                    log.debug("Processing HTML report.");
-                    //report.outputHTML(request, response, mapping);
-                    throw new RuntimeException("not working");
-                    //turn null;
-                } else {
-                    log.error("Invalid report output format: " + reportOutput);
-                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreportoutput"));
-                    throw new ReportException();
-                }
             }
         } catch (ReportException re) {
-            if (re.getErrorKey() != null) {
+            log.debug("Error for report", re);
+            if (!StringUtils.isEmpty(re.getErrorKey())) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(re.getErrorKey()));
+            } else {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.details", re.getMessage()));
             }
+
         } catch (Exception e) {
-            log.debug("Error in report processing: " + e.getMessage(), e);
+            log.warn("Error in report processing: " + e.getMessage(), e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.details", e.getMessage()));
         }
@@ -190,23 +186,114 @@ public class DisplayReportAction extends ItrackerBaseAction {
         return mapping.findForward("error");
     }
 
-    private boolean exportIssues(List<Issue> issues, SystemConfiguration config, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/xml; charset=UTF-8");
-        response.setHeader("Content-Disposition", "attachment; filename=\"issue_export.xml\"");
-        PrintWriter out = response.getWriter();
 
-        out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n\n");
+
+
+
+    private static JasperPrint generateReport(Report report,
+                                       Map<String, Object> parameters, JRDataSource datasource)
+    throws ReportException{
         try {
-            String xml = ImportExportUtilities.exportIssues(issues, config);
-            out.print(xml);
-            out.flush();
-        } catch (ImportExportException iee) {
-            log.error("Error exporting issue data. Message: " + iee.getMessage(), iee);
-            return false;
+
+            JasperReport jasperReport = JasperCompileManager.compileReport(new ByteArrayInputStream(report.getFileData()));
+            JasperPrint jasperPrint = JasperFillManager.fillReport(
+                    jasperReport,
+                    parameters,
+                    datasource);
+
+
+            return jasperPrint;
+        } catch (JRException e) {
+            throw new ReportException(e);
         }
-        out.flush();
-        out.close();
-        return true;
+
     }
+
+    /**
+     *
+     */
+    public static void outputReport(List<Issue> reportDataArray, Project project, Report report,
+                          Locale userLocale, String reportOutput,
+                          HttpServletResponse response) throws ReportException {
+
+        try {
+            // hack, we have to find a more structured way to support
+            // various types of queries
+            final JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(
+                    reportDataArray);
+
+            final Map<String, Object> parameters = new HashMap<String, Object>();
+            String reportTitle = report.getName();
+            if (project != null) {
+                reportTitle += " - " + project.getName();
+                if (report.getNameKey() != null) {
+                    reportTitle = ITrackerResources.getString(report.getNameKey(), project.getName());
+                }
+            } else if (report.getNameKey() != null) {
+                reportTitle = ITrackerResources.getString(report.getNameKey());
+            }
+            parameters.put("ReportTitle", reportTitle);
+            parameters.put("BaseDir", new File("."));
+            parameters.put("REPORT_LOCALE", userLocale);
+            parameters.put("REPORT_RESOURCE_BUNDLE", ITrackerResourceBundle.getBundle(userLocale));
+
+            final JasperPrint jasperPrint = generateReport(report, parameters,
+                    beanCollectionDataSource);
+
+            final JRViewer jrViewer = new JRViewer(jasperPrint);
+            final JFrame frame = new JFrame();
+            frame.add(jrViewer);
+
+            final ServletOutputStream out = response.getOutputStream();
+            final JRExporter x;
+            if (ReportUtilities.REPORT_OUTPUT_PDF.equals(reportOutput)) {
+
+                response.setHeader("Content-Type", "application/pdf");
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getName()
+                        + new SimpleDateFormat("-yyyy-MM-dd").format(new Date())
+                        + ".pdf\"");
+                x = new JRPdfExporter();
+
+            } else if (ReportUtilities.REPORT_OUTPUT_XLS.equals(reportOutput)) {
+                response.setHeader("Content-Type", "application/xls");
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getName()
+                           + new SimpleDateFormat("-yyyy-MM-dd").format(new Date())
+                           + ".xls\"");
+                x = new JRXlsExporter();
+
+            } else if (ReportUtilities.REPORT_OUTPUT_CSV.equals(reportOutput)) {
+
+                response.setHeader("Content-Type", "text/csv");
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getName()
+                        + new SimpleDateFormat("-yyyy-MM-dd").format(new Date())
+                        + ".csv\"");
+                x = new JRCsvExporter();
+
+            } else if (ReportUtilities.REPORT_OUTPUT_HTML.equals(reportOutput)) {
+                response.setHeader("Content-Type", "text/html");
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getName()
+                        + new SimpleDateFormat("-yyyy-MM-dd").format(new Date())
+                        + ".html\"");
+                x = new JRHtmlExporter();
+
+            } else {
+                log.error("Invalid report output format: " + reportOutput);
+                throw new ReportException("Invalid report type.", "itracker.web.error.invalidreportoutput");
+            }
+            x.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+            x.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
+
+            x.exportReport();
+
+            out.flush();
+            out.close();
+        } catch (JRException e) {
+            throw new ReportException(e);
+        } catch (IOException e) {
+            throw new ReportException(e);
+        }
+
+    }
+
 }
   

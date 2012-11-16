@@ -12,6 +12,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -29,7 +31,7 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
         return xml.replace("\n", "").replace("\r", "").replaceAll("> +<", "><").trim();
     }
 
-    public void doTestImportIssues(final String xml,
+    public void doTestImportIssues(final Reader xml,
                                    final AbstractEntity[] expected) {
         try {
             final AbstractEntity[] actual = ImportExportUtilities.importIssues(xml);
@@ -129,7 +131,7 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
                 "<first-name><![CDATA[]]></first-name>" +
                 "<last-name><![CDATA[]]></last-name>" +
                 "<email><![CDATA[]]></email>" +
-                "<user-status>MISSING KEY: itracker.user.status.0</user-status>" +
+                "<user-status>0</user-status>" +
                 "<super-user>false</super-user>" +
                 "</user>" +
                 "<user id=\"user2\" systemid=\"2\">" +
@@ -137,7 +139,7 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
                 "<first-name><![CDATA[]]></first-name>" +
                 "<last-name><![CDATA[]]></last-name>" +
                 "<email><![CDATA[]]></email>" +
-                "<user-status>MISSING KEY: itracker.user.status.0</user-status>" +
+                "<user-status>0</user-status>" +
                 "<super-user>false</super-user>" +
                 "</user>" +
                 "</users>" +
@@ -174,7 +176,7 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
                 "</issue>" +
                 "</issues>" +
                 "</itracker>";
-        doTestImportIssues(xml,
+        doTestImportIssues(new StringReader(xml),
                 new AbstractEntity[]{
                         systemConfiguration,
                         creator,
@@ -193,12 +195,18 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
         }
 
         try {
-            ImportExportUtilities.importIssues("");
+            ImportExportUtilities.importIssues(new StringReader(""));
             fail("should throw ImportExportException");
         } catch (final ImportExportException e) {
 
         }
 
+        try {
+            ImportExportUtilities.importIssues(new StringReader("Test"));
+            fail("should throw ImportExportException");
+        } catch (final ImportExportException e) {
+
+        }
     }
 
 
@@ -405,7 +413,7 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
                     "<first-name><![CDATA[firstName]]></first-name>" +
                     "<last-name><![CDATA[lastName]]></last-name>" +
                     "<email><![CDATA[]]></email>" +
-                    "<user-status>MISSING KEY: itracker.user.status.0</user-status>" +
+                    "<user-status>0</user-status>" +
                     "<super-user>false</super-user>" +
                     "</user>";
             assertEquals(flatXml(expected),
@@ -650,7 +658,7 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
                 "<first-name><![CDATA[firstName]]></first-name>" +
                 "<last-name><![CDATA[lastName]]></last-name>" +
                 "<email><![CDATA[]]></email>" +
-                "<user-status>MISSING KEY: itracker.user.status.0</user-status>" +
+                "<user-status>0</user-status>" +
                 "<super-user>false</super-user>" +
                 "</user>";
         assertEquals(flatXml(expected),

@@ -16,7 +16,7 @@ public class ReportDAOImplIT extends AbstractDependencyInjectionTest {
         assertNotNull("report", report);
         assertNotNull("report.id", report.getId());
         assertEquals("report.id", new Integer(1000), report.getId());
-        assertEquals("report.name", "DailayReport Report", report.getName());
+        assertEquals("report.name", "DailyReport Report", report.getName());
     }
 
     @Test

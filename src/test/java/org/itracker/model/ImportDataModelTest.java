@@ -13,7 +13,7 @@ public class ImportDataModelTest {
     public void testGetData() {
         assertNotNull("data not null", idm.getData());
         AbstractEntity[] entities = new AbstractEntity[1];
-        boolean[] existingModel = new boolean[1];
+        AbstractEntity[] existingModel = new AbstractEntity[1];
         idm.setData(entities, existingModel);
         assertEquals("data length is 1", 1, idm.getData().length);
     }
@@ -22,7 +22,7 @@ public class ImportDataModelTest {
     public void testGetExistingModel() {
         assertNotNull("existingModel not null", idm.getExistingModel());
         AbstractEntity[] entities = new AbstractEntity[1];
-        boolean[] existingModel = new boolean[1];
+        AbstractEntity[] existingModel = new AbstractEntity[1];
         idm.setData(entities, existingModel);
         assertEquals("existingModel length is 1", 1, idm.getExistingModel().length);
     }
@@ -31,18 +31,18 @@ public class ImportDataModelTest {
     public void testGetExistingModelByIndex() {
         assertNotNull("existingModel not null", idm.getExistingModel());
         AbstractEntity[] entities = new AbstractEntity[1];
-        boolean[] existingModel = new boolean[1];
-        existingModel[0] = false;
+        AbstractEntity[] existingModel = new AbstractEntity[1];
+        existingModel[0] = null;
         idm.setData(entities, existingModel);
         assertEquals("existingModel length is 1", 1, idm.getExistingModel().length);
-        assertFalse("existingModel index o value", idm.getExistingModel()[0]);
+        assertNull("existingModel index o value", idm.getExistingModel()[0]);
     }
 
 
     @Test
     public void testSetData() {
         AbstractEntity[] entities = new AbstractEntity[1];
-        boolean[] existingModel = new boolean[1];
+        AbstractEntity[] existingModel = new AbstractEntity[1];
         idm.setData(entities, existingModel);
         assertEquals("data length is 1", 1, idm.getData().length);
 
@@ -50,21 +50,21 @@ public class ImportDataModelTest {
             idm.setData(null, existingModel);
             fail("did not throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
-            assertTrue(true);
+            // expected
         }
 
         try {
             idm.setData(entities, null);
             fail("did not throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
-            assertTrue(true);
+            // expected
         }
 
         try {
             idm.setData(null, null);
             fail("did not throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
-            assertTrue(true);
+            // expected
         }
     }
 

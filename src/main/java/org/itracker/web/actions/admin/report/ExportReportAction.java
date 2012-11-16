@@ -58,7 +58,6 @@ public class ExportReportAction extends ItrackerBaseAction {
 
                 Report report = reportService.getReportDAO().findByPrimaryKey(reportId);
                 if (report != null) {
-                    //report.setFileData(reportService.getReportFile(reportId));
                     response.setContentType("application/x-itracker-report-export");
                     response.setHeader("Content-Disposition", "attachment; filename=\"ITracker_report_" + report.getId() + ".itr\"");
                     ServletOutputStream out = response.getOutputStream();
@@ -67,15 +66,10 @@ public class ExportReportAction extends ItrackerBaseAction {
                     out.println("id=" + report.getId());
                     out.println("name=" + report.getName());
                     out.println("namekey=" + report.getNameKey());
-                    out.println("dataType=" + report.getDataType());
-                    out.println("reportType=" + report.getReportType());
                     if (report.getClassName() != null && !report.getClassName().equals("")) {
                         out.println("className=" + report.getClassName());
                     }
                     out.println("description=" + Base64Coder.encodeString(report.getDescription()));
-//                    out.println("description=" + Base64.encodeObject(report.getDescription(), Base64.DONT_BREAK_LINES));
-
-                    //out.println("definition=" + Base64.encodeBytes(report.getFileData(), Base64.DONT_BREAK_LINES));
                     out.flush();
                     out.close();
                     return null;

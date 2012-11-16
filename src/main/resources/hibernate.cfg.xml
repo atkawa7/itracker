@@ -6,7 +6,7 @@
 <hibernate-configuration>
 
     <session-factory>
-        <property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+        <property name="hibernate.cache.region.factory_class">net.sf.ehcache.hibernate.EhCacheRegionFactory</property>
         <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
         <property name="hibernate.hbm2ddl.auto">update</property>

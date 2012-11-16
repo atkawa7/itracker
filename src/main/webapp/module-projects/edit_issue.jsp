@@ -10,13 +10,11 @@
 
 
 <logic:messagesPresent >
-    <center>
-          <span class="formError">
+          <div class="formError">
            <html:messages id="error">
-               <bean:write name="error"/><br/>
+               <bean:write name="error"/>
            </html:messages>
-          </span>
-    </center>
+          </div>
     <br>
 </logic:messagesPresent>
 

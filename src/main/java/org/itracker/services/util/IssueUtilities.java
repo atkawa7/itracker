@@ -333,7 +333,7 @@ public class IssueUtilities {
         return getStatusName(value, ITrackerResources.getLocale());
     }
 
-    public static String getStatusName(int value, Locale locale) {
+    public static String getStatusName(Integer value, Locale locale) {
         return getStatusName(Integer.toString(value), locale);
     }
 
@@ -372,7 +372,7 @@ public class IssueUtilities {
         return getSeverityName(value, ITrackerResources.getLocale());
     }
 
-    public static String getSeverityName(int value, Locale locale) {
+    public static String getSeverityName(Integer value, Locale locale) {
         return getSeverityName(Integer.toString(value), locale);
     }
 

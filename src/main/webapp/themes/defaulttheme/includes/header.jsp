@@ -95,45 +95,40 @@
 				titleKey="itracker.web.header.menu.search.alt">
 				<it:message key="itracker.web.header.menu.search" />
 			</html:link>
-			<%-- TODO: fix reports-section 
-				<c:if
-					test="<%=UserUtilities.hasPermission(permissions,
-										UserUtilities.PERMISSION_VIEW_ALL)%>">
-	                      
-	                | <html:link styleClass="headerLinks"
-						titleKey="itracker.web.header.menu.reports.alt"
-						module="/module-reports" action="/list_reports" >
-						<it:message key="itracker.web.header.menu.reports" />
-					</html:link>
-				</c:if>
-				--%>
+            <c:if test="${hasPermissionViewAll}">
+                | <html:link styleClass="headerLinks"
+                    titleKey="itracker.web.header.menu.reports.alt"
+                    module="/module-reports" action="/list_reports" >
+                    <it:message key="itracker.web.header.menu.reports" />
+                </html:link>
+            </c:if>
 			<c:if test="${hasPermissionUserAdmin}">
-	                      |
-	                      <html:link styleClass="headerLinks"
+                | <html:link styleClass="headerLinks"
 					titleKey="itracker.web.header.menu.admin.alt"
 					module="/module-admin" action="/adminhome">
 					<it:message key="itracker.web.header.menu.admin" />
 				</html:link>
 			</c:if>
 			<c:if test="${hasPermissionProductAdmin}">
-	               | <html:link styleClass="headerLinks"
+	            | <html:link styleClass="headerLinks"
 					titleKey="itracker.web.header.menu.projectadmin.alt"
 					module="/module-admin" action="/listprojectsadmin">
 					<it:message key="itracker.web.header.menu.projectadmin" />
 				</html:link>
 			</c:if>
 	           
-	            
-	                | <html:link module="/module-preferences"
+	            | <html:link module="/module-preferences"
 				forward="editpreferences" styleClass="headerLinks"
 				titleKey="itracker.web.header.menu.preferences.alt">
 				<it:message key="itracker.web.header.menu.preferences" />
 			</html:link>
-	                | <html:link forward="help" styleClass="headerLinks"
+
+	            | <html:link forward="help" styleClass="headerLinks"
 				titleKey="itracker.web.header.menu.help.alt" module="/module-help">
 				<it:message key="itracker.web.header.menu.help" />
 			</html:link>
-	                | <html:link linkName="logoff" action="/logoff"
+
+                | <html:link linkName="logoff" action="/logoff"
 				styleClass="headerLinks"
 				titleKey="itracker.web.header.menu.logout.alt" module="/">
 				<it:message key="itracker.web.header.menu.logout" />

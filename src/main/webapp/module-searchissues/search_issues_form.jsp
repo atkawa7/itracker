@@ -11,12 +11,7 @@
 <%@ page import="org.itracker.web.util.LoginUtilities" %>
 <%@ page import="org.itracker.web.util.RequestHelper" %>
 <%@ page import="java.util.*" %>
-
-<%--<bean:define id="pageTitleKey" value="itracker.web.search.title"/>--%>
-<%--<bean:define id="pageTitleArg" value=""/>--%>
-
-<%--<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">--%>
-<%--<tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>--%>
+<%@ page import="org.itracker.services.util.ReportUtilities" %>
 
 <%  // TODO : move redirect logic to the Action class. 
     final Map<Integer, Set<PermissionType>> permissions =
@@ -38,11 +33,10 @@
 <%
     } else {
         List<Report> reports = new ArrayList<Report>();
-        try {
+        if (null != rh) {
             reports = rh.getAllReports();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
 
         Project project = null;
         List<User> possibleContributors = new ArrayList<User>();
@@ -85,7 +79,7 @@
             <% } else { %>
                 <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.projects"/>: </td>
                 <td valign="top" class="editColumnText">
-                  <html:select property="projects" styleClass="editColumnText" size="5" multiple="true">
+                  <html:select property="projects" styleClass="editColumnText"  size="5" multiple="true">
                   <%
                       for(int i = 0; i < query.getAvailableProjects().size(); i++) {
                   %>
@@ -305,36 +299,38 @@
               </td></tr>
            
           <% } else { %>
-          <%-- TODO: fix reports 
-              <html:form action="/displayreport" target="_blank">
                 <tr><td colspan="99"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="10"/></td></tr>
-                <tr class="listRowUnshaded" align="left" style="vertical-align: top;">
-                  <td colspan="10" align="left" style="vertical-align: top;">
-                    <html:select property="reportId" styleClass="listRowUnshaded" style="vertical-align: top;">
-                      <%
-                         for(int i = 0; i < reports.size(); i++ ) {
-                            if(reports.get(i).getNameKey() != null) {
-                      %>
-                               <html:option value="<%= reports.get(i).getId().toString() %>" key="<%= reports.get(i).getNameKey() %>"/>
-                      <%    } else { %>
-                               <html:option value="<%= reports.get(i).getId().toString() %>"><%= reports.get(i).getName() %></html:option>
-                      <%
-                            }
-                         }
-                      %>
-                      <html:option value="<%= Integer.toString(ReportUtilities.REPORT_EXPORT_XML) %>" key="itracker.report.exportxml"/>
-                    </html:select>
-                    <html:select property="reportOutput" styleClass="listRowUnshaded" style="vertical-align: top;">
-                      <html:option value="<%= ReportUtilities.REPORT_OUTPUT_HTML %>">HTML</html:option>
-                      <html:option value="<%= ReportUtilities.REPORT_OUTPUT_PDF %>">PDF</html:option>
-                      <html:option value="<%= ReportUtilities.REPORT_OUTPUT_XLS %>">Excel</html:option>
-                      <html:option value="<%= ReportUtilities.REPORT_OUTPUT_CSV %>">CSV</html:option>
-                    </html:select>
-                    <html:submit styleClass="button" altKey="itracker.web.button.run.alt" titleKey="itracker.web.button.run.alt"><it:message key="itracker.web.button.run"/></html:submit>
+                <tr align="left" style="vertical-align: top;">
+                  <td colspan="10" >
+
+                      <html:form action="/displayreport">
+                        <html:select property="reportId">
+                          <%
+                             for(Report report: reports) {
+                                if(report.getNameKey() != null) {
+                          %>
+                                   <html:option value="<%= report.getId().toString() %>" key="<%= report.getNameKey() %>"/>
+                          <%    } else { %>
+                                   <html:option value="<%= report.getId().toString() %>"><%= report.getName() %></html:option>
+                          <%
+                                }
+
+                             }
+                          %>
+                          <html:option value="<%= Integer.toString(ReportUtilities.REPORT_EXPORT_XML) %>" key="itracker.report.exportxml"/>
+                        </html:select>
+                          <html:select property="reportOutput">
+                            <html:option value="<%= ReportUtilities.REPORT_OUTPUT_PDF %>">PDF</html:option>
+                            <%-- TODO HTMLreports will not show images, should be embedded in downloaded file or zipped
+                            <html:option value="<%= ReportUtilities.REPORT_OUTPUT_HTML %>">HTML</html:option>--%>
+                            <html:option value="<%= ReportUtilities.REPORT_OUTPUT_XLS %>">Excel</html:option>
+                            <html:option value="<%= ReportUtilities.REPORT_OUTPUT_CSV %>">CSV</html:option>
+                          </html:select>
+                        <html:submit styleClass="button" altKey="itracker.web.button.run.alt" titleKey="itracker.web.button.run.alt"><it:message key="itracker.web.button.run"/></html:submit>
+
+                      </html:form>
                   </td>
                 </tr>
-              </html:form>
-              --%>
           <% } %>
         </table>
         </td></tr>
@@ -343,7 +339,3 @@
       }
     }
 %>
-
-<%--<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/>--%>
-<%--</body>--%>
-<%--</html>--%>

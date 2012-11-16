@@ -55,16 +55,16 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     public Project getProject(Integer projectId) {
-        Project project = projectDAO.findByPrimaryKey(projectId);
+        Project project = getProjectDAO().findByPrimaryKey(projectId);
         return project;
     }
 
     public List<Project> getAllProjects() {
-        return projectDAO.findAll();
+        return getProjectDAO().findAll();
     }
 
     public List<Project> getAllAvailableProjects() {
-        List<Project> projects = projectDAO.findAllAvailable();
+        List<Project> projects = getProjectDAO().findAllAvailable();
         return projects;
     }
 
@@ -73,38 +73,33 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     public Component updateProjectComponent(Component component) {
-//		component.setLastModifiedDate(new Date());
-        componentDAO.saveOrUpdate(component);
+        getComponentDAO().saveOrUpdate(component);
         return component;
     }
 
     public Component addProjectComponent(Integer projectId, Component component) {
-        Project project = projectDAO.findByPrimaryKey(projectId);
+        Project project = getProjectDAO().findByPrimaryKey(projectId);
 
-        component.setCreateDate(new Date());
         component.setProject(project);
-
-        List<Component> components = project.getComponents();
-        components.add(component);
-
-        componentDAO.save(component);
+        project.getComponents().add(component);
+        getComponentDAO().save(component);
+        getProjectDAO().save(project);
 
         return component;
     }
 
     public boolean removeProjectComponent(Integer projectId, Integer componentId) {
 
-        Component component = componentDAO.findById(componentId);
+        Component component = getComponentDAO().findById(componentId);
         if (component == null) {
             return false; //component doesn't exist
         }
 
         if (!component.getProject().getId().equals(projectId)) {
-            //throw new ProjectException("the component doesn't belong to the project specified");
             return false;
         }
 
-        componentDAO.delete(component);
+        getComponentDAO().delete(component);
 
         return true;
 
@@ -112,7 +107,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     public Component getProjectComponent(Integer componentId) {
 
-        Component component = componentDAO.findById(componentId);
+        Component component = getComponentDAO().findById(componentId);
 
         return component;
 
@@ -121,12 +116,12 @@ public class ProjectServiceImpl implements ProjectService {
     public Version addProjectVersion(Integer projectId, Version version) {
         version.setCreateDate(new Date());
 
-        Project project = projectDAO.findByPrimaryKey(projectId);
+        Project project = getProjectDAO().findByPrimaryKey(projectId);
         version.setProject(project);
 
         Collection<Version> versions = project.getVersions();
         versions.add(version);
-        versionDAO.save(version);
+        getVersionDAO().save(version);
 
         return version;
 
@@ -134,52 +129,50 @@ public class ProjectServiceImpl implements ProjectService {
 
     public boolean removeProjectVersion(Integer projectId, Integer versionId) {
 
-        Version version = versionDAO.findByPrimaryKey(versionId);
+        Version version = getVersionDAO().findByPrimaryKey(versionId);
         if (version == null) {
             return false; // version doesn't exist
         }
 
         if (!version.getProject().getId().equals(projectId)) {
-            // throw new
-            // ProjectException("the component doesn't belong to the project specified");
             return false;
         }
 
-        List<Issue> issues = issueDAO.findByTargetVersion(version.getId());
+        List<Issue> issues = getIssueDAO().findByTargetVersion(version.getId());
         Iterator<Issue> iterator = issues.iterator();
         while (iterator.hasNext()) {
             Issue issue = (Issue) iterator.next();
             issue.setTargetVersion(null);
-            issueDAO.save(issue);
+            getIssueDAO().save(issue);
         }
 
-        issues = issueDAO.findByVersion(version.getId());
+        issues = getIssueDAO().findByVersion(version.getId());
         iterator = issues.iterator();
         while (iterator.hasNext()) {
             Issue issue = (Issue) iterator.next();
             if (issue.getVersions().remove(version)) {
-                issueDAO.save(issue);
+                getIssueDAO().save(issue);
             }
         }
 
-        versionDAO.delete(version);
+        getVersionDAO().delete(version);
         return true;
     }
 
     public Version updateProjectVersion(Version version) {
-        versionDAO.saveOrUpdate(version);
+        getVersionDAO().saveOrUpdate(version);
         return version;
     }
 
     public Version getProjectVersion(Integer versionId) {
-        Version version = versionDAO.findByPrimaryKey(versionId);
+        Version version = getVersionDAO().findByPrimaryKey(versionId);
 
         return version;
 
     }
 
     public List<User> getProjectOwners(Integer projectId) {
-        Project project = projectDAO.findByPrimaryKey(projectId);
+        Project project = getProjectDAO().findByPrimaryKey(projectId);
         List<User> users = project.getOwners();
         return users;
     }
@@ -200,7 +193,7 @@ public class ProjectServiceImpl implements ProjectService {
             for (Iterator<Integer> iterator = setOfNewOwnerIds.iterator(); iterator
                     .hasNext(); ) {
                 Integer ownerId = iterator.next();
-                User owner = userDAO.findByPrimaryKey(ownerId);
+                User owner = getUserDAO().findByPrimaryKey(ownerId);
                 owners.add(owner);
             }
         }
@@ -261,8 +254,6 @@ public class ProjectServiceImpl implements ProjectService {
         addprojectScript.setPriority(projectScript.getPriority());
         addprojectScript.setProject(projectScript.getProject());
         addprojectScript.setScript(projectScript.getScript());
-//		addprojectScript.setCreateDate(new Date());
-//		addprojectScript.setLastModifiedDate(addprojectScript.getCreateDate());
         this.projectScriptDAO.save(addprojectScript);
 
         return addprojectScript;
@@ -270,17 +261,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     public boolean removeProjectScript(Integer projectId, Integer scriptId) {
-        // Project project = projectDAO.findByPrimaryKey(projectId);
         ProjectScript script = projectScriptDAO.findByPrimaryKey(scriptId);
         this.projectScriptDAO.delete(script);
-        // TODO: check this: why is this comment "script.remove()" there? Which
-        // type is expected in Collection<T> scripts?
-        // (WorkflowsScript? ProjectScript? Do you understand this? - I would
-        // say ProjectScript)
-        // Collection<ProjectScript> scripts = project.getScripts();
-        // scripts.remove(script);
 
-        // script.remove();
 
         return true;
 
@@ -294,8 +277,6 @@ public class ProjectServiceImpl implements ProjectService {
         editprojectScript.setPriority(projectScript.getPriority());
         editprojectScript.setProject(projectScript.getProject());
         editprojectScript.setScript(projectScript.getScript());
-        // editprojectScript.setCreateDate(projectScript.getCreateDate());
-//		editprojectScript.setLastModifiedDate(new Date());
 
         this.projectScriptDAO.saveOrUpdate(editprojectScript);
 
@@ -340,26 +321,18 @@ public class ProjectServiceImpl implements ProjectService {
         return projectDAO;
     }
 
-    //TODO: Decide if this code is really needed and document for what
-    @SuppressWarnings("unused")
     private ComponentDAO getComponentDAO() {
         return componentDAO;
     }
 
-    //TODO: Decide if this code is really needed and document for what
-    @SuppressWarnings("unused")
     private CustomFieldDAO getCustomFieldDAO() {
         return this.customFieldDAO;
     }
 
-    //TODO: Decide if this code is really needed and document for what
-    @SuppressWarnings("unused")
     private ProjectScriptDAO getProjectScriptDAO() {
         return this.projectScriptDAO;
     }
 
-    //TODO: Decide if this code is really needed and document for what
-    @SuppressWarnings("unused")
     private VersionDAO getVersionDAO() {
         return this.versionDAO;
     }
@@ -391,6 +364,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     public Project createProject(Project project, Integer userId) {
+        project.setId(null);
         User user = getUserDAO().findByPrimaryKey(userId);
         project.setOwners(Arrays.asList(new User[]{user}));
         getProjectDAO().save(project);

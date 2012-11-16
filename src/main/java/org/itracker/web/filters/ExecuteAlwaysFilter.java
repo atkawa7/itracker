@@ -336,6 +336,9 @@ public class ExecuteAlwaysFilter implements Filter {
                 UserUtilities.PERMISSION_USER_ADMIN));
         request.setAttribute("hasPermissionProductAdmin", UserUtilities.hasPermission(permissions,
                 UserUtilities.PERMISSION_PRODUCT_ADMIN));
+        request.setAttribute("hasPermissionViewAll",
+                UserUtilities.hasPermission(permissions,
+                        UserUtilities.PERMISSION_VIEW_ALL));
     }
 
 

@@ -64,24 +64,21 @@
                          titleKey="itracker.web.header.menu.projectlist.alt"
                          module="/module-projects" action="/list_projects">
 				<it:message key="itracker.web.header.menu.projectlist" />
-        </html:link>
-            | <html:link forward="searchissues" module="/module-searchissues"
-                         styleClass="headerLinks"
-                         titleKey="itracker.web.header.menu.search.alt">
-				<it:message key="itracker.web.header.menu.search" />
-        </html:link>
-            <%-- TODO: fix reports-section
-                   <c:if
-                       test="<%=UserUtilities.hasPermission(permissions,
-                                           UserUtilities.PERMISSION_VIEW_ALL)%>">
+            </html:link>
+                | <html:link forward="searchissues" module="/module-searchissues"
+                             styleClass="headerLinks"
+                             titleKey="itracker.web.header.menu.search.alt">
+                    <it:message key="itracker.web.header.menu.search" />
+            </html:link>
+           <c:if
+               test="${hasPermissionViewAll}">
 
-                       | <html:link styleClass="headerLinks"
-                           titleKey="itracker.web.header.menu.reports.alt"
-                           module="/module-reports" action="/list_reports" >
-                           <it:message key="itracker.web.header.menu.reports" />
-                       </html:link>
-                   </c:if>
-                   --%>
+               | <html:link styleClass="headerLinks"
+                   titleKey="itracker.web.header.menu.reports.alt"
+                   module="/module-reports" action="/list_reports" >
+                   <it:message key="itracker.web.header.menu.reports" />
+               </html:link>
+           </c:if>
             <c:if test="${hasPermissionUserAdmin}">
                 |
                 <html:link styleClass="headerLinks"

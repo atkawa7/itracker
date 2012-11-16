@@ -26,12 +26,20 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import java.io.OutputStream;
-import java.io.StringReader;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.*;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -66,11 +74,11 @@ public class ImportExportUtilities implements ImportExportTags {
      * of AbstractBean objects.  The array will contain all of the projects, components
      * versions, users, custom fields, and issues contained in the XML.
      *
-     * @param xml an xml string to import
+     * @param xmlReader an xml reader to import
      * @throws ImportExportException thrown if the xml can not be parsed into the appropriate objects
      */
-    public static AbstractEntity[] importIssues(String xml) throws ImportExportException {
-        AbstractEntity[] abstractBeans = new AbstractEntity[0];
+    public static AbstractEntity[] importIssues(Reader xmlReader) throws ImportExportException {
+        AbstractEntity[] abstractBeans;
 
         try {
             logger.debug("Starting XML data import.");
@@ -79,12 +87,12 @@ public class ImportExportUtilities implements ImportExportTags {
             ImportHandler handler = new ImportHandler();
             reader.setContentHandler(handler);
             reader.setErrorHandler(handler);
-            reader.parse(new InputSource(new StringReader(xml)));
+            reader.parse(new InputSource(xmlReader));
             abstractBeans = handler.getModels();
 
             logger.debug("Imported a total of " + abstractBeans.length + " beans.");
         } catch (Exception e) {
-            logger.debug("Exception.", e);
+            logger.error("Exception.", e);
             throw new ImportExportException(e.getMessage());
         }
 
@@ -92,19 +100,57 @@ public class ImportExportUtilities implements ImportExportTags {
     }
 
 
+    /**
+     * export the issues to an XML and write it to the response.
+     * @param issues
+     * @param config
+     * @param request
+     * @param response
+     * @return  if <code>true</code> the export was sucessful.
+     * @throws ServletException
+     * @throws IOException
+     */
+    public static boolean exportIssues(List<Issue> issues, SystemConfiguration config, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/xml; charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=\"issue_export.xml\"");
+        PrintWriter out = response.getWriter();
+
+        try {
+            // TODO instead to have a string returned, it should directly serialize the
+            // export to the response-writer.
+            String xml = ImportExportUtilities.exportIssues(issues, config);
+
+            TransformerFactory.newInstance().newTransformer().transform(
+                    new StreamSource(new StringReader(xml)),
+                    new StreamResult(out));
+
+            out.flush();
+        } catch (ImportExportException iee) {
+            logger.error("Error exporting issue data. Message: " + iee.getMessage(), iee);
+            return false;
+        } catch (TransformerConfigurationException tce) {
+            logger.error("Error exporting issue data. Message: " + tce.getMessage(), tce);
+            return false;
+        } catch (TransformerException te) {
+            logger.error("Error exporting issue data. Message: " + te.getMessage(), te);
+            return false;
+        }
+        out.flush();
+        out.close();
+        return true;
+    }
+
     public static AbstractEntity importXml(InputSource is) throws Exception {
-        // unmarshal from is
-        JAXBContext jc = JAXBContext.newInstance("ch.dope");
+        // TODO unmarshal from is
+        JAXBContext jc = JAXBContext.newInstance("org.itracker");
         Unmarshaller u = jc.createUnmarshaller();
         AbstractEntity o = (AbstractEntity) u.unmarshal(is);
         return o;
     }
 
     public static void export(AbstractEntity o, OutputStream os) throws Exception {
-        JAXBContext jc = JAXBContext.newInstance("ch.dope");
-
-
-        // marshal to System.out
+        // TODO marshal to System.out
+        JAXBContext jc = JAXBContext.newInstance("org.itracker");
         Marshaller m = jc.createMarshaller();
         m.marshal(o, System.out);
     }
@@ -120,7 +166,6 @@ public class ImportExportUtilities implements ImportExportTags {
         StringBuffer buf = new StringBuffer();
         HashMap<String, Project> projects = new HashMap<String, Project>();
         HashMap<String, User> users = new HashMap<String, User>();
-        // HashSet customFields = new HashSet();
 
         if (issues == null || issues.size() == 0) {
             throw new ImportExportException("The issue list was null or zero length.");
@@ -193,7 +238,7 @@ public class ImportExportUtilities implements ImportExportTags {
     /**
      * Returns the appropriate XML block for a given model.
      *
-     * @param model a model that extends AbstractBean
+     * @param abstractBean a model that extends AbstractEntity
      * @throws ImportExportException thrown if the given model can not be exported
      */
     public static String exportModel(AbstractEntity abstractBean) throws ImportExportException {
@@ -390,7 +435,7 @@ public class ImportExportUtilities implements ImportExportTags {
         buf.append("  <" + TAG_FIRST_NAME + "><![CDATA[" + ITrackerResources.escapeUnicodeString(user.getFirstName(), false) + "]]></" + TAG_FIRST_NAME + ">\n");
         buf.append("  <" + TAG_LAST_NAME + "><![CDATA[" + ITrackerResources.escapeUnicodeString(user.getLastName(), false) + "]]></" + TAG_LAST_NAME + ">\n");
         buf.append("  <" + TAG_EMAIL + "><![CDATA[" + ITrackerResources.escapeUnicodeString(user.getEmail(), false) + "]]></" + TAG_EMAIL + ">\n");
-        buf.append("  <" + TAG_USER_STATUS + ">" + UserUtilities.getStatusName(user.getStatus(), EXPORT_LOCALE) + "</" + TAG_USER_STATUS + ">\n");
+        buf.append("  <" + TAG_USER_STATUS + ">" + user.getStatus() + "</" + TAG_USER_STATUS + ">\n");
         buf.append("  <" + TAG_SUPER_USER + ">" + user.isSuperUser() + "</" + TAG_SUPER_USER + ">\n");
         buf.append("</" + TAG_USER + ">\n");
 
@@ -402,7 +447,7 @@ public class ImportExportUtilities implements ImportExportTags {
      * This function will not generate the XML for other models needed for a complete import
      * or export.
      *
-     * @param user a SystemConfiguration to generate the XML for
+     * @param config a SystemConfiguration to generate the XML for
      * @return a String containing the XML for the configuration
      */
     public static String getConfigurationXML(SystemConfiguration config) {
@@ -416,7 +461,7 @@ public class ImportExportUtilities implements ImportExportTags {
         for (int i = 0; i < config.getCustomFields().size(); i++) {
             buf.append("    <" + TAG_CUSTOM_FIELD + " " + ATTR_ID + "=\"" + TAG_CUSTOM_FIELD + config.getCustomFields().get(i).getId() + "\" " + ATTR_SYSTEMID + "=\"" + config.getCustomFields().get(i).getId() + "\">\n");
             buf.append("      <" + TAG_CUSTOM_FIELD_LABEL + "><![CDATA[" + ITrackerResources.escapeUnicodeString(CustomFieldUtilities.getCustomFieldName(config.getCustomFields().get(i).getId()), false) + "]]></" + TAG_CUSTOM_FIELD_LABEL + ">\n");
-            buf.append("      <" + TAG_CUSTOM_FIELD_TYPE + "><![CDATA[" + config.getCustomFields().get(i).getFieldType() + "]]></" + TAG_CUSTOM_FIELD_TYPE + ">\n");
+            buf.append("      <" + TAG_CUSTOM_FIELD_TYPE + "><![CDATA[" + config.getCustomFields().get(i).getFieldType().name() + "]]></" + TAG_CUSTOM_FIELD_TYPE + ">\n");
             buf.append("      <" + TAG_CUSTOM_FIELD_REQUIRED + "><![CDATA[" + config.getCustomFields().get(i).isRequired() + "]]></" + TAG_CUSTOM_FIELD_REQUIRED + ">\n");
             buf.append("      <" + TAG_CUSTOM_FIELD_DATEFORMAT + "><![CDATA[" + ITrackerResources.escapeUnicodeString(config.getCustomFields().get(i).getDateFormat(), false) + "]]></" + TAG_CUSTOM_FIELD_DATEFORMAT + ">\n");
             buf.append("      <" + TAG_CUSTOM_FIELD_SORTOPTIONS + "><![CDATA[" + config.getCustomFields().get(i).isSortOptionsByName() + "]]></" + TAG_CUSTOM_FIELD_SORTOPTIONS + ">\n");

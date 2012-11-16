@@ -141,9 +141,9 @@ public class SystemConfigurationUtilities {
                     throw new IllegalArgumentException("The version " + version + " is not parseable, excpected '(int)number[.(int)major[.(int)minor]]");
                 }
             } catch (NumberFormatException nfe) {
-                log.warn("getVersionAsLong: failed to parse version " + version, nfe);
+                // OK
             } catch (NoSuchElementException nsee) {
-                log.warn("getVersionAsLong: failed to parse version, elements are not complete for " + version, nsee);
+                // OK
             }
 
         }

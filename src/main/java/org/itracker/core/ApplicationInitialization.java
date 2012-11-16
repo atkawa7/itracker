@@ -18,6 +18,8 @@
 
 package org.itracker.core;
 
+import net.sf.jasperreports.engine.DefaultJasperReportsContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.User;
@@ -29,6 +31,8 @@ import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
+
+import java.util.StringTokenizer;
 
 
 /**
@@ -64,10 +68,24 @@ public class ApplicationInitialization {
 
             // check for and create admin user, if so configured
             createAdminUser(configurationService);
+
+            setUpPdfFonts();
         } catch (PasswordException pe) {
             logger.info("Unable to create admin user.  Error: " + pe.getMessage());
         } catch (UserException ue) {
             logger.warn("Exception while creating admin user.", ue);
+        }
+    }
+
+    private void setUpPdfFonts() {
+
+        StringTokenizer st = new StringTokenizer(configurationService.getProperty("pdf.export.fonts", "arial"), ",");
+        String font;
+        while (st.hasMoreTokens()) {
+            font = StringUtils.trim(st.nextToken());
+            DefaultJasperReportsContext.getInstance().setProperty("net.sf.jasperreports.export.pdf.font." + font,
+                    this.getClass().getResource("/fonts/" + font + ".ttf").toString());
+
         }
     }
 

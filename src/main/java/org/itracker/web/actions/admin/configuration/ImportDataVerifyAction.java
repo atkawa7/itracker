@@ -24,6 +24,7 @@ import org.apache.struts.action.*;
 import org.apache.struts.upload.FormFile;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
+import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
@@ -34,13 +35,17 @@ import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 
@@ -68,17 +73,15 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
 
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
         try {
             FormFile file = (FormFile) PropertyUtils.getSimpleProperty(form, "importFile");
-            String xmlData = new String(file.getFileData());
-
             ImportDataModel model = new ImportDataModel();
-            AbstractEntity[] importData = ImportExportUtilities.importIssues(xmlData);
-            boolean[] existingModel = new boolean[importData.length];
+            AbstractEntity[] importData = ImportExportUtilities.importIssues(new InputStreamReader(file.getInputStream()));
+            AbstractEntity[] existingModel = new AbstractEntity[importData.length];
 
             model.setReuseUsers((Boolean) PropertyUtils.getSimpleProperty(form, "optionreuseusers"));
             model.setReuseProjects((Boolean) PropertyUtils.getSimpleProperty(form, "optionreuseprojects"));
@@ -156,7 +159,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                             if (model.getReuseConfig() && statuses.get(j).getName().equalsIgnoreCase(configItem.getName())) {
                                 // Matching status, update issues
                                 updateIssues(importData, UPDATE_STATUS, configItem.getValue(), statuses.get(j).getValue());
-                                model.setExistingModel(i, true);
+                                model.setExistingModel(i, configItem);
                                 model.addVerifyStatistic(ImportExportUtilities.IMPORT_STAT_STATUSES, ImportExportUtilities.IMPORT_STAT_REUSED);
                                 found = true;
                                 break;
@@ -175,7 +178,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                                 if (severities.get(j).getName().equalsIgnoreCase(configItem.getName())) {
                                     // Matching severity, update issues
                                     updateIssues(importData, UPDATE_SEVERITY, configItem.getValue(), severities.get(j).getValue());
-                                    model.setExistingModel(i, true);
+                                    model.setExistingModel(i, configItem);
                                     model.addVerifyStatistic(ImportExportUtilities.IMPORT_STAT_SEVERITIES, ImportExportUtilities.IMPORT_STAT_REUSED);
                                     found = true;
                                     break;
@@ -194,7 +197,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                                 if (resolutions.get(j).getName().equalsIgnoreCase(configItem.getName())) {
                                     // Matching resolution, update issues
                                     updateIssues(importData, UPDATE_RESOLUTION, configItem.getValue(), resolutions.get(j).getValue());
-                                    model.setExistingModel(i, true);
+                                    model.setExistingModel(i, configItem);
                                     model.addVerifyStatistic(ImportExportUtilities.IMPORT_STAT_RESOLUTIONS, ImportExportUtilities.IMPORT_STAT_REUSED);
                                     found = true;
                                     break;
@@ -216,7 +219,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                                 // Matching custom field.  Set id, but don't need to update issues
                                 // since it contains the customfield model
                                 field.setId(fields.get(j).getId());
-                                model.setExistingModel(i, true);
+                                model.setExistingModel(i, field);
                                 model.addVerifyStatistic(ImportExportUtilities.IMPORT_STAT_FIELDS, ImportExportUtilities.IMPORT_STAT_REUSED);
                                 found = true;
                                 break;
@@ -247,11 +250,16 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
             for (int i = 0; i < importData.length; i++) {
                 if (importData[i] instanceof User) {
                     User user = (User) importData[i];
-                    User existingUser = userService.getUserByLogin(user.getLogin());
+                    User existingUser;
+                    try {
+                        existingUser = userService.getUserByLogin(user.getLogin());
+                    } catch (NoSuchEntityException e) {
+                        existingUser = null;
+                    }
                     if (existingUser != null) {
                         if (model.getReuseUsers()) {
                             user.setId(existingUser.getId());
-                            model.setExistingModel(i, true);
+                            model.setExistingModel(i, existingUser);
                             model.addVerifyStatistic(ImportExportUtilities.IMPORT_STAT_USERS, ImportExportUtilities.IMPORT_STAT_REUSED);
                             log.debug("Reusing existing user " + user.getLogin() + "(" + user.getId() + ") during import.");
                         } else {
@@ -266,7 +274,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                 }
             }
         } catch (Exception e) {
-            log.error("Error verifiying import data.", e);
+            log.error("Error verifying import data.", e);
             throw new ImportExportException(e.getMessage());
         }
 
@@ -277,12 +285,9 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
 
     private void checkProjects(ImportDataModel model, InitialContext ic) throws ImportExportException {
         try {
-            ProjectService projectService = getITrackerServices().getProjectService();
+            ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
 
             List<Project> existingProjects = projectService.getAllProjects();
-            if (existingProjects.size() == 0) {
-                return;
-            }
 
             AbstractEntity[] importData = model.getData();
 
@@ -294,22 +299,20 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
                     }
 
                     Project project = (Project) importData[i];
-                    boolean found = false;
                     for (int j = 0; j < existingProjects.size(); j++) {
                         log.debug("Project Name: " + project.getName() + "  Existing Project: " + existingProjects.get(j).getName());
                         log.debug("Project Name: " + ITrackerResources.escapeUnicodeString(project.getName(), false) + "  Existing Project: " + ITrackerResources.escapeUnicodeString(existingProjects.get(j).getName(), false));
                         if (project.getName() != null && project.getName().equalsIgnoreCase(existingProjects.get(j).getName())) {
                             project.setId(existingProjects.get(j).getId());
-                            model.setExistingModel(i, true);
+                            model.setExistingModel(i, project);
                             model.addVerifyStatistic(ImportExportUtilities.IMPORT_STAT_PROJECTS, ImportExportUtilities.IMPORT_STAT_REUSED);
-                            found = true;
+
                             log.debug("Reusing existing project " + project.getName() + "(" + project.getId() + ") during import.");
                             break;
                         }
                     }
-                    if (!found) {
-                        model.addVerifyStatistic(ImportExportUtilities.IMPORT_STAT_PROJECTS, ImportExportUtilities.IMPORT_STAT_NEW);
-                    }
+                    model.addVerifyStatistic(ImportExportUtilities.IMPORT_STAT_PROJECTS, ImportExportUtilities.IMPORT_STAT_NEW);
+
                 }
             }
         } catch (Exception e) {

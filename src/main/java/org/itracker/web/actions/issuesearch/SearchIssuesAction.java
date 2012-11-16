@@ -31,6 +31,7 @@ import org.itracker.services.UserService;
 import org.itracker.services.exceptions.IssueSearchException;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -64,9 +65,9 @@ public class SearchIssuesAction extends ItrackerBaseAction {
 
         try {
 
-            ReportService reportService = getITrackerServices()
+            ReportService reportService = ServletContextUtils.getItrackerServices()
                     .getReportService();
-            UserService userService = getITrackerServices().getUserService();
+            UserService userService = ServletContextUtils.getItrackerServices().getUserService();
             request.setAttribute("rh", reportService);
             request.setAttribute("uh", userService);
 

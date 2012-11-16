@@ -29,7 +29,7 @@ public class ImportDataModel extends AbstractEntity {
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(ImportDataModel.class);
     private AbstractEntity[] dataModels;
-    private boolean[] existingModel;
+    private AbstractEntity[] existingModel;
 
     private boolean reuseConfig = true;
     private boolean reuseFields = true;
@@ -46,22 +46,24 @@ public class ImportDataModel extends AbstractEntity {
         return (dataModels == null ? new AbstractEntity[0] : dataModels.clone());
     }
 
-    public boolean[] getExistingModel() {
-        return (existingModel == null ? new boolean[0] : existingModel.clone());
+    public AbstractEntity[] getExistingModel() {
+
+        return (existingModel == null ? new AbstractEntity[0] : existingModel.clone());
+
     }
 
-    public boolean getExistingModel(int i) {
+    public AbstractEntity getExistingModel(int i) {
         return (existingModel != null && i < existingModel.length ? existingModel[i]
-                : false);
+                : null);
     }
 
-    public void setExistingModel(int i, boolean value) {
+    public void setExistingModel(int i, AbstractEntity model) {
         if (existingModel != null && i < existingModel.length) {
-            existingModel[i] = value;
+            existingModel[i] = model;
         }
     }
 
-    public void setData(AbstractEntity[] dataModels, boolean[] existingModel) {
+    public void setData(AbstractEntity[] dataModels, AbstractEntity[] existingModel) {
         if (dataModels != null && existingModel != null
                 && dataModels.length == existingModel.length) {
             this.dataModels = dataModels.clone();
@@ -76,10 +78,6 @@ public class ImportDataModel extends AbstractEntity {
         return reuseConfig;
     }
 
-    public void setReuseConfig(boolean value) {
-        reuseConfig = value;
-    }
-
     public void setReuseConfig(Boolean value) {
         reuseConfig = (value != null ? value.booleanValue() : true);
     }
@@ -88,20 +86,8 @@ public class ImportDataModel extends AbstractEntity {
         return reuseFields;
     }
 
-    public void setReuseFields(boolean value) {
-        reuseFields = value;
-    }
-
-    public void setReuseFields(Boolean value) {
-        reuseFields = (value != null ? value.booleanValue() : true);
-    }
-
     public boolean getReuseProjects() {
         return reuseProjects;
-    }
-
-    public void setReuseProjects(boolean value) {
-        reuseProjects = value;
     }
 
     public void setReuseProjects(Boolean value) {
@@ -112,9 +98,6 @@ public class ImportDataModel extends AbstractEntity {
         return reuseUsers;
     }
 
-    public void setReuseUsers(boolean value) {
-        reuseUsers = value;
-    }
 
     public void setReuseUsers(Boolean value) {
         reuseUsers = (value != null ? value.booleanValue() : true);
@@ -122,10 +105,6 @@ public class ImportDataModel extends AbstractEntity {
 
     public boolean getCreatePasswords() {
         return createPasswords;
-    }
-
-    public void setCreatePasswords(boolean value) {
-        createPasswords = value;
     }
 
     public void setCreatePasswords(Boolean value) {
@@ -140,7 +119,6 @@ public class ImportDataModel extends AbstractEntity {
         try {
             verifyStatistics[itemType][category]++;
         } catch (RuntimeException e) {
-            log.error("addVerifyStatistic: faild with runtime exception", e);
             throw e;
         }
     }

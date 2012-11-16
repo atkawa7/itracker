@@ -25,18 +25,6 @@
             <column name="description" not-null="true"/>
         </property>
 
-        <property name="dataType">
-            <column name="data_type" not-null="true"/>
-        </property>
-
-        <property name="reportType">
-            <column name="report_type" not-null="true"/>
-        </property>
-
-        <property name="className">
-            <column name="class_name" not-null="false"/>
-        </property>
-
         <property name="createDate" update="false">
             <column name="create_date" sql-type="timestamp" not-null="true"/>
         </property>
@@ -44,6 +32,11 @@
         <property name="lastModifiedDate">
             <column name="last_modified" sql-type="timestamp" not-null="true"/>
         </property>
+
+        <property name="fileData" type="binary" >
+            <column name="file_data" not-null="true" length="1000000" />
+        </property>
+
 
     </class>
 

@@ -20,8 +20,11 @@ package org.itracker.model;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.hibernate.Hibernate;
 
-import java.io.InputStream;
+import java.io.*;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.Comparator;
 
 /**
@@ -47,11 +50,7 @@ public class Report extends AbstractEntity {
 
     private String description;
 
-    private int dataType;
-
-    private int reportType;
-
-    // private byte[] fileData;
+    private byte[] fileData;
 
     private String className;
 
@@ -91,13 +90,6 @@ public class Report extends AbstractEntity {
         this.className = className;
     }
 
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(int dataType) {
-        this.dataType = dataType;
-    }
 
     public String getDescription() {
         return description;
@@ -107,29 +99,20 @@ public class Report extends AbstractEntity {
         this.description = description;
     }
 
-    public InputStream getReportDefinition() {
-        return getClass().getResourceAsStream("/reports/" + getClassName());
+    public byte[] getFileData() {
+        return fileData;
     }
 
-    /*
-      * public void setFileData(byte[] fileData) { this.fileData = (fileData !=
-      * null && fileData.length > 0 ? fileData : new byte[0]); }
-      */
-
-    public int getReportType() {
-        return reportType;
-    }
-
-    public void setReportType(int reportType) {
-        this.reportType = reportType;
+    public void setFileData(byte[] fileData) {
+        this.fileData = fileData;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("id", getId()).append("name",
                 getName()).append("description", getDescription()).append(
-                "nameKey", getNameKey()).append("reportType", getReportType())
-                .append("dataType", getDataType()).toString();
+                "nameKey", getNameKey())
+                .toString();
     }
 
     private static final class NameComparator implements Comparator<Report> {

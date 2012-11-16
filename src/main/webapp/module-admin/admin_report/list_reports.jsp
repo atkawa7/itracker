@@ -7,19 +7,17 @@
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 <logic:messagesPresent>
-  <center>
-    <span class="formError">
+    <div class="formError">
      <html:messages id="error">
         <bean:write name="error"/><br/>
      </html:messages>
-    </span>
-  </center>
+    </div>
   <br>
 </logic:messagesPresent>
 
-<table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
+<table class="shadeList" style="border: none; padding: 1px; border-spacing: 0; width: 100%">
   <tr>
-    <td class="editColumnTitle" colspan="10"><it:message key="itracker.web.attr.reports"/>:</td>
+    <td class="editColumnTitle" colspan="6"><it:message key="itracker.web.attr.reports"/>:</td>
     <td style="text-align: right">
       <it:formatImageAction action="editreportform" targetAction="create" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.report.alt" textActionKey="itracker.web.image.create.texttag"/>
     </td>
@@ -30,10 +28,6 @@
     <td><it:message key="itracker.web.attr.report"/></td>
     <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4" height="1"/></td>
     <td><it:message key="itracker.web.attr.description"/></td>
-    <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4" height="1"/></td>
-    <td><it:message key="itracker.web.attr.reporttype"/></td>
-    <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4" height="1"/></td>
-    <td><it:message key="itracker.web.attr.datatype"/></td>
     <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4" height="1"/></td>
     <td><it:message key="itracker.web.attr.lastmodified"/></td>
   </tr>
@@ -58,10 +52,6 @@
 			<td>${report.name}</td>
 			<td></td>
 			<td><it:formatDescription truncateLength="60">${report.description}</it:formatDescription></td>
-			<td></td>
-			<td ><it:message key="itracker.report.reporttype.${report.reportType}"></it:message></td>
-			<td></td>
-			<td ><it:message key="itracker.report.datatype.${report.dataType}"></it:message></td>
 			<td></td>
 			<td style="text-align: right"><it:formatDate date="${report.lastModifiedDate}"/></td>
     

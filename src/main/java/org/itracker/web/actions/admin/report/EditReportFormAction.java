@@ -3,6 +3,7 @@ package org.itracker.web.actions.admin.report;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
+import org.dom4j.io.OutputFormat;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Report;
 import org.itracker.services.ReportService;
@@ -10,12 +11,26 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ReportForm;
 import org.itracker.web.util.Constants;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Set;
@@ -37,13 +52,11 @@ public class EditReportFormAction extends ItrackerBaseAction {
             HttpSession session = request.getSession(true);
             String action = (String) request.getParameter("action");
             Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
-            // TODO: never used, therefore commented, task added
-            // UserModel user = (UserModel) session.getAttribute(Constants.USER_KEY);
 
             if (!UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_USER_ADMIN)) {
                 return mapping.findForward("unauthorized");
             }
-            Report report = (Report) session.getAttribute(Constants.REPORT_KEY);
+            Report report;
             String pageTitleKey = "";
             String pageTitleArg = "";
             if (action != null && action.equals("update")) {
@@ -79,10 +92,12 @@ public class EditReportFormAction extends ItrackerBaseAction {
                     reportForm.setName(report.getName());
                     reportForm.setNameKey(report.getNameKey());
                     reportForm.setDescription(report.getDescription());
-                    reportForm.setReportType(report.getReportType());
-                    reportForm.setDataType(report.getDataType());
                     reportForm.setClassName(report.getClassName());
-                    //reportForm.setFileData(new String((byte[]) report.getFileData()));
+                    if (null != report.getFileData()) {
+                        String fileDataString = getAsString(report.getFileData(), errors);
+                        reportForm.setFileData(fileDataString);
+                    }
+
                 }
             } else {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidaction"));
@@ -113,6 +128,69 @@ public class EditReportFormAction extends ItrackerBaseAction {
         }
 
         return mapping.findForward("error");
+    }
+
+    public static final String getAsString(byte[] xmlBytes, ActionMessages errors) {
+
+        try {
+            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
+                    new ByteArrayInputStream(xmlBytes));
+            StringWriter w = new StringWriter();
+
+            Transformer t = TransformerFactory.newInstance().newTransformer();
+            t.transform(new DOMSource(doc), new StreamResult(w));
+
+            return w.toString();
+
+        } catch (SAXException e) {
+            log.debug("Exception while creating edit report form.", e);
+          //  errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.details", e.getMessage()));
+        } catch (ParserConfigurationException e) {
+            log.error("Exception while creating edit report form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+        } catch (TransformerConfigurationException e) {
+            log.error("Exception while creating edit report form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+        } catch (TransformerException e) {
+            log.error("Exception while creating edit report form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+        } catch (IOException e) {
+            log.error("Exception while creating edit report form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+        }
+        return null;
+    }
+
+    public static final byte[] getAsXmlBytes (String xmlString, ActionMessages errors) {
+
+        try {
+            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
+                    new ByteArrayInputStream(xmlString.getBytes("utf-8")));
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            OutputStreamWriter w = new OutputStreamWriter(os, "utf-8");
+
+            Transformer t = TransformerFactory.newInstance().newTransformer();
+            t.transform(new DOMSource(doc), new StreamResult(w));
+
+            return os.toByteArray();
+
+        } catch (SAXException e) {
+            log.debug("Exception while creating edit report form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.details", e.getMessage()));
+        } catch (ParserConfigurationException e) {
+            log.debug("Exception while creating edit report form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.details", e.getMessage()));
+        } catch (TransformerConfigurationException e) {
+            log.error("Exception while creating edit report form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+        } catch (TransformerException e) {
+            log.error("Exception while creating edit report form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+        } catch (IOException e) {
+            log.error("Exception while creating edit report form.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+        }
+        return null;
     }
 
 }

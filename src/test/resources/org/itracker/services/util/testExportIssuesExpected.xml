@@ -16,7 +16,7 @@
             <first-name><![CDATA[]]></first-name>
             <last-name><![CDATA[]]></last-name>
             <email><![CDATA[]]></email>
-            <user-status>MISSING KEY: itracker.user.status.0</user-status>
+            <user-status>0</user-status>
             <super-user>false</super-user>
         </user>
         <user id="user1" systemid="1">
@@ -24,7 +24,7 @@
             <first-name><![CDATA[]]></first-name>
             <last-name><![CDATA[]]></last-name>
             <email><![CDATA[]]></email>
-            <user-status>MISSING KEY: itracker.user.status.0</user-status>
+            <user-status>0</user-status>
             <super-user>false</super-user>
         </user>
         <user id="user2" systemid="2">
@@ -32,7 +32,7 @@
             <first-name><![CDATA[]]></first-name>
             <last-name><![CDATA[]]></last-name>
             <email><![CDATA[]]></email>
-            <user-status>MISSING KEY: itracker.user.status.0</user-status>
+            <user-status>0</user-status>
             <super-user>false</super-user>
         </user>
         <user id="user3" systemid="3">
@@ -40,7 +40,7 @@
             <first-name><![CDATA[]]></first-name>
             <last-name><![CDATA[]]></last-name>
             <email><![CDATA[]]></email>
-            <user-status>MISSING KEY: itracker.user.status.0</user-status>
+            <user-status>0</user-status>
             <super-user>false</super-user>
         </user>
     </users>

@@ -2,6 +2,7 @@ package org.itracker.services.util;
 
 import junit.framework.TestCase;
 import org.itracker.model.*;
+import org.itracker.services.exceptions.ImportExportException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -103,6 +104,7 @@ public class ImportHandlerIT extends TestCase {
             fail("should throw SAXException");
             handler.endElement("", "custom-field", "custom-field");
         } catch (SAXException e) {
+            // expected
         } catch (Exception e) {
             fail("should throw SAXException");
         }
@@ -112,44 +114,92 @@ public class ImportHandlerIT extends TestCase {
         attributes.addAttribute("", "", ImportHandler.ATTR_SYSTEMID, "", "1");
 
 
-        AttributesImpl projectAttrs = new AttributesImpl();
-        projectAttrs.addAttribute("", "", ImportHandler.ATTR_SYSTEMID, "", "1");
-        handler.startElement("", "configuration", "configuration", new AttributesImpl());
-
-        handler.startElement("", "custom-fields", "custom-fields", null);
 
 
-        AttributesImpl attrs = new AttributesImpl();
-        attrs.addAttribute("", "", ImportHandler.ATTR_VALUE, "", "fieldoptionvalue");
-        handler.startElement("", "custom-field", "custom-field", attributes);
-        handler.startElement("", "custom-field-option", "custom-field-option", attrs);
-        handler.endElement("", "custom-field-option", "custom-field-option");
-        handler.startElement("", "custom-field-dateformat", "custom-field-dateformat", attrs);
-        handler.endElement("", "custom-field-dateformat", "custom-field-dateformat");
-        handler.startElement("", "custom-field-label", "custom-field-label", attrs);
-        handler.endElement("", "custom-field-label", "custom-field-label");
-        handler.startElement("", "custom-field-required", "custom-field-required", attrs);
-        handler.endElement("", "custom-field-required", "custom-field-required");
-        handler.startElement("", "custom-field-sortoptions", "custom-field-sortoptions", attrs);
-        handler.endElement("", "custom-field-sortoptions", "custom-field-sortoptions");
-        handler.startElement("", "custom-field-type", "custom-field-type", attrs);
-        handler.characters("2".toCharArray(), 0, 1);
-        handler.endElement("", "custom-field-type", "custom-field-type");
-        handler.endElement("", "custom-field", "custom-field");
+        try {
+            AttributesImpl projectAttrs = new AttributesImpl();
+            projectAttrs.addAttribute("", "", ImportHandler.ATTR_SYSTEMID, "", "1");
+            handler.startElement("", "configuration", "configuration", new AttributesImpl());
 
-        handler.endElement("", "custom-fields", "custom-fields");
-        handler.endElement("", "configuration", "configuration");
+            handler.startElement("", "custom-fields", "custom-fields", null);
+
+            AttributesImpl attrs = new AttributesImpl();
+            attrs.addAttribute("", "", ImportHandler.ATTR_VALUE, "", "fieldoptionvalue");
+            handler.startElement("", "custom-field", "custom-field", attributes);
+            handler.startElement("", "custom-field-option", "custom-field-option", attrs);
+            handler.endElement("", "custom-field-option", "custom-field-option");
+            handler.startElement("", "custom-field-dateformat", "custom-field-dateformat", attrs);
+            handler.endElement("", "custom-field-dateformat", "custom-field-dateformat");
+            handler.startElement("", "custom-field-label", "custom-field-label", attrs);
+            handler.endElement("", "custom-field-label", "custom-field-label");
+            handler.startElement("", "custom-field-required", "custom-field-required", attrs);
+            handler.endElement("", "custom-field-required", "custom-field-required");
+            handler.startElement("", "custom-field-sortoptions", "custom-field-sortoptions", attrs);
+            handler.endElement("", "custom-field-sortoptions", "custom-field-sortoptions");
+            handler.startElement("", "custom-field-type", "custom-field-type", attrs);
+            handler.characters("INTEGER".toCharArray(), 0, 7);
+            handler.endElement("", "custom-field-type", "custom-field-type");
+            handler.endElement("", "custom-field", "custom-field");
+
+            handler.endElement("", "custom-fields", "custom-fields");
+            handler.endElement("", "configuration", "configuration");
 
 
-        AbstractEntity[] models = handler.getModels();
-        assertNotNull(models);
+            AbstractEntity[] models = handler.getModels();
+            assertNotNull(models);
 
-        assertEquals(CustomField.class, models[0].getClass());
+            assertEquals(CustomField.class, models[0].getClass());
 
-        CustomField field = (CustomField) models[0];
-        assertEquals(Integer.valueOf(1), field.getId());
-        assertEquals(1, field.getOptions().size());
+            CustomField field = (CustomField) models[0];
+            assertEquals(Integer.valueOf(1), field.getId());
+            assertEquals(1, field.getOptions().size());
 
+        } catch (SAXException e) {
+            throw e;
+        }
+
+        // legacy int-type check
+        try {
+            AttributesImpl projectAttrs = new AttributesImpl();
+            projectAttrs.addAttribute("", "", ImportHandler.ATTR_SYSTEMID, "", "1");
+            handler.startElement("", "configuration", "configuration", new AttributesImpl());
+
+            handler.startElement("", "custom-fields", "custom-fields", null);
+
+            AttributesImpl attrs = new AttributesImpl();
+            attrs.addAttribute("", "", ImportHandler.ATTR_VALUE, "", "fieldoptionvalue");
+            handler.startElement("", "custom-field", "custom-field", attributes);
+            handler.startElement("", "custom-field-option", "custom-field-option", attrs);
+            handler.endElement("", "custom-field-option", "custom-field-option");
+            handler.startElement("", "custom-field-dateformat", "custom-field-dateformat", attrs);
+            handler.endElement("", "custom-field-dateformat", "custom-field-dateformat");
+            handler.startElement("", "custom-field-label", "custom-field-label", attrs);
+            handler.endElement("", "custom-field-label", "custom-field-label");
+            handler.startElement("", "custom-field-required", "custom-field-required", attrs);
+            handler.endElement("", "custom-field-required", "custom-field-required");
+            handler.startElement("", "custom-field-sortoptions", "custom-field-sortoptions", attrs);
+            handler.endElement("", "custom-field-sortoptions", "custom-field-sortoptions");
+            handler.startElement("", "custom-field-type", "custom-field-type", attrs);
+            handler.characters("2".toCharArray(), 0, 1);
+            handler.endElement("", "custom-field-type", "custom-field-type");
+            handler.endElement("", "custom-field", "custom-field");
+
+            handler.endElement("", "custom-fields", "custom-fields");
+            handler.endElement("", "configuration", "configuration");
+
+
+            AbstractEntity[] models = handler.getModels();
+            assertNotNull(models);
+
+            assertEquals(CustomField.class, models[0].getClass());
+
+            CustomField field = (CustomField) models[0];
+            assertEquals(Integer.valueOf(1), field.getId());
+            assertEquals(1, field.getOptions().size());
+
+        } catch (SAXException e) {
+            throw e;
+        }
 
     }
 
@@ -176,17 +226,35 @@ public class ImportHandlerIT extends TestCase {
             handler.characters("A".toCharArray(), 0, 1);
             handler.endElement("", "custom-field-type", "custom-field-type");
             fail("should throw SAXException");
-            handler.endElement("", "custom-field", "custom-field");
-
-            handler.endElement("", "custom-fields", "custom-fields");
-            handler.endElement("", "configuration", "configuration");
 
         } catch (SAXException e) {
-            assertEquals("Could not convert string buffer to int value.", e.getMessage());
+            assertEquals("Could not convert string buffer to type value.", e.getMessage());
         } catch (Exception e) {
             fail("should throw SAXException not " + e);
         }
 
+        try {
+            AttributesImpl projectAttrs = new AttributesImpl();
+            projectAttrs.addAttribute("", "", ImportHandler.ATTR_SYSTEMID, "", "1");
+            handler.startElement("", "configuration", "configuration", new AttributesImpl());
+
+            handler.startElement("", "custom-fields", "custom-fields", null);
+
+
+            AttributesImpl attrs = new AttributesImpl();
+            attrs.addAttribute("", "", ImportHandler.ATTR_VALUE, "", "fieldoptionvalue");
+            handler.startElement("", "custom-field", "custom-field", attributes);
+
+            handler.startElement("", "custom-field-type", "custom-field-type", attrs);
+            handler.characters("11".toCharArray(), 0, 2);
+            handler.endElement("", "custom-field-type", "custom-field-type");
+            fail("should throw SAXException");
+
+        } catch (SAXException e) {
+            assertEquals("Could not convert string buffer to type value.", e.getMessage());
+        } catch (Exception e) {
+            fail("should throw SAXException not " + e);
+        }
 
         try {
             handler = new ImportHandler();

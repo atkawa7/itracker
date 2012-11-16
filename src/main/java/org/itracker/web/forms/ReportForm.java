@@ -130,13 +130,6 @@ public class ReportForm extends ValidatorForm {
         this.nameKey = nameKey;
     }
 
-    public Integer getReportType() {
-        return reportType;
-    }
-
-    public void setReportType(Integer reportType) {
-        this.reportType = reportType;
-    }
 
     public Integer getId() {
         return id;

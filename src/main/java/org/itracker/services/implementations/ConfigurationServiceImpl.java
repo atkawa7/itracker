@@ -1055,6 +1055,11 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
         config.setStatuses(statuses);
 
+        List<CustomField> customFields = getCustomFields();
+
+        config.setCustomFields(customFields);
+
+
         // Now set the system version
 
         config.setVersion(getItrackerVersion());

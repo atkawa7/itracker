@@ -31,7 +31,7 @@
   <br>
 </logic:messagesPresent>
 
-<html:form action="/displayreport" target="_blank" onsubmit="return validateDisplayReportForm(this);">
+<html:form action="/displayreport" >
 <html:hidden property="type" value="project"/>
 
 <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
@@ -91,14 +91,12 @@
 %>
         <tr><td colspan="6" class="listRowUnshaded" style="text-align: center;"><it:message key="itracker.web.error.noprojects"/></td></tr>
 <%  } else { %>
-        <tr><td colspan="6"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="12" width="1"/></td></tr>
-        <tr class="listRowUnshaded" align="left" style="vertical-align: top;">
+        <tr>
           <td colspan="6" align="left" style="vertical-align: top;">
-            <html:select property="reportId" styleClass="listRowUnshaded" style="vertical-align: top;">
+            <html:select property="reportId">
               <%
 				    List<Report> reports = new ArrayList<Report>();
-			    	try { 
-			    	
+			    	try {
 			      		reports = rs.getAllReports();
 					} catch (Exception e) {
 						e.printStackTrace(); 
@@ -108,22 +106,23 @@
 	                while (reportsIt.hasNext()) {
 	                	currentReport = reportsIt.next();
 	                    if(currentReport.getNameKey() != null) {
-		              %>
-		                       <html:option value="<%= currentReport.getId().toString() %>" key="<%= currentReport.getNameKey() %>"/>
-		              <% } else { %>
-		                       <html:option value="<%= currentReport.getId().toString() %>"><%= currentReport.getName() %></html:option>
-		              <%
-		                 }
+                      %>
+                               <html:option value="<%= currentReport.getId().toString() %>" key="<%= currentReport.getNameKey() %>"/>
+                      <% } else { %>
+                               <html:option value="<%= currentReport.getId().toString() %>"><%= currentReport.getName() %></html:option>
+                      <%
+                         }
 	                 }
               %>
               <html:option value="<%= Integer.toString(ReportUtilities.REPORT_EXPORT_XML) %>" key="itracker.report.exportxml"/>
             </html:select>
-            <html:select property="reportOutput" styleClass="listRowUnshaded" style="vertical-align: top;">
-                <html:option value="<%= ReportUtilities.REPORT_OUTPUT_HTML %>">HTML</html:option>
+              <html:select property="reportOutput">
                 <html:option value="<%= ReportUtilities.REPORT_OUTPUT_PDF %>">PDF</html:option>
+                <%-- TODO HTMLreports will not show images, should be embedded in downloaded file or zipped
+                <html:option value="<%= ReportUtilities.REPORT_OUTPUT_HTML %>">HTML</html:option>--%>
                 <html:option value="<%= ReportUtilities.REPORT_OUTPUT_XLS %>">Excel</html:option>
                 <html:option value="<%= ReportUtilities.REPORT_OUTPUT_CSV %>">CSV</html:option>
-            </html:select>
+              </html:select>
             <html:submit styleClass="button" altKey="itracker.web.button.run.alt" titleKey="itracker.web.button.run.alt"><it:message key="itracker.web.button.run"/></html:submit>
           </td>
         </tr>

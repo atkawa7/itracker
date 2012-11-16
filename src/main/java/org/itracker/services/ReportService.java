@@ -39,12 +39,5 @@ public interface ReportService {
 
     public ReportDAO getReportDAO();
 
-    /**
-     * @deprecated needs to be moved to static method in a new web-report-utility class
-     */
-    public void outputPDF(List<Issue> reportDataArray, Report reportModel,
-                          Locale userLocale, String reportOutput, HttpSession session,
-                          HttpServletRequest request, HttpServletResponse response,
-                          ActionMapping mapping);
 
 }

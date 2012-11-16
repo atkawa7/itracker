@@ -34,6 +34,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.SearchForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -57,10 +58,10 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
         HttpSession session = request.getSession();
 
         try {
-            ProjectService projectService = getITrackerServices().getProjectService();
+            ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
 
-            ReportService reportService = this.getITrackerServices().getReportService();
-            UserService userService = this.getITrackerServices().getUserService();
+            ReportService reportService = ServletContextUtils.getItrackerServices().getReportService();
+            UserService userService = ServletContextUtils.getItrackerServices().getUserService();
             request.setAttribute("rh", reportService);
             request.setAttribute("uh", userService);
 

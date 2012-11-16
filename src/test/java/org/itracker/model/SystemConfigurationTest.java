@@ -19,6 +19,16 @@ public class SystemConfigurationTest {
         conf.addConfiguration(con);
         assertEquals("Resolutions size 1", 1, conf.getResolutions().size());
         assertEquals("Resolutions type TYPE_RESOLUTION", Configuration.Type.resolution, conf.getResolutions().get(0).getType());
+        assertEquals("Resolutions", con, conf.getResolutions().get(0));
+
+        // fallback support
+        con = new Configuration();
+        con.setType(Configuration.Type.resolution);
+        conf.addConfiguration(con);
+        assertEquals("Resolutions size 2", 2, conf.getResolutions().size());
+        assertEquals("Resolutions type TYPE_RESOLUTION", Configuration.Type.resolution, conf.getResolutions().get(1).getType());
+        assertEquals("Resolutions", con, conf.getResolutions().get(1));
+
     }
 
     @Test

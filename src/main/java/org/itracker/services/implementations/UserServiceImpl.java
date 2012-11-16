@@ -208,8 +208,6 @@ public class UserServiceImpl implements UserService {
             }
             user.setStatus(UserUtilities.STATUS_ACTIVE);
             user.setRegistrationType(user.getRegistrationType());
-//            user.setCreateDate(new Date());
-//            user.setLastModifiedDate(user.getCreateDate());
             userDAO.save(user);
             return user;
         } catch (AuthenticatorException ex) {

@@ -32,6 +32,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ReportForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +51,7 @@ public class EditReportAction extends ItrackerBaseAction {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        ActionMessages errors = new ActionMessages();
+        final ActionMessages errors = new ActionMessages();
 
         if (!isTokenValid(request)) {
             log.debug("Invalid request token while editing report.");
@@ -61,71 +62,56 @@ public class EditReportAction extends ItrackerBaseAction {
         }
         resetToken(request);
 
-        ReportForm reportForm = (ReportForm) form;
+        final ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
+        final ReportService reportService = ServletContextUtils.getItrackerServices().getReportService();
+        final ReportForm reportForm = (ReportForm) form;
         if (reportForm == null)
             return mapping.findForward("listreportsadmin");
 
         HttpSession session = request.getSession(true);
-        Report editreport = null;
+        Report editreport;
         try {
-            boolean errorFound = false;
-            ReportService reportService = getITrackerServices().getReportService();
 
             Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
             if (!UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_USER_ADMIN)) {
                 return mapping.findForward("unauthorized");
             }
 
-            editreport = (Report) session.getAttribute(Constants.REPORT_KEY);
-
-            editreport = new Report();
-            if (reportForm.getId() != -1) {
-                editreport.setId(reportForm.getId());
+            if (null != reportForm.getId() && reportForm.getId() != -1) {
+                // TODO cleanup the service.
+                editreport = reportService.getReportDAO().findByPrimaryKey(reportForm.getId());
+            } else {
+                editreport = new Report();
             }
             editreport.setName(reportForm.getName());
             editreport.setNameKey(reportForm.getNameKey());
             editreport.setDescription(reportForm.getDescription());
-            editreport.setDataType((reportForm.getDataType() != null ? reportForm.getDataType() : ReportUtilities.DATATYPE_ISSUE));
-            editreport.setReportType((reportForm.getReportType() != null ? reportForm.getReportType() : ReportUtilities.REPORTTYPE_JFREE));
-            String fileData = reportForm.getFileData();
+            FormFile fileData = reportForm.getFileDataFile();
             try {
-                if (fileData == null || fileData.length() == 0) {
-                    FormFile file = reportForm.getFileDataFile();
-                    if (file.getFileData() == null ||
-                            file.getFileData().length == 0) {
-                        errorFound = true;
+                if (fileData.getFileData() == null ||
+                        fileData.getFileData().length == 0) {
+                    // should be validated already-
+                    if (null == reportForm.getId()) {
                         errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingdatafile"));
-                    } else {
-                        //editreport.setFileData(file.getFileData());
                     }
                 } else {
-                    //editreport.setFileData(fileData.getBytes());
+                    EditReportFormAction.getAsString(fileData.getFileData(), errors);
+                    editreport.setFileData(fileData.getFileData());
                 }
+
             } catch (Exception e) {
                 log.error("Exception while verifying import data.", e);
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.missingdatafile"));
             }
 
-            editreport.setClassName((reportForm.getClassName() != null ? reportForm.getClassName() : ""));
 
             String action = (String) request.getParameter("action");
-            if (!errorFound) {
-                if ("create".equals(action)) {
-                    editreport = reportService.createReport(editreport);
-                } else if ("update".equals(action)) {
-                    Report existingreport = reportService.getReportDAO().findByPrimaryKey(editreport.getId());
-                    if (existingreport != null) {
-                        reportService.getReportDAO().saveOrUpdate(editreport);
-                    }
-                }
+            if (errors.isEmpty()) {
+                reportService.getReportDAO().saveOrUpdate(editreport);
             }
 
-            if (editreport == null && !errorFound) {
-                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.save"));
-            } else if ("create".equals(action) && editreport != null) {
+            if ("create".equals(action) && editreport != null) {
                 // If it was a create, add a new language key in the base for it.
-                ConfigurationService configurationService = getITrackerServices().getConfigurationService();
-
                 configurationService.updateLanguageItem(new Language(ITrackerResources.BASE_LOCALE, editreport.getNameKey(), editreport.getName()));
                 ITrackerResources.clearKeyFromBundles(editreport.getNameKey(), true);
             }

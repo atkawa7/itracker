@@ -18,6 +18,7 @@
 
 package org.itracker.web.actions.admin.configuration;
 
+import com.sun.xml.internal.ws.api.message.Attachment;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
@@ -26,7 +27,9 @@ import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
+import org.itracker.services.exceptions.ImportExportException;
 import org.itracker.services.exceptions.PasswordException;
+import org.itracker.services.exceptions.ProjectException;
 import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.ImportExportUtilities;
@@ -34,6 +37,8 @@ import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.naming.InitialContext;
 import javax.servlet.ServletException;
@@ -41,6 +46,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -48,62 +54,91 @@ import java.util.List;
 public class ImportDataProcessAction extends ItrackerBaseAction {
     private static final Logger log = Logger.getLogger(ImportDataProcessAction.class);
 
+    private static final class ActionException extends Exception {
+
+    }
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
         try {
-            InitialContext ic = new InitialContext();
 
-            HttpSession session = request.getSession(true);
-            User importer = (User) session.getAttribute(Constants.USER_KEY);
-            if (importer == null) {
+            HttpSession session = request.getSession(false);
+            User importer = LoginUtilities.getCurrentUser(request);
+            if (importer == null || !importer.isSuperUser()) {
                 return mapping.findForward("unauthorized");
             }
 
             ImportDataModel model = (ImportDataModel) session.getAttribute(Constants.IMPORT_DATA_KEY);
-            if (log.isDebugEnabled())
-                log.debug("Importing configuration data.");
-            createConfig(model, importer, ic);
-            if (log.isDebugEnabled())
-                log.debug("Importing user data.");
-            createUsers(model, importer, ic);
-            if (log.isDebugEnabled())
-                log.debug("Importing project data.");
-            createProjects(model, importer, ic);
-            if (log.isDebugEnabled())
-                log.debug("Importing issue data.");
-            createIssues(model, importer, ic);
-            if (log.isDebugEnabled())
-                log.debug("Import complete.");
+            if (null == model) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                        new ActionMessage("itracker.web.error.system.message", "No model in session.", "Request"));
+            }
+            checkErrors(errors);
+            log.debug("Importing configuration data.");
+            createConfig(model, importer, errors);
 
+            checkErrors(errors);
+            log.debug("Importing user data.");
+            createUsers(model, importer, errors);
+
+            checkErrors(errors);
+            log.debug("Importing project data.");
+            createProjects(model, importer, errors);
+
+            checkErrors(errors);
+            log.debug("Importing issue data.");
+            createIssues(model, importer, errors);
+
+            checkErrors(errors);
+            log.debug("Import complete.");
+
+        } catch (ActionException e) {
+            if (errors.isEmpty()) {
+                log.error("failed with empty errors", e);
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system.message", e.getMessage(), "Unexpected"));
+            }
+            return handleErrors(errors, request, mapping);
         } catch (Exception e) {
             log.error("Exception while importing data.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system.message", e.getMessage(), "Unexpected"));
+            return handleErrors(errors, request, mapping);
         }
+
+        errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.importexport.importcomplete"));
+        saveMessages(request, errors);
+        // reset import models
+        request.getSession().removeAttribute(Constants.IMPORT_DATA_KEY);
+        return mapping.findForward("adminindex");
+    }
+
+    private void checkErrors(ActionMessages errors) throws ActionException{
+        if (!errors.isEmpty()) {
+            throw new ActionException();
+        }
+    }
+
+    private ActionForward handleErrors(ActionMessages errors, HttpServletRequest request, ActionMapping mapping) {
 
         if (!errors.isEmpty()) {
             saveErrors(request, errors);
             return mapping.findForward("error");
-        } else {
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.importexport.importcomplete"));
-            saveMessages(request, errors);
         }
+        return null;
 
-        return mapping.findForward("adminindex");
     }
-
-    private boolean createConfig(ImportDataModel model, User importer, InitialContext ic) {
+    private boolean createConfig(ImportDataModel model, User importer, ActionMessages errors) {
         try {
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+            ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
 
             AbstractEntity[] importData = model.getData();
             for (int i = 0; i < importData.length; i++) {
-                if (importData[i] instanceof Configuration && !model.getExistingModel(i)) {
+                if (importData[i] instanceof Configuration && null == model.getExistingModel(i)) {
                     Configuration configItem = (Configuration) importData[i];
                     Configuration newConfigItem = configurationService.createConfigurationItem(configItem);
                     configItem.setId(newConfigItem.getId());
@@ -112,7 +147,7 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
                     String key = SystemConfigurationUtilities.getLanguageKey(configItem);
                     configurationService.updateLanguageItem(new Language(ImportExportUtilities.EXPORT_LOCALE_STRING, key, configItem.getName()));
                     ITrackerResources.clearKeyFromBundles(key, true);
-                } else if (importData[i] instanceof CustomField && !model.getExistingModel(i)) {
+                } else if (importData[i] instanceof CustomField && null == model.getExistingModel(i)) {
                     CustomField customField = (CustomField) importData[i];
                     CustomField newCustomField = configurationService.createCustomField(customField);
                     customField.setId(newCustomField.getId());
@@ -135,91 +170,128 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
             }
             configurationService.resetConfigurationCache();
         } catch (RuntimeException e) {
+            log.error("failed to import", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system.message", e.getMessage()));
             return false;
         }
 
         return true;
     }
 
-    private boolean createUsers(ImportDataModel model, User importer, InitialContext ic) {
+    private boolean createUsers(ImportDataModel model, User importer, ActionMessages errors) {
         try {
-            UserService userService = getITrackerServices().getUserService();
+            UserService userService = ServletContextUtils.getItrackerServices().getUserService();
 
             AbstractEntity[] importData = model.getData();
             for (int i = 0; i < importData.length; i++) {
-                if (importData[i] instanceof User && !model.getExistingModel(i)) {
+                if (importData[i] instanceof User && null == model.getExistingModel(i)) {
                     User user = (User) importData[i];
                     user.setRegistrationType(UserUtilities.REGISTRATION_TYPE_IMPORT);
                     if (model.getCreatePasswords()) {
                         user.setPassword(UserUtilities.encryptPassword(user.getLogin()));
                     }
                     user.setLogin(user.getLogin());
+                    int status = user.getStatus();
                     User newUser = userService.createUser(user);
                     user.setId(newUser.getId());
+                    newUser.setStatus(status);
+                    userService.updateUser(newUser);
                 }
             }
         } catch (RuntimeException e) {
+            log.error("failed to import", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system.message", e.getMessage()));
             return false;
         } catch (PasswordException e) {
+            log.error("failed to import", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system.message", e.getMessage()));
             return false;
         } catch (UserException e) {
+            log.error("failed to import", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system.message", e.getMessage()));
             return false;
         }
 
         return true;
     }
 
-    private boolean createProjects(ImportDataModel model, User importer, InitialContext ic) {
+    private boolean createProjects(ImportDataModel model, User importer, ActionMessages errors) {
         try {
-            ProjectService projectService = getITrackerServices().getProjectService();
+            ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
 
             AbstractEntity[] importData = model.getData();
             for (int i = 0; i < importData.length; i++) {
-                if (importData[i] instanceof Project && !model.getExistingModel(i)) {
-                    Project project = (Project) importData[i];
-                    project = projectService.createProject(project, importer.getId());
-//                    projectService.getProjectDAO().save(project);
+                if (importData[i] instanceof Project && null == model.getExistingModel(i)) {
+                    final Project project = (Project) importData[i];
+
+                    Project importProject = new Project(project.getName());
+                    importProject.setStatus(project.getStatus());
+                    importProject.setDescription(project.getDescription());
+
+                    importProject = projectService.createProject(importProject, importer.getId());
+                    project.setId(importProject.getId());
 
                     HashSet<Integer> setOfOwnerIDs = new HashSet<Integer>();
                     for (int j = 0; j < project.getOwners().size(); j++) {
                         setOfOwnerIDs.add(project.getOwners().get(j).getId());
                     }
-                    projectService.setProjectOwners(project, setOfOwnerIDs);
+                    projectService.setProjectOwners(importProject, setOfOwnerIDs);
 
                     HashSet<Integer> setOfFieldIds = new HashSet<Integer>();
-                    for (int j = 0; j < project.getCustomFields().size(); j++) {
-                        setOfFieldIds.add(project.getCustomFields().get(j).getId());
+                    for (CustomField field: project.getCustomFields()) {
+                        setOfFieldIds.add(field.getId());
                     }
-                    projectService.setProjectFields(project, setOfFieldIds);
+                    projectService.setProjectFields(importProject, setOfFieldIds);
 
                     List<Component> components = project.getComponents();
-                    for (int j = 0; j < components.size(); j++) {
-                        Component newComponent = projectService.addProjectComponent(project.getId(), components.get(j));
-                        components.get(j).setId(newComponent.getId());
+                    for (Component component: components) {
+                        Component newComponent = projectService.addProjectComponent(importProject.getId(), component);
+                        component.setId(newComponent.getId());
                     }
 
                     List<Version> versions = project.getVersions();
-                    for (int j = 0; j < versions.size(); j++) {
-                        Version newVersion = projectService.addProjectVersion(project.getId(), versions.get(j));
-                        versions.get(j).setId(newVersion.getId());
+                    for (Version version:  versions) {
+                        Version newVersion = projectService.addProjectVersion(importProject.getId(), version);
+                        version.setId(newVersion.getId());
                     }
                 }
             }
         } catch (RuntimeException e) {
+            log.error("createProjects: import failed.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system.message", e.getMessage()));
             return false;
         }
 
         return true;
     }
 
-    private boolean createIssues(ImportDataModel model, User importer, InitialContext ic) {
+    private boolean createIssues(ImportDataModel model, User importer, ActionMessages errors) {
         try {
-            IssueService issueService = getITrackerServices().getIssueService();
+            IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
 
             AbstractEntity[] importData = model.getData();
             for (int i = 0; i < importData.length; i++) {
-                if (importData[i] instanceof Issue && !model.getExistingModel(i)) {
+                if (importData[i] instanceof Issue && null == model.getExistingModel(i)) {
+
                     Issue issue = (Issue) importData[i];
+                    if (issue.getProject().getStatus() != Status.ACTIVE) {
+                        log.warn("createIssues: could not create issue for NON-Active project: " + issue);
+                        continue;
+                    }
+
+                    final List<IssueHistory> history = issue.getHistory();
+                    issue.setHistory(new ArrayList<IssueHistory>());
+
+                    List<Component> componentsList = issue.getComponents();
+                    issue.setComponents(new ArrayList<Component>());
+
+                    List<Version> versionsList = issue.getVersions();
+                    issue.setVersions(new ArrayList<Version>());
+
+                    List<IssueAttachment> attachments = issue.getAttachments();
+                    issue.setAttachments(new ArrayList<IssueAttachment>());
+
+
                     Issue newIssue = issueService.createIssue(issue,
                             issue.getProject().getId(), issue.getCreator().getId(), importer.getId());
                     issue.setId(newIssue.getId());
@@ -230,65 +302,57 @@ public class ImportDataProcessAction extends ItrackerBaseAction {
                     }
 
                     // Now set Issue Custom Fields
+                    // TODO:?
                     List<IssueField> fields = issue.getFields();
-                    if (fields.size() > 0) {
-                        for (int j = 0; j < fields.size(); j++) {
-                            fields.get(j).setIssue(issue);
+                    if (!fields.isEmpty()) {
+                        for (IssueField f : fields) {
+                            f.setIssue(issue);
                         }
                         issueService.setIssueFields(issue.getId(), issue.getFields());
                     }
 
-                    // Now add all the issue history
-                    List<IssueHistory> history = issue.getHistory();
-                    if (history.size() > 0) {
-                        for (int j = 0; j < history.size(); j++) {
-                            history.get(j).setIssue(issue);
 
-                            issueService.updateIssue(issue, importer.getId());
-                        }
+                    // Now add all the issue history
+                    for (IssueHistory h: history) {
+                        h.setIssue(newIssue);
+                        issueService.addIssueHistory(h);
+                     // needed?   issueService.updateIssue(newIssue, importer.getId());
                     }
+
 
                     // Now add components and versions
                     HashSet<Integer> components = new HashSet<Integer>();
-                    List<Component> componentsList = issue.getComponents();
-                    if (componentsList.size() > 0) {
-                        for (int j = 0; j < componentsList.size(); j++) {
-                            components.add(componentsList.get(j).getId());
-                        }
-                        issueService.setIssueComponents(issue.getId(), components, importer.getId());
+                    for (Component c: componentsList) {
+                        components.add(c.getId());
                     }
-                    HashSet<Integer> versions = new HashSet<Integer>();
-                    List<Version> versionsList = issue.getVersions();
-                    if (versionsList.size() > 0) {
-                        for (int j = 0; j < versionsList.size(); j++) {
-                            versions.add(versionsList.get(j).getId());
-                        }
-                        issueService.setIssueVersions(issue.getId(), versions, importer.getId());
+                    if (!components.isEmpty()) {
+                        issueService.setIssueComponents(newIssue.getId(), components, importer.getId());
                     }
 
+                    HashSet<Integer> versions = new HashSet<Integer>();
+                    for (Version v: versionsList) {
+                        versions.add(v.getId());
+                    }
+                    if (!versions.isEmpty()) {
+                        issueService.setIssueVersions(newIssue.getId(), versions, importer.getId());
+                    }
+
+
                     // Now add any attachments
-                    List<IssueAttachment> attachments = issue.getAttachments();
-                    if (attachments.size() > 0) {
-                        for (int j = 0; j < history.size(); j++) {
-                            attachments.get(j).setIssue(issue);
-                            issueService.addIssueAttachment(attachments.get(j), null);
-                        }
+                    for (IssueAttachment a : attachments) {
+                        a.setIssue(newIssue);
+                        issueService.addIssueAttachment(a, null);
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (ProjectException e) {
+            log.error("createIssues: import failed.", e);
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system.message", e.getMessage()));
             return false;
         }
 
         return true;
     }
-
-    // TODO: it looks like the following method is not used; commented and task added
-    // private void printArray(AbstractBean[] models) {
-    //    for(int i = 0; i < models.length; i++) {
-    //       logger.debug(i + ") " + models[i].toString());
-    //  }
-    // }
 
 }
   

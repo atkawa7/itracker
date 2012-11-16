@@ -18,7 +18,7 @@
 
 package org.itracker.services.exceptions;
 
-public class ReportException extends RuntimeException {
+public class ReportException extends Exception {
     /**
      *
      */

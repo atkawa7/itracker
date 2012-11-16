@@ -39,6 +39,10 @@ public interface ImportExportTags {
     public static final String ATTR_NAME = "name";
     public static final String ATTR_ORDER = "order";
     public static final String ATTR_STATUS = "status";
+    /**
+     * TODO
+     * @deprecated must use speaking ids, systemid will be generated instead
+     */
     public static final String ATTR_SYSTEMID = "systemid";
     public static final String ATTR_VALUE = "value";
 

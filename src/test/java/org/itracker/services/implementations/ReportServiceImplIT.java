@@ -34,12 +34,9 @@ public class ReportServiceImplIT extends AbstractDependencyInjectionTest {
             assertEquals("reports size ", 1, reports.size());
             Report report = reports.get(0);
             assertEquals("id", 1000, report.getId().intValue());
-            assertEquals("name", "DailayReport Report", report.getName());
+            assertEquals("name", "DailyReport Report", report.getName());
             assertEquals("nameKey", "0001", report.getNameKey());
             assertEquals("description", "This is a daily report", report.getDescription());
-            assertEquals("dataType", 1, report.getDataType());
-            assertEquals("reportType", 2, report.getReportType());
-            assertEquals("className", "org.itracker.model.Report", report.getClassName());
             DateFormat format = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
             try {
                 assertEquals("createDate", format.parse("2004-01-01 13:00:00"), report.getCreateDate());
@@ -79,9 +76,8 @@ public class ReportServiceImplIT extends AbstractDependencyInjectionTest {
         report.setName("weekly report");
         report.setNameKey("0002");
         report.setDescription("This is a weekly report");
-        report.setDataType(1);
-        report.setReportType(2);
         report.setClassName("xxx.xxx.Weekly");
+        report.setFileData(new byte[]{1,2,3});
         Report result = reportService.createReport(report);
         Report reportFind = reportDAO.findByPrimaryKey(result.getId());
         assertNotNull(reportFind);
@@ -93,6 +89,9 @@ public class ReportServiceImplIT extends AbstractDependencyInjectionTest {
         Report result1 = reportService.createReport(report);
         reportFind = reportDAO.findByPrimaryKey(result1.getId());
         assertEquals("name", "monthly report", reportFind.getName());
+        for (int b : new byte[]{1,2,3}) {
+            assertEquals("fileData byte " + b, b, reportFind.getFileData()[b-1]);
+        }
 
         //test null
         try {

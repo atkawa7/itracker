@@ -41,7 +41,7 @@ public class ProjectUtilities {
      * The Map implementation is synchronized because it can be accessed
      * by multiple threads that will alter it in case of cache miss.
      */
-    private static Map<Locale, Map<Status, String>> statusNames =
+    private static final Map<Locale, Map<Status, String>> statusNames =
             new Hashtable<Locale, Map<Status, String>>();
 
     /**
@@ -106,7 +106,7 @@ public class ProjectUtilities {
             statusNames.put(locale, Collections.unmodifiableMap(statuses));
 
         }
-        return statuses;
+        return Collections.unmodifiableMap(statusNames.get(locale));
 
     }
 

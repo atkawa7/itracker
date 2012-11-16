@@ -81,7 +81,7 @@
 					<strong>site_logo</strong>
 					Set this if you wish to use an alternate image logo in the header
 					of all
-					pages. It must be a resolvable url. (type : String)
+					pages. It must be a resolvable absolute path to the context-root. (type : String)
 					<br />
 					<em>default: shows no logo (null)</em>
 				</li>
@@ -220,6 +220,14 @@
 					<br />
                     <em>it is recommended to use a mail-session instead, only use this for fallback support. </em>
 				</li>
+
+                <li>
+                    <strong>pdf.export.fonts</strong>
+                    Fonts which will be included in exported PDFs, they are used from Jasper reports.
+                    your application server
+                    <br />
+                    <em>Fonts are looked up in classpath: /fonts/#name#.ttf </em>
+                </li>
 
 			</ul>
 		</section>

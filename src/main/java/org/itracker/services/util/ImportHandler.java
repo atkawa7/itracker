@@ -111,7 +111,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                 childModel = new IssueHistory();
                 ((IssueHistory) childModel).setUser((User) findModel(creatorId));
                 ((IssueHistory) childModel).setStatus(status != null && !status.equals("") ? Integer.parseInt(status) : IssueUtilities.HISTORY_STATUS_AVAILABLE);
-                ((IssueHistory) childModel).setCreateDate(getDateValue(date, qName));
+                childModel.setCreateDate(getDateValue(date, qName));
                 tagBuffer = new StringBuffer();
             } else if (TAG_ISSUE.equals(qName)) {
                 String id = atts.getValue(ATTR_SYSTEMID);
@@ -247,7 +247,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if (TAG_CONFIGURATION_VERSION.equals(qName)) {
                 ((SystemConfiguration) parentModel).setVersion(getBuffer());
             } else if (TAG_CREATE_DATE.equals(qName)) {
-                ((Issue) parentModel).setCreateDate(getDateValue(getBuffer(), qName));
+                parentModel.setCreateDate(getDateValue(getBuffer(), qName));
             } else if (TAG_CREATOR.equals(qName)) {
                 ((Issue) parentModel).setCreator((User) findModel(getBuffer()));
             } else if (TAG_CUSTOM_FIELDS.equals(qName)) {
@@ -268,7 +268,18 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if (TAG_CUSTOM_FIELD_SORTOPTIONS.equals(qName)) {
                 ((CustomField) childModel).setSortOptionsByName(("true".equalsIgnoreCase(getBuffer()) ? true : false));
             } else if (TAG_CUSTOM_FIELD_TYPE.equals(qName)) {
-                ((CustomField) childModel).setFieldType(CustomField.Type.valueOf(getBufferAsInt()));
+                final String s = getBuffer();
+                try {
+                    // fallback for old export type as int-code
+                    int i = Integer.valueOf(s);
+                    ((CustomField) childModel).setFieldType(CustomField.Type.valueOf(i));
+                } catch (RuntimeException e) {
+                    try {
+                        ((CustomField) childModel).setFieldType(CustomField.Type.valueOf(s));
+                    } catch (RuntimeException re) {
+                        throw new SAXException("Could not convert string buffer to type value.");
+                    }
+                }
             } else if (TAG_EMAIL.equals(qName)) {
                 ((User) parentModel).setEmail(getBuffer());
             } else if (TAG_FIRST_NAME.equals(qName)) {
@@ -326,7 +337,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                 }
                 ((Issue) parentModel).setVersions(itemListArray);
             } else if (TAG_LAST_MODIFIED.equals(qName)) {
-                ((Issue) parentModel).setLastModifiedDate(getDateValue(getBuffer(), qName));
+                parentModel.setLastModifiedDate(getDateValue(getBuffer(), qName));
             } else if (TAG_LAST_NAME.equals(qName)) {
                 ((User) parentModel).setLastName(getBuffer());
             } else if (TAG_LOGIN.equals(qName)) {
@@ -356,20 +367,12 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if (TAG_PROJECT_OWNER_ID.equals(qName)) {
                 itemList.add((User) findModel(getBuffer()));
             } else if (TAG_PROJECT_STATUS.equals(qName)) {
-                // By default lock the project
-                ((Project) parentModel).setStatus(Status.LOCKED);
-
-                // PENDING: In the XML export, we don't use the status code, 
-                // but the localized name => non-portable export format!!! 
-                String currBuffer = getBuffer();
-                Map<Status, String> projectStatuses = ProjectUtilities.getStatusNames(EXPORT_LOCALE);
-                for (Iterator<Status> iter = projectStatuses.keySet().iterator(); iter.hasNext(); ) {
-                    Status key = iter.next();
-                    String keyValue = (String) projectStatuses.get(key);
-                    if (keyValue != null && keyValue.equalsIgnoreCase(currBuffer)) {
-                        ((Project) parentModel).setStatus(key);
-                        break;
-                    }
+                // By default activate the project
+                ((Project) parentModel).setStatus(Status.ACTIVE);
+                try {
+                    ((Project) parentModel).setStatus(Status.valueOf(getBuffer().toUpperCase()));
+                } catch (RuntimeException re) {
+                    // ok, it is active.
                 }
             } else if (TAG_SUPER_USER.equals(qName)) {
                 ((User) parentModel).setSuperUser(("true".equalsIgnoreCase(getBuffer()) ? true : false));
@@ -378,16 +381,20 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if (TAG_USER_STATUS.equals(qName)) {
                 // By default lock the user
                 ((User) parentModel).setStatus(UserUtilities.STATUS_LOCKED);
-
+                // TODO: Make status Enum
                 String currBuffer = getBuffer();
-                HashMap<String, String> userStatuses = UserUtilities.getStatusNames(EXPORT_LOCALE);
-                for (Iterator<String> iter = userStatuses.keySet().iterator(); iter.hasNext(); ) {
-                    String key = (String) iter.next();
-                    String keyValue = (String) userStatuses.get(key);
-                    if (keyValue != null && keyValue.equalsIgnoreCase(currBuffer)) {
-                        ((User) parentModel).setStatus(Integer.parseInt(key));
-                        break;
-                    }
+                try {
+                    ((User)parentModel).setStatus(Integer.parseInt(currBuffer));
+                } catch (RuntimeException re) {
+                    HashMap<String, String> userStatuses = UserUtilities.getStatusNames(EXPORT_LOCALE);
+                   for (Iterator<String> iter = userStatuses.keySet().iterator(); iter.hasNext(); ) {
+                       String key = (String) iter.next();
+                       String keyValue = (String) userStatuses.get(key);
+                       if (keyValue != null && keyValue.equalsIgnoreCase(currBuffer)) {
+                           ((User) parentModel).setStatus(Integer.parseInt(key));
+                           break;
+                       }
+                   }
                 }
             } else if (TAG_VERSIONS.equals(qName)) {
                 List<Version> itemListArray = new ArrayList<Version>();

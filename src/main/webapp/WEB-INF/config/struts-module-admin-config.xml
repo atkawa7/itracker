@@ -38,7 +38,8 @@
 
     <!-- ==================================== Global Forwards    -->
     <global-forwards>
-        <forward name="edittask" module="/module-admin" path="/edittaskform.do"/>
+        <!-- TODO -->
+        <!--forward name="edittask" module="/module-admin" path="/edittaskform.do"/-->
         <forward name="editproject" module="/module-admin" path="/editprojectform.do"/>
         <forward name="editcustomfield" module="/module-admin" path="/editcustomfieldform.do"/>
         <forward name="editcustomfieldvalue" module="/module-admin" path="/editcustomfieldvalueform.do"/>
@@ -57,8 +58,10 @@
         <forward name="logoff" path="/logoff.do" module="/"/>
         <forward name="listtasks" module="/module-admin" path="/listtasks.do"/>
         <forward name="index" path="/portalhome.do" module="/"/>
+        <forward name="adminindex" redirect="true" path="/adminhome.do" module="/module-admin"/>
         <forward name="edituser" module="/module-admin" path="/edituserform.do"/>
         <forward name="listusers" module="/module-admin" path="/listusers.do"/>
+        <forward name="displayreport" module="/module-reports" path="/displayreport.do" />
         <forward name="downloadreport" module="/module-admin" path="/servlets/ReportDownloadController"/>
     </global-forwards>
 
@@ -127,7 +130,7 @@
         <action path="/exportattachments"
                 type="org.itracker.web.actions.admin.attachment.ExportAttachmentsAction"
                 name="adminActionForm" scope="request"
-                input="/admin_attachment/list_attachments.jsp"></action>
+                input="/admin_attachment/list_attachments.jsp" />
         <action path="/editcomponent"
                 type="org.itracker.web.actions.admin.project.EditComponentAction"
                 name="componentForm" scope="request" input="/admin_project/edit_component.jsp"
@@ -154,28 +157,28 @@
         <action path="/editcustomfield"
                 type="org.itracker.web.actions.admin.configuration.EditCustomFieldAction"
                 name="customFieldForm" scope="request"
-                input="/admin_configuration/edit_customfield.jsp" validate="true"></action>
+                input="/admin_configuration/edit_customfield.jsp" validate="true" />
         <action path="/editcustomfieldform"
                 type="org.itracker.web.actions.admin.configuration.EditCustomFieldFormAction"
                 name="customFieldForm" scope="request"
-                input="/admin_configuration/edit_customfield.jsp" validate="false"></action>
+                input="/admin_configuration/edit_customfield.jsp" validate="false" />
         <!-- TODO validations (Base Locale, Value) -->
         <action path="/editcustomfieldvalue"
                 type="org.itracker.web.actions.admin.configuration.EditCustomFieldValueAction"
                 name="customFieldValueForm" scope="request" validate="false"
-                input="/admin_configuration/edit_customfieldvalue.jsp"></action>
+                input="/admin_configuration/edit_customfieldvalue.jsp" />
         <action path="/editcustomfieldvalueform"
                 type="org.itracker.web.actions.admin.configuration.EditCustomFieldValueFormAction"
                 name="customFieldValueForm" scope="request"
-                input="/admin_configuration/edit_customfieldvalue.jsp" validate="false"></action>
+                input="/admin_configuration/edit_customfieldvalue.jsp" validate="false" />
         <action path="/editlanguage"
                 type="org.itracker.web.actions.admin.language.EditLanguageAction"
                 name="languageForm" scope="request" input="/admin_language/edit_language.jsp"
-                validate="true"></action>
+                validate="true" />
         <action path="/editlanguageform"
                 type="org.itracker.web.actions.admin.language.EditLanguageFormAction"
                 name="languageForm" scope="request"
-                input="/admin_language/edit_language.jsp" validate="false"></action>
+                input="/admin_language/edit_language.jsp" validate="false" />
         <action path="/editproject" type="org.itracker.web.actions.admin.project.EditProjectAction"
                 name="projectForm" scope="request" input="/admin_project/edit_project.jsp"
                 validate="true">
@@ -199,20 +202,21 @@
         </action>
         <action path="/removeprojectscript"
                 type="org.itracker.web.actions.admin.project.RemoveProjectScriptAction"
-                name="projectScriptForm" scope="request" validate="false"></action>
+                name="projectScriptForm" scope="request" validate="false" />
         <action path="/editreport" type="org.itracker.web.actions.admin.report.EditReportAction"
-                name="reportForm" scope="request" input="/admin_report/edit_report.jsp"></action>
+                name="reportForm" scope="request" input="/admin_report/edit_report.jsp" />
         <action path="/editreportform"
                 type="org.itracker.web.actions.admin.report.EditReportFormAction"
                 name="reportForm" scope="request" input="/admin_report/edit_report.jsp"
-                validate="false"></action>
-        <action path="/edittask" type="org.itracker.web.actions.admin.scheduler.EditTaskAction"
+                validate="false" />
+        <!-- TODO tasks
+        action path="/edittask" type="org.itracker.web.actions.admin.scheduler.EditTaskAction"
                 name="taskForm" scope="request" input="/admin_scheduler/edit_task.jsp"></action>
         <action path="/edittaskform"
                 type="org.itracker.web.actions.admin.scheduler.EditTaskFormAction"
-                name="taskForm" scope="request" input="/admin_scheduler/edit_task.jsp"></action>
+                name="taskForm" scope="request" input="/admin_scheduler/edit_task.jsp"></action-->
         <action path="/edituser" type="org.itracker.web.actions.admin.user.EditUserAction"
-                name="userForm" scope="request" input="/admin_user/edit_user.jsp"></action>
+                name="userForm" scope="request" input="/admin_user/edit_user.jsp" />
         <action path="/edituserform" type="org.itracker.web.actions.admin.user.EditUserFormAction"
                 name="userForm" scope="request" input="/admin_user/edit_user.jsp" validate="false">
             <forward name="edituserform" path="/admin_user/edit_user.jsp" module="/module-admin"/>
@@ -232,7 +236,7 @@
         <action path="/editworkflowscript"
                 type="org.itracker.web.actions.admin.workflow.EditWorkflowScriptAction"
                 name="workflowScriptForm" scope="request"
-                input="/admin_workflow/edit_workflowscript.jsp" validate="true"></action>
+                input="/admin_workflow/edit_workflowscript.jsp" validate="true" />
         <action path="/editworkflowscriptform"
                 type="org.itracker.web.actions.admin.workflow.EditWorkflowScriptFormAction"
                 name="workflowScriptForm" scope="request"
@@ -242,7 +246,7 @@
         </action>
         <action path="/removeworkflowscript"
                 type="org.itracker.web.actions.admin.workflow.RemoveWorkflowScriptAction"
-                name="workflowScriptForm" scope="request" validate="false"></action>
+                name="workflowScriptForm" scope="request" validate="false" />
         <!--
                 <action path="/exportattachments"
                         type="org.itracker.web.actions.admin.attachment.ExportAttachmentsAction"
@@ -252,48 +256,48 @@
         <action path="/exportlanguage"
                 type="org.itracker.web.actions.admin.language.ExportLanguageAction"
                 name="languageForm" scope="request" input="/admin_language/list_languages.jsp"
-                validate="true"></action>
+                validate="true" />
         <action path="/exportreport" type="org.itracker.web.actions.admin.report.ExportReportAction"
                 name="adminActionForm" scope="request"
-                input="/admin_report/list_reports.jsp"></action>
+                input="/admin_report/list_reports.jsp" />
         <action path="/initializelanguages"
                 type="org.itracker.web.actions.admin.language.InitializeLanguagesAction"
-                name="languageForm" scope="request" input="/adminhome.jsp" validate="true"></action>
+                name="languageForm" scope="request" input="/adminhome.jsp" validate="true" />
         <action path="/lockuser" type="org.itracker.web.actions.admin.user.LockUserAction"
-                name="adminActionForm" scope="request" input="/admin_user/list_users.jsp"></action>
+                name="adminActionForm" scope="request" input="/admin_user/list_users.jsp" />
         <action path="/orderconfiguration"
                 type="org.itracker.web.actions.admin.configuration.OrderConfigurationItemAction"
                 name="configurationForm" scope="request"
-                input="/admin_configuration/list_configuration.jsp"></action>
+                input="/admin_configuration/list_configuration.jsp" />
         <action path="/ordercustomfieldvalue" validate="false"
                 type="org.itracker.web.actions.admin.configuration.OrderCustomFieldValueAction"
                 name="customFieldForm" scope="request"
-                input="/admin_configuration/edit_customfield.jsp"></action>
+                input="/admin_configuration/edit_customfield.jsp" />
         <action path="/removeattachment"
                 type="org.itracker.web.actions.project.RemoveIssueAttachmentAction"
                 name="adminActionForm" scope="request"
-                input="/admin_attachment/list_attachments.jsp" validate="true"></action>
+                input="/admin_attachment/list_attachments.jsp" validate="true" />
         <action path="/removeconfiguration"
                 type="org.itracker.web.actions.admin.configuration.RemoveConfigurationItemAction"
                 name="configurationForm" scope="request"
-                input="/admin_configuration/list_configuration.jsp" validate="true"></action>
+                input="/admin_configuration/list_configuration.jsp" validate="true" />
         <action path="/removecustomfield"
                 type="org.itracker.web.actions.admin.configuration.RemoveCustomFieldAction"
                 name="customFieldForm" scope="request"
-                input="/admin_configuration/list_configuration.jsp" validate="false"></action>
+                input="/admin_configuration/list_configuration.jsp" validate="false" />
         <action path="/removecustomfieldvalue"
                 type="org.itracker.web.actions.admin.configuration.RemoveCustomFieldValueAction"
                 name="customFieldValueForm" scope="request"
-                input="/admin_configuration/edit_customfield.jsp"></action>
+                input="/admin_configuration/edit_customfield.jsp" />
         <action path="/removereport" type="org.itracker.web.actions.admin.report.RemoveReportAction"
                 name="adminActionForm" scope="request" input="/admin_report/list_reports.jsp"
-                validate="true"></action>
-        <action path="/removetask" type="org.itracker.web.actions.admin.scheduler.RemoveTaskAction"
+                validate="true" />
+        <!--action path="/removetask" type="org.itracker.web.actions.admin.scheduler.RemoveTaskAction"
                 name="adminActionForm" scope="request" input="/admin_scheduler/list_tasks.jsp"
-                validate="true"></action>
+                validate="true" /-->
         <action path="/unlockuser" type="org.itracker.web.actions.admin.user.UnlockUserAction"
                 name="adminActionForm" scope="request" input="/admin_user/list_users.jsp"
-                validate="true"></action>
+                validate="true" />
         <action path="/importdata"
                 type="org.itracker.web.actions.admin.configuration.ImportDataFormAction"
                 name="importForm" scope="request" input="/admin_configuration/import_data.jsp"
@@ -308,7 +312,7 @@
         <action path="/importdataprocess"
                 type="org.itracker.web.actions.admin.configuration.ImportDataProcessAction"
                 name="adminActionForm" scope="request"
-                input="/admin_configuration/import_data_verify.jsp" validate="false"></action>
+                input="/admin_configuration/import_data_verify.jsp" validate="false" />
         <action path="/admin_users_list" type="org.itracker.web.actions.admin.user.ListUsersAction">
             <forward name="listusers" path="/admin_user/list_users.jsp"/>
         </action>

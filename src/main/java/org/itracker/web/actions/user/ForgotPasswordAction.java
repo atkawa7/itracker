@@ -61,7 +61,11 @@ public class ForgotPasswordAction extends ItrackerBaseAction {
                     if (user == null) {
                         throw new PasswordException(PasswordException.UNKNOWN_USER);
                     }
-                    locale = ITrackerResources.getLocale(user.getPreferences().getUserLocale());
+                    try {
+                        locale = ITrackerResources.getLocale(user.getPreferences().getUserLocale());
+                    } catch (RuntimeException e) {
+                        locale = ITrackerResources.getLocale();
+                    }
 
                     if (user.getLastName() == null || !user.getLastName().equalsIgnoreCase(lastName)) {
                         throw new PasswordException(PasswordException.INVALID_NAME);

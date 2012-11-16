@@ -6,12 +6,13 @@
 
 <% // TODO : move redirect logic to the Action class. 
     Report report = (Report) session.getAttribute(Constants.REPORT_KEY);
+
+    boolean isUpdate = false;
     if(report == null) {
 %>
       <logic:forward name="unauthorized"/>
 <%
     } else {
-      boolean isUpdate = false;
       if(report.getId().intValue() > 0) {
           isUpdate = true;
       }
@@ -21,17 +22,15 @@
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
       <logic:messagesPresent>
-        <center>
-          <span class="formError">
+          <div class="formError">
            <html:messages id="error">
               <bean:write name="error"/><br/>
            </html:messages>
-          </span>
-        </center>
+          </div>
         <br>
       </logic:messagesPresent>
 
-      <html:form action="/editreport" enctype="multipart/form-data">
+      <html:form action="/editreport" enctype="multipart/form-data" acceptCharset="utf-8">
         <html:hidden property="action"/>
         <html:hidden property="id"/>
 
@@ -55,40 +54,24 @@
 
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td></tr>
           <tr>
-            <td class="editColumnTitle"><it:message key="itracker.web.attr.reporttype"/>:</td>
-            <td>
-              <html:select property="reportType" styleClass="editColumnText">
-                <html:option value="<%= Integer.toString(ReportUtilities.REPORTTYPE_JFREE) %>" styleClass="editColumnText">JFreeReport</html:option>
-                <html:option value="<%= Integer.toString(ReportUtilities.REPORTTYPE_JASPER) %>" styleClass="editColumnText">JasperReport</html:option>
-              </html:select>
-            </td>
-            <td class="editColumnTitle"><it:message key="itracker.web.attr.class"/>:</td>
-            <td><html:text property="className" styleClass="editColumnText" size="50"/></td>
-          </tr>
-          <tr>
-            <td class="editColumnTitle"><it:message key="itracker.web.attr.datatype"/>:</td>
-            <td>
-              <html:select property="dataType" styleClass="editColumnText">
-                <html:option value="<%= Integer.toString(ReportUtilities.DATATYPE_ISSUE) %>" styleClass="editColumnText"><it:message key="itracker.web.attr.issues"/></html:option>
-                <html:option value="<%= Integer.toString(ReportUtilities.DATATYPE_PROJECT) %>" styleClass="editColumnText"><it:message key="itracker.web.attr.projects"/></html:option>
-              </html:select>
-            </td>
-          </tr>
-
-          <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td></tr>
-          <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.reportdefinition"/>:</td>
             <td colspan="3" classs="editColumnText"><html:file property="fileDataFile" styleClass="editColumnText"/></td>
           </tr>
 
+        <c:set var="fileData" value="${reportForm.fileData}" />
+        <logic:notEmpty name="fileData">
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td></tr>
           <tr>
             <td class="editColumnTitle"><it:message key="itracker.web.attr.reportcontent"/>:</td>
             <td colspan="3"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td>
             <tr>
-            <td colspan="4" classs="editColumnText"><html:textarea onchange="setFileInfo();" cols="120" rows="10" property="fileData" styleClass="editColumnText"/></td>
+            <td colspan="4" classs="editColumnText">
+
+               <pre style="width: 80em; height: 40em; overflow: scroll;"><c:out value="${fileData}" escapeXml="true" /></pre>
+                <%--html:textarea readonly="${true}" cols="120" rows="10" property="fileData" styleClass="editColumnText"/--%></td>
           </tr>
 
+        </logic:notEmpty>
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td></tr>
           <% if(isUpdate) { %>
             <tr><td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.update.alt" titleKey="itracker.web.button.update.alt"><it:message key="itracker.web.button.update"/></html:submit></td></tr>

@@ -102,32 +102,18 @@ public class SystemConfiguration extends AbstractEntity {
 
     public void addConfiguration(Configuration configuration) {
         if (configuration != null) {
-            Configuration[] newArray;
-
-            if (configuration.getType() == Configuration.Type.resolution) {
-                newArray = new Configuration[getResolutions().size() + 1];
-                if (getResolutions().size() > 0) {
-                    System.arraycopy(resolutions, 0,
-                            newArray, 0, resolutions.size());
-                }
-                newArray[getResolutions().size()] = configuration;
-                setResolutions(Arrays.asList(newArray));
-            } else if (configuration.getType() == Configuration.Type.severity) {
-                newArray = new Configuration[getSeverities().size() + 1];
-                if (getSeverities().size() > 0) {
-                    System.arraycopy(severities, 0, newArray,
-                            0, severities.size());
-                }
-                newArray[getSeverities().size()] = configuration;
-                setSeverities(Arrays.asList(newArray));
-            } else if (configuration.getType() == Configuration.Type.status) {
-                newArray = new Configuration[getStatuses().size() + 1];
-                if (getStatuses().size() > 0) {
-                    System.arraycopy(statuses, 0, newArray,
-                            0, statuses.size());
-                }
-                newArray[getStatuses().size()] = configuration;
-                setStatuses(Arrays.asList(newArray));
+            switch (configuration.getType()) {
+                case resolution:
+                    resolutions.add(configuration);
+                    break;
+                case severity:
+                    severities.add(configuration);
+                    break;
+                case status:
+                    statuses.add(configuration);
+                    break;
+                default:
+                    return;
             }
         }
     }

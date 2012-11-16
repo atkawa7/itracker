@@ -59,17 +59,15 @@ User um = RequestHelper.getCurrentUser(session);
       <html:javascript formName="searchForm"/>
 
       <logic:messagesPresent>
-        <center>
-          <span class="formError">
+          <div class="formError">
            <html:messages id="error">
               <bean:write name="error"/><br/>
            </html:messages>
-          </span>
-        </center>
+          </div>
         <br>
       </logic:messagesPresent>
 
-        <html:form action="/searchissues" onsubmit="return validateSearchForm(this);">
+        <html:form action="/searchissues">
         <% if(query.getType().equals(IssueSearchQuery.TYPE_PROJECT)) { %>
             <input type="hidden" name="type" value="<%= IssueSearchQuery.TYPE_PROJECT %>">
             <input type="hidden" name="projects" value="<%= query.getProjectId() %>">
@@ -167,7 +165,7 @@ User um = RequestHelper.getCurrentUser(session);
                 <tr>
                   <td valign="top" class="editColumnTitle"><it:message key="itracker.web.attr.contributor"/>: </td>
                   <td valign="top" class="editColumnText">
-                    <html:select property="contributor" styleClass="editColumnText">
+                    <html:select property="creator" styleClass="editColumnText">
                       <html:option value="-1" key="itracker.web.generic.any"/>
                       <% for(int j = 0; j < possibleContributors.size(); j++) { %>
                            <html:option value="<%= possibleContributors.get(j).getId().toString() %>"><%= possibleContributors.get(j).getFirstName() + " " + possibleContributors.get(j).getLastName() %></html:option>
@@ -322,12 +320,14 @@ User um = RequestHelper.getCurrentUser(session);
                       %>
                       <html:option value="<%= Integer.toString(ReportUtilities.REPORT_EXPORT_XML) %>" key="itracker.report.exportxml"/>
                     </html:select>
-                    <html:select property="reportOutput" styleClass="listRowUnshaded" style="vertical-align: top;">
-                      <html:option value="<%= ReportUtilities.REPORT_OUTPUT_HTML %>">HTML</html:option>
-                      <html:option value="<%= ReportUtilities.REPORT_OUTPUT_PDF %>">PDF</html:option>
-                      <html:option value="<%= ReportUtilities.REPORT_OUTPUT_XLS %>">Excel</html:option>
-                      <html:option value="<%= ReportUtilities.REPORT_OUTPUT_CSV %>">CSV</html:option>
-                    </html:select>
+
+                      <html:select property="reportOutput">
+                        <html:option value="<%= ReportUtilities.REPORT_OUTPUT_PDF %>">PDF</html:option>
+                        <%-- TODO HTMLreports will not show images, should be embedded in downloaded file or zipped
+                        <html:option value="<%= ReportUtilities.REPORT_OUTPUT_HTML %>">HTML</html:option>--%>
+                        <html:option value="<%= ReportUtilities.REPORT_OUTPUT_XLS %>">Excel</html:option>
+                        <html:option value="<%= ReportUtilities.REPORT_OUTPUT_CSV %>">CSV</html:option>
+                      </html:select>
                     <html:submit styleClass="button" altKey="itracker.web.button.run.alt" titleKey="itracker.web.button.run.alt"><it:message key="itracker.web.button.run"/></html:submit>
                   </td>
                 </tr>
