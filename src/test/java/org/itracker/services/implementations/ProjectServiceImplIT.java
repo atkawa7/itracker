@@ -98,7 +98,7 @@ public class ProjectServiceImplIT extends AbstractDependencyInjectionTest {
                 .getComponents().size());
 
 
-        assertFalse("date created", project.getCreateDate().after(then));
+        assertTrue("date created", project.getCreateDate().compareTo(then) >= 0);
 
         // refresh saved component
         Component savedComponent = projectService.getProjectComponent(component
