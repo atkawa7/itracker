@@ -156,6 +156,7 @@ public class ViewIssueAction extends ItrackerBaseAction {
 						.getOptions()));
 		request.setAttribute("histories", histories);
 		request.setAttribute("project", project);
+        request.setAttribute("rssFeed", "/servlets/issues/p" + project.getId() + "/i" + issue.getId());
 		request.setAttribute("hasIssueNotification", !notificationService.hasIssueNotification(
 				issue, currUserId));
 		request.setAttribute("canEditIssue", IssueUtilities.canEditIssue(issue,

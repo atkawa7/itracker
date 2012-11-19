@@ -119,6 +119,8 @@ public class ListProjectsAction extends ItrackerBaseAction {
 				UserUtilities.PERMISSION_VIEW_ALL,
 				UserUtilities.PERMISSION_VIEW_USERS }, permissions));
 
+        request.setAttribute("rssFeed", "/servlets/issues/");
+
 		String pageTitleKey = "itracker.web.listprojects.title";
 		String pageTitleArg = "";
 

@@ -213,7 +213,10 @@ public class ListIssuesActionUtil {
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_HAS_VIEW_ALL, hasViewAll);
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_NUM_VIEWABLE, numViewable);
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_K, k);
-     
+
+
+    request.setAttribute("rssFeed", "/servlets/issues/p" + project.getId());
+
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_UNASSIGNED, ITrackerResources.getString(ListIssuesActionUtil.RES_KEY_UNASSIGNED, locale));
     String pageTitleArg = project.getName();
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_PAGE_TITLE_KEY, ListIssuesActionUtil.LIST_ISSUES_PAGE_TITLE_KEY);

@@ -13,6 +13,7 @@ import org.itracker.model.*;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
+import org.itracker.services.util.HTMLUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.util.Constants;
@@ -247,7 +248,7 @@ public class RssFeedController extends GenericController {
 
             issue = issuesIt.next();
             current = new Item();
-            current.setUri("http://mgpro.local/itracker/servlets/issues/1/4");
+            current.setUri(baseURL + req.getServletPath());
             current.setLink(getIssueURL(issue, null, req, getServletContext(), baseURL));
 
             Guid guid = new Guid();
@@ -267,9 +268,7 @@ public class RssFeedController extends GenericController {
             c.setType(Content.HTML);
 
             c.setValue(
-//                    HtmlUtils.htmlEscape(
                     issue.getHistory().get(issue.getHistory().size() - 1).getDescription()
-//            )
             );
             current.setContent(c);
 
@@ -323,11 +322,9 @@ public class RssFeedController extends GenericController {
 
             content.setType(Content.HTML);
             content.setValue(
-//                    HtmlUtils.htmlEscape(
-                    "<p>" + ih.getDescription() + "</p>"
-//            )
+                    "<p>" + HTMLUtilities.removeMarkup( ih.getDescription() ) + "</p>"
             );
-//            current.setContent(content);
+            current.setContent(content);
             current.setPubDate(ih.getCreateDate());
 
             current.setAuthor(ih.getUser().getLogin());
@@ -338,7 +335,7 @@ public class RssFeedController extends GenericController {
     }
 
 
-    private String getIssueURL(Issue i, IssueHistory ih, HttpServletRequest req, ServletContext context, String baseUrl) {
+    private String getIssueURL(Issue i,  IssueHistory ih, HttpServletRequest req, ServletContext context, String baseUrl) {
         ModuleConfig conf = ModuleUtils.getInstance().getModuleConfig(
                 "/module-projects",
                 req,
@@ -346,12 +343,9 @@ public class RssFeedController extends GenericController {
 
         ForwardConfig forwardConfig = conf.findForwardConfig("viewissue");
         return
-                //HtmlUtils.htmlEscape(
                 baseUrl + TagUtils.getInstance().pageURL(req, forwardConfig.getPath(), conf)
-                        + i.getId()
-//                        + "?id=" + i.getId() + (null == ih ? "" : "#history_" + ih.getId()
-////                )
-//                )
+                        + "?id=" + i.getId()
+
                 ;
     }
 
@@ -363,12 +357,8 @@ public class RssFeedController extends GenericController {
 
         ForwardConfig forwardConfig = conf.findForwardConfig("listissues");
         return
-//                HtmlUtils.htmlEscape(
-                baseUrl + TagUtils.getInstance().pageURL(req, forwardConfig.getPath(), conf) + p.getId()
-//                        + "?id=" + p.getId() + (null == i ? "" : "#issue_"
-//                        + i.getId()
-////                        )
-//                )
+                baseUrl + TagUtils.getInstance().pageURL(req, forwardConfig.getPath(), conf) + "?projectId=" + p.getId()
+
                 ;
     }
 }
