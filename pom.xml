@@ -40,7 +40,7 @@
         <maven-tomcat-plugin.version>2.0</maven-tomcat-plugin.version>
         <maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
         <maven-checkstyle-plugin.version>2.8</maven-checkstyle-plugin.version>
-        <maven-jetty-plugin.version>8.1.3.v20120416</maven-jetty-plugin.version>
+        <maven-jetty-plugin.version>8.1.8.v20121106</maven-jetty-plugin.version>
         <maven-taglist-plugin.version>2.4</maven-taglist-plugin.version>
         <maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
         <maven-changes-plugin.version>2.7</maven-changes-plugin.version>
