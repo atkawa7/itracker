@@ -186,30 +186,30 @@ a.listHeading:link {
 }
 
 
-.listRowShaded {
+tr.listRowShaded {
 	font-weight: normal;
 	text-align: left;
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	color: black;
-  background-color: #DDDDFF;
+    background-color: #DDDDFF;
 	text-decoration: none;
 }
 
-.listRowUnshaded {
+tr.listRowUnshaded {
 	font-weight: normal;
 	text-align: left;
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	color: black;
-  background-color: white;
+    background-color: white;
 	text-decoration: none;
 }
 
-.shadeList .listRowShaded:hover {
+.shadeList tr.listRowShaded:hover {
     background-color: #cfc;
 }
-.shadeList .listRowUnshaded:hover {
+.shadeList tr.listRowUnshaded:hover {
     background-color: #efe;
 }
 
