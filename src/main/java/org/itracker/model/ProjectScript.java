@@ -32,6 +32,7 @@ import java.util.Comparator;
 public class ProjectScript extends AbstractEntity {
 
     public static final FieldPriorityComparator FIELD_PRIORITY_COMPARATOR = new FieldPriorityComparator();
+    public static final ScriptPriorityComparator PRIORITY_COMPARATOR = new ScriptPriorityComparator();
     /**
      *
      */
@@ -117,6 +118,20 @@ public class ProjectScript extends AbstractEntity {
         }
 
     }
+    public static class ScriptPriorityComparator implements
+                Comparator<ProjectScript>, Serializable {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 1L;
+
+            public int compare(ProjectScript a, ProjectScript b) {
+
+                return new CompareToBuilder().append(a.getPriority(), b.getPriority()).toComparison();
+            }
+
+        }
+
 
     @Override
     public String toString() {

@@ -269,7 +269,7 @@ public class Issue extends AbstractEntity implements Comparable<Entity> {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

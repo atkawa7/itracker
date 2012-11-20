@@ -56,7 +56,7 @@ public class Configuration extends AbstractEntity implements Comparable<Entity> 
 
         public static Type valueOf(Integer code) {
             for (Type val: values()) {
-                if (val.code == code) {
+                if (val.code.compareTo(code) == 0) {
                     return val;
                 }
             }
