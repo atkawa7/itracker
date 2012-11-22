@@ -25,7 +25,8 @@ public class IssueActivityTypeTest {
         assertEquals(IssueActivityType.RESOLUTION_CHANGE, IssueActivityType.forCode(12));
         assertEquals(IssueActivityType.RELATION_ADDED, IssueActivityType.forCode(13));
         assertEquals(IssueActivityType.RELATION_REMOVED, IssueActivityType.forCode(14));
-        assertEquals(null, IssueActivityType.forCode(15));
+        assertEquals(IssueActivityType.ATTACHMENT_ADDED, IssueActivityType.forCode(15));
+        assertEquals(null, IssueActivityType.forCode(16));
     }
 
     @Test
@@ -44,7 +45,8 @@ public class IssueActivityTypeTest {
         assertEquals(IssueActivityType.RESOLUTION_CHANGE, IssueActivityType.ISSUE_CREATED.fromCode(12));
         assertEquals(IssueActivityType.RELATION_ADDED, IssueActivityType.ISSUE_CREATED.fromCode(13));
         assertEquals(IssueActivityType.RELATION_REMOVED, IssueActivityType.ISSUE_CREATED.fromCode(14));
-        assertEquals(null, IssueActivityType.ISSUE_CREATED.fromCode(15));
+        assertEquals(IssueActivityType.ATTACHMENT_ADDED, IssueActivityType.ISSUE_CREATED.fromCode(15));
+        assertEquals(null, IssueActivityType.ISSUE_CREATED.fromCode(16));
     }
 
 
