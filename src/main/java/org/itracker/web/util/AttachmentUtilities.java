@@ -97,16 +97,17 @@ public class AttachmentUtilities {
     public static Issue addAttachment(Issue issue, Project project, User user,
                                       IssueForm form, ITrackerServices services, ActionMessages messages) {
 
-        if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS,
-                project.getOptions())) {
-            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.validate.attachment.disabled", project.getName()));
-            return issue;
-        }
 
         FormFile file = form.getAttachment();
 
         if (file == null || file.getFileName().trim().length() < 1) {
             logger.info("addAttachment: skipping file " + file);
+            return issue;
+        }
+
+        if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS,
+                project.getOptions())) {
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.validate.attachment.disabled", project.getName()));
             return issue;
         }
 
