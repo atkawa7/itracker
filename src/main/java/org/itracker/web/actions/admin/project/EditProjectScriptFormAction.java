@@ -21,16 +21,21 @@ package org.itracker.web.actions.admin.project;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
+import org.itracker.model.CustomField;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.WorkflowScript;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ProjectService;
+import org.itracker.services.util.Convert;
+import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectScriptForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -38,11 +43,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
+/**
+ * TODO maybe intended to be an 'action' for the EditProjectScriptAction?
+ */
 public class EditProjectScriptFormAction extends ItrackerBaseAction {
     private static final Logger log = Logger.getLogger(EditProjectScriptFormAction.class);
 
@@ -60,9 +66,10 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
         String pageTitleKey = "";
         String pageTitleArg = "";
         String action = "";
-        Project project = null;
+        Project project;
 
         try {
+
             ProjectScriptForm projectScriptForm = (ProjectScriptForm) form;
             final ProjectService projectService = getITrackerServices().getProjectService();
             final ConfigurationService configurationService = getITrackerServices().getConfigurationService();
@@ -70,90 +77,34 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
             if (projectScriptForm == null) {
                 projectScriptForm = new ProjectScriptForm();
             }
-            final List<ProjectScript> projectScripts;
             final List<WorkflowScript> workflowScripts = configurationService.getWorkflowScripts();
 
-
-            action = request.getParameter("action");
-            if (action == null)
-                action = (String) PropertyUtils.getSimpleProperty(projectScriptForm, "action");
-            projectScriptForm.setAction(action);
 
             Integer projectId = (Integer) PropertyUtils.getSimpleProperty(projectScriptForm, "projectId");
             projectScriptForm.setProjectId(projectId);
             project = projectService.getProject(projectId);
-            projectScripts = project.getScripts();
 
-//            if(action != null && action.equals("update")) {
-//                isUpdate = true;
-//                pageTitleKey = "itracker.web.admin.editprojectscript.title.update";
-
-//            } else {
+            final List<ProjectScript> projectScripts = project.getScripts();
             pageTitleKey = "itracker.web.admin.editprojectscript.title.create";
-//            }
-            HashMap<String, String> scriptDescs = new HashMap<String, String>();
-            HashMap<String, String> scriptItems = new HashMap<String, String>();
-            HashMap<String, String> ids = new HashMap<String, String>();
-            HashMap<String, String> fieldIds = new HashMap<String, String>();
-            HashMap<String, String> priorities = new HashMap<String, String>();
-//            Integer[] Ids = new Integer[workflowScripts.size()];
-//            Integer[] fieldIds = new Integer[workflowScripts.size()];
-//            Integer[] priorities = new Integer[workflowScripts.size()];
-            int i = 0;
-//            if ("update".equals(action)) {
-            for (Iterator<WorkflowScript> wfsIterator = workflowScripts.iterator(); wfsIterator.hasNext(); i++) {
-                WorkflowScript workflowScript = (WorkflowScript) wfsIterator.next();
-                scriptDescs.put(String.valueOf(workflowScript.getId()), workflowScript.getName());
-                String idstr = "0";
-                String sdstr = "";
-                String fidstr = "";
-                String pristr = "";
-                for (Iterator<ProjectScript> psIterator = projectScripts.iterator(); psIterator.hasNext(); ) {
-                    ProjectScript chkprojectScript = psIterator.next();
-                    if (workflowScript.getId().equals(chkprojectScript.getScript())) {
-                        idstr = String.valueOf(chkprojectScript.getId());
-                        fidstr = String.valueOf(chkprojectScript.getFieldId());
-                        pristr = String.valueOf(chkprojectScript.getPriority());
-                        sdstr = "on";
-                    }
-                }
-                scriptItems.put(String.valueOf(workflowScript.getId()), sdstr);
-                ids.put(String.valueOf(workflowScript.getId()), idstr);
-                fieldIds.put(String.valueOf(workflowScript.getId()), fidstr);
-                priorities.put(String.valueOf(workflowScript.getId()), pristr);
-            }
-/*            } else {
-                for ( Iterator<WorkflowScript> wfsIterator = workflowScripts.iterator(); wfsIterator.hasNext(); i++) {
-                    WorkflowScript workflowScript = (WorkflowScript) wfsIterator.next();
-                    scriptItems.put(String.valueOf(workflowScript.getId()), "");
-                    scriptDescs.put(String.valueOf(workflowScript.getId()), workflowScript.getName());
-                    ids.put(String.valueOf(workflowScript.getId()), "0");
-                    fieldIds.put(String.valueOf(workflowScript.getId()), "");
-                    priorities.put(String.valueOf(workflowScript.getId()), "");
-                }
-            }
- **/
-            projectScriptForm.setScriptDescs(scriptDescs);
-            projectScriptForm.setScriptItems(scriptItems);
-            projectScriptForm.setId(ids);
-            projectScriptForm.setFieldId(fieldIds);
-            projectScriptForm.setPriority(priorities);
-
-            projectScriptForm.setCustomFields(configurationService.getCustomFields());
-            String prioritySizeStr = ProjectUtilities.getScriptPrioritySize();
-            int prioritySize = Integer.parseInt(prioritySizeStr);
-
-            HashMap<String, String> priorityList = new HashMap<String, String>();
-            for (int j = 1; j <= prioritySize; j++) {
-                priorityList.put(String.valueOf(j), ProjectUtilities.getScriptPriorityLabelKey(j));
-            }
-            projectScriptForm.setPriorityList(priorityList);
 
             if (errors.isEmpty()) {
-                HttpSession session = request.getSession(true);
+                request.setAttribute("workflowScripts", workflowScripts);
+                request.setAttribute("projectScripts", projectScripts);
+
+                final Locale locale = LoginUtilities.getCurrentLocale(request);
+                Map<String, String> customFieldsMapped = new HashMap<String, String>(project.getCustomFields().size());
+                for (CustomField field: project.getCustomFields()) {
+                    String name = CustomFieldUtilities.getCustomFieldName(field.getId(), locale);
+                    name += " ";
+                    name += CustomFieldUtilities.getTypeString(field.getFieldType(), locale);
+                    customFieldsMapped.put(String.valueOf(field.getId()), name);
+                }
+
+                request.setAttribute("customFields", customFieldsMapped);
                 request.setAttribute("projectScriptForm", projectScriptForm);
-                session.setAttribute(Constants.PROJECT_SCRIPT_KEY, project);
-                request.setAttribute("action", action);
+                EditProjectScriptAction.setUpPrioritiesInEnv(request);
+                request.setAttribute("project", project);
+
                 saveToken(request);
                 request.setAttribute("pageTitleKey", pageTitleKey);
                 request.setAttribute("pageTitleArg", pageTitleArg);

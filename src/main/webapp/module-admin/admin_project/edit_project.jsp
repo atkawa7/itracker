@@ -299,7 +299,7 @@
 		    </td>
 		    <td>${ script.script.script.name }
 		    </td>
-		    <td>${ script.script.priority }
+		    <td class="priority-${script.script.priority}">${ priorityList[script.script.priority] }
 		    </td>
 		    <td>${ script.eventName }
 		    </td>

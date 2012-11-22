@@ -86,8 +86,6 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                 Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
 
                 Locale locale = getLocale(request);
-                // (Locale) session
-                // .getAttribute(Constants.LOCALE_KEY);
 
                 List<NameValuePair> ownersList = UserUtilities
                         .getAssignableIssueOwnersList(issue, project, currUser,

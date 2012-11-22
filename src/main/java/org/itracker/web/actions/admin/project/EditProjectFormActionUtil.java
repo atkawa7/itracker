@@ -271,6 +271,8 @@ public class EditProjectFormActionUtil {
         List<ProjectScript> scripts = project.getScripts();
         Collections.sort(scripts, ProjectScript.FIELD_PRIORITY_COMPARATOR);
 
+        EditProjectScriptAction.setUpPrioritiesInEnv(request);
+
         Locale locale = LoginUtilities.getCurrentLocale(request);
         Iterator<ProjectScript> it = scripts.iterator();
 

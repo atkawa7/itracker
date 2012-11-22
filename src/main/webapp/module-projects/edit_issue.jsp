@@ -378,11 +378,13 @@
 				step="2">
 				<tr>
 					<it:formatCustomField field="${ projectField.key }" formName="issueForm"
-										  currentValue="${ projectField.value }" 
+                                          listOptions="${ listoptions }"
+										  currentValue="${ projectField.value }"
 										  displayType="${ hasFullEdit?'edit' : 'view' }" />
 					<c:forEach begin="${ i.index + 1 }" end="${ i.index + 1 }"
 						var="projectField" items="${ projectFieldsMap }">
 						<it:formatCustomField field="${ projectField.key }" formName="issueForm"
+                                              listOptions="${ listoptions }"
 											  currentValue="${ projectField.value }"
 											  displayType="${ hasFullEdit?'edit' : 'view' }" />
 					</c:forEach>

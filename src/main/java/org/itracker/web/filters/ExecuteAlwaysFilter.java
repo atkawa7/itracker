@@ -49,18 +49,18 @@ public class ExecuteAlwaysFilter implements Filter {
     /**
      * this match paths which are not protected
      */
-    private Set<Pattern> unprotectedPaterns = null;
+    private Set<Pattern> unprotectedPatterns = null;
 
     private String loginForwardPath;
 
     public void destroy() {
-        this.unprotectedPaterns = null;
+        this.unprotectedPatterns = null;
     }
 
     public void doFilter(ServletRequest servletRequest,
                          ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
-        if (null == this.unprotectedPaterns) {
+        if (null == this.unprotectedPatterns) {
             RuntimeException re = new IllegalStateException(
                     "Filter has not been initialized yet.");
             log.error("doFilter: failed, not initialized", re);
@@ -91,7 +91,7 @@ public class ExecuteAlwaysFilter implements Filter {
         ConfigurationService configurationService = getITrackerServices()
                 .getConfigurationService();
 
-        boolean protect = isProtected(path, this.unprotectedPaterns);
+        boolean protect = isProtected(path, this.unprotectedPatterns);
 
         // do not protect the login-page itself.
         if (protect && this.loginForwardPath.equals(path)) {
@@ -375,7 +375,7 @@ public class ExecuteAlwaysFilter implements Filter {
      *
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-        if (null != unprotectedPaterns) {
+        if (null != unprotectedPatterns) {
             throw new IllegalStateException(
                     "Filter was already initialized before.");
         }
@@ -386,16 +386,16 @@ public class ExecuteAlwaysFilter implements Filter {
         if (null == this.loginForwardPath) {
             this.loginForwardPath = DEFAULT_LOGIN_FORWARD;
         }
-        this.unprotectedPaterns = new HashSet<Pattern>();
+        this.unprotectedPatterns = new HashSet<Pattern>();
         if (null != excludePaths) {
             StringTokenizer tk = new StringTokenizer(excludePaths, ",");
             while (tk.hasMoreTokens()) {
-                this.unprotectedPaterns.add(Pattern.compile(tk.nextToken().trim()));
+                this.unprotectedPatterns.add(Pattern.compile(tk.nextToken().trim()));
             }
         }
         if (log.isInfoEnabled()) {
             log.info("init: initialized with " + this.loginForwardPath
-                    + ", excludes: " + this.unprotectedPaterns);
+                    + ", excludes: " + this.unprotectedPatterns);
         }
     }
 

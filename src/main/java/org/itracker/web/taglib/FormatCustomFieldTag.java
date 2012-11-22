@@ -117,12 +117,9 @@ public final class FormatCustomFieldTag extends TagSupport {
                     + ": ");
             buf.append("</td>\n");
             buf.append("<td align=\"left\" class=\"editColumnText\">");
+
             if (DISPLAY_TYPE_VIEW.equalsIgnoreCase(displayType)) {
                 if (currentValue != null) {
-                    // buf.append((field.getFieldType() == CustomField.Type.LIST
-                    // ? field.getOptionNameByValue(currentValue) :
-                    // currentValue));
-
                     if (field.getFieldType() == CustomField.Type.LIST) {
                         buf.append(CustomFieldUtilities
                                 .getCustomFieldOptionName(getField(),
@@ -133,10 +130,8 @@ public final class FormatCustomFieldTag extends TagSupport {
                         buf.append(currentValue);
                     }
                 }
+
             } else {
-                // Object requestValue = RequestUtils.lookup(pageContext,
-                // org.apache.struts.taglib.html.Constants.BEAN_KEY,
-                // "customFields(" + field.getId() + ")", null);
                 Object requestValue = TagUtils.getInstance().lookup(
                         pageContext,
                         org.apache.struts.taglib.html.Constants.BEAN_KEY,
@@ -145,17 +140,14 @@ public final class FormatCustomFieldTag extends TagSupport {
                     currentValue = requestValue.toString();
                 }
 
+
                 if (field.getFieldType() == CustomField.Type.LIST) {
-                    List<CustomFieldValue> options = field.getOptions();
-                    // WorkflowUtilities.getListOptions(getListOptions(),
-                    // field.getId());
+                    final List<CustomFieldValue> options = field.getOptions();
 
                     buf.append("<select name=\"customFields(").append(
                             field.getId()).append(
                             ")\" class=\"editColumnText\">\n");
                     for (int i = 0; i < options.size(); i++) {
-                        // TODO: why not work with option-id here? if value
-                        // contains quotes, problem.
                         buf.append("<option value=\"").append(
                                 HTMLUtilities.escapeTags(options.get(i)
                                         .getValue())).append("\"");
@@ -168,7 +160,6 @@ public final class FormatCustomFieldTag extends TagSupport {
                         buf.append(CustomFieldUtilities
                                 .getCustomFieldOptionName(options.get(i),
                                         locale));
-                        // buf.append(options.get(i).getName());
                         buf.append("</option>\n");
                     }
                     buf.append("</select>\n");
@@ -190,7 +181,6 @@ public final class FormatCustomFieldTag extends TagSupport {
                     buf.append((currentValue != null
                             && !currentValue.equals("") ? " value=\""
                             + currentValue + "\"" : ""));
-//					buf.append(" onchange=\"onDateChange(this, " + cf + ")\"");
                     buf.append(" class=\"editColumnText\" />&nbsp;");
                     buf.append("<img onmouseup=\"toggleCalendar(" + cf + ")\"");
                     buf.append("id=\"").append(cf).append(
@@ -247,17 +237,14 @@ public final class FormatCustomFieldTag extends TagSupport {
 
                     buf.append("        var options = Object.extend({\n");
                     buf.append("            titleformat:'mmmm yyyy',\n");
-//					buf.append("            updateformat:'mm/dd/yyyy',\n");
                     buf.append("            updateformat:'" + HTMLUtilities.getJSDateFormat(df) + "',\n");
                     buf.append("            dayheadlength:2,\n");
                     buf.append("            weekdaystart:1,\n");
                     buf.append("            tabular: true,\n");
                     buf.append("            closebutton:'x',\n");
                     buf.append("            planner: false,\n");
-//					custom expanded option
                     buf.append("            expanded: false\n");
                     buf.append("        });\n");
-//					buf.append("\nvar updateyear = function(d){ $('"+ fieldName + "').value = d.format('" + HTMLUtilities.getJSDateFormat(df) + "'); };");
                     buf.append("\nvar " + cf + " = new scal('" + cf + "', '" + fieldName + "', options);");
 
                     if (null != date) {
@@ -265,25 +252,29 @@ public final class FormatCustomFieldTag extends TagSupport {
                         cal1.setTime(date);
                         buf.append("\n " + cf + ".setCurrentDate(new Date(" + cal1.get(Calendar.YEAR) + ", " + cal1.get(Calendar.MONTH) + ", " + cal1.get(Calendar.DAY_OF_MONTH) + "));");
                     }
-
-//					buf.append("\n$('" + cf + "').cf=" + cf + ";");
                     buf.append("// ]]>");
                     buf.append("</script>");
 
-//					// try {
-//					// buf.append(RequestUtils.computeURL(pageContext, null,
-//					// null, "/images/calendar.gif", null, null, null, false));
-//					buf.append(ServletContextUtils.getItrackerServices()
-//							.getConfigurationService().getSystemBaseURL());
-//					buf.append("/themes/defaulttheme/images/calendar.gif");
-//					// buf.append(TagUtils.getInstance().computeURL(pageContext,
-//					// null, null, "/images/calendar.gif", null, null, null,
-//					// null, false));
-//
-//					// } catch(MalformedURLException murle) {
-//					// buf.append("images/calendar.gif");
-//					// }
-
+                } else  if (null != getListOptions() && null != getListOptions().get(field.getId())
+                        && !getListOptions().get(field.getId()).isEmpty()) {
+                    List<NameValuePair> options = getListOptions().get(field.getId());
+                    buf.append("<select name=\"customFields(").append(
+                               field.getId()).append(
+                               ")\" class=\"editColumnText\">\n");
+                       for (int i = 0; i < options.size(); i++) {
+                           buf.append("<option value=\"").append(
+                                   HTMLUtilities.escapeTags(options.get(i)
+                                           .getValue())).append("\"");
+                           if (currentValue != null
+                                   && currentValue.equals(options.get(i)
+                                   .getValue())) {
+                               buf.append(" selected=\"selected\"");
+                           }
+                           buf.append(" class=\"editColumnText\">");
+                           buf.append(options.get(i).getName());
+                           buf.append("</option>\n");
+                       }
+                       buf.append("</select>\n");
                 } else {
                     buf.append("<input type=\"text\" name=\"customFields(")
                             .append(field.getId()).append(")\"");
@@ -295,7 +286,6 @@ public final class FormatCustomFieldTag extends TagSupport {
             }
             buf.append("</td>\n");
 
-            // ResponseUtils.write(pageContext, buf.toString());
             TagUtils.getInstance().write(pageContext, buf.toString());
         }
 
@@ -317,35 +307,4 @@ public final class FormatCustomFieldTag extends TagSupport {
     }
 
 
-    private String formatDate(Date dateValue, ResourceBundle bundle) {
-        // TODO Auto-generated method stub
-
-        try {
-
-            SimpleDateFormat sdf =
-                    new SimpleDateFormat(bundle
-                            .getString("itracker.dateformat."
-                                    + field.getDateFormat()), bundle.getLocale());
-
-//			if (log.isDebugEnabled()) {
-//				log.debug("getValue: dateFormat from itracker configuration "
-//						+ sdf.toPattern());
-//			}
-
-            // sdf = new SimpleDateFormat(dateFormat, locale);
-            String formattedDate = sdf.format(dateValue);
-//			if (log.isDebugEnabled()) {
-//				log.debug("getValue: formated date " + this.dateValue
-//						+ " to " + formattedDate);
-//			}
-            return formattedDate;
-        } catch (Exception ne) {
-//			log.debug("getValue: ", ne);
-//			if (dateValue == null) {
-//				log.warn("getValue: failed to format date, null for "
-//						+ customField);
-//			}
-            return "";
-        }
-    }
 }

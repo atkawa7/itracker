@@ -33,6 +33,7 @@ import org.itracker.web.forms.IssueForm;
 import org.itracker.web.ptos.CreateIssuePTO;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -65,10 +66,10 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
 
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
-            Map<Integer, Set<PermissionType>> Permissions = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> permissions = getUserPermissions(session);
             Locale locale = LoginUtilities.getCurrentLocale(request);
 
-            if (!UserUtilities.hasPermission(Permissions, projectId,
+            if (!UserUtilities.hasPermission(permissions, projectId,
                     UserUtilities.PERMISSION_CREATE)) {
                 log
                         .debug("Unauthorized user requested access to create issue for project "
@@ -90,27 +91,26 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
             }
 
             if (errors.isEmpty()) {
-                Map<Integer, List<NameValuePair>> listOptions = new HashMap<Integer, List<NameValuePair>>();
-                if (UserUtilities.hasPermission(Permissions, project.getId(),
+                
+                
+                final List<User> owners = new ArrayList<User>();  
+                               
+                if (UserUtilities.hasPermission(permissions, project.getId(),
                         UserUtilities.PERMISSION_ASSIGN_OTHERS)) {
-                    List<User> possibleOwners = userService.getPossibleOwners(
-                            null, project.getId(), currUser.getId());
-                    Collections.sort(possibleOwners, User.NAME_COMPARATOR);
-                    listOptions.put(IssueUtilities.FIELD_OWNER, Convert
-                            .usersToNameValuePairs(possibleOwners));
-                } else if (UserUtilities.hasPermission(Permissions, project
-                        .getId(), UserUtilities.PERMISSION_ASSIGN_SELF)) {
-                    NameValuePair myNameValuePair = new NameValuePair(currUser
-                            .getFirstName()
-                            + " " + currUser.getLastName(), currUser.getId()
-                            .toString());
-                    List<NameValuePair> myNameValuePairList = new ArrayList<NameValuePair>();
-                    myNameValuePairList.add(myNameValuePair);
-                    listOptions.put(IssueUtilities.FIELD_OWNER,
-                            myNameValuePairList);
+                                                      
+                    owners.addAll(userService.getPossibleOwners(
+                                                null, project.getId(), currUser.getId()));
+                    Collections.sort(owners, User.NAME_COMPARATOR);
+                }  else if (UserUtilities.hasPermission(permissions, project
+                                        .getId(), UserUtilities.PERMISSION_ASSIGN_SELF)) {
+                     owners.add(currUser);
                 }
-
-                if (UserUtilities.hasPermission(Permissions, project.getId(),
+                
+                final Map<Integer, List<NameValuePair>> listOptions = EditIssueActionUtil.getListOptions(request, null, 
+                        Convert.usersToNameValuePairs(owners), 
+                        permissions, project, currUser);
+                
+                if (UserUtilities.hasPermission(permissions, project.getId(),
                         UserUtilities.PERMISSION_CREATE_OTHERS)) {
                     List<User> possibleCreators = userService
                             .getUsersWithAnyProjectPermission(
@@ -123,73 +123,28 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                             .usersToNameValuePairs(possibleCreators));
                 }
 
-                List<NameValuePair> severities = IssueUtilities
-                        .getSeverities(locale);
-                // sort by severity code so it will be ascending output.
-                Collections.sort(severities, NameValuePair.VALUE_COMPARATOR);
-                listOptions.put(IssueUtilities.FIELD_SEVERITY, severities);
-
-                List<Component> components = project.getComponents();
-                Collections.sort(components, Component.NAME_COMPARATOR);
-                listOptions.put(IssueUtilities.FIELD_COMPONENTS, Convert
-                        .componentsToNameValuePairs(components));
-                List<Version> versions = project.getVersions();
-                Collections.sort(versions, new Version.VersionComparator());
-                listOptions.put(IssueUtilities.FIELD_VERSIONS, Convert
-                        .versionsToNameValuePairs(versions));
-
-                List<CustomField> projectFields = project.getCustomFields();
-                for (int i = 0; i < projectFields.size(); i++) {
-                    if (projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
-//						projectFields.get(i).setLabels(locale);
-                        listOptions
-                                .put(
-                                        projectFields.get(i).getId(),
-                                        Convert
-                                                .customFieldOptionsToNameValuePairs(projectFields
-                                                        .get(i).getOptions()));
-                    }
-                }
-
                 IssueForm issueForm = (IssueForm) form;
                 if (issueForm == null) {
                     issueForm = new IssueForm();
                 }
                 issueForm.setCreatorId(currUser.getId());
-                if (severities.size() > 0) {
-                    try {
-                        // this sets the selected severity to a medium level
-                        // (middleSeverity). It was argued that this is not
-                        // simple to understand and therefore needs
-                        // simplification or refactoring
-                        int middleSeverity = (severities.size() / 2);
-                        issueForm.setSeverity(Integer.valueOf(severities.get(
-                                middleSeverity).getValue()));
-                    } catch (NumberFormatException nfe) {
-                        log
-                                .debug(
-                                        "Invalid status number found while preparing create issue form.",
-                                        nfe);
-                    }
-                }
 
-                if (versions.size() > 0) {
-                    issueForm.setVersions(new Integer[]{versions.get(0)
-                            .getId()});
-                }
+                // Severity by configured default value or Major (2)
+                List<Configuration> severities ;
+                Integer severity = ServletContextUtils.getItrackerServices()
+                        .getConfigurationService().getIntegerProperty("default_severity", 2);
+                issueForm.setSeverity(severity);
 
                 String pageTitleKey = "itracker.web.createissue.title";
                 String pageTitleArg = project.getName();
                 request.setAttribute("pageTitleKey", pageTitleKey);
                 request.setAttribute("pageTitleArg", pageTitleArg);
 
-                List<ProjectScript> scripts = project.getScripts();
-                WorkflowUtilities.processFieldScripts(scripts,
-                        WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions,
-                        errors, issueForm);
-                WorkflowUtilities.processFieldScripts(scripts,
-                        WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, null,
-                        errors, issueForm);
+                // populate the possible list options
+                EditIssueActionUtil.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors, issueForm);
+
+                EditIssueActionUtil.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, errors, issueForm);
+
 
                 if (errors == null || errors.isEmpty()) {
                     log.debug("Forwarding to create issue form for project "

@@ -395,9 +395,8 @@ public class IssueForm extends ITrackerForm {
     private static void validateProjectScripts(Project project, ActionErrors errors, IssueForm form)
             throws WorkflowException {
 
-        List<ProjectScript> scripts = project.getScripts();
-        WorkflowUtilities.processFieldScripts(scripts,
-                WorkflowUtilities.EVENT_FIELD_ONVALIDATE, null, errors, form);
+        EditIssueActionUtil.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONVALIDATE, errors, form);
+
     }
 
 }

@@ -21,13 +21,16 @@ package org.itracker.web.actions.admin.project;
 //import java.io.ByteArrayInputStream;
 
 import bsh.ParseException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
+import org.hibernate.HibernateException;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.WorkflowScript;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ProjectService;
+import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectScriptForm;
@@ -40,6 +43,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 public class EditProjectScriptAction extends ItrackerBaseAction {
@@ -61,7 +66,7 @@ public class EditProjectScriptAction extends ItrackerBaseAction {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                     "itracker.web.error.transaction"));
             saveErrors(request, errors);
-            return mapping.findForward("listworkflow");
+            return mapping.findForward("listprojectscript");
         }
         resetToken(request);
         ProjectScriptForm projectScriptForm = (ProjectScriptForm) form;
@@ -69,68 +74,62 @@ public class EditProjectScriptAction extends ItrackerBaseAction {
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
             ProjectService projectService = getITrackerServices().getProjectService();
-            String action = request.getParameter("action");
-            if (action == null)
-                action = (String) projectScriptForm.getAction();
-            Integer projectId = (Integer) projectScriptForm.getProjectId();
+
+            Integer projectId = projectScriptForm.getProjectId();
             Project project = projectService.getProject(projectId);
-            HashMap<String, String> fieldIds = (HashMap<String, String>) projectScriptForm.getFieldId();
-            HashMap<String, String> priorities = (HashMap<String, String>) projectScriptForm.getPriority();
-            HashMap<String, String> scriptItems = (HashMap<String, String>) projectScriptForm.getScriptItems();
-            HashMap<String, String> ids = (HashMap<String, String>) projectScriptForm.getId();
+            HashMap<String, String> fieldIds = projectScriptForm.getFieldId();
+            HashMap<String, String> priorities = projectScriptForm.getPriority();
+            HashMap<String, String> scriptItems = projectScriptForm.getScriptItems();
+            HashMap<String, String> ids = projectScriptForm.getId();
             for (Iterator<String> siIterator = scriptItems.keySet().iterator(); siIterator.hasNext(); ) {
-                String key = (String) siIterator.next();
+                String key = siIterator.next();
                 if (key != null) {
                     String scriptItemsvalue = (String) scriptItems.get(key);
-                    if (scriptItemsvalue != null && !scriptItemsvalue.trim().equals("") && scriptItemsvalue.trim().equals("on")) {
+                    if ( (!StringUtils.isBlank(scriptItemsvalue))
+                            && StringUtils.equalsIgnoreCase(StringUtils.trim(scriptItemsvalue), "on") ) {
                         Integer wfsIds = Integer.valueOf(key);
                         Integer fieldId = Integer.valueOf((String) fieldIds.get(key));
                         Integer priority = Integer.valueOf((String) priorities.get(key));
                         WorkflowScript workflowScript = configurationService.getWorkflowScript(wfsIds);
                         ProjectScript projectScript = new ProjectScript();
-                        Integer id = Integer.valueOf((String) ids.get(key));
-                        projectScript.setId(id);
-                        ProjectScript chkprojectScript = projectService.getProjectScript(id);
 
                         projectScript.setFieldId(fieldId);
                         projectScript.setPriority(priority);
                         projectScript.setProject(project);
                         projectScript.setScript(workflowScript);
-                        if ("create".equals(action) || chkprojectScript == null) {
-                            projectScript = projectService.addProjectScript(projectId, projectScript);
-                        } else {
-                            projectScript = projectService.updateProjectScript(projectScript);
-                        }
-                        if (projectScript == null) {
-                            throw new Exception("Error creating/updating project script.");
-                        }
+                        projectService.addProjectScript(projectId, projectScript);
+
                     }
                 }
             }
 
-
-            HttpSession session = request.getSession(true);
-            session.removeAttribute(Constants.PROJECT_SCRIPT_KEY);
-            request.setAttribute("action", action);
             saveToken(request);
             return new ActionForward(
                     mapping.findForward("editproject").getPath()
                             + "?id=" + project.getId() + "&action=update");
-        } catch (ParseException pe) {
-            log.debug("Error parseing script.  Redisplaying form for correction.", pe);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidscriptdata", pe.getMessage()));
-            saveErrors(request, errors);
-            saveToken(request);
-            return mapping.getInputForward();
-        } catch (Exception e) {
+
+        } catch (RuntimeException e) {
             log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.details", e.getMessage()));
         }
 
         if (!errors.isEmpty()) {
             saveErrors(request, errors);
         }
         return mapping.findForward("error");
+    }
+
+    public static final void setUpPrioritiesInEnv(HttpServletRequest request) {
+
+        String prioritySizeStr = ProjectUtilities.getScriptPrioritySize();
+        int prioritySize = Integer.parseInt(prioritySizeStr);
+        Map<Integer, String> priorityList = new TreeMap<Integer, String>();
+        for (int j = 1; j <= prioritySize; j++) {
+            priorityList.put(j, ProjectUtilities.getScriptPriorityLabelKey(j));
+        }
+
+        request.setAttribute("priorityList", priorityList);
     }
 
 }

@@ -32,7 +32,7 @@ import java.util.Comparator;
 public class ProjectScript extends AbstractEntity {
 
     public static final FieldPriorityComparator FIELD_PRIORITY_COMPARATOR = new FieldPriorityComparator();
-    public static final ScriptPriorityComparator PRIORITY_COMPARATOR = new ScriptPriorityComparator();
+    public static final FieldPriorityComparator PRIORITY_COMPARATOR = new FieldPriorityComparator();
     /**
      *
      */

@@ -712,8 +712,20 @@ public class EditIssueActionUtil {
         return listOptions;
     }
 
+    public static List<NameValuePair> fieldOptions(CustomField field) {
+        return Convert.customFieldOptionsToNameValuePairs(field.getOptions());
+    }
+    public static Map<Integer, List<NameValuePair>> mappedFieldOptions(List<CustomField> fields ) {
+        Map<Integer, List<NameValuePair>> options = new HashMap<Integer, List<NameValuePair>>(fields.size());
+        for (CustomField field: fields) {
+            options.put(field.getId(), fieldOptions(field));
+        }
+
+        return options;
+    }
+
     public static final void setupIssueForm(IssueForm issueForm, Issue issue,
-                                            Map<Integer, List<NameValuePair>> listOptions,
+                                            final Map<Integer, List<NameValuePair>> listOptions,
                                             HttpServletRequest request, ActionMessages errors)
             throws WorkflowException {
         HttpSession session = request.getSession(true);
@@ -733,6 +745,7 @@ public class EditIssueActionUtil {
         if (!ProjectUtilities.hasOption(
                 ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS, issue
                 .getProject().getOptions())) {
+            // TODO What happens here, validation?
             try {
                 issue.setResolution(IssueUtilities.checkResolutionName(issue
                         .getResolution(), locale));
@@ -782,14 +795,31 @@ public class EditIssueActionUtil {
             issueForm.setVersions(versionIds);
         }
 
-        List<ProjectScript> scripts = issue.getProject().getScripts();
-        WorkflowUtilities.processFieldScripts(scripts,
-                WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors,
-                issueForm);
-        WorkflowUtilities.processFieldScripts(scripts,
-                WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, null, errors,
-                issueForm);
+        invokeProjectScripts(issue.getProject(), WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors, issueForm);
 
+        invokeProjectScripts(issue.getProject(), WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, errors, issueForm);
+
+    }
+
+
+    public static void invokeProjectScripts(Project project, int event, final Map<Integer, List<NameValuePair>> options, ActionMessages errors, IssueForm form)
+            throws WorkflowException {
+        final Map<Integer, String> values = new HashMap<Integer, String>(options.size());
+        for (CustomField field: project.getCustomFields()) {
+            values.put(field.getId(), form.getCustomFields().get(String.valueOf(field.getId())));
+        }
+
+        WorkflowUtilities.processFieldScripts(project.getScripts(),
+                event, values, options, errors, form);
+
+    }
+
+    public static Map<Integer, List<NameValuePair>> invokeProjectScripts(Project project, int event, ActionMessages errors, IssueForm form)
+            throws WorkflowException {
+
+        final Map<Integer, List<NameValuePair>> options = EditIssueActionUtil.mappedFieldOptions(project.getCustomFields()) ;
+        invokeProjectScripts(project, event, options, errors, form);
+        return options;
     }
 
 }

@@ -120,9 +120,9 @@ public class CreateIssueAction extends ItrackerBaseAction {
                 return mapping.findForward("unauthorized");
             } else {
                 List<ProjectScript> scripts = project.getScripts();
-                WorkflowUtilities.processFieldScripts(scripts,
-                        WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, null,
-                        errors, issueForm);
+
+
+                EditIssueActionUtil.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, errors, issueForm);
 
                 Issue issue = new Issue();
                 issue.setDescription((String) issueForm.getDescription());
@@ -196,7 +196,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                         }
                     }
 
-                    // FIXME this is absolutely complex, unreadable code. why do it, what does it do, can we keep it simple?
+                    // TODO this is absolutely complex, unreadable code. why do it, what does it do, can we keep it simple?
                     // it seems to set issueCustomField (issueFields), you might be able to refactor this into its own method (hiding in a method ;) )
                     List<IssueField> issueFields = new ArrayList<IssueField>();
                     Map<String, String> customFields = issueForm.getCustomFields();
@@ -227,7 +227,6 @@ public class CreateIssueAction extends ItrackerBaseAction {
                                 log.error("execute: failed to assign issue", e);
                             }
                         }
-                        issueFields = new ArrayList<IssueField>();
                         issueFields = issueFieldsVector;
                     }
                     issueService.setIssueFields(issue.getId(), issueFields);
@@ -266,14 +265,12 @@ public class CreateIssueAction extends ItrackerBaseAction {
                                     .getIssue(relatedIssueId);
 
                             if (relatedIssue == null) {
-                                log
-                                        .debug("Unknown relation issue, relation not created.");
+                                log.debug("Unknown relation issue, relation not created.");
                             } else if (relatedIssue.getProject() == null
                                     || !IssueUtilities.canEditIssue(
                                     relatedIssue, currUserId,
                                     userPermissionsMap)) {
-                                log
-                                        .info("User not authorized to add issue relation from issue "
+                                log.info("User not authorized to add issue relation from issue "
                                                 + issue.getId()
                                                 + " to issue "
                                                 + relatedIssueId);
@@ -287,8 +284,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                                 if (!issueService.addIssueRelation(issue
                                         .getId(), relatedIssueId, relationType
                                         .intValue(), currUser.getId())) {
-                                    log
-                                            .info("Error adding issue relation from issue "
+                                    log.info("Error adding issue relation from issue "
                                                     + issue.getId()
                                                     + " to issue "
                                                     + relatedIssueId);
@@ -318,9 +314,8 @@ public class CreateIssueAction extends ItrackerBaseAction {
                 }
                 session.removeAttribute(Constants.PROJECT_KEY);
 
-                WorkflowUtilities.processFieldScripts(scripts,
-                        WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, null,
-                        errors, issueForm);
+                EditIssueActionUtil.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, errors, issueForm);
+
                 if (errors.isEmpty()) {
                     return getReturnForward(issue, project, issueForm, mapping);
                 }

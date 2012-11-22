@@ -111,11 +111,10 @@ public class EditIssueAction extends ItrackerBaseAction {
                 return mapping.findForward("unauthorized");
             }
 
-            List<ProjectScript> scripts = project.getScripts();
             logTimeMillies("execute: got scripts", logDate, log, Level.DEBUG);
-            WorkflowUtilities.processFieldScripts(scripts,
-                    WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, null, errors,
-                    (ValidatorForm) form);
+
+            EditIssueActionUtil.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, errors, issueForm);
+
             logTimeMillies("execute: processed field scripts EVENT_FIELD_ONPRESUBMIT", logDate, log, Level.DEBUG);
 
             if (errors.isEmpty()) {
@@ -153,9 +152,8 @@ public class EditIssueAction extends ItrackerBaseAction {
                         getBaseURL(request), notificationService);
                 logTimeMillies("execute: sent notification", logDate, log, Level.DEBUG);
 
-                WorkflowUtilities.processFieldScripts(scripts,
-                        WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, null, errors,
-                        (ValidatorForm) form);
+                EditIssueActionUtil.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, errors, issueForm);
+
                 logTimeMillies("execute: processed field scripts EVENT_FIELD_ONPOSTSUBMIT", logDate, log, Level.DEBUG);
 
                 return EditIssueActionUtil.getReturnForward(issue, project, issueForm, mapping);
