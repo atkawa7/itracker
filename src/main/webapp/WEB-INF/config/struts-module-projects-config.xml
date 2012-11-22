@@ -33,7 +33,7 @@
         <forward name="viewissue" module="/module-projects" path="/view_issue.do"/>
         <forward name="editissue" module="/module-projects" path="/editissueform.do"/>
         <forward name="moveissue" module="/module-projects" path="/moveissue.do"/>
-        <forward name="error" module="/module-projects" path="/error.do"/>
+        <forward name="error" module="/" path="/error.do"/>
         <forward name="help" module="/module-help" path="/show_help.do"/>
         <forward name="unauthorized" module="/" path="/unauthorized.do" redirect="true"/>
         <forward name="searchissues" module="/module-searchissues" path="/searchissuesform.do"/>
@@ -133,6 +133,10 @@
         </action>
 
     </action-mappings>
+
+    <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor">
+        <set-property property="inputForward" value="false"/>
+    </controller>
 
     <message-resources factory="org.itracker.web.resources.ITrackerMessageResourcesFactory"
                        parameter="org.itracker.core.resources.ITracker" null="false"/>

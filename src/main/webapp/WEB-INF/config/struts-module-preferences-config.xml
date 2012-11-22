@@ -51,6 +51,10 @@
         </action>
     </action-mappings>
 
+    <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor">
+        <set-property property="inputForward" value="false"/>
+    </controller>
+
     <message-resources factory="org.itracker.web.resources.ITrackerMessageResourcesFactory"
                        parameter="org.itracker.core.resources.ITracker" null="false"/>
 

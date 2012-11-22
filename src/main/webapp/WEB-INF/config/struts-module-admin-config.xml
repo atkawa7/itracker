@@ -45,6 +45,7 @@
         <forward name="editcustomfieldvalue" module="/module-admin" path="/editcustomfieldvalueform.do"/>
         <forward name="listattachments" module="/module-admin" path="/listattachments.do"/>
         <forward name="listworkflow" module="/module-admin" path="/listworkflowscripts.do"/>
+        <forward name="listprojectscript" module="/module-admin" path="/editprojectscriptform.do" />
         <forward name="listprojectsadmin" path="/listprojectsadmin.do"/>
         <forward name="listreports" module="/module-reports" path="/list_reports.do"/>
         <forward name="listreportsadmin" module="/module-admin" path="/listreportsadmin.do"/>
@@ -318,6 +319,10 @@
         </action>
 
     </action-mappings>
+
+    <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor">
+        <set-property property="inputForward" value="false"/>
+    </controller>
 
     <message-resources factory="org.itracker.web.resources.ITrackerMessageResourcesFactory"
                        parameter="org.itracker.core.resources.ITracker" null="false"/>
