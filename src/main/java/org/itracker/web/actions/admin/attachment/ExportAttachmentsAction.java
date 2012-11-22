@@ -18,6 +18,8 @@
 
 package org.itracker.web.actions.admin.attachment;
 
+import com.sun.tools.internal.ws.wsdl.document.mime.MIMEConstants;
+import com.sun.tools.internal.ws.wsdl.document.mime.MIMEContent;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.IssueAttachment;
@@ -51,6 +53,7 @@ public class ExportAttachmentsAction extends ItrackerBaseAction {
 
             List<IssueAttachment> attachments = issueService.getAllIssueAttachments();
             if (attachments.size() > 0) {
+                response.setContentType("application/zip");
                 response.setHeader("Content-Disposition", "attachment; filename=\"ITracker_attachments.zip\"");
                 ServletOutputStream out = response.getOutputStream();
                 ZipOutputStream zipOut = new ZipOutputStream(out);

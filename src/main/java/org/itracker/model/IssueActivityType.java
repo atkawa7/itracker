@@ -31,7 +31,9 @@ public enum IssueActivityType implements IntCodeEnum<IssueActivityType> {
 
     RELATION_ADDED(13),
 
-    RELATION_REMOVED(14);
+    RELATION_REMOVED(14),
+
+    ATTACHMENT_ADDED(15);
 
     final Integer code;
 
@@ -43,69 +45,17 @@ public enum IssueActivityType implements IntCodeEnum<IssueActivityType> {
      * @deprecated
      */
     public static final IssueActivityType forCode(Integer type) {
-        switch (type) {
-            case 1:
-                return ISSUE_CREATED;
-            case 2:
-                return STATUS_CHANGE;
-            case 3:
-                return OWNER_CHANGE;
-            case 4:
-                return SEVERITY_CHANGE;
-            case 5:
-                return COMPONENTS_MODIFIED;
-            case 6:
-                return VERSIONS_MODIFIED;
-            case 7:
-                return REMOVE_HISTORY;
-            case 8:
-                return ISSUE_MOVE;
-            case 9:
-                return SYSTEM_UPDATE;
-            case 10:
-                return TARGETVERSION_CHANGE;
-            case 11:
-                return DESCRIPTION_CHANGE;
-            case 12:
-                return RESOLUTION_CHANGE;
-            case 13:
-                return RELATION_ADDED;
-            case 14:
-                return RELATION_REMOVED;
-        }
-        return null;
+        return IssueActivityType.values()[0].fromCode(type);
+    }
+    public static final IssueActivityType valueOf(Integer type) {
+        return IssueActivityType.values()[0].fromCode(type);
     }
 
     public IssueActivityType fromCode(Integer code) {
-        switch (code) {
-            case 1:
-                return ISSUE_CREATED;
-            case 2:
-                return STATUS_CHANGE;
-            case 3:
-                return OWNER_CHANGE;
-            case 4:
-                return SEVERITY_CHANGE;
-            case 5:
-                return COMPONENTS_MODIFIED;
-            case 6:
-                return VERSIONS_MODIFIED;
-            case 7:
-                return REMOVE_HISTORY;
-            case 8:
-                return ISSUE_MOVE;
-            case 9:
-                return SYSTEM_UPDATE;
-            case 10:
-                return TARGETVERSION_CHANGE;
-            case 11:
-                return DESCRIPTION_CHANGE;
-            case 12:
-                return RESOLUTION_CHANGE;
-            case 13:
-                return RELATION_ADDED;
-            case 14:
-                return RELATION_REMOVED;
+        for (IssueActivityType c : IssueActivityType.values()) {
+            if (c.getCode()== code) {
+                return c;
+            }
         }
         return null;
     }

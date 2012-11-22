@@ -99,7 +99,7 @@ public class AttachmentDownloadController extends GenericController {
             }
 
             response.setContentType(attachment.getType());
-            response.setHeader("Content-Disposition", "inline; filename=" + attachment.getOriginalFileName() + "");
+            response.setHeader("Content-Disposition", "attachment; filename=" + attachment.getOriginalFileName() + "");
             out = response.getOutputStream();
             logger.debug("Displaying attachment " + attachment.getId() + " of type " + attachment.getType() + " to client.  Attachment size: " + fileData.length);
             out.write(fileData);

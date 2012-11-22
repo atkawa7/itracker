@@ -41,7 +41,7 @@
             <column name="file_size" not-null="true"/>
         </property>
 
-        <property name="fileData" type="binary">
+        <property name="fileData" type="binary" lazy="true">
             <column name="file_data" not-null="true" length="1000000"/>
         </property>
 

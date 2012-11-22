@@ -278,7 +278,6 @@
                                 				  module="/module-projects"
                                                   paramName="id"
                                                   paramValue="${attachment.id}"
-                                                  target="_blank"
                                                   src="/themes/defaulttheme/images/download.png"
                                                   altKey="itracker.web.image.download.attachment.alt"
                                                   textActionKey="itracker.web.image.download.texttag"/>

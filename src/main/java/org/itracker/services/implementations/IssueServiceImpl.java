@@ -1,36 +1,20 @@
 /*
-
- * This software was designed and created by Jason Carroll.
-
- * Copyright (c) 2002, 2003, 2004 Jason Carroll.
-
- * The author can be reached at jcarroll@cowsultants.com
-
- * ITracker website: http://www.cowsultants.com
-
- * ITracker forums: http://www.cowsultants.com/phpBB/index.php
-
- *
-
- * This program is free software; you can redistribute it and/or modify
-
- * it only under the terms of the GNU General Public License as published by
-
- * the Free Software Foundation; either version 2 of the License, or
-
- * (at your option) any later version.
-
- *
-
- * This program is distributed in the hope that it will be useful,
-
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-
- * GNU General Public License for more details.
-
- */
+* This software was designed and created by Jason Carroll.
+* Copyright (c) 2002, 2003, 2004 Jason Carroll.
+* The author can be reached at jcarroll@cowsultants.com
+* ITracker website: http://www.cowsultants.com
+* ITracker forums: http://www.cowsultants.com/phpBB/index.php
+*
+* This program is free software; you can redistribute it and/or modify
+* it only under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*/
 
 package org.itracker.services.implementations;
 
@@ -50,11 +34,8 @@ import org.itracker.web.util.ServletContextUtils;
 import java.util.*;
 
 /**
- * Issue related service layer. A bit "fat" at this time, because of being a
- * direct EJB porting. Going go get thinner over time
- *
- * @author ricardo
- */
+ * Issue related service layer. A bit "fat" at this time, because of being a* direct EJB porting. Going go get thinner over time** @author ricardo
+ * */
 
 //TODO: Cleanup this file, go through all issues, todos, etc.
 
@@ -332,10 +313,6 @@ public class IssueServiceImpl implements IssueService {
 
             issue.getNotifications().add(watchModel);
 
-//			Does save issue after saving notificaton ->  not-null property references a null or transient value: org.itracker.model.Notification.issue
-//			Will be saved by cascade when saving issue
-//			notificationService.addIssueNotification(watchModel);
-
         }
 
         List<IssueActivity> activities = new ArrayList<IssueActivity>();
@@ -595,8 +572,6 @@ public class IssueServiceImpl implements IssueService {
                 field.setCustomField(customField);
                 field.setIssue(issue);
 
-                // what date value?
-                // field.setDateValue(new Timestamp(new Date().getTime()));
                 issueFields.add(field);
             }
         }
@@ -1201,23 +1176,21 @@ public class IssueServiceImpl implements IssueService {
     /**
      * Adds an attachment to an issue
      *
-     * @param model The attachment data
-     * @param data  The byte data
+     * @param attachment The attachment data
+     * @param data       The byte data
      */
     public boolean addIssueAttachment(IssueAttachment attachment, byte[] data) {
         Issue issue = attachment.getIssue();
-        // User user = attachment.getUser();
 
         attachment.setFileName("attachment_issue_" + issue.getId() + "_"
                 + attachment.getOriginalFileName());
         attachment.setFileData((data == null ? new byte[0] : data));
 
-        // attachment.setIssue(issue);
-        // attachment.setUser(user);
-
-        // TODO: activity for adding attachment?
-        // IssueActivity activityAdd = new IssueActivity(attachment.getIssue(),
-        // user, IssueActivity.Type.ATTACHEMENT_ADDED)
+        // TODO: translate activity for adding attachments
+        // IssueActivity activityAdd = new IssueActivity(issue,
+        //         attachment.getUser(), IssueActivityType.ATTACHMENT_ADDED);
+        // activityAdd.setDescription(attachment.getOriginalFileName());
+        // issue.getActivities().add(activityAdd);
 
         if (logger.isDebugEnabled()) {
             logger.debug("addIssueAttachment: adding attachment " + attachment);
@@ -1288,9 +1261,6 @@ public class IssueServiceImpl implements IssueService {
 
             history.setStatus(IssueUtilities.HISTORY_STATUS_REMOVED);
 
-            // moved date stuff to BaseHibernateDAO
-            // history.setLastModifiedDate(new Timestamp(new Date().getTime()));
-
             IssueActivity activity = new IssueActivity();
             activity
                     .setActivityType(org.itracker.model.IssueActivityType.REMOVE_HISTORY);
@@ -1304,9 +1274,6 @@ public class IssueServiceImpl implements IssueService {
 
             getIssueHistoryDAO().delete(history);
 
-            // need to fix this - RJST
-            // activity.setIssue(history.getIssue().getId());
-            // activity.setUser(userId);
             return history.getIssue().getId();
 
         }
@@ -1404,10 +1371,6 @@ public class IssueServiceImpl implements IssueService {
         return getIssueAttachmentDAO().countAll().longValue();
     }
 
-    /**
-     * @deprecated do not use this due to expensive memory use! use explicit
-     *             hsqldb queries instead.
-     */
     public List<IssueAttachment> getAllIssueAttachments() {
         logger.warn("getAllIssueAttachments: use of deprecated API");
         if (logger.isDebugEnabled()) {

@@ -84,7 +84,7 @@ public interface IssueService {
     /**
      * Creates a new issue in a project.
      *
-     * @param model       an Issue representing the new issue information
+     * @param issue       an Issue representing the new issue information
      * @param projectId   the projectId the issue belongs to
      * @param userId      the id of registered creator of the new issue
      * @param createdById the id of the actual creator of the issue.  This would normally be the same as the userId.
@@ -96,7 +96,7 @@ public interface IssueService {
     /**
      * Save a modified issue to the persistence layer
      *
-     * @param issueDirty the changed, unsaved issue to update on persistency layer
+     * @param issue      the changed, unsaved issue to update on persistency layer
      * @param userId     the user-id of the changer
      */
     Issue updateIssue(Issue issue, Integer userId) throws ProjectException;
@@ -140,10 +140,6 @@ public interface IssueService {
     boolean addIssueHistory(IssueHistory history);
 
     boolean addIssueRelation(Integer issueId, Integer relatedIssueId, int relationType, Integer userId);
-
-    //boolean addIssueActivity(IssueActivityModel model);
-
-//    void updateIssueActivityNotification(Integer issueId, boolean notificationSent);
 
     boolean addIssueAttachment(IssueAttachment attachment, byte[] data);
 
@@ -198,29 +194,9 @@ public interface IssueService {
 
     List<IssueActivity> getIssueActivity(Integer issueId, boolean notificationSent);
 
-    /**
-     * @deprecated
-     */
     List<IssueAttachment> getAllIssueAttachments();
 
-//    /**
-//     * @deprecated use the methods getAllIssueAttachmentSize and getAllIssueAttachmentCount instead.
-//     * @return
-//     */
-//    long[] getAllIssueAttachmentsSizeAndCount();
-
     Long getAllIssueAttachmentSize();
-
-//    /**
-//     * @deprecated use getAllIssueAttachmentSize instead.
-//     * @return
-//     */
-//    Long totalSystemIssuesAttachmentSize();
-//    /**
-//     * @deprecated use getAllIssuesAttachmentCount instead
-//     * @return
-//     */
-//    Long countSystemIssuesAttachments();
 
     Long getAllIssueAttachmentCount();
 
@@ -248,55 +224,6 @@ public interface IssueService {
     IssueHistory getLastIssueHistory(Integer issueId);
 
     List<IssueHistory> getIssueHistory(Integer issueId);
-
-//    /**
-//     * @deprecated Moved to NotificationService
-//     * Retrieves the primary issue notifications.  Primary notifications
-//     * are defined as the issue owner (or creator if not assigned), and any project owners.
-//     * This should encompass the list of people that should be notified so that action
-//     * can be taken on an issue that needs immediate attention.
-//     * @param issueId the id of the issue to find notifications for
-//     * @returns an array of NotificationModels
-//     */
-//    List<Notification> getPrimaryIssueNotifications(Integer issueId);
-//    
-//    /**
-//     * Retrieves all notifications for an issue where the notification's user is also active.
-//     * @param issueId the id of the issue to find notifications for
-//     * @returns an array of NotificationModels
-//     * @deprecated Moved to NotificationService
-//     */
-//    List<Notification> getIssueNotifications(Integer issueId);
-//    
-//    /**
-//     * Retrieves an array of issue notifications.  The notifications by default
-//     * is the creator and owner of the issue, all project admins for the issue's project,
-//     * and anyone else that has a notfication on file.
-//     * @param issueId the id of the issue to find notifications for
-//     * @param pimaryOnly only include the primary notifications
-//     * @param activeOnly only include the notification if the user is currently active (not locked or deleted)
-//     * @returns an array of NotificationModels
-//     * @see org.itracker.services.implementations.IssueServiceImpl#getPrimaryIssueNotifications
-//     * @deprecated moved to NotificationService
-//     */
-//    boolean removeIssueNotification(Integer notificationId);
-//    
-//    /**
-//     * @deprecated Moved to NotificationService
-//     * @param issueId
-//     * @param primaryOnly
-//     * @param activeOnly
-//     * @return
-//     */
-//    List<Notification> getIssueNotifications(Integer issueId, boolean primaryOnly, boolean activeOnly);
-//    /**
-//     * @deprecated Moved to NotificationService
-//     * @param issueId
-//     * @param userId
-//     * @return
-//     */
-//    boolean hasIssueNotification(Integer issueId, Integer userId);
-
 
     int getOpenIssueCountByProjectId(Integer projectId);
 

@@ -11,9 +11,15 @@
             <ul>
                 <li>
                     Datbase Reports table:
-                    <code>ALTER TABLE `itracker_3_0_2`.`reportbean` CHANGE COLUMN `report_type` `report_type` INT(11) NULL  ;</code>
-                    <code>ALTER TABLE `itracker_3_0_2`.`reportbean` CHANGE COLUMN `data_type` `report_type` INT(11) NULL  ;</code>
-                    <code>ALTER TABLE `itracker_3_0_2`.`reportbean` CHANGE COLUMN `class_name` `report_type` INT(11) NULL  ;</code>
+                    <code>ALTER TABLE reportbean CHANGE COLUMN report_type report_type INT(11) NULL  ;</code>
+                    <code>ALTER TABLE reportbean CHANGE COLUMN data_type report_type INT(11) NULL  ;</code>
+                    <code>ALTER TABLE reportbean CHANGE COLUMN class_name report_type INT(11) NULL  ;</code>
+                    or remove all:
+                    <code>ALTER TABLE reportbean DROP COLUMN class_name , DROP COLUMN report_type , DROP COLUMN data_type ;</code>
+                </li>
+                <li>
+                    To fix the DB unique key on projectscript, so the same script can be set on different fields in one project. SQL to Fix the DB:
+                    <code>ALTER TABLE projectscriptbean DROP INDEX project_id, ADD UNIQUE INDEX project_id (project_id ASC, script_id ASC, field_id ASC) ; </code>
                 </li>
             </ul>
         </section>
@@ -30,6 +36,10 @@
 
             <p>
                 Upgrades for dependencies.
+            </p>
+
+            <p>
+                Project Script fixes.
             </p>
 
 

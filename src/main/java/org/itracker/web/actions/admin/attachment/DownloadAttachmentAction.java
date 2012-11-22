@@ -35,7 +35,7 @@ public class DownloadAttachmentAction extends ItrackerBaseAction {
         }
 
         response.setContentType(attachment.getType());
-        response.setHeader("Content-Disposition", "inline; filename=" + attachment.getOriginalFileName() + "");
+        response.setHeader("Content-Disposition", "attachment; filename=" + attachment.getOriginalFileName() + "");
         ServletOutputStream outputStream = response.getOutputStream();
         log.debug("Displaying attachment " + attachment.getId() + " of type " + attachment.getType()
                 + " to client.  Attachment size: " + attachment.getFileData().length);
