@@ -22,6 +22,10 @@ pre, .pre {
     color: #666;
     padding: 0.5em;
 }
+a.pre {
+    border: none;
+    padding: 0;
+}
 
 a:hover {
     color: #000000;
