@@ -5,9 +5,7 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="true" package="org.itracker.model">
-    <!-- TODO: Should it be possible to assign same script on different fields of the same project?
-        -> remove the unique-key attributes and drop index for exinsting databases
-     -->
+
     <class name="ProjectScript" table="projectscriptbean">
 
         <id name="id" unsaved-value="null">
@@ -26,7 +24,8 @@
         </many-to-one>
 
         <property name="fieldId">
-            <column name="field_id" not-null="true"/>
+            <column name="field_id" not-null="true"
+                    unique-key="project_script_ak"/>
         </property>
 
         <property name="priority">
