@@ -18,8 +18,6 @@
 
 package org.itracker.web.actions.admin.attachment;
 
-import com.sun.tools.internal.ws.wsdl.document.mime.MIMEConstants;
-import com.sun.tools.internal.ws.wsdl.document.mime.MIMEContent;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.IssueAttachment;
