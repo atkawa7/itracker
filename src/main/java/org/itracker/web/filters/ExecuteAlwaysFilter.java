@@ -105,6 +105,11 @@ public class ExecuteAlwaysFilter implements Filter {
 
         User currUser = LoginUtilities.getCurrentUser(request);
 
+        if (null != currUser && this.loginForwardPath.equals(path)) {
+            redirectToOnLoginSuccess(request, (HttpServletResponse) response);
+        }
+
+
         if (null == currUser && protect) {
 //			check for autologin
             if (LoginUtilities.checkAutoLogin(request, configurationService.getBooleanProperty(
@@ -450,7 +455,7 @@ public class ExecuteAlwaysFilter implements Filter {
         String path = (String) request.getSession().getAttribute(
                 SES_KEY_REDIRECT_ON_SUCCESS);
         if (null == path) {
-            path = "/";
+            path = request.getContextPath() + "/";
         }
         if (log.isDebugEnabled()) {
             log.debug("redirectToOnLoginSuccess: sending redirect to " + path);
