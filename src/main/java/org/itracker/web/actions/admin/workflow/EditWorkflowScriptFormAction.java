@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
     private static final Logger log = Logger.getLogger(EditWorkflowScriptFormAction.class);
@@ -106,8 +107,7 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
                 request.setAttribute("pageTitleKey", pageTitleKey);
                 request.setAttribute("pageTitleArg", pageTitleArg);
 
-                NameValuePair[] eventTypes = WorkflowUtilities.getEvents(getLocale(request));
-                request.setAttribute("nameValuePair", Arrays.asList(eventTypes));
+                setupFormEeventTypes(request, getLocale(request));
 
                 return mapping.getInputForward();
             }
@@ -128,5 +128,12 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
         return mapping.findForward("error");
     }
 
+    public static final void setupFormEeventTypes(HttpServletRequest request, Locale locale) {
+
+
+        NameValuePair[] eventTypes = WorkflowUtilities.getEvents(locale);
+        request.setAttribute("nameValuePair", Arrays.asList(eventTypes));
+
+    }
 }
   

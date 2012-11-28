@@ -21,6 +21,7 @@ package org.itracker.web.actions.admin.workflow;
 //import java.io.ByteArrayInputStream;
 
 import bsh.ParseException;
+import bsh.Parser;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
@@ -29,12 +30,15 @@ import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.ServletContextUtils;
+import org.springframework.dao.DataAccessException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.StringReader;
 
 
 public class EditWorkflowScriptAction extends ItrackerBaseAction {
@@ -60,23 +64,17 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
         WorkflowScript workflowScript = null;
 
         try {
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+            ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
 
+            // parse the file to check syntax
             String scriptData = (String) PropertyUtils.getSimpleProperty(form, "script");
             if (scriptData != null && scriptData.trim().length() > 0) {
-                //ByteArrayInputStream sbis = new ByteArrayInputStream(scriptData.getBytes());
-                //Parser parser = new Parser(sbis);
-//                try {
-//                    while(!parser.Line()) {
-                // do nothing, if script is syntactically correct
-                // no exception is thrown
-//                    }
-//                } catch(Throwable t) {
-//                    throw new ParseException(t.getMessage());
-//                }
+                Parser parser = new Parser(new StringReader(scriptData));
+                boolean eof;
+                while (!(eof = parser.Line())) {
+                }
             }
 
-            log.info("Kimba:  using this module action 1");
             workflowScript = new WorkflowScript();
             workflowScript.setId((Integer) PropertyUtils.getSimpleProperty(form, "id"));
             workflowScript.setName((String) PropertyUtils.getSimpleProperty(form, "name"));
@@ -84,7 +82,8 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
             workflowScript.setScript(scriptData);
 
             String action = (String) PropertyUtils.getSimpleProperty(form, "action");
-            log.info("Kimba:  using this module action 2" + action);
+
+
             if ("create".equals(action)) {
                 workflowScript = configurationService.createWorkflowScript(workflowScript);
             } else if ("update".equals(action)) {
@@ -94,19 +93,22 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
             if (workflowScript == null) {
                 throw new Exception("Error creating/updating workflow script.");
             }
-
             HttpSession session = request.getSession(true);
             session.removeAttribute(Constants.WORKFLOW_SCRIPT_KEY);
             request.setAttribute("action", action);
             saveToken(request);
-//            return mapping.findForward("listworkflow");
             return new ActionForward(mapping.findForward("listworkflow").getPath() + "?id=" + workflowScript.getId() + "&action=update");
         } catch (ParseException pe) {
-            log.debug("Error parseing script.  Redisplaying form for correction.", pe);
+            log.info("Error parsing script.  Redisplaying form for correction.", pe);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidscriptdata", pe.getMessage()));
             saveErrors(request, errors);
-            saveToken(request);
-            return mapping.getInputForward();
+            return toInputForward(request, mapping);
+        } catch (DataAccessException dae) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system.message",
+                    dae.getRootCause().getMessage(), "Data"));
+
+            saveErrors(request, errors);
+            return toInputForward(request, mapping);
         } catch (Exception e) {
             log.error("Exception processing form data", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
@@ -116,6 +118,12 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
             saveErrors(request, errors);
         }
         return mapping.findForward("error");
+    }
+
+    private ActionForward toInputForward(HttpServletRequest request, ActionMapping mapping) {
+        EditWorkflowScriptFormAction.setupFormEeventTypes(request, getLocale(request));
+        saveToken(request);
+        return mapping.getInputForward();
     }
 
 }

@@ -318,8 +318,9 @@ public class WorkflowUtilities {
             logger.warn("processFieldScript: Error processing field script: " + projectScript, e);
             currentErrors.add(ActionMessages.GLOBAL_MESSAGE,
                     new ActionMessage("itracker.web.error.system.message",
-                            new Object[]{ITrackerResources.getString("itracker.web.attr.script"), // Script
-                                    e.getMessage()
+                            new Object[]{
+                                    e.getMessage(),
+                                    ITrackerResources.getString("itracker.web.attr.script") // Script
                             }));
         }
         if (logger.isDebugEnabled()) {
