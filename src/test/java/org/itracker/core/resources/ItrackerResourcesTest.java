@@ -10,8 +10,7 @@ import java.util.ResourceBundle;
 
 import static org.junit.Assert.*;
 
-// TODO makit unit-test?
-public class ITrackerResourcesIT {
+public class ItrackerResourcesTest {
     private String defaultLocaleString_;
     private Locale defaultLocale_;
     private ResourceBundle defaultResourceBundle_;
@@ -45,8 +44,8 @@ public class ITrackerResourcesIT {
 
     @After
     public void onTearDown() throws Exception {
-        ITrackerResources.setDefaultLocale(defaultLocaleString_);
     }
+
 
     @Test
     public void testGetLocaleNull() {
@@ -60,50 +59,11 @@ public class ITrackerResourcesIT {
         Locale localeInvalid = ITrackerResources.getLocale("ABCDEFG");
         Locale localeDefault = ITrackerResources.getLocale(ITrackerResources.getDefaultLocale());
         assertEquals(localeInvalid, localeDefault);
-        ITrackerResources.setDefaultLocale("ABCDEFG");
         localeInvalid = ITrackerResources.getLocale("ABCDEFG");
         localeDefault = ITrackerResources.getLocale(ITrackerResources.DEFAULT_LOCALE);
         assertEquals(localeInvalid, localeDefault);
     }
 
-    @Test
-    public void testGetBundleEmptyString() {
-        ResourceBundle resourceBundle = ITrackerResources.getBundle("");
-        assertNotNull(resourceBundle);
-        assertEquals(defaultResourceBundle_, resourceBundle);
-    }
-
-    @Test
-    public void testGetBundleStringParameter() {
-        ResourceBundle resourceBundle = ITrackerResources.getBundle(defaultLocaleString_);
-        assertNotNull(resourceBundle);
-        assertEquals(defaultResourceBundle_, resourceBundle);
-    }
-
-    @Test
-    public void testGetBundleNullLocale() {
-        ResourceBundle resourceBundle = ITrackerResources.getBundle((Locale) null);
-        assertNotNull(resourceBundle);
-        assertEquals(defaultResourceBundle_, resourceBundle);
-    }
-
-    @Test
-    public void testGetEditBundleNullLocale() {
-        //TODO: set languageDAO of ConfigurationService
-        ResourceBundle resourceBundle = ITrackerResources.getEditBundle(null);
-        assertNotNull(resourceBundle);
-        assertEquals(defaultResourceBundle_.getLocale(), resourceBundle.getLocale());
-        Enumeration<String> keys = resourceBundle.getKeys(); // keys of copy bundle
-        while (keys.hasMoreElements()) {
-            String key = keys.nextElement();
-            assertEquals(defaultResourceBundle_.getString(key), resourceBundle.getString(key));
-        }
-        keys = defaultResourceBundle_.getKeys(); // keys of original bundle
-        while (keys.hasMoreElements()) {
-            String key = keys.nextElement();
-            assertEquals(defaultResourceBundle_.getString(key), resourceBundle.getString(key));
-        }
-    }
 
     @Test
     public void testClearBundles() {
@@ -141,7 +101,6 @@ public class ITrackerResourcesIT {
             assertNotNull(resourceBundle.getString("itracker.web.attr.admin"));
             assertEquals("", ResourceBundle.getBundle(ITrackerResources.RESOURCE_BUNDLE_NAME, resourceBundle.getLocale()).getString("itracker.web.attr.admin"),
                     resourceBundle.getString("itracker.web.attr.admin"));
-//			fail("Should throw MissingResourceException");
         } catch (RuntimeException exception) {
             fail("should fall back to properties resource, but throwed " + exception.getClass() + ", " + exception.getMessage());
         }
@@ -154,7 +113,6 @@ public class ITrackerResourcesIT {
 
     @Test
     public void testGetStringDefaultLocaleString() {
-        ITrackerResources.setDefaultLocale(testLocaleString_);
         assertEquals("Admin", ITrackerResources.getString("itracker.web.attr.admin", (String) null));
     }
 
@@ -168,18 +126,8 @@ public class ITrackerResourcesIT {
         assertEquals("", ITrackerResources.getString(null, testLocale_));
     }
 
-    @Test
-    public void testGetStringWithLocaleWithDirtyKey() {
-        testResourceBundle_.removeValue("itracker.web.attr.admin", true);
-        String value = ITrackerResources.getString("itracker.web.attr.admin", testLocale_);
-
-
-        // When a language items is removed, the default is loaded from properties.
-        assertEquals("Admin", value);
-    }
 
     @Test
-
     public void testGetStringWithLocaleWithRemovedKey() {
         testResourceBundle_.removeValue("itracker.web.attr.admin", false);
         String value = ITrackerResources.getString("itracker.web.attr.admin", testLocale_);
@@ -218,14 +166,12 @@ public class ITrackerResourcesIT {
 
     @Test
     public void testGetCheckForKey() {
-        ITrackerResources.setDefaultLocale(testLocaleString_);
         String value = ITrackerResources.getCheckForKey("itracker.web.attr.admin");
         assertEquals("Admin", value);
     }
 
     @Test
     public void testGetCheckForKeyDirty() {
-        ITrackerResources.setDefaultLocale(testLocaleString_);
         testResourceBundle_.removeValue("itracker.web.attr.admin", true);
         String value = ITrackerResources.getCheckForKey("itracker.web.attr.admin");
 
@@ -236,9 +182,8 @@ public class ITrackerResourcesIT {
 
     @Test
     public void testGetCheckForKeyWithWrongBundle() {
-        ITrackerResources.setDefaultLocale("AAAAAA");
         try {
-            ITrackerResources.getCheckForKey("itracker.web.attr.admin");
+            ITrackerResources.getCheckForKey("itracker.web.attr.admin", new Locale("AAAAAA"));
 
         } catch (RuntimeException exception) {
 
@@ -248,28 +193,22 @@ public class ITrackerResourcesIT {
 
     @Test
     public void testIsLongStringFalse() {
-        ITrackerResources.setDefaultLocale(testLocaleString_);
         assertFalse(ITrackerResources.isLongString("itracker.web.attr.admin"));
     }
 
     @Test
     public void testIsLongStringTrueLong() {
-        ITrackerResources.setDefaultLocale(testLocaleString_);
-        assertTrue(ITrackerResources.isLongString("itracker.web.attr.longString"));
+        assertTrue(ITrackerResources.isLongString("itracker.web.moveissue.instructions"));
     }
 
     @Test
     public void testIsLongStringTrueNewLine() {
-        ITrackerResources.setDefaultLocale(testLocaleString_);
-        assertTrue(ITrackerResources.isLongString("itracker.web.attr.newLine"));
+        assertTrue(ITrackerResources.isLongString("itracker.email.forgotpass.body"));
     }
 
     @Test
     public void testInitialized() {
-        ITrackerResources.setInitialized(false);
         assertFalse(ITrackerResources.isInitialized());
-        ITrackerResources.setInitialized(true);
-        assertTrue(ITrackerResources.isInitialized());
     }
 
     @Test
@@ -323,15 +262,6 @@ public class ITrackerResourcesIT {
         assertEquals(originalString, ITrackerResources.unescapeUnicodeString(escapedString));
     }
 
-//	@Override
-//	protected String[] getDataSetFiles() {
-//        return new String[]{};
-//	}
-//
-//	@Override
-//	protected String[] getConfigLocations() {
-//		return new String[]{"application-context.xml"};
-//	}
 }
 
  	  	 

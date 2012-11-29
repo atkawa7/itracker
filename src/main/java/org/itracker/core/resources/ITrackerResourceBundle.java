@@ -127,10 +127,7 @@ public class ITrackerResourceBundle extends ResourceBundle {
         return dataArray.clone();
     }
 
-    /**
-     * @deprecated should be private
-     */
-    public void setContents(List<Language> content) {
+    private void setContents(List<Language> content) {
         if (content != null) {
             synchronized (data) {
                 data.clear();
@@ -144,8 +141,7 @@ public class ITrackerResourceBundle extends ResourceBundle {
     }
 
     /**
-     * @param content should be private
-     * @deprecated
+     * @param content
      */
     private void setContents(Object[][] content) {
         if (content != null && content.length == 2

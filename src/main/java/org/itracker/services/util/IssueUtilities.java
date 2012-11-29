@@ -869,7 +869,7 @@ public class IssueUtilities {
             }
         }
 
-        Collection<Notification> notifications = ServletContextUtils.getItrackerServices().getNotificationService().getIssueNotifications(issue);
+        Collection<Notification> notifications = issue.getNotifications();
         if (notifications != null && !notifications.isEmpty()) {
             Iterator<Notification> notificationsIt = notifications.iterator();
             while (notificationsIt.hasNext()) {

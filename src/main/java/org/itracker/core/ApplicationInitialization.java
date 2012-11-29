@@ -54,8 +54,7 @@ public class ApplicationInitialization {
 
     public void init() {
         try {
-            ITrackerResources.setDefaultLocale(configurationService.getProperty("default_locale", ITrackerResources.DEFAULT_LOCALE));
-            logger.info("Set system default locale to '" + ITrackerResources.getDefaultLocale() + "'");
+            ITrackerResources.setConfigurationService(configurationService);
 
             logger.info("Checking and initializing languages in the database.");
             SystemConfigurationUtilities.initializeAllLanguages(configurationService, false);
