@@ -10,7 +10,7 @@ import java.io.IOException;
  *
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
  */
-public class LogoutTest extends AbstractSeleniumTestCase {
+public class LogoutSeleniumIT extends AbstractSeleniumTestCase {
     /**
      * Verifies the successfull login case with valid login/password.
      * <p/>

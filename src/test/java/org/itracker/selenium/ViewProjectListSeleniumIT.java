@@ -9,7 +9,7 @@ import java.io.IOException;
  *
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
  */
-public class ViewProjectListTest extends AbstractSeleniumTestCase {
+public class ViewProjectListSeleniumIT extends AbstractSeleniumTestCase {
     /**
      * 0. Exit all available http sessions.
      * 1. Login into the system with particular login (admin_test1).

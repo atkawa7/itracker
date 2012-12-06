@@ -9,7 +9,7 @@ import java.io.IOException;
  *
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
  */
-public class LoginTest extends AbstractSeleniumTestCase {
+public class LoginSeleniumIT extends AbstractSeleniumTestCase {
 
 
     /**

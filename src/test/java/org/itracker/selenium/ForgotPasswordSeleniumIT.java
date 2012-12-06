@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  *
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
  */
-public class ForgotPasswordTest extends AbstractSeleniumTestCase {
+public class ForgotPasswordSeleniumIT extends AbstractSeleniumTestCase {
     /**
      * 1. Go to the Login Page.
      * 2. Leave all input fields (login and password) empty.

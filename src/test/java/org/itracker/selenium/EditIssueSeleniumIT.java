@@ -8,7 +8,7 @@ import org.subethamail.wiser.WiserMessage;
  *
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
  */
-public class EditIssueTest extends AbstractSeleniumTestCase {
+public class EditIssueSeleniumIT extends AbstractSeleniumTestCase {
 
     /**
      * Editing one of tickets.

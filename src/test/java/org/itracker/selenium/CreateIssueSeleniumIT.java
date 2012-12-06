@@ -12,9 +12,9 @@ import org.subethamail.wiser.WiserMessage;
  *
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
  */
-public class CreateIssueTest extends AbstractSeleniumTestCase {
+public class CreateIssueSeleniumIT extends AbstractSeleniumTestCase {
 
-    private static final Logger log = Logger.getLogger(CreateIssueTest.class);
+    private static final Logger log = Logger.getLogger(CreateIssueSeleniumIT.class);
 
     /**
      * 1. Login into the system with some particular user

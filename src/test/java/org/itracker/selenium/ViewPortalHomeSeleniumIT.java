@@ -9,7 +9,7 @@ import java.io.IOException;
  *
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
  */
-public class ViewPortalHomeTest extends AbstractSeleniumTestCase {
+public class ViewPortalHomeSeleniumIT extends AbstractSeleniumTestCase {
     /**
      * Verifies the successfull login case with valid login/password.
      * <p/>

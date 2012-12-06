@@ -9,7 +9,7 @@ import java.io.IOException;
  *
  * @author Andrey Sergievskiy <seas@andreysergievskiy.com>
  */
-public class ViewProjectIssueListTest extends AbstractSeleniumTestCase {
+public class ViewProjectIssueListSeleniumIT extends AbstractSeleniumTestCase {
     /**
      * 1. Login into the application with a specific user (admin_test1).
      * 2. Goto Project List page.
