@@ -21,13 +21,9 @@ package org.itracker.web.actions.project;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
-import org.apache.struts.validator.ValidatorForm;
-import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
-import org.itracker.services.exceptions.IssueException;
-import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.services.util.WorkflowUtilities;
@@ -40,7 +36,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
 public class EditIssueAction extends ItrackerBaseAction {
     private static final Logger log = Logger.getLogger(EditIssueAction.class);

@@ -22,11 +22,12 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.Configuration;
+import org.itracker.model.Configuration.Type;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.SystemConfigurationException;
-import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.LoginUtilities;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,8 +35,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.itracker.model.Configuration.Type;
-import org.itracker.web.util.LoginUtilities;
 
 
 public class OrderConfigurationItemAction extends ItrackerBaseAction {

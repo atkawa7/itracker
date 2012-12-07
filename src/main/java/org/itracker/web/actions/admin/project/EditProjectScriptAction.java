@@ -20,11 +20,9 @@ package org.itracker.web.actions.admin.project;
 
 //import java.io.ByteArrayInputStream;
 
-import bsh.ParseException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
-import org.hibernate.HibernateException;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.WorkflowScript;
@@ -34,12 +32,10 @@ import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectScriptForm;
-import org.itracker.web.util.Constants;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;

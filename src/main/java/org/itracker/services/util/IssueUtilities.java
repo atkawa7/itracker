@@ -21,7 +21,6 @@ package org.itracker.services.util;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
-import org.itracker.web.util.ServletContextUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;

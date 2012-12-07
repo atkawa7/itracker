@@ -20,11 +20,7 @@ package org.itracker.model;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.hibernate.Hibernate;
 
-import java.io.*;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.Comparator;
 
 /**

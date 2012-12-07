@@ -1,32 +1,9 @@
 package org.itracker.web.actions.project;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.Component;
-import org.itracker.model.Issue;
-import org.itracker.model.IssueAttachment;
-import org.itracker.model.IssueHistory;
-import org.itracker.model.PermissionType;
-import org.itracker.model.Project;
-import org.itracker.model.Status;
-import org.itracker.model.User;
-import org.itracker.model.Version;
+import org.itracker.model.*;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
 import org.itracker.services.util.IssueUtilities;
@@ -34,6 +11,11 @@ import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.RequestHelper;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 public class ViewIssueAction extends ItrackerBaseAction {
 	private static final Logger log = Logger.getLogger(ViewIssueAction.class);

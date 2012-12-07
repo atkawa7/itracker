@@ -21,12 +21,9 @@ package org.itracker.web.forms;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
-import org.itracker.model.CustomField;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.

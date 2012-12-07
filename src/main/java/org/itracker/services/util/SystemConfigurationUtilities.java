@@ -22,11 +22,9 @@ import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
 import org.itracker.model.NameValuePair;
-import org.itracker.persistence.dao.AbstractEnumUserType;
 import org.itracker.services.ConfigurationService;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 

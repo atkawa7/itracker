@@ -18,36 +18,11 @@
 
 package org.itracker.services.implementations;
 
-import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.engine.export.JRHtmlExporter;
-import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.view.JRViewer;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.RequestUtils;
-import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.Issue;
 import org.itracker.model.Report;
 import org.itracker.persistence.dao.ReportDAO;
 import org.itracker.services.ReportService;
-import org.itracker.services.exceptions.ReportException;
-import org.itracker.web.util.Constants;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.swing.*;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 public class ReportServiceImpl implements ReportService {
 

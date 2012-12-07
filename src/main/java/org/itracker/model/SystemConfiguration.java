@@ -20,10 +20,8 @@ package org.itracker.model;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.itracker.services.util.SystemConfigurationUtilities;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 

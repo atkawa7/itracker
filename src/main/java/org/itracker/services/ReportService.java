@@ -18,16 +18,10 @@
 
 package org.itracker.services;
 
-import org.apache.struts.action.ActionMapping;
-import org.itracker.model.Issue;
 import org.itracker.model.Report;
 import org.itracker.persistence.dao.ReportDAO;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Locale;
 
 public interface ReportService {
 

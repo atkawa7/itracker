@@ -32,7 +32,6 @@ import org.itracker.model.ProjectScript;
 import org.itracker.services.exceptions.WorkflowException;
 import org.itracker.web.forms.IssueForm;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -304,12 +303,6 @@ public class WorkflowUtilities {
             if (logger.isDebugEnabled()) {
                 logger.debug("processFieldScript: Script returned current value of '" + optionValues + "' (" + (optionValues != null ? optionValues.getClass().getName() : "NULL") + ")");
             }
-            if (event == EVENT_FIELD_ONSETDEFAULT && form != null && optionValues != null) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("processFieldScript: Setting current form field value for field " + IssueUtilities.getFieldName(projectScript.getFieldId()) + " to '" + optionValues + "'");
-                }
-                setFormProperty(form, projectScript.getFieldId(), result);
-            }
         } catch (EvalError evalError) {
             logger.error("processFieldScript: eval failed: " + projectScript, evalError);
             currentErrors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -327,61 +320,6 @@ public class WorkflowUtilities {
             logger.debug("processFieldScript: returning " + result + ", errors: " + currentErrors);
         }
         return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static void setFormProperty(ValidatorForm form, Integer fieldId, Object currentValue) {
-        String fieldName = IssueUtilities.getFieldName(fieldId);
-        int fieldType = IssueUtilities.getFieldType(fieldId);
-        if (fieldType == IssueUtilities.FIELD_TYPE_SINGLE) {
-            try {
-                Field formField = form.getClass().getField(fieldName);
-                if (formField != null) {
-                    formField.set(form, currentValue);
-                } else {
-                    throw new IllegalArgumentException("no field with name "
-                            + fieldName + " found in form " + form);
-                }
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        } else if (fieldType == IssueUtilities.FIELD_TYPE_INDEXED) {
-            try {
-                Object indexedField = null;
-                Field formField = form.getClass().getField(fieldName);
-                indexedField = formField.get(form);
-                if (indexedField instanceof List) {
-                    ((List) indexedField).set(0, currentValue);
-                } else if (indexedField instanceof Collection) {
-                    ((Collection) indexedField).add(currentValue);
-                } else {
-                    throw new IllegalArgumentException("field with name "
-                            + fieldName + " found in form " + form + " is of unknown type");
-                }
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        } else if (fieldType == IssueUtilities.FIELD_TYPE_MAP) {
-            try {
-                Object indexedField = null;
-                Field formField = form.getClass().getField(fieldName);
-                indexedField = formField.get(form);
-                if (indexedField instanceof Map) {
-                    ((Map) indexedField).put(fieldId.toString(), currentValue);
-                } else {
-                    throw new IllegalArgumentException("field with name "
-                            + fieldName + " found in form " + form + " is of unknown type");
-                }
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 }

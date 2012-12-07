@@ -19,12 +19,10 @@
 package org.itracker.services;
 
 import org.itracker.model.*;
-import org.itracker.services.util.CustomFieldUtilities;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Manages the applications configuration properties.

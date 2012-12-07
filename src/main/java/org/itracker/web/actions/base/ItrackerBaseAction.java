@@ -19,14 +19,12 @@ package org.itracker.web.actions.base;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.struts.Globals;
-import org.apache.struts.action.*;
+import org.apache.struts.action.Action;
 import org.itracker.model.PermissionType;
-import org.itracker.model.User;
-import org.itracker.services.ConfigurationService;
 import org.itracker.services.ITrackerServices;
-import org.itracker.services.util.UserUtilities;
-import org.itracker.web.util.*;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
