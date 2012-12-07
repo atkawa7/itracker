@@ -79,11 +79,10 @@ public class CreateIssueSeleniumIT extends AbstractSeleniumTestCase {
 
 
         log.debug("testCreateUnassignedIssue, received:\n" + smtpMessageBody);
-        final String systemURL = "http://" + SeleniumManager.getApplicationHost() + "/"
-                        + SeleniumManager.getApplicationPath();
-        // TODO: not yet working in jetty-env.xml and from request..
-        assertTrue("System URL not contained in Message body, " + applicationURL + ", " + smtpMessageBody,
-                StringUtils.containsIgnoreCase(smtpMessageBody, applicationURL));
+        // as defined in jetty-env.xconf
+        final String systemURL = applicationURL + "/env";
+        assertTrue("System URL not contained in Message body, " + systemURL + ", " + smtpMessageBody,
+                StringUtils.containsIgnoreCase(smtpMessageBody, systemURL));
 
         assertTrue("Description not contained in Message body, " + descriptionValue,
                 smtpMessageBody.contains(descriptionValue));

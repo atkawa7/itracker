@@ -198,7 +198,7 @@
                         <configuration>
                             <forkMode>none</forkMode>
                             <excludes>
-                                <exclude>org/itracker/selenium/**/*.java</exclude>
+                                <exclude>org/itracker/**/SeleniumPreTest.java</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -217,7 +217,7 @@
                         <configuration>
                             <forkMode>none</forkMode>
                             <excludes>
-                                <exclude>org/itracker/selenium/**/*.java</exclude>
+                                <exclude>org/itracker/**/*SeleniumIT.java</exclude>
                             </excludes>
                             <skipITs>${itracker.it.skip}</skipITs>
                         </configuration>
@@ -1433,13 +1433,16 @@
                 <application.port>8888</application.port>
                 <application.path>itracker</application.path>
 
-                <main.dataSource.jdbcUrl>jdbc:hsqldb:hsql://localhost:8887/itrackerdev-test</main.dataSource.jdbcUrl>
+                <selenium.datasource.name>itrackerdev-test</selenium.datasource.name>
+                <selenium.datasource.port>8887</selenium.datasource.port>
+
+                <main.dataSource.jdbcUrl>jdbc:hsqldb:hsql://localhost:${selenium.datasource.port}/${selenium.datasource.name}</main.dataSource.jdbcUrl>
                 <main.dataSource.user>sa</main.dataSource.user>
                 <main.dataSource.password />
                 <main.dataSource.driverClass>org.hsqldb.jdbcDriver</main.dataSource.driverClass>
                 <main.hibernate.dialect>org.hibernate.dialect.HSQLDialect</main.hibernate.dialect>
 
-                <test.dataSource.jdbcUrl>jdbc:hsqldb:hsql://localhost:8887/itrackerdev-test</test.dataSource.jdbcUrl>
+                <test.dataSource.jdbcUrl>jdbc:hsqldb:hsql://localhost:${selenium.datasource.port}/${selenium.datasource.name}</test.dataSource.jdbcUrl>
                 <test.dataSource.user>sa</test.dataSource.user>
                 <test.dataSource.password />
                 <test.dataSource.driverClass>org.hsqldb.jdbcDriver</test.dataSource.driverClass>
@@ -1468,39 +1471,52 @@
                                 <configuration>
                                     <target unless="maven.test.skip">
                                         <property name="plugin_classpath" refid="maven.plugin.classpath" />
-                                        <concat destfile="${project.build.directory}/temp.bsh">
-                                            <![CDATA[
-						import java.sql.*;
 
-						try {
-						    Class.forName("org.hsqldb.jdbcDriver");
-						    String url = "jdbc:hsqldb:hsql://localhost:8887/" + bsh.args[0];
-						    Connection con = DriverManager.getConnection(url, "sa", "");
-						    String sql = "SHUTDOWN";
-						    Statement stmt = con.createStatement();
-						    stmt.executeUpdate(sql);
-						    stmt.close();
-						} catch (Exception e) {
-						    //
-						}
-					    ]]>
-                                        </concat>
-                                        <java classname="bsh.Interpreter" classpath="${plugin_classpath}">
-                                            <arg line="${project.build.directory}/temp.bsh itrackerdev-test" />
-                                        </java>
-                                        <delete failonerror="false">
-                                            <fileset dir="${project.build.directory}" includes="temp.bsh" />
-                                            <fileset dir="${java.io.tmpdir}/hsqldb" includes="itrackerdev-test*" />
-                                        </delete>
                                         <java fork="true" spawn="true" dir="${java.io.tmpdir}" classname="org.hsqldb.Server" classpath="${plugin_classpath}">
                                             <arg value="-database.0" />
-                                            <arg value="${java.io.tmpdir}/hsqldb/itrackerdev-test" />
+                                            <arg value="${java.io.tmpdir}/hsqldb/${selenium.datasource.name}" />
                                             <arg value="-dbname.0" />
-                                            <arg value="itrackerdev-test" />
+                                            <arg value="${selenium.datasource.name}" />
                                             <arg value="-port" />
-                                            <arg value="8887" />
+                                            <arg value="${selenium.datasource.port}" />
                                         </java>
                                     </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>hsql-server-stop</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target unless="maven.test.skip">
+                                         <property name="plugin_classpath" refid="maven.plugin.classpath" />
+                                         <concat destfile="${project.build.directory}/temp.bsh">
+                                                                             <![CDATA[
+                                 						import java.sql.*;
+
+                                 						try {
+                                 						    Class.forName("org.hsqldb.jdbcDriver");
+                                 						    String url = bsh.args[0];
+                                 						    Connection con = DriverManager.getConnection(url, "sa", "");
+                                 						    String sql = "SHUTDOWN";
+                                 						    Statement stmt = con.createStatement();
+                                 						    stmt.executeUpdate(sql);
+                                 						    stmt.close();
+                                 						} catch (Exception e) {
+                                 						    //
+                                 						}
+                                 					    ]]>
+                                         </concat>
+                                         <java classname="bsh.Interpreter" classpath="${plugin_classpath}">
+                                             <arg line="${project.build.directory}/temp.bsh ${main.dataSource.jdbcUrl}}" />
+                                         </java>
+                                         <delete failonerror="false">
+                                             <fileset dir="${project.build.directory}" includes="temp.bsh" />
+                                             <fileset dir="${java.io.tmpdir}/hsqldb" includes="itrackerdev-test*" />
+                                         </delete>
+                                     </target>
                                 </configuration>
                             </execution>
                             <execution>
@@ -1670,20 +1686,14 @@
                                     <goal>verify</goal>
                                 </goals>
                                 <configuration>
-                                    <skipTests>false</skipTests>
-                                    <!-- TODO: should change selenium tests to integration-tests. -->
-                                    <skipITs>false</skipITs>
                                     <properties>
                                         <!-- test-ng related configurations -->
                                     </properties>
                                     <test>${selenium.test}</test>
                                     <!--reportsDirectory>${project.build.directory}/failsafe-selenium-reports</reportsDirectory-->
                                     <includes>
-                                        <include>org/itracker/selenium/**/*.java</include>
+                                        <include>org/itracker/**/*SeleniumIT.java</include>
                                     </includes>
-                                    <excludes>
-                                        <exclude>org/itracker/selenium/**/*PreTest.java</exclude>
-                                    </excludes>
                                 </configuration>
                             </execution>
 
