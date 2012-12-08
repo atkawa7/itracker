@@ -18,9 +18,7 @@ import java.io.IOException;
 public abstract class AbstractSeleniumTestCase
         extends AbstractDependencyInjectionTest {
     public final static String SE_TIMEOUT = "20000";
-    public final static int SMTP_PORT = 2525;
     protected static final Wiser wiser;
-    //    protected SMTPServer smtp;
     protected Selenium selenium;
     protected String applicationHost;
     protected int applicationPort;
@@ -29,9 +27,9 @@ public abstract class AbstractSeleniumTestCase
     Logger log = Logger.getLogger(getClass());
 
     static {
-        wiser = new Wiser(SMTP_PORT);
+        wiser = new Wiser(SeleniumManager.getSMTPPort());
         wiser.start();
-        Logger.getLogger(AbstractSeleniumTestCase.class).info("started wiser on " + SMTP_PORT);
+        Logger.getLogger(AbstractSeleniumTestCase.class).info("started wiser on " + wiser.getServer().getPort());
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
@@ -103,5 +101,9 @@ public abstract class AbstractSeleniumTestCase
         assertNotNull("Login failed: 'itracker' Cookie was not found", selenium.getCookieByName("itracker"));
 
         log.debug("loginUser, logged in " + username + ", cookies: " + selenium.getCookie());
+    }
+    @Override
+    final protected String[] getConfigLocations() {
+        return new String[]{"selenium-it-application-context.xml"};
     }
 }

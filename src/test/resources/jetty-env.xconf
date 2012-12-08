@@ -12,7 +12,7 @@
                 <Set name="properties">
                     <New class="java.util.Properties">
                         <Put name="mail.smtp.host">localhost</Put>
-                        <Put name="mail.smtp.port">2525</Put>
+                        <Put name="mail.smtp.port">${selenium.smtp.port}</Put>
                         <Put name="mail.from">itracker@example.com</Put>
                         <Put name="mail.senderName">itracker</Put>
                         <Put name="mail.debug">false</Put>
@@ -28,7 +28,7 @@
         <Arg>
             <New class="com.mchange.v2.c3p0.ComboPooledDataSource">
                 <Set name="driverClass">${main.dataSource.driverClass}</Set>
-                <Set name="jdbcUrl">${main.dataSource.jdbcUrl}</Set>
+                <Set name="jdbcUrl">jdbc:hsqldb:hsql://localhost:${selenium.datasource.port}/${selenium.datasource.name}</Set>
                 <Set name="user">${main.dataSource.user}</Set>
                 <Set name="password">${main.dataSource.password}</Set>
                 <Set name="maxPoolSize">100</Set>
@@ -40,7 +40,7 @@
     <New class="org.eclipse.jetty.plus.jndi.EnvEntry">
         <Arg><Ref id='wac'/></Arg>
         <Arg>itracker/system_base_url</Arg>
-        <Arg>http://${application.host}:${application.port}/${application.path}/env</Arg>
+        <Arg>http://${application.host}:${it.application.port}/${application.path}/env</Arg>
         <Arg type="java.lang.Boolean">true</Arg>
     </New>
 </Configure>

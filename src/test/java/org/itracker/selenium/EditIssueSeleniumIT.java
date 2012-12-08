@@ -323,8 +323,4 @@ public class EditIssueSeleniumIT extends AbstractSeleniumTestCase {
         };
     }
 
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"application-context.xml"};
-    }
 }

@@ -55,6 +55,8 @@
         <maven-deploy-plugin.version>2.7</maven-deploy-plugin.version>
         <maven-wagon-ssh-plugin.version>2.2</maven-wagon-ssh-plugin.version>
         <maven-release-plugin.version>2.3.2</maven-release-plugin.version>
+        <maven-build-helper-plugin.version>1.7</maven-build-helper-plugin.version>
+        <maven-properties-plugin.version>1.0-alpha-2</maven-properties-plugin.version>
 
         <tomcat.deploy.server>localhost</tomcat.deploy.server>
         <tomcat.deploy.url>http://localhost:8080/manager</tomcat.deploy.url>
@@ -595,6 +597,17 @@
                             <version>1.4.4</version>
                         </dependency>
                     </dependencies>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${maven-build-helper-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>properties-maven-plugin</artifactId>
+                    <version>${maven-properties-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -1422,7 +1435,7 @@
                 <!--itracker.it.skip>true</itracker.it.skip-->
                 <selenium.firefox.binary>firefox</selenium.firefox.binary>
                 <selenium.host>localhost</selenium.host>
-                <selenium.port>5555</selenium.port>
+                <!-- selenium.port is set-up by helper-->
                 <selenium.browser>*firefox</selenium.browser>
                 <selenium.browserLogLevel>warn</selenium.browserLogLevel>
                 <selenium.speed>0</selenium.speed>
@@ -1430,18 +1443,20 @@
                 <selenium.test />
 
                 <application.host>localhost</application.host>
-                <application.port>8888</application.port>
+                <!-- it.application.port is set-up by helper-->
                 <application.path>itracker</application.path>
 
+                <!-- selenium.datasource.port is set-up by helper -->
                 <selenium.datasource.name>itrackerdev-test</selenium.datasource.name>
-                <selenium.datasource.port>8887</selenium.datasource.port>
 
+                <!-- main.dataSource.jdbcUrl must not be used, port is set-up by helper after property is created-->
                 <main.dataSource.jdbcUrl>jdbc:hsqldb:hsql://localhost:${selenium.datasource.port}/${selenium.datasource.name}</main.dataSource.jdbcUrl>
                 <main.dataSource.user>sa</main.dataSource.user>
                 <main.dataSource.password />
                 <main.dataSource.driverClass>org.hsqldb.jdbcDriver</main.dataSource.driverClass>
                 <main.hibernate.dialect>org.hibernate.dialect.HSQLDialect</main.hibernate.dialect>
 
+                <!-- main.dataSource.jdbcUrl must not be used, port is set-up by helper after property is created-->
                 <test.dataSource.jdbcUrl>jdbc:hsqldb:hsql://localhost:${selenium.datasource.port}/${selenium.datasource.name}</test.dataSource.jdbcUrl>
                 <test.dataSource.user>sa</test.dataSource.user>
                 <test.dataSource.password />
@@ -1459,6 +1474,49 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>reserve-network-port</id>
+                                <goals>
+                                    <goal>reserve-network-port</goal>
+                                </goals>
+                                <phase>process-test-classes</phase>
+                                <configuration>
+                                    <portNames>
+                                        <portName>selenium.port</portName>
+                                        <portName>selenium.datasource.port</portName>
+                                        <portName>selenium.smtp.port</portName>
+                                        <portName>it.application.port</portName>
+                                        <portName>jetty.stopPort</portName>
+                                    </portNames>
+                                    <outputFile>${project.build.testOutputDirectory}/dynamicports.properties</outputFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>properties-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <!--  set the port-properties to runtime -->
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>read-project-properties</goal>
+                                </goals>
+                                <configuration>
+                                    <files>
+                                        <file>${project.build.testOutputDirectory}/dynamicports.properties</file>
+                                    </files>
+                                    <quiet>false</quiet>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <version>1.7</version>
                         <executions>
@@ -1469,17 +1527,27 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <target unless="maven.test.skip">
+                                    <failOnError>true</failOnError>
+                                    <target>
                                         <property name="plugin_classpath" refid="maven.plugin.classpath" />
+                                        <property file="${project.build.testOutputDirectory}/dynamicports.properties"/>
 
-                                        <java fork="true" spawn="true" dir="${java.io.tmpdir}" classname="org.hsqldb.Server" classpath="${plugin_classpath}">
-                                            <arg value="-database.0" />
-                                            <arg value="${java.io.tmpdir}/hsqldb/${selenium.datasource.name}" />
-                                            <arg value="-dbname.0" />
-                                            <arg value="${selenium.datasource.name}" />
-                                            <arg value="-port" />
-                                            <arg value="${selenium.datasource.port}" />
+                                        <delete failonerror="false" verbose="true">
+                                            <fileset dir="${java.io.tmpdir}/hsqldb" includes="itrackerdev-test*"/>
+                                        </delete>
+
+                                        <java fork="true" spawn="true" dir="${java.io.tmpdir}"
+                                              classname="org.hsqldb.Server" classpath="${plugin_classpath}">
+                                            <arg value="-database.0"/>
+                                            <arg value="${java.io.tmpdir}/hsqldb/${selenium.datasource.name}"/>
+                                            <arg value="-dbname.0"/>
+                                            <arg value="${selenium.datasource.name}"/>
+                                            <arg value="-port"/>
+                                            <arg value="${selenium.datasource.port}"/>
+                                            <arg value="--no_system_exit" />
+                                            <arg value="true" />
                                         </java>
+                                        <echo>Database started on ${selenium.datasource.port}:${selenium.datasource.name} (CP: ${plugin_classpath})</echo>
                                     </target>
                                 </configuration>
                             </execution>
@@ -1490,35 +1558,42 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <target unless="maven.test.skip">
-                                         <property name="plugin_classpath" refid="maven.plugin.classpath" />
-                                         <concat destfile="${project.build.directory}/temp.bsh">
-                                                                             <![CDATA[
-                                 						import java.sql.*;
+                                    <target>
+                                        <property name="plugin_classpath" refid="maven.plugin.classpath" />
+                                        <property file="${project.build.testOutputDirectory}/dynamicports.properties"/>
 
-                                 						try {
-                                 						    Class.forName("org.hsqldb.jdbcDriver");
-                                 						    String url = bsh.args[0];
-                                 						    Connection con = DriverManager.getConnection(url, "sa", "");
-                                 						    String sql = "SHUTDOWN";
-                                 						    Statement stmt = con.createStatement();
-                                 						    stmt.executeUpdate(sql);
-                                 						    stmt.close();
-                                 						} catch (Exception e) {
-                                 						    //
-                                 						}
-                                 					    ]]>
-                                         </concat>
-                                         <java classname="bsh.Interpreter" classpath="${plugin_classpath}">
-                                             <arg line="${project.build.directory}/temp.bsh ${main.dataSource.jdbcUrl}}" />
-                                         </java>
-                                         <delete failonerror="false">
-                                             <fileset dir="${project.build.directory}" includes="temp.bsh" />
-                                             <fileset dir="${java.io.tmpdir}/hsqldb" includes="itrackerdev-test*" />
-                                         </delete>
-                                     </target>
+                                        <concat destfile="${project.build.directory}/temp.bsh">
+                                        <![CDATA[
+                                        import java.sql.*;
+
+                                        try {
+                                            Class.forName("org.hsqldb.jdbcDriver");
+                                            String url = bsh.args[0];
+                                            Connection con = DriverManager.getConnection(url, "sa", "");
+                                            String sql = "SHUTDOWN";
+                                            Statement stmt = con.createStatement();
+                                            stmt.executeUpdate(sql);
+                                            stmt.close();
+                                            print("shutdown " + url + " complete");
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        ]]>
+                                        </concat>
+                                        <echo>DB Shutdown script created: ${project.build.directory}/temp.bsh</echo>
+
+                                        <java classname="bsh.Interpreter" classpath="${plugin_classpath}">
+                                            <arg line="${project.build.directory}/temp.bsh jdbc:hsqldb:hsql://localhost:${selenium.datasource.port}/${selenium.datasource.name}"/>
+                                        </java>
+                                        <echo>Shut-down DB jdbc:hsqldb:hsql://localhost:${selenium.datasource.port}/${selenium.datasource.name}</echo>
+                                        <delete failonerror="false" verbose="true">
+                                            <fileset dir="${project.build.directory}" includes="temp.bsh"/>
+                                            <fileset dir="${java.io.tmpdir}/hsqldb" includes="itrackerdev-test*"/>
+                                        </delete>
+                                    </target>
                                 </configuration>
                             </execution>
+
                             <execution>
                                 <id>override-log4j-with-console-output</id>
                                 <phase>test-compile</phase>
@@ -1550,6 +1625,8 @@
                             </dependency>
                         </dependencies>
                     </plugin>
+
+
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>selenium-maven-plugin</artifactId>
@@ -1578,15 +1655,17 @@
                                 </configuration>
                             </execution>
                         </executions>
-
                     </plugin>
+
+
                     <plugin>
                         <groupId>org.mortbay.jetty</groupId>
                         <artifactId>jetty-maven-plugin</artifactId>
                         <version>${maven-jetty-plugin.version}</version>
                         <configuration>
 
-                            <stopPort>9966</stopPort>
+                            <stopPort>${jetty.stopPort}</stopPort>
+
                             <stopKey>foo</stopKey>
                             <systemProperties>
                                 <systemProperty>
@@ -1607,7 +1686,7 @@
                             <jettyXml>${project.build.testOutputDirectory}/jetty.xconf</jettyXml>
                             <connectors>
                                 <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                                    <port>${application.port}</port>
+                                    <port>${it.application.port}</port>
                                     <maxIdleTime>60000</maxIdleTime>
                                 </connector>
                             </connectors>
@@ -1716,6 +1795,8 @@
                             </dependency>
                         </dependencies>
                     </plugin>
+
+
 
                 </plugins>
             </build>

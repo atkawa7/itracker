@@ -71,9 +71,4 @@ public class ViewProjectListSeleniumIT extends AbstractSeleniumTestCase {
                 "dataset/issuebean_dataset.xml"
         };
     }
-
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"application-context.xml"};
-    }
 }

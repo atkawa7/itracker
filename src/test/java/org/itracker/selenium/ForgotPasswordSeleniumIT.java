@@ -178,8 +178,4 @@ public class ForgotPasswordSeleniumIT extends AbstractSeleniumTestCase {
         };
     }
 
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"application-context.xml"};
-    }
 }

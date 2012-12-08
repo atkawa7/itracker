@@ -67,8 +67,4 @@ public class ViewPortalHomeSeleniumIT extends AbstractSeleniumTestCase {
         };
     }
 
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"application-context.xml"};
-    }
 }

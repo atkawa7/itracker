@@ -67,9 +67,4 @@ public class LogoutSeleniumIT extends AbstractSeleniumTestCase {
                 "dataset/userbean_dataset.xml"
         };
     }
-
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"application-context.xml"};
-    }
 }

@@ -69,8 +69,4 @@ public class LoginSeleniumIT extends AbstractSeleniumTestCase {
         };
     }
 
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"application-context.xml"};
-    }
 }

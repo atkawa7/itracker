@@ -27,6 +27,7 @@ public class SeleniumManager {
     private final static String PROPERTY_SELENIUM_BROWSER_LOG_LEVEL = "selenium.browserLogLevel";
     private final static String PROPERTY_SELENIUM_SPEED = "selenium.speed";
     private final static String PROPERTY_SELENIUM_USE_XPATH_LIBRARY = "selenium.useXPathLibrary";
+    private final static String PROPERTY_SELENIUM_SMTP_PORT = "selenium.smtp.port";
     private final static String PROPERTY_APPLICATION_HOST = "application.host";
     private final static String PROPERTY_APPLICATION_PORT = "application.port";
     private final static String PROPERTY_APPLICATION_PATH = "application.path";
@@ -49,6 +50,8 @@ public class SeleniumManager {
             PROPERTY_SELENIUM_SPEED_DEFAULT = "0";
     private final static String
             PROPERTY_SELENIUM_USE_XPATH_LIBRARY_DEFAULT = "javascript-xpath";
+    private final static String
+            PROPERTY_SELENIUM_SMTP_PORT_DEFAULT = "2525";
 
 
     private static Selenium selenium = null;
@@ -63,6 +66,7 @@ public class SeleniumManager {
     private static String applicationHost = null;
     private static Integer applicationPort = null;
     private static String applicationPath = null;
+    private static Integer smtpPort = null;
 
     private static final Logger log = Logger.getLogger(SeleniumManager.class);
 
@@ -110,6 +114,8 @@ public class SeleniumManager {
                 properties.getProperty(PROPERTY_SELENIUM_SPEED, PROPERTY_SELENIUM_SPEED_DEFAULT);
         seleniumUseXPathLibrary =
                 properties.getProperty(PROPERTY_SELENIUM_USE_XPATH_LIBRARY, PROPERTY_SELENIUM_USE_XPATH_LIBRARY_DEFAULT);
+        smtpPort =
+                Integer.valueOf(properties.getProperty(PROPERTY_SELENIUM_SMTP_PORT, PROPERTY_SELENIUM_SMTP_PORT_DEFAULT));
     }
 
     public static Selenium getSelenium() throws IOException {
@@ -157,6 +163,10 @@ public class SeleniumManager {
 
     public static int getSeleniumPort() {
         return seleniumPort;
+    }
+
+    public static int getSMTPPort() {
+        return smtpPort;
     }
 
     public static String getSeleniumBrowser() {
