@@ -11,15 +11,17 @@ Releasing itracker from Sources
 
   The following steps must be taken when releasing itracker from a trunk snapshot version:
 
-  [[1]] Assign memory to the maven tool (needed for creating the site):
+  [[1]] Finalize and link the current release-notes in site.xml and index.xml and release-notes/index.xml
+
+  [[2]] Assign memory to the maven tool (needed for creating the site):
 
   <<<export MAVEN_OPTS="-Xms512m -Xmx1224m -XX:PermSize=256m -XX:MaxPermSize=512m">>>
 
-  [[2]] Open an interactive ssh shell for sourceforge:
+  [[3]] Open an interactive ssh shell for sourceforge:
 
   <<<ssh -t #username#,itracker@shell.sourceforge.net create>>>
 
-  [[3]] Set-up the SVN committer's credentials in <<<settings.xml>>>
+  [[4]] Set-up the SVN committer's credentials in <<<settings.xml>>>
 
 +-------------------------------+
   <servers>
@@ -45,13 +47,15 @@ Releasing itracker from Sources
 
     * Create new Folder following the pattern <<<itracker-#RELEASE_VERSION#>>> using the web-interface (<<check the 'staging' flag!>>)
 
-    * Upload file <<<target/itracker-bin-#RELEASE_VERSION#.zip>>>
+    * Upload file <<<target/itracker-#RELEASE_VERSION#-bin.zip>>>
 
     <Set this file as default download for all>
 
-    * Upload file <<<target/itracker-src-#RELEASE_VERSION#.zip>>>
+    * Upload file <<<target/itracker-#RELEASE_VERSION#-src.zip>>>
 
     * Uncheck the staging-flag for the folder.
+
+  [[6]] Create a news post for the release on source-forge: {{{http://sourceforge.net/p/itracker/news/}}News Section}
 
   []
 
