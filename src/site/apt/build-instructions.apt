@@ -81,7 +81,7 @@ Building itracker from Sources
    <<<mvn clean verify -Dit.test=ITrackerResourcesIT>>>
 
    * Frontend Tests with Selenium running against an in-memory database in a Jenkins deployed itracker-application.\
-   <<<mvn clean verify -Dselenium -Dselenium.test=ForgotPasswordTest>>> (local ports need to be available: 5555, 8888, 9966, 2525)\
+   <<<mvn clean verify -Dselenium -Dselenium.test=ForgotPasswordTest>>> (against random 'free' ports on the build system)\
 
     Run selenium tests, eg:\
     <<<mvn clean verify -Pselenium -Dselenium.browser=firefox>>>
@@ -100,6 +100,21 @@ Building itracker from Sources
   on the command line.
 
   <<<mvn site>>>
+
+* Building for Sonar
+
+  Assuming your Sonar Server runs at http://localhost:9000 and default h2-DB; otherwise provide the <<<sonar.host.url>>> property and DB connection.
+
+  Usually use the two commands:
+
++-------------------------------+
+  mvn clean install -DskipTests=true
+  mvn sonar:sonar
++-------------------------------+
+
+  Or with one single command:
+
+  <<<mvn clean install sonar:sonar -Dmaven.test.failure.ignore=true>>>
 
 Release a final Version
 

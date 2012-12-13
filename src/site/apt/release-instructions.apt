@@ -74,17 +74,3 @@ Staging the Maven generated Site
   <<<mvn site site:stage-deploy -Dmaven.ssh.args=-t>>>
 
   []
-
-Building for Sonar
-
-  Assuming your Sonar Server runs at http://localhost:9000 otherwise provide the <<<sonar.host.url>>> property.
-
-  Usually use the two commands:
-+-------------------------------+
-  mvn clean install -DskipTests=true
-  mvn sonar:sonar
-+-------------------------------+
-
-  Or with one single command:
-
-  <<<mvn clean install sonar:sonar -Dmaven.test.failure.ignore=true>>>
