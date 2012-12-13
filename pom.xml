@@ -5,7 +5,7 @@
     <artifactId>itracker</artifactId>
     <packaging>war</packaging>
     <name>itracker</name>
-    <version>3.1.3-SNAPSHOT</version>
+    <version>3.1.3</version>
     <url>http://itracker.sourceforge.net/</url>
     <properties>
         <clover.maven.charset>UTF-8</clover.maven.charset>
@@ -126,9 +126,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/trunk/</connection>
-        <developerConnection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/trunk/</developerConnection>
-        <url>http://svn.code.sf.net/p/itracker/code/itracker/trunk/</url>
+        <connection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/tags/itracker-3.1.3</connection>
+        <developerConnection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/tags/itracker-3.1.3</developerConnection>
+        <url>http://svn.code.sf.net/p/itracker/code/itracker/tags/itracker-3.1.3</url>
     </scm>
     <organization>
         <name>itracker</name>
@@ -1530,20 +1530,19 @@
                                     <failOnError>true</failOnError>
                                     <target>
                                         <property name="plugin_classpath" refid="maven.plugin.classpath" />
-                                        <property file="${project.build.testOutputDirectory}/dynamicports.properties"/>
+                                        <property file="${project.build.testOutputDirectory}/dynamicports.properties" />
 
                                         <delete failonerror="false" verbose="true">
-                                            <fileset dir="${java.io.tmpdir}/hsqldb" includes="itrackerdev-test*"/>
+                                            <fileset dir="${java.io.tmpdir}/hsqldb" includes="itrackerdev-test*" />
                                         </delete>
 
-                                        <java fork="true" spawn="true" dir="${java.io.tmpdir}"
-                                              classname="org.hsqldb.Server" classpath="${plugin_classpath}">
-                                            <arg value="-database.0"/>
-                                            <arg value="${java.io.tmpdir}/hsqldb/${selenium.datasource.name}"/>
-                                            <arg value="-dbname.0"/>
-                                            <arg value="${selenium.datasource.name}"/>
-                                            <arg value="-port"/>
-                                            <arg value="${selenium.datasource.port}"/>
+                                        <java fork="true" spawn="true" dir="${java.io.tmpdir}" classname="org.hsqldb.Server" classpath="${plugin_classpath}">
+                                            <arg value="-database.0" />
+                                            <arg value="${java.io.tmpdir}/hsqldb/${selenium.datasource.name}" />
+                                            <arg value="-dbname.0" />
+                                            <arg value="${selenium.datasource.name}" />
+                                            <arg value="-port" />
+                                            <arg value="${selenium.datasource.port}" />
                                             <arg value="--no_system_exit" />
                                             <arg value="true" />
                                         </java>
@@ -1560,7 +1559,7 @@
                                 <configuration>
                                     <target>
                                         <property name="plugin_classpath" refid="maven.plugin.classpath" />
-                                        <property file="${project.build.testOutputDirectory}/dynamicports.properties"/>
+                                        <property file="${project.build.testOutputDirectory}/dynamicports.properties" />
 
                                         <concat destfile="${project.build.directory}/temp.bsh">
                                         <![CDATA[
@@ -1583,12 +1582,12 @@
                                         <echo>DB Shutdown script created: ${project.build.directory}/temp.bsh</echo>
 
                                         <java classname="bsh.Interpreter" classpath="${plugin_classpath}">
-                                            <arg line="${project.build.directory}/temp.bsh jdbc:hsqldb:hsql://localhost:${selenium.datasource.port}/${selenium.datasource.name}"/>
+                                            <arg line="${project.build.directory}/temp.bsh jdbc:hsqldb:hsql://localhost:${selenium.datasource.port}/${selenium.datasource.name}" />
                                         </java>
                                         <echo>Shut-down DB jdbc:hsqldb:hsql://localhost:${selenium.datasource.port}/${selenium.datasource.name}</echo>
                                         <delete failonerror="false" verbose="true">
-                                            <fileset dir="${project.build.directory}" includes="temp.bsh"/>
-                                            <fileset dir="${java.io.tmpdir}/hsqldb" includes="itrackerdev-test*"/>
+                                            <fileset dir="${project.build.directory}" includes="temp.bsh" />
+                                            <fileset dir="${java.io.tmpdir}/hsqldb" includes="itrackerdev-test*" />
                                         </delete>
                                     </target>
                                 </configuration>
