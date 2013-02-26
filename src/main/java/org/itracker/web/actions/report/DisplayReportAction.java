@@ -232,9 +232,6 @@ public class DisplayReportAction extends ItrackerBaseAction {
             final JasperPrint jasperPrint = generateReport(report, parameters,
                     beanCollectionDataSource);
 
-            final JRViewer jrViewer = new JRViewer(jasperPrint);
-            final JFrame frame = new JFrame();
-            frame.add(jrViewer);
 
             final ServletOutputStream out = response.getOutputStream();
             final JRExporter x;
