@@ -30,7 +30,7 @@
         <appender-ref ref="file"/>
     </category>
     <!-- should mock a mail-session, throws exceptions -->
-    <category name="org.itracker.services.util.EmailService">
+    <category name="org.itracker.services.implementations.EmailService">
         <priority value="FATAL"></priority>
         <appender-ref ref="file"/>
     </category>
