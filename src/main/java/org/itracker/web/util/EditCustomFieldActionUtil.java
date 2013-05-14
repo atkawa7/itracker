@@ -1,4 +1,4 @@
-package org.itracker.web.actions.admin.configuration;
+package org.itracker.web.util;
 
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
@@ -8,9 +8,6 @@ import org.itracker.model.NameValuePair;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.web.forms.CustomFieldForm;
-import org.itracker.web.util.Constants;
-import org.itracker.web.util.LoginUtilities;
-import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

@@ -31,6 +31,7 @@ import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectScriptForm;
+import org.itracker.web.util.EditProjectFormActionUtil;
 import org.itracker.web.util.LoginUtilities;
 
 import javax.servlet.ServletException;
@@ -100,7 +101,7 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
 
                 request.setAttribute("customFields", customFieldsMapped);
                 request.setAttribute("projectScriptForm", projectScriptForm);
-                EditProjectScriptAction.setUpPrioritiesInEnv(request);
+                EditProjectFormActionUtil.setUpPrioritiesInEnv(request);
                 request.setAttribute("project", project);
 
                 saveToken(request);

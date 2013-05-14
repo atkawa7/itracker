@@ -31,7 +31,9 @@ import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.SystemConfigurationUtilities;
 import org.itracker.services.util.UserUtilities;
+import org.springframework.web.context.ServletConfigAware;
 
+import javax.servlet.ServletConfig;
 import java.util.StringTokenizer;
 
 
@@ -40,11 +42,12 @@ import java.util.StringTokenizer;
  *
  */
 
-public class ApplicationInitialization {
+public class ApplicationInitialization implements ServletConfigAware {
 
     private final Logger logger;
     private UserService userService;
     private ConfigurationService configurationService;
+    private ServletConfig servletConfig;
 
     public ApplicationInitialization(UserService userService, ConfigurationService configurationService, ReportService reportService) {
         this.userService = userService;
@@ -106,4 +109,7 @@ public class ApplicationInitialization {
         }
     }
 
+    public void setServletConfig(ServletConfig servletConfig) {
+        this.servletConfig =  servletConfig;
+    }
 }

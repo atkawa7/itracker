@@ -1,4 +1,4 @@
-package org.itracker.web.actions.project;
+package org.itracker.web.util;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
@@ -10,10 +10,7 @@ import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.UserUtilities;
-import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.IssuePTO;
-import org.itracker.web.util.RequestHelper;
-import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -61,9 +58,11 @@ public class ListIssuesActionUtil {
 	
 	public static final String FWD_LIST_ISSUES = "list_issues";
 
-	public ActionForward init(Action action, ActionMapping mapping, HttpServletRequest request) {
+
+
+	public static ActionForward init(Action action, ActionMapping mapping, HttpServletRequest request) {
 		
-    Locale locale = ((ItrackerBaseAction)action).getLocale(request);
+    Locale locale = LoginUtilities.getCurrentLocale(request);
     // get the services
     IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
     ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();

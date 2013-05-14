@@ -30,6 +30,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.CustomFieldForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.EditCustomFieldActionUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

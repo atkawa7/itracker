@@ -32,7 +32,7 @@ import org.itracker.services.exceptions.WorkflowException;
 import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.services.util.WorkflowUtilities;
-import org.itracker.web.actions.project.EditIssueActionUtil;
+import org.itracker.web.util.EditIssueActionUtil;
 import org.itracker.web.ptos.CreateIssuePTO;
 import org.itracker.web.util.AttachmentUtilities;
 import org.itracker.web.util.Constants;

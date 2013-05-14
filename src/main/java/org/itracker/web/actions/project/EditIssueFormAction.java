@@ -28,6 +28,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.EditIssueActionUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

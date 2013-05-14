@@ -1,4 +1,4 @@
-package org.itracker.web.actions.project;
+package org.itracker.web.util;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForward;
@@ -15,10 +15,6 @@ import org.itracker.services.UserService;
 import org.itracker.services.exceptions.WorkflowException;
 import org.itracker.services.util.*;
 import org.itracker.web.forms.IssueForm;
-import org.itracker.web.util.AttachmentUtilities;
-import org.itracker.web.util.Constants;
-import org.itracker.web.util.LoginUtilities;
-import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -50,9 +46,6 @@ public class EditIssueActionUtil {
         needReloadIssue = needReloadIssue | issueService.setIssueComponents(issue.getId(),
                 new HashSet<Integer>(Arrays.asList(form.getComponents())),
                 user.getId());
-        // save attachment and reload updated issue
-
-//		needReloadIssue = needReloadIssue | addAttachment(issue, project, user, form, issueService, errors);
 
         // reload issue for further updates
         if (needReloadIssue) {
@@ -509,7 +502,7 @@ public class EditIssueActionUtil {
      * Get project fields and put name and value in map
      * TODO: simplify this code, it's not readable, unsave yet.
      */
-    protected static final void setupProjectFieldsMapJspEnv(List<CustomField> projectFields, Collection<IssueField> issueFields, HttpServletRequest request) {
+    public static final void setupProjectFieldsMapJspEnv(List<CustomField> projectFields, Collection<IssueField> issueFields, HttpServletRequest request) {
         Map<CustomField, String> projectFieldsMap = new HashMap<CustomField, String>();
 
         if (projectFields != null && projectFields.size() > 0) {
@@ -518,7 +511,7 @@ public class EditIssueActionUtil {
             HashMap<String, String> fieldValues = new HashMap<String, String>();
             Iterator<IssueField> issueFieldsIt = issueFields.iterator();
             while (issueFieldsIt.hasNext()) {
-                IssueField issueField = (IssueField) issueFieldsIt.next();
+                IssueField issueField = issueFieldsIt.next();
 
                 if (issueField.getCustomField() != null
                         && issueField.getCustomField().getId() > 0) {
@@ -544,12 +537,7 @@ public class EditIssueActionUtil {
                         .getId()));
                 if (null == fieldValue) {
                     fieldValue = "";
-                }
-//				if (fieldValue != null && field.getFieldType() == CustomField.Type.LIST) { 
-//					fieldValue = CustomFieldUtilities.getCustomFieldOptionName(field, 
-//							fieldValue, LoginUtilities.getCurrentLocale(request)); 
-////					projectFields.get(i).getOptionNameByValue(fieldValue));
-//	        	} 
+                };
                 projectFieldsMap.put(field, fieldValue);
 
             }
@@ -617,8 +605,6 @@ public class EditIssueActionUtil {
                         statusList.add(allStatuses.get(i));
                     }
                 }
-            } else {
-                // Can't change
             }
 
         } else {
@@ -670,8 +656,6 @@ public class EditIssueActionUtil {
                         statusList.add(allStatuses.get(i));
                     }
                 }
-            } else {
-                // Can't change
             }
 
         }
@@ -693,7 +677,6 @@ public class EditIssueActionUtil {
                 .componentsToNameValuePairs(components));
 
         List<Version> versions = project.getVersions();
-        // Collections.sort(versions, new Version());
         listOptions.put(IssueUtilities.FIELD_VERSIONS, Convert
                 .versionsToNameValuePairs(versions));
         listOptions.put(IssueUtilities.FIELD_TARGET_VERSION, Convert
@@ -702,7 +685,6 @@ public class EditIssueActionUtil {
         List<CustomField> projectFields = project.getCustomFields();
         for (int i = 0; i < projectFields.size(); i++) {
             if (projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
-//				projectFields.get(i).setLabels(locale);
                 listOptions.put(projectFields.get(i).getId(), Convert
                         .customFieldOptionsToNameValuePairs(projectFields
                                 .get(i).getOptions()));
@@ -796,8 +778,6 @@ public class EditIssueActionUtil {
         }
 
         invokeProjectScripts(issue.getProject(), WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors, issueForm);
-
-        invokeProjectScripts(issue.getProject(), WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, errors, issueForm);
 
     }
 

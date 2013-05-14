@@ -38,6 +38,7 @@ import org.itracker.web.forms.IssueForm;
 import org.itracker.web.ptos.CreateIssuePTO;
 import org.itracker.web.util.AttachmentUtilities;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.EditIssueActionUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -72,13 +73,11 @@ public class CreateIssueAction extends ItrackerBaseAction {
             saveErrors(request, errors);
             log.info("execute: return to edit-issue");
             saveToken(request);
-            //	return mapping.findForward("error");
+
 
             CreateIssuePTO.setupCreateIssue(request);
             return mapping.findForward("createissue");
-//			project PTOs must be set in request for listprojects-forward to work
-            // return mapping.findForward("listprojects");
-//			return null; 
+
         }
         resetToken(request);
 

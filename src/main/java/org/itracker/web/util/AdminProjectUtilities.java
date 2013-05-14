@@ -1,4 +1,4 @@
-package org.itracker.web.actions.admin.project;
+package org.itracker.web.util;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
@@ -85,29 +85,6 @@ public class AdminProjectUtilities {
             log.debug("updateProjectOwners: setting new owners: " + userIds);
         }
 
-        // cleanup current owners permissions
-        // TODO: needed? If user is no more owner, he can still be admin
-        //		Collection<User> currentOwners = projectService
-        //				.getProjectOwners(project.getId());
-
-        //		Iterator<User> currentOwnersIt = currentOwners.iterator();
-        //		while (currentOwnersIt.hasNext()) {
-        //			User user = (User) currentOwnersIt.next();
-        //			Iterator<Permission> currentPermissionsIt = userService.getUserPermissionsLocal(user).iterator();
-        //			while (currentPermissionsIt.hasNext()) {
-        //				Permission permission = (Permission) currentPermissionsIt
-        //						.next();
-        //				if (project.equals(permission.getProject()) &&
-        //						permission.getPermissionType() == UserUtilities.PERMISSION_PRODUCT_ADMIN) {
-        //					user.getPermissions().remove(permission);
-        //				}
-        //				userService.setUserPermissions(user.getId(), user.getPermissions());
-        //			}
-        //		}
-
-        // remove all owners
-        //		projectService.setProjectOwners(project, new HashSet<Integer>(0));
-
         // add all defined owners to project
         for (Integer userId : userIds) {
             User usermodel = userService.getUser(userId);
@@ -145,13 +122,9 @@ public class AdminProjectUtilities {
                 form, "status");
 
         String projectName = (String) PropertyUtils.getSimpleProperty(form, "name");
-//		if (projectService.isUniqueProjectName(projectName, project.getId())) {
+
         project.setName(projectName);
-//		} else {
-//			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.project.duplicate.name"));
-//			//			throw new ProjectException(
-//			//					"Project already exist with this name.");
-//		}
+
 
         if (errors.isEmpty()) {
             if (projectStatus != null) {

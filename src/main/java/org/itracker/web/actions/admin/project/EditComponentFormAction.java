@@ -29,6 +29,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ComponentForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.EditComponentFormActionUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -59,15 +60,12 @@ public class EditComponentFormAction extends ItrackerBaseAction {
             ProjectService projectService = getITrackerServices().getProjectService();
 
             HttpSession session = request.getSession(true);
-            String action = (String) request.getParameter("action");
+            String action = request.getParameter("action");
             Map<Integer, Set<PermissionType>> userPermissions = (Map<Integer, Set<PermissionType>>) session.getAttribute(Constants.PERMISSIONS_KEY);
-
-            Component component = null;
-            component = (Component) session.getAttribute(Constants.COMPONENT_KEY);
-
-            Project project = null;
-
+            Component component = (Component) session.getAttribute(Constants.COMPONENT_KEY);
+            Project project;
             ComponentForm componentForm = (ComponentForm) form;
+
             if (componentForm == null) {
                 componentForm = new ComponentForm();
             }
@@ -134,7 +132,7 @@ public class EditComponentFormAction extends ItrackerBaseAction {
                 saveToken(request);
                 request.setAttribute("pageTitleKey", pageTitleKey);
                 request.setAttribute("pageTitleArg", pageTitleArg);
-                ActionForward af = new EditComponentFormActionUtil().init(mapping, request);
+                ActionForward af = EditComponentFormActionUtil.init(mapping, request);
                 if (af != null) return af;
                 return mapping.getInputForward();
             }

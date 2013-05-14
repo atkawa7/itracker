@@ -1,4 +1,4 @@
-package org.itracker.web.actions.admin.project;
+package org.itracker.web.util;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForward;
@@ -13,10 +13,6 @@ import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.forms.ProjectForm;
 import org.itracker.web.ptos.ProjectScriptPTO;
-import org.itracker.web.util.Constants;
-import org.itracker.web.util.LoginUtilities;
-import org.itracker.web.util.RequestHelper;
-import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -25,7 +21,7 @@ import java.util.*;
 public class EditProjectFormActionUtil {
     private static final Logger log = Logger.getLogger(EditProjectFormActionUtil.class);
 
-    public class CustomFieldInfo {
+    public static class CustomFieldInfo {
         private int id;
         private String name;
         private String type;
@@ -61,7 +57,7 @@ public class EditProjectFormActionUtil {
         }
     }
 
-    public class VersionInfo {
+    public static class VersionInfo {
         private int id;
         private String number;
         private String description;
@@ -119,7 +115,7 @@ public class EditProjectFormActionUtil {
 
     }
 
-    public class ComponentInfo {
+    public static class ComponentInfo {
         private int id;
         private String name;
         private String description;
@@ -177,7 +173,7 @@ public class EditProjectFormActionUtil {
 
     }
 
-    public ActionForward init(ActionMapping mapping, HttpServletRequest request, ProjectForm form) {
+    public static ActionForward init(ActionMapping mapping, HttpServletRequest request, ProjectForm form) {
         ITrackerServices itrackerServices = ServletContextUtils.getItrackerServices();
         ProjectService projectService = itrackerServices.getProjectService();
         UserService userService = itrackerServices.getUserService();
@@ -271,7 +267,7 @@ public class EditProjectFormActionUtil {
         List<ProjectScript> scripts = project.getScripts();
         Collections.sort(scripts, ProjectScript.FIELD_PRIORITY_COMPARATOR);
 
-        EditProjectScriptAction.setUpPrioritiesInEnv(request);
+        setUpPrioritiesInEnv(request);
 
         Locale locale = LoginUtilities.getCurrentLocale(request);
         Iterator<ProjectScript> it = scripts.iterator();
@@ -308,11 +304,11 @@ public class EditProjectFormActionUtil {
      * @param form           - must be a ProjectForm
      * @param projectService - project-service
      */
-    public void setupTitle(HttpServletRequest request, ProjectForm form, ProjectService projectService) {
+    public static void setupTitle(HttpServletRequest request, ProjectForm form, ProjectService projectService) {
         String pageTitleKey;
         String pageTitleArg = "";
 
-        if ("update".equals(((ProjectForm) form).getAction())) {
+        if ("update".equals(form.getAction())) {
             pageTitleKey = "itracker.web.admin.editproject.title.update";
             if (form instanceof ProjectForm) {
                 Project project = projectService.getProject(((ProjectForm) form).getId());
@@ -321,11 +317,22 @@ public class EditProjectFormActionUtil {
                 }
             }
         } else {
-            ((ProjectForm) form).setAction("create");
+            form.setAction("create");
             pageTitleKey = "itracker.web.admin.editproject.title.create";
         }
         request.setAttribute("pageTitleKey", pageTitleKey);
         request.setAttribute("pageTitleArg", pageTitleArg);
     }
 
+    public static final void setUpPrioritiesInEnv(HttpServletRequest request) {
+
+        String prioritySizeStr = ProjectUtilities.getScriptPrioritySize();
+        int prioritySize = Integer.parseInt(prioritySizeStr);
+        Map<Integer, String> priorityList = new TreeMap<Integer, String>();
+        for (int j = 1; j <= prioritySize; j++) {
+            priorityList.put(j, ProjectUtilities.getScriptPriorityLabelKey(j));
+        }
+
+        request.setAttribute("priorityList", priorityList);
+    }
 }

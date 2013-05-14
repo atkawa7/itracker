@@ -24,7 +24,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.ValidatorForm;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.web.actions.admin.configuration.EditCustomFieldActionUtil;
+import org.itracker.web.util.EditCustomFieldActionUtil;
 import org.itracker.web.util.LoginUtilities;
 
 import javax.servlet.http.HttpServletRequest;

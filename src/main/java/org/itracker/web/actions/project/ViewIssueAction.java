@@ -10,6 +10,7 @@ import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.ProjectUtilities;
 import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.EditIssueActionUtil;
 import org.itracker.web.util.RequestHelper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,8 +44,8 @@ public class ViewIssueAction extends ItrackerBaseAction {
 			return mapping.findForward("index");
 		}
 		EditIssueActionUtil.setupNotificationsInRequest(request, issueService
-				.getIssue(issueId),
-				getITrackerServices().getNotificationService());
+                .getIssue(issueId),
+                getITrackerServices().getNotificationService());
 
 		HttpSession session = request.getSession();
 		final Map<Integer, Set<PermissionType>> permissions = RequestHelper

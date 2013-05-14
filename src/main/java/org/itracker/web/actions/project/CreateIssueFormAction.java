@@ -32,6 +32,7 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
 import org.itracker.web.ptos.CreateIssuePTO;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.EditIssueActionUtil;
 import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 

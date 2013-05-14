@@ -116,16 +116,5 @@ public class EditProjectScriptAction extends ItrackerBaseAction {
         return mapping.findForward("error");
     }
 
-    public static final void setUpPrioritiesInEnv(HttpServletRequest request) {
-
-        String prioritySizeStr = ProjectUtilities.getScriptPrioritySize();
-        int prioritySize = Integer.parseInt(prioritySizeStr);
-        Map<Integer, String> priorityList = new TreeMap<Integer, String>();
-        for (int j = 1; j <= prioritySize; j++) {
-            priorityList.put(j, ProjectUtilities.getScriptPriorityLabelKey(j));
-        }
-
-        request.setAttribute("priorityList", priorityList);
-    }
 
 }

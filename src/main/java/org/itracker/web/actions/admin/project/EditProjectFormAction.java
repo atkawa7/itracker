@@ -30,6 +30,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.EditProjectFormActionUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -91,8 +92,6 @@ public class EditProjectFormAction extends ItrackerBaseAction {
                 if (!user.isSuperUser()) {
                     return mapping.findForward("unauthorized");
                 }
-//                project.setId(-1);
-//                projectForm.setAction("create");
                 projectForm.setId(project.getId());
             } else if ("update".equals(projectForm.getAction())) {
 
@@ -102,7 +101,6 @@ public class EditProjectFormAction extends ItrackerBaseAction {
                     if (!UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
                         return mapping.findForward("unauthorized");
                     } else if (errors.isEmpty()) {
-//                        projectForm.setAction("update");
                         projectForm.setId(project.getId());
                         projectForm.setName(project.getName());
                         projectForm.setDescription(project.getDescription());
@@ -136,7 +134,7 @@ public class EditProjectFormAction extends ItrackerBaseAction {
                 request.setAttribute("projectForm", projectForm);
                 session.setAttribute(Constants.PROJECT_KEY, project);
                 saveToken(request);
-                ActionForward af = new EditProjectFormActionUtil().init(mapping, request, projectForm);
+                ActionForward af = EditProjectFormActionUtil.init(mapping, request, projectForm);
                 if (af != null) {
                     return af;
                 }

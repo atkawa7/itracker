@@ -29,6 +29,7 @@ import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.VersionForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.EditVersionFormActionUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -134,7 +135,7 @@ public class EditVersionFormAction extends ItrackerBaseAction {
                 saveToken(request);
                 request.setAttribute("pageTitleKey", pageTitleKey);
                 request.setAttribute("pageTitleArg", pageTitleArg);
-                ActionForward af = new EditVersionFormActionUtil().init(mapping, request);
+                ActionForward af = EditVersionFormActionUtil.init(mapping, request);
                 if (af != null) return af;
                 return mapping.getInputForward();
             }
