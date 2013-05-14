@@ -1,18 +1,19 @@
 body {
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 8pt;
     background: #fff;
 }
 
 .smallbody {
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 1em;
     background: #fff;
 }
 
 hr {
     border: none;
-    border-bottom: solid 1px black;
-    height: 1px;
+    border-bottom: solid thin black;
+    height: .1em;
     background: black;
 }
 
@@ -76,7 +77,7 @@ a.history:visited {
     font-weight: bold;
     text-align: left;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 12px;
+    font-size: 1.2em;
     color: black;
     background-color: white;
     text-decoration: none;
@@ -89,13 +90,13 @@ a.history:visited {
 
 .headerText,
 .headerTextWelcome {
-    width: 250px;
+    width: auto;
 }
 
 .headerText, .headerTextWelcome, .headerTextPageTitle {
     font-weight: bold;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 12px;
+    font-size: 1.2em;
     color: black;
     background-color: white;
     text-decoration: none;
@@ -108,14 +109,14 @@ a.history:visited {
 .headerTextPageTitle,
 .headerTextPageTitle h1 {
     text-align: center;
-    font-size: 14px;
+    font-size: 1.2em;
     margin: 0;
 }
 
 .headerLinks {
     font-weight: normal;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 1em;
     color: #9999FF;
     background-color: white;
     text-decoration: none;
@@ -139,7 +140,7 @@ a.headerLinks:visited {
 .lookupBox {
     font-weight: normal;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 1em;
     color: black;
     background-color: white;
     text-decoration: none;
@@ -150,7 +151,7 @@ a.headerLinks:visited {
     font-weight: normal;
     text-align: left;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: .75em;
     color: black;
     background-color: white;
     text-decoration: none;
@@ -160,14 +161,14 @@ a.headerLinks:visited {
     font-weight: bold;
     text-align: left;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 1em;
     color: white;
     background-color: #555555;
     text-decoration: none;
 }
 
 tr.listHeading td, tr.listHeading th {
-    padding: 3px 6px;
+    padding: .2em .4em;
 }
 
 .listHeading .editColumnText,
@@ -182,7 +183,7 @@ tr.listHeading td, tr.listHeading th {
     font-weight: normal;
     text-align: left;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 1em;
     color: black;
     background-color: #555555;
     text-decoration: none;
@@ -199,7 +200,7 @@ tr.listRowShaded {
     font-weight: normal;
     text-align: left;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 1em;
     color: black;
     background-color: #DDDDFF;
     text-decoration: none;
@@ -209,7 +210,7 @@ tr.listRowUnshaded {
     font-weight: normal;
     text-align: left;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 1em;
     color: black;
     background-color: white;
     text-decoration: none;
@@ -226,12 +227,12 @@ tr.listRowUnshaded {
 .listRowText {
     font-weight: normal;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 1em;
 }
 
 .listRowSmall {
     font-weight: normal;
-    font-size: 10px;
+    font-size: 1em;
 }
 
 .listRowSmall ul, .listRowSmall li {
@@ -259,7 +260,7 @@ a.listRow:link {
     font-weight: normal;
     text-align: left;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 1em;
     color: black;
     background-color: white;
     text-decoration: none;
@@ -269,7 +270,8 @@ a.listRow:link {
     font-weight: bold;
     text-align: left;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 1em;
+
     color: black;
     background-color: white;
     text-decoration: none;
@@ -279,7 +281,7 @@ a.listRow:link {
     font-weight: normal;
     text-align: left;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 1em;
     color: black;
     background-color: white;
     text-decoration: none;
@@ -300,21 +302,21 @@ table.maincontent,
 table.portalhomeMain {
     width: 100%;
     border-spacing: 0;
-    padding: 1px;
+    padding: .1em;
     margin: 0;
     border: none;
 }
 
 .historyName {
     font-style: italic;
-    font-size: 10px;
+    font-size: 1em;
 }
 
 .help {
     font-weight: normal;
     text-align: left;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 1em;
     color: black;
     background-color: white;
     text-decoration: none;
@@ -329,18 +331,18 @@ table.portalhomeMain {
     font-weight: bold;
     text-align: left;
     font-family: verdana, helvetica, sans serif;
-    font-size: 10px;
+    font-size: 1em;
     text-decoration: none;
     color: #000000;
 
-    padding: 2px 5px 2px 5px;
+    padding: .2em .4em;
     background-color: #8888FF;
     border-style: solid;
     border-color: #DDDDDD #5555FF #5555FF #DDDDDD;
-    border-top-width: 2px;
-    border-left-width: 2px;
-    border-right-width: 2px;
-    border-bottom-width: 2px;
+    border-top-width: .1em;
+    border-left-width: .1em;
+    border-right-width: .1em;
+    border-bottom-width: .1em;
 
 }
 
