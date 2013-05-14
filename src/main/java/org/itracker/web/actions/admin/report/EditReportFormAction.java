@@ -6,7 +6,7 @@ import org.apache.struts.action.*;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Report;
 import org.itracker.services.ReportService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ReportForm;
 import org.itracker.web.util.Constants;
@@ -45,18 +45,17 @@ public class EditReportFormAction extends ItrackerBaseAction {
             ReportService reportService = getITrackerServices().getReportService();
 
             HttpSession session = request.getSession(true);
-            String action = (String) request.getParameter("action");
+            String action = request.getParameter("action");
             Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
 
             if (!UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_USER_ADMIN)) {
                 return mapping.findForward("unauthorized");
             }
             Report report;
-            String pageTitleKey = "";
+            String pageTitleKey;
             String pageTitleArg = "";
             if (action != null && action.equals("update")) {
                 pageTitleKey = "itracker.web.admin.editreport.title.update";
-                // pageTitleArg = report.getId().toString();
             } else {
                 pageTitleKey = "itracker.web.admin.editreport.title.create";
             }

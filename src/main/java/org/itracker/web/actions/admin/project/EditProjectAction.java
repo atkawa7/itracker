@@ -26,7 +26,7 @@ import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.AdminProjectUtilities;
 import org.itracker.web.util.Constants;
@@ -64,7 +64,7 @@ public class EditProjectAction extends ItrackerBaseAction {
         }
         resetToken(request);
 
-        Project project = null;
+        Project project;
         try {
             ProjectService projectService = getITrackerServices()
                     .getProjectService();
@@ -73,7 +73,7 @@ public class EditProjectAction extends ItrackerBaseAction {
             HttpSession session = request.getSession(true);
             User user = LoginUtilities.getCurrentUser(request);
 
-            String action = (String) request.getParameter("action");
+            String action = request.getParameter("action");
 
             if ("update".equals(action)) {
 

@@ -24,7 +24,7 @@ import org.itracker.model.Component;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.services.ProjectService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ComponentForm;
 import org.itracker.web.util.Constants;

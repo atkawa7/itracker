@@ -19,16 +19,16 @@
 package org.itracker.services.implementations;
 
 import org.apache.log4j.Logger;
+import org.itracker.IssueSearchException;
+import org.itracker.ProjectException;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 import org.itracker.model.Notification.Role;
 import org.itracker.model.Notification.Type;
+import org.itracker.model.util.IssueUtilities;
 import org.itracker.persistence.dao.*;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
-import org.itracker.services.exceptions.IssueSearchException;
-import org.itracker.services.exceptions.ProjectException;
-import org.itracker.services.util.IssueUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 import java.util.*;

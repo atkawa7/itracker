@@ -25,7 +25,7 @@ import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.UserService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.Constants;

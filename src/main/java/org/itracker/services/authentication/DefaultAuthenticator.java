@@ -21,10 +21,10 @@ package org.itracker.services.authentication;
 import org.apache.log4j.Logger;
 import org.itracker.model.Permission;
 import org.itracker.model.User;
+import org.itracker.UserException;
 import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.exceptions.PasswordException;
-import org.itracker.services.exceptions.UserException;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.jfree.util.Log;
 import org.springframework.dao.DataAccessException;
 
@@ -68,11 +68,6 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
                 throw new AuthenticatorException(AuthenticatorException.UNKNOWN_USER, e.getMessage());
             }
 
-//            if (user == null) {
-//                AuthenticatorException e =  new AuthenticatorException(AuthenticatorException.UNKNOWN_USER);
-//                logger.error("checkLogin: failed to get user by login: " + login, e);
-//                throw e;
-//            }
             if (user.getStatus() != UserUtilities.STATUS_ACTIVE) {
                 AuthenticatorException e = new AuthenticatorException(AuthenticatorException.INACTIVE_ACCOUNT);
                 logger.info("checkLogin: user is inactive, user: " + user, e);

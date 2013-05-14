@@ -24,13 +24,13 @@ import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
 import org.itracker.model.Issue;
+import org.itracker.SystemConfigurationException;
 import org.itracker.model.User;
+import org.itracker.model.util.IssueUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
-import org.itracker.services.exceptions.SystemConfigurationException;
-import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.SystemConfigurationUtilities;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.SystemConfigurationUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 

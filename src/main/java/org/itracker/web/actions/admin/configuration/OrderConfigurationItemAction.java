@@ -23,9 +23,9 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.Configuration;
 import org.itracker.model.Configuration.Type;
+import org.itracker.SystemConfigurationException;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.exceptions.SystemConfigurationException;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.LoginUtilities;
 
@@ -73,7 +73,7 @@ public class OrderConfigurationItemAction extends ItrackerBaseAction {
                 if (configItems.get(i) != null) {
                     Configuration firstConfiguration = new Configuration();
                     Configuration secondConfiguration = new Configuration();
-                    Configuration curConfiguration = (Configuration) configItems.get(i);
+                    Configuration curConfiguration = configItems.get(i);
                     int todo_i = -1;
                     if (curConfiguration.getId().equals(configId)) {
                         if ("up".equals(action)) {
@@ -81,7 +81,7 @@ public class OrderConfigurationItemAction extends ItrackerBaseAction {
                         } else {
                             todo_i = i + 1;
                         }
-                        Configuration todoConfiguration = (Configuration) configItems.get(todo_i);
+                        Configuration todoConfiguration = configItems.get(todo_i);
 
                         firstConfiguration.setId(todoConfiguration.getId());
                         firstConfiguration.setCreateDate(todoConfiguration.getCreateDate());

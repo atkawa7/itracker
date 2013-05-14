@@ -1,6 +1,6 @@
 package org.itracker.model;
 
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

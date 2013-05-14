@@ -21,7 +21,7 @@ package org.itracker.model;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.services.util.CustomFieldUtilities;
+import org.itracker.model.util.CustomFieldUtilities;
 
 import java.io.Serializable;
 import java.util.Comparator;

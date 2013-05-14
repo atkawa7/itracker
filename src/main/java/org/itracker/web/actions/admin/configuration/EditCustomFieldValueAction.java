@@ -25,10 +25,10 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.model.Language;
+import org.itracker.SystemConfigurationException;
+import org.itracker.model.util.CustomFieldUtilities;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.exceptions.SystemConfigurationException;
-import org.itracker.services.util.CustomFieldUtilities;
-import org.itracker.services.util.SystemConfigurationUtilities;
+import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.CustomFieldValueForm;
 import org.itracker.web.util.Constants;
@@ -75,11 +75,10 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             }
 
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
-            CustomFieldValue customFieldValue = null;
+            CustomFieldValue customFieldValue;
 
             if ("create".equals(action)) {
                 List<CustomFieldValue> currOptions = customField.getOptions();
-                int highestSortOrder = (currOptions.size() == 0 ? 1 : currOptions.get(currOptions.size() - 1).getSortOrder());
                 customFieldValue = new CustomFieldValue();
                 customFieldValue.setCustomField(customField);
                 customFieldValue.setValue(customFieldValueForm.getValue());
@@ -91,8 +90,6 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
 
                 customFieldValue.setValue(customFieldValueForm.getValue());
                 customFieldValue.setSortOrder(customFieldValueForm.getSortOrder());
-//                String name = CustomFieldUtilities.getCustomFieldOptionName(customFieldValue.getCustomField().getId(), id);
-//                customFieldValue.setName(name);
                 customFieldValue = configurationService.updateCustomFieldValue(customFieldValue);
             } else {
                 throw new SystemConfigurationException("Invalid action " + action + " while editing custom field value.");
@@ -107,16 +104,16 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             log.debug("Processing label translations for custom field value " + customFieldValue.getId() + " with key " + key);
             if (translations != null && key != null && !key.equals("")) {
                 for (Iterator<String> iter = translations.keySet().iterator(); iter.hasNext(); ) {
-                    String locale = (String) iter.next();
+                    String locale = iter.next();
                     if (locale != null) {
-                        String translation = (String) translations.get(locale);
+                        String translation = translations.get(locale);
                         if (translation != null && !translation.equals("")) {
                             log.debug("Adding new translation for locale " + locale + " for " + String.valueOf(customFieldValue.getId()));
                             configurationService.updateLanguageItem(new Language(locale, key, translation));
                         }
                     }
                 }
-                String baseValue = (String) translations.get(ITrackerResources.BASE_LOCALE);
+                String baseValue = translations.get(ITrackerResources.BASE_LOCALE);
                 configurationService.updateLanguageItem(new Language(ITrackerResources.BASE_LOCALE, key, baseValue));
             }
             if (key != null)
@@ -135,7 +132,6 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             request.setAttribute("pageTitleKey", pageTitleKey);
             request.setAttribute("pageTitleArg", pageTitleArg);
 
-//            session.removeAttribute(Constants.CUSTOMFIELDVALUE_KEY);
             saveToken(request);
             return new ActionForward(mapping.findForward("editcustomfield").getPath() + "?id=" + customField.getId() + "&action=update");
         } catch (SystemConfigurationException sce) {

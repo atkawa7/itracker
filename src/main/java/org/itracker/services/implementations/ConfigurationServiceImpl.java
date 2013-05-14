@@ -22,12 +22,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
+import org.itracker.model.util.CustomFieldUtilities;
+import org.itracker.model.util.IssueUtilities;
 import org.itracker.persistence.dao.*;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.util.CustomFieldUtilities;
-import org.itracker.services.util.IssueUtilities;
 import org.itracker.services.util.NamingUtilites;
-import org.itracker.services.util.SystemConfigurationUtilities;
+import org.itracker.model.util.SystemConfigurationUtilities;
 import org.jfree.util.Log;
 
 import javax.naming.InitialContext;

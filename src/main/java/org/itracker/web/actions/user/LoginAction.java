@@ -26,7 +26,7 @@ import org.itracker.services.UserService;
 import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.util.AuthenticationConstants;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.filters.ExecuteAlwaysFilter;
 import org.itracker.web.forms.LoginForm;

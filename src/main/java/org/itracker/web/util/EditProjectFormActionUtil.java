@@ -4,13 +4,13 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.model.*;
+import org.itracker.model.util.CustomFieldUtilities;
+import org.itracker.model.util.IssueUtilities;
+import org.itracker.model.util.ProjectUtilities;
 import org.itracker.services.ITrackerServices;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.services.util.CustomFieldUtilities;
-import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.ProjectUtilities;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.forms.ProjectForm;
 import org.itracker.web.ptos.ProjectScriptPTO;
 

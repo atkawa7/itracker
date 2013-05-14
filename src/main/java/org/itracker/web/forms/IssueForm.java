@@ -24,20 +24,15 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
+import org.itracker.IssueException;
+import org.itracker.WorkflowException;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
+import org.itracker.model.util.CustomFieldUtilities;
 import org.itracker.services.ITrackerServices;
-import org.itracker.services.exceptions.IssueException;
-import org.itracker.services.exceptions.WorkflowException;
-import org.itracker.services.util.CustomFieldUtilities;
-import org.itracker.services.util.UserUtilities;
-import org.itracker.services.util.WorkflowUtilities;
-import org.itracker.web.util.EditIssueActionUtil;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.ptos.CreateIssuePTO;
-import org.itracker.web.util.AttachmentUtilities;
-import org.itracker.web.util.Constants;
-import org.itracker.web.util.LoginUtilities;
-import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -270,7 +265,7 @@ public class IssueForm extends ITrackerForm {
                         Constants.LOCALE_KEY);
                 User currUser = (User) request.getSession().getAttribute(
                         Constants.USER_KEY);
-                List<NameValuePair> ownersList = UserUtilities
+                List<NameValuePair> ownersList = EditIssueActionUtil
                         .getAssignableIssueOwnersList(issue,
                                 issue.getProject(), currUser, locale,
                                 getITrackerServices().getUserService(),

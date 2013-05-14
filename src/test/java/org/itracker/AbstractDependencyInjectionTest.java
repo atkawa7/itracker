@@ -10,8 +10,8 @@ import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.itracker.core.ApplicationInitialization;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.util.SystemConfigurationUtilities;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.internal.runners.JUnit4ClassRunner;
@@ -117,7 +117,7 @@ public abstract class AbstractDependencyInjectionTest extends
         ConfigurationService configurationService = (ConfigurationService) applicationContext
                 .getBean("configurationService");
 
-        SystemConfigurationUtilities.initializeAllLanguages(configurationService, true);
+        ApplicationInitialization.initializeAllLanguages(configurationService, true);
         configurationService.initializeConfiguration();
 
         configurationService.resetConfigurationCache();

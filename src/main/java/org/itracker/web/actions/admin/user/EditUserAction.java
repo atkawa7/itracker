@@ -23,10 +23,10 @@ import org.apache.struts.action.*;
 import org.itracker.model.Permission;
 import org.itracker.model.Project;
 import org.itracker.model.User;
+import org.itracker.UserException;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.services.exceptions.UserException;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.ServletContextUtils;
@@ -71,8 +71,6 @@ public class EditUserAction extends ItrackerBaseAction {
             saveErrors(request, errors);
         }
         return forward;
-//        request.getSession().removeAttribute(Constants.EDIT_USER_KEY);
-//        return mapping.findForward("error");
     }
 
 
@@ -86,7 +84,6 @@ public class EditUserAction extends ItrackerBaseAction {
             User editUser;
             // if userForm.getID returns -1, then this is a new user.. 
             if (userForm.getId() != -1) {
-//                editUser.setId(userForm.getId());
                 editUser = userService.getUser(userForm.getId());
                 previousLogin = editUser.getLogin();
             } else {
@@ -104,7 +101,6 @@ public class EditUserAction extends ItrackerBaseAction {
                 if ("create".equals(userForm.getAction())) {
                     if (!userService.allowProfileCreation(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
                         errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprofilecreates"));
-//                    	saveErrors(request, errors);
                         return mapping.findForward("error");
                     }
 
@@ -117,7 +113,6 @@ public class EditUserAction extends ItrackerBaseAction {
                             // Passwort was attempted to set, but authenticator is not able to. Exception
 //	                    	itracker.web.error.nopasswordupdates
                             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
-//	                    	saveErrors(request, errors);
                             return mapping.findForward("error");
                         }
                     }
@@ -133,26 +128,21 @@ public class EditUserAction extends ItrackerBaseAction {
                             editUser = existingUser;
 //                            itracker.web.error.noprofileupdates
                             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprofileupdates"));
-//	                    	saveErrors(request, errors);
                             return mapping.findForward("error");
                         }
 
 
-//                            log.debug("updating " + editUser);
                         if (null != userForm.getPassword() && !userForm.getPassword().equals("")) {
                             if (userService.allowPasswordUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
 
                                 editUser.setPassword(UserUtilities.encryptPassword(userForm.getPassword()));
-//	                                if (log.isDebugEnabled()) {
-//	                                	log.debug("execute: setting password: " + userForm.getPassword() + " encrypted: " + editUser.getPassword());
-//	                                }
+
 
                             } else {
                                 // Passwort was attempted to set, but authenticator is not able to. Exception
                                 editUser = existingUser;
 //		                            itracker.web.error.nopasswordupdates
                                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
-//		                    	saveErrors(request, errors);
                                 return mapping.findForward("error");
                             }
                         }
@@ -173,8 +163,7 @@ public class EditUserAction extends ItrackerBaseAction {
             } catch (UserException ue) {
                 ue.printStackTrace();
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.existinglogin"));
-//                saveErrors(request, errors);
-//                saveToken(request);
+
                 mapping.findForward("error");
             }
 

@@ -18,9 +18,9 @@
 
 package org.itracker.services;
 
+import org.itracker.IssueSearchException;
+import org.itracker.ProjectException;
 import org.itracker.model.*;
-import org.itracker.services.exceptions.IssueSearchException;
-import org.itracker.services.exceptions.ProjectException;
 
 import java.util.*;
 

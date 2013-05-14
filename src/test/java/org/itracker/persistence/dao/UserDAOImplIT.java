@@ -3,7 +3,7 @@ package org.itracker.persistence.dao;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 

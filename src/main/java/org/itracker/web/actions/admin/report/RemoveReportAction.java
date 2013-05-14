@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.PermissionType;
 import org.itracker.services.ReportService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
 import javax.servlet.ServletException;

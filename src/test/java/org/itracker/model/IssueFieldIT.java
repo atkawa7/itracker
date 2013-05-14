@@ -1,8 +1,8 @@
 package org.itracker.model;
 
 import org.itracker.AbstractDependencyInjectionTest;
+import org.itracker.IssueException;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.services.exceptions.IssueException;
 import org.junit.Test;
 
 import java.text.ParseException;

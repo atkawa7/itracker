@@ -23,10 +23,10 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
+import org.itracker.SystemConfigurationException;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.exceptions.SystemConfigurationException;
-import org.itracker.services.util.SystemConfigurationUtilities;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.SystemConfigurationUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
 import javax.servlet.ServletException;
@@ -79,10 +79,7 @@ public class OrderCustomFieldValueAction extends ItrackerBaseAction {
                         "Invalid custom field id.");
             }
             List<CustomFieldValue> customFieldvalues = customField.getOptions();
-            // List<CustomFieldValue> newCustomFieldValueItems = new
-            // ArrayList<CustomFieldValue>();
 
-            // newCustomFieldValueItems.addAll(customFieldvalues);
 
             Collections.sort(customFieldvalues,
                     CustomFieldValue.SORT_ORDER_COMPARATOR);
@@ -90,20 +87,17 @@ public class OrderCustomFieldValueAction extends ItrackerBaseAction {
             CustomFieldValue curCustomFieldValue, prevCustomFieldValue = null;
             int i = 0;
             while (valuesIt.hasNext()) {
-                curCustomFieldValue = (CustomFieldValue) valuesIt.next();
+                curCustomFieldValue = valuesIt.next();
                 curCustomFieldValue.setSortOrder(i);
 
-                // int todo_i = -1;
                 if (curCustomFieldValue.getId() == customFieldValueId) {
 
                     if ("up".equals(action)) {
-                        // todo_i = i - 1;
                         if (prevCustomFieldValue != null) {
                             curCustomFieldValue.setSortOrder(i - 1);
                             prevCustomFieldValue.setSortOrder(i);
                         }
                     } else {
-                        // todo_i = i + 1;
                         CustomFieldValue value = valuesIt.next();
                         value.setSortOrder(i++);
                         curCustomFieldValue.setSortOrder(i);
@@ -114,9 +108,6 @@ public class OrderCustomFieldValueAction extends ItrackerBaseAction {
                 prevCustomFieldValue = curCustomFieldValue;
                 i++;
             }
-
-//			configurationService.updateCustomFieldValues(customField.getId(),
-//					customFieldvalues);
 
             configurationService.updateCustomField(customField);
 

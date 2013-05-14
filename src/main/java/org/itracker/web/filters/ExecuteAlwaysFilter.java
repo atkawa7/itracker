@@ -10,7 +10,7 @@ import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ITrackerServices;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.util.*;
 
 import javax.servlet.*;

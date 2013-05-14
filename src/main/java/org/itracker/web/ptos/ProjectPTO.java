@@ -5,7 +5,7 @@ import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.Status;
 import org.itracker.services.ProjectService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 import java.util.Collections;

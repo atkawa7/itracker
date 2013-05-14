@@ -6,13 +6,14 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
+import org.itracker.model.util.IssueUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.IssuePTO;
+import org.itracker.web.util.EditIssueActionUtil;
 import org.itracker.web.util.LoginUtilities;
 
 import javax.servlet.http.HttpServletRequest;
@@ -182,7 +183,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     
                     final List<NameValuePair> ownersList;
                     
-                    ownersList = UserUtilities.getAssignableIssueOwnersList(issue, project, currUser, locale, userService, userPermissions);
+                    ownersList = EditIssueActionUtil.getAssignableIssueOwnersList(issue, project, currUser, locale, userService, userPermissions);
                     
                     for ( Iterator idIterator = ownersList.iterator(); idIterator.hasNext(); ) {
                         NameValuePair owner = (NameValuePair) idIterator.next();

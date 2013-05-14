@@ -522,7 +522,7 @@
         </description>
         <name>getStatusName</name>
         <function-class>
-            org.itracker.services.util.IssueUtilities
+            org.itracker.model.util.IssueUtilities
         </function-class>
         <function-signature>
             java.lang.String getStatusName(java.lang.String, java.util.Locale)
@@ -535,7 +535,7 @@
         </description>
         <name>getResolutionName</name>
         <function-class>
-            org.itracker.services.util.IssueUtilities
+            org.itracker.model.util.IssueUtilities
         </function-class>
         <function-signature>
             java.lang.String getResolutionName(java.lang.String, java.util.Locale)
@@ -548,7 +548,7 @@
         </description>
         <name>getSeverityName</name>
         <function-class>
-            org.itracker.services.util.IssueUtilities
+            org.itracker.model.util.IssueUtilities
         </function-class>
         <function-signature>
             java.lang.String getSeverityName(java.lang.String, java.util.Locale)
@@ -561,7 +561,7 @@
         </description>
         <name>getCustomFieldName</name>
         <function-class>
-            org.itracker.services.util.CustomFieldUtilities
+            org.itracker.model.util.CustomFieldUtilities
         </function-class>
         <function-signature>
             java.lang.String getCustomFieldName(java.lang.Integer, java.util.Locale)
@@ -574,7 +574,7 @@
         </description>
         <name>getCustomFieldTypeString</name>
         <function-class>
-            org.itracker.services.util.CustomFieldUtilities
+            org.itracker.model.util.CustomFieldUtilities
         </function-class>
         <function-signature>
             java.lang.String getTypeString(int, java.util.Locale)

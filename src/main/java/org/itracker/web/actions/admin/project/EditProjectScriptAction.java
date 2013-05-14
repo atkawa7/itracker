@@ -28,8 +28,7 @@ import org.itracker.model.ProjectScript;
 import org.itracker.model.WorkflowScript;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ProjectService;
-import org.itracker.services.util.ProjectUtilities;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectScriptForm;
 
@@ -39,8 +38,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
 
 
 public class EditProjectScriptAction extends ItrackerBaseAction {
@@ -76,16 +73,15 @@ public class EditProjectScriptAction extends ItrackerBaseAction {
             HashMap<String, String> fieldIds = projectScriptForm.getFieldId();
             HashMap<String, String> priorities = projectScriptForm.getPriority();
             HashMap<String, String> scriptItems = projectScriptForm.getScriptItems();
-            HashMap<String, String> ids = projectScriptForm.getId();
             for (Iterator<String> siIterator = scriptItems.keySet().iterator(); siIterator.hasNext(); ) {
                 String key = siIterator.next();
                 if (key != null) {
-                    String scriptItemsvalue = (String) scriptItems.get(key);
+                    String scriptItemsvalue =  scriptItems.get(key);
                     if ( (!StringUtils.isBlank(scriptItemsvalue))
                             && StringUtils.equalsIgnoreCase(StringUtils.trim(scriptItemsvalue), "on") ) {
                         Integer wfsIds = Integer.valueOf(key);
-                        Integer fieldId = Integer.valueOf((String) fieldIds.get(key));
-                        Integer priority = Integer.valueOf((String) priorities.get(key));
+                        Integer fieldId = Integer.valueOf(fieldIds.get(key));
+                        Integer priority = Integer.valueOf(priorities.get(key));
                         WorkflowScript workflowScript = configurationService.getWorkflowScript(wfsIds);
                         ProjectScript projectScript = new ProjectScript();
 

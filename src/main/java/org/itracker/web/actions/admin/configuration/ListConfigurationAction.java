@@ -6,7 +6,7 @@ import org.apache.struts.action.ActionMapping;
 import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.util.SystemConfigurationUtilities;
+import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.LoginUtilities;
 

@@ -1,11 +1,17 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<%@ page import="java.util.*" %>
+<%@ page import="org.itracker.core.resources.ITrackerResources" %>
 <%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.services.util.*" %>
-<%@ page import="org.itracker.services.*" %>
-<%@ page import="org.itracker.core.resources.*" %>
-<%@ page import="org.itracker.web.util.*" %>
+<%@ page import="org.itracker.model.util.IssueUtilities" %>
+<%@ page import="org.itracker.model.util.ProjectUtilities" %>
+<%@ page import="org.itracker.model.util.ReportUtilities" %>
+<%@ page import="org.itracker.services.ReportService" %>
+<%@ page import="org.itracker.services.UserService" %>
+<%@ page import="org.itracker.model.util.UserUtilities" %>
+<%@ page import="org.itracker.web.util.Constants" %>
+<%@ page import="org.itracker.web.util.LoginUtilities" %>
+<%@ page import="org.itracker.web.util.RequestHelper" %>
+<%@ page import="java.util.*" %>
 
 <bean:define id="pageTitleKey" value="itracker.web.search.title"/>
 <bean:define id="pageTitleArg" value=""/>

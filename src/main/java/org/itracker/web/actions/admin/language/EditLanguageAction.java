@@ -26,7 +26,7 @@ import org.itracker.model.Configuration;
 import org.itracker.model.Language;
 import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.util.SystemConfigurationUtilities;
+import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 

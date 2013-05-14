@@ -20,9 +20,9 @@ package org.itracker.web.actions.admin.language;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
+import org.itracker.core.ApplicationInitialization;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.util.SystemConfigurationUtilities;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.admin.AdminHomeAction;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
@@ -48,7 +48,7 @@ public class InitializeLanguagesAction extends ItrackerBaseAction {
         try {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
 
-            SystemConfigurationUtilities.initializeAllLanguages(configurationService, true);
+            ApplicationInitialization.initializeAllLanguages(configurationService, true);
 
             AdminHomeAction.execSetupJspEnv(request);
             return mapping.getInputForward();

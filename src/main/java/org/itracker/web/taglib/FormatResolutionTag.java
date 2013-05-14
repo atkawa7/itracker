@@ -19,8 +19,8 @@
 package org.itracker.web.taglib;
 
 import org.apache.struts.taglib.TagUtils;
-import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.ProjectUtilities;
+import org.itracker.model.util.IssueUtilities;
+import org.itracker.model.util.ProjectUtilities;
 import org.itracker.web.util.Constants;
 
 import javax.servlet.http.HttpSession;

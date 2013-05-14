@@ -20,9 +20,9 @@ package org.itracker.services.implementations;
 
 import org.apache.log4j.Logger;
 import org.itracker.model.*;
+import org.itracker.model.util.IssueUtilities;
 import org.itracker.persistence.dao.*;
 import org.itracker.services.ProjectService;
-import org.itracker.services.util.IssueUtilities;
 
 import java.util.*;
 

@@ -23,13 +23,16 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 import org.itracker.model.Notification.Role;
 import org.itracker.model.Notification.Type;
+import org.itracker.model.util.IssueUtilities;
+import org.itracker.model.util.ProjectUtilities;
 import org.itracker.persistence.dao.IssueActivityDAO;
 import org.itracker.persistence.dao.IssueDAO;
 import org.itracker.persistence.dao.NotificationDAO;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
 import org.itracker.services.ProjectService;
-import org.itracker.services.util.*;
+import org.itracker.model.util.UserUtilities;
+import org.itracker.web.util.HTMLUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 import javax.mail.internet.InternetAddress;
@@ -243,11 +246,8 @@ public class NotificationServiceImpl implements NotificationService {
             }
 
             List<Component> components = issue.getComponents();
-            // issueService
-            // .getIssueComponents(issue.getId());
 
             List<Version> versions = issue.getVersions();
-            // issueService.getIssueVersions(issue.getId());
 
             if (recipients.length > 0) {
                 String subject = "";
@@ -285,7 +285,6 @@ public class NotificationServiceImpl implements NotificationService {
 
                 String activityString;
                 String componentString = "";
-                String versionString = "";
                 StringBuffer sb = new StringBuffer();
                 for (int i = 0; i < activity.size(); i++) {
                     sb.append(
@@ -298,10 +297,6 @@ public class NotificationServiceImpl implements NotificationService {
                 for (int i = 0; i < components.size(); i++) {
                     componentString += (i != 0 ? ", " : "")
                             + components.get(i).getName();
-                }
-                for (int i = 0; i < versions.size(); i++) {
-                    versionString += (i != 0 ? ", " : "")
-                            + versions.get(i).getNumber();
                 }
 
                 String msgText = "";
@@ -456,7 +451,7 @@ public class NotificationServiceImpl implements NotificationService {
                             .warn("handleIssueNotification: issue was null. Notification will not be handled");
                     return;
                 }
-                Map<InternetAddress, Locale> localeMapping = null;
+                Map<InternetAddress, Locale> localeMapping;
 
                 if (recipients == null) {
 
@@ -486,7 +481,7 @@ public class NotificationServiceImpl implements NotificationService {
                     Locale locale = ITrackerResources.getLocale();
                     Iterator<InternetAddress> it = Arrays.asList(recipients).iterator();
                     while (it.hasNext()) {
-                        InternetAddress internetAddress = (InternetAddress) it
+                        InternetAddress internetAddress = it
                                 .next();
                         localeMapping.put(internetAddress, locale);
                     }
@@ -528,7 +523,7 @@ public class NotificationServiceImpl implements NotificationService {
         Integer historyId = 0;
         // find history with greatest id
         while (it.hasNext()) {
-            currentHistory = (IssueHistory) it.next();
+            currentHistory = it.next();
             if (logger.isDebugEnabled()) {
                 logger.debug("handleIssueNotification: found history: "
                         + currentHistory.getDescription() + " (time: "
@@ -550,7 +545,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         Iterator<InternetAddress> iaIt = recipientsLocales.keySet().iterator();
         while (iaIt.hasNext()) {
-            InternetAddress internetAddress = (InternetAddress) iaIt.next();
+            InternetAddress internetAddress = iaIt.next();
 
             recipientsString.append("\n  ");
             recipientsString.append(internetAddress.getPersonal());
@@ -567,7 +562,7 @@ public class NotificationServiceImpl implements NotificationService {
         Iterator<Locale> localesIt = localeRecipients.keySet().iterator();
         try {
             while (localesIt.hasNext()) {
-                Locale currentLocale = (Locale) localesIt.next();
+                Locale currentLocale = localesIt.next();
                 recipients = localeRecipients.get(currentLocale);
 
 
@@ -612,7 +607,6 @@ public class NotificationServiceImpl implements NotificationService {
 
                     String activityString;
                     String componentString = "";
-                    String versionString = "";
                     StringBuffer sb = new StringBuffer();
                     if (activity.size() == 0) {
                         sb.append("-");
@@ -632,12 +626,8 @@ public class NotificationServiceImpl implements NotificationService {
                         componentString += (i != 0 ? ", " : "")
                                 + components.get(i).getName();
                     }
-                    for (int i = 0; i < versions.size(); i++) {
-                        versionString += (i != 0 ? ", " : "")
-                                + versions.get(i).getNumber();
-                    }
 
-                    String msgText = "";
+                    String msgText;
                     if (type == Type.ISSUE_REMINDER) {
                         msgText = ITrackerResources
                                 .getString(
@@ -842,7 +832,6 @@ public class NotificationServiceImpl implements NotificationService {
         // etc...
 
         boolean hasOwner = false;
-        // getIssueDAO().findByPrimaryKey(issueId);
         if (issue != null) {
             if (issue.getOwner() != null) {
                 User ownerModel = issue.getOwner();

@@ -24,9 +24,9 @@ import org.itracker.model.CustomField;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
+import org.itracker.model.util.ProjectUtilities;
 import org.itracker.services.ProjectService;
-import org.itracker.services.util.ProjectUtilities;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectForm;
 import org.itracker.web.util.Constants;
@@ -67,7 +67,7 @@ public class EditProjectFormAction extends ItrackerBaseAction {
             ProjectForm projectForm = (ProjectForm) form;
 
             if (projectForm == null) {
-                // this should not be
+                // TODO fix; this should not be
                 projectForm = new ProjectForm();
             }
 

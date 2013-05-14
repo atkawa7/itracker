@@ -20,21 +20,17 @@ package org.itracker.web.actions.project;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
+import org.itracker.WorkflowException;
 import org.itracker.model.*;
+import org.itracker.model.util.Convert;
+import org.itracker.model.util.IssueUtilities;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.services.exceptions.WorkflowException;
-import org.itracker.services.util.Convert;
-import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.UserUtilities;
-import org.itracker.services.util.WorkflowUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
 import org.itracker.web.ptos.CreateIssuePTO;
-import org.itracker.web.util.Constants;
-import org.itracker.web.util.EditIssueActionUtil;
-import org.itracker.web.util.LoginUtilities;
-import org.itracker.web.util.ServletContextUtils;
+import org.itracker.web.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

@@ -8,7 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.itracker.model.*;
-import org.itracker.services.util.IssueUtilities;
+import org.itracker.model.util.IssueUtilities;
 
 import java.util.*;
 
@@ -557,19 +557,14 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         if ("id".equals(order)) {
         } else if ("sev".equals(order)) {
             criteria.addOrder(order("severity", true));
-//            Collections.sort(list, Issue.SEVERITY_COMPARATOR);
         } else if ("proj".equals(order)) {
             criteria.addOrder(order("project", true)).addOrder(order("status", false));
-//            Collections.sort(list, Issue.PROJECT_AND_STATUS_COMPARATOR);
         } else if ("owner".equals(order)) {
             criteria.addOrder(order("owner", true)).addOrder(order("status", false));
-//        	Collections.sort(list, Issue.OWNER_AND_STATUS_COMPARATOR);
         } else if ("lm".equals(order)) {
             criteria.addOrder(order("lastModifiedDate", true));
-//            Collections.sort(list, Collections.reverseOrder(Issue.LAST_MODIFIED_DATE_COMPARATOR));
         } else {
             criteria.addOrder(order("status", true));
-//            Collections.sort(list, Issue.STATUS_COMPARATOR);
         }
         criteria.addOrder(order("id", true));
 

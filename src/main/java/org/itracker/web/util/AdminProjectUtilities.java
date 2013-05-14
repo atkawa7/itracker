@@ -10,7 +10,7 @@ import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;

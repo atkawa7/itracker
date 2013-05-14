@@ -24,7 +24,7 @@ import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.Version;
 import org.itracker.services.ProjectService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.VersionForm;
 import org.itracker.web.util.Constants;
@@ -63,8 +63,8 @@ public class EditVersionAction extends ItrackerBaseAction {
         }
         resetToken(request);
 
-        Version version = null;
-        Project project = null;
+        Version version;
+        Project project;
 
         try {
             VersionForm versionForm = (VersionForm) form;
@@ -108,7 +108,6 @@ public class EditVersionAction extends ItrackerBaseAction {
                         } else if ("update".equals(action)) {
                             version = projectService
                                     .getProjectVersion(versionForm.getId());
-//							version.setLastModifiedDate(new Date());
                             version.setNumber(versionForm.getNumber());
                             version.setProject(project);
                             version

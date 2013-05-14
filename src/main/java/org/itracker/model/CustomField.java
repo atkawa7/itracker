@@ -21,8 +21,8 @@ package org.itracker.model;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
-import org.itracker.services.exceptions.IssueException;
-import org.itracker.services.util.CustomFieldUtilities;
+import org.itracker.IssueException;
+import org.itracker.model.util.CustomFieldUtilities;
 import org.itracker.web.taglib.FormatCustomFieldTag;
 import org.jfree.util.Log;
 
@@ -79,9 +79,6 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
      */
     private static final long serialVersionUID = 1L;
 
-
-    /* Is a CustomField instance locale-specific ? */
-    // private Locale locale;
     /**
      * Field value data type.
      */
@@ -185,29 +182,6 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
         this.options.add(new CustomFieldValue(this, value));
     }
 
-    /**
-     * Returns the name for a particular option value.
-     *
-     * @param optionValue the value to lookup the name for
-     * @return the localized name for the supplied value
-     * @deprecated this can not be in the entity, replace by Utility or service.
-     *             FIXME: Don't know, this seems not to be working. Removed use from {@link FormatCustomFieldTag}
-     */
-    public String getOptionNameByValue(String optionValue) {
-        final Iterator<CustomFieldValue> iter = this.options.iterator();
-
-        if (logger.isDebugEnabled()) {
-            logger.warn("getOptionNameByValue: called deprecated api", new RuntimeException());
-        }
-        while (iter.hasNext()) {
-            CustomFieldValue option = iter.next();
-
-            if (option.getValue().equalsIgnoreCase(optionValue)) {
-                return CustomFieldUtilities.getCustomFieldOptionName(option, null);
-            }
-        }
-        return "";
-    }
 
     public boolean isSortOptionsByName() {
         return sortOptionsByName;
@@ -233,7 +207,7 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
      * Checks if the given value is assignable to this custom field.
      *
      * @param value custom field data
-     * @throws IssueException if it isn't
+     * @throws org.itracker.IssueException if it isn't
      * @see IssueField#setValue(String, Locale, ResourceBundle)
      */
     public void checkAssignable(String value, Locale locale,

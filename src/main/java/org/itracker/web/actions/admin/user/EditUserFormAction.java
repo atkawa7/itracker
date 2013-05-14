@@ -26,7 +26,7 @@ import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.Constants;
@@ -57,7 +57,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
 
         HttpSession session = request.getSession(true);
         User user = (User) session.getAttribute(Constants.USER_KEY);
-        String action = (String) request.getParameter("action");
+        String action = request.getParameter("action");
         String pageTitleKey = "";
         String pageTitleArg = "";
         boolean isUpdate = false;
@@ -71,9 +71,6 @@ public class EditUserFormAction extends ItrackerBaseAction {
         } else {
 
             pageTitleKey = "itracker.web.admin.edituser.title.create";
-            //     pageTitleArg = ITrackerResources.getString("itracker.locale.name", parentLocale);
-            //    pageTitleArg = ITrackerResources.getString("itracker.locale.name", this.getCurrLocale());
-
 
         }
 
@@ -86,7 +83,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
             UserService userService = getITrackerServices().getUserService();
             ProjectService projectService = getITrackerServices().getProjectService();
 
-            List<Project> projects = null;
+            List<Project> projects;
             User editUser = null;
             HashMap<Integer, HashMap<String, Permission>> userPermissions = new HashMap<Integer, HashMap<String, Permission>>();
 

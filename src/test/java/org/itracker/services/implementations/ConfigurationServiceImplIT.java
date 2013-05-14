@@ -5,9 +5,9 @@ import org.hibernate.ObjectNotFoundException;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.model.*;
 import org.itracker.model.CustomField.Type;
+import org.itracker.model.util.IssueUtilities;
 import org.itracker.persistence.dao.*;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.util.IssueUtilities;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 

@@ -1,6 +1,5 @@
 package org.itracker.model;
 
-import org.itracker.services.util.SystemConfigurationUtilities;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -4,16 +4,20 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessages;
+import org.itracker.WorkflowException;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 import org.itracker.model.Notification.Role;
 import org.itracker.model.Notification.Type;
+import org.itracker.model.util.Convert;
+import org.itracker.model.util.IssueUtilities;
+import org.itracker.model.util.NotificationUtilities;
+import org.itracker.model.util.ProjectUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.services.exceptions.WorkflowException;
-import org.itracker.services.util.*;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.forms.IssueForm;
 
 import javax.servlet.ServletException;
@@ -802,4 +806,67 @@ public class EditIssueActionUtil {
         return options;
     }
 
+    /**
+     * This method will obtain and build a list of possible owners for the
+     * webpages to display and the operator to choose from.
+     */
+    public static List<NameValuePair> getAssignableIssueOwnersList(Issue issue,
+                                                                   Project project, User currUser, Locale locale,
+                                                                   UserService userService,
+                                                                   Map<Integer, Set<PermissionType>> userPermissions) {
+
+        List<NameValuePair> ownersList = new ArrayList<NameValuePair>();
+
+        if (UserUtilities.hasPermission(userPermissions, project.getId(),
+                UserUtilities.PERMISSION_ASSIGN_OTHERS)) {
+            if (issue.getOwner() == null) {
+                ownersList.add(new NameValuePair(ITrackerResources.getString(
+                        "itracker.web.generic.unassigned", locale), "-1"));
+            } else {
+                ownersList.add(new NameValuePair(ITrackerResources.getString(
+                        "itracker.web.generic.unassign", locale), "-1"));
+            }
+            List<User> possibleOwners = userService.getPossibleOwners(issue,
+                    project.getId(), currUser.getId());
+            Collections.sort(possibleOwners, User.NAME_COMPARATOR);
+            List<NameValuePair> ownerNames = Convert
+                    .usersToNameValuePairs(possibleOwners);
+            for (int i = 0; i < ownerNames.size(); i++) {
+                ownersList.add(ownerNames.get(i));
+            }
+        } else if (UserUtilities.hasPermission(userPermissions,
+                project.getId(), UserUtilities.PERMISSION_ASSIGN_SELF)) {
+            if (issue.getOwner() != null) {
+                if (IssueUtilities.canUnassignIssue(issue, currUser.getId(),
+                        userPermissions)) {
+                    ownersList.add(new NameValuePair(ITrackerResources
+                            .getString("itracker.web.generic.unassign",
+                                    locale), "-1"));
+                }
+                if (!issue.getOwner().getId().equals(currUser.getId())) {
+                    ownersList.add(new NameValuePair(issue.getOwner()
+                            .getFirstName()
+                            + " " + issue.getOwner().getLastName(), issue
+                            .getOwner().getId().toString()));
+                    ownersList.add(new NameValuePair(currUser.getFirstName()
+                            + " " + currUser.getLastName(), currUser.getId()
+                            .toString()));
+                } else {
+                    ownersList.add(new NameValuePair(currUser.getFirstName()
+                            + " " + currUser.getLastName(), currUser.getId()
+                            .toString()));
+                }
+            }
+        } else if (issue.getOwner() != null
+                && IssueUtilities.canUnassignIssue(issue, currUser.getId(),
+                userPermissions)) {
+            ownersList.add(new NameValuePair(ITrackerResources.getString(
+                    "itracker.web.generic.unassign", locale), "-1"));
+            ownersList.add(new NameValuePair(issue.getOwner().getFirstName()
+                    + " " + issue.getOwner().getLastName(), issue.getOwner()
+                    .getId().toString()));
+        }
+
+        return ownersList;
+    }
 }

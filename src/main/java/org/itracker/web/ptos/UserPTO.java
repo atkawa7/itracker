@@ -1,7 +1,7 @@
 package org.itracker.web.ptos;
 
 import org.itracker.model.User;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.util.SessionManager;
 
 import java.util.Date;

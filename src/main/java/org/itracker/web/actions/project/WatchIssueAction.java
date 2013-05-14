@@ -24,7 +24,7 @@ import org.itracker.model.*;
 import org.itracker.model.Notification.Role;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 

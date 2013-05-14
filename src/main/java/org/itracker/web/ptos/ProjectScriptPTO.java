@@ -1,8 +1,8 @@
 package org.itracker.web.ptos;
 
 import org.itracker.model.ProjectScript;
-import org.itracker.services.util.CustomFieldUtilities;
-import org.itracker.services.util.WorkflowUtilities;
+import org.itracker.model.util.CustomFieldUtilities;
+import org.itracker.web.util.WorkflowUtilities;
 
 import java.util.Locale;
 

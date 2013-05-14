@@ -21,9 +21,9 @@ package org.itracker.web.taglib;
 import org.apache.oro.text.regex.*;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.services.util.HTMLUtilities;
-import org.itracker.services.util.ProjectUtilities;
+import org.itracker.model.util.ProjectUtilities;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.HTMLUtilities;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;

@@ -1,6 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<%@ page import="org.itracker.services.util.IssueUtilities" %>
+<%@ page import="org.itracker.model.util.IssueUtilities" %>
 
 <% // TODO : move redirect logic to the Action class. 
     String issueId = (String) request.getParameter("id");

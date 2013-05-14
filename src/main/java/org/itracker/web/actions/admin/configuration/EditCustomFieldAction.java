@@ -25,10 +25,10 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.model.Language;
+import org.itracker.SystemConfigurationException;
+import org.itracker.model.util.CustomFieldUtilities;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.exceptions.SystemConfigurationException;
-import org.itracker.services.util.CustomFieldUtilities;
-import org.itracker.services.util.SystemConfigurationUtilities;
+import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.CustomFieldForm;
 import org.itracker.web.util.Constants;
@@ -72,10 +72,9 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             }
             CustomFieldForm customFieldForm = (CustomFieldForm) form;
 
-            CustomField customField = null;
+            CustomField customField;
             if ("create".equals(action)) {
                 customField = new CustomField();
-//				customField.setName(" ");
                 customField.setFieldType(CustomField.Type.valueOf(customFieldForm.getFieldType()));
                 customField.setRequired(("true".equals((String) PropertyUtils.getSimpleProperty(form, "required")) ? true : false));
                 customField.setSortOptionsByName(("true".equals((String) PropertyUtils.getSimpleProperty(form, "sortOptionsByName")) ? true : false));
@@ -88,7 +87,6 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
                     throw new SystemConfigurationException("Invalid custom field id " + id);
                 }
                 List<CustomFieldValue> customFieldValues = customField.getOptions();
-//				customField.setName(CustomFieldUtilities.getCustomFieldName(id));
                 customField.setFieldType(CustomField.Type.valueOf(customFieldForm.getFieldType()));
                 customField.setRequired(("true".equals((String) PropertyUtils.getSimpleProperty(form, "required")) ? true : false));
                 customField.setSortOptionsByName(("true".equals((String) PropertyUtils.getSimpleProperty(form, "sortOptionsByName")) ? true : false));
@@ -114,9 +112,9 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
                 configurationService.removeLanguageKey(key);
                 Iterator<String> iter = translations.keySet().iterator();
                 while (iter.hasNext()) {
-                    String locale = (String) iter.next();
+                    String locale = iter.next();
                     if (locale != null) {
-                        String translation = (String) translations.get(locale);
+                        String translation = translations.get(locale);
                         if (translation != null && !translation.trim().equals("")) {
                             log.debug("Adding new translation for locale "
                                     + locale + " for "

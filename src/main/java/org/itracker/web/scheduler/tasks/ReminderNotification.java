@@ -23,10 +23,10 @@ import org.apache.log4j.Logger;
 import org.itracker.model.Issue;
 import org.itracker.model.Notification;
 import org.itracker.model.Notification.Type;
+import org.itracker.model.util.IssueUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
-import org.itracker.services.util.IssueUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 import javax.mail.internet.InternetAddress;

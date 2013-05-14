@@ -21,8 +21,8 @@ package org.itracker.web.taglib;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.services.util.HTMLUtilities;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.HTMLUtilities;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;

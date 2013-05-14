@@ -22,14 +22,14 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.NameValuePair;
+import org.itracker.SystemConfigurationException;
 import org.itracker.model.WorkflowScript;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.exceptions.SystemConfigurationException;
-import org.itracker.services.util.UserUtilities;
-import org.itracker.services.util.WorkflowUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.WorkflowScriptForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.WorkflowUtilities;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -61,8 +61,7 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
             if (workflowScriptForm == null) {
                 workflowScriptForm = new WorkflowScriptForm();
             }
-            String action = (String) request.getParameter("action");
-            action = (String) PropertyUtils.getSimpleProperty(workflowScriptForm, "action");
+            String action = workflowScriptForm.getAction();
 
             if (action != null && action.equals("update")) {
                 isUpdate = true;

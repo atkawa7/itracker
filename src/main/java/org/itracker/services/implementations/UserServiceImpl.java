@@ -19,7 +19,9 @@
 package org.itracker.services.implementations;
 
 import org.apache.log4j.Logger;
+import org.itracker.UserException;
 import org.itracker.model.*;
+import org.itracker.model.util.ProjectUtilities;
 import org.itracker.persistence.dao.*;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ProjectService;
@@ -27,10 +29,8 @@ import org.itracker.services.UserService;
 import org.itracker.services.authentication.PluggableAuthenticator;
 import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.exceptions.PasswordException;
-import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.AuthenticationConstants;
-import org.itracker.services.util.ProjectUtilities;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 
 import java.util.*;
 
@@ -141,32 +141,6 @@ public class UserServiceImpl implements UserService {
         return superUsers;
     }
 
-    /*public boolean isSuperUser(User user) {
-        if(user == null) {
-            return false;
-        }
-        
-        // Super user has access to all projects, which is indicated by null.
-        List<User> users = userDAO.findSuperUsers();
-        
-        if(users.contains(user)) {
-            return true;
-        } else {
-            return false; }
-        
-    }*/
-
-    /*
-     * accessible from User
-     * 
-     public UserPreferences  ferencesByUserId(Integer userId) {
-        
-        UserPreferences userPrefs = userPreferencesDAO.findByUserId(userId);
-        if (userPrefs == null)
-            return new UserPreferences();
-        
-        return userPrefs;
-    }*/
 
     public User createUser(User user) throws UserException {
         try {
@@ -267,11 +241,7 @@ public class UserServiceImpl implements UserService {
 
         existinguser.setStatus(user.getStatus());
 
-//        existinguser.setLastModifiedDate(new Timestamp(new Date().getTime()));
-
-//        // Only set the password if it is a new value...
         if (user.getPassword() != null && (!user.getPassword().equals(""))) {
-//                && (!user.getPassword().equals(user.getPassword()))) {
             if (logger.isInfoEnabled()) {
                 logger.info("updateUser: setting new password for " + user.getLogin());
             }
@@ -279,9 +249,6 @@ public class UserServiceImpl implements UserService {
         }
 
         userDAO.saveOrUpdate(existinguser);
-
-//        user = userDAO.findByPrimaryKey(id);
-//        userDAO.refresh(user);
         return existinguser;
     }
 
@@ -293,7 +260,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserPreferences updateUserPreferences(UserPreferences userPrefs) throws UserException {
-        UserPreferences newUserPrefs = new UserPreferences();
+        UserPreferences newUserPrefs;
 
         try {
             User user = userPrefs.getUser();
@@ -435,12 +402,11 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean updateAuthenticator(Integer userId, List<Permission> permissions) {
-        boolean successful = false;
+        boolean successful;
 
         try {
             User user = userDAO.findByPrimaryKey(userId);
             user.getPermissions().addAll(permissions);
-//            user.setPermissions(permissions);
             try {
                 PluggableAuthenticator authenticator = (PluggableAuthenticator) authenticatorClass.newInstance();
                 if (authenticator != null) {
@@ -452,7 +418,6 @@ public class UserServiceImpl implements UserService {
                             .updateProfile(user, AuthenticationConstants.UPDATE_TYPE_PERMISSION_SET, null,
                                     AuthenticationConstants.AUTH_TYPE_UNKNOWN,
                                     AuthenticationConstants.REQ_SOURCE_UNKNOWN)) {
-//                        permissions = user.getPermissions();
                     }
                 } else {
                     logger.error("Unable to create new authenticator.");
@@ -504,7 +469,7 @@ public class UserServiceImpl implements UserService {
 
         Iterator<Permission> permssionsIt = permissions.iterator();
         while (permssionsIt.hasNext()) {
-            Permission permission2 = (Permission) permssionsIt.next();
+            Permission permission2 = permssionsIt.next();
             if (Permission.PERMISSION_PROPERTIES_COMPARATOR.compare(permission, permission2) == 0) {
                 // found in list, return the found object
                 return permission2;

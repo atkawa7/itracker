@@ -1,7 +1,7 @@
 package org.itracker.selenium;
 
 import org.itracker.services.ITrackerServices;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.junit.Test;
 import org.subethamail.wiser.WiserMessage;
 

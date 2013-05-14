@@ -21,10 +21,9 @@ package org.itracker.web.actions.project;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.*;
+import org.itracker.model.util.IssueUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.UserService;
-import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
 import org.itracker.web.util.Constants;
@@ -88,7 +87,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
 
                 Locale locale = getLocale(request);
 
-                List<NameValuePair> ownersList = UserUtilities
+                List<NameValuePair> ownersList = EditIssueActionUtil
                         .getAssignableIssueOwnersList(issue, project, currUser,
                                 locale, userService, userPermissions);
 

@@ -27,7 +27,7 @@ import org.itracker.model.PermissionType;
 import org.itracker.model.Report;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ReportService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ReportForm;
 import org.itracker.web.util.Constants;

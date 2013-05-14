@@ -25,7 +25,7 @@ import org.apache.struts.action.*;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.services.ProjectService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 
@@ -48,13 +48,6 @@ public class RemoveProjectScriptAction extends ItrackerBaseAction {
             return mapping.findForward("unauthorized");
         }
 
-/*        if(! isTokenValid(request)) {
-            logger.debug("Invalid request token while editing workflow script.");
-            return new ActionForward(
-                    mapping.findForward("editproject").getPath()
-                    + "?id=" + project.getId() +"&action=update");
-        }
-*/
         resetToken(request);
 
         try {

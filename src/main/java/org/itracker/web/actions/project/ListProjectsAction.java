@@ -7,7 +7,7 @@ import org.apache.struts.action.ActionMapping;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.services.ProjectService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.ProjectPTO;
 import org.itracker.web.util.RequestHelper;

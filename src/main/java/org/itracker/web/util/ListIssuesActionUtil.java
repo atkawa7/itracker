@@ -6,10 +6,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
+import org.itracker.model.util.IssueUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
-import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.ptos.IssuePTO;
 
 import javax.servlet.http.HttpServletRequest;

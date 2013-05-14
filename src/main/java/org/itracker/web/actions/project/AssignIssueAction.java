@@ -28,7 +28,7 @@ import org.itracker.model.Status;
 import org.itracker.model.User;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 

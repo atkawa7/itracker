@@ -19,7 +19,7 @@
 package org.itracker.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.itracker.services.util.IssueUtilities;
+import org.itracker.model.util.IssueUtilities;
 
 /**
  * An issue history entry.

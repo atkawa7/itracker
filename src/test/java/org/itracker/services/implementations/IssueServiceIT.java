@@ -11,11 +11,11 @@ import org.itracker.model.CustomField.Type;
 import org.itracker.persistence.dao.*;
 import org.itracker.services.IssueService;
 import org.itracker.services.UserService;
-import org.itracker.services.exceptions.IssueException;
-import org.itracker.services.exceptions.IssueSearchException;
-import org.itracker.services.exceptions.ProjectException;
+import org.itracker.IssueException;
+import org.itracker.IssueSearchException;
+import org.itracker.ProjectException;
 import org.itracker.services.util.AuthenticationConstants;
-import org.itracker.services.util.IssueUtilities;
+import org.itracker.model.util.IssueUtilities;
 import org.itracker.web.util.ServletContextUtils;
 import org.junit.Test;
 

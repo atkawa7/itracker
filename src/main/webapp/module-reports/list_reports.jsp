@@ -1,15 +1,15 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.services.util.*" %>
-<%@ page import="org.itracker.services.*" %>
+<%@ page import="org.itracker.model.PermissionType" %>
+<%@ page import="org.itracker.model.Project" %>
+<%@ page import="org.itracker.model.Report" %>
+<%@ page import="org.itracker.model.util.ReportUtilities" %>
 <%@ page import="org.itracker.services.IssueService" %>
+<%@ page import="org.itracker.services.ProjectService" %>
+<%@ page import="org.itracker.services.ReportService" %>
+<%@ page import="org.itracker.model.util.UserUtilities" %>
 <%@ page import="org.itracker.web.util.RequestHelper" %>
+<%@ page import="java.util.*" %>
 
 <bean:define id="pageTitleKey" value="itracker.web.listreports.title"/>
 <bean:define id="pageTitleArg" value=""/>
@@ -131,8 +131,5 @@
 </table>
 </html:form>
 
-<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body><%@page import="java.util.Iterator"%>
-<%@page import="java.util.TreeSet"%>
-<%@page import="java.util.SortedSet"%>
-<%@page import="java.util.Collections"%>
+<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body>
 </html>

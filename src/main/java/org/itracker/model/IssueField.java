@@ -20,9 +20,9 @@ package org.itracker.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
+import org.itracker.IssueException;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField.Type;
-import org.itracker.services.exceptions.IssueException;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -261,7 +261,7 @@ public class IssueField extends AbstractEntity {
      * @param value  the value to set this field to as a string
      * @param locale the locale used for any string formatting
      * @param bundle the ResourceBundle used for any string formatting
-     * @throws IssueException represents an error formatting or parsing the value
+     * @throws org.itracker.IssueException represents an error formatting or parsing the value
      * @deprecated locale is redundant set, in bundle and as separate parameter.
      *             use {@link IssueField#setValue(String, ResourceBundle)}
      *             instead

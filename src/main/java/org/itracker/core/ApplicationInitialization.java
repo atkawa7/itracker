@@ -23,17 +23,17 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.User;
+import org.itracker.UserException;
 import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ReportService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.PasswordException;
-import org.itracker.services.exceptions.UserException;
-import org.itracker.services.util.SystemConfigurationUtilities;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.springframework.web.context.ServletConfigAware;
 
 import javax.servlet.ServletConfig;
+import java.util.HashSet;
 import java.util.StringTokenizer;
 
 
@@ -60,7 +60,8 @@ public class ApplicationInitialization implements ServletConfigAware {
             ITrackerResources.setConfigurationService(configurationService);
 
             logger.info("Checking and initializing languages in the database.");
-            SystemConfigurationUtilities.initializeAllLanguages(configurationService, false);
+
+            initializeAllLanguages(configurationService, false);
 
             logger.info("Checking and initializing default system configuration in the database.");
             configurationService.initializeConfiguration();
@@ -91,6 +92,48 @@ public class ApplicationInitialization implements ServletConfigAware {
         }
     }
 
+
+
+    /**
+     * This method will attempt to load all of the locales defined in the
+     * ITracker.properties file, and add them to the database if they don't
+     * already exist.
+     *
+     * @param configurationService a configurationService object to use when processing the
+     *                             locales
+     * @param forceReload          if true, it will reload the languages from the property files
+     *                             even if they are listed as being up to date
+     */
+    public static void initializeAllLanguages(
+            ConfigurationService configurationService, boolean forceReload) {
+        HashSet<String> definedLocales = new HashSet<String>();
+
+        configurationService.initializeLocale(ITrackerResources.BASE_LOCALE,
+                forceReload);
+
+        String definedLocalesString;
+        try {
+            definedLocalesString = configurationService
+                    .getLanguageItemByKey(ITrackerResources.DEFINED_LOCALES_KEY,
+                            null).getResourceValue();
+        } catch (RuntimeException e) {
+            definedLocalesString = ITrackerResources.getString(ITrackerResources.DEFINED_LOCALES_KEY);
+        }
+        if (definedLocalesString != null) {
+            StringTokenizer token = new StringTokenizer(definedLocalesString, ",");
+            while (token.hasMoreTokens()) {
+                String locale = token.nextToken();
+                if (locale.length() == 5 && locale.indexOf('_') == 2) {
+                    definedLocales.add(locale.substring(0, 2));
+                }
+                definedLocales.add(locale);
+            }
+        }
+
+        for (String locale: definedLocales ) {
+            configurationService.initializeLocale(locale, forceReload);
+        }
+    }
     /**
      * Check if we should create the admin user, if so, do it.
      */

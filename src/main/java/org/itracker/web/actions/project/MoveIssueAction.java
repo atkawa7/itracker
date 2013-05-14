@@ -24,7 +24,7 @@ import org.itracker.model.Issue;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 import org.itracker.services.IssueService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.MoveIssueForm;
 import org.itracker.web.util.LoginUtilities;

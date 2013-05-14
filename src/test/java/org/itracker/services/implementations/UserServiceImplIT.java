@@ -1,6 +1,7 @@
 package org.itracker.services.implementations;
 
 import org.itracker.AbstractDependencyInjectionTest;
+import org.itracker.UserException;
 import org.itracker.model.*;
 import org.itracker.persistence.dao.PermissionDAO;
 import org.itracker.persistence.dao.ProjectDAO;
@@ -8,9 +9,8 @@ import org.itracker.persistence.dao.UserDAO;
 import org.itracker.persistence.dao.UserPreferencesDAO;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.PasswordException;
-import org.itracker.services.exceptions.UserException;
 import org.itracker.services.util.AuthenticationConstants;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.junit.Test;
 
 import java.util.ArrayList;

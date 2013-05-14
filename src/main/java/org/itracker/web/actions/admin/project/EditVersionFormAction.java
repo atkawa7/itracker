@@ -25,7 +25,7 @@ import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.Version;
 import org.itracker.services.ProjectService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.VersionForm;
 import org.itracker.web.util.Constants;
@@ -62,13 +62,13 @@ public class EditVersionFormAction extends ItrackerBaseAction {
             ProjectService projectService = getITrackerServices().getProjectService();
 
             HttpSession session = request.getSession(true);
-            String action = (String) request.getParameter("action");
+            String action = request.getParameter("action");
             Map<Integer, Set<PermissionType>> userPermissions = (Map<Integer, Set<PermissionType>>) session.getAttribute(Constants.PERMISSIONS_KEY);
 
-            Version version = null;
+            Version version;
             version = (Version) session.getAttribute(Constants.VERSION_KEY);
 
-            Project project = null;
+            Project project;
 
             VersionForm versionForm = (VersionForm) form;
             if (versionForm == null) {

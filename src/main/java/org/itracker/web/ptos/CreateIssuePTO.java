@@ -6,11 +6,11 @@ package org.itracker.web.ptos;
 import org.itracker.model.CustomField;
 import org.itracker.model.NameValuePair;
 import org.itracker.model.Project;
-import org.itracker.services.util.IssueUtilities;
-import org.itracker.services.util.ProjectUtilities;
-import org.itracker.services.util.WorkflowUtilities;
+import org.itracker.model.util.IssueUtilities;
+import org.itracker.model.util.ProjectUtilities;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.WorkflowUtilities;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

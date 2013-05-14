@@ -21,7 +21,7 @@ package org.itracker.model;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -66,7 +66,6 @@ public class User extends AbstractEntity implements Comparable<Entity> {
     /**
      * The Permissions of this User on all Projects.
      */
-    // TODO: it would be a Set, not list
     private Set<Permission> permissions = new TreeSet<Permission>(Permission.PERMISSION_PROPERTIES_COMPARATOR);
 
     /**
@@ -82,33 +81,6 @@ public class User extends AbstractEntity implements Comparable<Entity> {
     public void setPreferences(UserPreferences preferences) {
         this.preferences = preferences;
     }
-
-    /*
-      * This class used to have an <code>activities</code> attribute, which was
-      * a Collection<IssueActivity>. This has been removed because the
-      * association User - IssueActivity doesn't need to be navigatable in this
-      * direction.
-      */
-
-    /*
-      * This class used to have a <code>notifications</code> attribute, which
-      * was a Collection<Notification>. This has been removed because the
-      * association User - Notification doesn't need to be navigatable in this
-      * direction.
-      */
-
-    /*
-      * This class used to have an <code>attachments</code> attribute, which
-      * was a Collection<IssueAttachment>. This has been removed because the
-      * association User - IssueAttachment doesn't need to be navigatable in this
-      * direction.
-      */
-
-    /*
-      * This class used to have a <code>history</code> attribute, which was a
-      * Collection<IssueHistory>. This has been removed because the association
-      * User - IssueHistory doesn't need to be navigatable in this direction.
-      */
 
     /**
      * Default constructor (required by Hibernate).

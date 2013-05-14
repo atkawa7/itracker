@@ -24,8 +24,8 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.model.NameValuePair;
-import org.itracker.services.util.CustomFieldUtilities;
-import org.itracker.services.util.HTMLUtilities;
+import org.itracker.model.util.CustomFieldUtilities;
+import org.itracker.web.util.HTMLUtilities;
 import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 

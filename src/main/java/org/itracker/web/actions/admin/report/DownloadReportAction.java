@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.Report;
 import org.itracker.services.ReportService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
 import javax.servlet.ServletException;
@@ -41,7 +41,7 @@ public class DownloadReportAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        String pageTitleKey = "";
+        String pageTitleKey;
         String pageTitleArg = "";
 
         if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
@@ -62,7 +62,6 @@ public class DownloadReportAction extends ItrackerBaseAction {
                     response.setHeader("Content-Disposition", "attachment; filename=\"ITracker_report_" + report.getId() + ".def\"");
                     ServletOutputStream out = response.getOutputStream();
                     log.debug("Attempting export for: " + report);
-                    //out.println( new String((byte[]) report.getFileData()));
                     out.flush();
                     out.close();
                     return null;

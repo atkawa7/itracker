@@ -1,10 +1,10 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<%@ page import="org.itracker.web.util.*" %>
-<%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.services.util.*" %>
+<%@ page import="org.itracker.model.ImportDataModel" %>
+<%@ page import="org.itracker.model.util.ImportExportUtilities" %>
+<%@ page import="org.itracker.web.util.Constants" %>
 
-<% // TODO : move redirect logic to Action class. 
+<% // TODO : move redirect logic to Action class.
     ImportDataModel importModel = (ImportDataModel) session.getAttribute(Constants.IMPORT_DATA_KEY);
     if(importModel == null) {
 %>

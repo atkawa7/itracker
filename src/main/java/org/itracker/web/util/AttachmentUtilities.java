@@ -25,10 +25,10 @@ import org.itracker.model.Issue;
 import org.itracker.model.IssueAttachment;
 import org.itracker.model.Project;
 import org.itracker.model.User;
+import org.itracker.model.util.ProjectUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ITrackerServices;
 import org.itracker.services.IssueService;
-import org.itracker.services.util.ProjectUtilities;
 import org.itracker.web.forms.IssueForm;
 
 import java.io.IOException;

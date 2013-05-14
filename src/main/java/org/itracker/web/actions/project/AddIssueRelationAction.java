@@ -24,10 +24,10 @@ import org.apache.struts.action.*;
 import org.itracker.model.Issue;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
+import org.itracker.model.util.IssueUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.UserService;
 import org.itracker.services.util.AuthenticationConstants;
-import org.itracker.services.util.IssueUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 

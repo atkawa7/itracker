@@ -23,11 +23,11 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
+import org.itracker.SystemConfigurationException;
+import org.itracker.model.util.CustomFieldUtilities;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.exceptions.SystemConfigurationException;
-import org.itracker.services.util.CustomFieldUtilities;
-import org.itracker.services.util.SystemConfigurationUtilities;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.SystemConfigurationUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 
 import javax.servlet.ServletException;

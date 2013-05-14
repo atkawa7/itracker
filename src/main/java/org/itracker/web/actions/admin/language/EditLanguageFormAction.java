@@ -25,8 +25,8 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Language;
 import org.itracker.model.util.PropertiesFileHandler;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.util.SystemConfigurationUtilities;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.SystemConfigurationUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.LanguageForm;
 import org.itracker.web.util.Constants;
@@ -101,7 +101,6 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
 
                 if (localeType >= SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE) {
                     if (!locale.equalsIgnoreCase(ITrackerResources.BASE_LOCALE)) {
-//                        String parentLocale = ITrackerResources.getParentLocale(locale) ;
                         String parentLocale = SystemConfigurationUtilities.getLocalePart(locale, SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE);
                         languageForm.setParentLocale(parentLocale);
                         langItems = configurationService.getDefinedKeys(parentLocale);
@@ -163,16 +162,14 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                 }
                 Language languageItem = null;
                 Locale curLocale = ITrackerResources.getLocale(locale);
-//                try {
-//                	languageItem = configurationService.getLanguageItemByKey("itracker.locale.name", curLocale);
-//                } catch (RuntimeException e) {
+
                 languageItem = new Language(locale, "itracker.locale.name",
                         ITrackerResources.getString("itracker.locale.name", curLocale));// configurationService.getLanguageItemByKey("itracker.locale.name", curLocale);
-//                }
+
                 languageForm.setLocaleTitle(languageItem.getResourceValue());
                 languageItem = new Language(locale, "itracker.locale.name",
                         ITrackerResources.getString("itracker.locale.name." + locale, ITrackerResources.BASE_LOCALE));// configurationService.getLanguageItemByKey("itracker.locale.name", curLocale);
-//                }
+
                 languageForm.setLocaleBaseTitle(languageItem.getResourceValue());
                 session.setAttribute(Constants.EDIT_LANGUAGE_KEYS_KEY, sortedKeys);
                 session.setAttribute(Constants.EDIT_LANGUAGE_BASE_KEY, baseItems);
@@ -232,7 +229,6 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
             if (log.isDebugEnabled()) {
                 log.debug("putPropertiesKeys: overloading locItems: " + locItems);
             }
-//        	Map<Object, Object> pMap = new HashMap<Object, Object>(p);
             p.putAll(locItems);
             locItems.putAll(Collections.checkedMap((Map) p, String.class, String.class));
 

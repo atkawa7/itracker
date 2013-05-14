@@ -5,8 +5,8 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.model.NameValuePair;
+import org.itracker.model.util.CustomFieldUtilities;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.util.CustomFieldUtilities;
 import org.itracker.web.forms.CustomFieldForm;
 
 import javax.servlet.http.HttpServletRequest;

@@ -7,10 +7,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.PermissionType;
+import org.itracker.model.util.ReportUtilities;
 import org.itracker.services.*;
-import org.itracker.services.util.ReportUtilities;
-import org.itracker.services.util.SystemConfigurationUtilities;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.SystemConfigurationUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
@@ -48,12 +48,9 @@ public class AdminHomeAction extends ItrackerBaseAction {
      */
     public static final void execSetupJspEnv(HttpServletRequest request) {
         Date time_millies = new Date(System.currentTimeMillis());
-        // super.executeAlways(mapping, form, request, response);
 
         IssueService issueService = ServletContextUtils.getItrackerServices()
                 .getIssueService();
-//		ProjectService projectService = ServletContextUtils.getItrackerServices()
-//				.getProjectService();
         ReportService reportService = ServletContextUtils.getItrackerServices()
                 .getReportService();
         ConfigurationService configurationService = ServletContextUtils.getItrackerServices()

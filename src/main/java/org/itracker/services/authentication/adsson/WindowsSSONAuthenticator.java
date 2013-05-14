@@ -5,12 +5,12 @@ package org.itracker.services.authentication.adsson;
 
 import org.apache.log4j.Logger;
 import org.itracker.model.User;
+import org.itracker.UserException;
 import org.itracker.model.UserPreferences;
 import org.itracker.services.UserService;
 import org.itracker.services.authentication.DefaultAuthenticator;
 import org.itracker.services.exceptions.AuthenticatorException;
-import org.itracker.services.exceptions.UserException;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 
 import javax.servlet.http.HttpServletRequest;
 import java.rmi.RemoteException;

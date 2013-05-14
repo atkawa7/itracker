@@ -18,8 +18,6 @@
 
 package org.itracker.web.actions.admin.workflow;
 
-//import java.io.ByteArrayInputStream;
-
 import bsh.ParseException;
 import bsh.Parser;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -27,7 +25,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.WorkflowScript;
 import org.itracker.services.ConfigurationService;
-import org.itracker.services.util.UserUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.ServletContextUtils;
