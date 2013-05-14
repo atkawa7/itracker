@@ -219,7 +219,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     <bean id="Scheduler" scope="singleton" lazy-init="false"></bean>
     -->
     <bean id="emailService" init-method="init"
-          class="org.itracker.services.util.EmailService">
+          class="org.itracker.services.implementations.EmailService">
         <property name="configurationService" ref="configurationService"/>
     </bean>
     <!--  TODO: make regular service for email-service

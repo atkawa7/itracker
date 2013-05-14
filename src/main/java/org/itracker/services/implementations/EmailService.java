@@ -16,10 +16,12 @@
  * GNU General Public License for more details.
  */
 
-package org.itracker.services.util;
+package org.itracker.services.implementations;
 
 import org.apache.log4j.Logger;
 import org.itracker.services.ConfigurationService;
+import org.itracker.services.util.EmailAuthenticator;
+import org.itracker.services.util.NamingUtilites;
 
 import javax.mail.*;
 import javax.mail.internet.AddressException;

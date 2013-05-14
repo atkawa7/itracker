@@ -1,9 +1,6 @@
 package org.itracker.services.implementations;
 
 import org.itracker.services.*;
-import org.itracker.services.util.EmailService;
-
-//TODO: clean up messy stuff by refactoring
 
 /**
  * Service layer is a bit messy. The are *Factories, which work mainly as data access objects,
@@ -13,7 +10,6 @@ import org.itracker.services.util.EmailService;
  * @author ricardow
  */
 
-//TODO: Cleanup this file, go through all issues, todos, etc.
 
 public class ITrackerServicesImpl implements ITrackerServices {
 
