@@ -56,9 +56,8 @@ public class EditUserFormAction extends ItrackerBaseAction {
         }
 
         HttpSession session = request.getSession(true);
-        User user = (User) session.getAttribute(Constants.USER_KEY);
         String action = request.getParameter("action");
-        String pageTitleKey = "";
+        String pageTitleKey;
         String pageTitleArg = "";
         boolean isUpdate = ( action != null && action.equals("update") );
 
