@@ -699,7 +699,8 @@ public class UserServiceImpl implements UserService {
         for (int i = 0; i < editUsers.size(); i++) {
             users.add(editUsers.get(i));
         }
-        List<User> otherUsers = getUsersWithProjectPermission(projectId, new int[]{UserUtilities.PERMISSION_EDIT_USERS, UserUtilities.PERMISSION_ASSIGNABLE}, true, true);
+        List<User> otherUsers = getUsersWithProjectPermission(projectId,
+                new int[]{UserUtilities.PERMISSION_EDIT_USERS, UserUtilities.PERMISSION_ASSIGNABLE}, true, true);
         for (int i = 0; i < otherUsers.size(); i++) {
             users.add(otherUsers.get(i));
         }

@@ -47,6 +47,7 @@
         PERMISSION_PRODUCT_ADMIN
         PERMISSION_CREATE
         PERMISSION_EDIT
+        PERMISSION_ASSIGN_SELF
         -->
         <row>
             <value>4</value>
@@ -74,7 +75,14 @@
             <value>3</value>
             <value>2</value>
         </row>
-
+        <row>
+            <value>23</value>
+            <value>2013-01-01</value>
+            <value>2013-01-01</value>
+            <value>6</value>
+            <value>3</value>
+            <value>2</value>
+        </row>
         <!--
         Permissions for user 4 (Refer to userbean_dataset.xml
 

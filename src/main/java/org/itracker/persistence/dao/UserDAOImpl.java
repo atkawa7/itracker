@@ -116,7 +116,6 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
      * string representation of the permission
      *
      * @param user          The user of interest
-     * @param requestSource requested by
      * @return HashMap of permission keyed by project ids
      */
     @SuppressWarnings("unchecked")
@@ -176,7 +175,7 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
             List<User> userList = userCriteria.getExecutableCriteria(getSession()).list();
 
             for (User user : userList) {
-                if (isSamePermission(user.getPermissions(), permissionTypes)) {
+                if (hasAllPermissions(user.getPermissions(), permissionTypes)) {
                     users.add(user);
                 }
             }
@@ -189,39 +188,23 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
 
     }
 
-    private boolean isSamePermission(Collection<Permission> permissions, Integer[] permissionTypes) {
-
-        boolean retVal = true;
-
-        if (permissions.size() != permissionTypes.length) {
+    private boolean hasAllPermissions(Collection<Permission> permissions, Integer[] required) {
+        if (null == required || required.length == 0) {
+            return true;
+        }
+        if (null == permissions || permissions.isEmpty()) {
             return false;
         }
 
+        Collection<Integer> requiredPermissions = Arrays.asList(required);
+        Collection<Integer> userPermissionTypes = new HashSet<Integer>(permissions.size());
+
         Iterator<Permission> permsIt = permissions.iterator();
         while (permsIt.hasNext()) {
-
-            boolean found = false;
-            Permission permission = permsIt.next();
-
-
-            Iterator<Integer> pTypesIt = Arrays.asList(permissionTypes).iterator();
-            while (pTypesIt.hasNext()) {
-
-                if (pTypesIt.next().equals(permission.getPermissionType())) {
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
-                retVal = false;
-                break;
-            }
-
+            userPermissionTypes.add(permsIt.next().getPermissionType());
         }
 
-        return retVal;
-
+        return userPermissionTypes.containsAll(requiredPermissions);
     }
 
 }

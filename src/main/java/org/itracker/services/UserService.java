@@ -64,6 +64,13 @@ public interface UserService {
 
     public void clearOwnedProjects(User user);
 
+    /**
+     * Finds all users assigned to a project having all of the given permissionTypes.
+     *
+     * @param projectID the project ID
+     * @param permissionTypes array of permission types
+     * @return users having the required permissions
+     */
     List<User> findUsersForProjectByPermissionTypeList(Integer projectID, Integer[] permissionTypes);
 
     /**

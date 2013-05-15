@@ -78,6 +78,13 @@ public interface UserDAO extends BaseDAO<User> {
      */
     Map<Integer, Set<PermissionType>> getUsersMapOfProjectsAndPermissionTypes(User user);
 
+    /**
+     * Finds all users assigned to a project having all of the given permissionTypes.
+     *
+     * @param projectID the project ID
+     * @param permissionTypes array of permission types
+     * @return users having the required permissions
+     */
     List<User> findUsersForProjectByAllPermissionTypeList(Integer projectID, Integer[] permissionTypes);
 
 }
