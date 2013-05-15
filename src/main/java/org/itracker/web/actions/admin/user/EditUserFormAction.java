@@ -60,23 +60,8 @@ public class EditUserFormAction extends ItrackerBaseAction {
         String action = request.getParameter("action");
         String pageTitleKey = "";
         String pageTitleArg = "";
-        boolean isUpdate = false;
+        boolean isUpdate = ( action != null && action.equals("update") );
 
-        if (action != null && action.equals("update")) {
-
-            isUpdate = true;
-            pageTitleKey = "itracker.web.admin.edituser.title.update";
-            pageTitleArg = user.getLogin();
-
-        } else {
-
-            pageTitleKey = "itracker.web.admin.edituser.title.create";
-
-        }
-
-        request.setAttribute("isUpdate", isUpdate);
-        request.setAttribute("pageTitleKey", pageTitleKey);
-        request.setAttribute("pageTitleArg", pageTitleArg);
 
         try {
 
@@ -206,7 +191,17 @@ public class EditUserFormAction extends ItrackerBaseAction {
             if (editUser == null) {
                 return mapping.findForward("unauthorized");
             }
+            if (isUpdate) {
+                pageTitleKey = "itracker.web.admin.edituser.title.update";
+                pageTitleArg = editUser.getLogin();
 
+            } else {
+                pageTitleKey = "itracker.web.admin.edituser.title.create";
+            }
+
+            request.setAttribute("isUpdate", isUpdate);
+            request.setAttribute("pageTitleKey", pageTitleKey);
+            request.setAttribute("pageTitleArg", pageTitleArg);
             if (errors.isEmpty()) {
 
                 String userStatus = UserUtilities.getStatusName(editUser.getStatus());
