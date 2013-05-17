@@ -34,7 +34,6 @@ import org.itracker.services.NotificationService;
 import org.itracker.services.ProjectService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
-import org.itracker.web.ptos.CreateIssuePTO;
 import org.itracker.web.util.*;
 
 import javax.servlet.ServletException;
@@ -72,7 +71,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
             saveToken(request);
 
 
-            CreateIssuePTO.setupCreateIssue(request);
+            EditIssueActionUtil.setupCreateIssue(request);
             return mapping.findForward("createissue");
 
         }
@@ -149,7 +148,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                     log.info("execute: tried to create issue with invalid attachemnt: " + msg);
                     errors.add(msg);
                     saveErrors(request, errors);
-                    CreateIssuePTO.setupCreateIssue(request);
+                    EditIssueActionUtil.setupCreateIssue(request);
                     return mapping.findForward("createissue");
                 }
 
@@ -295,7 +294,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                         errors.add(ActionMessages.GLOBAL_MESSAGE,
                                 new ActionMessage("itracker.web.error.system"));
                         saveErrors(request, errors);
-                        CreateIssuePTO.setupCreateIssue(request);
+                        EditIssueActionUtil.setupCreateIssue(request);
                         return mapping.findForward("createissue");
                     }
 
@@ -316,7 +315,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                     return getReturnForward(issue, project, issueForm, mapping);
                 }
                 saveErrors(request, errors);
-                CreateIssuePTO.setupCreateIssue(request);
+                EditIssueActionUtil.setupCreateIssue(request);
                 return mapping.findForward("createissue");
 
             }

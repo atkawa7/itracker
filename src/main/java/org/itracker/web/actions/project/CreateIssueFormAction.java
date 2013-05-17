@@ -29,7 +29,6 @@ import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
-import org.itracker.web.ptos.CreateIssuePTO;
 import org.itracker.web.util.*;
 
 import javax.servlet.ServletException;
@@ -183,7 +182,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                         return mapping.findForward("unauthorized");
 
                     } else {
-                        CreateIssuePTO.setupCreateIssue(request);
+                        EditIssueActionUtil.setupCreateIssue(request);
                         return mapping.getInputForward();
                     }
                 }

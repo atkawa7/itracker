@@ -33,7 +33,6 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 import org.itracker.model.util.*;
 import org.itracker.services.*;
-import org.itracker.web.ptos.CreateIssuePTO;
 import org.itracker.web.util.*;
 
 import javax.servlet.ServletException;
@@ -1169,7 +1168,7 @@ public class IssueForm extends ITrackerForm {
                     validateAttachment(this.getAttachment(), getITrackerServices(), errors);
                 }
             } else {
-                CreateIssuePTO.setupCreateIssue(request);
+                EditIssueActionUtil.setupCreateIssue(request);
                 HttpSession session = request.getSession();
                 Project project = (Project) session
                         .getAttribute(Constants.PROJECT_KEY);
