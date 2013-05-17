@@ -4,9 +4,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.Status;
-import org.itracker.services.ProjectService;
 import org.itracker.model.util.UserUtilities;
-import org.itracker.web.util.ServletContextUtils;
+import org.itracker.services.ProjectService;
 
 import java.util.Collections;
 import java.util.Date;
@@ -24,11 +23,6 @@ public class ProjectPTO {
 
     private final ProjectService projectService;
     private final Map<Integer, Set<PermissionType>> permissions;
-
-    public ProjectPTO(Project project, Map<Integer, Set<PermissionType>> permissions) {
-        this(project, ServletContextUtils.getItrackerServices().getProjectService(), permissions);
-
-    }
 
     public ProjectPTO(Project project, ProjectService projectService, final Map<Integer, Set<PermissionType>> permissions) {
         if (null == project) {
