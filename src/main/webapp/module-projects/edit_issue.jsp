@@ -12,7 +12,7 @@
 <logic:messagesPresent >
           <div class="formError">
            <html:messages id="error">
-               <bean:write name="error"/>
+               <bean:write name="error"/><br />
            </html:messages>
           </div>
     <br>
