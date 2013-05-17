@@ -2,15 +2,16 @@ package org.itracker.web.ptos;
 
 import org.itracker.model.User;
 import org.itracker.model.util.UserUtilities;
-import org.itracker.web.util.SessionManager;
 
 import java.util.Date;
 
 public class UserPTO {
     private User user;
+    private Date lastAccess;
 
-    public UserPTO(User user) {
+    public UserPTO(User user, Date lastAccess) {
         this.user = user;
+        this.lastAccess = lastAccess;
     }
 
     public User getUser() {
@@ -26,6 +27,6 @@ public class UserPTO {
     }
 
     public Date getLastAccess() {
-        return SessionManager.getSessionLastAccess(user.getLogin());
+        return lastAccess;
     }
 }

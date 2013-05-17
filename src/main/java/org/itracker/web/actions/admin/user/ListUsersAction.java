@@ -38,7 +38,7 @@ public class ListUsersAction extends ItrackerBaseAction {
 
         List<UserPTO> userDTOList = new LinkedList<UserPTO>();
         for (User user : users) {
-            UserPTO aUserDTO = new UserPTO(user);
+            UserPTO aUserDTO = new UserPTO(user, SessionManager.getSessionLastAccess(user.getLogin()));
             userDTOList.add(aUserDTO);
         }
 
