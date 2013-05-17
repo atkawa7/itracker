@@ -24,12 +24,14 @@ import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Language;
 import org.itracker.model.util.PropertiesFileHandler;
-import org.itracker.services.ConfigurationService;
 import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.LanguageForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -47,12 +49,12 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
         try {
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+            ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
 
             HttpSession session = request.getSession(true);
 
@@ -81,9 +83,9 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                 String[] sortedKeys = configurationService.getSortedKeys();
                 // Fix for bug in beanutils.  Can remove this logic here and in EditLanguageAction
                 // once the bug is fixed.
-                for (int i = 0; i < sortedKeys.length; i++) {
-                    sortedKeys[i] = sortedKeys[i].replace('.', '/');
-                }
+                //for (int i = 0; i < sortedKeys.length; i++) {
+                //    sortedKeys[i] = sortedKeys[i].replace('.', '/');
+                //}
 
                 Map<String, String> baseItems = new HashMap<String, String>();
                 Map<String, String> langItems = new HashMap<String, String>();
@@ -94,7 +96,7 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
 
                 if (localeType >= SystemConfigurationUtilities.LOCALE_TYPE_BASE) {
                     baseItems = configurationService.getDefinedKeys(null);
-                    putPropertiesKeys(baseItems, items, ITrackerResources.BASE_LOCALE);
+                    putPropertiesKeys(baseItems, ITrackerResources.BASE_LOCALE);
                     items = baseItems;
                     log.debug("Base Locale has " + baseItems.size() + " keys defined.");
                 }
@@ -104,7 +106,7 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                         String parentLocale = SystemConfigurationUtilities.getLocalePart(locale, SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE);
                         languageForm.setParentLocale(parentLocale);
                         langItems = configurationService.getDefinedKeys(parentLocale);
-                        putPropertiesKeys(langItems, items, parentLocale);
+                        putPropertiesKeys(langItems, parentLocale);
 
                         items = langItems;
                         log.debug("Language " + parentLocale + " has " + langItems.size() + " keys defined.");
@@ -113,23 +115,13 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
 
                 if (localeType == SystemConfigurationUtilities.LOCALE_TYPE_LOCALE) {
                     locItems = configurationService.getDefinedKeys(locale);
-                    putPropertiesKeys(locItems, items, locale);
+                    putPropertiesKeys(locItems, locale);
 
                     items = locItems;
                     log.debug("Locale " + locale + " has " + locItems.size() + " keys defined.");
                 }
 
-                if (!"create".equals((String) PropertyUtils.getSimpleProperty(form, "action"))) {
-                    // Fix for bug in beanutils.  Can remove this logic here and in EditLanguageAction
-                    // once the bug is fixed.
-                    // languageForm.set("items", items);
-//                    for (Iterator<String> iter = baseItems.keySet().iterator(); iter.hasNext(); ) {
-//                        String key = (String) iter.next();
-//                        String itemStr = (String) items.get(key);
-//                        if ( itemStr == null || itemStr.length() == 0 )
-//                            items.put(key,"");
-//                    }
-
+                if (!"create".equals(PropertyUtils.getSimpleProperty(form, "action"))) {
                     Map<String, String> formItems = new HashMap<String, String>();
                     for (Enumeration<String> en = ITrackerResources.getBundle(locale).getKeys(); en.hasMoreElements(); ) {
                         String key = en.nextElement();
@@ -160,10 +152,9 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                     languageForm.setItems(new TreeMap<String, String>(formItems));
 
                 }
-                Language languageItem = null;
                 Locale curLocale = ITrackerResources.getLocale(locale);
 
-                languageItem = new Language(locale, "itracker.locale.name",
+                Language languageItem = new Language(locale, "itracker.locale.name",
                         ITrackerResources.getString("itracker.locale.name", curLocale));// configurationService.getLanguageItemByKey("itracker.locale.name", curLocale);
 
                 languageForm.setLocaleTitle(languageItem.getResourceValue());
@@ -205,7 +196,7 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
     }
 
     @SuppressWarnings("unchecked")
-    void putPropertiesKeys(Map<String, String> locItems, Map<String, String> items, String locale) {
+    void putPropertiesKeys(Map<String, String> locItems, String locale) {
         try {
             Hashtable<Object, Object> p;
             try {

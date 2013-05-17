@@ -22,11 +22,13 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.*;
 import org.itracker.model.Notification.Role;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -49,8 +51,8 @@ public class WatchIssueAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
 
         try {
-            IssueService issueService = getITrackerServices().getIssueService();
-            NotificationService notificationService = getITrackerServices().getNotificationService();
+            IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
+            NotificationService notificationService = ServletContextUtils.getItrackerServices().getNotificationService();
             Integer issueId = new Integer((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
             Issue issue = issueService.getIssue(issueId);
             Project project = issueService.getIssueProject(issueId);
@@ -61,7 +63,7 @@ public class WatchIssueAction extends ItrackerBaseAction {
 
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
-            Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(session);
 
             if (!UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_VIEW_ALL)) {
                 return mapping.findForward("unauthorized");

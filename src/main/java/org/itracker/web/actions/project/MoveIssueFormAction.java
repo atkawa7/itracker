@@ -23,11 +23,13 @@ import org.apache.struts.action.*;
 import org.itracker.model.Issue;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.MoveIssueForm;
+import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -52,8 +54,8 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
         request.setAttribute("pageTitleArg", "itracker.web.generic.unknown");
 
         try {
-            IssueService issueService = getITrackerServices().getIssueService();
-            ProjectService projectService = getITrackerServices()
+            IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
+            ProjectService projectService = ServletContextUtils.getItrackerServices()
                     .getProjectService();
 
             Integer issueId = Integer
@@ -133,7 +135,7 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
      */
     private List<Project> getAvailableProjects(HttpServletRequest request, List<Project> projects,
                                                Issue issue) {
-        Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(request.getSession());
+        Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(request.getSession());
         List<Project> availableProjects = new ArrayList<Project>();
         for (int i = 0; i < projects.size(); i++) {
             if (projects.get(i).getId() != null
@@ -158,7 +160,7 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
      * @return true if permission is granted.
      */
     private boolean isPermissionGranted(HttpServletRequest request, Issue issue) {
-        Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(request.getSession());
+        Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(request.getSession());
 
         if (!UserUtilities.hasPermission(userPermissions, issue.getProject().getId(), UserUtilities.PERMISSION_EDIT)) {
             log.debug("Unauthorized user requested access to move issue for issue "

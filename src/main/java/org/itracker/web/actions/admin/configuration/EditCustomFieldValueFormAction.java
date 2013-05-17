@@ -22,13 +22,18 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.SystemConfigurationException;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.*;
+import org.itracker.model.CustomField;
+import org.itracker.model.CustomFieldValue;
+import org.itracker.model.Language;
+import org.itracker.model.NameValuePair;
 import org.itracker.model.util.CustomFieldUtilities;
-import org.itracker.services.ConfigurationService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.CustomFieldValueForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -50,17 +55,15 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
         //  TODO: Action Cleanup
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request,
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request,
                 response)) {
             return mapping.findForward("unauthorized");
         }
-        ConfigurationService configurationService = getITrackerServices()
+        ConfigurationService configurationService = ServletContextUtils.getItrackerServices()
                 .getConfigurationService();
 
         try {
 
-            // TODO: it looks like to following 3 lines can be removed, we
-            // comment them and add a task.
             HttpSession session = request.getSession(true);
             Map<String, List<String>> languages = configurationService
                     .getAvailableLanguages();

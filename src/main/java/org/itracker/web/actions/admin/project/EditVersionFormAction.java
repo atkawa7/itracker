@@ -24,12 +24,13 @@ import org.apache.struts.action.*;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.Version;
-import org.itracker.services.ProjectService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ProjectService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.VersionForm;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.EditVersionFormActionUtil;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +40,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * logger.info("EDIT VERSION FORM");
- */
 public class EditVersionFormAction extends ItrackerBaseAction {
     private static final Logger log = Logger.getLogger(EditVersionFormAction.class);
 
@@ -59,7 +57,7 @@ public class EditVersionFormAction extends ItrackerBaseAction {
 
 
         try {
-            ProjectService projectService = getITrackerServices().getProjectService();
+            ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
 
             HttpSession session = request.getSession(true);
             String action = request.getParameter("action");

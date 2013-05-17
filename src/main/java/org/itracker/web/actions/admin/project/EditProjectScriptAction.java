@@ -26,11 +26,13 @@ import org.apache.struts.action.*;
 import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.WorkflowScript;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ProjectService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectScriptForm;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +52,7 @@ public class EditProjectScriptAction extends ItrackerBaseAction {
 
         ActionMessages errors = new ActionMessages();
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
@@ -65,8 +67,8 @@ public class EditProjectScriptAction extends ItrackerBaseAction {
         ProjectScriptForm projectScriptForm = (ProjectScriptForm) form;
 
         try {
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
-            ProjectService projectService = getITrackerServices().getProjectService();
+            ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
+            ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
 
             Integer projectId = projectScriptForm.getProjectId();
             Project project = projectService.getProject(projectId);

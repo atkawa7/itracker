@@ -30,6 +30,7 @@ import org.itracker.services.UserService;
 import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -52,11 +53,11 @@ public class AddIssueRelationAction extends ItrackerBaseAction {
         Integer issueId = null;
         String caller = "index";
 
-        UserService userService = getITrackerServices().getUserService();
+        UserService userService = ServletContextUtils.getItrackerServices().getUserService();
 
         try {
 
-            IssueService issueService = getITrackerServices().getIssueService();
+            IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
 
             caller = (String) PropertyUtils.getSimpleProperty(form, "caller");
             issueId = (Integer) PropertyUtils.getSimpleProperty(form, "issueId");

@@ -213,13 +213,12 @@ public class WorkflowUtilitiesIT extends AbstractDependencyInjectionTest {
         try {
             final ValidatorFormAdhoc validatorForm = new ValidatorFormAdhoc();
             final String result =
-                    WorkflowUtilities.processFieldScripts(projectScripts,
+                    validatorForm.processFieldScripts(projectScripts,
                             WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT,
                             IssueUtilities.FIELD_STATUS,
                             "defaultStatus",
                             new Vector<NameValuePair>(),
-                            new ActionErrors(),
-                            validatorForm);
+                            new ActionErrors());
             assertEquals("WorkflowUtilities.processFieldScripts result",
                     "defaultStatus", result);
             assertEquals("validatorForm.status",
@@ -231,13 +230,12 @@ public class WorkflowUtilitiesIT extends AbstractDependencyInjectionTest {
             final ValidatorFormAdhoc validatorForm = new ValidatorFormAdhoc();
             final List<NameValuePair> possibleOptions = new ArrayList<NameValuePair>();
             final String result =
-                    WorkflowUtilities.processFieldScripts(projectScripts,
+                    validatorForm.processFieldScripts(projectScripts,
                             WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT,
                             IssueUtilities.FIELD_STATUS,
                             validatorForm.status,
                             possibleOptions,
-                            new ActionErrors(),
-                            validatorForm);
+                            new ActionErrors());
             assertEquals("possibleOptions.size",
                     1, possibleOptions.size());
             assertEquals("possibleOptions[0].value",
@@ -251,13 +249,12 @@ public class WorkflowUtilitiesIT extends AbstractDependencyInjectionTest {
             List<NameValuePair> possibleValues = new Vector<NameValuePair>();
             final ValidatorFormAdhoc validatorForm = new ValidatorFormAdhoc();
             final String result =
-                    WorkflowUtilities.processFieldScripts(projectScripts,
+                    validatorForm.processFieldScripts(projectScripts,
                             WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT,
                             IssueUtilities.FIELD_STATUS,
                             validatorForm.status,
                             possibleValues,
-                            new ActionErrors(),
-                            validatorForm);
+                            new ActionErrors());
             assertEquals("WorkflowUtilities.processFieldScripts possibleValues.length",
                     1, possibleValues.size());
             assertEquals("WorkflowUtilities possibleValues[0].getName()",
@@ -284,12 +281,11 @@ public class WorkflowUtilitiesIT extends AbstractDependencyInjectionTest {
             Map<Integer, String> currentValues = new HashMap<Integer, String>(1);
             currentValues.put(IssueUtilities.FIELD_STATUS, validatorForm.status);
 
-            WorkflowUtilities.processFieldScripts(projectScripts,
+            validatorForm.processFieldScripts(projectScripts,
                     WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT,
                     currentValues,
                     possibleValues,
-                    new ActionMessages(),
-                    validatorForm);
+                    new ActionMessages());
             assertEquals("status possibleValues.size", 1,
                     possibleValues.get(IssueUtilities.FIELD_STATUS).size());
             assertEquals("possibleValues possibleValues[0].name", "fieldDescription",

@@ -25,12 +25,13 @@ import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.model.util.ProjectUtilities;
-import org.itracker.services.ProjectService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ProjectService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectForm;
 import org.itracker.web.util.Constants;
-import org.itracker.web.util.EditProjectFormActionUtil;
+import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -56,19 +57,18 @@ public class EditProjectFormAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
 
         try {
-            ProjectService projectService = getITrackerServices().getProjectService();
+            ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
 
             HttpSession session = request.getSession(true);
 
 
-            Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(session);
             User user = (User) session.getAttribute(Constants.USER_KEY);
 
             ProjectForm projectForm = (ProjectForm) form;
 
             if (projectForm == null) {
-                // TODO fix; this should not be
-                projectForm = new ProjectForm();
+                return mapping.getInputForward();
             }
 
             Project project;
@@ -134,7 +134,7 @@ public class EditProjectFormAction extends ItrackerBaseAction {
                 request.setAttribute("projectForm", projectForm);
                 session.setAttribute(Constants.PROJECT_KEY, project);
                 saveToken(request);
-                ActionForward af = EditProjectFormActionUtil.init(mapping, request, projectForm);
+                ActionForward af = projectForm.init(mapping, request);
                 if (af != null) {
                     return af;
                 }

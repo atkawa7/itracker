@@ -24,9 +24,9 @@ import org.itracker.WorkflowException;
 import org.itracker.model.*;
 import org.itracker.model.util.Convert;
 import org.itracker.model.util.IssueUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
 import org.itracker.web.ptos.CreateIssuePTO;
@@ -53,9 +53,9 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
         //  TODO: Action Cleanup
 
         try {
-            ProjectService projectService = getITrackerServices()
+            ProjectService projectService = ServletContextUtils.getItrackerServices()
                     .getProjectService();
-            UserService userService = getITrackerServices().getUserService();
+            UserService userService = ServletContextUtils.getItrackerServices().getUserService();
 
             Integer projectId = new Integer(
                     (request.getParameter("projectId") == null ? "-1"
@@ -63,7 +63,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
 
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
-            Map<Integer, Set<PermissionType>> permissions = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> permissions = RequestHelper.getUserPermissions(session);
             Locale locale = LoginUtilities.getCurrentLocale(request);
 
             if (!UserUtilities.hasPermission(permissions, projectId,
@@ -165,9 +165,9 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                 issueForm.setSeverity(severity);
 
                 // populate the possible list options
-                EditIssueActionUtil.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors, issueForm);
+                issueForm.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors);
 
-                EditIssueActionUtil.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, errors, issueForm);
+                issueForm.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT, errors);
 
 
                 if (errors == null || errors.isEmpty()) {

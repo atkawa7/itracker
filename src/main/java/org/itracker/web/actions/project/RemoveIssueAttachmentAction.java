@@ -21,10 +21,12 @@ package org.itracker.web.actions.project;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.IssueAttachment;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -41,19 +43,19 @@ public class RemoveIssueAttachmentAction extends ItrackerBaseAction {
 
         ActionMessages errors = new ActionMessages();
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
         try {
-            IssueService issueService = getITrackerServices().getIssueService();
+            IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
 
             try {
                 Integer attachmentId = new Integer((request.getParameter("id") == null ? "-1" : request.getParameter("id")));
                 IssueAttachment attachment = issueService.getIssueAttachment(attachmentId);
 
                 if (attachment != null) {
-                    ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+                    ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
 
                     File attachmentFile = new File(configurationService.getProperty("attachment_dir")
                             + File.separator + attachment.getFileName());

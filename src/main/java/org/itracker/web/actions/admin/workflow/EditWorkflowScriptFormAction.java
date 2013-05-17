@@ -21,14 +21,16 @@ package org.itracker.web.actions.admin.workflow;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
-import org.itracker.model.NameValuePair;
 import org.itracker.SystemConfigurationException;
+import org.itracker.model.NameValuePair;
 import org.itracker.model.WorkflowScript;
-import org.itracker.services.ConfigurationService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.WorkflowScriptForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 import org.itracker.web.util.WorkflowUtilities;
 
 import javax.servlet.ServletException;
@@ -49,7 +51,7 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
         String pageTitleKey = "";
         String pageTitleArg = "";
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
@@ -72,7 +74,7 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
 
             WorkflowScript workflowScript = new WorkflowScript();
             if ("update".equals(action)) {
-                ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+                ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
 
 
                 Integer id = (Integer) PropertyUtils.getSimpleProperty(workflowScriptForm, "id");

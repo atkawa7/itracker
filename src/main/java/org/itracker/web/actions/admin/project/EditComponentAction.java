@@ -23,11 +23,13 @@ import org.apache.struts.action.*;
 import org.itracker.model.Component;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
-import org.itracker.services.ProjectService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ProjectService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ComponentForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -61,16 +63,15 @@ public class EditComponentAction extends ItrackerBaseAction {
         }
         resetToken(request);
 
-        Component component = null;
-        Project project = null;
+        Project project;
 
         try {
             ComponentForm componentForm = (ComponentForm) form;
-            ProjectService projectService = getITrackerServices()
+            ProjectService projectService = ServletContextUtils.getItrackerServices()
                     .getProjectService();
 
             HttpSession session = request.getSession(true);
-            Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> userPermissionsMap = RequestHelper.getUserPermissions(session);
 
             Integer projectId = componentForm.getProjectId();
 
@@ -91,7 +92,7 @@ public class EditComponentAction extends ItrackerBaseAction {
                     if (!authorised) {
                         return mapping.findForward("unauthorized");
                     } else {
-                        String action = (String) request.getParameter("action");
+                        String action = request.getParameter("action");
                         if (log.isDebugEnabled()) {
                             log.debug("execute: action was " + action);
                         }
@@ -100,7 +101,7 @@ public class EditComponentAction extends ItrackerBaseAction {
                             if (log.isDebugEnabled()) {
                                 log.debug("execute: create new component for " + project);
                             }
-                            component = new Component(project, componentForm
+                            Component component = new Component(project, componentForm
                                     .getName());
                             component.setDescription(componentForm
                                     .getDescription());
@@ -115,7 +116,7 @@ public class EditComponentAction extends ItrackerBaseAction {
                             }
                         } else if ("update".equals(action)) {
 
-                            component = projectService
+                            Component component = projectService
                                     .getProjectComponent(componentForm.getId());
                             if (log.isDebugEnabled()) {
                                 log.debug("execute: update component " + component);
@@ -132,7 +133,9 @@ public class EditComponentAction extends ItrackerBaseAction {
                             component = projectService
                                     .updateProjectComponent(component);
 
-
+                            if (log.isDebugEnabled()) {
+                                log.debug("execute: updated component " + component);
+                            }
                         }
                         session.removeAttribute(Constants.COMPONENT_KEY);
 

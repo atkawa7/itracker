@@ -5,11 +5,13 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Report;
-import org.itracker.services.ReportService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ReportService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ReportForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -42,11 +44,11 @@ public class EditReportFormAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
 
         try {
-            ReportService reportService = getITrackerServices().getReportService();
+            ReportService reportService = ServletContextUtils.getItrackerServices().getReportService();
 
             HttpSession session = request.getSession(true);
             String action = request.getParameter("action");
-            Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> userPermissionsMap = RequestHelper.getUserPermissions(session);
 
             if (!UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_USER_ADMIN)) {
                 return mapping.findForward("unauthorized");
@@ -138,7 +140,6 @@ public class EditReportFormAction extends ItrackerBaseAction {
 
         } catch (SAXException e) {
             log.debug("Exception while creating edit report form.", e);
-          //  errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.details", e.getMessage()));
         } catch (ParserConfigurationException e) {
             log.error("Exception while creating edit report form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));

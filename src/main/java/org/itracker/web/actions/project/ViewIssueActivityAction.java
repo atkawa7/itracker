@@ -6,11 +6,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.model.*;
 import org.itracker.model.util.IssueUtilities;
-import org.itracker.services.IssueService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.IssueService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,8 +34,7 @@ public class ViewIssueActivityAction extends ItrackerBaseAction {
             log.debug("execute: called");
         }
 
-        IssueService issueService = this.getITrackerServices()
-                .getIssueService();
+        IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
 
         ActionForward ret = checkPermission(request, issueService, mapping);
         if (null != ret) {
@@ -124,7 +124,7 @@ public class ViewIssueActivityAction extends ItrackerBaseAction {
         Iterator<IssueActivity> activityIt = issueService.getIssueActivity(issueId).iterator();
         IssueActivity issueActivity;
         while (activityIt.hasNext()) {
-            issueActivity = (IssueActivity) activityIt.next();
+            issueActivity = activityIt.next();
             activities.put(issueActivity, IssueUtilities.getActivityName(issueActivity.getActivityType(),
                     LoginUtilities.getCurrentLocale(request)));
         }

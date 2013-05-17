@@ -24,10 +24,11 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.WorkflowScript;
-import org.itracker.services.ConfigurationService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 import org.springframework.dao.DataAccessException;
 
@@ -46,7 +47,7 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 

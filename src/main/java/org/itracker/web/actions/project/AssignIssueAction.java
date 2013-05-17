@@ -26,11 +26,13 @@ import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.Status;
 import org.itracker.model.User;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -52,8 +54,8 @@ public class AssignIssueAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
 
         try {
-            IssueService issueService = getITrackerServices().getIssueService();
-            ProjectService projectService = getITrackerServices().getProjectService();
+            IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
+            ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
 
             Integer defaultValue = -1;
             IntegerConverter converter = new IntegerConverter(defaultValue);
@@ -63,7 +65,7 @@ public class AssignIssueAction extends ItrackerBaseAction {
 
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
-            Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(session);
             Integer currUserId = currUser.getId();
 
             Project project = projectService.getProject(projectId);

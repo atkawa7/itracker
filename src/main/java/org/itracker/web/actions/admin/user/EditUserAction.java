@@ -20,15 +20,16 @@ package org.itracker.web.actions.admin.user;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
+import org.itracker.UserException;
 import org.itracker.model.Permission;
 import org.itracker.model.Project;
 import org.itracker.model.User;
-import org.itracker.UserException;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
+import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 import org.itracker.web.util.SessionManager;
 
@@ -46,7 +47,7 @@ public class EditUserAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 

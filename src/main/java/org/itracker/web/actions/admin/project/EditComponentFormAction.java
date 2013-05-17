@@ -24,12 +24,13 @@ import org.apache.struts.action.*;
 import org.itracker.model.Component;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
-import org.itracker.services.ProjectService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ProjectService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ComponentForm;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.EditComponentFormActionUtil;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -57,7 +58,7 @@ public class EditComponentFormAction extends ItrackerBaseAction {
 
 
         try {
-            ProjectService projectService = getITrackerServices().getProjectService();
+            ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
 
             HttpSession session = request.getSession(true);
             String action = request.getParameter("action");

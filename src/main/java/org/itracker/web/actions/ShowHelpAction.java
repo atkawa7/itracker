@@ -8,6 +8,7 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,7 +60,7 @@ public class ShowHelpAction extends ItrackerBaseAction {
      * This method will prepare the request attribute for the help about jsp .
      */
     private void setupHelpAboutPageAttributes(HttpServletRequest request) {
-        ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+        ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
         long startTimeMillis = Long.parseLong(configurationService.getProperty("start_time_millis", ""));
         SimpleDateFormat dateFormat = new SimpleDateFormat(ITrackerResources.getString("itracker.dateformat.full"));
         String startTime = dateFormat.format(new Date(startTimeMillis));

@@ -21,9 +21,11 @@ package org.itracker.web.actions.admin.attachment;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.IssueAttachment;
-import org.itracker.services.IssueService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.IssueService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -42,12 +44,12 @@ public class ExportAttachmentsAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
 
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
         try {
-            IssueService issueService = getITrackerServices().getIssueService();
+            IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
 
             List<IssueAttachment> attachments = issueService.getAllIssueAttachments();
             if (attachments.size() > 0) {

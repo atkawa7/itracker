@@ -25,6 +25,7 @@ import org.itracker.model.User;
 import org.itracker.services.IssueService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +43,7 @@ public class RemoveHistoryEntryAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
 
         try {
-            IssueService issueService = getITrackerServices().getIssueService();
+            IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
 
             Integer historyId = (Integer) PropertyUtils.getSimpleProperty(form, "historyId");
             String caller = (String) PropertyUtils.getSimpleProperty(form, "caller");

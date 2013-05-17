@@ -28,6 +28,8 @@ import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.EditIssueActionUtil;
+import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -60,8 +62,8 @@ public class EditIssueFormAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
 
         try {
-            IssueService issueService = getITrackerServices().getIssueService();
-            UserService userService = getITrackerServices().getUserService();
+            IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
+            UserService userService = ServletContextUtils.getItrackerServices().getUserService();
             Integer issueId = new Integer(
                     (request.getParameter("id") == null ? "-1" : (request
                             .getParameter("id"))));
@@ -83,7 +85,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
             } else {
                 HttpSession session = request.getSession(true);
                 User currUser = (User) session.getAttribute(Constants.USER_KEY);
-                Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+                Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(session);
 
                 Locale locale = getLocale(request);
 
@@ -107,9 +109,9 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                         request, issue, ownersList, userPermissions, issue
                         .getProject(), currUser);
 
-                EditIssueActionUtil.setupIssueForm(issueForm, issue, listOptions, request, errors);
+                issueForm.setupIssueForm(issue, listOptions, request, errors);
 
-                EditIssueActionUtil.setupJspEnv(mapping, issueForm, request,
+                IssueForm.setupJspEnv(mapping, issueForm, request,
                         issue, issueService, userService, userPermissions,
                         listOptions, errors);
 

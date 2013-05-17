@@ -5,6 +5,7 @@ import org.apache.struts.action.*;
 import org.itracker.model.IssueAttachment;
 import org.itracker.services.IssueService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.ServletContextUtils;
 import org.springframework.web.bind.ServletRequestUtils;
 
 import javax.servlet.ServletOutputStream;
@@ -20,7 +21,7 @@ public class DownloadAttachmentAction extends ItrackerBaseAction {
 
         Integer attachmentID = ServletRequestUtils.getIntParameter(request, "id");
 
-        IssueService issueService = getITrackerServices().getIssueService();
+        IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
 
         IssueAttachment attachment = issueService.getIssueAttachment(attachmentID);
 

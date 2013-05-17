@@ -20,19 +20,20 @@ package org.itracker.web.actions.preferences;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
+import org.itracker.UserException;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.User;
-import org.itracker.UserException;
 import org.itracker.model.UserPreferences;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.util.AuthenticationConstants;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -69,7 +70,7 @@ public class EditPreferencesAction extends ItrackerBaseAction {
 
         User user = null;
         try {
-            UserService userService = getITrackerServices().getUserService();
+            UserService userService = ServletContextUtils.getItrackerServices().getUserService();
 
             // TODO: the following checks make no sense from my perspective.
             // This check should happen in the ExecuteAlways filter maybe

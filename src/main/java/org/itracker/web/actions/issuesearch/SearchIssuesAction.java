@@ -23,11 +23,15 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.apache.struts.validator.ValidatorForm;
 import org.itracker.IssueSearchException;
-import org.itracker.model.*;
+import org.itracker.model.Issue;
+import org.itracker.model.IssueSearchQuery;
+import org.itracker.model.PermissionType;
+import org.itracker.model.User;
 import org.itracker.services.ReportService;
 import org.itracker.services.UserService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
@@ -58,7 +62,7 @@ public class SearchIssuesAction extends ItrackerBaseAction {
         HttpSession session = request.getSession();
 
         User user = (User) session.getAttribute(Constants.USER_KEY);
-        Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+        Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(session);
 
         try {
 
@@ -76,7 +80,7 @@ public class SearchIssuesAction extends ItrackerBaseAction {
             processQueryParameters(isqm, (ValidatorForm) form, errors);
 
             if (errors.isEmpty()) {
-                List<Issue> results = getITrackerServices().getIssueService()
+                List<Issue> results = ServletContextUtils.getItrackerServices().getIssueService()
                         .searchIssues(isqm, user, userPermissions);
                 if (log.isDebugEnabled()) {
                     log.debug("SearchIssuesAction received " + results.size()
@@ -119,7 +123,7 @@ public class SearchIssuesAction extends ItrackerBaseAction {
             Integer creatorValue = (Integer) PropertyUtils.getSimpleProperty(
                     form, "creator");
             if (creatorValue != null && creatorValue.intValue() != -1) {
-                isqm.setCreator(getITrackerServices().getUserService().getUser(
+                isqm.setCreator(ServletContextUtils.getItrackerServices().getUserService().getUser(
                         creatorValue));
             } else {
                 isqm.setCreator(null);
@@ -128,7 +132,7 @@ public class SearchIssuesAction extends ItrackerBaseAction {
             Integer ownerValue = (Integer) PropertyUtils.getSimpleProperty(
                     form, "owner");
             if (ownerValue != null && ownerValue.intValue() != -1) {
-                isqm.setOwner(getITrackerServices().getUserService().getUser(
+                isqm.setOwner(ServletContextUtils.getItrackerServices().getUserService().getUser(
                         ownerValue));
             } else {
                 isqm.setOwner(null);

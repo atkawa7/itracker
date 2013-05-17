@@ -4,10 +4,11 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.model.User;
-import org.itracker.services.UserService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.UserService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.UserPTO;
+import org.itracker.web.util.ServletContextUtils;
 import org.itracker.web.util.SessionManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +25,7 @@ public class ListUsersAction extends ItrackerBaseAction {
                                  HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
-        UserService userService = this.getITrackerServices().getUserService();
+        UserService userService = ServletContextUtils.getItrackerServices().getUserService();
         boolean allowProfileCreation =
                 userService.allowProfileCreation(null, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
         request.setAttribute("allowProfileCreation", allowProfileCreation);

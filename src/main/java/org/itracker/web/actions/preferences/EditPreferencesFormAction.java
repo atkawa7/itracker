@@ -23,13 +23,14 @@ import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.UserService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -55,9 +56,9 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
         //  TODO: Action Cleanup
 
         try {
-            UserService userService = getITrackerServices().getUserService();
+            UserService userService = ServletContextUtils.getItrackerServices().getUserService();
             request.setAttribute("uh", userService);
-            ConfigurationService configurationService = getITrackerServices()
+            ConfigurationService configurationService = ServletContextUtils.getItrackerServices()
                     .getConfigurationService();
             request.setAttribute("sc", configurationService);
             Map<String, List<String>> languagesMap = configurationService

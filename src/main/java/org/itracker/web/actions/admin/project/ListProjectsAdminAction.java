@@ -8,6 +8,7 @@ import org.itracker.model.PermissionType;
 import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.project.ListProjectsAction;
 import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,9 +36,9 @@ public class ListProjectsAdminAction extends ListProjectsAction {
 
         // filter projects, so only administrated projects remain
         if (showAll) {
-            request.setAttribute("projects", getAllPTOs(getITrackerServices().getProjectService(), new int[]{UserUtilities.PERMISSION_PRODUCT_ADMIN}, permissions));
+            request.setAttribute("projects", getAllPTOs(ServletContextUtils.getItrackerServices().getProjectService(), new int[]{UserUtilities.PERMISSION_PRODUCT_ADMIN}, permissions));
         } else {
-            request.setAttribute("projects", getPTOs(getITrackerServices().getProjectService(), new int[]{UserUtilities.PERMISSION_PRODUCT_ADMIN}, permissions));
+            request.setAttribute("projects", getPTOs(ServletContextUtils.getItrackerServices().getProjectService(), new int[]{UserUtilities.PERMISSION_PRODUCT_ADMIN}, permissions));
         }
         if (log.isDebugEnabled()) {
             log.debug("execute: project-ptos set to request-attribute: " + request.getAttribute("projects"));

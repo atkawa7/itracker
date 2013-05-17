@@ -23,11 +23,13 @@ import org.apache.struts.action.*;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.Version;
-import org.itracker.services.ProjectService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ProjectService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.VersionForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -68,11 +70,11 @@ public class EditVersionAction extends ItrackerBaseAction {
 
         try {
             VersionForm versionForm = (VersionForm) form;
-            ProjectService projectService = getITrackerServices()
+            ProjectService projectService = ServletContextUtils.getItrackerServices()
                     .getProjectService();
 
             HttpSession session = request.getSession(true);
-            Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(session);
 
             Integer projectId = versionForm.getProjectId();
 

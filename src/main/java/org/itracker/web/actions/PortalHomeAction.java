@@ -7,14 +7,13 @@ import org.apache.struts.action.ActionMapping;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 import org.itracker.model.util.IssueUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.IssuePTO;
-import org.itracker.web.util.EditIssueActionUtil;
-import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +23,7 @@ import java.util.*;
 //  TODO: Action Cleanup
 
 public class PortalHomeAction extends ItrackerBaseAction {
-    
+
     static final Logger LOGGER = Logger.getLogger(PortalHomeAction.class);
     
     @SuppressWarnings("unchecked")
@@ -41,20 +40,16 @@ public class PortalHomeAction extends ItrackerBaseAction {
 		} else {
             
             LOGGER.info("Found forward, let's go and check if this forward is portalhome...");
-//            super.executeAlways(mapping,form,request,response);
-            
+
             if (forward.getName().equals("portalhome")
 					|| forward.getName().equals("index")) {
                 
-                IssueService issueService = this.getITrackerServices().getIssueService();
-                ProjectService projectService = this.getITrackerServices().getProjectService();
-                UserService userService = this.getITrackerServices().getUserService();
+                IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
+                ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
+                UserService userService = ServletContextUtils.getItrackerServices().getUserService();
                 User currUser = (User)request.getSession().getAttribute("currUser");
                 Locale locale = super.getLocale(request);
-//                Integer userId = currUser.getId();
-//				Map<Integer, Set<PermissionType>> permissions =
-//                        (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");
-                
+
                 // GETTING AND SETTING USER PREFS AND HIDDEN SECTIONS ACCORDINGLY
                 UserPreferences userPrefs = currUser.getPreferences();
                 if(userPrefs == null) userPrefs = new UserPreferences();
@@ -164,13 +159,9 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 // creator of the issue though since they may only have EDIT_USERS permission.  So if the
                 // creator isn't already in the project list, check to see if the creator has EDIT_USERS
                 // permissions, if so then add them to the list of owners and resort.
-                
-// Marky:  moved these out of for loop so they can be referenced after loop is over to set attributes.
-                
-//                List<Boolean> creatorsPresent = new ArrayList<Boolean>();
-//                HashMap<Integer,List<User>> usersWithEditOwnMap = new HashMap<Integer,List<User>>();
+
                 HttpSession session = request.getSession(true);
-                Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+                Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(session);
                 
                 Iterator<IssuePTO> unassignedIssuePTOIt = unassignedIssuePTOs.iterator();
                 while (unassignedIssuePTOIt.hasNext()) {
@@ -231,32 +222,30 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 
                 String pageTitleKey = "itracker.web.index.title";
                 String pageTitleArg = "";
-                request.setAttribute("pageTitleKey",pageTitleKey);
-                request.setAttribute("pageTitleArg",pageTitleArg);
+                request.setAttribute(Constants.PAGE_TITLE_KEY,pageTitleKey);
+                request.setAttribute(Constants.PAGE_TITLE_ARG,pageTitleArg);
                 
                 request.setAttribute("ih",issueService);
                 request.setAttribute("ph",projectService);
                 request.setAttribute("uh",userService);
                 request.setAttribute("userPrefs",userPrefs);
                 //TODO: set the next value based on the request attribute!
-                Boolean showall = null == request.getSession().getAttribute("showAll") ? false : Boolean.valueOf(request.getSession().getAttribute("showAll").toString());
-                
-                if (null != request.getParameter("showAll")) {
-                	showall = Boolean.valueOf(request.getParameter("showAll"));
+                String showAllAtt = String.valueOf(request.getSession().getAttribute(Constants.SHOW_ALL_KEY));
+                Boolean showAll = null == showAllAtt? false
+                        : Boolean.valueOf(showAllAtt);
+                showAllAtt = request.getParameter(Constants.SHOW_ALL_KEY);
+                if (null != showAllAtt) {
+                	showAll = Boolean.valueOf(showAllAtt);
                 }
-                if (!showall && userPrefs.getNumItemsOnIndex() < 1) {
-                	showall=true;
+                if (!showAll && userPrefs.getNumItemsOnIndex() < 1) {
+                	showAll=true;
                 }
                 
-                LOGGER.info("userPrefs.getNumItemsOnIndex(): " + userPrefs.getNumItemsOnIndex() + ", showAll: " + showall);
-                
-                //request.setAttribute("showAll", Boolean.valueOf(showall));
-                request.getSession().setAttribute("showAll", showall);
-                
+                LOGGER.info("userPrefs.getNumItemsOnIndex(): " + userPrefs.getNumItemsOnIndex() + ", showAll: " + showAll);
 
-                
-                request.getSession().setAttribute("allSections", allSections);
-                
+                request.getSession().setAttribute(Constants.SHOW_ALL_KEY, showAll);
+
+                request.getSession().setAttribute(Constants.ALL_SECTIONS_KEY, allSections);
                 
                 LOGGER.info("Action is trying to forward portalhome");
             }
@@ -271,7 +260,6 @@ public class PortalHomeAction extends ItrackerBaseAction {
 	public List<IssuePTO> buildIssueList( List<Issue> issues, HttpServletRequest request ) {
         User currUser = LoginUtilities.getCurrentUser(request);
         Locale locale = getLocale(request);
-        //Integer userId = currUser.getId();
         Map<Integer, Set<PermissionType>> permissions =
                 (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");
         

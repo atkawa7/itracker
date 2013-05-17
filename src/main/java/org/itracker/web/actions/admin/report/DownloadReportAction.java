@@ -21,9 +21,11 @@ package org.itracker.web.actions.admin.report;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.Report;
-import org.itracker.services.ReportService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ReportService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -44,7 +46,7 @@ public class DownloadReportAction extends ItrackerBaseAction {
         String pageTitleKey;
         String pageTitleArg = "";
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
@@ -53,11 +55,10 @@ public class DownloadReportAction extends ItrackerBaseAction {
             if (reportId == null || reportId.intValue() < 0) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreport"));
             } else {
-                ReportService reportService = getITrackerServices().getReportService();
+                ReportService reportService = ServletContextUtils.getItrackerServices().getReportService();
 
                 Report report = reportService.getReportDAO().findByPrimaryKey(reportId);
                 if (report != null) {
-                    //report.setFileData(reportService.getReportFile(reportId));
                     response.setContentType("application/x-itracker-report-export");
                     response.setHeader("Content-Disposition", "attachment; filename=\"ITracker_report_" + report.getId() + ".def\"");
                     ServletOutputStream out = response.getOutputStream();

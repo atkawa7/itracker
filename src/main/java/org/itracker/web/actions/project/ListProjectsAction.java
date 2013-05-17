@@ -6,11 +6,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
-import org.itracker.services.ProjectService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ProjectService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.ProjectPTO;
 import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -106,7 +107,7 @@ public class ListProjectsAction extends ItrackerBaseAction {
 		final Map<Integer, Set<PermissionType>> permissions = RequestHelper
 				.getUserPermissions(request.getSession());
 
-		ProjectService projectService = this.getITrackerServices()
+		ProjectService projectService = ServletContextUtils.getItrackerServices()
 				.getProjectService();
 
 		request.setAttribute("projects", getPTOs(projectService, new int[] {

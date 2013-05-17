@@ -23,10 +23,12 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.NameValuePair;
-import org.itracker.services.ConfigurationService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.HTMLUtilities;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -44,12 +46,12 @@ public class ExportLanguageAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
 
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
         try {
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+            ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
 
             String locale = (String) PropertyUtils.getSimpleProperty(form, "locale");
             if (locale != null && !locale.equals("")) {

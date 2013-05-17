@@ -18,6 +18,9 @@
 
 package org.itracker.web.forms;
 
+import bsh.EvalError;
+import bsh.Interpreter;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -28,14 +31,15 @@ import org.itracker.IssueException;
 import org.itracker.WorkflowException;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
-import org.itracker.model.util.CustomFieldUtilities;
-import org.itracker.services.ITrackerServices;
-import org.itracker.model.util.UserUtilities;
+import org.itracker.model.util.*;
+import org.itracker.services.*;
 import org.itracker.web.ptos.CreateIssuePTO;
 import org.itracker.web.util.*;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -70,6 +74,858 @@ public class IssueForm extends ITrackerForm {
     private HashMap<String, String> customFields = new HashMap<String, String>();
     private Integer relationType = null;
     private Integer relatedIssueId = null;
+
+    /**
+     * The most general way to run scripts. All matching of event and fields
+     * are embedded within. As a result, optionValues parameter will
+     * contain updated values and form will contain new default values
+     * if appropriate.
+     *
+     * @param projectScriptModels is a list of scripts.
+     * @param event               is an event type.
+     * @param currentValues       values mapped to field-ids
+     * @param optionValues        is a map of current values to fields by field-Id.
+     * @param currentErrors       is a container for errors.
+     */
+    public void processFieldScripts(List<ProjectScript> projectScriptModels, int event, Map<Integer, String> currentValues, Map<Integer, List<NameValuePair>> optionValues, ActionMessages currentErrors) throws WorkflowException {
+        if (projectScriptModels == null || projectScriptModels.size() == 0)
+            return;
+        log.debug("Processing " + projectScriptModels.size() + " field scripts for project " + projectScriptModels.get(0).getProject().getId());
+
+        List<ProjectScript> scriptsToRun = new ArrayList<ProjectScript>(projectScriptModels.size());
+        for (ProjectScript model : projectScriptModels) {
+            if (model.getScript().getEvent() == event) {
+                scriptsToRun.add(model);
+            }
+        }
+        // order the scripts by priority
+        Collections.sort(scriptsToRun, ProjectScript.PRIORITY_COMPARATOR);
+
+        if (log.isDebugEnabled()) {
+            log.debug(scriptsToRun.size() + " eligible scripts found for event " + event);
+        }
+
+        String currentValue;
+        for (ProjectScript currentScript : scriptsToRun) {
+            try {
+                currentValue = currentValues.get(currentScript.getFieldId());
+                log.debug("Running script " + currentScript.getScript().getId()
+                        + " with priority " + currentScript.getPriority());
+
+                log.debug("Before script current value for field " + IssueUtilities.getFieldName(currentScript.getFieldId())
+                        + " (" + currentScript.getFieldId() + ") is "
+                        + currentValue + "'");
+
+                List<NameValuePair> options = optionValues.get(currentScript.getFieldId());
+                if (null == options) {
+                    options = new ArrayList<NameValuePair>();
+                    optionValues.put(currentScript.getFieldId(), options);
+                }
+                currentValue = processFieldScript(currentScript, event,
+                        currentScript.getFieldId(),
+                        currentValue,
+                        options, currentErrors);
+                currentValues.put( currentScript.getFieldId(), currentValue );
+
+                log.debug("After script current value for field " + IssueUtilities.getFieldName(currentScript.getFieldId())
+                        + " (" + currentScript.getFieldId() + ") is "
+                        + currentValue + "'");
+
+            } catch (WorkflowException we) {
+                log.error("Error processing script ", we);
+                currentErrors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system.message", we.getMessage(), "Workflow"));
+            }
+        }
+
+        for (Integer fieldId: currentValues.keySet()) {
+            getCustomFields().put(String.valueOf(fieldId),
+                    currentValues.get(fieldId));
+        }
+    }
+
+    /**
+     * Run appropriate script, selecting it from provided list by matching
+     * event and field.
+     *
+     * @param projectScripts is a list of provided scripts.
+     * @param event          is an event type.
+     * @param fieldId        is a field, associated with event.
+     * @param currentValue   the current value
+     * @param optionValues   is a set of current values.
+     * @param currentErrors  is a container for errors.
+     * @return new set of values.
+     */
+    public String processFieldScripts(List<ProjectScript> projectScripts, int event, Integer fieldId, String currentValue, List<NameValuePair> optionValues, ActionErrors currentErrors) throws WorkflowException {
+        if (projectScripts == null || projectScripts.size() == 0 || fieldId == null) {
+            return null;
+        }
+        log.debug("Processing " + projectScripts.size() + " field scripts for project " + projectScripts.get(0).getProject().getId());
+
+        List<ProjectScript> scriptsToRun = new LinkedList<ProjectScript>();
+        for (int i = 0; i < projectScripts.size(); i++) {
+            if (projectScripts.get(i).getScript().getEvent() == event && fieldId.equals(projectScripts.get(i).getFieldId())) {
+                int insertIndex = 0;
+                for (insertIndex = 0; insertIndex < scriptsToRun.size(); insertIndex++) {
+                    if (projectScripts.get(i).getPriority() < ((ProjectScript) scriptsToRun.get(insertIndex)).getPriority()) {
+                        break;
+                    }
+                }
+                scriptsToRun.add(insertIndex, projectScripts.get(i));
+            }
+        }
+        log.debug(scriptsToRun.size() + " eligible scripts found for event " + event + " on field " + fieldId);
+
+        String result = currentValue;
+        for (int i = 0; i < scriptsToRun.size(); i++) {
+            ProjectScript currentScript = (ProjectScript) scriptsToRun.get(i);
+            try {
+                if (log.isDebugEnabled()) {
+                    log.debug("Running script " + currentScript.getScript().getId() + " with priority "
+                            + currentScript.getPriority());
+                }
+                result = processFieldScript(currentScript, event, fieldId,
+                        result, optionValues, currentErrors);
+            } catch (WorkflowException we) {
+                log.error("Error processing script " + currentScript.getScript().getId() + ": " + we.getMessage());
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Run provided BEANSHELL script against form instance, taking into account
+     * incoming event type, field raised an event and current values.
+     * As a result, a set of new current values is returned and if
+     * appropriate, default values are changed in form.
+     * TODO: should issue, project, user, services be available too?
+     *
+     * @param projectScript is a script to run.
+     * @param event         is an event type.
+     * @param fieldId       is a field id associated with event.
+     * @param currentValue  the current field value
+     * @param optionValues  is a set of valid option-values.
+     * @param currentErrors is a container for occured errors.
+     * @return new changed currentValue.
+     */
+    public String processFieldScript(ProjectScript projectScript, int event, Integer fieldId, String currentValue, List<NameValuePair> optionValues, ActionMessages currentErrors) throws WorkflowException {
+        if (projectScript == null) {
+            throw new WorkflowException("ProjectScript was null.", WorkflowException.INVALID_ARGS);
+        }
+        if (currentErrors == null) {
+            throw new WorkflowException("Errors was null.", WorkflowException.INVALID_ARGS);
+        }
+
+        String result = "";
+
+        try {
+            Interpreter bshInterpreter = new Interpreter();
+            bshInterpreter.set("event", event);
+            bshInterpreter.set("fieldId", fieldId);
+            currentValue = StringUtils.defaultString(currentValue);
+            bshInterpreter.set("currentValue", currentValue);
+            bshInterpreter.set("optionValues", optionValues);
+            bshInterpreter.set("currentErrors", currentErrors);
+            bshInterpreter.set("currentForm", this);
+
+            bshInterpreter.eval(projectScript.getScript().getScript());
+
+            result = String.valueOf(bshInterpreter.get("currentValue"));
+            if (log.isDebugEnabled()) {
+                log.debug("processFieldScript: Script returned current value of '" + optionValues + "' (" + (optionValues != null ? optionValues.getClass().getName() : "NULL") + ")");
+            }
+        } catch (EvalError evalError) {
+            log.error("processFieldScript: eval failed: " + projectScript, evalError);
+            currentErrors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("itracker.web.error.invalidscriptdata", evalError.getMessage()));
+        } catch (RuntimeException e) {
+            log.warn("processFieldScript: Error processing field script: " + projectScript, e);
+            currentErrors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("itracker.web.error.system.message",
+                            new Object[]{
+                                    e.getMessage(),
+                                    ITrackerResources.getString("itracker.web.attr.script") // Script
+                            }));
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("processFieldScript: returning " + result + ", errors: " + currentErrors);
+        }
+        return result;
+    }
+
+    public final Issue processFullEdit(Issue issue, Project project, User user,
+                                              Map<Integer, Set<PermissionType>> userPermissions, Locale locale,
+                                              IssueService issueService, ActionMessages errors) throws Exception {
+        int previousStatus = issue.getStatus();
+        boolean needReloadIssue;
+        ActionMessages msg = new ActionMessages();
+        issue = addAttachment(issue, project, user, getITrackerServices(), msg);
+
+        if (!msg.isEmpty()) {
+            // Validation of attachment failed
+            errors.add(msg);
+            return issue;
+        }
+
+        needReloadIssue = issueService.setIssueVersions(issue.getId(),
+                new HashSet<Integer>(Arrays.asList(getVersions())),
+                user.getId());
+
+        needReloadIssue = needReloadIssue | issueService.setIssueComponents(issue.getId(),
+                new HashSet<Integer>(Arrays.asList(getComponents())),
+                user.getId());
+
+        // reload issue for further updates
+        if (needReloadIssue) {
+            if (log.isDebugEnabled()) {
+                log.debug("processFullEdit: updating issue from session: " + issue);
+            }
+            issue = issueService.getIssue(issue.getId());
+        }
+
+        Integer targetVersion = getTargetVersion();
+        if (targetVersion != null && targetVersion != -1) {
+            ProjectService projectService = ServletContextUtils.getItrackerServices()
+                    .getProjectService();
+            Version version = projectService.getProjectVersion(targetVersion);
+            if (version == null) {
+                throw new RuntimeException("No version with Id "
+                        + targetVersion);
+            }
+            issue.setTargetVersion(version);
+        }
+
+        issue.setResolution(getResolution());
+        issue.setSeverity(getSeverity());
+
+        applyLimitedFields(issue, project, user, userPermissions, locale, issueService);
+
+        Integer formStatus = getStatus();
+        issue.setStatus(formStatus);
+        if (formStatus != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("processFullEdit: processing status: " + formStatus);
+            }
+            if (previousStatus != -1) {
+                // Reopened the issue. Reset the resolution field.
+                if ((previousStatus >= IssueUtilities.STATUS_ASSIGNED && previousStatus < IssueUtilities.STATUS_RESOLVED)
+                        && (previousStatus >= IssueUtilities.STATUS_RESOLVED && previousStatus < IssueUtilities.STATUS_END)) {
+                    issue.setResolution("");
+                }
+
+                if (previousStatus >= IssueUtilities.STATUS_CLOSED
+                        && !UserUtilities.hasPermission(userPermissions, project
+                        .getId(), UserUtilities.PERMISSION_CLOSE)) {
+                    if (previousStatus < IssueUtilities.STATUS_CLOSED) {
+                        issue.setStatus(previousStatus);
+                    } else {
+                        issue.setStatus(IssueUtilities.STATUS_RESOLVED);
+                    }
+                }
+
+                if (issue.getStatus() < IssueUtilities.STATUS_NEW
+                        || issue.getStatus() >= IssueUtilities.STATUS_END) {
+                    issue.setStatus(previousStatus);
+                }
+            } else if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED
+                    && !UserUtilities.hasPermission(userPermissions, project
+                    .getId(), UserUtilities.PERMISSION_CLOSE)) {
+                issue.setStatus(IssueUtilities.STATUS_RESOLVED);
+            }
+        }
+
+        if (issue.getStatus() < IssueUtilities.STATUS_NEW) {
+            if (log.isDebugEnabled()) {
+                log.debug("processFullEdit: status < STATUS_NEW: " + issue.getStatus());
+            }
+            issue.setStatus(IssueUtilities.STATUS_NEW);
+            if (log.isDebugEnabled()) {
+                log.debug("processFullEdit: updated to: " + issue.getStatus());
+            }
+        } else if (issue.getStatus() >= IssueUtilities.STATUS_END) {
+            if (log.isDebugEnabled()) {
+                log.debug("processFullEdit: status >= STATUS_END: " + issue.getStatus());
+            }
+            if (!UserUtilities.hasPermission(userPermissions, project.getId(),
+                    UserUtilities.PERMISSION_CLOSE)) {
+                issue.setStatus(IssueUtilities.STATUS_RESOLVED);
+            } else {
+                issue.setStatus(IssueUtilities.STATUS_CLOSED);
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("processFullEdit: status updated to: " + issue.getStatus());
+            }
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("processFullEdit: updating issue " + issue);
+        }
+        return issueService.updateIssue(issue, user.getId());
+    }
+
+    public final void applyLimitedFields(Issue issue, Project project,
+                                                User user, Map<Integer, Set<PermissionType>> userPermissionsMap,
+                                                Locale locale,  IssueService issueService) throws Exception {
+
+        issue.setDescription(getDescription());
+
+        setIssueFields(issue, user, locale,  issueService);
+        setOwner(issue, user, userPermissionsMap);
+        addHistoryEntry(issue, user);
+    }
+
+    private void setIssueFields(Issue issue, User user, Locale locale,
+                                       IssueService issueService) throws Exception {
+        if (log.isDebugEnabled()) {
+            log.debug("setIssueFields: called");
+        }
+        List<CustomField> projectCustomFields = issue.getProject()
+                .getCustomFields();
+        if (log.isDebugEnabled()) {
+            log.debug("setIssueFields: got project custom fields: " + projectCustomFields);
+        }
+
+        if (projectCustomFields == null || projectCustomFields.size() == 0) {
+            log.debug("setIssueFields: no custom fields, returning...");
+            return;
+        }
+
+
+        // here you see some of the ugly side of Struts 1.3 - the forms... they
+        // can only contain Strings and some simple objects types...
+        HashMap<String, String> formCustomFields = getCustomFields();
+
+        if (log.isDebugEnabled()) {
+            log.debug("setIssueFields: got form custom fields: " + formCustomFields);
+        }
+
+        if (formCustomFields == null || formCustomFields.size() == 0) {
+            log.debug("setIssueFields: no form custom fields, returning..");
+            return;
+        }
+
+        ResourceBundle bundle = ITrackerResources.getBundle(locale);
+//		List<IssueField> issueFieldsList = new ArrayList<IssueField>(projectCustomFields.size());
+        Iterator<CustomField> customFieldsIt = projectCustomFields.iterator();
+        // declare iteration fields
+        CustomField field;
+        String fieldValue;
+        IssueField issueField;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("setIssueFields: processing project fields");
+            }
+            // set values to issue-fields and add if needed
+            while (customFieldsIt.hasNext()) {
+
+                field = customFieldsIt.next();
+                fieldValue = (String) formCustomFields.get(String.valueOf(field
+                        .getId()));
+
+                // remove the existing field for re-setting
+                issueField = getIssueField(issue, field);
+
+
+                if (fieldValue != null && fieldValue.trim().length() > 0) {
+                    if (null == issueField) {
+                        issueField = new IssueField(issue, field);
+                        issue.getFields().add(issueField);
+                    }
+
+                    issueField.setValue(fieldValue, bundle);
+                } else {
+                    if (null != issueField) {
+                        issue.getFields().remove(issueField);
+                    }
+                }
+            }
+
+            // set new issue fields for later saving
+//			issue.setFields(issueFieldsList);
+
+//			issueService.setIssueFields(issue.getId(), issueFieldsList);
+        } catch (Exception e) {
+            log.error("setIssueFields: failed to process custom fields", e);
+            throw e;
+        }
+    }
+
+    private static IssueField getIssueField(Issue issue, CustomField field) {
+        Iterator<IssueField> it = issue.getFields().iterator();
+        IssueField issueField = null;
+        while (it.hasNext()) {
+            issueField = it.next();
+            if (issueField.getCustomField().equals(field)) {
+                return issueField;
+            }
+        }
+        return null;
+
+    }
+
+    private void setOwner(Issue issue, User user,
+                                 Map<Integer, Set<PermissionType>> userPermissionsMap) throws Exception {
+        if (log.isDebugEnabled()) {
+            log.debug("setOwner: called to " + getOwnerId());
+        }
+        Integer currentOwner = (issue.getOwner() == null) ? null : issue
+                .getOwner().getId();
+
+        Integer ownerId = getOwnerId();
+
+        if (ownerId == null || ownerId.equals(currentOwner)) {
+            if (log.isDebugEnabled()) {
+                log.debug("setOwner: returning, existing owner is the same: " + issue.getOwner());
+            }
+            return;
+        }
+
+        if (UserUtilities.hasPermission(userPermissionsMap,
+                UserUtilities.PERMISSION_ASSIGN_OTHERS)
+                || (UserUtilities.hasPermission(userPermissionsMap,
+                UserUtilities.PERMISSION_ASSIGN_SELF) && user.getId()
+                .equals(ownerId))
+                || (UserUtilities.hasPermission(userPermissionsMap,
+                UserUtilities.PERMISSION_UNASSIGN_SELF)
+                && user.getId().equals(currentOwner) && ownerId
+                .intValue() == -1)) {
+            User newOwner = ServletContextUtils.getItrackerServices().getUserService().getUser(ownerId);
+            if (log.isDebugEnabled()) {
+                log.debug("setOwner: setting new owner " + newOwner + " to " + issue);
+            }
+            issue.setOwner(newOwner);
+//			issueService.assignIssue(issue.getId(), ownerId, user.getId());
+        }
+
+    }
+
+    private void addHistoryEntry(Issue issue, User user) throws Exception {
+        try {
+            String history = getHistory();
+
+            if (history == null || history.equals("")) {
+                if (log.isDebugEnabled()) {
+                    log.debug("addHistoryEntry: skip history to " + issue);
+                }
+                return;
+            }
+
+
+            if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_SURPRESS_HISTORY_HTML, issue.getProject().getOptions())) {
+                history = HTMLUtilities.removeMarkup(history);
+            } else if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_LITERAL_HISTORY_HTML, issue.getProject().getOptions())) {
+                history = HTMLUtilities.escapeTags(history);
+            } else {
+                history = HTMLUtilities.newlinesToBreaks(history);
+            }
+
+
+            if (log.isDebugEnabled()) {
+                log.debug("addHistoryEntry: adding history to " + issue);
+            }
+            IssueHistory issueHistory = new IssueHistory(issue, user, history,
+                    IssueUtilities.HISTORY_STATUS_AVAILABLE);
+
+            issueHistory.setDescription(getHistory());
+            issueHistory.setCreateDate(new Date());
+
+            issueHistory.setLastModifiedDate(new Date());
+            issue.getHistory().add(issueHistory);
+
+
+//  TODO why do we need to updateIssue here, and can not later?
+//			issueService.updateIssue(issue, user.getId());
+        } catch (Exception e) {
+            log.error("addHistoryEntry: failed to add", e);
+            throw e;
+        }
+//		issueService.addIssueHistory(issueHistory);
+        if (log.isDebugEnabled()) {
+            log.debug("addHistoryEntry: added history for issue " + issue);
+        }
+    }
+
+    public final Issue processLimitedEdit(Issue issue, Project project,
+                                                 User user, Map<Integer, Set<PermissionType>> userPermissionsMap,
+                                                 Locale locale, IssueService issueService, ActionMessages messages)
+            throws Exception {
+        ActionMessages msg = new ActionMessages();
+        issue = addAttachment(issue, project, user, ServletContextUtils.getItrackerServices(), msg);
+
+        if (!msg.isEmpty()) {
+            messages.add(msg);
+            return issue;
+        }
+
+        Integer formStatus = getStatus();
+
+        if (formStatus != null) {
+
+            if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED
+                    && formStatus >= IssueUtilities.STATUS_CLOSED
+                    && UserUtilities.hasPermission(userPermissionsMap,
+                    UserUtilities.PERMISSION_CLOSE)) {
+
+                issue.setStatus(formStatus);
+            }
+
+        }
+
+        applyLimitedFields(issue, project, user, userPermissionsMap, locale, issueService);
+        return issueService.updateIssue(issue, user.getId());
+
+    }
+
+    /**
+     * method needed to prepare request for edit_issue.jsp
+     */
+    public static final void setupJspEnv(ActionMapping mapping,
+                                         IssueForm issueForm, HttpServletRequest request, Issue issue,
+                                         IssueService issueService, UserService userService,
+                                         Map<Integer, Set<PermissionType>> userPermissions,
+                                         Map<Integer, List<NameValuePair>> listOptions, ActionMessages errors)
+            throws ServletException, IOException, WorkflowException {
+
+        if (log.isDebugEnabled()) {
+            log.debug("setupJspEnv: for issue " + issue);
+        }
+
+        NotificationService notificationService = ServletContextUtils
+                .getItrackerServices().getNotificationService();
+        String pageTitleKey = "itracker.web.editissue.title";
+        String pageTitleArg = request.getParameter("id");
+        Locale locale = LoginUtilities.getCurrentLocale(request);
+        User um = LoginUtilities.getCurrentUser(request);
+        List<NameValuePair> statuses = WorkflowUtilities.getListOptions(
+                listOptions, IssueUtilities.FIELD_STATUS);
+        String statusName = IssueUtilities.getStatusName(issue.getStatus(), locale);
+        boolean hasFullEdit = UserUtilities.hasPermission(userPermissions,
+                issue.getProject().getId(), UserUtilities.PERMISSION_EDIT_FULL);
+        List<NameValuePair> resolutions = WorkflowUtilities.getListOptions(
+                listOptions, IssueUtilities.FIELD_RESOLUTION);
+        String severityName = IssueUtilities.getSeverityName(issue
+                .getSeverity(), locale);
+        List<NameValuePair> components = WorkflowUtilities.getListOptions(
+                listOptions, IssueUtilities.FIELD_COMPONENTS);
+        List<NameValuePair> versions = WorkflowUtilities.getListOptions(
+                listOptions, IssueUtilities.FIELD_VERSIONS);
+        List<NameValuePair> targetVersion = WorkflowUtilities.getListOptions(
+                listOptions, IssueUtilities.FIELD_TARGET_VERSION);
+        List<Component> issueComponents = issue.getComponents();
+        Collections.sort(issueComponents);
+        List<Version> issueVersions = issue.getVersions();
+        Collections.sort(issueVersions, new Version.VersionComparator());
+        /* Get project fields and put name and value in map */
+        setupProjectFieldsMapJspEnv(issue.getProject().getCustomFields(), issue.getFields(), request);
+
+        setupRelationsRequestEnv(issue.getRelations(), request);
+
+
+        request.setAttribute("pageTitleKey", pageTitleKey);
+        request.setAttribute("pageTitleArg", pageTitleArg);
+//		request.setAttribute("wrap", wrap);
+        request.getSession().setAttribute(Constants.LIST_OPTIONS_KEY,
+                listOptions);
+        request.setAttribute("targetVersions", targetVersion);
+        request.setAttribute("components", components);
+        request.setAttribute("versions", versions);
+        request.setAttribute("hasIssueNotification", !notificationService
+                .hasIssueNotification(issue, um.getId()));
+        request.setAttribute("hasEditIssuePermission", UserUtilities
+                .hasPermission(userPermissions, issue.getProject().getId(),
+                        UserUtilities.PERMISSION_EDIT));
+        request.setAttribute("canCreateIssue",
+                issue.getProject().getStatus() == Status.ACTIVE
+                        && UserUtilities.hasPermission(userPermissions, issue
+                        .getProject().getId(),
+                        UserUtilities.PERMISSION_CREATE));
+        request.setAttribute("issueComponents", issueComponents);
+        request.setAttribute("issueVersions",
+                issueVersions == null ? new ArrayList<Version>()
+                        : issueVersions);
+        request.setAttribute("statuses", statuses);
+        request.setAttribute("statusName", statusName);
+        request.setAttribute("hasFullEdit", hasFullEdit);
+        request.setAttribute("resolutions", resolutions);
+        request.setAttribute("severityName", severityName);
+        request.setAttribute("hasPredefinedResolutionsOption", ProjectUtilities
+                .hasOption(ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS,
+                        issue.getProject().getOptions()));
+        request.setAttribute("issueOwnerName",
+                (issue.getOwner() == null ? ITrackerResources.getString(
+                        "itracker.web.generic.unassigned", locale)
+                        : issue.getOwner().getFirstName() + " "
+                        + issue.getOwner().getLastName()));
+        request.setAttribute("isStatusResolved",
+                issue.getStatus() >= IssueUtilities.STATUS_RESOLVED);
+
+
+        request.setAttribute("fieldSeverity", WorkflowUtilities.getListOptions(
+                listOptions, IssueUtilities.FIELD_SEVERITY));
+        request.setAttribute("possibleOwners", WorkflowUtilities
+                .getListOptions(listOptions, IssueUtilities.FIELD_OWNER));
+
+        request.setAttribute("hasNoViewAttachmentOption", ProjectUtilities
+                .hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS, issue
+                        .getProject().getOptions()));
+
+        if (log.isDebugEnabled()) {
+            log.debug("setupJspEnv: options " + issue.getProject().getOptions() + ", hasNoViewAttachmentOption: " + request.getAttribute("hasNoViewAttachmentOption"));
+        }
+
+        setupNotificationsInRequest(request, issue, notificationService);
+
+        // setup issue to request, as it's needed by the jsp.
+        request.setAttribute(Constants.ISSUE_KEY, issue);
+        request.setAttribute("issueForm", issueForm);
+        request.setAttribute(Constants.PROJECT_KEY, issue.getProject());
+        List<IssueHistory> issueHistory = issueService.getIssueHistory(issue
+                .getId());
+        Collections.sort(issueHistory, IssueHistory.CREATE_DATE_COMPARATOR);
+        request.setAttribute("issueHistory", issueHistory);
+
+
+    }
+
+    /**
+     * Get project fields and put name and value in map
+     * TODO: simplify this code, it's not readable, unsave yet.
+     */
+    public static final void setupProjectFieldsMapJspEnv(List<CustomField> projectFields, Collection<IssueField> issueFields, HttpServletRequest request) {
+        Map<CustomField, String> projectFieldsMap = new HashMap<CustomField, String>();
+
+        if (projectFields != null && projectFields.size() > 0) {
+            Collections.sort(projectFields, CustomField.ID_COMPARATOR);
+
+            HashMap<String, String> fieldValues = new HashMap<String, String>();
+            Iterator<IssueField> issueFieldsIt = issueFields.iterator();
+            while (issueFieldsIt.hasNext()) {
+                IssueField issueField = issueFieldsIt.next();
+
+                if (issueField.getCustomField() != null
+                        && issueField.getCustomField().getId() > 0) {
+                    if (issueField.getCustomField().getFieldType() == CustomField.Type.DATE) {
+                        Locale locale = LoginUtilities.getCurrentLocale(request);
+                        String value = issueField.getValue(locale);
+                        fieldValues.put(issueField.getCustomField().getId()
+                                .toString(), value);
+                    } else {
+                        fieldValues.put(issueField.getCustomField().getId()
+                                .toString(), issueField
+                                .getStringValue());
+                    }
+                }
+            }
+            Iterator<CustomField> fieldsIt = projectFields.iterator();
+            CustomField field;
+            while (fieldsIt.hasNext()) {
+
+                field = fieldsIt.next();
+
+                String fieldValue = fieldValues.get(String.valueOf(field
+                        .getId()));
+                if (null == fieldValue) {
+                    fieldValue = "";
+                };
+                projectFieldsMap.put(field, fieldValue);
+
+            }
+
+            request.setAttribute("projectFieldsMap", projectFieldsMap);
+        }
+    }
+
+    protected static final void setupRelationsRequestEnv(List<IssueRelation> relations, HttpServletRequest request) {
+        Collections.sort(relations, IssueRelation.LAST_MODIFIED_DATE_COMPARATOR);
+        request.setAttribute("issueRelations", relations);
+
+    }
+
+    public static final void setupNotificationsInRequest(
+            HttpServletRequest request, Issue issue,
+            NotificationService notificationService) {
+        List<Notification> notifications = notificationService
+                .getIssueNotifications(issue);
+
+        Collections.sort(notifications, Notification.TYPE_COMPARATOR);
+
+        request.setAttribute("notifications", notifications);
+        Map<User, Set<Notification.Role>> notificationMap = NotificationUtilities
+                .mappedRoles(notifications);
+        request.setAttribute("notificationMap", notificationMap);
+        request.setAttribute("notifiedUsers", notificationMap.keySet());
+    }
+
+    /**
+     * Adds an attachment to issue.
+     *
+     * @return updated issue
+     */
+    public Issue addAttachment(Issue issue, Project project, User user,
+                                       ITrackerServices services, ActionMessages messages) {
+
+
+        FormFile file = getAttachment();
+
+        if (file == null || file.getFileName().trim().length() < 1) {
+            log.info("addAttachment: skipping file " + file);
+            return issue;
+        }
+
+        if (ProjectUtilities.hasOption(ProjectUtilities.OPTION_NO_ATTACHMENTS,
+                project.getOptions())) {
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.validate.attachment.disabled", project.getName()));
+            return issue;
+        }
+
+        String origFileName = file.getFileName();
+        String contentType = file.getContentType();
+        int fileSize = file.getFileSize();
+
+        String attachmentDescription = getAttachmentDescription();
+
+        if (null == contentType || 0 >= contentType.length()) {
+            log.info("addAttachment: got no mime-type, using default plain-text");
+            contentType = "text/plain";
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("addAttachment: adding file, name: " + origFileName
+                    + " of type " + file.getContentType() + ", description: "
+                    + getAttachmentDescription() + ". filesize: " + fileSize);
+        }
+        ActionMessages validation = AttachmentUtilities.validate(file, services);
+        if (validation.isEmpty()) {
+
+//		if (AttachmentUtilities.checkFile(file, getITrackerServices())) {
+            int lastSlash = Math.max(origFileName.lastIndexOf('/'),
+                    origFileName.lastIndexOf('\\'));
+            if (lastSlash > -1) {
+                origFileName = origFileName.substring(lastSlash + 1);
+            }
+
+            IssueAttachment attachmentModel = new IssueAttachment(issue,
+                    origFileName, contentType, attachmentDescription, fileSize,
+                    user);
+
+            attachmentModel.setIssue(issue);
+//			issue.getAttachments().add(attachmentModel);
+            byte[] fileData;
+            try {
+                fileData = file.getFileData();
+            } catch (IOException e) {
+                log.error("addAttachment: failed to get file data", e);
+                messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
+                return issue;
+            }
+            if (services.getIssueService()
+                    .addIssueAttachment(attachmentModel, fileData)) {
+                return services.getIssueService().getIssue(issue.getId());
+            }
+
+
+        } else {
+            if (log.isDebugEnabled()) {
+                log.debug("addAttachment: failed to validate: " + origFileName + ", " + validation);
+            }
+            messages.add(validation);
+        }
+        return issue;
+    }
+
+    public final void setupIssueForm(Issue issue,
+                                            final Map<Integer, List<NameValuePair>> listOptions,
+                                            HttpServletRequest request, ActionMessages errors)
+            throws WorkflowException {
+        HttpSession session = request.getSession(true);
+
+        IssueService issueService = ServletContextUtils.getItrackerServices()
+                .getIssueService();
+        Locale locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+        setId(issue.getId());
+        setProjectId(issue.getProject().getId());
+        setPrevStatus(issue.getStatus());
+        setCaller(request.getParameter("caller"));
+
+        setDescription(HTMLUtilities.handleQuotes(issue
+                .getDescription()));
+        setStatus(issue.getStatus());
+
+        if (!ProjectUtilities.hasOption(
+                ProjectUtilities.OPTION_PREDEFINED_RESOLUTIONS, issue
+                .getProject().getOptions())) {
+            // TODO What happens here, validation?
+            try {
+                issue.setResolution(IssueUtilities.checkResolutionName(issue
+                        .getResolution(), locale));
+            } catch (MissingResourceException mre) {
+                log.error(mre.getMessage());
+            } catch (NumberFormatException nfe) {
+                log.error(nfe.getMessage());
+            }
+        }
+
+        setResolution(HTMLUtilities.handleQuotes(issue
+                .getResolution()));
+        setSeverity(issue.getSeverity());
+
+        setTargetVersion(issue.getTargetVersion() == null ? -1
+                : issue.getTargetVersion().getId());
+
+        setOwnerId((issue.getOwner() == null ? -1 : issue.getOwner()
+                .getId()));
+
+        List<IssueField> fields = issue.getFields();
+        HashMap<String, String> customFields = new HashMap<String, String>();
+        for (int i = 0; i < fields.size(); i++) {
+            customFields.put(fields.get(i).getCustomField().getId().toString(),
+                    fields.get(i).getValue(locale));
+        }
+
+        setCustomFields(customFields);
+
+        HashSet<Integer> selectedComponents = issueService
+                .getIssueComponentIds(issue.getId());
+        if (selectedComponents != null) {
+            Integer[] componentIds;
+            ArrayList<Integer> components = new ArrayList<Integer>(
+                    selectedComponents);
+            componentIds = components.toArray(new Integer[]{});
+            setComponents(componentIds);
+        }
+
+        HashSet<Integer> selectedVersions = issueService
+                .getIssueVersionIds(issue.getId());
+        if (selectedVersions != null) {
+            Integer[] versionIds = null;
+            ArrayList<Integer> versions = new ArrayList<Integer>(
+                    selectedVersions);
+            versionIds = versions.toArray(new Integer[]{});
+            setVersions(versionIds);
+        }
+
+        invokeProjectScripts(issue.getProject(), WorkflowUtilities.EVENT_FIELD_ONPOPULATE, listOptions, errors);
+
+    }
+
+    public void invokeProjectScripts(Project project, int event, final Map<Integer, List<NameValuePair>> options, ActionMessages errors)
+            throws WorkflowException {
+        final Map<Integer, String> values = new HashMap<Integer, String>(options.size());
+        for (CustomField field: project.getCustomFields()) {
+            values.put(field.getId(), getCustomFields().get(String.valueOf(field.getId())));
+        }
+
+        processFieldScripts(project.getScripts(),
+                event, values, options, errors);
+
+    }
+
+    public  Map<Integer, List<NameValuePair>> invokeProjectScripts(Project project, int event, ActionMessages errors)
+            throws WorkflowException {
+
+        final Map<Integer, List<NameValuePair>> options = EditIssueActionUtil.mappedFieldOptions(project.getCustomFields()) ;
+        invokeProjectScripts(project, event, options, errors);
+        return options;
+    }
 
     public FormFile getAttachment() {
         return attachment;
@@ -272,7 +1128,7 @@ public class IssueForm extends ITrackerForm {
                                 RequestHelper.getUserPermissions(request
                                         .getSession()));
 
-                EditIssueActionUtil.setupJspEnv(mapping, this, request, issue,
+                setupJspEnv(mapping, this, request, issue,
                         getITrackerServices().getIssueService(),
                         getITrackerServices().getUserService(), RequestHelper
                         .getUserPermissions(request.getSession()),
@@ -309,7 +1165,7 @@ public class IssueForm extends ITrackerForm {
                     }
 
 
-                    validateProjectScripts(issue.getProject(), errors, this);
+                    validateProjectScripts(issue.getProject(), errors);
                     validateAttachment(this.getAttachment(), getITrackerServices(), errors);
                 }
             } else {
@@ -321,7 +1177,7 @@ public class IssueForm extends ITrackerForm {
                     log.debug("validate: validating create new issue for project: " + page);
                 }
                 validateProjectFields(project, request, errors);
-                validateProjectScripts(project, errors, this);
+                validateProjectScripts(project, errors);
                 validateAttachment(this.getAttachment(), getITrackerServices(), errors);
             }
         } catch (Exception e) {
@@ -387,10 +1243,10 @@ public class IssueForm extends ITrackerForm {
         }
     }
 
-    private static void validateProjectScripts(Project project, ActionErrors errors, IssueForm form)
+    private void validateProjectScripts(Project project, ActionErrors errors)
             throws WorkflowException {
 
-        EditIssueActionUtil.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONVALIDATE, errors, form);
+        invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONVALIDATE, errors);
 
     }
 

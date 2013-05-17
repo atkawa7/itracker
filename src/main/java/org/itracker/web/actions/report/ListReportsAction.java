@@ -7,6 +7,7 @@ import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.ReportService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,10 +19,9 @@ public class ListReportsAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                  HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-//			super.executeAlways(mapping,form,request,response);
-        IssueService issueService = this.getITrackerServices().getIssueService();
-        ProjectService projectService = this.getITrackerServices().getProjectService();
-        ReportService reportService = this.getITrackerServices().getReportService();
+        IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
+        ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
+        ReportService reportService = ServletContextUtils.getItrackerServices().getReportService();
         request.setAttribute("ih", issueService);
         request.setAttribute("ph", projectService);
         request.setAttribute("rh", reportService);

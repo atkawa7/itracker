@@ -20,9 +20,11 @@ package org.itracker.web.actions.admin.user;
 
 import org.apache.struts.action.*;
 import org.itracker.model.User;
-import org.itracker.services.UserService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.UserService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 import org.itracker.web.util.SessionManager;
 
 import javax.servlet.ServletException;
@@ -37,12 +39,12 @@ public class LockUserAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
         try {
-            UserService userService = getITrackerServices().getUserService();
+            UserService userService = ServletContextUtils.getItrackerServices().getUserService();
 
             Integer userId = Integer.valueOf((request.getParameter("id") == null ? "-1" : (request.getParameter("id"))));
             User user = userService.getUser(userId);

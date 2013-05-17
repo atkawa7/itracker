@@ -6,6 +6,7 @@ import org.apache.struts.action.ActionMapping;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +19,7 @@ public class ListLanguagesAction extends ItrackerBaseAction {
                                  HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
-        ConfigurationService configurationService = getITrackerServices()
+        ConfigurationService configurationService = ServletContextUtils.getItrackerServices()
                 .getConfigurationService();
 
         Map<String, List<String>> languages = configurationService.getAvailableLanguages();

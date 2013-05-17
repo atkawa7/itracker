@@ -20,17 +20,18 @@ package org.itracker.web.actions.admin.configuration;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
+import org.itracker.SystemConfigurationException;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
 import org.itracker.model.Language;
 import org.itracker.model.NameValuePair;
-import org.itracker.SystemConfigurationException;
-import org.itracker.services.ConfigurationService;
 import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ConfigurationForm;
 import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +51,7 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
         if (log.isDebugEnabled()) {
             log.debug("execute: called");
         }
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request,
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request,
                 response)) {
             log.warn("execute: user has not permissue user-admin: " + LoginUtilities.getCurrentUser(request)
                     + ", forwarding to unauthorized!");
@@ -59,7 +60,7 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
         }
 
         try {
-            ConfigurationService configurationService = getITrackerServices()
+            ConfigurationService configurationService = ServletContextUtils.getItrackerServices()
                     .getConfigurationService();
 
             ConfigurationForm configurationForm = (ConfigurationForm) form;

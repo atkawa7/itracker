@@ -21,16 +21,17 @@ package org.itracker.web.actions.admin.configuration;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
+import org.itracker.SystemConfigurationException;
 import org.itracker.model.CustomField;
 import org.itracker.model.Language;
-import org.itracker.SystemConfigurationException;
 import org.itracker.model.util.CustomFieldUtilities;
-import org.itracker.services.ConfigurationService;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.CustomFieldForm;
 import org.itracker.web.util.Constants;
-import org.itracker.web.util.EditCustomFieldActionUtil;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +55,7 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
             throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
@@ -68,7 +69,7 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
 
             String action = (String) PropertyUtils.getSimpleProperty(customFieldForm, "action");
             CustomField customField = null;
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+            ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
             if ("create".equals(action)) {
                 customField = new CustomField();
             } else if ("update".equals(action)) {
@@ -89,7 +90,6 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
                     translations.put(languageItems.get(i).getLocale(), languageItems.get(i).getResourceValue());
                 }
                 customFieldForm.setTranslations(translations);
-//				customField.setLabels(locale);
             }
 
             /*
@@ -103,7 +103,7 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
                 return mapping.findForward("error");
             }
             session.setAttribute(Constants.CUSTOMFIELD_KEY, customField);
-            EditCustomFieldActionUtil.setRequestEnv(request, customFieldForm);
+            customFieldForm.setRequestEnv(request);
             saveToken(request);
 
         } catch (SystemConfigurationException sce) {

@@ -13,6 +13,8 @@ import org.apache.struts.action.*;
 import org.itracker.model.PermissionType;
 import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +56,7 @@ public class RemoveWorkflowScriptAction extends ItrackerBaseAction {
 
         // check permissions
         HttpSession session = request.getSession(true);
-        Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
+        Map<Integer, Set<PermissionType>> userPermissionsMap = RequestHelper.getUserPermissions(session);
         if (!UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_USER_ADMIN)) {
             return mapping.findForward("unauthorized");
         }
@@ -64,7 +66,7 @@ public class RemoveWorkflowScriptAction extends ItrackerBaseAction {
             Integer scriptId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
 
             // remove the script
-            this.getITrackerServices().getConfigurationService()
+            ServletContextUtils.getItrackerServices().getConfigurationService()
                     .removeWorkflowScript(scriptId);
 
             // find the mapping for the list of all worksflows

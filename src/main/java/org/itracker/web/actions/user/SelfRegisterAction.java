@@ -20,19 +20,20 @@ package org.itracker.web.actions.user;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
+import org.itracker.UserException;
 import org.itracker.model.Notification;
 import org.itracker.model.Notification.Role;
 import org.itracker.model.Notification.Type;
 import org.itracker.model.User;
-import org.itracker.UserException;
 import org.itracker.model.UserPreferences;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.UserService;
 import org.itracker.services.util.AuthenticationConstants;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -53,14 +54,7 @@ public class SelfRegisterAction extends ItrackerBaseAction {
         resetToken(request);
 
         try {
-//			itracker.web.selfreg.title
-
-//			String pageTitleKey = "itracker.web.selfreg.title";
-//			String pageTitleArg = "";
-//			request.setAttribute("pageTitleKey", pageTitleKey);
-//			request.setAttribute("pageTitleArg", pageTitleArg);
-//			
-            ConfigurationService configurationService = getITrackerServices()
+            ConfigurationService configurationService = ServletContextUtils.getItrackerServices()
                     .getConfigurationService();
 
             boolean allowSelfRegister = configurationService
@@ -83,7 +77,7 @@ public class SelfRegisterAction extends ItrackerBaseAction {
                             new ActionMessage(
                                     "itracker.web.error.missingfields"));
                 } else {
-                    UserService userService = getITrackerServices().getUserService();
+                    UserService userService = ServletContextUtils.getItrackerServices().getUserService();
 
 
                     try {

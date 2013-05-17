@@ -28,17 +28,14 @@ import org.itracker.model.*;
 import org.itracker.model.Notification.Type;
 import org.itracker.model.util.IssueUtilities;
 import org.itracker.model.util.ProjectUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
 import org.itracker.services.ProjectService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
 import org.itracker.web.ptos.CreateIssuePTO;
-import org.itracker.web.util.AttachmentUtilities;
-import org.itracker.web.util.Constants;
-import org.itracker.web.util.EditIssueActionUtil;
-import org.itracker.web.util.WorkflowUtilities;
+import org.itracker.web.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -82,15 +79,15 @@ public class CreateIssueAction extends ItrackerBaseAction {
         resetToken(request);
 
         try {
-            IssueService issueService = getITrackerServices().getIssueService();
-            NotificationService notificationService = getITrackerServices()
+            IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
+            NotificationService notificationService = ServletContextUtils.getItrackerServices()
                     .getNotificationService();
-            ProjectService projectService = getITrackerServices()
+            ProjectService projectService = ServletContextUtils.getItrackerServices()
                     .getProjectService();
 
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
-            Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> userPermissionsMap = RequestHelper.getUserPermissions(session);
             Locale locale = getLocale(request);
             Integer currUserId = currUser.getId();
 
@@ -121,7 +118,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                 List<ProjectScript> scripts = project.getScripts();
 
 
-                EditIssueActionUtil.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, errors, issueForm);
+                issueForm.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, errors);
 
                 Issue issue = new Issue();
                 issue.setDescription((String) issueForm.getDescription());
@@ -146,7 +143,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                     }
                 }
                 // create the issue in the database
-                ActionMessages msg = AttachmentUtilities.validate(issueForm.getAttachment(), getITrackerServices());
+                ActionMessages msg = AttachmentUtilities.validate(issueForm.getAttachment(), ServletContextUtils.getItrackerServices());
 
                 if (!msg.isEmpty()) {
                     log.info("execute: tried to create issue with invalid attachemnt: " + msg);
@@ -172,7 +169,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                             ProjectUtilities.OPTION_NO_ATTACHMENTS, project
                             .getOptions())) {
                         msg = new ActionMessages();
-                        issue = AttachmentUtilities.addAttachment(issue, project, currUser, issueForm, getITrackerServices(), msg);
+                        issue = issueForm.addAttachment(issue, project, currUser, ServletContextUtils.getItrackerServices(), msg);
 
                         if (!msg.isEmpty()) {
                             errors.add(msg);
@@ -313,7 +310,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                 }
                 session.removeAttribute(Constants.PROJECT_KEY);
 
-                EditIssueActionUtil.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, errors, issueForm);
+                issueForm.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, errors);
 
                 if (errors.isEmpty()) {
                     return getReturnForward(issue, project, issueForm, mapping);

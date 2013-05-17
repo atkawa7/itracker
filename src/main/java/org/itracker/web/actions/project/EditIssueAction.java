@@ -23,14 +23,12 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.*;
 import org.itracker.model.util.IssueUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
-import org.itracker.web.util.Constants;
-import org.itracker.web.util.EditIssueActionUtil;
-import org.itracker.web.util.WorkflowUtilities;
+import org.itracker.web.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -68,16 +66,16 @@ public class EditIssueAction extends ItrackerBaseAction {
 
 
         try {
-            IssueService issueService = getITrackerServices().getIssueService();
+            IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
 
 
             logTimeMillies("execute: got issueService", logDate, log, Level.DEBUG);
-            NotificationService notificationService = getITrackerServices()
+            NotificationService notificationService = ServletContextUtils.getItrackerServices()
                     .getNotificationService();
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
 
-            Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(session);
 
             Integer currUserId = currUser.getId();
             IssueForm issueForm = (IssueForm) form;
@@ -112,7 +110,7 @@ public class EditIssueAction extends ItrackerBaseAction {
 
             logTimeMillies("execute: got scripts", logDate, log, Level.DEBUG);
 
-            EditIssueActionUtil.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, errors, issueForm);
+            issueForm.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, errors);
 
             logTimeMillies("execute: processed field scripts EVENT_FIELD_ONPRESUBMIT", logDate, log, Level.DEBUG);
 
@@ -124,15 +122,15 @@ public class EditIssueAction extends ItrackerBaseAction {
                         if (log.isDebugEnabled()) {
                             log.debug("execute: process full, " + issue);
                         }
-                        issue = EditIssueActionUtil.processFullEdit(issue, project, currUser, userPermissions,
-                                getLocale(request), issueForm, issueService, errors);
+                        issue = issueForm.processFullEdit(issue, project, currUser, userPermissions,
+                                getLocale(request), issueService, errors);
                         logTimeMillies("execute: processed fulledit", logDate, log, Level.DEBUG);
                     } else {
                         if (log.isDebugEnabled()) {
                             log.debug("execute: process limited, " + issue);
                         }
-                        issue = EditIssueActionUtil.processLimitedEdit(issue, project, currUser, userPermissions,
-                                getLocale(request), issueForm, issueService, errors);
+                        issue = issueForm.processLimitedEdit(issue, project, currUser, userPermissions,
+                                getLocale(request), issueService, errors);
                         logTimeMillies("execute: processed limited edit", logDate, log, Level.DEBUG);
                     }
                 } catch (Exception e) {
@@ -151,11 +149,11 @@ public class EditIssueAction extends ItrackerBaseAction {
                         getBaseURL(request), notificationService);
                 logTimeMillies("execute: sent notification", logDate, log, Level.DEBUG);
 
-                EditIssueActionUtil.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, errors, issueForm);
+                issueForm.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT, errors);
 
                 logTimeMillies("execute: processed field scripts EVENT_FIELD_ONPOSTSUBMIT", logDate, log, Level.DEBUG);
 
-                return EditIssueActionUtil.getReturnForward(issue, project, issueForm, mapping);
+                return EditIssueActionUtil.getReturnForward(issue, project, issueForm.getCaller(), mapping);
             }
         } catch (Exception e) {
             log.error("execute: Exception processing form data", e);

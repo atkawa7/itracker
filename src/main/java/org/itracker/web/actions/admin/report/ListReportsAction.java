@@ -7,6 +7,7 @@ import org.itracker.model.Report;
 import org.itracker.services.ProjectService;
 import org.itracker.services.ReportService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,8 +20,8 @@ public class ListReportsAction extends ItrackerBaseAction {
                                  HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
-        ProjectService projectService = this.getITrackerServices().getProjectService();
-        ReportService reportService = this.getITrackerServices().getReportService();
+        ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
+        ReportService reportService = ServletContextUtils.getItrackerServices().getReportService();
         request.setAttribute("ph", projectService);
         request.setAttribute("rh", reportService);
 

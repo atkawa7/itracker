@@ -21,19 +21,19 @@ package org.itracker.web.actions.issuesearch;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
-import org.apache.struts.validator.ValidatorForm;
 import org.itracker.model.IssueSearchQuery;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.UserPreferences;
 import org.itracker.model.util.IssueUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ProjectService;
 import org.itracker.services.ReportService;
 import org.itracker.services.UserService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.SearchForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
@@ -71,10 +71,10 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
             request.setAttribute("pageTitleArg", pageTitleArg);
 
             UserPreferences userPrefs = (UserPreferences) session.getAttribute(Constants.PREFERENCES_KEY);
-            Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(session);
 
             String projectId = request.getParameter("projectId");
-            String action = (String) PropertyUtils.getSimpleProperty((ValidatorForm) form, "action");
+            String action = (String) PropertyUtils.getSimpleProperty(form, "action");
 
             SearchForm searchForm = (SearchForm) form;
             if (searchForm == null) {

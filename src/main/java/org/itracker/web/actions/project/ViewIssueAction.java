@@ -6,12 +6,13 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 import org.itracker.model.util.IssueUtilities;
 import org.itracker.model.util.ProjectUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
-import org.itracker.web.util.EditIssueActionUtil;
+import org.itracker.web.forms.IssueForm;
 import org.itracker.web.util.RequestHelper;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,10 +25,8 @@ public class ViewIssueAction extends ItrackerBaseAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		//  TODO: Action Cleanup
 
-		IssueService issueService = this.getITrackerServices()
-				.getIssueService();
+		IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
 		
 		Locale locale = getLocale(request);
 
@@ -43,18 +42,18 @@ public class ViewIssueAction extends ItrackerBaseAction {
 			saveErrors(request, getErrors(request));
 			return mapping.findForward("index");
 		}
-		EditIssueActionUtil.setupNotificationsInRequest(request, issueService
+		IssueForm.setupNotificationsInRequest(request, issueService
                 .getIssue(issueId),
-                getITrackerServices().getNotificationService());
+                ServletContextUtils.getItrackerServices().getNotificationService());
 
 		HttpSession session = request.getSession();
 		final Map<Integer, Set<PermissionType>> permissions = RequestHelper
 				.getUserPermissions(session);
 		User um = RequestHelper.getCurrentUser(session);
 
-		NotificationService notificationService = getITrackerServices().getNotificationService();
+		NotificationService notificationService = ServletContextUtils.getItrackerServices().getNotificationService();
 
-		Issue issue = null;
+		Issue issue;
 
 		Integer currUserId = um.getId();
 //		TODO verify this code.
@@ -79,8 +78,6 @@ public class ViewIssueAction extends ItrackerBaseAction {
 			log.info("ViewIssueAction: Forward: error");
 			return mapping.findForward("error");
 		} else {
-			//User owner = issue.getOwner();
-			//User creator = issue.getCreator();
 			boolean canViewIssue = IssueUtilities.canViewIssue(issue,
 					currUserId, permissions);
 
@@ -126,7 +123,7 @@ public class ViewIssueAction extends ItrackerBaseAction {
 		/*
 		 * Create Project field map
 		 */
-		EditIssueActionUtil.setupProjectFieldsMapJspEnv(project.getCustomFields(), issue.getFields(), request);
+		IssueForm.setupProjectFieldsMapJspEnv(project.getCustomFields(), issue.getFields(), request);
 
 		/*
 		 * Set the objects in request that are required for ui render

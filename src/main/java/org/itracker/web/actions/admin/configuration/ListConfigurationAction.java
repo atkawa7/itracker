@@ -5,10 +5,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
-import org.itracker.services.ConfigurationService;
 import org.itracker.model.util.SystemConfigurationUtilities;
+import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +23,7 @@ public class ListConfigurationAction extends ItrackerBaseAction {
                                  HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
-        ConfigurationService configurationService = this.getITrackerServices().getConfigurationService();
+        ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
 
         List<Configuration> resolutions = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_RESOLUTION);
         List<Configuration> severities = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_SEVERITY);

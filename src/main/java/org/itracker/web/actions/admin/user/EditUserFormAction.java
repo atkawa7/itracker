@@ -24,12 +24,14 @@ import org.itracker.model.NameValuePair;
 import org.itracker.model.Permission;
 import org.itracker.model.Project;
 import org.itracker.model.User;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -51,7 +53,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
 
         ActionMessages errors = new ActionMessages();
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
@@ -64,8 +66,8 @@ public class EditUserFormAction extends ItrackerBaseAction {
 
         try {
 
-            UserService userService = getITrackerServices().getUserService();
-            ProjectService projectService = getITrackerServices().getProjectService();
+            UserService userService = ServletContextUtils.getItrackerServices().getUserService();
+            ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
 
             List<Project> projects;
             User editUser = null;

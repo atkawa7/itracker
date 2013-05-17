@@ -23,11 +23,12 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.User;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.UserService;
 import org.itracker.services.exceptions.PasswordException;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -43,8 +44,8 @@ public class ForgotPasswordAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
 
         try {
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
-            UserService userService = getITrackerServices().getUserService();
+            ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
+            UserService userService = ServletContextUtils.getItrackerServices().getUserService();
 
             if (!configurationService.getBooleanProperty("allow_forgot_password", true)) {
                 throw new PasswordException(PasswordException.FEATURE_DISABLED);
@@ -85,11 +86,10 @@ public class ForgotPasswordAction extends ItrackerBaseAction {
                     StringBuffer msgText = new StringBuffer();
                     msgText.append(ITrackerResources.getString("itracker.email.forgotpass.body", locale));
                     String newPass = userService.generateUserPassword(user);
-                    //user.setPassword(newPass);
                     userService.updateUser(user);
                     msgText.append(ITrackerResources.getString("itracker.web.attr.password", locale)).append(": ").append(newPass);
 
-                    getITrackerServices().getEmailService()
+                    ServletContextUtils.getItrackerServices().getEmailService()
                             .sendEmail(user.getEmail(), subject, msgText.toString());
                 } catch (PasswordException pe) {
                     if (log.isDebugEnabled()) {

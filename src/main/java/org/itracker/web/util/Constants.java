@@ -58,4 +58,8 @@ public class Constants {
     public static final String IMPORT_DATA_KEY = "importdata";
 
     public static final String REPORT_IMAGEMAP_KEY = "reportimages";
+    public static final String PAGE_TITLE_KEY = "pageTitleKey";
+    public static final String PAGE_TITLE_ARG = "pageTitleArg";
+    public static final String SHOW_ALL_KEY = "showAll";
+    public static final String ALL_SECTIONS_KEY = "allSections";
 }

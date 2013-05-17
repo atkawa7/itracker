@@ -21,18 +21,18 @@ package org.itracker.web.actions.admin.configuration;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
+import org.itracker.SystemConfigurationException;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.model.Language;
-import org.itracker.SystemConfigurationException;
 import org.itracker.model.util.CustomFieldUtilities;
-import org.itracker.services.ConfigurationService;
 import org.itracker.model.util.SystemConfigurationUtilities;
+import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.CustomFieldForm;
 import org.itracker.web.util.Constants;
-import org.itracker.web.util.EditCustomFieldActionUtil;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -65,7 +65,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
         }
         resetToken(request);
         try {
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+            ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
             String action = (String) PropertyUtils.getSimpleProperty(form, "action");
             if (action == null) {
                 return mapping.findForward("listconfiguration");
@@ -76,7 +76,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             if ("create".equals(action)) {
                 customField = new CustomField();
                 customField.setFieldType(CustomField.Type.valueOf(customFieldForm.getFieldType()));
-                customField.setRequired(("true".equals((String) PropertyUtils.getSimpleProperty(form, "required")) ? true : false));
+                customField.setRequired(("true".equals(PropertyUtils.getSimpleProperty(form, "required")) ? true : false));
                 customField.setSortOptionsByName(("true".equals((String) PropertyUtils.getSimpleProperty(form, "sortOptionsByName")) ? true : false));
                 customField.setDateFormat((String) PropertyUtils.getSimpleProperty(form, "dateFormat"));
                 customField = configurationService.createCustomField(customField);
@@ -139,7 +139,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             HttpSession session = request.getSession();
             if (customField.getFieldType() == CustomField.Type.LIST && "create".equals(action)) {
                 session.setAttribute(Constants.CUSTOMFIELD_KEY, customField);
-                EditCustomFieldActionUtil.setRequestEnv(request, customFieldForm);
+                customFieldForm.setRequestEnv(request);
                 saveToken(request);
                 return new ActionForward(mapping.findForward("editcustomfield").getPath() + "?id=" + customField.getId() + "&action=update");
             }

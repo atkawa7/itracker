@@ -21,14 +21,16 @@ package org.itracker.web.actions.admin.configuration;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
+import org.itracker.SystemConfigurationException;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
-import org.itracker.SystemConfigurationException;
 import org.itracker.model.util.CustomFieldUtilities;
-import org.itracker.services.ConfigurationService;
 import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -44,12 +46,12 @@ public class RemoveCustomFieldAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
 
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 
         try {
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+            ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
 
             Integer valueId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
             if (valueId == null || valueId.intValue() <= 0) {

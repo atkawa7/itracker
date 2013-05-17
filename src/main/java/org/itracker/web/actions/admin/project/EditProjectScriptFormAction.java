@@ -26,13 +26,14 @@ import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.WorkflowScript;
 import org.itracker.model.util.CustomFieldUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ProjectService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ProjectScriptForm;
 import org.itracker.web.util.EditProjectFormActionUtil;
 import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +59,7 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
 
         ActionMessages errors = new ActionMessages();
 
-        if (!hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
         boolean isUpdate = false;
@@ -70,8 +71,8 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
         try {
 
             ProjectScriptForm projectScriptForm = (ProjectScriptForm) form;
-            final ProjectService projectService = getITrackerServices().getProjectService();
-            final ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+            final ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
+            final ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
 
             if (projectScriptForm == null) {
                 projectScriptForm = new ProjectScriptForm();

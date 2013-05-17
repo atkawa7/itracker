@@ -25,6 +25,7 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Language;
 import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -53,7 +54,7 @@ public class CreateLanguageKeyAction extends ItrackerBaseAction {
         resetToken(request);
 
         try {
-            ConfigurationService configurationService = getITrackerServices().getConfigurationService();
+            ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
 
             String key = (String) PropertyUtils.getSimpleProperty(form, "key");
             HashMap<String, String> items = (HashMap<String, String>) PropertyUtils.getSimpleProperty(form, "items");

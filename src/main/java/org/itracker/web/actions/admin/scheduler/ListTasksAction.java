@@ -5,6 +5,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.services.ProjectService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +17,7 @@ public class ListTasksAction extends ItrackerBaseAction {
                                  HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
-        ProjectService projectService = this.getITrackerServices().getProjectService();
+        ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
         request.setAttribute("ph", projectService);
 
         String pageTitleKey = "itracker.web.admin.listtasks.title";

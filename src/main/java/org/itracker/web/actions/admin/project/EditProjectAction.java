@@ -24,13 +24,11 @@ import org.apache.struts.action.*;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
-import org.itracker.web.util.AdminProjectUtilities;
-import org.itracker.web.util.Constants;
-import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -59,16 +57,14 @@ public class EditProjectAction extends ItrackerBaseAction {
             saveErrors(request, errors);
             saveToken(request);
             return mapping.getInputForward();
-            // return mapping.findForward("listprojectsadmin");
 
         }
         resetToken(request);
 
-        Project project;
         try {
-            ProjectService projectService = getITrackerServices()
+            ProjectService projectService = ServletContextUtils.getItrackerServices()
                     .getProjectService();
-            UserService userService = getITrackerServices().getUserService();
+            UserService userService = ServletContextUtils.getItrackerServices().getUserService();
 
             HttpSession session = request.getSession(true);
             User user = LoginUtilities.getCurrentUser(request);
@@ -77,9 +73,10 @@ public class EditProjectAction extends ItrackerBaseAction {
 
             if ("update".equals(action)) {
 
-                Map<Integer, Set<PermissionType>> userPermissions = getUserPermissions(session);
+                Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(session);
 
-                project = projectService.getProject((Integer) PropertyUtils
+
+                Project project = projectService.getProject((Integer) PropertyUtils
                         .getSimpleProperty(form, "id"));
                 if (!UserUtilities.hasPermission(userPermissions, project
                         .getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
@@ -102,7 +99,7 @@ public class EditProjectAction extends ItrackerBaseAction {
                         log.debug("execute: updating existing project: "
                                 + project);
                     }
-                    project = projectService.updateProject(project, user
+                    projectService.updateProject(project, user
                             .getId());
                 }
             } else if ("create".equals(action)) {
@@ -110,7 +107,7 @@ public class EditProjectAction extends ItrackerBaseAction {
                     return mapping.findForward("unauthorized");
                 }
 
-                project = new Project();
+                Project project = new Project();
                 AdminProjectUtilities.setFormProperties(project,
                         projectService, form, errors);
                 if (!errors.isEmpty()) {

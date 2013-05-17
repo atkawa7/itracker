@@ -18,17 +18,25 @@
 
 package org.itracker.web.forms;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.ValidatorForm;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.web.util.EditCustomFieldActionUtil;
+import org.itracker.model.CustomField;
+import org.itracker.model.CustomFieldValue;
+import org.itracker.model.NameValuePair;
+import org.itracker.model.util.CustomFieldUtilities;
+import org.itracker.services.ConfigurationService;
+import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 /**
  * This is the Struts Form. It is used by action.
@@ -47,6 +55,95 @@ public class CustomFieldForm extends ValidatorForm {
     //	private String base_locale;
     HashMap<String, String> translations = new HashMap<String, String>();
 
+    private static final Logger log = Logger.getLogger(CustomFieldForm.class);
+
+    public final void setRequestEnv(HttpServletRequest request) {
+
+        ConfigurationService configurationService = ServletContextUtils
+                .getItrackerServices().getConfigurationService();
+        Locale currentLocale = LoginUtilities.getCurrentLocale(request);
+        CustomField customField = (CustomField) request.getSession().getAttribute(Constants.CUSTOMFIELD_KEY);
+
+        Map<String, List<String>> languages_map = configurationService.getAvailableLanguages();
+        String[] languagesArray = new String[languages_map.size()];
+        int idx = 0;
+        for (Iterator<String> iter = languages_map.keySet().iterator(); iter.hasNext(); ) {
+            String language = iter.next();
+            languagesArray[idx] = language;
+            idx++;
+        }
+
+        String pageTitleKey = "itracker.web.admin.editcustomfield.title.create";
+        String pageTitleArg = "";
+
+        String action = getAction();
+
+        if ("update".equals(action)) {
+            pageTitleKey = "itracker.web.admin.editcustomfield.title.update";
+            pageTitleArg = ITrackerResources.getString(CustomFieldUtilities.getCustomFieldLabelKey(customField.getId()));
+        }
+        request.setAttribute("pageTitleKey", pageTitleKey);
+        request.setAttribute("pageTitleArg", pageTitleArg);
+
+        request.setAttribute("customFieldForm", this);
+        request.setAttribute("languages", languagesArray);
+        request.setAttribute("action", action);
+
+        Map<String, List<String>> languages = configurationService.getAvailableLanguages();
+        Map<NameValuePair, List<NameValuePair>> languagesNameValuePair = new HashMap<NameValuePair, List<NameValuePair>>();
+        for (Map.Entry<String, List<String>> entry : languages.entrySet()) {
+            String language = entry.getKey();
+            List<String> locales = entry.getValue();
+            List<NameValuePair> localesNameValuePair = new ArrayList<NameValuePair>();
+            for (String locale : locales) {
+                NameValuePair localeNameValuePair = new NameValuePair(locale, ITrackerResources.getString("itracker.locale.name", locale));
+                localesNameValuePair.add(localeNameValuePair);
+            }
+            NameValuePair languageNameValuePair = new NameValuePair(language, ITrackerResources.getString("itracker.locale.name", language));
+            languagesNameValuePair.put(languageNameValuePair, localesNameValuePair);
+        }
+        HttpSession session = request.getSession();
+        String baseLocaleKey = "translations(" + ITrackerResources.BASE_LOCALE + ")";
+
+        List<CustomFieldValue> options = customField.getOptions();
+
+        Collections.sort(options, CustomFieldValue.SORT_ORDER_COMPARATOR);
+        if (log.isDebugEnabled()) {
+            log.debug("setRequestEnv: sorted values by sort order comparator: " + options);
+        }
+
+        HashMap<Integer, String> optionsMap = new HashMap<Integer, String>();
+        for (CustomFieldValue option : options) {
+            String optionName = CustomFieldUtilities.getCustomFieldOptionName(customField.getId(), option.getId(), currentLocale);
+            optionsMap.put(option.getId(), optionName);
+        }
+
+        String fieldTypeString = Integer.toString(CustomField.Type.STRING.getCode());
+        String fieldTypeInteger = Integer.toString(CustomField.Type.INTEGER.getCode());
+        String fieldTypeDate = Integer.toString(CustomField.Type.DATE.getCode());
+        String fieldTypeList = Integer.toString(CustomField.Type.LIST.getCode());
+
+        request.setAttribute("fieldTypeString", fieldTypeString);
+        request.setAttribute("fieldTypeInteger", fieldTypeInteger);
+        request.setAttribute("fieldTypeDate", fieldTypeDate);
+        request.setAttribute("fieldTypeList", fieldTypeList);
+        String dateFormatDateOnly = CustomFieldUtilities.DATE_FORMAT_DATEONLY;
+        String dateFormatTimeOnly = CustomFieldUtilities.DATE_FORMAT_TIMEONLY;
+        String dateFormatFull = CustomFieldUtilities.DATE_FORMAT_FULL;
+
+        request.setAttribute("dateFormatDateOnly", dateFormatDateOnly);
+        request.setAttribute("dateFormatTimeOnly", dateFormatTimeOnly);
+        request.setAttribute("dateFormatFull", dateFormatFull);
+
+        session.setAttribute("CustomFieldType_List", Integer.toString(CustomField.Type.LIST.getCode()));
+        request.setAttribute("baseLocaleKey", baseLocaleKey);
+        request.setAttribute("field", customField);
+        request.setAttribute("languagesNameValuePair", languagesNameValuePair);
+        request.setAttribute("options", options);
+        request.setAttribute("optionsMap", optionsMap);
+
+    }
+
 
     /*
       * public void reset(ActionMapping mapping, HttpServletRequest request) {
@@ -64,10 +161,9 @@ public class CustomFieldForm extends ValidatorForm {
                     ITrackerResources.getString("itracker.web.attr.baselocale", LoginUtilities.getCurrentLocale(request))));
         }
 
-        EditCustomFieldActionUtil.setRequestEnv(request, this);
+        setRequestEnv(request);
         return errors;
     }
-
 
     @Override
     public void reset(ActionMapping mapping, HttpServletRequest request) {

@@ -20,7 +20,6 @@ package org.itracker.web.util;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Seems to manage the Web Sessions...
@@ -41,23 +40,15 @@ public class SessionManager {
     }
 
     public static Date getSessionStart(String login) {
-        return ((Date) activeSessionsStarted.get(login));
+        return activeSessionsStarted.get(login);
     }
 
     public static Date getSessionLastAccess(String login) {
-        return ((Date) activeSessionsLastAccess.get(login));
+        return  activeSessionsLastAccess.get(login);
     }
 
     public static boolean getSessionNeedsReset(String login) {
-        return (activeSessionsReset.get(login) != null ? true : false);
-    }
-
-    public static void updateSessionLastAccess(String login) {
-        Date now = new Date();
-        activeSessionsLastAccess.put(login, now);
-        if (activeSessionsStarted.get(login) == null) {
-            activeSessionsStarted.put(login, now);
-        }
+        return activeSessionsReset.get(login) != null ? true : false;
     }
 
     public static void createSession(String login) {
@@ -86,16 +77,10 @@ public class SessionManager {
 
     public static String checkRenamedLogin(String prevLogin) {
         if (renamedLogins.containsKey(prevLogin)) {
-            return (String) renamedLogins.get(prevLogin);
+            return renamedLogins.get(prevLogin);
         }
 
         return null;
-    }
-
-    public static void setAllSessionsNeedsReset() {
-        for (Iterator<String> iter = activeSessionsStarted.keySet().iterator(); iter.hasNext(); ) {
-            activeSessionsReset.put((String) iter.next(), 1);
-        }
     }
 
     public static void clearSessionNeedsReset(String login) {

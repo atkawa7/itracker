@@ -25,12 +25,13 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Language;
 import org.itracker.model.PermissionType;
 import org.itracker.model.Report;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ReportService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ReportForm;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
@@ -71,7 +72,7 @@ public class EditReportAction extends ItrackerBaseAction {
         Report editreport;
         try {
 
-            Map<Integer, Set<PermissionType>> userPermissionsMap = getUserPermissions(session);
+            Map<Integer, Set<PermissionType>> userPermissionsMap = RequestHelper.getUserPermissions(session);
             if (!UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_USER_ADMIN)) {
                 return mapping.findForward("unauthorized");
             }
@@ -104,7 +105,7 @@ public class EditReportAction extends ItrackerBaseAction {
             }
 
 
-            String action = (String) request.getParameter("action");
+            String action = request.getParameter("action");
             if (errors.isEmpty()) {
                 reportService.getReportDAO().saveOrUpdate(editreport);
             }
