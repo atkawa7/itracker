@@ -25,13 +25,13 @@ import org.itracker.SystemConfigurationException;
 import org.itracker.model.NameValuePair;
 import org.itracker.model.WorkflowScript;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.model.util.WorkflowUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.WorkflowScriptForm;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
-import org.itracker.web.util.WorkflowUtilities;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

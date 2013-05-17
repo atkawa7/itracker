@@ -25,6 +25,7 @@ import org.itracker.model.*;
 import org.itracker.model.util.Convert;
 import org.itracker.model.util.IssueUtilities;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.model.util.WorkflowUtilities;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
 import org.itracker.web.actions.base.ItrackerBaseAction;

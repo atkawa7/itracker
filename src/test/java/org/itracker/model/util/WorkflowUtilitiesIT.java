@@ -14,7 +14,6 @@ import org.itracker.model.Project;
 import org.itracker.model.ProjectScript;
 import org.itracker.model.WorkflowScript;
 import org.itracker.web.forms.IssueForm;
-import org.itracker.web.util.WorkflowUtilities;
 import org.junit.Test;
 
 import java.util.*;

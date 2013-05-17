@@ -2,7 +2,7 @@ package org.itracker.web.ptos;
 
 import org.itracker.model.ProjectScript;
 import org.itracker.model.util.CustomFieldUtilities;
-import org.itracker.web.util.WorkflowUtilities;
+import org.itracker.model.util.WorkflowUtilities;
 
 import java.util.Locale;
 
@@ -18,7 +18,6 @@ public class ProjectScriptPTO {
 
     public String getFieldName() {
         return CustomFieldUtilities.getCustomFieldName(this.script.getFieldId(), locale);
-        //return IssueUtilities.getFieldName(this.script.getFieldId(), script.getProject().getCustomFields(), locale);
     }
 
     public String getEventName() {

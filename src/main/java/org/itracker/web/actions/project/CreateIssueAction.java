@@ -29,6 +29,7 @@ import org.itracker.model.Notification.Type;
 import org.itracker.model.util.IssueUtilities;
 import org.itracker.model.util.ProjectUtilities;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.model.util.WorkflowUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
 import org.itracker.services.ProjectService;

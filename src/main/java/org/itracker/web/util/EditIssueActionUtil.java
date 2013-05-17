@@ -6,10 +6,7 @@ import org.apache.struts.action.ActionMapping;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 import org.itracker.model.Notification.Type;
-import org.itracker.model.util.Convert;
-import org.itracker.model.util.IssueUtilities;
-import org.itracker.model.util.ProjectUtilities;
-import org.itracker.model.util.UserUtilities;
+import org.itracker.model.util.*;
 import org.itracker.services.NotificationService;
 import org.itracker.services.UserService;
 

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package org.itracker.web.util;
+package org.itracker.model.util;
 
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
