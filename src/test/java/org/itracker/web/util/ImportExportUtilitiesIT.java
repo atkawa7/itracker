@@ -2,13 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.itracker.model.util;
+package org.itracker.web.util;
 
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.ImportExportException;
 import org.itracker.model.*;
 import org.itracker.model.CustomField.Type;
-import org.itracker.web.util.ImportExportTags;
+import org.itracker.model.util.IssueUtilities;
+import org.itracker.model.util.ProjectUtilities;
 import org.junit.Test;
 
 import java.io.IOException;

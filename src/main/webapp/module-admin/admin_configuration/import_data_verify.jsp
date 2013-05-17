@@ -1,8 +1,8 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <%@ page import="org.itracker.model.ImportDataModel" %>
-<%@ page import="org.itracker.model.util.ImportExportUtilities" %>
 <%@ page import="org.itracker.web.util.Constants" %>
+<%@ page import="org.itracker.web.util.ImportExportUtilities" %>
 
 <% // TODO : move redirect logic to Action class.
     ImportDataModel importModel = (ImportDataModel) session.getAttribute(Constants.IMPORT_DATA_KEY);

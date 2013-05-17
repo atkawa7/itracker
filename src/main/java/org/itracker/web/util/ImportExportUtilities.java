@@ -16,14 +16,14 @@
  * GNU General Public License for more details.
  */
 
-package org.itracker.model.util;
+package org.itracker.web.util;
 
 import org.apache.log4j.Logger;
 import org.itracker.ImportExportException;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
-import org.itracker.web.util.ImportExportTags;
-import org.itracker.web.util.ImportHandler;
+import org.itracker.model.util.CustomFieldUtilities;
+import org.itracker.model.util.ProjectUtilities;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
