@@ -3,6 +3,7 @@
     <formats>
         <format>zip</format>
     </formats>
+    <includeSiteDirectory>true</includeSiteDirectory>
     <fileSets>
         <fileSet>
             <directory>src/site</directory>
@@ -14,22 +15,11 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>target</directory>
+            <directory>${project.build.directory}</directory>
             <outputDirectory></outputDirectory>
             <includes>
                 <include>*.war</include>
             </includes>
-        </fileSet>
-        <fileSet>
-            <directory>target/generated-sources/schema</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>*.sql</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-          <directory>${project.build.directory}/site</directory>
-          <outputDirectory>docs</outputDirectory>
         </fileSet>
     </fileSets>
 </assembly>

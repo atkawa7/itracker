@@ -37,7 +37,7 @@
 
         <maven-findbugs-plugin.version>2.4.0</maven-findbugs-plugin.version>
         <maven-site-plugin.version>3.0</maven-site-plugin.version>
-        <maven-project-info-reports-plugin.version>2.4</maven-project-info-reports-plugin.version>
+        <maven-project-info-reports-plugin.version>2.7</maven-project-info-reports-plugin.version>
         <maven-tomcat-plugin.version>2.0</maven-tomcat-plugin.version>
         <maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
         <maven-checkstyle-plugin.version>2.8</maven-checkstyle-plugin.version>
@@ -230,7 +230,7 @@
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
-                    <goals>deploy site-deploy</goals>
+                    <goals>deploy assembly:single site-deploy</goals>
                     <preparationGoals>clean verify</preparationGoals>
                 </configuration>
             </plugin>
@@ -334,24 +334,6 @@
             </plugin>
 
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/main/assembly/assembly-src.xml</descriptor>
-                        <descriptor>src/main/assembly/assembly-bin.xml</descriptor>
-                    </descriptors>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat6-maven-plugin</artifactId>
                 <configuration>
@@ -445,6 +427,11 @@
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>2.4</version>
                     <configuration>
+							  <descriptors>
+									<descriptor>src/main/assembly/assembly-src.xml</descriptor>
+									<descriptor>src/main/assembly/assembly-bin.xml</descriptor>
+							  </descriptors>
+                    		<attach>false</attach>
                         <finalName>${project.artifactId}-${project.version}</finalName>
                     </configuration>
                 </plugin>
