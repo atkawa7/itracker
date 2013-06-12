@@ -45,12 +45,12 @@
             <column name="target_version_id"/>
         </many-to-one>
 
-        <property name="createDate" update="false">
-            <column name="create_date" sql-type="timestamp" not-null="true"/>
-        </property>
-
         <property name="lastModifiedDate">
             <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="createDate" update="false">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
         </property>
 
         <bag name="components" table="issue_component_rel" lazy="true">

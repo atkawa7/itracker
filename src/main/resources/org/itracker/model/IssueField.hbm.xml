@@ -32,7 +32,15 @@
         <property name="dateValue">
             <column name="date_value"/>
         </property>
-
+			<!-- TODO, why is these not defined? would need migration to enable..
+			  <property name="lastModifiedDate">
+					<column name="last_modified" sql-type="timestamp" not-null="true"/>
+			  </property>
+		  
+			  <property name="createDate" update="false">
+					<column name="create_date" sql-type="timestamp" not-null="true"/>
+			  </property>
+			 -->
     </class>
 
 </hibernate-mapping>

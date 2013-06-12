@@ -36,12 +36,12 @@
             <column name="sort_options_by_name" not-null="true"/>
         </property>
 
-        <property name="createDate" update="false">
-            <column name="create_date" sql-type="timestamp" not-null="true"/>
-        </property>
-
         <property name="lastModifiedDate">
             <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="createDate" update="false">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
         </property>
 
         <bag name="options" table="customfieldvaluebean" cascade="all">

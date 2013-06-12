@@ -28,12 +28,12 @@
 
         <!--  many-to-one name="projectFields" column="project_id" class="org.itracker.model.Project"/ -->
 
-        <property name="createDate" update="false">
-            <column name="create_date" sql-type="timestamp" not-null="true"/>
-        </property>
-
         <property name="lastModifiedDate">
             <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="createDate" update="false">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
         </property>
 
     </class>

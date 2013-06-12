@@ -27,12 +27,13 @@
                 <column name="user_id" not-null="true"/>
             </many-to-one>
         </natural-id>
-        <property name="createDate" update="false">
-            <column name="create_date" sql-type="timestamp" not-null="true"/>
-        </property>
 
         <property name="lastModifiedDate">
             <column name="last_modified" sql-type="timestamp" not-null="true"/>
+        </property>
+        
+        <property name="createDate" update="false">
+            <column name="create_date" sql-type="timestamp" not-null="true"/>
         </property>
 
     </class>
