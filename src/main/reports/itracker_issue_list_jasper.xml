@@ -21,7 +21,7 @@
     <import value="java.util.*" />
     <import value="net.sf.jasperreports.engine.*" />
     <import value="net.sf.jasperreports.engine.data.*" />
-    <import value="org.itracker.services.util.*" />
+    <import value="org.itracker.model.util.*" />
 
     <parameter name="ReportTitle" class="java.lang.String" />
 
