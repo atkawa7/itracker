@@ -230,8 +230,8 @@
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
-                    <goals>deploy assembly:single site-deploy</goals>
-                    <preparationGoals>clean verify</preparationGoals>
+                    <goals>deploy assembly:single site:deploy</goals>
+                    <preparationGoals>clean verify site:site</preparationGoals>
                 </configuration>
             </plugin>
             <plugin>
