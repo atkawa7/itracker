@@ -23,9 +23,9 @@
                To fix the DDL of existing MySQL databases, the following migration-script can be used:<br />
                <a href="../migration/mysql/timestamp.sql">timestamp.sql</a><br />
                Consider fixing issue create_date for existing issues:
-<pre>SELECT issuebean.id, min(issuehistorybean.create_date) as cdate FROM issuebean 
-left join issuehistorybean on issuehistorybean.issue_id = issuebean.id
-group by issuebean.id</pre>
+               <pre>UPDATE issuebean i
+set i.create_date = (select min(ih.create_date) from issuehistorybean ih where ih.issue_id = i.id)
+</pre>
             </p>
             
 
