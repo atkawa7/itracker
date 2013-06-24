@@ -5,7 +5,7 @@
     <artifactId>itracker</artifactId>
     <packaging>war</packaging>
     <name>itracker</name>
-    <version>3.1.5</version>
+    <version>3.1.5-SNAPSHOT</version>
     <url>http://itracker.sourceforge.net/</url>
     <properties>
         <clover.maven.charset>UTF-8</clover.maven.charset>
@@ -126,9 +126,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/tags/itracker-3.1.5</connection>
-        <developerConnection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/tags/itracker-3.1.5</developerConnection>
-        <url>http://svn.code.sf.net/p/itracker/code/itracker/tags/itracker-3.1.5</url>
+        <connection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/trunk/</connection>
+        <developerConnection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/trunk/</developerConnection>
+        <url>http://svn.code.sf.net/p/itracker/code/itracker/trunk/</url>
     </scm>
     <organization>
         <name>itracker</name>
@@ -230,8 +230,8 @@
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
-                    <goals>deploy site:site assembly:single site:deploy</goals>
-                    <preparationGoals>clean verify</preparationGoals>
+                    <goals>deploy assembly:single site:deploy</goals>
+                    <preparationGoals>clean verify site:site</preparationGoals>
                 </configuration>
             </plugin>
             <plugin>
