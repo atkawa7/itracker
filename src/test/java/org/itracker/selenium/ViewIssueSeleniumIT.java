@@ -1,6 +1,7 @@
 package org.itracker.selenium;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import java.io.IOException;
 
@@ -21,27 +22,27 @@ public class ViewIssueSeleniumIT extends AbstractSeleniumTestCase {
     @Test
     public void testViewIssue1() throws IOException {
         closeSession();
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        loginUser("admin_test1", "admin_test1");
+        login("admin_test1", "admin_test1");
 
-        selenium.click("listprojects");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.name("listprojects")).click();
+
+        waitForPageToLoad();
 
         // Click view issue link (usually it's named "View").
-        assertElementPresent("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]");
-        selenium.click("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name']/../*[1]/a[1]")).click();
 
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='1']" +
-                "/../td[11][text()='test_description']/../td[1]/a[1]");
-        selenium.click("//tr[starts-with(@id, 'issue.')]/td[3][text()='1']" +
-                "/../td[11][text()='test_description']/../td[1]/a[1]");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        waitForPageToLoad();
 
-        assertElementTextEquals("test_description", "description");
-        assertElementTextEquals("admin firstname admin lastname", "ownerName");
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]/*[3][text()='1']" +
+                "/../*[11][text()='test_description']/../*[1]/a[1]")).click();
+
+        waitForPageToLoad();
+
+        assertElementTextEquals("test_description", By.id("description"));
+        assertElementTextEquals("admin firstname admin lastname", By.id("ownerName"));
     }
 
     /**
@@ -55,27 +56,24 @@ public class ViewIssueSeleniumIT extends AbstractSeleniumTestCase {
     @Test
     public void testViewIssue2() throws IOException {
         closeSession();
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        loginUser("admin_test1", "admin_test1");
+        login("admin_test1", "admin_test1");
 
-        selenium.click("listprojects");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.name("listprojects")).click();
+        waitForPageToLoad();
 
         // Click view issue link (usually it's named "View").
-        assertElementPresent("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]");
-        selenium.click("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name']/../*[1]/a[1]")).click();
+        waitForPageToLoad();
 
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='2']" +
-                "/../td[11][text()='test_description 2']/../td[1]/a[1]");
-        selenium.click("//tr[starts-with(@id, 'issue.')]/td[3][text()='2']" +
-                "/../td[11][text()='test_description 2']/../td[1]/a[1]");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]/*[3][text()='2']" +
+                "/../*[11][text()='test_description 2']/../*[1]/a[1]")).click();
+        waitForPageToLoad();
 
-        assertElementTextEquals("test_description 2", "description");
-        assertElementTextEquals("admin firstname admin lastname", "ownerName");
+        assertElementTextEquals("test_description 2", By.id("description"));
+        assertElementTextEquals("admin firstname admin lastname", By.id("ownerName"));
     }
 
     @Override

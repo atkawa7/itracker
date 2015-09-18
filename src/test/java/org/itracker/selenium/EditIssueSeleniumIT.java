@@ -1,6 +1,9 @@
 package org.itracker.selenium;
 
+import org.junit.Ignore;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.subethamail.wiser.WiserMessage;
 
 /**
@@ -28,59 +31,53 @@ public class EditIssueSeleniumIT extends AbstractSeleniumTestCase {
     public void testEditIssue1FromViewIssue() throws Exception {
         log.info("running testEditIssue1FromViewIssue");
         closeSession();
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        loginUser("admin_test1", "admin_test1");
+        login("admin_test1", "admin_test1");
 
-        selenium.click("listprojects");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        driver.findElement(By.name("listprojects")).click();
+        waitForPageToLoad();
 
         // Click view issue link (usually it's named "View").
-        assertElementPresent("//tr[starts-with(@id, 'project.')]" +
-                "/td[3][text()='test_name']/../td[1]/a[1]");
+        assertElementPresent(By.xpath("//tr[starts-with(@id, 'project.')]" +
+                "/td[3][text()='test_name']/../td[1]/a[1]")).click();
+        waitForPageToLoad();
 
-        selenium.click("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.xpath("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/.." +
+                "/td[13][contains(text(),'A. admin lastname')]"));
+        assertElementPresent(By.xpath("//tr[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]")).click();
+        waitForPageToLoad();
 
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]");
+        assertElementPresent(By.xpath("//td[@id='actions']/a[2]")).click();
+        waitForPageToLoad();
 
-        selenium.click("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]");
-
-        selenium.waitForPageToLoad(SE_TIMEOUT);
-
-        assertElementPresent("//td[@id='actions']/a[2]");
-        selenium.click("//td[@id='actions']/a[2]");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
-
-        assertElementPresent("description");
-        assertElementPresent("ownerId");
-        assertElementPresent("//input[@type='submit']");
-
-        selenium.type("description", "test_description (updated)");
+        assertElementPresent(By.name("description")).sendKeys(" (updated)");
+        assertElementPresent(By.name("ownerId"));
 
         int received = wiser.getMessages().size();
-        selenium.click("//input[@type='submit']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.xpath("//input[@type='submit']")).click();
+        waitForPageToLoad();
 
         assertEquals("wiser.receivedEmailSize", received + 1, wiser.getMessages().size());
         final WiserMessage smtpMessage = wiser.getMessages().get(received);
         final String smtpMessageBody = (String) smtpMessage.getMimeMessage().getContent();
 
         assertTrue(smtpMessageBody.contains("test_description (updated)"));
-//
 
+        assertElementPresent(By.id("issues"));
+        assertElementCountEquals(4, By.xpath("//tr[starts-with(@id, 'issue.')]"));
 
-        assertElementPresent("issues");
-        assertEquals(4, selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
-        assertElementNotPresent("//tr[starts-with(@id, 'issue.')]" +
+        assertTrue(driver.getPageSource().contains("test_description (updated)"));
+
+        assertElementNotPresent(By.xpath("//tr[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='1']/../td[11][text()='test_description']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]");
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[13][contains(text(),'A. admin lastname')]"));
+        assertElementPresent(By.xpath("//tr[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='1']/../td[11][text()='test_description (updated)']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]");
+                "/td[13][contains(text(),'A. admin lastname')]"));
     }
 
     /**
@@ -100,40 +97,32 @@ public class EditIssueSeleniumIT extends AbstractSeleniumTestCase {
     public void testEditIssue1FromIssueList() throws Exception {
         log.info("running testEditIssue1FromIssueList");
         closeSession();
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        loginUser("admin_test1", "admin_test1");
+        login("admin_test1", "admin_test1");
 
-        selenium.click("listprojects");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        driver.findElement(By.name("listprojects")).click();
+        waitForPageToLoad();
 
         // Click view issue link (usually it's named "View").
-        assertElementPresent("//tr[starts-with(@id, 'project.')]" +
-                "/td[3][text()='test_name']/../td[1]/a[1]");
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]" +
+                "/td[3][text()='test_name']/../td[1]/a[1]"))
+                .click();
+        waitForPageToLoad();
 
-        selenium.click("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]"+
+                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[2]"))
+                .click();
+        waitForPageToLoad();
 
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[2]");
-
-        selenium.click("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[2]");
-
-        selenium.waitForPageToLoad(SE_TIMEOUT);
-
-        assertElementPresent("description");
-        assertElementPresent("ownerId");
-        assertElementPresent("//input[@type='submit']");
-
-        selenium.type("description", "test_description (updated)");
+        assertElementPresent(By.name("description")).sendKeys(" (updated)");
+        assertElementPresent(By.name("ownerId"));
 
         int received = wiser.getMessages().size();
 
-        selenium.click("//input[@type='submit']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
-
+        assertElementPresent(By.xpath("//input[@type='submit']")).click();
+        waitForPageToLoad();
 
         assertEquals("wiser.receivedEmailSize", received + 1, wiser.getMessages().size());
         final WiserMessage smtpMessage = wiser.getMessages().get(received);
@@ -141,16 +130,15 @@ public class EditIssueSeleniumIT extends AbstractSeleniumTestCase {
         log.debug("testEditIssue1FromIssueList, received:\n " + smtpMessageBody);
 
         assertTrue(smtpMessageBody.contains("test_description (updated)"));
-//
-//
-        assertElementPresent("issues");
-        assertEquals(4, selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
-        assertElementNotPresent("//tr[starts-with(@id, 'issue.')]" +
+
+        assertElementPresent(By.id("issues"));
+        assertElementCountEquals(4, By.xpath("//*[starts-with(@id, 'issue.')]"));
+        assertElementNotPresent(By.xpath("//*[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='1']/../td[11][text()='test_description']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]");
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
+                "/td[13][contains(text(),'A. admin lastname')]"));
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]" +
                 "/td[3][text()='1']/../td[11][text()='test_description (updated)']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]");
+                "/td[13][contains(text(),'A. admin lastname')]"));
     }
 
     /**
@@ -169,61 +157,43 @@ public class EditIssueSeleniumIT extends AbstractSeleniumTestCase {
     public void testMoveIssue1() throws Exception {
         log.info("running testMoveIssue1");
         closeSession();
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        assertTrue(selenium.isElementPresent("//*[@name='login']"));
-        assertTrue(selenium.isElementPresent("//*[@name='password']"));
-        assertTrue(selenium.isElementPresent("//*[@value='Login']"));
-        selenium.type("//*[@name='login']", "admin_test1");
-        selenium.type("//*[@name='password']", "admin_test1");
-        selenium.click("//*[@value='Login']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        login("admin_test1", "admin_test1");
 
-        selenium.click("listprojects");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.name("listprojects")).click();
+        waitForPageToLoad();
 
         // Click view issue link (usually it's named "View").
-        assertElementPresent("//tr[starts-with(@id, 'project.')]" +
-                "/td[3][text()='test_name']/../td[1]/a[1]");
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]" +
+                "/td[3][text()='test_name']/../td[1]/a[1]")).click();
+        waitForPageToLoad();
 
-        selenium.click("//tr[starts-with(@id, 'project.')]" +
-                "/td[3][text()='test_name']/../td[1]/a[1]");
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]" +
+                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]")).click();
+        waitForPageToLoad();
 
-        selenium.waitForPageToLoad(SE_TIMEOUT);
-
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]");
-
-        selenium.click("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]");
-
-        selenium.waitForPageToLoad(SE_TIMEOUT);
-
-        assertElementPresent("//td[@id='actions']/a[3]");
-        selenium.click("//td[@id='actions']/a[3]");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
-
-        assertElementPresent("projectId");
-        selenium.select("projectId", "label=test_name2");
+        assertElementPresent(By.xpath("//td[@id='actions']/a[3]")).click();
+        waitForPageToLoad();
 
         int received = wiser.getMessages().size();
 
-        selenium.click("//input[@type='submit']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.name("projectId"))
+        .findElement(By.xpath("option[text()='test_name2']")).click();
+        assertElementPresent(By.xpath("//input[@type='submit']")).click();
+        waitForPageToLoad();
 
         // no message sent?
         assertEquals("wiser.receivedEmailSize", received, wiser.getMessages().size());
+        assertElementPresent(By.xpath("//td[@id='actions']/a[1]")).click();
+        waitForPageToLoad();
 
-        assertElementPresent("//td[@id='actions']/a[1]");
-        selenium.click("//td[@id='actions']/a[1]");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
-
-        assertElementPresent("issues");
-        assertEquals(1, selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='1']/../td[11][text()='test_description']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]");
+        assertElementPresent(By.id("issues"));
+        assertElementCountEquals(1, By.xpath("//*[starts-with(@id, 'issue.')]"));
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]" +
+                "/*[3][text()='1']/../*[11][text()='test_description']/.." +
+                "/*[13][contains(text(),'A. admin lastname')]"));
     }
 
     /**
@@ -244,48 +214,43 @@ public class EditIssueSeleniumIT extends AbstractSeleniumTestCase {
     public void testEditIssue2FromViewIssue() throws Exception {
         log.info("running testEditIssue2FromViewIssue");
         closeSession();
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        loginUser("admin_test1", "admin_test1");
+        login("admin_test1", "admin_test1");
 
-        selenium.click("listprojects");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.name("listprojects")).click();
+        waitForPageToLoad();
 
         // Click view issue link (usually it's named "View").
-        assertElementPresent("//tr[starts-with(@id, 'project.')]" +
-                "/td[3][text()='test_name']/../td[1]/a[1]");
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]" +
+                "/*[3][text()='test_name']/../*[1]/a[1]")).click();
+        waitForPageToLoad();
 
-        selenium.click("//tr[starts-with(@id, 'project.')]" +
-                "/td[3][text()='test_name']/../td[1]/a[1]");
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]" +
+                "/*[3][text()='2']/../*[11][text()='test_description 2']/../*[1]/a[1]"))
+                .click();
+        waitForPageToLoad();
 
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementTextEquals("test_description 2",
+                By.id("description"));
+        assertElementTextEquals("admin firstname admin lastname",
+                By.id("ownerName"));
 
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='2']/../td[11][text()='test_description 2']/../td[1]/a[1]");
+        assertElementPresent(By.xpath("//*[@id='actions']/a[2]"))
+                .click();
+        waitForPageToLoad();
 
-        selenium.click("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='2']/../td[11][text()='test_description 2']/../td[1]/a[1]");
-
-        selenium.waitForPageToLoad(SE_TIMEOUT);
-
-        assertEquals("test_description 2", selenium.getText("description"));
-        assertEquals("admin firstname admin lastname", selenium.getText("ownerName"));
-
-        assertElementPresent("//td[@id='actions']/a[2]");
-        selenium.click("//td[@id='actions']/a[2]");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
-
-        assertElementPresent("description");
-        assertElementPresent("ownerId");
-        assertElementPresent("//input[@type='submit']");
-
-        selenium.type("description", "test_description 2 (updated)");
+        WebElement el = assertElementPresent(By.name("description"));
+        el.clear();
+        el.sendKeys("test_description 2 (updated)");
+        assertElementPresent(By.name("ownerId"));
 
         int received = wiser.getMessages().size();
 
-        selenium.click("//input[@type='submit']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.xpath("//input[@type='submit']"))
+        .click();
+        waitForPageToLoad();
         assertEquals("wiser.receivedEmailSize", received + 1, wiser.getMessages().size());
         final WiserMessage smtpMessage = wiser.getMessages().get(received);
         final String smtpMessageBody = (String) smtpMessage.getMimeMessage().getContent();
@@ -293,16 +258,16 @@ public class EditIssueSeleniumIT extends AbstractSeleniumTestCase {
 
         assertTrue(smtpMessageBody.contains("test_description 2 (updated)"));
 
-        assertElementPresent("issues");
-        assertEquals(4, selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
+        assertElementPresent(By.id("issues"));
+        assertElementCountEquals(4, By.xpath("//*[starts-with(@id, 'issue.')]"));
 
-        assertElementNotPresent("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='2']/../td[11][text()='test_description 2']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]");
+        assertElementNotPresent(By.xpath("//*[starts-with(@id, 'issue.')]" +
+                "/*[3][text()='2']/../*[11][text()='test_description 2']/.." +
+                "/*[13][contains(text(),'A. admin lastname')]"));
 
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='2']/../td[11][text()='test_description 2 (updated)']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]");
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]" +
+                "/*[3][text()='2']/../*[11][text()='test_description 2 (updated)']/.." +
+                "/*[13][contains(text(),'A. admin lastname')]"));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.itracker.selenium;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import java.io.IOException;
 
@@ -24,38 +25,38 @@ public class ViewProjectListSeleniumIT extends AbstractSeleniumTestCase {
     @Test
     public void testViewProjectList() throws IOException {
         closeSession();
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        loginUser("admin_test1", "admin_test1");
+        login("admin_test1", "admin_test1");
 
-        assertElementPresent("listprojects");
-        selenium.click("listprojects");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.name("listprojects")).click();
 
-        assertElementPresent("projects");
+        waitForPageToLoad();
+
+        assertElementPresent(By.id("projects"));
         assertEquals("projects count", 2,
-                selenium.getXpathCount("//tr[starts-with(@id, 'project.')]"));
+                driver.findElements(By.xpath("//*[starts-with(@id, 'project.')]")).size());
 
         //// project "test_name"
         // Check the number of open issues.
-        assertElementTextEquals("4", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[4]");
+        assertElementTextEquals("4", By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name']/../*[4]"));
 
         // Check the number of resolved issues.
-        assertElementTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[5]");
+        assertElementTextEquals("0", By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name']/../*[5]"));
 
         // Check total number of issues.
-        assertElementTextEquals("4", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[6]");
+        assertElementTextEquals("4", By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name']/../*[6]"));
 
         //// project "test_name2"
         // Check the number of open issues.
-        assertElementTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[4]");
+        assertElementTextEquals("0", By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name2']/../*[4]"));
 
         // Check the number of resolved issues.
-        assertElementTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[5]");
+        assertElementTextEquals("0", By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name2']/../*[5]"));
 
         // Check total number of issues.
-        assertElementTextEquals("0", "//tr[starts-with(@id, 'project.')]/td[3][text()='test_name2']/../td[6]");
+        assertElementTextEquals("0", By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name2']/../*[6]"));
     }
 
     @Override

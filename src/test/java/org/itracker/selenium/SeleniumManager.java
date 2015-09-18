@@ -1,14 +1,10 @@
 package org.itracker.selenium;
 
-import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
-import com.thoughtworks.selenium.SeleniumException;
 import org.apache.log4j.Logger;
-import org.openqa.selenium.SeleneseCommandExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverBackedSelenium;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.remote.CommandExecutor;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -23,6 +19,7 @@ import java.util.Properties;
 public class SeleniumManager {
     private final static String PROPERTY_SELENIUM_BROWSER = "selenium.browser";
     private final static String PROPERTY_SELENIUM_HOST = "selenium.host";
+    private final static String PROPERTY_SELENIUM_NO_SERVER = "selenium.no.server";
     private final static String PROPERTY_SELENIUM_PORT = "selenium.port";
     private final static String PROPERTY_SELENIUM_BROWSER_LOG_LEVEL = "selenium.browserLogLevel";
     private final static String PROPERTY_SELENIUM_SPEED = "selenium.speed";
@@ -33,7 +30,7 @@ public class SeleniumManager {
     private final static String PROPERTY_APPLICATION_PATH = "application.path";
 
 
-    private final static String PROPERTY_SELENIUM_BROWSER_DEFAULT = "*firefox";
+    private final static String PROPERTY_SELENIUM_BROWSER_DEFAULT = "firefox";
     private final static String
             PROPERTY_SELENIUM_HOST_DEFAULT = "localhost";
     private final static String
@@ -54,11 +51,13 @@ public class SeleniumManager {
             PROPERTY_SELENIUM_SMTP_PORT_DEFAULT = "2525";
 
 
-    private static Selenium selenium = null;
+    private static WebDriver driver = null;
 
     private static String seleniumHost = null;
     private static Integer seleniumPort = null;
+    private static Boolean seleniumNoServer = null;
     private static String seleniumBrowser = null;
+
     private static String seleniumBrowserLogLevel = null;
     private static String seleniumSpeed = null;
     private static String seleniumUseXPathLibrary = null;
@@ -74,14 +73,8 @@ public class SeleniumManager {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                if (null != SeleniumManager.selenium) {
-                    try {
-                        SeleniumManager.selenium.stop();
-                    } catch (SeleniumException e) {
-                        log.warn("could not stop running selenium: " + selenium);
-                        log.debug("exception caught", e);
-                    }
-
+                if (null != SeleniumManager.driver) {
+                    driver.close();
                 }
             }
         });
@@ -98,6 +91,8 @@ public class SeleniumManager {
         }
         seleniumBrowser =
                 properties.getProperty(PROPERTY_SELENIUM_BROWSER, PROPERTY_SELENIUM_BROWSER_DEFAULT);
+        seleniumNoServer =
+                Boolean.valueOf(properties.getProperty(PROPERTY_SELENIUM_NO_SERVER, "true"));
         seleniumHost =
                 properties.getProperty(PROPERTY_SELENIUM_HOST, PROPERTY_SELENIUM_HOST_DEFAULT);
         seleniumPort =
@@ -118,43 +113,75 @@ public class SeleniumManager {
                 Integer.valueOf(properties.getProperty(PROPERTY_SELENIUM_SMTP_PORT, PROPERTY_SELENIUM_SMTP_PORT_DEFAULT));
     }
 
-    public static Selenium getSelenium() throws IOException {
-        if (null == selenium) {
-            final String seleniumUrl = "http://" + applicationHost + ":" + applicationPort;
-            log.info("getSelenium: starting new selenium on URL " + seleniumUrl);
-            if (seleniumBrowser.equals("htmlunit")) {
-                // TODO FIXME not working yet due to javascript issues
-                WebDriver driver = new HtmlUnitDriver(true);
-                selenium = new WebDriverBackedSelenium(driver, seleniumUrl);
-            } else if (seleniumBrowser.equals("safari")) {
-                DesiredCapabilities capabilities = new DesiredCapabilities();
-                capabilities.setBrowserName("safari");
-                CommandExecutor executor = new SeleneseCommandExecutor(new URL("http://" + seleniumHost + ":"+ seleniumPort +"/"), new URL(seleniumUrl), capabilities);
-                WebDriver driver = new RemoteWebDriver(executor, capabilities);
-                selenium = new WebDriverBackedSelenium(driver, seleniumUrl);
+
+    public static synchronized WebDriver getWebDriver() throws IOException {
+
+
+        if (null == driver) {
+
+            if (!getSeleniumNoServer()) {
+                DesiredCapabilities capabilities = DesiredCapabilities.htmlUnitWithJs();
+                if (getSeleniumBrowser().equals("firefox")) {
+                    capabilities = DesiredCapabilities.firefox();
+                }
+                if (getSeleniumBrowser().equals("edge")) {
+                    capabilities = DesiredCapabilities.edge();
+                }
+                if (getSeleniumBrowser().equals("ie")) {
+                    capabilities = DesiredCapabilities.internetExplorer();
+                }
+                if (getSeleniumBrowser().equals("chrome")) {
+                    capabilities = DesiredCapabilities.chrome();
+                }
+                if (getSeleniumBrowser().equals("phantomjs")) {
+                    capabilities = DesiredCapabilities.phantomjs();
+                }
+                URL remoteURL = new URL("http://" + getSeleniumHost() + ":" + getSeleniumPort());
+                capabilities.setJavascriptEnabled(true);
+                RemoteWebDriver remoteWebDriver = new RemoteWebDriver(remoteURL, capabilities);
+
+                driver = remoteWebDriver;
             } else {
-                selenium = new DefaultSelenium(seleniumHost, seleniumPort,
-                        seleniumBrowser,
-                        seleniumUrl);
+
+               if (getSeleniumBrowser().equals("firefox")) {
+                   DesiredCapabilities capabilities = DesiredCapabilities.firefox();
+                   driver = new FirefoxDriver(capabilities);
+               } else {
+                   DesiredCapabilities capabilities = DesiredCapabilities.htmlUnitWithJs();
+                   driver = new HtmlUnitDriver(capabilities);
+               }
             }
 
-            selenium.start();
-            selenium.setBrowserLogLevel(seleniumBrowserLogLevel);
-            selenium.setSpeed(seleniumSpeed);
-            selenium.useXpathLibrary(seleniumUseXPathLibrary);
 
         }
-        return selenium;
+
+        return driver;
+
     }
 
     /**
      * This will initialize a new selenium session for this test scope.
      */
+    @Deprecated
     protected static void closeSession(Selenium selenium) {
         if (log.isDebugEnabled()) {
             log.debug("closeSession: " + selenium);
         }
         selenium.deleteAllVisibleCookies();
+    }
+
+    /**
+     * This will initialize a new selenium session for this test scope.
+     */
+    protected static void closeSession(WebDriver driver) {
+        if (log.isDebugEnabled()) {
+            log.debug("closeSession: " + driver);
+        }
+        driver.manage().deleteAllCookies();
+    }
+
+    public static Boolean getSeleniumNoServer() {
+        return seleniumNoServer;
     }
 
     public static String getSeleniumHost() {

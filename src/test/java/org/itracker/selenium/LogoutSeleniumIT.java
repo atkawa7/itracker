@@ -1,6 +1,7 @@
 package org.itracker.selenium;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import java.io.IOException;
 
@@ -12,7 +13,7 @@ import java.io.IOException;
  */
 public class LogoutSeleniumIT extends AbstractSeleniumTestCase {
     /**
-     * Verifies the successfull login case with valid login/password.
+     * Verifies the successful login case with valid login/password.
      * <p/>
      * 0. Exit all available http sessions.
      * 1. Open some page inside the system.
@@ -29,33 +30,31 @@ public class LogoutSeleniumIT extends AbstractSeleniumTestCase {
      */
     @Test
     public void testLoginAndLogout() throws IOException {
-        SeleniumManager.closeSession(selenium);
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        closeSession();
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath + "/portalhome.do");
 
-        assertFalse(selenium.isElementPresent("id"));
-        assertTrue(selenium.isElementPresent("login"));
-        assertTrue(selenium.isElementPresent("password"));
-        assertTrue(selenium.isElementPresent("xpath=//*[@type='submit']"));
-        selenium.type("login", "user_test1");
-        selenium.type("password", "user_test1");
-        selenium.click("xpath=//*[@type='submit']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementNotPresent(By.name("id"));
+        assertElementPresent(By.name("login")).sendKeys("user_test1");
+        //TODO not use username as password!
+        assertElementPresent(By.name("password")).sendKeys("user_test1");
+        assertElementPresent(By.xpath("//*[@type='submit']")).click();
 
-        assertTrue(selenium.isElementPresent("id"));
-        assertTrue(selenium.isElementPresent("logoff"));
-        selenium.click("logoff");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        waitForPageToLoad();
 
-        assertFalse(selenium.isElementPresent("id"));
-        assertTrue(selenium.isElementPresent("login"));
-        assertTrue(selenium.isElementPresent("password"));
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        assertElementPresent(By.name("id"));
+        assertElementPresent(By.name("logoff")).click();
+        waitForPageToLoad();
+
+        assertElementNotPresent(By.name("id"));
+        assertElementPresent(By.name("login"));
+        assertElementPresent(By.name("password"));
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath + "/portalhome.do");
 
-        assertFalse(selenium.isElementPresent("id"));
-        assertTrue(selenium.isElementPresent("login"));
-        assertTrue(selenium.isElementPresent("password"));
+        assertElementNotPresent(By.name("id"));
+        assertElementPresent(By.name("login"));
+        assertElementPresent(By.name("password"));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.itracker.selenium;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import java.io.IOException;
 
@@ -20,28 +21,29 @@ public class ViewProjectIssueListSeleniumIT extends AbstractSeleniumTestCase {
     @Test
     public void testViewProjectIssueList() throws IOException {
         closeSession();
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
-                + applicationPath);
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
+                        + applicationPath);
 
-        loginUser("admin_test1", "admin_test1");
+        login("admin_test1", "admin_test1");
 
-        selenium.click("listprojects");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        driver.findElement(By.name("listprojects")).click();
+        waitForPageToLoad();
 
         // Click view issue link (usually it's named "View").
-        assertElementPresent("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]");
-        selenium.click("//tr[starts-with(@id, 'project.')]/td[3][text()='test_name']/../td[1]/a[1]");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name']/../*[1]/a[1]")).click();
 
-        assertEquals(4, selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='1']/../td[11][text()='test_description']" +
-                "/../td[13][contains(text(),'A. admin lastname')]");
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='2']/../td[11][text()='test_description 2']" +
-                "/../td[13][contains(text(),'A. admin lastname')]");
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='3']/../td[11][text()='test_description 3']" +
-                "/../td[13][contains(text(),'A. admin lastname')]");
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]/td[3][text()='4']/../td[11][text()='test_description 4']" +
-                "/../td[13][contains(text(),'A. admin lastname')]");
+        waitForPageToLoad();
+
+        assertElementCountEquals(4, By.xpath("//*[starts-with(@id, 'issue.')]"));
+
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]/*[3][text()='1']/../*[11][text()='test_description']" +
+                "/../*[13][contains(text(),'A. admin lastname')]"));
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]/*[3][text()='2']/../*[11][text()='test_description 2']" +
+                "/../*[13][contains(text(),'A. admin lastname')]"));
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]/*[3][text()='3']/../*[11][text()='test_description 3']" +
+                "/../*[13][contains(text(),'A. admin lastname')]"));
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]/*[3][text()='4']/../*[11][text()='test_description 4']" +
+                "/../*[13][contains(text(),'A. admin lastname')]"));
     }
 
     @Override
