@@ -22,7 +22,7 @@
         <forward name="arrivalforward" path="/portalhome.do"/>
         <forward name="adminindex" module="/module-admin" path="/adminhome.do"/>
 
-        <forward name="downloadattachment" path="/servlets/AttachmentDownloadController"/>
+        <forward name="downloadattachment" module="/module-projects" path="/downloadAttachment.do"/>
         <!--
            <forward name="editissue" module="/module-projects" path="/editissue.do" />
         -->

@@ -41,16 +41,6 @@
         </form>
 
         <form name="selfRegistrationForm">
-            <field property="email" depends="required,email">
-                <msg name="email" key="itracker.web.error.validate.email"/>
-                <arg0 key="itracker.web.attr.email"/>
-            </field>
-            <field property="firstName" depends="required">
-                <arg0 key="itracker.web.attr.firstname"/>
-            </field>
-            <field property="lastName" depends="required">
-                <arg0 key="itracker.web.attr.lastname"/>
-            </field>
             <field property="login" depends="required">
                 <arg0 key="itracker.web.attr.login"/>
             </field>
@@ -60,6 +50,16 @@
             <!-- changed case from itracker.web.attr.confPassword -->
             <field property="confPassword" depends="required">
                 <arg0 key="itracker.web.attr.confpassword"/>
+            </field>
+            <field property="firstName" depends="required">
+                <arg0 key="itracker.web.attr.firstname"/>
+            </field>
+            <field property="lastName" depends="required">
+                <arg0 key="itracker.web.attr.lastname"/>
+            </field>
+            <field property="email" depends="required,email">
+                <msg name="email" key="itracker.web.error.validate.email"/>
+                <arg0 key="itracker.web.attr.email"/>
             </field>
         </form>
 

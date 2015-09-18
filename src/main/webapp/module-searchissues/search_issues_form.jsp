@@ -53,9 +53,7 @@
         }
 %>
 
-      <html:javascript formName="searchForm"/>
-
-        <html:form action="/searchissues" onsubmit="return validateSearchForm(this);">
+        <html:form action="/searchissues">
         <% if(query.getType().equals(IssueSearchQuery.TYPE_PROJECT)) { %>
             <input type="hidden" name="type" value="<%= IssueSearchQuery.TYPE_PROJECT %>">
             <input type="hidden" name="projects" value="<%= query.getProjectId() %>">
