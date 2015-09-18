@@ -1,3 +1,5 @@
+<%@ taglib prefix="hrml" uri="http://struts.apache.org/tags-html-el" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="/common/taglibs.jsp"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -211,12 +213,47 @@
 	    <input type="hidden"
            name="currentOwner"
            value="${issue.owner == null ? -1 : issue.owner.id}">
+
 	    <c:choose>
 			<c:when test="${not empty possibleOwners}">
     			<td>
+                    <c:set var="unassignedDone" value="${false}" />
+
         			<html:select property="ownerId" styleClass="editColumnText">
-            			<c:forEach items="${possibleOwners}" var="possibleOwner" varStatus="status">
-                			<html:option value="${possibleOwner.value}">${possibleOwner.name}</html:option>
+                        <c:set var="morePossible" value="${not empty notifiedUsers}" />
+                        <c:if test="${morePossible}" >
+                            <c:forEach items="${possibleOwners}" var="possibleOwner" varStatus="status">
+                                <c:choose>
+                                    <c:when test="${possibleOwner.value eq -1}">
+                                        <html:option value="${possibleOwner.value}">${possibleOwner.name}</html:option>
+                                        <c:set var="unassignedDone" value="${true}" />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:forEach items="${notifiedUsers}" var="notifiedUser" varStatus="statusNotified">
+                                            <c:if test="${notifiedUser.id eq possibleOwner.value}">
+                                                <html:option value="${possibleOwner.value}">${possibleOwner.name}</html:option>
+                                            </c:if>
+                                            <c:set var="morePossible" value="${(status.count+(unassignedDone?-1:0)) gt statusNotified.count}" />
+                                        </c:forEach>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                            <c:if test="${morePossible}">
+                                <option disabled="disabled"><it:message key="itracker.web.generic.owners.separator"/></option>
+                            </c:if>
+                        </c:if>
+
+
+                        <c:forEach items="${possibleOwners}" var="possibleOwner" varStatus="status">
+                            <c:set var="notified" value="${false}" />
+                            <c:forEach items="${notifiedUsers}" var="notifiedUser" varStatus="statusNotified">
+                                <c:if test="${notifiedUser.id eq possibleOwner.value}">
+                                    <c:set var="notified" value="${true}" />
+                                </c:if>
+                            </c:forEach>
+                            <c:if test="${not (((possibleOwner.value eq -1) and unassignedDone) or notified)}">
+                                <html:option value="${possibleOwner.value}">${possibleOwner.name}</html:option>
+                            </c:if>
         				</c:forEach>
         			</html:select>
     			</td>
