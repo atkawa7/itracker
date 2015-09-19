@@ -10,6 +10,7 @@ import org.itracker.model.*;
 import org.itracker.model.CustomField.Type;
 import org.itracker.model.util.IssueUtilities;
 import org.itracker.model.util.ProjectUtilities;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -212,6 +213,8 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
     }
 
 
+    // TODO not stable
+    @Ignore
     @Test
     public void testExportIssues() {
         final List<Issue> issues = new Vector<Issue>();
