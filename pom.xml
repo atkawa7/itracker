@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.itracker</groupId>
     <artifactId>itracker</artifactId>
@@ -64,8 +65,6 @@
         <tomcat.deploy.path>/${project.artifactId}</tomcat.deploy.path>
         <tomcat.deploy.charset>UTF-8</tomcat.deploy.charset>
 
-        <!-- provide this for path with the path containing jetty.xconf and jetty-env.xml -->
-        <jetty.config>${project.build.directory}/jetty-itracker</jetty.config>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -280,54 +279,45 @@
                 <version>${maven-war-plugin.version}</version>
             </plugin>
             <plugin>
-              <groupId>org.eclipse.jetty</groupId>
-              <artifactId>jetty-maven-plugin</artifactId>
-              <version>${maven-jetty-plugin.version}</version>
-                <configuration>
-                    <stopPort>9966</stopPort>
-                    <stopKey>foo</stopKey>
-
-                    <webAppConfig>
-                        <contextPath>/${application.path}</contextPath>
-                        <jettyEnvXml>${jetty.config}/jetty-env.xml</jettyEnvXml>
-                    </webAppConfig>
-
-                    <systemProperties>
-                        <systemProperty>
-                            <name>java.naming.factory.initial</name>
-                            <value>org.eclipse.jetty.jndi.InitialContextFactory</value>
-                        </systemProperty>
-                        <systemProperty>
-                            <name>java.naming.provider.url</name>
-                            <value>rmi://localhost:8099</value>
-                        </systemProperty>
-                    </systemProperties>
-                    <daemon>false</daemon>
-                    <httpConnector>
-                        <port>${application.port}</port>
-                        <idleTimeout>60000</idleTimeout>
-                    </httpConnector>
-                    <!--connectors>
-                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                            <port>${application.port}</port>
-                            <maxIdleTime>60000</maxIdleTime>
-                        </connector>
-                    </connectors-->
-                    <useTestClasspath>true</useTestClasspath>
-                </configuration>
-
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${maven-jetty-plugin.version}</version>
                 <dependencies>
+                    <dependency>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                        <version>${mail.version}</version>
+                    </dependency>
                     <dependency>
                         <groupId>c3p0</groupId>
                         <artifactId>c3p0</artifactId>
                         <version>${c3p0.version}</version>
                     </dependency>
-                   <dependency>
-                       <groupId>javax.mail</groupId>
-                       <artifactId>mail</artifactId>
-                       <version>${mail.version}</version>
-                   </dependency>
-
+                    <dependency>
+                        <groupId>org.hsqldb</groupId>
+                        <artifactId>hsqldb</artifactId>
+                        <version>${hsqldb.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <version>${h2.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>${mysql-connector-java.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>${postgresql.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.derby</groupId>
+                        <artifactId>derby</artifactId>
+                        <version>${derby.version}</version>
+                    </dependency>
                 </dependencies>
             </plugin>
             <plugin>
@@ -452,11 +442,11 @@
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>2.4</version>
                     <configuration>
-							  <descriptors>
-									<descriptor>src/main/assembly/assembly-src.xml</descriptor>
-									<descriptor>src/main/assembly/assembly-bin.xml</descriptor>
-							  </descriptors>
-                    		<attach>false</attach>
+                        <descriptors>
+                            <descriptor>src/main/assembly/assembly-src.xml</descriptor>
+                            <descriptor>src/main/assembly/assembly-bin.xml</descriptor>
+                        </descriptors>
+                        <attach>false</attach>
                         <finalName>${project.artifactId}-${project.version}</finalName>
                     </configuration>
                 </plugin>
@@ -986,9 +976,9 @@
             <version>2.7.7</version>
         </dependency>
         <dependency>
-        	<groupId>net.sf.ehcache</groupId>
-        	<artifactId>ehcache-core</artifactId>
-        	<version>2.5.5</version>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache-core</artifactId>
+            <version>2.5.5</version>
         </dependency>
         <dependency>
             <groupId>javax.mail</groupId>
@@ -1041,7 +1031,6 @@
                     <artifactId>commons-codec</artifactId>
                     <groupId>commons-codec</groupId>
                 </exclusion>
-
             </exclusions>
         </dependency>
         <dependency>
@@ -1411,6 +1400,7 @@
                 <main.dataSource.driverClass>org.hsqldb.jdbcDriver</main.dataSource.driverClass>
                 <main.hibernate.dialect>org.hibernate.dialect.HSQLDialect</main.hibernate.dialect>
                 <jetty.configSrc>${project.basedir}/src/main/jetty</jetty.configSrc>
+                <jetty.config>${project.build.directory}/jetty-itracker</jetty.config>
             </properties>
             <build>
                 <resources>
@@ -1424,7 +1414,6 @@
                     </resource>
                 </resources>
                 <plugins>
-
                     <plugin>
                         <groupId>org.eclipse.jetty</groupId>
                         <artifactId>jetty-maven-plugin</artifactId>
@@ -1432,6 +1421,11 @@
                         <configuration>
                             <stopKey>stop</stopKey>
                             <stopPort>120039</stopPort>
+                            <jettyXml>${jetty.config}/jetty.xml</jettyXml>
+                            <webAppConfig>
+                                <contextPath>/${application.path}</contextPath>
+                                <jettyEnvXml>${jetty.config}/jetty-env.xml</jettyEnvXml>
+                            </webAppConfig>
                             <systemProperties>
                                 <systemProperty>
                                     <name>java.naming.factory.initial</name>
@@ -1447,12 +1441,6 @@
                                 <port>${application.port}</port>
                                 <idleTimeout>600000</idleTimeout>
                             </httpConnector>
-                            <!--connectors>
-                                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                                    <port>${application.port}</port>
-                                    <maxIdleTime>600000</maxIdleTime>
-                                </connector>
-                            </connectors-->
                         </configuration>
                     </plugin>
                 </plugins>
@@ -1528,31 +1516,10 @@
                                         <portName>it.application.port</portName>
                                         <portName>jetty.stopPort</portName>
                                     </portNames>
-                                    <!--outputFile>${project.build.testOutputDirectory}/dynamicports.properties</outputFile-->
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
-                    <!--plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>properties-maven-plugin</artifactId>
-                        <version>1.0-alpha-2</version>
-                        <executions>
-                            <execution>
-                                <!-  set the port-properties to runtime ->
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>read-project-properties</goal>
-                                </goals>
-                                <configuration>
-                                    <files>
-                                        <file>${project.build.testOutputDirectory}/dynamicports.properties</file>
-                                    </files>
-                                    <quiet>false</quiet>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin-->
 
                     <plugin>
                         <artifactId>maven-antrun-plugin</artifactId>
@@ -1560,8 +1527,8 @@
                         <executions>
 
                             <execution>
-                               <id>output-info-process-sources</id>
-                               <phase>process-sources</phase>
+                                <id>output-info-process-sources</id>
+                                <phase>process-sources</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
@@ -1572,8 +1539,8 @@
                                 </configuration>
                             </execution>
                             <execution>
-                               <id>output-info-process-test-classes</id>
-                               <phase>process-test-classes</phase>
+                                <id>output-info-process-test-classes</id>
+                                <phase>process-test-classes</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
@@ -1584,8 +1551,8 @@
                                 </configuration>
                             </execution>
                             <execution>
-                               <id>output-info-pre-integration-test</id>
-                               <phase>pre-integration-test</phase>
+                                <id>output-info-pre-integration-test</id>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
@@ -1604,7 +1571,8 @@
                                 <configuration>
                                     <skip>false</skip>
                                     <target>
-                                        <copy overwrite="true" file="${project.build.testOutputDirectory}/log4j.xml" todir="${project.build.testOutputDirectory}/" />
+                                        <copy overwrite="true" file="${project.build.testOutputDirectory}/log4j.xml"
+                                              todir="${project.build.testOutputDirectory}/"/>
                                     </target>
                                 </configuration>
                             </execution>
@@ -1618,23 +1586,25 @@
                                 <configuration>
                                     <failOnError>true</failOnError>
                                     <target>
-                                        <property name="plugin_classpath" refid="maven.plugin.classpath" />
+                                        <property name="maven.plugin.classpath" refid="maven.plugin.classpath"/>
 
                                         <delete failonerror="false" verbose="true">
-                                            <fileset dir="${java.io.tmpdir}/hsqldb" includes="itrackerdev-test*" />
+                                            <fileset dir="${java.io.tmpdir}/hsqldb" includes="itrackerdev-test*"/>
                                         </delete>
 
-                                        <java fork="true" spawn="true" dir="${java.io.tmpdir}" classname="org.hsqldb.Server" classpath="${plugin_classpath}">
-                                            <arg value="-database.0" />
-                                            <arg value="${java.io.tmpdir}/hsqldb/${selenium.datasource.name}" />
-                                            <arg value="-dbname.0" />
-                                            <arg value="${selenium.datasource.name}" />
-                                            <arg value="-port" />
-                                            <arg value="${selenium.datasource.port}" />
-                                            <arg value="--no_system_exit" />
-                                            <arg value="true" />
+                                        <java fork="true" spawn="true" dir="${java.io.tmpdir}"
+                                              classname="org.hsqldb.Server" classpath="${maven.plugin.classpath}">
+                                            <arg value="-database.0"/>
+                                            <arg value="${java.io.tmpdir}/hsqldb/${selenium.datasource.name}"/>
+                                            <arg value="-dbname.0"/>
+                                            <arg value="${selenium.datasource.name}"/>
+                                            <arg value="-port"/>
+                                            <arg value="${selenium.datasource.port}"/>
+                                            <arg value="--no_system_exit"/>
+                                            <arg value="true"/>
                                         </java>
-                                        <echo>Database started on ${selenium.datasource.port}:${selenium.datasource.name} (CP: ${plugin_classpath})</echo>
+                                        <echo>Database started on ${selenium.datasource.port}:${selenium.datasource.name} (CP: ${maven.plugin.classpath})
+                                        </echo>
                                     </target>
                                 </configuration>
                             </execution>
@@ -1745,7 +1715,6 @@
                     </plugin>
 
 
-
                     <plugin>
                         <groupId>org.eclipse.jetty</groupId>
                         <artifactId>jetty-maven-plugin</artifactId>
@@ -1764,7 +1733,6 @@
                                     <value>rmi://localhost:8099</value>
                                 </systemProperty>
                             </systemProperties>
-                            <useProvidedScope>true</useProvidedScope>
                             <daemon>true</daemon>
                             <waitForChild>false</waitForChild>
 
