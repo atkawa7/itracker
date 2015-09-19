@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<bean:define id="pageTitleKey" value="itracker.web.issueactivity.title"/>
-<bean:define id="pageTitleArg" value="${issueId}"/>
+<bean:define toScope="request" id="pageTitleKey" value="itracker.web.issueactivity.title"/>
+<bean:define toScope="request" id="pageTitleArg" value="${issueId}"/>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
@@ -15,7 +15,7 @@
 
             <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
               <tr>
-                <td class="editColumnTitle" colspan="7">Activity:</td>
+        <td class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.activity" />:</td>
               </tr>
               <tr align="left" class="listHeading">
                 <td><it:message key="itracker.web.attr.date"/></td>

@@ -1,8 +1,8 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<bean:define id="pageTitleKey" value="itracker.web.listissues.title"/>
-<bean:define id="pageTitleArg" value="${project.name}"/>
+<bean:define toScope="request" id="pageTitleKey" value="itracker.web.listissues.title"/>
+<bean:define toScope="request" id="pageTitleArg" value="${project.name}"/>
 
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
@@ -67,7 +67,7 @@
             <td></td>  <td>
                 <c:choose>
             		<c:when test="${issuePTO.unassigned}">
-            			<c:out value="${itracker_web_generic_unassigned}"/>
+                        <it:message key="itracker.web.generic.unassigned"/>
             	 	</c:when>
             		<c:otherwise><%-- ${issuePTO.issue.owner.firstName}. ${issuePTO.issue.owner.lastName}--%>
             		  <it:formatIssueOwner issue="${issuePTO.issue}" format="short" />
