@@ -1,15 +1,14 @@
 package org.itracker.web.util;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 import org.itracker.model.util.IssueUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.ptos.IssuePTO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +59,7 @@ public class ListIssuesActionUtil {
 
 
 
-	public static ActionForward init(Action action, ActionMapping mapping, HttpServletRequest request) {
+	public static ActionForward init(Action action, ActionMessages messages, ActionMapping mapping, HttpServletRequest request) {
 		
     Locale locale = LoginUtilities.getCurrentLocale(request);
     // get the services
@@ -72,14 +71,26 @@ public class ListIssuesActionUtil {
     Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(session);
     // get the request parameters
     UserPreferences userPrefs = (UserPreferences) request.getSession().getAttribute(ListIssuesActionUtil.SES_ATT_NAME_PREFERENCES);
-    Integer projectId = Integer.valueOf(request.getParameter(ListIssuesActionUtil.PARAM_NAME_PROJECT_ID) == null ? "-1" : (request.getParameter(ListIssuesActionUtil.PARAM_NAME_PROJECT_ID)));
+
+    Integer projectId = NumberUtils.createInteger(request.getParameter(ListIssuesActionUtil.PARAM_NAME_PROJECT_ID));
     log.info("execute: " + ListIssuesActionUtil.PARAM_NAME_PROJECT_ID + " was: " + projectId);
-    
+
+    if (null == projectId) {
+        messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                "itracker.web.error.invalidproject"));
+        return mapping.findForward("error");
+
+    }
     // get some values
     int status = (userPrefs.getShowClosedOnIssueList() ? IssueUtilities.STATUS_END : IssueUtilities.STATUS_CLOSED);
     
     // do some service calls
     Project project = projectService.getProject(projectId);
+    if (null == project) {
+        messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+                "itracker.web.error.invalidproject"));
+        return mapping.findForward("error");
+    }
     log.info("execute: projectModel_Name: " + project.getName());
     List<Issue> listIssues = issueService.getIssuesByProjectId(projectId, status);
     log.info("execute: issues found for this project: " + listIssues.size());
@@ -124,6 +135,12 @@ public class ListIssuesActionUtil {
     int numViewable = 0;
     boolean hasIssues = false;
     boolean hasViewAll = UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_VIEW_ALL);
+
+    if (!hasViewAll) {
+        if (null == userPermissions.get(projectId)) {
+            return mapping.findForward("unauthorized");
+        }
+    }
     
     if(hasViewAll) {
         numViewable = listIssues.size();

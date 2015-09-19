@@ -8,16 +8,27 @@
 </c:if>
 <c:set var="pageTitle">
     <c:choose>
-        <c:when test="${empty pageTitleKey}"><tiles:getAsString name="title" ignore="false"/>
+        <c:when test="${empty pageTitleKey}">
+            <%-- looking for tiles pageTitleKey to translate --%>
+            <bean:define id="pageTitleKey"><tiles:getAsString name="pageTitleKey" ignore="true"/></bean:define>
+            <c:choose>
+                <c:when test="${empty pageTitleKey}">
+                    <tiles:getAsString name="title" ignore="false"/>
+                </c:when>
+                <c:otherwise>
+                    <it:message key="${pageTitleKey}" arg0="${pageTitleArg}" />
+                </c:otherwise>
+            </c:choose>
         </c:when>
-        <c:otherwise><it:message
+
+        <c:otherwise><%-- Looking for untranslated fallback title --%><it:message
                 	key="${pageTitleKey}" arg0="${pageTitleArg}" />
         </c:otherwise>
     </c:choose>
 </c:set>
 
 <c:set var="pageTitleFull">
-    <c:out value="${ siteTitle }: ${ pageTitle }" />
+    Test <c:out value="${ siteTitle }: ${ pageTitle }" />
 </c:set>
 
 <html>

@@ -19,6 +19,7 @@
 package org.itracker.web.actions.issuesearch;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.IssueSearchQuery;
@@ -65,15 +66,11 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
             request.setAttribute("rh", reportService);
             request.setAttribute("uh", userService);
 
-            String pageTitleKey = "itracker.web.search.title";
-            String pageTitleArg = "";
-            request.setAttribute("pageTitleKey", pageTitleKey);
-            request.setAttribute("pageTitleArg", pageTitleArg);
+            String projectId = request.getParameter("projectId");
 
             UserPreferences userPrefs = (UserPreferences) session.getAttribute(Constants.PREFERENCES_KEY);
             Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(session);
 
-            String projectId = request.getParameter("projectId");
             String action = (String) PropertyUtils.getSimpleProperty(form, "action");
 
             SearchForm searchForm = (SearchForm) form;
@@ -119,26 +116,28 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
             List<Project> availableProjectsList = new ArrayList<Project>();
             List<Integer> selectedProjectsList = new ArrayList<Integer>();
 
-            for (int i = 0; i < projects.size(); i++) {
-                if (!UserUtilities.hasPermission(userPermissions, projects.get(i).getId(), UserUtilities.PERMISSION_VIEW_ALL) &&
-                        !UserUtilities.hasPermission(userPermissions, projects.get(i).getId(), UserUtilities.PERMISSION_VIEW_USERS)) {
+            for (Project project : projects) {
+                if (!UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_VIEW_ALL) &&
+                        !UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_VIEW_USERS)) {
                     continue;
                 }
 
-                log.debug("Adding project " + projects.get(i).getId() + " to list of available projects.");
-                availableProjectsList.add(projects.get(i));
+                log.debug("Adding project " + project.getId() + " to list of available projects.");
+                availableProjectsList.add(project);
 
-                if (projectId != null && projects.get(i).getId().toString().equals(projectId)) {
+                if (projectId != null && StringUtils.equals(String.valueOf(project.getId()), projectId)) {
                     query.setType(IssueSearchQuery.TYPE_PROJECT);
-                    query.setProject(projects.get(i));
+                    query.setProject(project);
+                    String pageTitleKey = "itracker.web.search.project.title";
+                    String pageTitleArg = project.getName();
+                    request.setAttribute("pageTitleKey", pageTitleKey);
+                    request.setAttribute("pageTitleArg", pageTitleArg);
                     break;
                 } else {
-                    for (int j = 0; j < query.getProjects().size(); j++) {
-                        if (query.getProjects().get(j).equals(projects.get(i).getId())) {
-                            selectedProjectsList.add(projects.get(i).getId());
-                            break;
-                        }
+                    if (query.getProjects().contains(project.getId())) {
+                        selectedProjectsList.add(project.getId());
                     }
+
                 }
             }
 

@@ -133,7 +133,7 @@ public class SelfRegisterAction extends ItrackerBaseAction {
             return mapping.getInputForward();
         }
 
-        return mapping.findForward("login");
+        return mapping.findForward("arrivalforward");
     }
 
 }

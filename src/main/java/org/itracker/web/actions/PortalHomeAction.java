@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 import org.itracker.model.util.IssueUtilities;
 import org.itracker.model.util.UserUtilities;
@@ -199,9 +198,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 }
                 
 
-                
-                request.setAttribute("itracker_web_generic_unassigned", ITrackerResources.getString("itracker.web.generic.unassigned", locale));
-                
+
                 // PUTTING ISSUES INTO THE REQUEST SCOPE
 				LOGGER.info("ownedIssues Size: " + ownedIssuePTOs.size());
 				request.setAttribute("ownedIssues", ownedIssuePTOs);
@@ -217,13 +214,13 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 
                 
                 
-                LOGGER.info("Found forward: "+forward.getName()+" and stepped into action method that's populating portalhome");
-                
-                
-                String pageTitleKey = "itracker.web.index.title";
-                String pageTitleArg = "";
-                request.setAttribute(Constants.PAGE_TITLE_KEY,pageTitleKey);
-                request.setAttribute(Constants.PAGE_TITLE_ARG,pageTitleArg);
+                LOGGER.info("Found forward: " + forward.getName() + " and stepped into action method that's populating portalhome");
+
+//
+//                String pageTitleKey = "itracker.web.index.title";
+//                String pageTitleArg = "";
+//                request.setAttribute(Constants.PAGE_TITLE_KEY,pageTitleKey);
+//                request.setAttribute(Constants.PAGE_TITLE_ARG,pageTitleArg);
                 
                 request.setAttribute("ih",issueService);
                 request.setAttribute("ph",projectService);

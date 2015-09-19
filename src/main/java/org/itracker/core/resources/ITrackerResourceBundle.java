@@ -28,12 +28,10 @@ public class ITrackerResourceBundle extends ResourceBundle {
 
     private static final Logger log = Logger
             .getLogger(ITrackerResourceBundle.class);
-    private final HashMap<String, Object> data = new HashMap<String, Object>();
-    /**
-     * TODO should dataArray be re-factored out?
-     */
-    private Object[][] dataArray = null;
+    private final Properties data = new Properties();
+
     private ResourceBundle propertiesBundle;
+
 
     static ResourceBundle loadBundle() {
         return new ITrackerResourceBundle();
@@ -43,11 +41,16 @@ public class ITrackerResourceBundle extends ResourceBundle {
         return new ITrackerResourceBundle(locale);
     }
 
+    @Deprecated
     static ResourceBundle loadBundle(Locale locale, Object[][] data) {
         return new ITrackerResourceBundle(locale, data);
     }
 
+    @Deprecated
     static ResourceBundle loadBundle(Locale locale, List<Language> items) {
+        return new ITrackerResourceBundle(locale, items);
+    }
+    static ResourceBundle loadBundle(Locale locale, Properties items) {
         return new ITrackerResourceBundle(locale, items);
     }
 
@@ -81,6 +84,11 @@ public class ITrackerResourceBundle extends ResourceBundle {
 
     }
 
+    public ITrackerResourceBundle(Locale locale, Properties items) {
+        this(locale);
+        this.data.putAll(items);
+    }
+
     public static ResourceBundle getBundle() {
         return ITrackerResources.getBundle();
     }
@@ -101,40 +109,20 @@ public class ITrackerResourceBundle extends ResourceBundle {
      * @param locale
      * @param items
      */
+    @Deprecated
     private ITrackerResourceBundle(Locale locale, List<Language> items) {
         this(locale);
         setContents(items);
     }
 
-    /**
-     * @return should be private or removed
-     * @deprecated
-     */
-    public Object[][] getContents() {
-        // Only load the array if it is requested for some reason.
-        if (dataArray == null) {
-            int i = 0;
-            Object[][] newData = new Object[2][data.size()];
-            Enumeration<String> keys = getKeys();
-            while (keys.hasMoreElements()) {
-                newData[0][i] = keys.nextElement();
-                newData[1][i] = data.get(newData[0][i]);
-            }
-
-            this.dataArray = newData;
-        }
-
-        return dataArray.clone();
-    }
-
+    @Deprecated
     private void setContents(List<Language> content) {
         if (content != null) {
             synchronized (data) {
                 data.clear();
-                this.dataArray = null;
-                for (int i = 0; i < content.size(); i++) {
-                    data.put(content.get(i).getResourceKey(), content.get(i)
-                            .getResourceValue());
+                for (Language aContent : content) {
+                    data.put(aContent.getResourceKey(),
+                            aContent.getResourceValue());
                 }
             }
         }
@@ -143,12 +131,12 @@ public class ITrackerResourceBundle extends ResourceBundle {
     /**
      * @param content
      */
+    @Deprecated
     private void setContents(Object[][] content) {
         if (content != null && content.length == 2
                 && content[0].length == content[1].length) {
             synchronized (data) {
                 data.clear();
-                this.dataArray = null;
                 for (int i = 0; i < content[0].length; i++) {
                     data.put((String) content[0][i], content[1][i]);
                 }
@@ -174,25 +162,23 @@ public class ITrackerResourceBundle extends ResourceBundle {
         return false;
     }
 
-    // public void updateValue(String key, Object value) {
-    // synchronized (data) {
-    // data.put(key, value);
-    // }
-    // }
 
     public void updateValue(String key, String value) {
+        if (null == key) {
+            throw new IllegalArgumentException("key must not be null");
+        }
+        if (null == value) {
+            throw new IllegalArgumentException("value must not be null");
+        }
         synchronized (data) {
             data.put(key, value);
-            this.dataArray = null;
         }
     }
 
+    @Deprecated
     public void updateValue(Language model) {
         if (model != null) {
-            synchronized (data) {
-                data.put(model.getResourceKey(), model.getResourceValue());
-                this.dataArray = null;
-            }
+            updateValue(model.getResourceKey(), model.getResourceValue());
         }
     }
 
@@ -205,7 +191,6 @@ public class ITrackerResourceBundle extends ResourceBundle {
                 } else {
                     data.remove(key);
                 }
-                this.dataArray = null;
             }
         }
     }
@@ -224,9 +209,6 @@ public class ITrackerResourceBundle extends ResourceBundle {
         if (null == value) {
             try {
                 value = propertiesBundle.getObject(key);
-
-                // log.debug("handleGetObject2: "
-                // + key + "=" + value);
             } catch (MissingResourceException e) {
                 if (log.isDebugEnabled()) {
                     log.debug("handleGetObject: " + key, e);
@@ -242,7 +224,7 @@ public class ITrackerResourceBundle extends ResourceBundle {
      * enumerator.
      */
     public Enumeration<String> getKeys() {
-        Set<String> set = new TreeSet<String>(data.keySet());
+        Set set = new TreeSet(data.keySet());
         if (null != parent) {
             Enumeration<String> keys = parent.getKeys();
             String key;
@@ -262,6 +244,6 @@ public class ITrackerResourceBundle extends ResourceBundle {
         return Collections.enumeration(set);
     }
 
-    public static interface DirtyKey {
+    public interface DirtyKey {
     }
 }
