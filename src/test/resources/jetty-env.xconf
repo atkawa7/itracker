@@ -23,6 +23,12 @@
         </Arg>
     </New>
 
+    <New id="db_dialect" class="org.eclipse.jetty.plus.jndi.EnvEntry">
+        <Arg><Ref id='wac'/></Arg>
+        <Arg>java:comp/env/itracker/db_dialect</Arg>
+        <Arg>${main.hibernate.dialect}</Arg>
+        <Arg type="java.lang.Boolean">true</Arg>
+    </New>
     <New id="itracker_ds" class="org.eclipse.jetty.plus.jndi.Resource">
         <Arg>java:comp/env/jdbc/itracker_ds</Arg>
         <Arg>
@@ -37,7 +43,7 @@
             </New>
         </Arg>
     </New>
-    <New class="org.eclipse.jetty.plus.jndi.EnvEntry">
+    <New id="system_base_url" class="org.eclipse.jetty.plus.jndi.EnvEntry">
         <Arg><Ref id='wac'/></Arg>
         <Arg>itracker/system_base_url</Arg>
         <Arg>http://${application.host}:${it.application.port}/${application.path}/env</Arg>
