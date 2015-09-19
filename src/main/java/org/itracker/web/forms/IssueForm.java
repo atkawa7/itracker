@@ -71,7 +71,7 @@ public class IssueForm extends ITrackerForm {
     private String history = null;
     // lets try to put Integer,String here:
     private HashMap<String, String> customFields = new HashMap<String, String>();
-    private Integer relationType = null;
+    private IssueRelation.Type relationType = null;
     private Integer relatedIssueId = null;
 
     /**
@@ -107,7 +107,8 @@ public class IssueForm extends ITrackerForm {
         String currentValue;
         for (ProjectScript currentScript : scriptsToRun) {
             try {
-                currentValue = currentValues.get(currentScript.getFieldId());
+                currentValue = currentValues.get(currentScript.getFieldId()
+                * (currentScript.getFieldType() == Configuration.Type.customfield?1:-1));
                 log.debug("Running script " + currentScript.getScript().getId()
                         + " with priority " + currentScript.getPriority());
 
@@ -115,16 +116,32 @@ public class IssueForm extends ITrackerForm {
                         + " (" + currentScript.getFieldId() + ") is "
                         + currentValue + "'");
 
-                List<NameValuePair> options = optionValues.get(currentScript.getFieldId());
-                if (null == options) {
-                    options = new ArrayList<NameValuePair>();
-                    optionValues.put(currentScript.getFieldId(), options);
+                List<NameValuePair> options;
+                if (currentScript.getFieldType() == Configuration.Type.customfield) {
+                    options = optionValues.get(currentScript.getFieldId());
+                    if (null == options) {
+                        options = Collections.emptyList();
+                        optionValues.put(currentScript.getFieldId(), options);
+                    }
+                } else {
+                    if (currentScript.getFieldType() == Configuration.Type.status) {
+                        options = IssueUtilities.getStatuses(ITrackerResources.getLocale());
+                    } else if (currentScript.getFieldType() == Configuration.Type.resolution) {
+                        options = IssueUtilities.getResolutions(ITrackerResources.getLocale());
+                    } else if (currentScript.getFieldType() == Configuration.Type.severity) {
+                        options = IssueUtilities.getSeverities(ITrackerResources.getLocale());
+                    } else {
+                        // TODO owner?
+                        options = Collections.emptyList();
+                    }
+                    optionValues.put(currentScript.getFieldType().getCode()*-1, options);
                 }
+
                 currentValue = processFieldScript(currentScript, event,
-                        currentScript.getFieldId(),
                         currentValue,
                         options, currentErrors);
-                currentValues.put( currentScript.getFieldId(), currentValue );
+                currentValues.put( currentScript.getFieldId()* (currentScript.getFieldType() == Configuration.Type.customfield?1:-1), currentValue );
+
 
                 log.debug("After script current value for field " + IssueUtilities.getFieldName(currentScript.getFieldId())
                         + " (" + currentScript.getFieldId() + ") is "
@@ -136,61 +153,37 @@ public class IssueForm extends ITrackerForm {
             }
         }
 
-        for (Integer fieldId: currentValues.keySet()) {
-            getCustomFields().put(String.valueOf(fieldId),
-                    currentValues.get(fieldId));
-        }
-    }
 
-    /**
-     * Run appropriate script, selecting it from provided list by matching
-     * event and field.
-     *
-     * @param projectScripts is a list of provided scripts.
-     * @param event          is an event type.
-     * @param fieldId        is a field, associated with event.
-     * @param currentValue   the current value
-     * @param optionValues   is a set of current values.
-     * @param currentErrors  is a container for errors.
-     * @return new set of values.
-     */
-    public String processFieldScripts(List<ProjectScript> projectScripts, int event, Integer fieldId, String currentValue, List<NameValuePair> optionValues, ActionErrors currentErrors) throws WorkflowException {
-        if (projectScripts == null || projectScripts.size() == 0 || fieldId == null) {
-            return null;
-        }
-        log.debug("Processing " + projectScripts.size() + " field scripts for project " + projectScripts.get(0).getProject().getId());
-
-        List<ProjectScript> scriptsToRun = new LinkedList<ProjectScript>();
-        for (int i = 0; i < projectScripts.size(); i++) {
-            if (projectScripts.get(i).getScript().getEvent() == event && fieldId.equals(projectScripts.get(i).getFieldId())) {
-                int insertIndex = 0;
-                for (insertIndex = 0; insertIndex < scriptsToRun.size(); insertIndex++) {
-                    if (projectScripts.get(i).getPriority() < ((ProjectScript) scriptsToRun.get(insertIndex)).getPriority()) {
+        // apply new values
+        for (ProjectScript script: projectScriptModels) {
+            if (script.getScript().getEvent() == event) {
+                final String val;
+                switch (script.getFieldType()) {
+                    case status:
+                        val = currentValues.get(Configuration.Type.status.getCode()*-1);
+                        if (null != val)
+                        setStatus(Integer.valueOf(val));
                         break;
-                    }
+                    case severity:
+                        val = currentValues.get(Configuration.Type.severity.getCode()*-1);
+                        if (null != val)
+                        setSeverity(Integer.valueOf(currentValues.get(Configuration.Type.severity.getCode()*-1)));
+                        break;
+                    case resolution:
+                        val = currentValues.get(Configuration.Type.resolution.getCode()*-1);
+                        setResolution(val);
+                        break;
+                    case customfield:
+                        getCustomFields().put(String.valueOf(script.getFieldId()), currentValues.get(script.getFieldId()));
+                        break;
+                    default:
+                        log.warn("unsupported field type in script: " + script.getFieldType() + " in project " + script.getProject().getName());
+                        break;
                 }
-                scriptsToRun.add(insertIndex, projectScripts.get(i));
             }
         }
-        log.debug(scriptsToRun.size() + " eligible scripts found for event " + event + " on field " + fieldId);
-
-        String result = currentValue;
-        for (int i = 0; i < scriptsToRun.size(); i++) {
-            ProjectScript currentScript = (ProjectScript) scriptsToRun.get(i);
-            try {
-                if (log.isDebugEnabled()) {
-                    log.debug("Running script " + currentScript.getScript().getId() + " with priority "
-                            + currentScript.getPriority());
-                }
-                result = processFieldScript(currentScript, event, fieldId,
-                        result, optionValues, currentErrors);
-            } catch (WorkflowException we) {
-                log.error("Error processing script " + currentScript.getScript().getId() + ": " + we.getMessage());
-            }
-        }
-
-        return result;
     }
+
 
     /**
      * Run provided BEANSHELL script against form instance, taking into account
@@ -201,13 +194,12 @@ public class IssueForm extends ITrackerForm {
      *
      * @param projectScript is a script to run.
      * @param event         is an event type.
-     * @param fieldId       is a field id associated with event.
      * @param currentValue  the current field value
      * @param optionValues  is a set of valid option-values.
      * @param currentErrors is a container for occured errors.
      * @return new changed currentValue.
      */
-    public String processFieldScript(ProjectScript projectScript, int event, Integer fieldId, String currentValue, List<NameValuePair> optionValues, ActionMessages currentErrors) throws WorkflowException {
+    public String processFieldScript(ProjectScript projectScript, int event, String currentValue, List<NameValuePair> optionValues, ActionMessages currentErrors) throws WorkflowException {
         if (projectScript == null) {
             throw new WorkflowException("ProjectScript was null.", WorkflowException.INVALID_ARGS);
         }
@@ -215,21 +207,24 @@ public class IssueForm extends ITrackerForm {
             throw new WorkflowException("Errors was null.", WorkflowException.INVALID_ARGS);
         }
 
-        String result = "";
+        String result = currentValue;
 
         try {
             Interpreter bshInterpreter = new Interpreter();
             bshInterpreter.set("event", event);
-            bshInterpreter.set("fieldId", fieldId);
+            bshInterpreter.set("fieldId", projectScript.getFieldId()
+                    * (projectScript.getFieldType()== Configuration.Type.customfield?1:-1));
             currentValue = StringUtils.defaultString(currentValue);
             bshInterpreter.set("currentValue", currentValue);
             bshInterpreter.set("optionValues", optionValues);
             bshInterpreter.set("currentErrors", currentErrors);
             bshInterpreter.set("currentForm", this);
 
-            bshInterpreter.eval(projectScript.getScript().getScript());
+            Object obj = bshInterpreter.eval(projectScript.getScript().getScript());
+            if (obj instanceof CharSequence) {
+                result = String.valueOf(obj);
+            }
 
-            result = String.valueOf(bshInterpreter.get("currentValue"));
             if (log.isDebugEnabled()) {
                 log.debug("processFieldScript: Script returned current value of '" + optionValues + "' (" + (optionValues != null ? optionValues.getClass().getName() : "NULL") + ")");
             }
@@ -910,8 +905,15 @@ public class IssueForm extends ITrackerForm {
             throws WorkflowException {
         final Map<Integer, String> values = new HashMap<Integer, String>(options.size());
         for (CustomField field: project.getCustomFields()) {
-            values.put(field.getId(), getCustomFields().get(String.valueOf(field.getId())));
+            values.put(field.getId()
+                    , getCustomFields().get(String.valueOf(field.getId())));
         }
+        values.put(Configuration.Type.status.getCode() * -1,
+                String.valueOf(getStatus()));
+        values.put(Configuration.Type.severity.getCode() * -1,
+                String.valueOf(getSeverity()));
+        values.put(Configuration.Type.resolution.getCode() * -1,
+                getResolution());
 
         processFieldScripts(project.getScripts(),
                 event, values, options, errors);
@@ -1037,11 +1039,11 @@ public class IssueForm extends ITrackerForm {
         this.relatedIssueId = relatedIssueId;
     }
 
-    public Integer getRelationType() {
+    public IssueRelation.Type getRelationType() {
         return relationType;
     }
 
-    public void setRelationType(Integer relationType) {
+    public void setRelationType(IssueRelation.Type relationType) {
         this.relationType = relationType;
     }
 

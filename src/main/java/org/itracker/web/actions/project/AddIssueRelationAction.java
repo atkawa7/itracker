@@ -22,6 +22,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.Issue;
+import org.itracker.model.IssueRelation;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 import org.itracker.model.util.IssueUtilities;
@@ -62,7 +63,7 @@ public class AddIssueRelationAction extends ItrackerBaseAction {
             caller = (String) PropertyUtils.getSimpleProperty(form, "caller");
             issueId = (Integer) PropertyUtils.getSimpleProperty(form, "issueId");
             Integer relatedIssueId = (Integer) PropertyUtils.getSimpleProperty(form, "relatedIssueId");
-            Integer relationType = (Integer) PropertyUtils.getSimpleProperty(form, "relationType");
+            IssueRelation.Type relationType = (IssueRelation.Type) PropertyUtils.getSimpleProperty(form, "relationType");
 
             HttpSession session = request.getSession(true);
             User currUser = (User) session.getAttribute(Constants.USER_KEY);

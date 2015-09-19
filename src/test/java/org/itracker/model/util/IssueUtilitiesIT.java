@@ -185,91 +185,79 @@ public class IssueUtilitiesIT extends AbstractDependencyInjectionTest {
     public void testGetRelationNameByLocaleWithInt() {
         assertEquals("test-cloned_c",
                 IssueUtilities.getRelationName(
-                        IssueUtilities.RELATION_TYPE_CLONED_C,
+                        IssueRelation.Type.CLONED_C,
                         new Locale("test")));
         assertEquals("test-cloned_p",
                 IssueUtilities.getRelationName(
-                        IssueUtilities.RELATION_TYPE_CLONED_P,
+                        IssueRelation.Type.CLONED_P,
                         new Locale("test")));
         assertEquals("test-dependent_c",
                 IssueUtilities.getRelationName(
-                        IssueUtilities.RELATION_TYPE_DEPENDENT_C,
+                        IssueRelation.Type.DEPENDENT_C,
                         new Locale("test")));
         assertEquals("test-dependent_p",
                 IssueUtilities.getRelationName(
-                        IssueUtilities.RELATION_TYPE_DEPENDENT_P,
+                        IssueRelation.Type.DEPENDENT_P,
                         new Locale("test")));
         assertEquals("test-duplicate_c",
                 IssueUtilities.getRelationName(
-                        IssueUtilities.RELATION_TYPE_DUPLICATE_C,
+                        IssueRelation.Type.DUPLICATE_C,
                         new Locale("test")));
         assertEquals("test-duplicate_p",
                 IssueUtilities.getRelationName(
-                        IssueUtilities.RELATION_TYPE_DUPLICATE_P,
+                        IssueRelation.Type.DUPLICATE_P,
                         new Locale("test")));
         assertEquals("test-related_c",
                 IssueUtilities.getRelationName(
-                        IssueUtilities.RELATION_TYPE_RELATED_C,
+                        IssueRelation.Type.RELATED_C,
                         new Locale("test")));
         assertEquals("test-related_p",
                 IssueUtilities.getRelationName(
-                        IssueUtilities.RELATION_TYPE_RELATED_P,
+                        IssueRelation.Type.RELATED_P,
                         new Locale("test")));
         assertEquals("test-split_c",
                 IssueUtilities.getRelationName(
-                        IssueUtilities.RELATION_TYPE_SPLIT_C,
+                        IssueRelation.Type.SPLIT_C,
                         new Locale("test")));
         assertEquals("test-split_p",
                 IssueUtilities.getRelationName(
-                        IssueUtilities.RELATION_TYPE_SPLIT_P,
+                        IssueRelation.Type.SPLIT_P,
                         new Locale("test")));
     }
 
-    @Test
-    public void testGetRelationNameByLocaleWithString() {
-        assertEquals("test-duplicate_c",
-                IssueUtilities.getRelationName(
-                        "4",
-                        new Locale("test")));
-        assertEquals("test-cloned_p",
-                IssueUtilities.getRelationName(
-                        "5",
-                        new Locale("test")));
-    }
 
     @Test
     public void testGetMatchingRelationType() {
-        assertEquals(IssueUtilities.RELATION_TYPE_RELATED_C,
+        assertEquals(IssueRelation.Type.RELATED_C,
                 IssueUtilities.getMatchingRelationType(
-                        IssueUtilities.RELATION_TYPE_RELATED_P));
-        assertEquals(IssueUtilities.RELATION_TYPE_RELATED_P,
+                        IssueRelation.Type.RELATED_P));
+        assertEquals(IssueRelation.Type.RELATED_P,
                 IssueUtilities.getMatchingRelationType(
-                        IssueUtilities.RELATION_TYPE_RELATED_C));
-        assertEquals(IssueUtilities.RELATION_TYPE_DUPLICATE_C,
+                        IssueRelation.Type.RELATED_C));
+        assertEquals(IssueRelation.Type.DUPLICATE_C,
                 IssueUtilities.getMatchingRelationType(
-                        IssueUtilities.RELATION_TYPE_DUPLICATE_P));
-        assertEquals(IssueUtilities.RELATION_TYPE_DUPLICATE_P,
+                        IssueRelation.Type.DUPLICATE_P));
+        assertEquals(IssueRelation.Type.DUPLICATE_P,
                 IssueUtilities.getMatchingRelationType(
-                        IssueUtilities.RELATION_TYPE_DUPLICATE_C));
-        assertEquals(IssueUtilities.RELATION_TYPE_CLONED_C,
+                        IssueRelation.Type.DUPLICATE_C));
+        assertEquals(IssueRelation.Type.CLONED_C,
                 IssueUtilities.getMatchingRelationType(
-                        IssueUtilities.RELATION_TYPE_CLONED_P));
-        assertEquals(IssueUtilities.RELATION_TYPE_CLONED_P,
+                        IssueRelation.Type.CLONED_P));
+        assertEquals(IssueRelation.Type.CLONED_P,
                 IssueUtilities.getMatchingRelationType(
-                        IssueUtilities.RELATION_TYPE_CLONED_C));
-        assertEquals(IssueUtilities.RELATION_TYPE_SPLIT_C,
+                        IssueRelation.Type.CLONED_C));
+        assertEquals(IssueRelation.Type.SPLIT_C,
                 IssueUtilities.getMatchingRelationType(
-                        IssueUtilities.RELATION_TYPE_SPLIT_P));
-        assertEquals(IssueUtilities.RELATION_TYPE_SPLIT_P,
+                        IssueRelation.Type.SPLIT_P));
+        assertEquals(IssueRelation.Type.SPLIT_P,
                 IssueUtilities.getMatchingRelationType(
-                        IssueUtilities.RELATION_TYPE_SPLIT_C));
-        assertEquals(IssueUtilities.RELATION_TYPE_DEPENDENT_C,
+                        IssueRelation.Type.SPLIT_C));
+        assertEquals(IssueRelation.Type.DEPENDENT_C,
                 IssueUtilities.getMatchingRelationType(
-                        IssueUtilities.RELATION_TYPE_DEPENDENT_P));
-        assertEquals(IssueUtilities.RELATION_TYPE_DEPENDENT_P,
+                        IssueRelation.Type.DEPENDENT_P));
+        assertEquals(IssueRelation.Type.DEPENDENT_P,
                 IssueUtilities.getMatchingRelationType(
-                        IssueUtilities.RELATION_TYPE_DEPENDENT_C));
-        assertEquals(-1, IssueUtilities.getMatchingRelationType(999));
+                        IssueRelation.Type.DEPENDENT_C));
     }
 
     @Test
@@ -645,7 +633,7 @@ public class IssueUtilitiesIT extends AbstractDependencyInjectionTest {
         related.setId(1);
         final IssueRelation relation =
                 new IssueRelation(issue, related,
-                        IssueUtilities.RELATION_TYPE_CLONED_C);
+                        IssueRelation.Type.CLONED_C);
         issue.getRelations().add(relation);
         assertTrue(IssueUtilities.hasIssueRelation(issue, 1));
         assertFalse(IssueUtilities.hasIssueRelation(issue, 2));

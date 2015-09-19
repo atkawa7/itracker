@@ -251,6 +251,7 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectScript addprojectScript = new ProjectScript();
         addprojectScript.setId(projectScript.getId());
         addprojectScript.setFieldId(projectScript.getFieldId());
+        addprojectScript.setFieldType(projectScript.getFieldType());
         addprojectScript.setPriority(projectScript.getPriority());
         addprojectScript.setProject(projectScript.getProject());
         addprojectScript.setScript(projectScript.getScript());

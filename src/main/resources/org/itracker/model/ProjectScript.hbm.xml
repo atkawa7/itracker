@@ -28,6 +28,15 @@
                     unique-key="project_script_ak"/>
         </property>
 
+        <property name="fieldType"
+                  unique-key="project_script_ak">
+            <column name="field_type" default="5" not-null="true"/>
+
+            <type name="org.itracker.persistence.dao.EnumCodeUserType">
+                <param name="enumClassName">org.itracker.model.Configuration$Type</param>
+            </type>
+        </property>
+
         <property name="priority">
             <column name="script_priority" not-null="true"/>
         </property>

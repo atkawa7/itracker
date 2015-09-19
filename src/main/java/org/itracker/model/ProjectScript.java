@@ -53,6 +53,7 @@ public class ProjectScript extends AbstractEntity {
      * </p>
      */
     private Integer fieldId;
+    private Configuration.Type fieldType;
 
     /**
      * The Beanshell script to execute.
@@ -103,6 +104,14 @@ public class ProjectScript extends AbstractEntity {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public Configuration.Type getFieldType() {
+        return fieldType;
+    }
+
+    public void setFieldType(Configuration.Type fieldType) {
+        this.fieldType = fieldType;
     }
 
     public static class FieldPriorityComparator implements

@@ -1,4 +1,5 @@
 /*
+/*
  * This software was designed and created by Jason Carroll.
  * Copyright (c) 2002, 2003, 2004 Jason Carroll.
  * The author can be reached at jcarroll@cowsultants.com
@@ -24,10 +25,10 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 import org.itracker.model.util.CustomFieldUtilities;
 import org.itracker.model.util.IssueUtilities;
+import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.persistence.dao.*;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.util.NamingUtilites;
-import org.itracker.model.util.SystemConfigurationUtilities;
 import org.jfree.util.Log;
 
 import javax.naming.InitialContext;
@@ -441,6 +442,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         // create project script and populate data
         ProjectScript editprojectScript = new ProjectScript();
         editprojectScript.setFieldId(projectScript.getFieldId());
+        editprojectScript.setFieldType(projectScript.getFieldType());
         editprojectScript.setPriority(projectScript.getPriority());
         editprojectScript.setProject(projectScript.getProject());
         editprojectScript.setScript(projectScript.getScript());
@@ -456,6 +458,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
         editprojectScript = projectScriptDAO.findByPrimaryKey(projectScript.getId());
         editprojectScript.setFieldId(projectScript.getFieldId());
+        editprojectScript.setFieldType(projectScript.getFieldType());
         editprojectScript.setPriority(projectScript.getPriority());
         editprojectScript.setProject(projectScript.getProject());
         editprojectScript.setScript(projectScript.getScript());
@@ -737,6 +740,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         return status;
     }
 
+    @Override
+    public String getLanguageValue(String key, Locale locale) {
+        return getLanguageItemByKey(key, locale).getResourceValue();
+    }
+
+
     public Language getLanguageItemByKey(String key, Locale locale) {
         Language languageItem;
         try {
@@ -905,64 +914,57 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     public List<Language> getLanguage(Locale locale) {
-
-
         Map<String, String> language = new HashMap<String, String>();
-
         if (locale == null) {
             locale = new Locale("");
         }
-
         String localeString = (locale.toString().equals("") ? ITrackerResources.BASE_LOCALE : locale.toString());
 
         Collection<Language> items = languageDAO.findByLocale(localeString);
-
-        for (Iterator<Language> iterator = items.iterator(); iterator.hasNext(); ) {
-
-            Language item = (Language) iterator.next();
-
+        for (Language item : items) {
             language.put(item.getResourceKey(), item.getResourceValue());
-
         }
 
         Language[] languageArray = new Language[language.size()];
-
         int i = 0;
 
-
-        for (Iterator<String> iterator = language.keySet().iterator(); iterator.hasNext(); i++) {
-
-            String key = (String) iterator.next();
-
-            languageArray[i] = new Language(localeString, key, (String) language.get(key));
-
+        for (String key : language.keySet()) {
+            languageArray[i] = new Language(localeString, key, language.get(key));
+            i++;
         }
-
         return Arrays.asList(languageArray);
+    }
 
+    public Properties getLanguageProperties(Locale locale) {
+        Properties properties = new Properties();
+        List<Language> lang = getLanguage(locale);
+        for (Language l : lang) {
+            properties.put(l.getResourceKey(), l.getResourceValue());
+        }
+        return properties;
     }
 
     public HashMap<String, List<String>> getAvailableLanguages() {
 
         HashMap<String, List<String>> languages = new HashMap<String, List<String>>();
-        List<Configuration> locales = getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_LOCALE);
+        List<Configuration> locales = getConfigurationItemsByType(Configuration.Type.locale);
 
         for (int i = 0; i < locales.size(); i++) {
-            String Baselocalestring = locales.get(i).getValue();
-            if (!ITrackerResources.BASE_LOCALE.equalsIgnoreCase(Baselocalestring)) {
+            String baselocalestring = locales.get(i).getValue();
+            if (!ITrackerResources.BASE_LOCALE.equalsIgnoreCase(baselocalestring)) {
 
-                if (Baselocalestring.length() == 2) {
+                if (baselocalestring.length() == 2) {
                     List<String> languageList = new ArrayList<String>();
-                    for (int j = 0; j < locales.size(); j++) {
-                        String localestring = locales.get(j).getValue();
+                    for (Configuration locale : locales) {
+                        String localestring = locale.getValue();
                         if (!ITrackerResources.BASE_LOCALE.equalsIgnoreCase(localestring) && localestring.length() > 2) {
                             String baseLanguage = localestring.substring(0, 2);
-                            if (baseLanguage.equals(Baselocalestring) && localestring.length() == 5 && localestring.indexOf('_') == 2) {
+                            if (baseLanguage.equals(baselocalestring) && localestring.length() == 5 && localestring.indexOf('_') == 2) {
                                 languageList.add(localestring);
                             }
                         }
                     }
-                    languages.put(Baselocalestring, languageList);
+                    languages.put(baselocalestring, languageList);
                 }
             }
         }

@@ -258,8 +258,9 @@
 <%-- TODO: this should be tested more, or postponed for next release? --%>
 
 <%-- REVIEW: Should it be possible to assign same script on different fields of the same project (HBM index)? --%>
+<c:if test="${currUser.superUser}" >
 <tr>
-    <td class="editColumnTitle" colspan="5"><it:message key="itracker.web.attr.scripts"/>:</td>
+    <td class="editColumnTitle" colspan="4"><it:message key="itracker.web.attr.scripts"/>:</td>
     <td align="right">
         <it:formatImageAction action="editprojectscriptform"
                               paramName="projectId"
@@ -271,30 +272,21 @@
                               textActionKey="itracker.web.image.create.texttag"/>
     </td>
 </tr>
+</c:if>
 <tr align="left" class="listHeading">
-    <td width="40"></td>
-    <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4"/></td>
     <td><it:message key="itracker.web.attr.field"/></td>
     <td><it:message key="itracker.web.attr.script"/></td>
     <td align="left"><it:message key="itracker.web.attr.priority"/></td>
     <td><it:message key="itracker.web.attr.event"/></td>
+    <td><!-- action --></td>
 </tr>
 
-<%-- TODO: fix the edit_projectscript.jsp before enabling this  --%>
 <c:if test="${ projectScripts != null && not empty projectScripts }">
 	<c:forEach items="${ projectScripts }" var="script" varStatus="i">
 	
 		<tr style="text-align: left;" class="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}">
 		
-		    <td style="text-align: right;" >
-		        <it:formatImageAction action="removeprojectscript"
-		                              paramName="delId"
-		                              paramValue="${ script.script.id }"
-		                              src="/themes/defaulttheme/images/delete.gif"
-		                              altKey="itracker.web.image.delete.projectscript.alt"
-		                              textActionKey="itracker.web.image.delete.texttag"/>
-		    </td>
-		    <td></td>
+
 		    <td>${ script.fieldName }
 		    </td>
 		    <td>${ script.script.script.name }
@@ -303,13 +295,22 @@
 		    </td>
 		    <td>${ script.eventName }
 		    </td>
-		    
+            <td style="text-align: right;" >
+                <c:if test="${currUser.superUser}" >
+      		        <it:formatImageAction action="removeprojectscript"
+      		                              paramName="delId"
+      		                              paramValue="${ script.script.id }"
+      		                              src="/themes/defaulttheme/images/delete.gif"
+      		                              altKey="itracker.web.image.delete.projectscript.alt"
+      		                              textActionKey="itracker.web.image.delete.texttag"/>
+                </c:if>
+            </td>
 		</tr>
 	</c:forEach>
 </c:if>
 
 <tr>
-    <td colspan="6"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15"/></td>
+    <td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="15"/></td>
 </tr>
 				<tr>
 					<td class="editColumnTitle" colspan="4">
@@ -349,7 +350,7 @@
 					</tr>
 				</c:forEach>
 				<tr>
-					<td colspan="6"><html:img module="/"
+					<td colspan="5"><html:img module="/"
 						page="/themes/defaulttheme/images/blank.gif" height="15" /></td>
 				</tr>
 
