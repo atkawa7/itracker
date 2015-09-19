@@ -1,6 +1,5 @@
 package org.itracker.services;
 
-import org.itracker.services.implementations.EmailService;
 
 /**
  * Service layer is a bit messy. The are *Factories, which work mainly as data

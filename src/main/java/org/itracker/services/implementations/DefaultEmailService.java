@@ -20,6 +20,7 @@ package org.itracker.services.implementations;
 
 import org.apache.log4j.Logger;
 import org.itracker.services.ConfigurationService;
+import org.itracker.services.EmailService;
 import org.itracker.services.util.EmailAuthenticator;
 import org.itracker.services.util.NamingUtilites;
 
@@ -32,7 +33,7 @@ import javax.naming.NamingException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
-public class EmailService {
+public class DefaultEmailService implements EmailService {
 
     private ConfigurationService configurationService;
 
@@ -50,7 +51,7 @@ public class EmailService {
 
     private Session session;
 
-    private final Logger logger = Logger.getLogger(EmailService.class);
+    private final Logger logger = Logger.getLogger(DefaultEmailService.class);
     private InternetAddress replyTo;
     private InternetAddress from;
 
@@ -75,14 +76,14 @@ public class EmailService {
         // props.put("mail.mime.charset", this.smtpCharset);
 
         if (smtpUserid != null && smtpPassword != null) {
-            smtpAuth = (Authenticator) new EmailAuthenticator(
+            smtpAuth = new EmailAuthenticator(
                     new PasswordAuthentication(smtpUserid,
                             smtpPassword));
         }
         this.session = Session.getInstance(props, smtpAuth);
     }
 
-    private final void initCharset(String smtpCharset) {
+    private void initCharset(String smtpCharset) {
         if (null != smtpCharset) {
             try {
                 new String(new byte[0], smtpCharset);
@@ -99,7 +100,7 @@ public class EmailService {
         }
     }
 
-    private final void initFrom(String fromAddress, String fromText) {
+    private void initFrom(String fromAddress, String fromText) {
         if (null != fromAddress) {
             try {
                 this.from = new InternetAddress(fromAddress, fromText, readSmtpCharset(this.session));
@@ -111,7 +112,7 @@ public class EmailService {
         }
     }
 
-    private final void initReplyTo(String replyToAddress, String replyToText) {
+    private void initReplyTo(String replyToAddress, String replyToText) {
         try {
             this.replyTo = new InternetAddress(replyToAddress, replyToText, readSmtpCharset(this.session));
             logger.info("initFrom: initialized reply-to: " + this.replyTo);
@@ -207,7 +208,7 @@ public class EmailService {
     public void sendEmail(Set<InternetAddress> recipients, String subject,
                           String message) {
 
-        InternetAddress[] recipientsArray = new ArrayList<InternetAddress>(recipients).toArray(new InternetAddress[]{});
+        InternetAddress[] recipientsArray = new ArrayList<InternetAddress>(recipients).toArray(new InternetAddress[new ArrayList<InternetAddress>(recipients).size()]);
 
         if (recipientsArray.length > 0) {
             this.sendEmail(recipientsArray, subject, message);
@@ -231,12 +232,11 @@ public class EmailService {
             ArrayList<InternetAddress> recipients = new ArrayList<InternetAddress>(
                     addresses.size());
 
-            Iterator<String> iterator = addresses.iterator();
-            while (iterator.hasNext()) {
-                recipients.add(new InternetAddress((String) iterator.next()));
+            for (String address : addresses) {
+                recipients.add(new InternetAddress(address));
             }
 
-            sendEmail(recipients.toArray(new InternetAddress[0]), subject,
+            sendEmail(recipients.toArray(new InternetAddress[recipients.size()]), subject,
                     msgText);
         } catch (AddressException ex) {
             logger.warn("AddressException while sending email.", ex);
@@ -298,9 +298,7 @@ public class EmailService {
 
             msg.setSentDate(new Date());
 
-            // really needed?
-            //msg.setHeader("Content-Transfer-Encoding", "quoted-printable");
-            msg.setContent(msgText.toString(), "text/plain; charset=\""
+            msg.setContent(msgText, "text/plain; charset=\""
                     + readSmtpCharset(session) + "\"");
 
             Transport.send(msg);
