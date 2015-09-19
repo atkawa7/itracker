@@ -23,6 +23,7 @@ import org.itracker.model.*;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Manages the applications configuration properties.
@@ -42,6 +43,7 @@ public interface ConfigurationService {
     long getLongProperty(String name, long defaultValue);
 
     Configuration getConfigurationItem(Integer id);
+
 
 
     /**
@@ -413,7 +415,9 @@ public interface ConfigurationService {
     /**
      * returns languages for the locale as list of Language-objects
      */
+    @Deprecated
     List<Language> getLanguage(Locale locale);
+    public Properties getLanguageProperties(Locale locale);
 
     void updateLanguage(Locale locale, List<Language> languages);
 
@@ -437,5 +441,7 @@ public interface ConfigurationService {
     void initializeConfiguration();
 
     String getSystemBaseURL();
+
+    String getLanguageValue(String key, Locale locale);
 
 }
