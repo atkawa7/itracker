@@ -4,7 +4,7 @@
  */
 package org.itracker.web.util;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.Ignore;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.ImportExportException;
 import org.itracker.model.*;
