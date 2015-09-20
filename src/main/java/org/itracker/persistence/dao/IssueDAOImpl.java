@@ -2,6 +2,7 @@ package org.itracker.persistence.dao;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -496,7 +497,7 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
         Criteria criteria = getSession().createCriteria(Issue.class);
 
         // projects
-        Collection<Project> projects = Collections.checkedCollection((Collection<Project>) searchQuery.getProjectsObjects(projectDAO), Project.class);
+        Collection<Project> projects = Collections.checkedCollection((Collection<Project>) getProjectsObjects(searchQuery), Project.class);
 
         if (projects.size() > 0) {
             criteria.add(Restrictions.in("project", projects));
@@ -554,17 +555,18 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
         // sort
         String order = searchQuery.getOrderBy();
-        if ("id".equals(order)) {
-        } else if ("sev".equals(order)) {
-            criteria.addOrder(order("severity", true));
-        } else if ("proj".equals(order)) {
-            criteria.addOrder(order("project", true)).addOrder(order("status", false));
-        } else if ("owner".equals(order)) {
-            criteria.addOrder(order("owner", true)).addOrder(order("status", false));
-        } else if ("lm".equals(order)) {
-            criteria.addOrder(order("lastModifiedDate", true));
-        } else {
-            criteria.addOrder(order("status", true));
+        if (!"id".equals(order)) {
+            if ("sev".equals(order)) {
+                criteria.addOrder(order("severity", true));
+            } else if ("proj".equals(order)) {
+                criteria.addOrder(order("project", true)).addOrder(order("status", false));
+            } else if ("owner".equals(order)) {
+                criteria.addOrder(order("owner", true)).addOrder(order("status", false));
+            } else if ("lm".equals(order)) {
+                criteria.addOrder(order("lastModifiedDate", true));
+            } else {
+                criteria.addOrder(order("status", true));
+            }
         }
         criteria.addOrder(order("id", true));
 
@@ -582,6 +584,15 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
     }
 
+    // from the list of project ids this objects has, return a list of
+    // projects
+    public Collection<?> getProjectsObjects(final IssueSearchQuery query) {
+        return CollectionUtils.collect(query.getProjects(), new Transformer() {
+            public Object transform(Object arg0) {
+                return projectDAO.findByPrimaryKey((Integer) arg0);
+            }
+        });
+    }
     Order order(String propertyName, boolean asc) {
         return asc ? Order.asc(propertyName) : Order.desc(propertyName);
     }
