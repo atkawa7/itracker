@@ -545,11 +545,16 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     }
 
+    @Deprecated
     public List<CustomField> getCustomFields() {
+        return getCustomFieldsSorted(null);
+    }
+    public List<CustomField> getCustomFieldsSorted(Locale locale) {
         List<CustomField> customFields = customFieldDAO.findAll();
-        Collections.sort(customFields, new CustomField.NameComparator());
+        Collections.sort(customFields, new CustomFieldUtilities.CustomFieldByNameComparator((null == locale)
+                ?ITrackerResources.getLocale(ITrackerResources.getDefaultLocale())
+                :locale));
         return customFields;
-
     }
 
     /**

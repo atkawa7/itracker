@@ -20,12 +20,9 @@ package org.itracker.model;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.util.CustomFieldUtilities;
 
 import java.io.Serializable;
 import java.util.Comparator;
-import java.util.Locale;
 
 /**
  * An option for the value of a CustomField of type <code>LIST</code>.
@@ -39,7 +36,6 @@ public class CustomFieldValue extends AbstractEntity {
      *
      */
     private static final long serialVersionUID = 1L;
-    public static final Comparator<CustomFieldValue> NAME_COMPARATOR = new NameComparator();
     public static final Comparator<CustomFieldValue> SORT_ORDER_COMPARATOR = new SortOrderComparator();
 
     /**
@@ -71,10 +67,6 @@ public class CustomFieldValue extends AbstractEntity {
     public CustomFieldValue() {
     }
 
-    /**
-     * @param customField
-     * @param value
-     */
     public CustomFieldValue(CustomField customField, String value) {
         setCustomField(customField);
         setValue(value);
@@ -149,50 +141,5 @@ public class CustomFieldValue extends AbstractEntity {
 
     }
 
-    /**
-     * Compares 2 CustomFieldValues by name.
-     * <p/>
-     * <p>
-     * If 2 instances have the same name, they are ordered by sortOrder.
-     * </p>
-     * <p/>
-     * <p>
-     * It doesn't take into account the custom field. <br>
-     * It should therefore only be used to compare options that belong to a
-     * single custom field.
-     * </p>
-     */
-    private static class NameComparator implements
-            Comparator<CustomFieldValue>, Serializable {
-        /**
-         *
-         */
-        private static final long serialVersionUID = 1L;
-
-        private final Locale locale;
-
-        /**
-         * @deprecated should create a localized comparator
-         */
-        private NameComparator() {
-            this(new Locale(ITrackerResources.getDefaultLocale()));
-        }
-
-        private NameComparator(Locale locale) {
-            this.locale = locale;
-        }
-
-        public int compare(CustomFieldValue a, CustomFieldValue b) {
-
-            //
-            return new CompareToBuilder()
-                    .append(
-                            CustomFieldUtilities.getCustomFieldOptionName(a, this.locale),
-                            CustomFieldUtilities.getCustomFieldOptionName(b, this.locale))
-                    .append(a.getSortOrder(), b.getSortOrder())
-                    .append(a.getId(), b.getId()).toComparison();
-        }
-
-    }
 
 }

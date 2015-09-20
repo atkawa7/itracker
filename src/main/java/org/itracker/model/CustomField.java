@@ -18,17 +18,18 @@
 
 package org.itracker.model;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.itracker.IssueException;
 import org.itracker.model.util.CustomFieldUtilities;
 import org.jfree.util.Log;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * A custom field that can be added to an Issue.
@@ -68,7 +69,6 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
 
     private static final Logger logger = Logger.getLogger(CustomField.class);
 
-    public static final Comparator<CustomField> NAME_COMPARATOR = new NameComparator();
     /**
      * Dateformat able to parse datepicker generated date string (dd/MM/yyyy)
      */
@@ -186,9 +186,6 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
         return sortOptionsByName;
     }
 
-    /**
-     * @param sortOptionsByName
-     */
     public void setSortOptionsByName(boolean sortOptionsByName) {
         this.sortOptionsByName = sortOptionsByName;
     }
@@ -229,7 +226,7 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
                 break;
 
             case DATE:
-                if (this.dateFormat != CustomFieldUtilities.DATE_FORMAT_UNKNOWN) {
+                if (!CustomFieldUtilities.DATE_FORMAT_UNKNOWN.equals(this.dateFormat)) {
                     SimpleDateFormat format =
                             // DEFAULT_DATE_FORMAT;
                             new SimpleDateFormat(bundle
@@ -246,10 +243,7 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
                 break;
 
             case LIST:
-                Iterator<CustomFieldValue> it = getOptions().iterator();
-                while (it.hasNext()) {
-                    CustomFieldValue customFieldValue = (CustomFieldValue) it
-                            .next();
+                for (CustomFieldValue customFieldValue : getOptions()) {
                     if (customFieldValue.getValue().equalsIgnoreCase(value)) {
                         return;
                     }
@@ -312,31 +306,4 @@ public class CustomField extends AbstractEntity implements Comparable<Entity> {
         }
 
     }
-
-    public static final class NameComparator implements Comparator<CustomField>, Serializable {
-        /**
-         *
-         */
-        private static final long serialVersionUID = 1L;
-
-        private final Locale locale;
-
-        public NameComparator() {
-            this(null);
-        }
-
-        public NameComparator(Locale locale) {
-            this.locale = locale;
-        }
-
-        public int compare(CustomField o1, CustomField o2) {
-            return new CompareToBuilder().append(
-                    CustomFieldUtilities.getCustomFieldName(o1.getId(), locale),
-                    CustomFieldUtilities.getCustomFieldName(o2.getId(), locale))
-                    .append(o1.getId(), o2.getId())
-                    .toComparison();
-        }
-
-    }
-
 }

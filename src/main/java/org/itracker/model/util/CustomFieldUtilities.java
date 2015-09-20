@@ -18,13 +18,14 @@
 
 package org.itracker.model.util;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
-import org.itracker.model.IssueField;
 
-import java.util.Iterator;
+import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,18 +37,6 @@ public class CustomFieldUtilities {
     public static final String DATE_FORMAT_DATEONLY = "dateonly";
     public static final String DATE_FORMAT_TIMEONLY = "timeonly";
     private static final Logger logger = Logger.getLogger(CustomFieldUtilities.class);
-
-
-    /**
-     * Returns the string representation of a field type.
-     *
-     * @param type the type to translate
-     * @return a string representation of the field type translated to the specified locale
-     */
-    @Deprecated
-    public static String getTypeString(CustomField.Type type) {
-        return getTypeString(type, ITrackerResources.getLocale());
-    }
 
 
     /**
@@ -127,18 +116,6 @@ public class CustomFieldUtilities {
     }
 
     /**
-     * Returns the label for a custom field option in the default locale.
-     *
-     * @param fieldId  the id of the field to return the label for
-     * @param optionId the id of the field option to return the label for
-     * @return the label for the field option translated to the default locale
-     */
-    @Deprecated
-    public static String getCustomFieldOptionName(Integer fieldId, Integer optionId) {
-        return getCustomFieldOptionName(fieldId, optionId, ITrackerResources.getLocale());
-    }
-
-    /**
      * Returns the label for a custom field option in the specified locale.
      *
      * @param fieldId  the id of the field to return the label for
@@ -153,29 +130,28 @@ public class CustomFieldUtilities {
         return "";
     }
 
-    public static final String getCustomFieldOptionName(CustomFieldValue option, Locale locale) {
+    public static String getCustomFieldOptionName(CustomFieldValue option, Locale locale) {
         if (null == option) {
             return null;
         }
         return getCustomFieldOptionName(option.getCustomField().getId(), option.getId(), locale);
     }
 
-    public static final CustomFieldValue getCustomFieldOptionByValue(List<CustomFieldValue> fields, String value) {
+    public static CustomFieldValue getCustomFieldOptionByValue(List<CustomFieldValue> fields, String value) {
 
         if (null != fields && !fields.isEmpty()) {
-            Iterator<CustomFieldValue> it = fields.iterator();
-            while (it.hasNext()) {
-                CustomFieldValue fieldValue = it.next();
+            for (CustomFieldValue fieldValue : fields) {
                 if (fieldValue.getValue().equalsIgnoreCase(value)) {
                     return fieldValue;
                 }
             }
+            return fields.get(0);
         }
-        return fields.get(0);
+        return null;
     }
 
 
-    public static final String getCustomFieldOptionName(CustomField field,
+    public static String getCustomFieldOptionName(CustomField field,
                                                         String value, Locale locale) {
         if (null == field) {
             return null;
@@ -196,14 +172,61 @@ public class CustomFieldUtilities {
         return value;
     }
 
+    public static final class CustomFieldByNameComparator implements Comparator<CustomField>, Serializable {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-    @Deprecated
-    public static final String getCustomFieldOptionName(IssueField field, Locale locale) {
-        if (null == field) {
-            return null;
+        private final Locale locale;
+
+        public CustomFieldByNameComparator(Locale locale) {
+            this.locale = locale;
         }
 
-        return getCustomFieldOptionName(field.getCustomField(), field.getStringValue(), locale);
+        public int compare(CustomField o1, CustomField o2) {
+            return new CompareToBuilder().append(
+                    getCustomFieldName(o1.getId(), locale),
+                    getCustomFieldName(o2.getId(), locale))
+                    .append(o1.getId(), o2.getId())
+                    .toComparison();
+        }
+    }
+
+    /**
+     * Compares 2 CustomFieldValues by name.
+     * <p/>
+     * <p>
+     * If 2 instances have the same name, they are ordered by sortOrder.
+     * </p>
+     * <p/>
+     * <p>
+     * It doesn't take into account the custom field. <br>
+     * It should therefore only be used to compare options that belong to a
+     * single custom field.
+     * </p>
+     */
+    public static final class CustomFieldValueByNameComparator implements
+            Comparator<CustomFieldValue>, Serializable {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
+
+        private final Locale locale;
+
+        public CustomFieldValueByNameComparator(Locale locale) {
+            this.locale = locale;
+        }
+
+        public int compare(CustomFieldValue a, CustomFieldValue b) {
+            return new CompareToBuilder()
+                    .append(
+                            CustomFieldUtilities.getCustomFieldOptionName(a, this.locale),
+                            CustomFieldUtilities.getCustomFieldOptionName(b, this.locale))
+                    .append(a.getSortOrder(), b.getSortOrder())
+                    .append(a.getId(), b.getId()).toComparison();
+        }
 
     }
 }
