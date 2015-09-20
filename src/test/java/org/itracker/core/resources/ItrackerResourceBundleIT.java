@@ -25,7 +25,7 @@ public class ItrackerResourceBundleIT extends AbstractDependencyInjectionTest {
         language.setLocale("en");
         language.setResourceKey("itracker.web.attr.administer");
         language.setResourceValue("administer");
-        resourceBundle.updateValue(language);
+        resourceBundle.updateValue(language.getResourceKey(), language.getResourceValue());
         assertEquals("administer", resourceBundle.getString("itracker.web.attr.administer"));
     }
 

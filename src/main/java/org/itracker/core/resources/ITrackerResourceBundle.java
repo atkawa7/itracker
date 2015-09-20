@@ -19,7 +19,6 @@
 package org.itracker.core.resources;
 
 import org.apache.log4j.Logger;
-import org.itracker.model.Language;
 import org.itracker.services.exceptions.ITrackerDirtyResourceException;
 
 import java.util.*;
@@ -41,15 +40,7 @@ public class ITrackerResourceBundle extends ResourceBundle {
         return new ITrackerResourceBundle(locale);
     }
 
-    @Deprecated
-    static ResourceBundle loadBundle(Locale locale, Object[][] data) {
-        return new ITrackerResourceBundle(locale, data);
-    }
 
-    @Deprecated
-    static ResourceBundle loadBundle(Locale locale, List<Language> items) {
-        return new ITrackerResourceBundle(locale, items);
-    }
     static ResourceBundle loadBundle(Locale locale, Properties items) {
         return new ITrackerResourceBundle(locale, items);
     }
@@ -106,29 +97,6 @@ public class ITrackerResourceBundle extends ResourceBundle {
     }
 
     /**
-     * @param locale
-     * @param items
-     */
-    @Deprecated
-    private ITrackerResourceBundle(Locale locale, List<Language> items) {
-        this(locale);
-        setContents(items);
-    }
-
-    @Deprecated
-    private void setContents(List<Language> content) {
-        if (content != null) {
-            synchronized (data) {
-                data.clear();
-                for (Language aContent : content) {
-                    data.put(aContent.getResourceKey(),
-                            aContent.getResourceValue());
-                }
-            }
-        }
-    }
-
-    /**
      * @param content
      */
     @Deprecated
@@ -175,12 +143,6 @@ public class ITrackerResourceBundle extends ResourceBundle {
         }
     }
 
-    @Deprecated
-    public void updateValue(Language model) {
-        if (model != null) {
-            updateValue(model.getResourceKey(), model.getResourceValue());
-        }
-    }
 
     public void removeValue(String key, boolean markDirty) {
         if (key != null) {

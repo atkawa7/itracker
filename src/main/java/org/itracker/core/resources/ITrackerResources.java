@@ -19,7 +19,6 @@
 package org.itracker.core.resources;
 
 import org.apache.log4j.Logger;
-import org.itracker.model.Language;
 import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.ITrackerDirtyResourceException;
@@ -257,8 +256,8 @@ public class ITrackerResources {
             if (!isInitialized()) {
                 return ITrackerResourceBundle.loadBundle(locale);
             } else {
-                List<Language> languageItems = configurationService
-                        .getLanguage(locale);
+                Properties languageItems = configurationService
+                        .getLanguageProperties(locale);
                 bundle = ITrackerResourceBundle.loadBundle(locale, languageItems);
                 if (logger.isDebugEnabled()) {
                     logger.debug("getBundle: got loaded for locale " + locale
@@ -282,7 +281,7 @@ public class ITrackerResources {
         ResourceBundle bundle = languages.get(locale);
         logger.debug("Loading new resource bundle for locale " + locale
                 + " from the database.");
-        List<Language> languageItems = configurationService.getLanguage(
+        Properties languageItems = configurationService.getLanguageProperties(
                 locale);
         bundle = ITrackerResourceBundle.loadBundle(locale, languageItems);
         if (bundle != null) {
@@ -381,11 +380,11 @@ public class ITrackerResources {
                     val = ITrackerResources.getString(key);
                 }
             } catch (ITrackerDirtyResourceException idre) {
-                Language languageItem = configurationService
-                        .getLanguageItemByKey(key, locale);
+                String languageItem = configurationService
+                        .getLanguageValue(key, locale);
                 ResourceBundle bundle = getBundle(locale);
                 ((ITrackerResourceBundle) bundle)
-                        .updateValue(languageItem);
+                        .updateValue(key, languageItem);
                 val = bundle.getString(key);
             }
             return val;
