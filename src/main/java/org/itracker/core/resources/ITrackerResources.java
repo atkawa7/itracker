@@ -19,9 +19,8 @@
 package org.itracker.core.resources;
 
 import org.apache.log4j.Logger;
-import org.itracker.persistence.dao.NoSuchEntityException;
-import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.ITrackerDirtyResourceException;
+import org.springframework.dao.DataAccessException;
 
 import java.util.*;
 
@@ -83,7 +82,7 @@ public class ITrackerResources {
 
     private static HashMap<Locale, ResourceBundle> languages = new HashMap<Locale, ResourceBundle>();
 
-    private static ConfigurationService configurationService;
+    private static ITrackerResourcesProvider configurationService;
 
     private static boolean initialized = false;
 
@@ -398,7 +397,7 @@ public class ITrackerResources {
                     "MissingResourceException caught while retrieving translation key '"
                             + key + "' for locale " + locale, ex);
             return "MISSING KEY: " + key;
-        } catch (NoSuchEntityException ex) {
+        } catch (DataAccessException ex) {
             logger.info("getString: not found " + key + " locale: " + locale,
                     ex);
             try {
@@ -534,7 +533,7 @@ public class ITrackerResources {
         ITrackerResources.initialized = initialized;
     }
 
-    public static void setConfigurationService(ConfigurationService service) {
+    public static void setConfigurationService(ITrackerResourcesProvider service) {
         if (isInitialized()) {
             throw new IllegalStateException("Service is already set up.");
         }

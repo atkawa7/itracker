@@ -23,7 +23,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.itracker.IssueException;
 import org.itracker.model.util.CustomFieldUtilities;
-import org.itracker.web.taglib.FormatCustomFieldTag;
 import org.jfree.util.Log;
 
 import java.io.Serializable;
