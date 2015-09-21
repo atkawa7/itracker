@@ -135,156 +135,154 @@
     </tr>
 
     <c:forEach items="${unassignedIssues}" var="unassignedIssue" step="1" varStatus="i">
-        <c:if test="${unassignedIssue.userCanViewIssue}">
-            <c:set var="iCount" value="${iCount +1}" />
-            <c:choose>
-                <c:when test="${showAll || (iCount <=userPrefs.numItemsOnIndex)}">
+        <c:set var="iCount" value="${i.index +1}" />
+        <c:choose>
+            <c:when test="${showAll || (iCount <=userPrefs.numItemsOnIndex)}">
 
-                    <c:set var="listRowClass"
-                        value="${iCount % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}" />
-                    <tr id="unassignedIssue.${iCount}" class="${listRowClass}">
-                        <td style="white-space: nowrap">
-                            <c:if test="${not unassignedIssue.userHasIssueNotification}">
-                                <it:formatImageAction forward="watchissue" paramName="id"
-                                    paramValue="${unassignedIssue.issue.id}" caller="index"
-                                    src="/themes/defaulttheme/images/watch.gif"
-                                    altKey="itracker.web.image.watch.issue.alt"
-                                    arg0="${unassignedIssue.issue.id}"
-                                    textActionKey="itracker.web.image.watch.texttag" />
-                            </c:if>
-                            <it:formatImageAction
-                                forward="viewissue" module="/module-projects"
-                                paramName="id" paramValue="${unassignedIssue.issue.id}"
-                                src="/themes/defaulttheme/images/view.gif"
-                                altKey="itracker.web.image.view.issue.alt"
+                <c:set var="listRowClass"
+                    value="${i.index % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}" />
+                <tr id="unassignedIssue.${iCount}" class="${listRowClass}">
+                    <td style="white-space: nowrap">
+                        <c:if test="${not unassignedIssue.userHasIssueNotification}">
+                            <it:formatImageAction forward="watchissue" paramName="id"
+                                paramValue="${unassignedIssue.issue.id}" caller="index"
+                                src="/themes/defaulttheme/images/watch.gif"
+                                altKey="itracker.web.image.watch.issue.alt"
                                 arg0="${unassignedIssue.issue.id}"
-                                textActionKey="itracker.web.image.view.texttag" />
-                            <c:if test="${unassignedIssue.userCanEdit}">
-                                <it:formatImageAction
-                                    forward="editissue" module="/module-projects"
-                                    paramName="id" paramValue="${unassignedIssue.issue.id}"
-                                    caller="index"
-                                    src="/themes/defaulttheme/images/edit.gif"
-                                    altKey="itracker.web.image.edit.issue.alt"
-                                    arg0="${unassignedIssue.issue.id}"
-                                    textActionKey="itracker.web.image.edit.texttag" />
-                            </c:if>
+                                textActionKey="itracker.web.image.watch.texttag" />
+                        </c:if>
+                        <it:formatImageAction
+                            forward="viewissue" module="/module-projects"
+                            paramName="id" paramValue="${unassignedIssue.issue.id}"
+                            src="/themes/defaulttheme/images/view.gif"
+                            altKey="itracker.web.image.view.issue.alt"
+                            arg0="${unassignedIssue.issue.id}"
+                            textActionKey="itracker.web.image.view.texttag" />
+                        <c:if test="${unassignedIssue.userCanEdit}">
+                            <it:formatImageAction
+                                forward="editissue" module="/module-projects"
+                                paramName="id" paramValue="${unassignedIssue.issue.id}"
+                                caller="index"
+                                src="/themes/defaulttheme/images/edit.gif"
+                                altKey="itracker.web.image.edit.issue.alt"
+                                arg0="${unassignedIssue.issue.id}"
+                                textActionKey="itracker.web.image.edit.texttag" />
+                        </c:if>
 
-                        </td>
-                        <td></td>
-                        <td style="text-align: left;">${unassignedIssue.issue.id}</td>
-                        <td></td>
-                        <td style="white-space: nowrap">${unassignedIssue.issue.project.name}</td>
-                        <td></td>
-                        <td><c:out value="${unassignedIssue.statusLocalizedString}" /></td>
-                        <td></td>
-                        <td><c:out
-                            value="${unassignedIssue.severityLocalizedString}" /></td>
-                        <td></td>
-                        <td style="white-space: nowrap;"><it:formatDescription>${unassignedIssue.issue.description}</it:formatDescription></td>
-                        <td></td>
-                        <!-- Marky:  modified the code to place the two checks in the chooser statement so only one select list will
-        be displayed. -->
-                        <%--c:if test="$ {unassignedIssue.userHasPermission_PERMISSION_ASSIGN_OTHERS}" --%>
-                        <c:choose>
-                            <c:when
-                                test="${unassignedIssue.userHasPermission_PERMISSION_ASSIGN_OTHERS}">
+                    </td>
+                    <td></td>
+                    <td style="text-align: left;">${unassignedIssue.issue.id}</td>
+                    <td></td>
+                    <td style="white-space: nowrap">${unassignedIssue.issue.project.name}</td>
+                    <td></td>
+                    <td><c:out value="${unassignedIssue.statusLocalizedString}" /></td>
+                    <td></td>
+                    <td><c:out
+                        value="${unassignedIssue.severityLocalizedString}" /></td>
+                    <td></td>
+                    <td style="white-space: nowrap;"><it:formatDescription>${unassignedIssue.issue.description}</it:formatDescription></td>
+                    <td></td>
+                    <!-- Marky:  modified the code to place the two checks in the chooser statement so only one select list will
+    be displayed. -->
+                    <%--c:if test="$ {unassignedIssue.userHasPermission_PERMISSION_ASSIGN_OTHERS}" --%>
+                    <c:choose>
+                        <c:when
+                            test="${unassignedIssue.userHasPermission_PERMISSION_ASSIGN_OTHERS}">
 
-                                <html:form action="/assignissue">
-                                    <html:hidden property="issueId"
-                                        value="${unassignedIssue.issue.id}" />
-                                    <html:hidden property="projectId"
-                                        value="${unassignedIssue.issue.project.id}" />
+                            <html:form action="/assignissue">
+                                <html:hidden property="issueId"
+                                    value="${unassignedIssue.issue.id}" />
+                                <html:hidden property="projectId"
+                                    value="${unassignedIssue.issue.project.id}" />
 
-                                    <td><html:select property="userId"
-                                        styleClass="${listRowClass}" onchange="this.form.submit();">
-                                        <!-- Marky:  I commented out the original <C : tags and replaced them with my <C : tages.
+                                <td><html:select property="userId"
+                                    styleClass="${listRowClass}" onchange="this.form.submit();">
+                                    <!-- Marky:  I commented out the original <C : tags and replaced them with my <C : tages.
 I change code to test for unassigned attribute instead of owner, since owner is not set.-->
-                                        <c:choose>
-                                            <c:when test="${unassignedIssue.unassigned}">
-                                                <!-- c:when test="$ {unassignedIssue.issue.owner == null}" -->
-                                                <option value="-1"><it:message key="itracker.web.generic.unassigned"/></option>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <option value="${unassignedIssue.issue.owner.id}"><c:out
-                                                    value="${unassignedIssue.issue.owner.firstName}" /> <c:out
-                                                    value="${unassignedIssue.issue.owner.lastName}" /></option>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <c:forEach items="${unassignedIssue.possibleOwners}"
-                                            var="possibleIssueOwner" varStatus="k">
-                                            <c:if test="${possibleIssueOwner.lastName != null}">
-                                                <option value="${possibleIssueOwner.id}"
-                                                    <c:choose>
-                                                   <c:when test="${unassignedIssue.issue.owner.id == possibleIssueOwner.id}">
-                                                       selected
-                                                   </c:when>
-                                                   <c:otherwise>
-                                                   </c:otherwise>
-                                               </c:choose>>${possibleIssueOwner.firstName}
-                                                ${possibleIssueOwner.lastName}</option>
-                                            </c:if>
-                                        </c:forEach>
-                                    </html:select></td>
-                                </html:form>
-                                <!-- /c:if -->
-                                <!--End of  unassignedIssue.userHasPermission_PERMISSION_ASSIGN_OTHERS-->
-                            </c:when>
-                            <c:otherwise>
-                                <c:choose>
-                                    <c:when
-                                        test="${unassignedIssue.userHasPermission_PERMISSION_ASSIGN_SELF}">
-                                        <html:form action="/assignissue">
-                                            <html:hidden property="issueId"
-                                                value="${unassignedIssue.issue.id}" />
-                                            <html:hidden property="projectId"
-                                                value="${unassignedIssue.issue.project.id}" />
-
-                                            <%--!String styleClass2 = "(i % 2 == 1 ? \"listRowShaded\" : \"listRowUnshaded\")";--%>
-                                            <td style="white-space: nowrap;"><html:select property="userId"
-                                                styleClass="${listRowClass}"
-                                                onchange="this.form.submit();">
+                                    <c:choose>
+                                        <c:when test="${unassignedIssue.unassigned}">
+                                            <!-- c:when test="$ {unassignedIssue.issue.owner == null}" -->
+                                            <option value="-1"><it:message key="itracker.web.generic.unassigned"/></option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="${unassignedIssue.issue.owner.id}"><c:out
+                                                value="${unassignedIssue.issue.owner.firstName}" /> <c:out
+                                                value="${unassignedIssue.issue.owner.lastName}" /></option>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <c:forEach items="${unassignedIssue.possibleOwners}"
+                                        var="possibleIssueOwner" varStatus="k">
+                                        <c:if test="${possibleIssueOwner.lastName != null}">
+                                            <option value="${possibleIssueOwner.id}"
                                                 <c:choose>
-                                                    <c:when test="${unassignedIssue.unassigned}">
-                                                        <option value="-1">
-                                                            <it:message key="itracker.web.generic.unassigned"/>
-                                                        </option>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <option value="${unassignedIssue.issue.owner.id}"><c:out
-                                                            value="${unassignedIssue.issue.owner.firstName}" /> <c:out
-                                                            value="${unassignedIssue.issue.owner.lastName}" />Test2</option>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                <option value="${currUser.id}"
-                                                    <c:if test="${unassignedIssue.issue.id==currUser.id}">selected</c:if>>
-                                                ${currUser.firstName} ${currUser.lastName}</option>
+                                               <c:when test="${unassignedIssue.issue.owner.id == possibleIssueOwner.id}">
+                                                   selected
+                                               </c:when>
+                                               <c:otherwise>
+                                               </c:otherwise>
+                                           </c:choose>>${possibleIssueOwner.firstName}
+                                            ${possibleIssueOwner.lastName}</option>
+                                        </c:if>
+                                    </c:forEach>
+                                </html:select></td>
+                            </html:form>
+                            <!-- /c:if -->
+                            <!--End of  unassignedIssue.userHasPermission_PERMISSION_ASSIGN_OTHERS-->
+                        </c:when>
+                        <c:otherwise>
+                            <c:choose>
+                                <c:when
+                                    test="${unassignedIssue.userHasPermission_PERMISSION_ASSIGN_SELF}">
+                                    <html:form action="/assignissue">
+                                        <html:hidden property="issueId"
+                                            value="${unassignedIssue.issue.id}" />
+                                        <html:hidden property="projectId"
+                                            value="${unassignedIssue.issue.project.id}" />
 
-                                            </html:select></td>
-                                        </html:form>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <td><it:formatIssueOwner
-                                            issue="${unassignedIssue.issue}" format="short" /></td>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:otherwise>
-                        </c:choose>
-                        <td></td>
-                        <td style="text-align: right; white-space: nowrap"><it:formatDate
-                            date="${unassignedIssue.issue.lastModifiedDate}" /></td>
+                                        <%--!String styleClass2 = "(i % 2 == 1 ? \"listRowShaded\" : \"listRowUnshaded\")";--%>
+                                        <td style="white-space: nowrap;"><html:select property="userId"
+                                            styleClass="${listRowClass}"
+                                            onchange="this.form.submit();">
+                                            <c:choose>
+                                                <c:when test="${unassignedIssue.unassigned}">
+                                                    <option value="-1">
+                                                        <it:message key="itracker.web.generic.unassigned"/>
+                                                    </option>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <option value="${unassignedIssue.issue.owner.id}"><c:out
+                                                        value="${unassignedIssue.issue.owner.firstName}" /> <c:out
+                                                        value="${unassignedIssue.issue.owner.lastName}" />Test2</option>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <option value="${currUser.id}"
+                                                <c:if test="${unassignedIssue.issue.id==currUser.id}">selected</c:if>>
+                                            ${currUser.firstName} ${currUser.lastName}</option>
+
+                                        </html:select></td>
+                                    </html:form>
+                                </c:when>
+                                <c:otherwise>
+                                    <td><it:formatIssueOwner
+                                        issue="${unassignedIssue.issue}" format="short" /></td>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:otherwise>
+                    </c:choose>
+                    <td></td>
+                    <td style="text-align: right; white-space: nowrap"><it:formatDate
+                        date="${unassignedIssue.issue.lastModifiedDate}" /></td>
+                </tr>
+            </c:when>
+            <c:otherwise>
+
+                <c:if test="${iCount == userPrefs.numItemsOnIndex + 1}">
+                    <tr class="listRowUnshaded">
+                        <td class="moreissues" colspan="15"><html:link anchor="unassignedIssues" module="/" action="/portalhome?showAll=true" ><it:message key="itracker.web.index.moreissues"/></html:link></td>
                     </tr>
-                </c:when>
-                <c:otherwise>
-
-                    <c:if test="${iCount == userPrefs.numItemsOnIndex + 1}">
-                        <tr class="listRowUnshaded">
-                            <td class="moreissues" colspan="15"><html:link anchor="unassignedIssues" module="/" action="/portalhome?showAll=true" ><it:message key="itracker.web.index.moreissues"/></html:link></td>
-                        </tr>
-                    </c:if>
-                </c:otherwise>
-            </c:choose>
-        </c:if>
+                </c:if>
+            </c:otherwise>
+        </c:choose>
     </c:forEach>
     </c:otherwise></c:choose>
        <tr><td><html:img page="/themes/defaulttheme/images/blank.gif" width="1" height="20"/></td></tr>
