@@ -166,12 +166,12 @@ public class ListIssuesActionUtil {
         statusLocalizedString=IssueUtilities.getStatusName(issue.getStatus(), locale);
         severityLocalizedString = IssueUtilities.getSeverityName(issue.getSeverity(), locale) ;
         if (issue.getComponents().size() == 0) {
-		componentsSize = ITrackerResources.getString(
+		    componentsSize = ITrackerResources.getString(
 				ListIssuesActionUtil.RES_KEY_UNKNOWN, locale);
-	} else {
-		componentsSize = issue.getComponents().get(0).getName()
-				+ (issue.getComponents().size() > 1 ? " (+)" : "");
-	}
+        } else {
+            componentsSize = issue.getComponents().get(0).getName()
+                    + (issue.getComponents().size() > 1 ? " (+)" : "");
+        }
         issuePTO.setStatusLocalizedString(statusLocalizedString);
         issuePTO.setSeverityLocalizedString(severityLocalizedString);
         issuePTO.setComponentsSize(componentsSize);
@@ -187,8 +187,7 @@ public class ListIssuesActionUtil {
                 issuePTO.setUserCanEdit(true);
             }
         }
-        
-        // TODO: check from here...
+
         if(! hasViewAll && ! IssueUtilities.canViewIssue(issue, currUserId, userPermissions)) {
             continue;
         }
@@ -201,11 +200,10 @@ public class ListIssuesActionUtil {
             break;
         }
         row++;
-        // TODO: check to here...
         
         issuePTOs.add(issuePTO);
     }
-    
+
     // populate the request
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_HAS_ORDER_PARAM, new Boolean(hasOrderParam));
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_START, start);
@@ -216,7 +214,6 @@ public class ListIssuesActionUtil {
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_HAS_ISSUES, hasIssues);
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_HAS_VIEW_ALL, hasViewAll);
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_NUM_VIEWABLE, numViewable);
-    request.setAttribute(ListIssuesActionUtil.ATT_NAME_K, k);
 
 
     request.setAttribute("rssFeed", "/servlets/issues/p" + project.getId());
