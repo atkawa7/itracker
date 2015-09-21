@@ -317,6 +317,10 @@ table.portalhomeMain {
     border: none;
 }
 
+.portalhomeMain.shadeList tr {
+    height: 2.5em;
+}
+
 .historyName {
     font-style: italic;
     font-size: 1em;
