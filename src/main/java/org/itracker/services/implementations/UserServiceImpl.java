@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.itracker.UserException;
 import org.itracker.model.*;
 import org.itracker.model.util.ProjectUtilities;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.persistence.dao.*;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ProjectService;
@@ -30,7 +31,6 @@ import org.itracker.services.authentication.PluggableAuthenticator;
 import org.itracker.services.exceptions.AuthenticatorException;
 import org.itracker.services.exceptions.PasswordException;
 import org.itracker.services.util.AuthenticationConstants;
-import org.itracker.model.util.UserUtilities;
 
 import java.util.*;
 
@@ -294,7 +294,7 @@ public class UserServiceImpl implements UserService {
             } else {
                 this.userPreferencesDAO.saveOrUpdate(newUserPrefs);
                 newUserPrefs = userPreferencesDAO.findByUserId(user.getId());
-                user.setUserPreferences(newUserPrefs);
+                user.setPreferences(newUserPrefs);
             }
 
             try {

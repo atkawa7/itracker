@@ -59,11 +59,6 @@ public class User extends AbstractEntity implements Comparable<Entity> {
     private int registrationType;
 
     /**
-     * The system configuration for this User.
-     */
-    private UserPreferences userPreferences;
-
-    /**
      * The Permissions of this User on all Projects.
      */
     private Set<Permission> permissions = new TreeSet<Permission>(Permission.PERMISSION_PROPERTIES_COMPARATOR);
@@ -190,13 +185,6 @@ public class User extends AbstractEntity implements Comparable<Entity> {
         this.permissions = getPermissions;
     }
 
-    public UserPreferences getUserPreferences() {
-        return userPreferences;
-    }
-
-    public void setUserPreferences(UserPreferences getPreferences) {
-        this.userPreferences = getPreferences;
-    }
 
     public int getRegistrationType() {
         return registrationType;

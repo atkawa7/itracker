@@ -13,7 +13,6 @@
         <column>status</column>
         <column>super_user</column>
         <column>registration_type</column>
-        <column>preferences_id</column>
 
         <!-- Superuser -->
         <row>
@@ -25,7 +24,6 @@
             <value>admin firstname</value>
             <value>admin lastname</value>
             <value>email@email.email</value>
-            <value>1</value>
             <value>1</value>
             <value>1</value>
             <value>1</value>
@@ -43,7 +41,6 @@
             <value>1</value>
             <value>0</value>
             <value>1</value>
-            <value>2</value>
         </row>
 
         <!-- Project admin (Refer to permissionbean_dataset.xml -->
@@ -59,7 +56,6 @@
             <value>1</value>
             <value>0</value>
             <value>1</value>
-            <null/>
         </row>
 
         <!-- Inactive user -->
@@ -75,7 +71,6 @@
             <value>0</value>
             <value>0</value>
             <value>1</value>
-            <null/>
         </row>
 
         <!-- User that doesn't belong to any projects -->
@@ -91,7 +86,6 @@
             <value>1</value>
             <value>0</value>
             <value>1</value>
-            <null/>
         </row>
 
     </table>
