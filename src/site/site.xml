@@ -29,9 +29,9 @@
 		<breadcrumbs>
 			<item name="Sourceforge" href="https://sourceforge.net/projects/itracker/" />
 			<item name="itracker"
-				href="http://www.itracker.org/" />
+				href="http://itracker.sourceforge.net/" />
             <item name="staging"
-         				href="http://www.itracker.org/staging/" />
+         				href="http://itracker.sourceforge.net/staging/" />
 		</breadcrumbs>
 
 		<menu name="itracker">

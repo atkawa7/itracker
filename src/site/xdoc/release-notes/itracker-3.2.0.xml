@@ -18,7 +18,7 @@
                     To apply to the database without loosing existing user preferences,
                     you will have to stop itracker and apply the following query (MySQL):
                     <br />
-                    <code>
+                    <code><pre>
 
                         ALTER TABLE userpreferencesbean ADD COLUMN newid INT(11) NOT NULL  AFTER id;
 
@@ -58,7 +58,7 @@
                         ALTER TABLE userpreferencesbean DROP COLUMN newid;
 
 
-                    </code>
+                    </pre></code>
 
 
                     Alternatively, shutdown itracker, drop the table userpreferences, upgrade itracker and start.
