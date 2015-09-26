@@ -1,0 +1,25 @@
+<assembly>
+    <id>bin</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeSiteDirectory>true</includeSiteDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>src/site</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>GPL.txt</include>
+                <include>LGPL.txt</include>
+                <include>INSTALL.txt</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${project.build.directory}</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>*.war</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>
