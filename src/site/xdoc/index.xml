@@ -27,6 +27,14 @@
 		<section name="News">
 			<table border="1">
                 <tr>
+                    <td>2015-9-26</td>
+                    <td>
+                        New 3.2.0 Dev Release is available for
+                        <a href="http://sourceforge.net/projects/itracker/files/">download,</a>
+                        <a href="/release-notes/itracker-3.2.0.html">more..</a>
+                    </td>
+                </tr>
+                <tr>
                     <td>2013-6-24</td>
                     <td>
                         New 3.1.5 Release is available for
