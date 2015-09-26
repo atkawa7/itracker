@@ -125,9 +125,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
             </props>
         </property>
         <property name="target" ref="notificationServiceTarget"/>
-        <property name="proxyInterfaces">
-            <value>org.itracker.services.NotificationService</value>
-        </property>
+        <property name="proxyInterfaces" value="org.itracker.services.NotificationService"/>
     </bean>
     <!-- Project service -->
     <bean id="projectService"
@@ -218,11 +216,11 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     
     <bean id="Scheduler" scope="singleton" lazy-init="false"></bean>
     -->
-    <bean id="emailService" init-method="init"
-          class="org.itracker.services.implementations.EmailService">
+    <bean id="emailServiceTarget" init-method="init"
+          class="org.itracker.services.implementations.DefaultEmailService">
         <property name="configurationService" ref="configurationService"/>
     </bean>
-    <!--  TODO: make regular service for email-service
+    <!--  TODO: make regular service for email-service     -->
     <bean id="emailService" 
         class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager" />
@@ -232,8 +230,6 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
             </props>
         </property>
         <property name="target" ref="emailServiceTarget" />
-        <property name="proxyInterfaces">
-            <value>org.itracker.services.NotificationService</value>
-        </property>
-    </bean>-->
+        <property name="proxyInterfaces" value="org.itracker.services.EmailService"/>
+    </bean>
 </beans>

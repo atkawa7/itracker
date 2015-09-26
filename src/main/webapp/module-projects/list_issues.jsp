@@ -1,8 +1,9 @@
 <%@ include file="/common/taglibs.jsp"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<bean:define id="pageTitleKey" value="itracker.web.listissues.title"/>
-<bean:define id="pageTitleArg" value="${project.name}"/>
+<bean:define toScope="request" id="pageTitleKey" value="itracker.web.listissues.title"/>
+<bean:define toScope="request" id="pageTitleArg" value="${project.name}"/>
 
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
@@ -67,7 +68,7 @@
             <td></td>  <td>
                 <c:choose>
             		<c:when test="${issuePTO.unassigned}">
-            			<c:out value="${itracker_web_generic_unassigned}"/>
+                        <it:message key="itracker.web.generic.unassigned"/>
             	 	</c:when>
             		<c:otherwise><%-- ${issuePTO.issue.owner.firstName}. ${issuePTO.issue.owner.lastName}--%>
             		  <it:formatIssueOwner issue="${issuePTO.issue}" format="short" />
@@ -92,27 +93,43 @@
             </tr>
             <tr class="listRowUnshaded" align="left">
               <td colspan="15" align="left">
+
                 <it:message key="itracker.web.generic.totalissues" arg0="${numViewable}"/>
+
               </td>
             </tr>
+        <c:if test="${preferences.numItemsOnIssueList > 0}">
             <tr class="listRowUnshaded" align="left">
               <td colspan="15" align="left">
 
-				<c:if test="${preferences.numItemsOnIssueList > 0}">
-                      <it:formatPaginationLink page="/list_issues.jsp" projectId="${project.id}" styleClass="headerLinks"
-                                               start="${100 - preferences.numItemsOnIssueList}" order="${orderParam}">
+                  <bean:define id="pageCount" value="${(numViewable / preferences.numItemsOnIssueList)}"/>
+
+                  <bean:define id="pageNr" value="${(start / preferences.numItemsOnIssueList)}"/>
+                  <bean:define id="pageNr" value="${pageNr + (1 - (pageNr % 1))}"/>
+
+
+				<c:if test="${pageNr > 1.0}">
+                      <it:formatPaginationLink page="/list_issues.do" projectId="${project.id}" styleClass="prev"
+                                               start="${start - preferences.numItemsOnIssueList}" order="${orderParam}">
                         <it:message key="itracker.web.generic.prevpage"/>
                       </it:formatPaginationLink>
                 </c:if>
-				<c:if test="${k < numViewable && preferences.numItemsOnIssueList > 0}">
-                      <it:formatPaginationLink page="/list_issues.jsp" projectId="${project.id}" styleClass="headerLinks"
-                                               start="${k}" order="${orderParam}">
+				<c:if test="${pageNr < pageCount}">
+                      <it:formatPaginationLink page="/list_issues.do" projectId="${project.id}" styleClass="next"
+                                               start="${start + preferences.numItemsOnIssueList}" order="${orderParam}">
                         <it:message key="itracker.web.generic.nextpage"/>
                       </it:formatPaginationLink>
                 </c:if>
 
+          <div class="paging">
+              (<fmt:formatNumber value="${pageNr}" maxFractionDigits="0"
+                                    />/<fmt:formatNumber
+                                    value="${pageCount}" maxFractionDigits="0" />)
+          </div>
+
               </td>
             </tr>
+                  </c:if>
             </c:when>
             <c:otherwise>
             	 <tr class="listRowUnshaded" align="left"><td colspan="15" align="left"><it:message key="itracker.web.error.noissues"/></td></tr>

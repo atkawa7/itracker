@@ -39,7 +39,8 @@
         <action path="/error" type="org.itracker.web.actions.ErrorAction"/>
         <action path="/editpreferencesform"
                 type="org.itracker.web.actions.preferences.EditPreferencesFormAction"
-                name="preferencesForm" scope="request" validate="false">
+                name="preferencesForm" scope="request" validate="false"
+                input="/edit_preferences.jsp">
             <forward name="editpreferencesform" path="/edit_preferences.jsp"
                      module="/module-preferences"/>
         </action>

@@ -1,6 +1,7 @@
 package org.itracker.selenium;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import java.io.IOException;
 
@@ -25,12 +26,12 @@ public class LoginSeleniumIT extends AbstractSeleniumTestCase {
     @Test
     public void testLoginSuccessDefaultAdmin() throws IOException {
         closeSession();
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        loginUser("admin_test1", "admin_test1");
+        login("admin_test1", "admin_test1");
 
-        assertTrue(selenium.isElementPresent("xpath=//*[@name='id']"));
+        assertElementPresent(By.name("id"));
     }
 
     /**
@@ -46,15 +47,18 @@ public class LoginSeleniumIT extends AbstractSeleniumTestCase {
     @Test
     public void testLoginFailure() throws IOException {
         closeSession();
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
         try {
-            loginUser("wrong_login", "wrong_password");
+            assertElementPresent(By.name("login")).sendKeys("wrong_login");
+            assertElementPresent(By.name("password")).sendKeys("wrong_password");
+            assertElementPresent(By.xpath("//*[@value='Login']")).click();
         } catch (Exception e) {
-
+             // fine
         } finally {
-            assertFalse(selenium.isElementPresent("xpath=//*[@name='id']"));
+            waitForPageToLoad();
+            assertElementNotPresent(By.name("id"));
         }
 
     }

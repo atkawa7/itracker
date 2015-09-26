@@ -4,13 +4,13 @@
  */
 package org.itracker.web.util;
 
-import org.junit.Ignore;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.ImportExportException;
 import org.itracker.model.*;
 import org.itracker.model.CustomField.Type;
 import org.itracker.model.util.IssueUtilities;
 import org.itracker.model.util.ProjectUtilities;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;

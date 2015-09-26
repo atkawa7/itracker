@@ -148,7 +148,7 @@ iscal - based on apple's ical default design
 }
 
 .iscal table.cal_table tbody.cal_wrapper tr.weekbox td.daybox {
-	border:	border-left:1px solid #cccccc;
+	border-left:1px solid #cccccc;
 	border-bottom: 1px solid #cccccc;
 	width:70px;
 	height:70px;

@@ -19,10 +19,10 @@
 
     <global-forwards>
         <forward name="autologin" path="/autologin.do"/>
-        <forward name="arrivalforward" path="/portalhome.do"/>
+        <forward name="arrivalforward" path="/portalhome.do" redirect="true"/>
         <forward name="adminindex" module="/module-admin" path="/adminhome.do"/>
 
-        <forward name="downloadattachment" path="/servlets/AttachmentDownloadController"/>
+        <forward name="downloadattachment" module="/module-projects" path="/downloadAttachment.do"/>
         <!--
            <forward name="editissue" module="/module-projects" path="/editissue.do" />
         -->

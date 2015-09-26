@@ -1,6 +1,7 @@
 package org.itracker.selenium;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import java.io.IOException;
 
@@ -30,28 +31,29 @@ public class ViewPortalHomeSeleniumIT extends AbstractSeleniumTestCase {
      */
     @Test
     public void testViewHomePage() throws IOException {
-        SeleniumManager.closeSession(selenium);
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        closeSession();
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        loginUser("admin_test1", "admin_test1");
+        login("admin_test1", "admin_test1");
 
-        assertElementPresent("id");
-        assertElementPresent("id=unassignedIssues");
-        assertEquals("count //tr[starts-with(@id, 'unassignedIssue.')]", 2, selenium.getXpathCount("//tr[starts-with(@id, 'unassignedIssue.')]"));
-        assertElementPresent("xpath=//tr[starts-with(@id,'unassignedIssue.')]/td[3][text()='1']/../td[5][text()='test_name']/../td[11][text()='test_description']");
-        assertElementPresent("xpath=//tr[starts-with(@id,'unassignedIssue.')]/td[3][text()='2']/../td[5][text()='test_name']/../td[11][text()='test_description 2']");
+        assertElementPresent(By.name("id"));
+        assertElementPresent(By.id("unassignedIssues"));
+        assertElementCountEquals(2, By.xpath("//*[starts-with(@id, 'unassignedIssue.')]"));
+        assertElementPresent(By.xpath("//*[starts-with(@id,'unassignedIssue.')]/*[3][text()='1']/../*[5][text()='test_name']/../*[11][text()='test_description']"));
+        assertElementPresent(By.xpath("//*[starts-with(@id,'unassignedIssue.')]/*[3][text()='2']/../*[5][text()='test_name']/../*[11][text()='test_description 2']"));
 
-        assertElementPresent("id=createdIssues");
-        assertEquals("count //tr[starts-with(@id, 'createdIssue.')]", 4, selenium.getXpathCount("//tr[starts-with(@id, 'createdIssue.')]"));
-        assertElementPresent("xpath=//tr[starts-with(@id,'createdIssue.')]/td[3][text()='1']/../td[5][text()='test_name']/../td[11][text()='test_description']");
-        assertElementPresent("xpath=//tr[starts-with(@id,'createdIssue.')]/td[3][text()='2']/../td[5][text()='test_name']/../td[11][text()='test_description 2']");
-        assertElementPresent("xpath=//tr[starts-with(@id,'createdIssue.')]/td[3][text()='3']/../td[5][text()='test_name']/../td[11][text()='test_description 3']");
-        assertElementPresent("xpath=//tr[starts-with(@id,'createdIssue.')]/td[3][text()='4']/../td[5][text()='test_name']/../td[11][text()='test_description 4']");
+        assertElementPresent(By.id("createdIssues"));
+        assertElementCountEquals(4, By.xpath("//*[starts-with(@id, 'createdIssue.')]"));
+        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.')]/*[3][text()='1']/../*[5][text()='test_name']/../*[11][text()='test_description']"));
+        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.')]/*[3][text()='2']/../*[5][text()='test_name']/../*[11][text()='test_description 2']"));
+        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.')]/*[3][text()='3']/../*[5][text()='test_name']/../*[11][text()='test_description 3']"));
+        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.')]/*[3][text()='4']/../*[5][text()='test_name']/../*[11][text()='test_description 4']"));
 
-        assertElementPresent("id=watchedIssues");
-        assertFalse("unexpected watchedIssue", selenium.isElementPresent("//tr[starts-with(@id, 'watchedIssue.')]"));
+        assertElementPresent(By.id("watchedIssues"));
+        assertElementNotPresent(By.xpath("//*[starts-with(@id, 'watchedIssue.')]"));
     }
+
 
     @Override
     protected String[] getDataSetFiles() {

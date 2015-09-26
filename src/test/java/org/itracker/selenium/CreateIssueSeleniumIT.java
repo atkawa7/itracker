@@ -4,7 +4,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.itracker.model.User;
 import org.itracker.persistence.dao.UserDAO;
+import org.itracker.services.ITrackerServices;
+import org.itracker.web.util.ServletContextUtils;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.subethamail.wiser.WiserMessage;
 
 /**
@@ -37,41 +40,48 @@ public class CreateIssueSeleniumIT extends AbstractSeleniumTestCase {
         final String descriptionValue = "Issue to be unassigned.";
         final String historyValue = "Issue to be unassigned history.";
 
-        selenium.open(applicationURL);
+        driver.get(applicationURL);
 
-        loginUser("admin_test1", "admin_test1");
+        login("admin_test1", "admin_test1");
 
         // Click "Projects List".
-        selenium.click("listprojects");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.name("listprojects")).click();
+        waitForPageToLoad();
 
         // Click issue creation link (usually it's named "Create").
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'project.')]" +
-                "/td[3][text()='test_name']/../td[1]/a[2]"));
-        selenium.click("//tr[starts-with(@id, 'project.')]" +
-                "/td[3][text()='test_name']/../td[1]/a[2]");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]" +
+                "/*[3][text()='test_name']/../*[1]/a[2]"))
+        .click();
+        waitForPageToLoad();
 
-        assertTrue(selenium.isElementPresent("description"));
-        assertTrue(selenium.isElementPresent("ownerId"));
-        assertTrue(selenium.isElementPresent("creatorId"));
-        assertTrue(selenium.isElementPresent("severity"));
-        assertTrue(selenium.isElementPresent("versions"));
+        assertElementPresent(By.name("description"));
+        assertElementPresent(By.name("ownerId"));
+        assertElementPresent(By.name("creatorId"));
+        assertElementPresent(By.name("severity"));
+        assertElementPresent(By.name("versions"));
 
-        selenium.type("//td[@id='description']/input", descriptionValue);
-        selenium.type("history", historyValue);
+        assertElementPresent(By.id("description"))
+                .findElement(By.tagName("input"))
+                .sendKeys(descriptionValue);
+        assertElementPresent(By.name("history"))
+                .sendKeys(historyValue);
 
-        selenium.select("//td[@id='ownerId']/select", "value=-1");
+        log.debug(driver.getPageSource());
+
+        assertElementPresent(By.cssSelector("#ownerId select option[value='-1']"))
+                .click();
         final UserDAO userDao = (UserDAO) applicationContext.getBean("userDAO");
         final User user = userDao.findByLogin("admin_test1");
         assertTrue(null != user);
         final long userId = user.getId();
-        selenium.select("//td[@id='creatorId']/select", "value=" + userId);
+        assertElementPresent(By.cssSelector("#creatorId select option[value='" + userId + "']"))
+        .click();
 
         int received = wiser.getMessages().size();
 
-        selenium.click("//td[@id='submit']/input");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.cssSelector("#submit input"))
+            .click();
+        waitForPageToLoad();
 
         assertEquals("wiser.receivedEmailSize", received + 1, wiser.getMessages().size());
         final WiserMessage smtpMessage = wiser.getMessages().get(received);
@@ -80,10 +90,9 @@ public class CreateIssueSeleniumIT extends AbstractSeleniumTestCase {
 
         log.debug("testCreateUnassignedIssue, received:\n" + smtpMessageBody);
         // as defined in jetty-env.xconf
-        final String systemURL = applicationURL + "/env";
-        // TODO not working from env
-       // assertTrue("System URL not contained in Message body, " + systemURL + ", " + smtpMessageBody,
-       //         StringUtils.containsIgnoreCase(smtpMessageBody, systemURL));
+
+        assertTrue("System URL in Message body, " + applicationURL + ", " + smtpMessageBody,
+                StringUtils.containsIgnoreCase(smtpMessageBody, applicationURL));
 
         assertTrue("Description not contained in Message body, " + descriptionValue,
                 smtpMessageBody.contains(descriptionValue));
@@ -91,24 +100,23 @@ public class CreateIssueSeleniumIT extends AbstractSeleniumTestCase {
                 smtpMessageBody.contains(historyValue));
 
         // Check that the total number of issues is 5 now (4 from db + 1 our).
-        assertTrue(selenium.isElementPresent("issues"));
-        assertEquals(5, selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'issue.')]" +
-                "/td[11][text()='" + descriptionValue + "']"));
+        assertElementPresent(By.id("issues"));
+        assertElementCountEquals(5, By.xpath("//*[starts-with(@id, 'issue.')]"));
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]" +
+                "/*[11][text()='" + descriptionValue + "']"));
 
-        selenium.open(applicationURL + "/portalhome.do");
+        driver.get(applicationURL + "/portalhome.do");
 
         // Check that just created issue has appeared in "Unassigned" area.
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id,'unassignedIssue.')]" +
-                "/td[5][text()='test_name']/../td[11][text()='" + descriptionValue + "']"));
+        assertElementPresent(By.xpath("//*[starts-with(@id,'unassignedIssue.')]" +
+                "/*[5][text()='test_name']/../*[11][text()='" + descriptionValue + "']"));
 
         // Check that just created issue has appeared in "Created" area.
-        assertTrue(selenium.isElementPresent("xpath=//tr[starts-with(@id,'createdIssue.')]" +
-                "/td[5][text()='test_name']/../td[11][text()='" + descriptionValue + "']"));
+        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.')]" +
+                "/*[5][text()='test_name']/../*[11][text()='" + descriptionValue + "']"));
 
         // Check that number of watched items is 0.
-        assertFalse("unexpected watchedIssue",
-                selenium.isElementPresent("//tr[starts-with(@id, 'watchedIssue.')]"));
+        assertElementNotPresent(By.xpath("//*[starts-with(@id, 'watchedIssue.')]"));
     }
 
     /**
@@ -123,41 +131,43 @@ public class CreateIssueSeleniumIT extends AbstractSeleniumTestCase {
         log.info(" running testCreateAssignedIssue");
         closeSession();
 
-        selenium.open(applicationURL);
+        driver.get(applicationURL);
 
-        loginUser("admin_test1", "admin_test1");
+        login("admin_test1", "admin_test1");
 
         // Clicking "Project List" link.
-        selenium.click("listprojects");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.name("listprojects"))
+        .click();
+        waitForPageToLoad();
 
         // Click issue creation link (usually it's named "Create").
-        assertTrue(selenium.isElementPresent("//tr[starts-with(@id, 'project.')]" +
-                "/td[3][text()='test_name']/../td[1]/a[2]"));
-        selenium.click("//tr[starts-with(@id, 'project.')]" +
-                "/td[3][text()='test_name']/../td[1]/a[2]");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]" +
+                "/*[3][text()='test_name']/../*[1]/a[2]"))
+        .click();
+        waitForPageToLoad();
 
-        assertTrue(selenium.isElementPresent("description"));
-        assertTrue(selenium.isElementPresent("ownerId"));
-        assertTrue(selenium.isElementPresent("creatorId"));
-        assertTrue(selenium.isElementPresent("severity"));
-        assertTrue(selenium.isElementPresent("versions"));
+        assertElementPresent(By.name("description"))
+        .sendKeys(descriptionValue);
+        assertElementPresent(By.name("ownerId"));
+        assertElementPresent(By.name("creatorId"));
+        assertElementPresent(By.name("severity"));
+        assertElementPresent(By.name("versions"));
+        assertElementPresent(By.name("history"))
+        .sendKeys(historyValue);
 
-
-        selenium.type("//input[@name='description']", descriptionValue);
-        selenium.type("history", historyValue);
         final UserDAO userDao = (UserDAO) applicationContext.getBean("userDAO");
         final User user = userDao.findByLogin("admin_test1");
-        assertTrue(null != user);
+        assertTrue("user #admin_test1", null != user);
         final long userId = user.getId();
-        selenium.select("//td[@id='ownerId']/select", "value=" + userId);
-        selenium.select("//td[@id='creatorId']/select", "value=" + userId);
-
+        assertElementPresent(By.cssSelector("#ownerId select option[value='" + userId + "']"))
+        .click();
+        assertElementPresent(By.cssSelector("#creatorId select option[value='" + userId + "']"))
+        .click();
 
         int received = wiser.getMessages().size();
-        selenium.click("//td[@id='submit']/input");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.cssSelector("#submit input"))
+        .click();
+        waitForPageToLoad();
 
         assertEquals("wiser.receivedEmailSize", received + 2, wiser.getMessages().size());
         final WiserMessage smtpMessage1 = wiser.getMessages().get(received);
@@ -177,26 +187,21 @@ public class CreateIssueSeleniumIT extends AbstractSeleniumTestCase {
         assertTrue(smtpMessageBody2.contains(historyValue));
 //
         // Checking that our new issue has appeared in "View Issues".
-        assertElementPresent("issues");
-        assertEquals("count //tr[starts-with(@id, 'issue.')]", 5,
-                selenium.getXpathCount("//tr[starts-with(@id, 'issue.')]"));
-        assertElementPresent("//tr[starts-with(@id, 'issue.')]/td[11][text()='" + descriptionValue + "']");
+        assertElementPresent(By.id("issues"));
+        assertElementCountEquals(5, By.xpath("//*[starts-with(@id, 'issue.')]"));
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]/*[11][text()='" + descriptionValue + "']"));
 
-        selenium.open(applicationURL + "/portalhome.do");
+        driver.get(applicationURL + "/portalhome.do");
 
         // Checking that our new issue has not appeared in "Unassigned" area.
-        assertFalse("still unassigned issue " + descriptionValue,
-                selenium.isElementPresent("//tr[starts-with(@id,'unassignedIssue.')]" +
-                        "/td[5][text()='test_name']/../td[11][text()='" + descriptionValue + "']"));
+        assertElementNotPresent(By.xpath("//*[starts-with(@id,'unassignedIssue.')]" +
+                        "/*[5][text()='test_name']/../*[11][text()='" + descriptionValue + "']"));
         // Checking that our new issue has appeared in "Created" area.
-        assertElementPresent("//tr[starts-with(@id,'createdIssue.')]" +
-                "/td[5][text()='test_name']/../td[11][text()='" + descriptionValue + "']");
+        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.')]" +
+                "/*[5][text()='test_name']/../*[11][text()='" + descriptionValue + "']"));
 
         // Check that "Watched" area is still empty.
-        assertFalse("unexpected watchedIssue",
-                selenium.isElementPresent("//tr[starts-with(@id, 'watchedIssue.')]")
-
-        );
+        assertElementNotPresent(By.xpath("//*[starts-with(@id, 'watchedIssue.')]"));
     }
 
     @Override

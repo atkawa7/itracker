@@ -18,14 +18,10 @@
 
 package org.itracker.model;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.itracker.persistence.dao.ProjectDAO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -71,7 +67,7 @@ public class IssueSearchQuery implements Serializable {
         if (null != value) {
             availableProjects = Collections.unmodifiableList(value);
         } else {
-            availableProjects = Collections.EMPTY_LIST;
+            availableProjects = Collections.emptyList();
         }
     }
 
@@ -108,7 +104,7 @@ public class IssueSearchQuery implements Serializable {
         if (value != null) {
             projects = Collections.unmodifiableList(value);
         } else {
-            projects = Collections.EMPTY_LIST;
+            projects = Collections.emptyList();
         }
     }
 
@@ -120,7 +116,7 @@ public class IssueSearchQuery implements Serializable {
         if (value != null) {
             severities = Collections.unmodifiableList(value);
         } else {
-            severities = Collections.EMPTY_LIST;
+            severities = Collections.emptyList();
         }
     }
 
@@ -132,7 +128,7 @@ public class IssueSearchQuery implements Serializable {
         if (value != null) {
             statuses = Collections.unmodifiableList(value);
         } else {
-            statuses = Collections.EMPTY_LIST;
+            statuses = Collections.emptyList();
         }
     }
 
@@ -145,7 +141,7 @@ public class IssueSearchQuery implements Serializable {
         if (value != null) {
             components = Collections.unmodifiableList(value);
         } else {
-            components = Collections.EMPTY_LIST;
+            components = Collections.emptyList();
         }
     }
 
@@ -157,7 +153,7 @@ public class IssueSearchQuery implements Serializable {
         if (value != null) {
             versions = Collections.unmodifiableList(value);
         } else {
-            versions = Collections.EMPTY_LIST;
+            versions = Collections.emptyList();
         }
     }
 
@@ -239,13 +235,4 @@ public class IssueSearchQuery implements Serializable {
       * the proper fix would be to always keep objects
       */
 
-    // from the list of project ids this objects has, return a list of
-    // projects
-    public Collection<?> getProjectsObjects(final ProjectDAO projectDAO) {
-        return CollectionUtils.collect(getProjects(), new Transformer() {
-            public Object transform(Object arg0) {
-                return projectDAO.findByPrimaryKey((Integer) arg0);
-            }
-        });
-    }
 }

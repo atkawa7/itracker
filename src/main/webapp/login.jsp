@@ -1,13 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
-<html:form action="/login" focus="login" onsubmit="return validateLoginForm(this);">
+<html:form action="/login" focus="login">
 
   <input type="hidden" name="authtype" value="1">
-    <%-- TODO is this AUTH_REDIRECT_KEY still needed? --%>
-  <logic:notEmpty name="authredirect" scope="request">
-      <input type="hidden" name="authredirect" value="<bean:write name="authredirect" scope="request" />">
-  </logic:notEmpty>
-
-  <html:javascript formName="loginForm"/>
 
   <table border="0" cellpadding="2" cellspacing="0">
     <tr>

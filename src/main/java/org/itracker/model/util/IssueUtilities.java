@@ -245,43 +245,39 @@ public class IssueUtilities {
         return fieldNames;
     }
 
-    public static String getRelationName(int value) {
+    public static String getRelationName(IssueRelation.Type value) {
         return getRelationName(value, ITrackerResources.getLocale());
     }
 
-    public static String getRelationName(int value, Locale locale) {
-        return getRelationName(Integer.toString(value), locale);
-    }
 
-    public static String getRelationName(String value, Locale locale) {
+    public static String getRelationName(IssueRelation.Type value, Locale locale) {
         return ITrackerResources.getString(
-                ITrackerResources.KEY_BASE_ISSUE_RELATION + value, locale);
+                ITrackerResources.KEY_BASE_ISSUE_RELATION + value.getCode(), locale);
     }
 
-    public static int getMatchingRelationType(int relationType) {
+    public static IssueRelation.Type getMatchingRelationType(IssueRelation.Type relationType) {
         switch (relationType) {
-            case RELATION_TYPE_RELATED_P:
-                return RELATION_TYPE_RELATED_C;
-            case RELATION_TYPE_RELATED_C:
-                return RELATION_TYPE_RELATED_P;
-            case RELATION_TYPE_DUPLICATE_P:
-                return RELATION_TYPE_DUPLICATE_C;
-            case RELATION_TYPE_DUPLICATE_C:
-                return RELATION_TYPE_DUPLICATE_P;
-            case RELATION_TYPE_CLONED_P:
-                return RELATION_TYPE_CLONED_C;
-            case RELATION_TYPE_CLONED_C:
-                return RELATION_TYPE_CLONED_P;
-            case RELATION_TYPE_SPLIT_P:
-                return RELATION_TYPE_SPLIT_C;
-            case RELATION_TYPE_SPLIT_C:
-                return RELATION_TYPE_SPLIT_P;
-            case RELATION_TYPE_DEPENDENT_P:
-                return RELATION_TYPE_DEPENDENT_C;
-            case RELATION_TYPE_DEPENDENT_C:
-                return RELATION_TYPE_DEPENDENT_P;
+            case RELATED_P:
+                return IssueRelation.Type.RELATED_C;
+            case RELATED_C:
+                return IssueRelation.Type.RELATED_P;
+            case DUPLICATE_P:
+                return IssueRelation.Type.DUPLICATE_C;
+            case DUPLICATE_C:
+                return IssueRelation.Type.DUPLICATE_P;
+            case CLONED_P:
+                return IssueRelation.Type.CLONED_C;
+            case CLONED_C:
+                return IssueRelation.Type.CLONED_P;
+            case SPLIT_P:
+                return IssueRelation.Type.SPLIT_C;
+            case SPLIT_C:
+                return IssueRelation.Type.SPLIT_P;
+            case DEPENDENT_P:
+                return IssueRelation.Type.DEPENDENT_C;
+            case DEPENDENT_C:
             default:
-                return -1;
+                return IssueRelation.Type.DEPENDENT_P;
         }
     }
 

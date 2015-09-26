@@ -139,7 +139,7 @@ public interface IssueService {
 
     boolean addIssueHistory(IssueHistory history);
 
-    boolean addIssueRelation(Integer issueId, Integer relatedIssueId, int relationType, Integer userId);
+    boolean addIssueRelation(Integer issueId, Integer relatedIssueId, IssueRelation.Type relationType, Integer userId);
 
     boolean addIssueAttachment(IssueAttachment attachment, byte[] data);
 

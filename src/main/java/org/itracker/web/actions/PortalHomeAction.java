@@ -1,10 +1,11 @@
 package org.itracker.web.actions;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 import org.itracker.model.util.IssueUtilities;
 import org.itracker.model.util.UserUtilities;
@@ -44,11 +45,14 @@ public class PortalHomeAction extends ItrackerBaseAction {
             if (forward.getName().equals("portalhome")
 					|| forward.getName().equals("index")) {
                 
-                IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
-                ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
-                UserService userService = ServletContextUtils.getItrackerServices().getUserService();
-                User currUser = (User)request.getSession().getAttribute("currUser");
-                Locale locale = super.getLocale(request);
+                final IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
+                final ProjectService projectService = ServletContextUtils.getItrackerServices().getProjectService();
+                final UserService userService = ServletContextUtils.getItrackerServices().getUserService();
+                final User currUser = (User)request.getSession().getAttribute("currUser");
+                final Locale locale = super.getLocale(request);
+
+                final Map<Integer, Set<PermissionType>> permissions =
+                        (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");
 
                 // GETTING AND SETTING USER PREFS AND HIDDEN SECTIONS ACCORDINGLY
                 UserPreferences userPrefs = currUser.getPreferences();
@@ -131,23 +135,30 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     Collections.sort(createdIssues, sort_id);
                     Collections.sort(ownedIssues, sort_id);
                     Collections.sort(unassignedIssues, sort_id);
+                    CollectionUtils.removeAll(unassignedIssues, CollectionUtils.select(unassignedIssues,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate(Object object) {
+                                return object instanceof Issue
+                                        && IssueUtilities.canViewIssue((Issue) object, currUser.getId(), permissions);
+                            }
+                        }
+                    ));
                     Collections.sort(watchedIssues, sort_id);
                 }
                 
                 // COPYING MODELS INTO PTOS
                 
                 // SETTING USER PERMISSIONS ON THE ISSUES
-// Marky:  Made function that would built the PTOs
-                ownedIssuePTOs = buildIssueList( ownedIssues, request );
-                unassignedIssuePTOs = buildIssueList( unassignedIssues, request );
-                createdIssuePTOs = buildIssueList( createdIssues, request );
-                watchedIssuePTOs = buildIssueList( watchedIssues, request );
+                ownedIssuePTOs = buildIssueList( ownedIssues, request, permissions );
+                unassignedIssuePTOs = buildIssueList( unassignedIssues, request, permissions );
+                createdIssuePTOs = buildIssueList( createdIssues, request, permissions );
+                watchedIssuePTOs = buildIssueList( watchedIssues, request, permissions );
                 if ( watchedIssuePTOs != null && watchedIssuePTOs.size() > 0 && unassignedIssuePTOs != null && unassignedIssuePTOs.size() > 0 ) {
-                    for ( Iterator<IssuePTO> witerator = watchedIssuePTOs.iterator(); witerator.hasNext(); ) {
-                        IssuePTO watchedIssue = (IssuePTO) witerator.next();
-                        for ( int i = 0; i < unassignedIssuePTOs.size(); i++ ) {
-                            if ( watchedIssue.getIssue().getId() == unassignedIssuePTOs.get(i).getIssue().getId() ) {
-                                unassignedIssuePTOs.get(i).setUserHasIssueNotification(false);
+                    for (IssuePTO watchedIssue : watchedIssuePTOs) {
+                        for (IssuePTO unassignedIssuePTO : unassignedIssuePTOs) {
+                            if (watchedIssue.getIssue().getId() == unassignedIssuePTO.getIssue().getId()) {
+                                unassignedIssuePTO.setUserHasIssueNotification(false);
                             }
                         }
                     }
@@ -162,46 +173,38 @@ public class PortalHomeAction extends ItrackerBaseAction {
 
                 HttpSession session = request.getSession(true);
                 Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(session);
-                
-                Iterator<IssuePTO> unassignedIssuePTOIt = unassignedIssuePTOs.iterator();
-                while (unassignedIssuePTOIt.hasNext()) {
-					IssuePTO issuePTO = unassignedIssuePTOIt.next();
 
+                for (IssuePTO issuePTO : unassignedIssuePTOs) {
                     List<User> possibleIssueOwners = new ArrayList<User>();
                     boolean creatorPresent = false;
                     final Issue issue = issuePTO.getIssue();
                     final Project project = issueService.getIssueProject(issue.getId());
-                    
+
                     final List<NameValuePair> ownersList;
-                    
+
                     ownersList = EditIssueActionUtil.getAssignableIssueOwnersList(issue, project, currUser, locale, userService, userPermissions);
-                    
-                    for ( Iterator idIterator = ownersList.iterator(); idIterator.hasNext(); ) {
-                        NameValuePair owner = (NameValuePair) idIterator.next();
+
+                    for (NameValuePair owner : ownersList) {
                         possibleIssueOwners.add(userService.getUser(Integer.parseInt(owner.getValue())));
-                        if ( owner.getValue().equals(String.valueOf(issue.getCreator().getId()) )) {
+                        if (owner.getValue().equals(String.valueOf(issue.getCreator().getId()))) {
                             creatorPresent = true;
                         }
                     }
-                    
-                    if(! creatorPresent) {
-                        Iterator premIterator = issue.getCreator().getPermissions().iterator();
-                        while (premIterator.hasNext()) {
-                            Permission creatorPermission = (Permission) premIterator.next();
-                            if ( creatorPermission.getPermissionType() == UserUtilities.PERMISSION_EDIT_USERS ) {
+
+                    if (!creatorPresent) {
+                        for (Permission creatorPermission : issue.getCreator().getPermissions()) {
+                            if (creatorPermission.getPermissionType() == UserUtilities.PERMISSION_EDIT_USERS) {
                                 possibleIssueOwners.add(userService.getUser(issue.getCreator().getId()));
                                 break;
                             }
                         }
                     }
                     issuePTO.setPossibleOwners(possibleIssueOwners);
-                    
+
                 }
                 
 
-                
-                request.setAttribute("itracker_web_generic_unassigned", ITrackerResources.getString("itracker.web.generic.unassigned", locale));
-                
+
                 // PUTTING ISSUES INTO THE REQUEST SCOPE
 				LOGGER.info("ownedIssues Size: " + ownedIssuePTOs.size());
 				request.setAttribute("ownedIssues", ownedIssuePTOs);
@@ -217,14 +220,14 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 
                 
                 
-                LOGGER.info("Found forward: "+forward.getName()+" and stepped into action method that's populating portalhome");
-                
-                
-                String pageTitleKey = "itracker.web.index.title";
-                String pageTitleArg = "";
-                request.setAttribute(Constants.PAGE_TITLE_KEY,pageTitleKey);
-                request.setAttribute(Constants.PAGE_TITLE_ARG,pageTitleArg);
-                
+                LOGGER.info("Found forward: " + forward.getName() + " and stepped into action method that's populating portalhome");
+
+//
+//                String pageTitleKey = "itracker.web.index.title";
+//                String pageTitleArg = "";
+//                request.setAttribute(Constants.PAGE_TITLE_KEY,pageTitleKey);
+//                request.setAttribute(Constants.PAGE_TITLE_ARG,pageTitleArg);
+
                 request.setAttribute("ih",issueService);
                 request.setAttribute("ph",projectService);
                 request.setAttribute("uh",userService);
@@ -257,11 +260,9 @@ public class PortalHomeAction extends ItrackerBaseAction {
     // function for further processing.
     
     @SuppressWarnings("unchecked")
-	public List<IssuePTO> buildIssueList( List<Issue> issues, HttpServletRequest request ) {
+	public List<IssuePTO> buildIssueList(List<Issue> issues, HttpServletRequest request, Map<Integer, Set<PermissionType>> permissions) {
         User currUser = LoginUtilities.getCurrentUser(request);
         Locale locale = getLocale(request);
-        Map<Integer, Set<PermissionType>> permissions =
-                (Map<Integer, Set<PermissionType>>)request.getSession().getAttribute("permissions");
         
         List<IssuePTO> issuePTOs = new ArrayList<IssuePTO>();
         
@@ -270,13 +271,12 @@ public class PortalHomeAction extends ItrackerBaseAction {
             IssuePTO issuePTO = new IssuePTO(issue);
             issuePTO.setSeverityLocalizedString(IssueUtilities.getSeverityName(issue.getSeverity(), locale));
             issuePTO.setStatusLocalizedString(IssueUtilities.getStatusName(issue.getStatus(), locale));
-            issuePTO.setUnassigned((issuePTO.getIssue().getOwner() == null ? true : false));
+            issuePTO.setUnassigned((issuePTO.getIssue().getOwner() == null));
             issuePTO.setUserCanEdit(IssueUtilities.canEditIssue(issue, currUser.getId(), permissions));
             issuePTO.setUserCanViewIssue(IssueUtilities.canViewIssue(issue, currUser.getId(), permissions));
             issuePTO.setUserHasPermission_PERMISSION_ASSIGN_SELF(UserUtilities.hasPermission(permissions, issue.getProject().getId(), UserUtilities.PERMISSION_ASSIGN_SELF));
             issuePTO.setUserHasPermission_PERMISSION_ASSIGN_OTHERS(UserUtilities.hasPermission(permissions, issue.getProject().getId(), UserUtilities.PERMISSION_ASSIGN_OTHERS));
             issuePTO.setUserHasIssueNotification(IssueUtilities.hasIssueNotification(issue, currUser.getId()));
-            
             issuePTOs.add(issuePTO);
         }
         return issuePTOs;

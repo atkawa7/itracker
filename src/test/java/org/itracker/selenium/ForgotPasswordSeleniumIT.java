@@ -1,8 +1,9 @@
 package org.itracker.selenium;
 
-import org.itracker.services.ITrackerServices;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.ITrackerServices;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.subethamail.wiser.WiserMessage;
 
 import java.util.regex.MatchResult;
@@ -26,20 +27,24 @@ public class ForgotPasswordSeleniumIT extends AbstractSeleniumTestCase {
     @Test
     public void testIfBothRequired() throws Exception {
         log.info("running testIfBothRequired");
-        SeleniumManager.closeSession(selenium);
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        closeSession();
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        selenium.click("name=forgotpassword");//("link=Forgot My Password");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.name("forgotpassword")).click();
+        waitForPageToLoad();
 
-        assertTrue(selenium.isElementPresent("login"));
-        assertTrue(selenium.isElementPresent("lastName"));
-        selenium.click("//input[@type='submit']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.name("login")).clear();
+        assertElementPresent(By.name("lastName")).clear();
 
-        assertEquals("Login is required\n Last Name is required",
-                selenium.getText("//div[@class='formError']"));
+        assertElementNotPresent(By.cssSelector("#pageErrors"));
+
+        assertElementPresent(By.xpath("//input[@type='submit']")).click();
+        waitForPageToLoad();
+
+        assertElementTextEquals("Login is required\n" +
+                "Last Name is required",
+                By.className("formError"));
     }
 
     /**
@@ -52,20 +57,20 @@ public class ForgotPasswordSeleniumIT extends AbstractSeleniumTestCase {
     @Test
     public void testIfLoginRequired() throws Exception {
         log.info("running testIfLoginRequired");
-        SeleniumManager.closeSession(selenium);
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        closeSession();
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        selenium.click("name=forgotpassword");//("link=Forgot My Password");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        driver.findElement(By.name("forgotpassword")).click();
+        waitForPageToLoad();
 
-        assertTrue(selenium.isElementPresent("login"));
-        assertTrue(selenium.isElementPresent("lastName"));
-        selenium.type("lastName", "user");
-        selenium.click("//input[@type='submit']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.name("login"));
+        assertElementPresent(By.name("lastName")).sendKeys("user");
 
-        assertEquals("Login is required", selenium.getText("//div[@class='formError']"));
+        assertElementPresent(By.xpath("//input[@type='submit']")).click();
+        waitForPageToLoad();
+
+        assertElementTextEquals("Login is required", By.className("formError"));
     }
 
     /**
@@ -77,18 +82,21 @@ public class ForgotPasswordSeleniumIT extends AbstractSeleniumTestCase {
      */
     @Test
     public void testIfLastNameRequired() throws Exception {
-        SeleniumManager.closeSession(selenium);
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        closeSession();
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
-        selenium.click("name=forgotpassword");//("link=Forgot My Password");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        driver.findElement(By.name("forgotpassword")).click();
+        waitForPageToLoad();
 
-        selenium.type("login", "user");
-        selenium.click("//input[@type='submit']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
+        assertElementPresent(By.name("login")).sendKeys("user");
+        assertElementPresent(By.name("lastName"));
 
-        assertEquals("Last Name is required", selenium.getText("//div[@class='formError']"));
+        assertElementPresent(By.xpath("//input[@type='submit']")).click();
+        waitForPageToLoad();
+
+        assertElementTextEquals("Last Name is required", By.className("formError"));
+
     }
 
     /**
@@ -108,29 +116,25 @@ public class ForgotPasswordSeleniumIT extends AbstractSeleniumTestCase {
     @Test
     public void testRetrievingForgottenPassword() throws Exception {
         log.info("running testRetrievingForgottenPassword");
-        SeleniumManager.closeSession(selenium);
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        closeSession();
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
 
         final String newPassword;
 
-        assertElementPresent("name=forgotpassword");
-        selenium.click("name=forgotpassword");//("link=Forgot My Password");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
-        assertElementPresent("login");
-        selenium.type("login", "user_test1");
-        assertElementPresent("lastName");
-        selenium.type("lastName", "user lastname");
+        driver.findElement(By.name("forgotpassword")).click();
+        waitForPageToLoad();
 
-        assertElementPresent("//input[@type='submit']");
-
+        assertElementPresent(By.name("login")).sendKeys("user_test1");
+        assertElementPresent(By.name("lastName")).sendKeys("user lastname");
 
         int received = wiser.getMessages().size();
-        selenium.click("//input[@type='submit']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
 
-        assertElementPresent("login");
-        assertElementPresent("password");
+        assertElementPresent(By.xpath("//input[@type='submit']")).click();
+        waitForPageToLoad();
+
+        assertElementPresent(By.name("login"));
+        assertElementPresent(By.name("password"));
         assertEquals("wiser.receivedEmailSize", received + 1, wiser.getMessages().size());
         final WiserMessage smtpMessage = wiser.getMessages().get(received);
         final String smtpMessageBody = (String) smtpMessage.getMimeMessage().getContent();
@@ -143,17 +147,12 @@ public class ForgotPasswordSeleniumIT extends AbstractSeleniumTestCase {
 
         assertEquals("new password", newPwEnc, UserUtilities.encryptPassword(newPassword));
 
-        SeleniumManager.closeSession(selenium);
-        selenium.open("http://" + applicationHost + ":" + applicationPort + "/"
+        closeSession();
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
                 + applicationPath);
-        assertElementPresent("login");
-        selenium.type("login", "user_test1");
-        assertElementPresent("password");
-        selenium.type("password", newPassword);
-        assertElementPresent("//input[@type='submit']");
-        selenium.click("//input[@type='submit']");
-        selenium.waitForPageToLoad(SE_TIMEOUT);
-        assertElementPresent("id");
+        login("user_test1", newPassword);
+
+        assertElementPresent(By.name("id"));
     }
 
     private String extractPassword(String string) {

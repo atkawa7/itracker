@@ -5,17 +5,17 @@ package org.itracker.services.implementations;
 
 import org.apache.log4j.Logger;
 import org.itracker.AbstractDependencyInjectionTest;
-import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.*;
-import org.itracker.model.CustomField.Type;
-import org.itracker.persistence.dao.*;
-import org.itracker.services.IssueService;
-import org.itracker.services.UserService;
 import org.itracker.IssueException;
 import org.itracker.IssueSearchException;
 import org.itracker.ProjectException;
-import org.itracker.services.util.AuthenticationConstants;
+import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.*;
+import org.itracker.model.CustomField.Type;
 import org.itracker.model.util.IssueUtilities;
+import org.itracker.persistence.dao.*;
+import org.itracker.services.IssueService;
+import org.itracker.services.UserService;
+import org.itracker.services.util.AuthenticationConstants;
 import org.itracker.web.util.ServletContextUtils;
 import org.junit.Test;
 
@@ -664,13 +664,13 @@ public class IssueServiceIT extends AbstractDependencyInjectionTest {
 
     /**
      * Test method for
-     * {@link org.itracker.services.IssueService#addIssueRelation(java.lang.Integer, java.lang.Integer, int, java.lang.Integer)}
+     * {@link org.itracker.services.IssueService#addIssueRelation(java.lang.Integer, java.lang.Integer, org.itracker.model.IssueRelation.Type, java.lang.Integer)}
      * .
      */
     @Test
     public void testAddIssueRelation() {
         // connect issues 2,3
-        boolean added = issueService.addIssueRelation(2, 3, IssueUtilities.RELATION_TYPE_DUPLICATE_C, 2);
+        boolean added = issueService.addIssueRelation(2, 3, IssueRelation.Type.DUPLICATE_C, 2);
         assertTrue(added);
 
         // find all issue relations involving issue 2
@@ -681,7 +681,7 @@ public class IssueServiceIT extends AbstractDependencyInjectionTest {
         assertNotNull(issueRelation);
         assertNotNull("issueRelation.id", issueRelation.getId());
         assertEquals("issueRelation.relatedIssue.id", new Integer(3), issueRelation.getRelatedIssue().getId());
-        assertEquals("issueRelation.relationType", IssueUtilities.RELATION_TYPE_DUPLICATE_C, issueRelation.getRelationType());
+        assertEquals("issueRelation.relationType", IssueRelation.Type.DUPLICATE_C, issueRelation.getRelationType());
 
     }
 

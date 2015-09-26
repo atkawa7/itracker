@@ -18,11 +18,10 @@
 
 package org.itracker.core.resources;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.itracker.model.Language;
-import org.itracker.persistence.dao.NoSuchEntityException;
-import org.itracker.services.ConfigurationService;
 import org.itracker.services.exceptions.ITrackerDirtyResourceException;
+import org.springframework.dao.DataAccessException;
 
 import java.util.*;
 
@@ -43,8 +42,6 @@ public class ITrackerResources {
     public static final String DEFAULT_LOCALE = "en_US";
 
     public static final String BASE_LOCALE = "BASE";
-
-    public static final String NO_LOCALE = "ZZ_ZZ";
 
     public static final String KEY_BASE_CUSTOMFIELD_TYPE = "itracker.web.generic.";
 
@@ -84,11 +81,11 @@ public class ITrackerResources {
 
     private static HashMap<Locale, ResourceBundle> languages = new HashMap<Locale, ResourceBundle>();
 
-    private static ConfigurationService configurationService;
+    private static ITrackerResourcesProvider configurationService;
 
     private static boolean initialized = false;
 
-    private static Object bundleLock = new Object();
+    private static final Object bundleLock = new Object();
 
 
     public static Locale getLocale() {
@@ -102,8 +99,8 @@ public class ITrackerResources {
         }
 
         Locale locale = locales.get(localeString);
-        if (locale == null && localeString != null
-                && !localeString.trim().equals("")) {
+        if (locale == null
+                && !StringUtils.isEmpty(localeString)) {
             try {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Creating new locale for '" + localeString
@@ -181,25 +178,27 @@ public class ITrackerResources {
         if (null == locale) {
             locale = new Locale("");
         }
-        String fullName = getLocaleNativeName(locale);
+        String fullName = StringUtils.trimToNull(getLocaleNativeName(locale));
         if (null == displayLocale || locale.getLanguage().equals(displayLocale.getLanguage())) {
             return fullName;
         }
-        if (fullName.equals(locale.toString())) {
+        if (StringUtils.equals(fullName, String.valueOf(locale))) {
             fullName = getLocaleDN(locale, displayLocale);
+            return fullName;
         } else {
-            String localizedName = getLocaleDN(locale, displayLocale);
-            if (null != fullName && null != localizedName && !localizedName.trim().equals(fullName.trim())) {
+            String localizedName = StringUtils.trimToNull(getLocaleDN(locale, displayLocale));
+            if (null != fullName && !StringUtils.equals(fullName, localizedName)) {
                 return fullName.trim() + " (" + localizedName.trim() + ")";
             } else if (null != localizedName) {
                 return localizedName.trim();
             } else if (null != fullName) {
                 return fullName.trim();
             }
-
         }
 
-        return "Unknown: " + locale.toString();
+
+        return locale.getDisplayName()
+                + (!locale.equals(displayLocale)? " (" + locale.getDisplayLanguage(locale) + ")":"");
 
     }
 
@@ -211,7 +210,7 @@ public class ITrackerResources {
         }
     }
 
-    public static final Map<String, String> getLocaleNamesMap(Locale locale, Set<String> languageCodes, Map<String, List<String>> languagesMap) {
+    public static Map<String, String> getLocaleNamesMap(Locale locale, Set<String> languageCodes, Map<String, List<String>> languagesMap) {
         Map<String, String> ret = new LinkedHashMap<String, String>();
         for (String languageCode : languageCodes) {
             List<String> languagelist = languagesMap.get(languageCode);
@@ -257,8 +256,8 @@ public class ITrackerResources {
             if (!isInitialized()) {
                 return ITrackerResourceBundle.loadBundle(locale);
             } else {
-                List<Language> languageItems = configurationService
-                        .getLanguage(locale);
+                Properties languageItems = configurationService
+                        .getLanguageProperties(locale);
                 bundle = ITrackerResourceBundle.loadBundle(locale, languageItems);
                 if (logger.isDebugEnabled()) {
                     logger.debug("getBundle: got loaded for locale " + locale
@@ -279,10 +278,10 @@ public class ITrackerResources {
         if (locale == null) {
             locale = getLocale(getDefaultLocale());
         }
-        ResourceBundle bundle = languages.get(locale);
+        ResourceBundle bundle;
         logger.debug("Loading new resource bundle for locale " + locale
                 + " from the database.");
-        List<Language> languageItems = configurationService.getLanguage(
+        Properties languageItems = configurationService.getLanguageProperties(
                 locale);
         bundle = ITrackerResourceBundle.loadBundle(locale, languageItems);
         if (bundle != null) {
@@ -338,9 +337,8 @@ public class ITrackerResources {
     public static void clearKeyFromBundles(String key, boolean markDirty) {
         if (key != null) {
             synchronized (bundleLock) {
-                for (Iterator<ResourceBundle> iter = languages.values()
-                        .iterator(); iter.hasNext(); ) {
-                    ((ITrackerResourceBundle) iter.next()).removeValue(key,
+                for (ResourceBundle resourceBundle : languages.values()) {
+                    ((ITrackerResourceBundle) resourceBundle).removeValue(key,
                             markDirty);
                 }
             }
@@ -381,11 +379,11 @@ public class ITrackerResources {
                     val = ITrackerResources.getString(key);
                 }
             } catch (ITrackerDirtyResourceException idre) {
-                Language languageItem = configurationService
-                        .getLanguageItemByKey(key, locale);
+                String languageItem = configurationService
+                        .getLanguageValue(key, locale);
                 ResourceBundle bundle = getBundle(locale);
                 ((ITrackerResourceBundle) bundle)
-                        .updateValue(languageItem);
+                        .updateValue(key, languageItem);
                 val = bundle.getString(key);
             }
             return val;
@@ -399,7 +397,7 @@ public class ITrackerResources {
                     "MissingResourceException caught while retrieving translation key '"
                             + key + "' for locale " + locale, ex);
             return "MISSING KEY: " + key;
-        } catch (NoSuchEntityException ex) {
+        } catch (DataAccessException ex) {
             logger.info("getString: not found " + key + " locale: " + locale,
                     ex);
             try {
@@ -458,10 +456,7 @@ public class ITrackerResources {
 
     public static boolean isLongString(String key) {
         String value = getString(key);
-        if (value.length() > 80 || value.indexOf('\n') > 0) {
-            return true;
-        }
-        return false;
+        return value.length() > 80 || value.indexOf('\n') > 0;
     }
 
     public static String escapeUnicodeString(String str, boolean escapeAll) {
@@ -469,7 +464,7 @@ public class ITrackerResources {
             return "";
         }
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
             if (!escapeAll && ((ch >= 0x0020) && (ch <= 0x007e))) {
@@ -486,7 +481,7 @@ public class ITrackerResources {
     }
 
     public static String unescapeUnicodeString(String str) {
-        StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < str.length(); ) {
             char ch = str.charAt(i++);
@@ -498,7 +493,7 @@ public class ITrackerResources {
                     }
                     sb.append((char) value);
                 } else {
-                    sb.append("\\" + str.charAt(i));
+                    sb.append("\\").append(str.charAt(i));
                 }
             } else {
                 sb.append(ch);
@@ -535,7 +530,7 @@ public class ITrackerResources {
         ITrackerResources.initialized = initialized;
     }
 
-    public static void setConfigurationService(ConfigurationService service) {
+    public static void setConfigurationService(ITrackerResourcesProvider service) {
         if (isInitialized()) {
             throw new IllegalStateException("Service is already set up.");
         }

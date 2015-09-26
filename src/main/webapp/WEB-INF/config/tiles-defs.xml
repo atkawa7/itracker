@@ -6,7 +6,9 @@
 
 
     <definition name="mainLayout" path="/themes/defaulttheme/defaultlayout.jsp">
-        <put name="title" value="iTracker"/>
+        <put name="title" type="string" value="iTracker"/>
+        <put name="pageTitleKey" type="string" value="itracker.web.index.title" />
+        <put name="pageTitleArg" type="string" value="" />
         <put name="header" value="includes/default.header.jsp"/>
         <put name="footer" value="includes/default.footer.jsp"/>
         <put name="body" value="/portalhome.jsp"/>
@@ -21,7 +23,6 @@
     </definition>
 
     <definition name="t.portalhome" extends="mainLayout">
-
     </definition>
     <definition name="t.login" extends="mainLayout">
         <put name="body" value="/login.jsp"/>

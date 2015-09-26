@@ -304,6 +304,7 @@ public class ProjectServiceImplIT extends AbstractDependencyInjectionTest {
         projectScript.setProject(project);
         projectScript.setPriority(1);
         projectScript.setFieldId(2);
+        projectScript.setFieldType(Configuration.Type.customfield);
 
         WorkflowScript script = workflowScriptDAO.findByPrimaryKey(2);
         assertNotNull("workflow script not found", script);

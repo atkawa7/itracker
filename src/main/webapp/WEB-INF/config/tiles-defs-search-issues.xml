@@ -7,5 +7,7 @@
     <!-- search -->
     <definition name="t.search_issues_form" extends="mainLayout">
         <put name="body" value="/module-searchissues/search_issues_form.jsp"/>
+        <put name="title" type="string" value="Hello" />
+        <put name="pageTitleKey" type="string" value="itracker.web.search.title" />
     </definition>
 </tiles-definitions>

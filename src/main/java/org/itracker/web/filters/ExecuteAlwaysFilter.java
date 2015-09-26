@@ -8,9 +8,9 @@ import org.apache.struts.action.ActionMessages;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ITrackerServices;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.util.*;
 
 import javax.servlet.*;
@@ -317,10 +317,6 @@ public class ExecuteAlwaysFilter implements Filter {
         request.setAttribute("baseURL", baseURL);
         // TODO: remove deprecated currLocale attribute
         request.setAttribute("currLocale", locale);
-
-        // set a default page-title key
-        request.setAttribute("pageTitleKey", "itracker.web.generic.itracker");
-        request.setAttribute("pageTitleArg", "");
 
 
         request.setAttribute("locales", configurationService.getAvailableLanguages());

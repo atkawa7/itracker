@@ -17,7 +17,7 @@ import java.util.*;
 public class EditIssueActionUtil {
     private static final Logger log = Logger.getLogger(EditIssueActionUtil.class);
 
-    public static final void sendNotification(Integer issueId, int previousStatus,
+    public static void sendNotification(Integer issueId, int previousStatus,
                                               String baseURL, NotificationService notificationService) {
         Type notificationType = Type.UPDATED;
 
@@ -38,7 +38,7 @@ public class EditIssueActionUtil {
         }
     }
 
-    public static final ActionForward getReturnForward(Issue issue, Project project,
+    public static ActionForward getReturnForward(Issue issue, Project project,
                                                        String caller, ActionMapping mapping) throws Exception {
         if ("index".equals(caller)) {
             log.info("EditIssueAction: Forward: index");
@@ -81,15 +81,15 @@ public class EditIssueActionUtil {
             if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED
                     && UserUtilities.hasPermission(userPermissions, project
                     .getId(), UserUtilities.PERMISSION_CLOSE)) {
-                for (int i = 0; i < allStatuses.size(); i++) {
-                    int statusNumber = Integer.parseInt(allStatuses.get(i)
+                for (NameValuePair allStatuse : allStatuses) {
+                    int statusNumber = Integer.parseInt(allStatuse
                             .getValue());
                     if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED
                             && statusNumber >= IssueUtilities.STATUS_CLOSED) {
-                        statusList.add(allStatuses.get(i));
+                        statusList.add(allStatuse);
                     } else if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED
                             && statusNumber >= IssueUtilities.STATUS_RESOLVED) {
-                        statusList.add(allStatuses.get(i));
+                        statusList.add(allStatuse);
                     }
                 }
             }
@@ -97,17 +97,17 @@ public class EditIssueActionUtil {
         } else {
 
             if (currUser.isSuperUser()) {
-                for (int i = 0; i < allStatuses.size(); i++) {
-                    statusList.add(allStatuses.get(i));
+                for (NameValuePair allStatuse : allStatuses) {
+                    statusList.add(allStatuse);
                 }
             } else if (issue.getStatus() >= IssueUtilities.STATUS_ASSIGNED
                     && issue.getStatus() < IssueUtilities.STATUS_RESOLVED) {
-                for (int i = 0; i < allStatuses.size(); i++) {
-                    int statusNumber = Integer.parseInt(allStatuses.get(i)
+                for (NameValuePair allStatuse : allStatuses) {
+                    int statusNumber = Integer.parseInt(allStatuse
                             .getValue());
                     if (statusNumber >= IssueUtilities.STATUS_ASSIGNED
                             && statusNumber < IssueUtilities.STATUS_CLOSED) {
-                        statusList.add(allStatuses.get(i));
+                        statusList.add(allStatuse);
                     } else if (statusNumber >= IssueUtilities.STATUS_CLOSED
                             && ProjectUtilities
                             .hasOption(
@@ -116,31 +116,31 @@ public class EditIssueActionUtil {
                             && UserUtilities.hasPermission(userPermissions,
                             project.getId(),
                             UserUtilities.PERMISSION_CLOSE)) {
-                        statusList.add(allStatuses.get(i));
+                        statusList.add(allStatuse);
                     }
                 }
             } else if (issue.getStatus() >= IssueUtilities.STATUS_RESOLVED
                     && issue.getStatus() < IssueUtilities.STATUS_CLOSED) {
-                for (int i = 0; i < allStatuses.size(); i++) {
-                    int statusNumber = Integer.parseInt(allStatuses.get(i)
+                for (NameValuePair allStatuse : allStatuses) {
+                    int statusNumber = Integer.parseInt(allStatuse
                             .getValue());
                     if (statusNumber >= IssueUtilities.STATUS_ASSIGNED
                             && statusNumber < IssueUtilities.STATUS_CLOSED) {
-                        statusList.add(allStatuses.get(i));
+                        statusList.add(allStatuse);
                     } else if (statusNumber >= IssueUtilities.STATUS_CLOSED
                             && UserUtilities.hasPermission(userPermissions,
                             project.getId(),
                             UserUtilities.PERMISSION_CLOSE)) {
-                        statusList.add(allStatuses.get(i));
+                        statusList.add(allStatuse);
                     }
                 }
             } else if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED) {
-                for (int i = 0; i < allStatuses.size(); i++) {
-                    int statusNumber = Integer.parseInt(allStatuses.get(i)
+                for (NameValuePair allStatuse : allStatuses) {
+                    int statusNumber = Integer.parseInt(allStatuse
                             .getValue());
                     if ((statusNumber >= IssueUtilities.STATUS_ASSIGNED && statusNumber < IssueUtilities.STATUS_RESOLVED)
                             || statusNumber >= IssueUtilities.STATUS_CLOSED) {
-                        statusList.add(allStatuses.get(i));
+                        statusList.add(allStatuse);
                     }
                 }
             }
@@ -170,11 +170,10 @@ public class EditIssueActionUtil {
                 .versionsToNameValuePairs(versions));
 
         List<CustomField> projectFields = project.getCustomFields();
-        for (int i = 0; i < projectFields.size(); i++) {
-            if (projectFields.get(i).getFieldType() == CustomField.Type.LIST) {
-                listOptions.put(projectFields.get(i).getId(), Convert
-                        .customFieldOptionsToNameValuePairs(projectFields
-                                .get(i).getOptions()));
+        for (CustomField projectField : projectFields) {
+            if (projectField.getFieldType() == CustomField.Type.LIST) {
+                listOptions.put(projectField.getId(), Convert
+                        .customFieldOptionsToNameValuePairs(projectField.getOptions()));
             }
         }
 
@@ -219,8 +218,8 @@ public class EditIssueActionUtil {
             Collections.sort(possibleOwners, User.NAME_COMPARATOR);
             List<NameValuePair> ownerNames = Convert
                     .usersToNameValuePairs(possibleOwners);
-            for (int i = 0; i < ownerNames.size(); i++) {
-                ownersList.add(ownerNames.get(i));
+            for (NameValuePair ownerName : ownerNames) {
+                ownersList.add(ownerName);
             }
         } else if (UserUtilities.hasPermission(userPermissions,
                 project.getId(), UserUtilities.PERMISSION_ASSIGN_SELF)) {
@@ -291,7 +290,7 @@ public class EditIssueActionUtil {
         req.setAttribute("pageTitleArg", pageTitleArg);
 
         req.setAttribute("statusName", IssueUtilities.getStatusName(
-                IssueUtilities.STATUS_NEW, (Locale)
+                IssueUtilities.STATUS_NEW,
                 LoginUtilities.getCurrentLocale(req)));
         req.setAttribute("hasAttachmentOption", !ProjectUtilities.hasOption(
                 ProjectUtilities.OPTION_NO_ATTACHMENTS, project.getOptions()));

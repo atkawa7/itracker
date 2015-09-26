@@ -82,6 +82,16 @@ a.history:visited {
     background-color: white;
     text-decoration: none;
 }
+.paging {
+    margin: 0 35%;
+    text-align: center;
+}
+a.prev {
+    float: left;
+}
+a.next {
+    float:right;
+}
 
 .locales {
     float: left;
@@ -305,6 +315,10 @@ table.portalhomeMain {
     padding: .1em;
     margin: 0;
     border: none;
+}
+
+.portalhomeMain.shadeList tr {
+    height: 2.5em;
 }
 
 .historyName {

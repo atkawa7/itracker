@@ -28,6 +28,7 @@ import org.itracker.model.util.ProjectUtilities;
 import org.itracker.persistence.dao.IssueActivityDAO;
 import org.itracker.persistence.dao.IssueDAO;
 import org.itracker.persistence.dao.NotificationDAO;
+import org.itracker.services.EmailService;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
 import org.itracker.services.ProjectService;

@@ -1,13 +1,12 @@
 <%@ include file="/common/taglibs.jsp" %>
 
 <c:choose>
-    <%-- <nitrox:var name="allowForgotPassword" type="java.lang.Boolean"/> --%>
     <c:when test="${! allowForgotPassword}">
         <span style="color: red;"><it:message key="itracker.web.error.notenabled"/></span>
     </c:when>
     <c:otherwise>
 
-        <html:form action="/forgotpassword" focus="login" onsubmit="validateForgotPasswordForm(this);">
+        <html:form action="/forgotpassword" focus="login" >
 
             <html:javascript formName="forgotPasswordForm" />
 

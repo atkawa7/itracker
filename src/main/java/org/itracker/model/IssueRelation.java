@@ -19,6 +19,7 @@
 package org.itracker.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.itracker.core.resources.ITrackerResources;
 
 /**
  * A relation between issues.
@@ -39,7 +40,7 @@ public class IssueRelation extends AbstractEntity {
     /**
      * Indicates the kind of relation that exists between the 2 issues.
      */
-    private int type;
+    private Type type;
 
     private Integer matchingRelationId;
 
@@ -55,7 +56,7 @@ public class IssueRelation extends AbstractEntity {
     public IssueRelation() {
     }
 
-    public IssueRelation(Issue issue, Issue relatedIssue, int relationType) {
+    public IssueRelation(Issue issue, Issue relatedIssue, Type relationType) {
         setIssue(issue);
         setRelatedIssue(relatedIssue);
         setRelationType(relationType);
@@ -83,11 +84,11 @@ public class IssueRelation extends AbstractEntity {
         this.relatedIssue = relatedIssue;
     }
 
-    public int getRelationType() {
+    public Type getRelationType() {
         return type;
     }
 
-    public void setRelationType(int type) {
+    public void setRelationType(Type type) {
         this.type = type;
     }
 
@@ -107,7 +108,7 @@ public class IssueRelation extends AbstractEntity {
                 .append("type", getRelationType()).toString();
     }
 
-    public static enum Type {
+    public static enum Type implements IntCodeEnum<Type> {
 
         /**
          * Defines a related issue. Sample text: related to
@@ -159,12 +160,40 @@ public class IssueRelation extends AbstractEntity {
          */
         DEPENDENT_C(10);
 
-        @SuppressWarnings("unused")
-        private final int code;
 
-        private Type(int code) {
+
+        private final Integer code;
+
+        private Type(Integer code) {
             this.code = code;
         }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public Type fromCode(Integer code) {
+            return Type.valueOf(code);
+        }
+
+        public static Type valueOf(Integer code) {
+            for (Type val: values()) {
+                if (val.code.compareTo(code) == 0) {
+                    return val;
+                }
+            }
+            throw new IllegalArgumentException("Unknown code : " + code);
+        }
+        /**
+         * Returns the key for a particular issue relation type.
+         *
+         * @return the key for the item
+         */
+        public String getLanguageKeyCode() {
+            String key = ITrackerResources.KEY_BASE_ISSUE_RELATION + getCode();
+            return key;
+        }
+
 
     }
 

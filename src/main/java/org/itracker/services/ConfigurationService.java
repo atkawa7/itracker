@@ -18,30 +18,69 @@
 
 package org.itracker.services;
 
+import org.itracker.core.resources.ITrackerResourcesProvider;
 import org.itracker.model.*;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Manages the applications configuration properties.
  */
-public interface ConfigurationService {
+public interface ConfigurationService extends ITrackerResourcesProvider {
 
     public static final String PNAME_SYSTEM_BASE_URL = "system_base_url";
 
+    /**
+     * Load a configuration from application properties.
+     *
+     * @param name configuration key
+     * @return the value from the configuration
+     */
     String getProperty(String name);
-
+    /**
+     * Load a configuration from application properties.
+     *
+     * @param name configuration key
+     * @param defaultValue returned if the value is null
+     * @return the value from the configuration
+     */
     String getProperty(String name, String defaultValue);
 
+    /**
+     * Load a configuration from application properties.
+     *
+     * @param name configuration key
+     * @param defaultValue returned if the value is null
+     * @return the boolean value from the configuration
+     */
     boolean getBooleanProperty(String name, boolean defaultValue);
-
+    /**
+     * Load a configuration from application properties.
+     *
+     * @param name configuration key
+     * @param defaultValue returned if the value is null
+     * @return the integer value from the configuration
+     */
     int getIntegerProperty(String name, int defaultValue);
-
+    /**
+     * Load a configuration from application properties.
+     *
+     * @param name configuration key
+     * @param defaultValue returned if the value is null
+     * @return the long value from the configuration
+     */
     long getLongProperty(String name, long defaultValue);
-
+    /**
+     * Load a configuration from database.
+     *
+     * @param id the row identifier
+     * @return the model from the configuration
+     */
     Configuration getConfigurationItem(Integer id);
+
 
 
     /**
@@ -413,7 +452,9 @@ public interface ConfigurationService {
     /**
      * returns languages for the locale as list of Language-objects
      */
+    @Deprecated
     List<Language> getLanguage(Locale locale);
+    public Properties getLanguageProperties(Locale locale);
 
     void updateLanguage(Locale locale, List<Language> languages);
 
@@ -437,5 +478,7 @@ public interface ConfigurationService {
     void initializeConfiguration();
 
     String getSystemBaseURL();
+
+    String getLanguageValue(String key, Locale locale);
 
 }

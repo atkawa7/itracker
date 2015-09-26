@@ -251,12 +251,12 @@ public class CreateIssueAction extends ItrackerBaseAction {
 
                     try {
                         Integer relatedIssueId = issueForm.getRelatedIssueId();
-                        Integer relationType = issueForm.getRelationType();
+                        IssueRelation.Type relationType = issueForm.getRelationType();
 
                         if (relatedIssueId != null
                                 && relatedIssueId.intValue() > 0
                                 && relationType != null
-                                && relationType.intValue() > 0) {
+                                && relationType.getCode() > 0) {
                             Issue relatedIssue = issueService
                                     .getIssue(relatedIssueId);
 
@@ -278,8 +278,8 @@ public class CreateIssueAction extends ItrackerBaseAction {
                                         + ", relation ot created.");
                             } else {
                                 if (!issueService.addIssueRelation(issue
-                                        .getId(), relatedIssueId, relationType
-                                        .intValue(), currUser.getId())) {
+                                        .getId(), relatedIssueId, relationType,
+                                        currUser.getId())) {
                                     log.info("Error adding issue relation from issue "
                                                     + issue.getId()
                                                     + " to issue "

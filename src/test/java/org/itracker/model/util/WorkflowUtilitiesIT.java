@@ -4,15 +4,11 @@
  */
 package org.itracker.model.util;
 
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.WorkflowException;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.NameValuePair;
-import org.itracker.model.Project;
-import org.itracker.model.ProjectScript;
-import org.itracker.model.WorkflowScript;
+import org.itracker.model.*;
 import org.itracker.web.forms.IssueForm;
 import org.junit.Test;
 
@@ -181,6 +177,7 @@ public class WorkflowUtilitiesIT extends AbstractDependencyInjectionTest {
                             "new NameValuePair(\"fieldDescription\", \"onPostSubmit\"));\n");
             projectScript.setScript(workflowScript);
             projectScript.setFieldId(IssueUtilities.FIELD_STATUS);
+            projectScript.setFieldType(Configuration.Type.customfield);
             projectScript.setPriority(1);
             projectScripts.add(projectScript);
         }
@@ -195,6 +192,7 @@ public class WorkflowUtilitiesIT extends AbstractDependencyInjectionTest {
                             "new NameValuePair(\"status\", \"onSetDefault\"));\n");
             projectScript.setScript(workflowScript);
             projectScript.setFieldId(IssueUtilities.FIELD_STATUS);
+            projectScript.setFieldType(Configuration.Type.customfield);
             projectScript.setPriority(1);
             projectScripts.add(projectScript);
         }
@@ -209,66 +207,6 @@ public class WorkflowUtilitiesIT extends AbstractDependencyInjectionTest {
             public String fieldDescription = "defaultDescription";
         }
 
-        try {
-            final ValidatorFormAdhoc validatorForm = new ValidatorFormAdhoc();
-            final String result =
-                    validatorForm.processFieldScripts(projectScripts,
-                            WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT,
-                            IssueUtilities.FIELD_STATUS,
-                            "defaultStatus",
-                            new Vector<NameValuePair>(),
-                            new ActionErrors());
-            assertEquals("WorkflowUtilities.processFieldScripts result",
-                    "defaultStatus", result);
-            assertEquals("validatorForm.status",
-                    "defaultStatus", validatorForm.status);
-        } catch (final WorkflowException e) {
-            assertTrue(e.getMessage(), false);
-        }
-        try {
-            final ValidatorFormAdhoc validatorForm = new ValidatorFormAdhoc();
-            final List<NameValuePair> possibleOptions = new ArrayList<NameValuePair>();
-            final String result =
-                    validatorForm.processFieldScripts(projectScripts,
-                            WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT,
-                            IssueUtilities.FIELD_STATUS,
-                            validatorForm.status,
-                            possibleOptions,
-                            new ActionErrors());
-            assertEquals("possibleOptions.size",
-                    1, possibleOptions.size());
-            assertEquals("possibleOptions[0].value",
-                    "onSetDefault", possibleOptions.get(0).getValue());
-            assertEquals("validatorForm.status",
-                    "defaultStatus", validatorForm.status);
-        } catch (final WorkflowException e) {
-            assertTrue(e.getMessage(), false);
-        }
-        try {
-            List<NameValuePair> possibleValues = new Vector<NameValuePair>();
-            final ValidatorFormAdhoc validatorForm = new ValidatorFormAdhoc();
-            final String result =
-                    validatorForm.processFieldScripts(projectScripts,
-                            WorkflowUtilities.EVENT_FIELD_ONPOSTSUBMIT,
-                            IssueUtilities.FIELD_STATUS,
-                            validatorForm.status,
-                            possibleValues,
-                            new ActionErrors());
-            assertEquals("WorkflowUtilities.processFieldScripts possibleValues.length",
-                    1, possibleValues.size());
-            assertEquals("WorkflowUtilities possibleValues[0].getName()",
-                    "fieldDescription", possibleValues.get(0).getName());
-
-            assertEquals("WorkflowUtilities possibleValues.getValue()",
-                    "onPostSubmit", possibleValues.get(0).getValue());
-
-            assertEquals("validatorForm.fieldDescription",
-                    "defaultDescription", validatorForm.fieldDescription);
-            assertEquals("validatorForm.status",
-                    "defaultStatus", validatorForm.status);
-        } catch (final WorkflowException e) {
-            assertTrue(e.getMessage(), false);
-        }
         try {
             final ValidatorFormAdhoc validatorForm = new ValidatorFormAdhoc();
             final Map<Integer, List<NameValuePair>> possibleValues =

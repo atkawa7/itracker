@@ -87,6 +87,7 @@ public class EditProjectScriptFormAction extends ItrackerBaseAction {
             final List<ProjectScript> projectScripts = project.getScripts();
             pageTitleKey = "itracker.web.admin.editprojectscript.title.create";
 
+
             if (errors.isEmpty()) {
                 request.setAttribute("workflowScripts", workflowScripts);
                 request.setAttribute("projectScripts", projectScripts);

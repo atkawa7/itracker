@@ -6,22 +6,13 @@
     </c:when>
     <c:otherwise>
 
-        <html:javascript formName="selfRegistrationForm"/>
-
-        <html:form action="/selfregister" focus="login" onsubmit="return validateSelfRegistrationForm();">
+        <html:form action="/selfregister" focus="login">
             <html:hidden property="action" value="register"/>
             <table border="0" cellspacing="0" cellpadding="2" align="left">
                 <tr>
                     <td align="right" class="editColumnTitle"><it:message key="itracker.web.attr.login"/>:</td>
                     <td align="left"><html:text property="login" styleClass="editColumnText"/></td>
                 </tr>
-                <%--<html:messages id="msg" property="login">--%>
-                <%--<tr class="formError">--%>
-                    <%--<td>--%>
-                      <%--<bean:write name="msg"/>--%>
-                    <%--</td>--%>
-                <%--</tr>--%>
-                <%--</html:messages>--%>
                 <tr>
                     <td align="right" class="editColumnTitle"><it:message key="itracker.web.attr.password"/>:</td>
                     <td align="left"><html:password property="password" styleClass="editColumnText"

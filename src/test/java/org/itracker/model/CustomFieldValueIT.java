@@ -90,9 +90,11 @@ public class CustomFieldValueIT extends AbstractDependencyInjectionSpringContext
         this.configurationService.updateLanguageItem(langB);
 
 
-        assertEntityComparator("name comparator", CustomFieldValue.NAME_COMPARATOR,
+        assertEntityComparator("name comparator",
+                new CustomFieldUtilities.CustomFieldValueByNameComparator(null),
                 valueA, valueB);
-        assertEntityComparator("name comparator", CustomFieldValue.NAME_COMPARATOR,
+        assertEntityComparator("name comparator",
+                new CustomFieldUtilities.CustomFieldValueByNameComparator(null),
                 valueA, null);
 
         langA.setResourceValue(langB.getResourceValue());
@@ -105,7 +107,7 @@ public class CustomFieldValueIT extends AbstractDependencyInjectionSpringContext
 //				CustomFieldValue.NAME_COMPARATOR,
 //				valueA, valueB);
         assertEntityComparatorEquals("name comparator",
-                CustomFieldValue.NAME_COMPARATOR,
+                new CustomFieldUtilities.CustomFieldValueByNameComparator(null),
                 valueA, valueA);
     }
 

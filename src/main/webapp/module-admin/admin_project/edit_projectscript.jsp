@@ -31,11 +31,28 @@
 
                         <c:set var="customFieldsDropdown">
                             <html:select property="fieldId(${script.id})" styleClass="editColumnText" value="">
+                                <c:forEach items="status,severity,resolution" var="builtin">
+                                    <c:set var="available" value="${ true }" />
+                                    <c:forEach items="${ projectScripts }" var="projectScript">
+                                        <c:if test="${ (script.id eq projectScript.script.id)
+                                                    and projectScript.fieldType == builtin}">
+                                            <c:set var="available" value="${ false }" />
+                                        </c:if>
+                                    </c:forEach>
+                                    <c:if test="${ available }">
+                                        <option value="${builtin}" >
+                                            <it:message key="itracker.web.attr.${builtin}" />
+                                            <c:set var="scriptAvailable" value="${ true }" />
+                                        </option>
+                                    </c:if>
+                                </c:forEach>
+
                                 <c:forEach items="${ customFields }" var="customfield">
                                     <c:set var="available" value="${ true }" />
                                     <c:forEach items="${ projectScripts }" var="projectScript">
                                         <c:if test="${ (script.id eq projectScript.script.id)
-                                                      and projectScript.fieldId eq customfield.key }">
+                                                      and projectScript.fieldId eq customfield.key
+                                                      and projectScript.fieldType == 'customfield'}">
                                             <c:set var="available" value="${ false }" />
                                         </c:if>
                                     </c:forEach>

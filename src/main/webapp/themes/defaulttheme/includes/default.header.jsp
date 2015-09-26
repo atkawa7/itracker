@@ -15,7 +15,6 @@
         <td class="headerTextPageTitle">
             <h1>
                 <tiles:getAsString name="title" />
-                <c:out value="${pageTitle}"/>
             </h1>
         </td>
         <td class="headerTextWelcome"><it:message

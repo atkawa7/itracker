@@ -25,6 +25,9 @@
         <property name="relationType" index="issuerelationbeanTypeIdx">
             <column name="relation_type" not-null="true"
                     unique-key="issue_relation_ak"/>
+            <type name="org.itracker.persistence.dao.EnumCodeUserType">
+                <param name="enumClassName">org.itracker.model.IssueRelation$Type</param>
+            </type>
         </property>
 
         <property name="matchingRelationId" index="issuerelationbeanMatchingRelationIdIdx">

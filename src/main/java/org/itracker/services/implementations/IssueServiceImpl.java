@@ -797,7 +797,7 @@ public class IssueServiceImpl implements IssueService {
      * TODO: There is no relation saved to database yet?
      */
     public boolean addIssueRelation(Integer issueId, Integer relatedIssueId,
-                                    int relationType, Integer userId) {
+                                    IssueRelation.Type relationType, Integer userId) {
 
         User user = getUserDAO().findByPrimaryKey(userId);
 
@@ -807,7 +807,7 @@ public class IssueServiceImpl implements IssueService {
 
         if (issueId != null && relatedIssueId != null) {
 
-            int matchingRelationType = IssueUtilities
+            IssueRelation.Type matchingRelationType = IssueUtilities
                     .getMatchingRelationType(relationType);
 
             // if(matchingRelationType < 0) {

@@ -10,7 +10,9 @@
 
         <id name="id" unsaved-value="null">
             <column name="id" not-null="true"/>
-            <generator class="native"/>
+            <generator class="foreign">
+                <param name="property">user</param>
+            </generator>
         </id>
 
         <property name="saveLogin">
@@ -57,7 +59,7 @@
             <column name="create_date" sql-type="timestamp" not-null="true"/>
         </property>
 
-        <one-to-one name="user" class="User" property-ref="preferences"/>
+        <one-to-one name="user" class="User" constrained="false"/>
 
     </class>
 

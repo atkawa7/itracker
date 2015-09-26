@@ -418,6 +418,7 @@ public class ConfigurationServiceImplIT extends
     public void testCreateProjectScript() {
         ProjectScript projectScript = new ProjectScript();
         projectScript.setFieldId(1);
+        projectScript.setFieldType(Configuration.Type.customfield);
         projectScript.setPriority(1);
         projectScript.setProject(projectDAO.findByPrimaryKey(3));
         projectScript.setScript(workflowScriptDAO.findByPrimaryKey(1));
@@ -453,6 +454,7 @@ public class ConfigurationServiceImplIT extends
 
         ProjectScript projectScript = new ProjectScript();
         projectScript.setFieldId(1);
+        projectScript.setFieldType(Configuration.Type.customfield);
         projectScript.setPriority(1);
         projectScript.setProject(projectDAO.findByPrimaryKey(3));
         projectScript.setScript(workflowScriptDAO.findByPrimaryKey(1));
