@@ -1,9 +1,9 @@
-<assembly>
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
     <id>bin</id>
     <formats>
         <format>zip</format>
     </formats>
-    <includeSiteDirectory>true</includeSiteDirectory>
     <fileSets>
         <fileSet>
             <directory>src/site</directory>
@@ -15,11 +15,31 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>${project.build.directory}</directory>
+            <directory>itracker-web/target</directory>
             <outputDirectory></outputDirectory>
             <includes>
                 <include>*.war</include>
             </includes>
+        </fileSet>
+        <fileSet>
+            <directory>target/site</directory>
+            <outputDirectory>site</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>itracker-core/target/site</directory>
+            <outputDirectory>site/itracker-core</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>itracker-persistence/target/site</directory>
+            <outputDirectory>site/itracker-persistence</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>itracker-services/target/site</directory>
+            <outputDirectory>site/itracker-services</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>itracker-web/target/site</directory>
+            <outputDirectory>site/itracker-web</outputDirectory>
         </fileSet>
     </fileSets>
 </assembly>

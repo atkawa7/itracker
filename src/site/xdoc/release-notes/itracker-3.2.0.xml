@@ -78,7 +78,6 @@
             <ul>
                 <li>preparing for a stable 3.3 release</li>
                 <li>fix relation between user and user-preferences in the database schema</li>
-                <li>split the single WAR project to a multi-project to separate the web from other layers</li>
             </ul>
 
 

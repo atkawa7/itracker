@@ -23,26 +23,29 @@
             <p>
                 Some JNDI environment resources are configured from the container running the itracker webapp.
                 The lookup names are found in <code>application.properties</code>.
-
-                <ul>
-                    <li>
-                        Configurable <code>configurationServiceTarget.jndiPropertiesOverridePrefix</code> from <code>WEB-INF/classes/application.properties</code>,
-                        useful for overriding values in <code><a href="#Configuration_Properties">configuration.properties</a></code> from <code>java:comp/env/itracker</code>.<br/>
-                        <em>eg. override <code>system_base_url</code> value with <code>java:comp/env/itracker/system_base_url</code> using the web.xml or context.xml.</em>
-                    </li>
-                    <li>
-                        <strong>Datasource</strong> (database connection):
-                        <code>java:comp/env/itracker/itracker_ds</code> (see also <code>dataSource.jndiName</code> in application.properties and datasource.xml)
-                    </li>
-                    <li>
-                        <strong>Mailsession</strong> (notifications, password, ..)):
-                        <code>java:comp/env/itracker/mail/Session</code><br/>
-                        <em>You can also override the lookup name by setting <code>configurationServiceTarget.mailSessionLookupName</code> but
-                            usually you want to rather configure a mail-session accordingly for your web context.</em>
-                    </li>
-
-                </ul>
             </p>
+            <ul>
+                <li>
+                    Configurable <code>configurationServiceTarget.jndiPropertiesOverridePrefix</code> from <code>WEB-INF/classes/application.properties</code>,
+                    useful for overriding values in <code><a href="#Configuration_Properties">configuration.properties</a></code> from <code>java:comp/env/itracker</code>.<br/>
+                    <em>eg. override <code>system_base_url</code> value with <code>java:comp/env/itracker/system_base_url</code> using the web.xml or context.xml.</em>
+                </li>
+                <li>
+                    <strong>Datasource</strong> (database connection):
+                    <code>java:comp/env/itracker/itracker_ds</code> (see also <code>dataSource.jndiName</code> in application.properties and datasource.xml)
+                </li>
+                <li>
+                    <strong>DB Dialect</strong> (hibernate dialect):
+                    <code>java:comp/env/itracker/db_dialect</code> (see also <code>db_dialect.defaultObject</code> in application.properties and datasource.xml)
+                </li>
+                <li>
+                    <strong>Mailsession</strong> (notifications, password, ..)):
+                    <code>java:comp/env/itracker/mail/Session</code><br/>
+                    <em>You can also override the lookup name by setting <code>configurationServiceTarget.mailSessionLookupName</code> but
+                        usually you want to rather configure a mail-session accordingly for your web context.</em>
+                </li>
+
+            </ul>
         </section>
 
 		<section name="Configuration Properties">
