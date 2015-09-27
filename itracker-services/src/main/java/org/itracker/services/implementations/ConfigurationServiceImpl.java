@@ -20,7 +20,6 @@
 package org.itracker.services.implementations;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.functors.NotNullPredicate;
 import org.apache.commons.lang.StringUtils;
@@ -967,17 +966,18 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                 List<String> languageList = new ArrayList<>();
                 final String l = baselocalestring;
 
-                CollectionUtils.collect(locales, new Transformer() {
-                    @Override
-                    public Object transform(Object input) {
-                        String val = ((Configuration)input).getValue();
-                        if (val.length()>2 &&
-                            val.startsWith(l+"_")) {
-                            return val;
-                        }
-                        return null;
-                    }
-                });
+                languageList.addAll(
+                        CollectionUtils.collect(locales, new Transformer() {
+                            @Override
+                            public Object transform(Object input) {
+                                String val = ((Configuration) input).getValue();
+                                if (val.length() > 2 &&
+                                        val.startsWith(l + "_")) {
+                                    return val;
+                                }
+                                return null;
+                            }
+                        }));
                 CollectionUtils.filter(languageList, NotNullPredicate.getInstance());
                 languages.put(baselocalestring, languageList);
             }
