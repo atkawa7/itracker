@@ -182,6 +182,7 @@ public class UserServiceImpl implements UserService {
             }
             user.setStatus(UserUtilities.STATUS_ACTIVE);
             user.setRegistrationType(user.getRegistrationType());
+            addPreferences(user);
             userDAO.save(user);
             return user;
         } catch (AuthenticatorException ex) {
@@ -248,8 +249,20 @@ public class UserServiceImpl implements UserService {
             existinguser.setPassword(user.getPassword());
         }
 
+        if (null == existinguser.getPreferences()) {
+            addPreferences(existinguser);
+        } else {
+            updateUserPreferences(user.getPreferences());
+        }
+
         userDAO.saveOrUpdate(existinguser);
         return existinguser;
+    }
+
+    private static void addPreferences(User user) {
+        UserPreferences prefs = new UserPreferences();
+        prefs.setUser(user);
+        user.setPreferences(prefs);
     }
 
     public String generateUserPassword(User user) throws PasswordException {
