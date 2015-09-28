@@ -9,7 +9,8 @@
               mail.mime.charset="UTF-8"
               mail.transport.protocol.rfc822="${mail.transport.protocol.rfc822}"
               mail.smtp.starttls.enable="${mail.smtp.starttls.enable}" />
-
+    <Environment name="itracker/db_dialect" value="${main.hibernate.dialect}"
+             type="java.lang.String" override="false"/>
     <Resource name="jdbc/itracker_ds" scope="Shareable" type="javax.sql.DataSource"
             url="${main.dataSource.jdbcUrl}"
             driverClassName="${main.dataSource.driverClass}"
