@@ -468,8 +468,7 @@
                                 <goals>
                                     <goal>reserve-network-port</goal>
                                 </goals>
-                                <phase>initialize</phase>
-
+                                <phase>generate-resources</phase>
                                 <configuration>
                                     <portNames>
                                         <portName>selenium.port</portName>
@@ -485,9 +484,7 @@
 
                     <plugin>
                         <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.7</version>
                         <executions>
-
                             <execution>
                                 <id>output-info-process-sources</id>
                                 <phase>process-sources</phase>
