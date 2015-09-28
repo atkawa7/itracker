@@ -34,7 +34,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>taglibs</groupId>
@@ -309,7 +309,6 @@
                     <dependency>
                         <groupId>com.h2database</groupId>
                         <artifactId>h2</artifactId>
-                        <version>1.4.188</version>
                         <scope>provided</scope>
                     </dependency>
                 </dependencies>
@@ -480,50 +479,6 @@
             </profile>
 
 
-            <!--profile>
-                <id>with-coverage</id>
-                <properties>
-                    <jetty.classesDirectory>target/generated-classes/cobertura</jetty.classesDirectory>
-                </properties>
-                <pluginRepositories>
-                    <pluginRepository>
-                        <id>cobertura-it-maven-plugin-maven2-release</id>
-                        <url>http://cobertura-it-maven-plugin.googlecode.com/svn/maven2/releases</url>
-                        <snapshots>
-                            <enabled>false</enabled>
-                        </snapshots>
-                        <releases>
-                            <enabled>true</enabled>
-                        </releases>
-                    </pluginRepository>
-                </pluginRepositories>
-                <build>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>cobertura-it-maven-plugin</artifactId>
-                            <version>2.5</version>
-                            <configuration>
-                                <formats>
-                                    <format>html</format>
-                                </formats>
-                                <check>
-                                    <haltOnFailure>false</haltOnFailure>
-                                </check>
-                            </configuration>
-                            <executions>
-                                <execution>
-                                    <id>pre-integration-test-cobertura</id>
-                                    <phase>pre-integration-test</phase>
-                                    <goals>
-                                        <goal>cobertura</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </build>
-            </profile-->
             <profile>
                 <!-- SELENIUM TESTING -->
                 <!-- SELENIUM TESTING -->
