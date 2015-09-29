@@ -167,9 +167,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/trunk/</connection>
-        <developerConnection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/trunk/</developerConnection>
-        <url>http://svn.code.sf.net/p/itracker/code/itracker/trunk/</url>
+        <connection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/branches/3.2.1/</connection>
+        <developerConnection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/branches/3.2.1/</developerConnection>
+        <url>http://svn.code.sf.net/p/itracker/code/itracker/branches/3.2.1/</url>
     </scm>
     <organization>
         <name>itracker</name>
