@@ -64,6 +64,7 @@ Building itracker from Sources
 *** Tomcat 7.x/8.x:
 
     * {{{https://codehaus-cargo.github.io/cargo/Tomcat+7.x.html}Tomcat 7 deploy reference}}
+
     * {{{https://codehaus-cargo.github.io/cargo/Tomcat+8.x.html}Tomcat 8 deploy reference}}
 
     []
@@ -101,7 +102,7 @@ Building itracker from Sources
     <<<mvn clean verify -Pselenium -Dselenium.browser=firefox>>>
 
     Run tests in slow-motion:\
-    <<<mvn clean verify -Pselenium -selenium.speed=2000>>>
+    <<<mvn clean verify -Pselenium>>>
 
     <If you cancel the build running Selenium Tests, some processes might be left and blocking some ports, you must find and kill them manually.>
 
