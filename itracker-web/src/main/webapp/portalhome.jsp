@@ -189,43 +189,46 @@
                         <c:when
                             test="${unassignedIssue.userHasPermission_PERMISSION_ASSIGN_OTHERS}">
 
-                            <html:form action="/assignissue">
-                                <html:hidden property="issueId"
-                                    value="${unassignedIssue.issue.id}" />
-                                <html:hidden property="projectId"
-                                    value="${unassignedIssue.issue.project.id}" />
+                            <td>
+                                <html:form action="/assignissue">
+                                    <html:hidden property="issueId"
+                                                 value="${unassignedIssue.issue.id}"/>
+                                    <html:hidden property="projectId"
+                                                 value="${unassignedIssue.issue.project.id}"/>
 
-                                <td><html:select property="userId"
-                                    styleClass="${listRowClass}" onchange="this.form.submit();">
-                                    <!-- Marky:  I commented out the original <C : tags and replaced them with my <C : tages.
-I change code to test for unassigned attribute instead of owner, since owner is not set.-->
-                                    <c:choose>
-                                        <c:when test="${unassignedIssue.unassigned}">
-                                            <!-- c:when test="$ {unassignedIssue.issue.owner == null}" -->
-                                            <option value="-1"><it:message key="itracker.web.generic.unassigned"/></option>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <option value="${unassignedIssue.issue.owner.id}"><c:out
-                                                value="${unassignedIssue.issue.owner.firstName}" /> <c:out
-                                                value="${unassignedIssue.issue.owner.lastName}" /></option>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    <c:forEach items="${unassignedIssue.possibleOwners}"
-                                        var="possibleIssueOwner" varStatus="k">
-                                        <c:if test="${possibleIssueOwner.lastName != null}">
-                                            <option value="${possibleIssueOwner.id}"
-                                                <c:choose>
-                                               <c:when test="${unassignedIssue.issue.owner.id == possibleIssueOwner.id}">
-                                                   selected
-                                               </c:when>
-                                               <c:otherwise>
-                                               </c:otherwise>
-                                           </c:choose>>${possibleIssueOwner.firstName}
-                                            ${possibleIssueOwner.lastName}</option>
-                                        </c:if>
-                                    </c:forEach>
-                                </html:select></td>
-                            </html:form>
+                                    <html:select property="userId"
+                                                 styleClass="${listRowClass}" onchange="this.form.submit();">
+                                        <!-- Marky: I commented out the original <C : tags and replaced them with my <C : tages.
+                                        I change code to test for unassigned attribute instead of owner, since owner is not set.-->
+                                        <c:choose>
+                                            <c:when test="${unassignedIssue.unassigned}">
+                                                <!-- c:when test="$ {unassignedIssue.issue.owner == null}" -->
+                                                <option value="-1"><it:message
+                                                        key="itracker.web.generic.unassigned"/></option>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <option value="${unassignedIssue.issue.owner.id}"><c:out
+                                                        value="${unassignedIssue.issue.owner.firstName}"/> <c:out
+                                                        value="${unassignedIssue.issue.owner.lastName}"/></option>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <c:forEach items="${unassignedIssue.possibleOwners}"
+                                                   var="possibleIssueOwner" varStatus="k">
+                                            <c:if test="${possibleIssueOwner.lastName != null}">
+                                                <option value="${possibleIssueOwner.id}"
+                                                        <c:choose>
+                                                            <c:when test="${unassignedIssue.issue.owner.id == possibleIssueOwner.id}">
+                                                                selected
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                            </c:otherwise>
+                                                        </c:choose>>${possibleIssueOwner.firstName}
+                                                        ${possibleIssueOwner.lastName}</option>
+                                            </c:if>
+                                        </c:forEach>
+                                    </html:select>
+                                </html:form>
+                            </td>
                             <!-- /c:if -->
                             <!--End of  unassignedIssue.userHasPermission_PERMISSION_ASSIGN_OTHERS-->
                         </c:when>
@@ -233,34 +236,38 @@ I change code to test for unassigned attribute instead of owner, since owner is 
                             <c:choose>
                                 <c:when
                                     test="${unassignedIssue.userHasPermission_PERMISSION_ASSIGN_SELF}">
-                                    <html:form action="/assignissue">
-                                        <html:hidden property="issueId"
-                                            value="${unassignedIssue.issue.id}" />
-                                        <html:hidden property="projectId"
-                                            value="${unassignedIssue.issue.project.id}" />
+                                    <td style="white-space: nowrap;">
+                                        <html:form action="/assignissue">
+                                            <html:hidden property="issueId"
+                                                         value="${unassignedIssue.issue.id}"/>
+                                            <html:hidden property="projectId"
+                                                         value="${unassignedIssue.issue.project.id}"/>
 
-                                        <%--!String styleClass2 = "(i % 2 == 1 ? \"listRowShaded\" : \"listRowUnshaded\")";--%>
-                                        <td style="white-space: nowrap;"><html:select property="userId"
-                                            styleClass="${listRowClass}"
-                                            onchange="this.form.submit();">
-                                            <c:choose>
-                                                <c:when test="${unassignedIssue.unassigned}">
-                                                    <option value="-1">
-                                                        <it:message key="itracker.web.generic.unassigned"/>
-                                                    </option>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <option value="${unassignedIssue.issue.owner.id}"><c:out
-                                                        value="${unassignedIssue.issue.owner.firstName}" /> <c:out
-                                                        value="${unassignedIssue.issue.owner.lastName}" />Test2</option>
-                                                </c:otherwise>
-                                            </c:choose>
-                                            <option value="${currUser.id}"
-                                                <c:if test="${unassignedIssue.issue.id==currUser.id}">selected</c:if>>
-                                            ${currUser.firstName} ${currUser.lastName}</option>
+                                            <%--!String styleClass2 = "(i % 2 == 1 ? \"listRowShaded\" : \"listRowUnshaded\")";--%>
+                                            <html:select property="userId"
+                                                         styleClass="${listRowClass}"
+                                                         onchange="this.form.submit();">
+                                                <c:choose>
+                                                    <c:when test="${unassignedIssue.unassigned}">
+                                                        <option value="-1">
+                                                            <it:message key="itracker.web.generic.unassigned"/>
+                                                        </option>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <option value="${unassignedIssue.issue.owner.id}"><c:out
+                                                                value="${unassignedIssue.issue.owner.firstName}"/>
+                                                            <c:out
+                                                                    value="${unassignedIssue.issue.owner.lastName}"/>Test2
+                                                        </option>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                <option value="${currUser.id}"
+                                                        <c:if test="${unassignedIssue.issue.id==currUser.id}">selected</c:if>>
+                                                        ${currUser.firstName} ${currUser.lastName}</option>
 
-                                        </html:select></td>
-                                    </html:form>
+                                            </html:select>
+                                        </html:form>
+                                    </td>
                                 </c:when>
                                 <c:otherwise>
                                     <td><it:formatIssueOwner

@@ -154,11 +154,12 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 unassignedIssuePTOs = buildIssueList( unassignedIssues, request, permissions );
                 createdIssuePTOs = buildIssueList( createdIssues, request, permissions );
                 watchedIssuePTOs = buildIssueList( watchedIssues, request, permissions );
+                // setup unassigned watched issues has notification
                 if ( watchedIssuePTOs != null && watchedIssuePTOs.size() > 0 && unassignedIssuePTOs != null && unassignedIssuePTOs.size() > 0 ) {
                     for (IssuePTO watchedIssue : watchedIssuePTOs) {
                         for (IssuePTO unassignedIssuePTO : unassignedIssuePTOs) {
                             if (watchedIssue.getIssue().getId() == unassignedIssuePTO.getIssue().getId()) {
-                                unassignedIssuePTO.setUserHasIssueNotification(false);
+                                unassignedIssuePTO.setUserHasIssueNotification(true);
                             }
                         }
                     }
