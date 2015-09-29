@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
 /**
- * This is the LoginForm Struts Form. It is used by Login form.
+ * This is the ProjectScriptForm Struts Form. It is used by the definition 'projectScriptForm'.
  *
  * @author ready
  */
@@ -35,13 +35,13 @@ public class ProjectScriptForm extends ValidatorForm {
      *
      */
     private static final long serialVersionUID = 1L;
-    String action;
-    Integer delId;
-    Integer projectId;
-    HashMap<String, String> id = new HashMap<String, String>();
-    HashMap<String, String> fieldId = new HashMap<String, String>();
-    HashMap<String, String> priority = new HashMap<String, String>();
-    HashMap<String, String> scriptItems = new HashMap<String, String>();
+    private String action;
+    private Integer delId;
+    private  Integer projectId;
+    private HashMap<String, String> id = new HashMap<>();
+    private HashMap<String, String> fieldId = new HashMap<>();
+    private HashMap<String, String> priority = new HashMap<>();
+    private HashMap<String, String> scriptItems = new HashMap<>();
 
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         action = null;

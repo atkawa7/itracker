@@ -110,7 +110,7 @@
 				</html:link>
 			</c:if>
 			<c:if test="${hasPermissionProductAdmin}">
-	            | <html:link styleClass="headerLinks"
+	            | <html:link styleClass="headerLinks" linkName="projectadmin"
 					titleKey="itracker.web.header.menu.projectadmin.alt"
 					module="/module-admin" action="/listprojectsadmin">
 					<it:message key="itracker.web.header.menu.projectadmin" />
