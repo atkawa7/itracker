@@ -34,8 +34,30 @@
         <test.dataSource.driverClass>org.hsqldb.jdbcDriver</test.dataSource.driverClass>
         <test.hibernate.dialect>org.hibernate.dialect.HSQLDialect</test.hibernate.dialect>
 
-        <log4j2.version>2.3</log4j2.version>
+        <springframework.version>3.1.1.RELEASE</springframework.version>
+        <hibernate.version>3.2.7.ga</hibernate.version>
+        <strus.version>1.3.10</strus.version>
+        <jasperreports.version>6.1.1</jasperreports.version>
         <bsh.version>1.3.0</bsh.version>
+        <antlr.version>2.7.7</antlr.version>
+        <rome.version>1.0</rome.version>
+        <servlet-api.version>2.5</servlet-api.version>
+        <jsp-api.version>2.1</jsp-api.version>
+        <jstl.version>1.2</jstl.version>
+        <standard-taglibs.version>1.1.2</standard-taglibs.version>
+        <xml-apis.version>1.4.01</xml-apis.version>
+        <log4j2.version>2.3</log4j2.version>
+        <commons-logging.version>1.2</commons-logging.version>
+        <commons-lang.version>2.6</commons-lang.version>
+        <commons-collections.version>3.2.1</commons-collections.version>
+        <commons-codec.version>1.10</commons-codec.version>
+        <commons-beanutils.version>1.9.2</commons-beanutils.version>
+        <commons-digester.version>1.8</commons-digester.version>
+
+        <junit.version>4.5</junit.version>
+        <dbunit.version>2.2</dbunit.version>
+        <selenium.version>2.47.1</selenium.version>
+        <subethamail.version>3.1.7</subethamail.version>
         <mysql-connector-java.version>5.1.6</mysql-connector-java.version>
         <hsqldb.version>2.0.0</hsqldb.version>
         <h2.version>1.4.188</h2.version>
@@ -56,16 +78,22 @@
         <maven-changes-plugin.version>2.11</maven-changes-plugin.version>
         <maven-changelog-plugin.version>2.3</maven-changelog-plugin.version>
         <maven-surefire-report-plugin.version>2.18.1</maven-surefire-report-plugin.version>
+        <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-failsafe-plugin.version>2.18.1</maven-failsafe-plugin.version>
+        <maven-surefire-plugin.version>2.8.1</maven-surefire-plugin.version>
+        <selenium-maven-plugin.version>2.3</selenium-maven-plugin.version>
         <maven-cobertura-plugin.version>2.7</maven-cobertura-plugin.version>
         <maven-javadoc-plugin.version>2.8.1</maven-javadoc-plugin.version>
+        <maven-clean-plugin.version>2.2</maven-clean-plugin.version>
+        <maven-assembly-plugin.version>2.4</maven-assembly-plugin.version>
+        <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
         <maven-war-plugin.version>2.6</maven-war-plugin.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-wagon-ssh-plugin.version>2.10</maven-wagon-ssh-plugin.version>
         <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
+        <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
         <maven-build-helper-plugin.version>1.9.1</maven-build-helper-plugin.version>
-        <maven-properties-plugin.version>1.0-alpha-2</maven-properties-plugin.version>
 
         <tomcat.deploy.server>localhost</tomcat.deploy.server>
         <tomcat.deploy.url>http://localhost:8080/manager</tomcat.deploy.url>
@@ -246,11 +274,11 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>selenium-maven-plugin</artifactId>
-                    <version>2.3</version>
+                    <version>${selenium-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.8.1</version>
+                    <version>${maven-surefire-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.eclipse.jetty</groupId>
@@ -259,7 +287,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.6</version>
+                    <version>${maven-resources-plugin.version}</version>
                     <configuration>
                         <encoding>ISO-8859-1</encoding>
                         <outputDirectory>${project.build.outputDirectory}</outputDirectory>
@@ -296,11 +324,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.2</version>
+                    <version>${maven-clean-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.4</version>
+                    <version>${maven-assembly-plugin.version}</version>
                     <configuration>
                         <descriptors>
                             <descriptor>src/main/assembly/assembly-src.xml</descriptor>
@@ -312,7 +340,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.6</version>
+                    <version>${maven-jar-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
@@ -379,7 +407,7 @@
 
                 <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.7</version>
+                    <version>${maven-antrun-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -496,79 +524,78 @@
             <dependency>
                 <groupId>rome</groupId>
                 <artifactId>rome</artifactId>
-                <version>1.0</version>
+                <version>${rome.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>servlet-api</artifactId>
-                <version>2.5</version>
+                <version>${servlet-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet.jsp</groupId>
                 <artifactId>jsp-api</artifactId>
-                <version>2.1</version>
+                <version>${jsp-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>jstl</artifactId>
-                <version>1.2</version>
+                <version>${jstl.version}</version>
             </dependency>
             <dependency>
                 <groupId>taglibs</groupId>
                 <artifactId>standard</artifactId>
-                <version>1.1.2</version>
+                <version>${standard-taglibs.version}</version>
             </dependency>
             <dependency>
                 <artifactId>xml-apis</artifactId>
                 <groupId>xml-apis</groupId>
-                <version>1.4.01</version>
+                <version>${xml-apis.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
-                <version>2.3</version>
+                <version>${log4j2.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-1.2-api</artifactId>
-                <version>2.3</version>
+                <version>${log4j2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${log4j2.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
-                <version>1.2</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-slf4j-impl</artifactId>
-                <version>2.3</version>
+                <version>${commons-logging.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
-                <version>2.6</version>
+                <version>${commons-lang.version}</version>
             </dependency>
             <dependency>
                 <artifactId>commons-collections</artifactId>
                 <groupId>commons-collections</groupId>
-                <version>3.2.1</version>
+                <version>${commons-collections.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.10</version>
+                <version>${commons-codec.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
-                <version>1.9.2</version>
+                <version>${commons-beanutils.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-digester</groupId>
                 <artifactId>commons-digester</artifactId>
-                <version>1.8</version>
+                <version>${commons-digester.version}1.8</version>
             </dependency>
 
             <dependency>
@@ -605,9 +632,15 @@
                 <version>${bsh.version}</version>
             </dependency>
             <dependency>
+                <groupId>antlr</groupId>
+                <artifactId>antlr</artifactId>
+                <version>${antlr.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>3.1.1.RELEASE</version>
+                <version>${springframework.version}</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>commons-logging</artifactId>
@@ -615,32 +648,26 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
-            <dependency>
-                <groupId>antlr</groupId>
-                <artifactId>antlr</artifactId>
-                <version>2.7.7</version>
-            </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-orm</artifactId>
-                <version>3.1.1.RELEASE</version>
+                <version>${springframework.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
-                <version>3.1.1.RELEASE</version>
+                <version>${springframework.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate</artifactId>
-                <version>3.2.7.ga</version>
+                <version>${hibernate.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts-tiles</artifactId>
-                <version>1.3.10</version>
+                <version>${strus.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>commons-digester</groupId>
@@ -651,22 +678,22 @@
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts-extras</artifactId>
-                <version>1.3.10</version>
+                <version>${strus.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts-taglib</artifactId>
-                <version>1.3.10</version>
+                <version>${strus.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts-el</artifactId>
-                <version>1.3.10</version>
+                <version>${strus.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.sf.jasperreports</groupId>
                 <artifactId>jasperreports</artifactId>
-                <version>6.1.1</version>
+                <version>${jasperreports.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xml-apis</groupId>
@@ -689,20 +716,20 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.5</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
-                <version>3.1.1.RELEASE</version>
+                <version>${springframework.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.dbunit</groupId>
                 <artifactId>dbunit</artifactId>
-                <version>2.2</version>
+                <version>${dbunit.version}</version>
                 <scope>test</scope>
                 <exclusions>
                     <exclusion>
@@ -718,7 +745,7 @@
             <dependency>
                   <groupId>org.seleniumhq.selenium</groupId>
                   <artifactId>selenium-java</artifactId>
-                  <version>2.47.1</version>
+                  <version>${selenium.version}</version>
                   <scope>test</scope>
                   <exclusions>
 <!--                      <exclusion>
@@ -734,7 +761,7 @@
             <dependency>
                  <groupId>org.seleniumhq.selenium</groupId>
                  <artifactId>selenium-server</artifactId>
-                 <version>2.47.1</version>
+                 <version>${selenium.version}</version>
                  <scope>test</scope>
                  <exclusions>
                      <exclusion>
@@ -758,7 +785,7 @@
              <dependency>
                  <groupId>org.subethamail</groupId>
                  <artifactId>subethasmtp</artifactId>
-                 <version>3.1.7</version>
+                 <version>${subethamail.version}</version>
                  <scope>test</scope>
                  <exclusions>
                      <exclusion>
