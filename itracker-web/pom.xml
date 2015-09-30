@@ -465,6 +465,7 @@
 
             <properties>
                 <itracker.it.skip>true</itracker.it.skip>
+                <forkCount>1</forkCount>
                 <selenium.firefox.binary>*firefox</selenium.firefox.binary>
                 <selenium.host>localhost</selenium.host>
                 <selenium.browser>firefox</selenium.browser>
