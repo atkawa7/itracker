@@ -144,6 +144,22 @@
     and issue.status <= :maxStatus ]]>
     </query>
 
+
+    <query name="FindNextIssues"><![CDATA[
+    	select issue
+    	  from Issue as issue
+    	 where issue.id > :issueId
+    	   and issue.project.id = (select project.id from Issue where id = :issueId)
+    	 order by issue.id asc]]>
+    </query>
+    <query name="FindPreviousIssues"><![CDATA[
+    	select issue
+    	  from Issue as issue
+    	 where issue.id < :issueId
+    	   and issue.project.id = (select project.id from Issue where id = :issueId)
+    	 order by issue.id desc]]>
+    </query>
+
     <query name="IssuesBySeverityQuery"><![CDATA[
     select issue
     from Issue as issue
@@ -289,7 +305,7 @@
     <query name="FindByTargetVersion"><![CDATA[
     	select issue
     	from Issue as issue 
-    	where issue.targetVersion.id = :versionId) ]]>
+    	where issue.targetVersion.id = :versionId ]]>
     </query>
 
 </hibernate-mapping>

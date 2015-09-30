@@ -227,6 +227,20 @@ public interface IssueDAO extends BaseDAO<Issue> {
     List<Issue> findByComponent(Integer componentId);
 
     /**
+     * Get the next issues in the project based on ID.
+     * @param issueId the issue ID
+     * @return List of next issues in the project.
+     */
+    List<Issue> findNextIssues(Integer issueId);
+
+    /**
+     * Get the next issues in the project based on ID.
+     * @param issueId the issue ID
+     * @return List of next issues in the project.
+     */
+    List<Issue> findPreviousIssues(Integer issueId);
+
+    /**
      * Count all Issues in database
      */
     Long countAllIssues();

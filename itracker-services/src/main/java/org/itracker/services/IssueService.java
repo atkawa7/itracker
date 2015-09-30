@@ -80,6 +80,8 @@ public interface IssueService {
 
     List<Issue> getUnassignedIssues(boolean availableProjectsOnly);
 
+    public List<Issue> getNextIssues(Integer issueId);
+    public List<Issue> getPreviousIssues(Integer issueId);
     /**
      * Creates a new issue in a project.
      *

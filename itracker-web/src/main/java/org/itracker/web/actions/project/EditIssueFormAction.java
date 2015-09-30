@@ -26,10 +26,7 @@ import org.itracker.services.IssueService;
 import org.itracker.services.UserService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
-import org.itracker.web.util.Constants;
-import org.itracker.web.util.EditIssueActionUtil;
-import org.itracker.web.util.RequestHelper;
-import org.itracker.web.util.ServletContextUtils;
+import org.itracker.web.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -110,6 +107,7 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                         .getProject(), currUser);
 
                 issueForm.setupIssueForm(issue, listOptions, request, errors);
+                IssueNavigationUtil.setupNextPreviousIssueInRequest(request, issue, issueService);
 
                 IssueForm.setupJspEnv(mapping, issueForm, request,
                         issue, issueService, userService, userPermissions,

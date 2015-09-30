@@ -21,7 +21,6 @@ package org.itracker.web.forms;
 import bsh.EvalError;
 import bsh.Interpreter;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -34,6 +33,8 @@ import org.itracker.model.*;
 import org.itracker.model.util.*;
 import org.itracker.services.*;
 import org.itracker.web.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -51,7 +52,7 @@ public class IssueForm extends ITrackerForm {
      */
     private static final long serialVersionUID = 1L;
 
-    private static final Logger log = Logger.getLogger(IssueForm.class);
+    private static final Logger log = LoggerFactory.getLogger(IssueForm.class);
 
     private Integer id = null;
     private String caller = null;
@@ -728,13 +729,13 @@ public class IssueForm extends ITrackerForm {
         }
     }
 
-    protected static final void setupRelationsRequestEnv(List<IssueRelation> relations, HttpServletRequest request) {
+    protected static void setupRelationsRequestEnv(List<IssueRelation> relations, HttpServletRequest request) {
         Collections.sort(relations, IssueRelation.LAST_MODIFIED_DATE_COMPARATOR);
         request.setAttribute("issueRelations", relations);
 
     }
 
-    public static final void setupNotificationsInRequest(
+    public static void setupNotificationsInRequest(
             HttpServletRequest request, Issue issue,
             NotificationService notificationService) {
         List<Notification> notifications = notificationService

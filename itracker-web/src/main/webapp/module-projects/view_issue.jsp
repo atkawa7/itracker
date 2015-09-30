@@ -301,7 +301,36 @@
             <table style="border: none; padding: 1px; border-spacing: 0; width: 100%">
               <tr>
                 <td class="editColumnTitle" colspan="3"><it:message key="itracker.web.attr.history"/>:</td>
-                <td style="text-align: right;"><it:formatImageAction forward="view_issue_activity.do" paramName="id" paramValue="${issueId}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.activity.alt" textActionKey="itracker.web.image.view.texttag"/></td>
+                <td style="text-align: right;">
+                    <c:if test="${not empty previousIssue}">
+                        <it:formatImageAction action="view_issue"
+                                              module="/module-projects"
+                                              paramName="id"
+                                              paramValue="${previousIssue.id}"
+                                              caller="${param.caller}"
+                                              src="/themes/defaulttheme/images/previous.gif"
+                                              altKey="itracker.web.image.previous.issue.alt"
+                                              arg0="${previousIssue.id}"
+                                              textActionKey="itracker.web.image.previous.texttag"/>
+                    </c:if>
+                    <c:choose>
+                        <c:when test="${not empty nextIssue}">
+                            <it:formatImageAction action="view_issue"
+                                                  module="/module-projects"
+                                                  paramName="id"
+                                                  paramValue="${nextIssue.id}"
+                                                  caller="${param.caller}"
+                                                  src="/themes/defaulttheme/images/next.gif"
+                                                  altKey="itracker.web.image.next.issue.alt"
+                                                  arg0="${nextIssue.id}"
+                                                  textActionKey="itracker.web.image.next.texttag"/>
+                        </c:when>
+                        <c:otherwise>
+                            <!-- spacer -->
+                            <html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="18px" height="18px"/>
+                        </c:otherwise>
+                    </c:choose>
+                    <it:formatImageAction forward="view_issue_activity.do" paramName="id" paramValue="${issueId}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.activity.alt" textActionKey="itracker.web.image.view.texttag"/></td>
               </tr>
               <tr style="text-align: left;" class="listHeading">
                 <td width="15"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>

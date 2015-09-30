@@ -261,6 +261,7 @@
                                         src="/themes/defaulttheme/images/view.gif"
                                         altKey="itracker.web.image.view.issue.alt"
                                         arg0="<%= issues.get(i).getId() %>"
+                                        caller="searchissue"
                                         textActionKey="itracker.web.image.view.texttag"/>
 
                   <% if(UserUtilities.hasPermission(permissions, issues.get(i).getProject().getId(), UserUtilities.PERMISSION_EDIT)) { %>
@@ -268,7 +269,7 @@
                                               module="/module-projects"
                                               paramName="id"
                                               paramValue="<%= issues.get(i).getId() %>"
-                                              caller="index"
+                                              caller="searchissue"
                                               src="/themes/defaulttheme/images/edit.gif"
                                               altKey="itracker.web.image.edit.issue.alt"
                                               arg0="<%= issues.get(i).getId() %>"

@@ -1452,6 +1452,13 @@ public class IssueServiceImpl implements IssueService {
 
     }
 
+    public List<Issue> getNextIssues(Integer issueId) {
+        return getIssueDAO().findNextIssues(issueId);
+    }
+    public List<Issue> getPreviousIssues(Integer issueId) {
+        return getIssueDAO().findPreviousIssues(issueId);
+    }
+
     public boolean canViewIssue(Integer issueId, User user) {
 
         Issue issue = getIssue(issueId);

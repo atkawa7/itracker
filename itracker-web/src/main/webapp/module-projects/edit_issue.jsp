@@ -685,6 +685,35 @@
                 <td class="editColumnTitle" colspan="3">
                     <it:message key="itracker.web.attr.history"/>:</td>
                 <td style="text-align: right">
+
+                    <c:if test="${not empty previousIssue}">
+                        <it:formatImageAction action="view_issue"
+                                              module="/module-projects"
+                                              paramName="id"
+                                              paramValue="${previousIssue.id}"
+                                              caller="viewissue"
+                                              src="/themes/defaulttheme/images/previous.gif"
+                                              altKey="itracker.web.image.previous.issue.alt"
+                                              arg0="${previousIssue.id}"
+                                              textActionKey="itracker.web.image.previous.texttag"/>
+                    </c:if>
+                    <c:choose>
+                        <c:when test="${not empty nextIssue}">
+                            <it:formatImageAction action="view_issue"
+                                                  module="/module-projects"
+                                                  paramName="id"
+                                                  paramValue="${nextIssue.id}"
+                                                  caller="viewissue"
+                                                  src="/themes/defaulttheme/images/next.gif"
+                                                  altKey="itracker.web.image.next.issue.alt"
+                                                  arg0="${nextIssue.id}"
+                                                  textActionKey="itracker.web.image.next.texttag"/>
+                        </c:when>
+                        <c:otherwise>
+                            <!-- spacer -->
+                            <html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="18px" height="18px"/>
+                        </c:otherwise>
+                    </c:choose>
                     <it:formatImageAction forward="view_issue_activity.do"
                                           paramName="id"
                                           paramValue="${issue.id}"

@@ -484,6 +484,31 @@ public class IssueDAOImpl extends BaseHibernateDAOImpl<Issue> implements IssueDA
 
     }
 
+    public List<Issue> findNextIssues(Integer issueId) {
+        List<Issue> issue;
+        try {
+            final Query query = getSession().getNamedQuery(
+                    "FindNextIssues");
+            query.setInteger("issueId", issueId);
+            issue = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issue;
+    }
+    public List<Issue> findPreviousIssues(Integer issueId) {
+        List<Issue> issue;
+        try {
+            final Query query = getSession().getNamedQuery(
+                    "FindPreviousIssues");
+            query.setInteger("issueId", issueId);
+            issue = query.list();
+        } catch (HibernateException ex) {
+            throw convertHibernateAccessException(ex);
+        }
+        return issue;
+    }
+
     /**
      * It doens't really make sense for this method to receive projectDAO, it's just a quick
      * fix for the fact that IssueSearchQuery handles ids and not objects
