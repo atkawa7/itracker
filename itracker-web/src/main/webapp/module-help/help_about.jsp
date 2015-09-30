@@ -15,7 +15,7 @@
 <table cellspacing="0" cellspacing="1" border="0" width="100%" class="help">
     <tr>
         <td><b><it:message key="itracker.web.helpabout.createdby"/>:</b></td>
-        <td align="left">itracker developer community, <a href="http://itracker.org">itracker.org, based on the
+        <td align="left">itracker developer community, <a href="http://itracker.sourceforge.net">itracker.org, based on the
             initial code donation by Jason Carroll (jcarroll@cowsultants.com)</a>
         </td>
     </tr>
