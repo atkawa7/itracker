@@ -132,6 +132,7 @@
             <item name="Project Reports" href="/project-reports.html" collapse="true">
                 <item name="Surefire Report" href="/surefire-report.html"/>
                 <item name="Checkstyle" href="/checkstyle-aggregate.html"/>
+                <item name="Changelog" href="/changelog.html"/>
                 <item name="Source Xref" href="/xref/index.html"/>
                 <item name="JavaDocs" href="/apidocs/index.html"/>
                 <item name="Test JavaDocs" href="/testapidocs/index.html"/>
