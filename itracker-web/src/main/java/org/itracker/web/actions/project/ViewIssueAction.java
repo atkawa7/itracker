@@ -11,6 +11,7 @@ import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
+import org.itracker.web.util.IssueNavigationUtil;
 import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
 
@@ -42,9 +43,6 @@ public class ViewIssueAction extends ItrackerBaseAction {
 			saveErrors(request, getErrors(request));
 			return mapping.findForward("index");
 		}
-		IssueForm.setupNotificationsInRequest(request, issueService
-                .getIssue(issueId),
-                ServletContextUtils.getItrackerServices().getNotificationService());
 
 		HttpSession session = request.getSession();
 		final Map<Integer, Set<PermissionType>> permissions = RequestHelper
@@ -70,6 +68,7 @@ public class ViewIssueAction extends ItrackerBaseAction {
 			log.info("ViewIssueAction: Forward: error");
 			return mapping.findForward("error");
 		}
+
 		Project project = issue.getProject();
 		if (project != null && project.getStatus() != Status.ACTIVE
 				&& project.getStatus() != Status.VIEWABLE) {
@@ -86,7 +85,11 @@ public class ViewIssueAction extends ItrackerBaseAction {
 				return mapping.findForward("unauthorized");
 			}
 		}
+        IssueForm.setupNotificationsInRequest(request, issueService
+                      .getIssue(issueId),
+                      ServletContextUtils.getItrackerServices().getNotificationService());
 
+        IssueNavigationUtil.setupNextPreviousIssueInRequest(request, issue, issueService);
 		/*
 		 * Get issue history, sort on create date.
 		 */
