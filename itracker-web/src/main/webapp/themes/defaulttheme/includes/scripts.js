@@ -5,6 +5,26 @@ document.observe("dom:loaded", function() {
     $$('.deleteButton').each(function(elem) {
         elem.observe("click", function(event) { if (!confirm(elem.title + "?")) { event.stop() }; });
     });
+    $$('a.HTTP_POST[href], .HTTP_POST a[href]').each(function(elem) {
+        elem.observe("click", function(event) {
+            var hr = elem.href
+            var x = hr.indexOf("?")
+            if (x>-1) {
+                event.stop()
+                var f = new Element("form")
+                var v = hr.substr(x+1).parseQuery()
+                $H(v).each(function(x){
+                    var h = new Element('input')
+                    h.setAttribute('name', x.key)
+                    h.setAttribute('value',x.value)
+                    f.insert(h)
+                })
+                f.setAttribute("action", hr.substr(0,x))
+                f.setAttribute("method", "post")
+                f.submit()
+            }
+        });
+    });
 });
 
 /**

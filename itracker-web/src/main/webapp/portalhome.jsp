@@ -144,12 +144,14 @@
                 <tr id="unassignedIssue.${iCount}" class="${listRowClass}">
                     <td style="white-space: nowrap">
                         <c:if test="${not unassignedIssue.userHasIssueNotification}">
+                            <span class="HTTP_POST">
                             <it:formatImageAction forward="watchissue" paramName="id"
                                 paramValue="${unassignedIssue.issue.id}" caller="index"
                                 src="/themes/defaulttheme/images/watch.gif"
                                 altKey="itracker.web.image.watch.issue.alt"
                                 arg0="${unassignedIssue.issue.id}"
                                 textActionKey="itracker.web.image.watch.texttag" />
+                            </span>
                         </c:if>
                         <it:formatImageAction
                             forward="viewissue" module="/module-projects"
@@ -470,13 +472,16 @@
                 <c:set var="listRowClass"
                     value="${i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded'}" />
                 <tr id="watchedIssue.${i.count}" class="${listRowClass}">
-                    <td style="white-space: nowrap"><it:formatImageAction
-                        forward="watchissue" paramName="id"
-                        paramValue="${watchedIssue.issue.id}" caller="index"
-                        src="/themes/defaulttheme/images/unwatch.gif"
-                        altKey="itracker.web.image.unwatch.issue.alt"
-                        arg0="${watchedIssue.issue.id}"
-                        textActionKey="itracker.web.image.unwatch.texttag" />
+                    <td style="white-space: nowrap">
+                        <span class="HTTP_POST">
+                        <it:formatImageAction
+                            forward="watchissue" paramName="id"
+                            paramValue="${watchedIssue.issue.id}" caller="index"
+                            src="/themes/defaulttheme/images/unwatch.gif"
+                            altKey="itracker.web.image.unwatch.issue.alt"
+                            arg0="${watchedIssue.issue.id}"
+                            textActionKey="itracker.web.image.unwatch.texttag" />
+                        </span>
                         <c:if test="${watchedIssue.userCanViewIssue}">
                             <it:formatImageAction
                                 forward="viewissue" module="/module-projects"

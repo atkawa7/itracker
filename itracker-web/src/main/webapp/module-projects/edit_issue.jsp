@@ -56,7 +56,7 @@
 
                    
                     <c:if test="${hasIssueNotification}">
-
+                    <span class="HTTP_POST">
                     <it:formatImageAction forward="watchissue"
                                           module="/module-projects"
                                           paramName="id"
@@ -66,7 +66,7 @@
                                           altKey="itracker.web.image.watch.issue.alt"
                                           arg0="${issue.id}"
                                           textActionKey="itracker.web.image.watch.texttag"/>
-
+                    </span>
                     </c:if>
 
                    

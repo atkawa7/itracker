@@ -51,7 +51,9 @@
             	</c:if>
                       
             	<c:if test="${issuePTO.userHasIssueNotification}">
-            	<it:formatImageAction forward="watchissue" paramName="id" paramValue="${issuePTO.issue.id}" src="/themes/defaulttheme/images/watch.gif" altKey="itracker.web.image.watch.issue.alt" arg0="${issuePTO.issue.id}" textActionKey="itracker.web.image.watch.texttag"/>
+                    <span class="HTTP_POST">
+            	    <it:formatImageAction forward="watchissue" paramName="id" paramValue="${issuePTO.issue.id}" src="/themes/defaulttheme/images/watch.gif" altKey="itracker.web.image.watch.issue.alt" arg0="${issuePTO.issue.id}" textActionKey="itracker.web.image.watch.texttag" />
+                    </span>
             	</c:if>
          
             </td>

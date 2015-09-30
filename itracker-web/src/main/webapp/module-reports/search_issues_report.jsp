@@ -288,7 +288,9 @@ User um = RequestHelper.getCurrentUser(session);
 
                   <% } %>
                   <% if(! IssueUtilities.hasIssueNotification(issues.get(i), currUserId)) { %>
+                    <span class="HTTP_POST">
                         <it:formatImageAction forward="watchissue" paramName="id" paramValue="<%= issues.get(i).getId() %>" caller="index" src="/themes/defaulttheme/images/watch.gif" altKey="itracker.web.image.watch.issue.alt" arg0="<%= issues.get(i).getId() %>" textActionKey="itracker.web.image.watch.texttag"/>
+                    </span>
                   <% } %>
                 </td>
                 <td></td>
