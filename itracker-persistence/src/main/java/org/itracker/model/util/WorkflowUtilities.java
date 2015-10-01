@@ -86,13 +86,13 @@ public class WorkflowUtilities {
      * @return an array of pairs (eventName, eventId), which is never null.
      */
     public static NameValuePair[] getEvents(Locale locale) {
-        NameValuePair[] eventNames = new NameValuePair[6];
+        NameValuePair[] eventNames = new NameValuePair[5];
         eventNames[0] = new NameValuePair(getEventName(EVENT_FIELD_ONPOPULATE, locale), Integer.toString(EVENT_FIELD_ONPOPULATE));
-        eventNames[1] = new NameValuePair(getEventName(EVENT_FIELD_ONSORT, locale), Integer.toString(EVENT_FIELD_ONSORT));
-        eventNames[2] = new NameValuePair(getEventName(EVENT_FIELD_ONSETDEFAULT, locale), Integer.toString(EVENT_FIELD_ONSETDEFAULT));
-        eventNames[3] = new NameValuePair(getEventName(EVENT_FIELD_ONVALIDATE, locale), Integer.toString(EVENT_FIELD_ONVALIDATE));
-        eventNames[4] = new NameValuePair(getEventName(EVENT_FIELD_ONPRESUBMIT, locale), Integer.toString(EVENT_FIELD_ONPRESUBMIT));
-        eventNames[5] = new NameValuePair(getEventName(EVENT_FIELD_ONPOSTSUBMIT, locale), Integer.toString(EVENT_FIELD_ONPOSTSUBMIT));
+//        eventNames[] = new NameValuePair(getEventName(EVENT_FIELD_ONSORT, locale), Integer.toString(EVENT_FIELD_ONSORT));
+        eventNames[1] = new NameValuePair(getEventName(EVENT_FIELD_ONSETDEFAULT, locale), Integer.toString(EVENT_FIELD_ONSETDEFAULT));
+        eventNames[2] = new NameValuePair(getEventName(EVENT_FIELD_ONVALIDATE, locale), Integer.toString(EVENT_FIELD_ONVALIDATE));
+        eventNames[3] = new NameValuePair(getEventName(EVENT_FIELD_ONPRESUBMIT, locale), Integer.toString(EVENT_FIELD_ONPRESUBMIT));
+        eventNames[4] = new NameValuePair(getEventName(EVENT_FIELD_ONPOSTSUBMIT, locale), Integer.toString(EVENT_FIELD_ONPOSTSUBMIT));
         return eventNames;
     }
 

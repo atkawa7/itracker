@@ -86,8 +86,8 @@ public class WorkflowUtilitiesIT extends AbstractDependencyInjectionTest {
                 new NameValuePair[]{
                         new NameValuePair("On Populate",
                                 Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPOPULATE)),
-                        new NameValuePair("On Sort",
-                                Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSORT)),
+//                        new NameValuePair("On Sort",
+//                                Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSORT)),
                         new NameValuePair("On Set Default",
                                 Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT)),
                         new NameValuePair("On Validate",
@@ -101,8 +101,8 @@ public class WorkflowUtilitiesIT extends AbstractDependencyInjectionTest {
                 new NameValuePair[]{
                         new NameValuePair("On Populate",
                                 Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPOPULATE)),
-                        new NameValuePair("On Sort",
-                                Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSORT)),
+//                        new NameValuePair("On Sort",
+//                                Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSORT)),
                         new NameValuePair("On Set Default",
                                 Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT)),
                         new NameValuePair("On Validate",
@@ -116,8 +116,8 @@ public class WorkflowUtilitiesIT extends AbstractDependencyInjectionTest {
                 new NameValuePair[]{
                         new NameValuePair("test_value",
                                 Integer.toString(WorkflowUtilities.EVENT_FIELD_ONPOPULATE)),
-                        new NameValuePair("On Sort",
-                                Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSORT)),
+//                        new NameValuePair("On Sort",
+//                                Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSORT)),
                         new NameValuePair("On Set Default",
                                 Integer.toString(WorkflowUtilities.EVENT_FIELD_ONSETDEFAULT)),
                         new NameValuePair("On Validate",
