@@ -12,15 +12,17 @@ document.observe("dom:loaded", function() {
             if (x>-1) {
                 event.stop()
                 var f = new Element("form")
+                f.setAttribute("action", hr.substr(0,x))
+                f.setAttribute("method", "post")
+                $$("body").first().insert(f)
                 var v = hr.substr(x+1).parseQuery()
                 $H(v).each(function(x){
                     var h = new Element('input')
+                    h.setAttribute('type', 'hidden')
                     h.setAttribute('name', x.key)
                     h.setAttribute('value',x.value)
                     f.insert(h)
                 })
-                f.setAttribute("action", hr.substr(0,x))
-                f.setAttribute("method", "post")
                 f.submit()
             }
         });
