@@ -20,6 +20,7 @@ package org.itracker.model;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.itracker.model.util.IssueUtilities;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -32,18 +33,20 @@ import java.util.Comparator;
 public class Configuration extends AbstractEntity implements Comparable<Entity> {
 
     public static enum Type implements IntCodeEnum<Type> {
-        initialized(-1),
-        locale(1),
-        status(2),
-        severity(3),
-        resolution(4),
-        customfield(5);
+        initialized(-1, 0),
+        locale(1, 0),
+        status(2, IssueUtilities.FIELD_STATUS),
+        severity(3, IssueUtilities.FIELD_SEVERITY),
+        resolution(4, IssueUtilities.FIELD_RESOLUTION),
+        customfield(5, 0);
 
 
         private final Integer code;
+        private final Integer legacyCode;
 
-        private Type(Integer code) {
+        private Type(Integer code, Integer legacyCode) {
             this.code = code;
+            this.legacyCode = legacyCode;
         }
 
         public Integer getCode() {
@@ -52,6 +55,10 @@ public class Configuration extends AbstractEntity implements Comparable<Entity> 
 
         public Type fromCode(Integer code) {
             return Type.valueOf(code);
+        }
+
+        public Integer getLegacyCode() {
+            return legacyCode;
         }
 
         public static Type valueOf(Integer code) {

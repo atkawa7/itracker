@@ -108,8 +108,8 @@ public class IssueForm extends ITrackerForm {
         String currentValue;
         for (ProjectScript currentScript : scriptsToRun) {
             try {
-                currentValue = currentValues.get(currentScript.getFieldId()
-                * (currentScript.getFieldType() == Configuration.Type.customfield?1:-1));
+                currentValue = currentValues.get((currentScript.getFieldType() == Configuration.Type.customfield?
+                        currentScript.getFieldId():currentScript.getFieldType().getLegacyCode()));
                 log.debug("Running script " + currentScript.getScript().getId()
                         + " with priority " + currentScript.getPriority());
 
@@ -135,13 +135,15 @@ public class IssueForm extends ITrackerForm {
                         // TODO owner?
                         options = Collections.emptyList();
                     }
-                    optionValues.put(currentScript.getFieldType().getCode()*-1, options);
+                    optionValues.put(currentScript.getFieldType().getLegacyCode(), options);
                 }
 
                 currentValue = processFieldScript(currentScript, event,
                         currentValue,
                         options, currentErrors);
-                currentValues.put( currentScript.getFieldId()* (currentScript.getFieldType() == Configuration.Type.customfield?1:-1), currentValue );
+                currentValues.put( (currentScript.getFieldType() == Configuration.Type.customfield?
+                        currentScript.getFieldId():currentScript.getFieldType().getLegacyCode()),
+                        currentValue );
 
 
                 log.debug("After script current value for field " + IssueUtilities.getFieldName(currentScript.getFieldId())
@@ -161,17 +163,17 @@ public class IssueForm extends ITrackerForm {
                 final String val;
                 switch (script.getFieldType()) {
                     case status:
-                        val = currentValues.get(Configuration.Type.status.getCode()*-1);
+                        val = currentValues.get(Configuration.Type.status.getLegacyCode());
                         if (null != val)
                         setStatus(Integer.valueOf(val));
                         break;
                     case severity:
-                        val = currentValues.get(Configuration.Type.severity.getCode()*-1);
+                        val = currentValues.get(Configuration.Type.severity.getLegacyCode());
                         if (null != val)
-                        setSeverity(Integer.valueOf(currentValues.get(Configuration.Type.severity.getCode()*-1)));
+                        setSeverity(Integer.valueOf(currentValues.get(Configuration.Type.severity.getLegacyCode())));
                         break;
                     case resolution:
-                        val = currentValues.get(Configuration.Type.resolution.getCode()*-1);
+                        val = currentValues.get(Configuration.Type.resolution.getLegacyCode());
                         setResolution(val);
                         break;
                     case customfield:
@@ -213,8 +215,8 @@ public class IssueForm extends ITrackerForm {
         try {
             Interpreter bshInterpreter = new Interpreter();
             bshInterpreter.set("event", event);
-            bshInterpreter.set("fieldId", projectScript.getFieldId()
-                    * (projectScript.getFieldType()== Configuration.Type.customfield?1:-1));
+            bshInterpreter.set("fieldId", (projectScript.getFieldType()== Configuration.Type.customfield?
+                projectScript.getFieldId():projectScript.getFieldType().getLegacyCode()));
             currentValue = StringUtils.defaultString(currentValue);
             bshInterpreter.set("currentValue", currentValue);
             bshInterpreter.set("optionValues", optionValues);
@@ -909,11 +911,11 @@ public class IssueForm extends ITrackerForm {
             values.put(field.getId()
                     , getCustomFields().get(String.valueOf(field.getId())));
         }
-        values.put(Configuration.Type.status.getCode() * -1,
+        values.put(Configuration.Type.status.getLegacyCode(),
                 String.valueOf(getStatus()));
-        values.put(Configuration.Type.severity.getCode() * -1,
+        values.put(Configuration.Type.severity.getLegacyCode(),
                 String.valueOf(getSeverity()));
-        values.put(Configuration.Type.resolution.getCode() * -1,
+        values.put(Configuration.Type.resolution.getLegacyCode(),
                 getResolution());
 
         processFieldScripts(project.getScripts(),

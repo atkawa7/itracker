@@ -21,6 +21,7 @@ package org.itracker.web.actions.admin.project;
 //import java.io.ByteArrayInputStream;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.Configuration;
@@ -84,14 +85,13 @@ public class EditProjectScriptAction extends ItrackerBaseAction {
                             && StringUtils.equalsIgnoreCase(StringUtils.trim(scriptItemsvalue), "on") ) {
                         Integer wfsIds = Integer.valueOf(key);
                         Integer fieldId = null;
-                        Configuration.Type fieldType = Configuration.Type.valueOf(fieldIds.get(key));
-                        if (null == fieldType) {
+                        Configuration.Type fieldType = Configuration.Type.customfield;
+                        if (NumberUtils.isNumber(fieldIds.get(key))) {
                             fieldId = Integer.valueOf(fieldIds.get(key));
-                            fieldType = Configuration.Type.customfield;
                         } else {
+                            fieldType = Configuration.Type.valueOf(fieldIds.get(key));
                             fieldId = fieldType.getCode();
                         }
-
 
                         Integer priority = Integer.valueOf(priorities.get(key));
                         WorkflowScript workflowScript = configurationService.getWorkflowScript(wfsIds);

@@ -1,5 +1,6 @@
 package org.itracker.model;
 
+import org.itracker.model.util.IssueUtilities;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,6 +8,7 @@ import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 import static org.itracker.Assert.assertEntityComparator;
 import static org.itracker.Assert.assertEntityComparatorEquals;
+import static org.itracker.model.util.IssueUtilities.FIELD_STATUS;
 import static org.junit.Assert.*;
 
 public class ConfigurationTest {
@@ -17,7 +19,8 @@ public class ConfigurationTest {
     public void testType() {
         Configuration.Type type = Configuration.Type.status;
         assertEquals("status.name", "status", type.name());
-        assertEquals("status.code", (Object)2, type.getCode());
+        assertEquals("status.code", (Integer)2, type.getCode());
+        assertEquals("status.legacyCode", (Integer)FIELD_STATUS, type.getLegacyCode());
         assertEquals("Configuration.Type.valueOf(2)",
                 type, Configuration.Type.valueOf(type.getCode()));
         assertEquals("Configuration.Type.valueOf('status')", type, Configuration.Type.valueOf("status"));
