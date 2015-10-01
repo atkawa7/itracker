@@ -99,7 +99,7 @@ public class EditLanguageAction extends ItrackerBaseAction {
                 languageItem.setResourceValue(newLocales.toString());
                 configurationService.updateLanguageItem(languageItem);
 
-                List<Configuration> localeConfigs = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_LOCALE);
+                List<Configuration> localeConfigs = configurationService.getConfigurationItemsByType(Configuration.Type.locale);
 
                 for (Configuration configuration: localeConfigs) {
                     if (configuration.getValue().equals(locale)) {

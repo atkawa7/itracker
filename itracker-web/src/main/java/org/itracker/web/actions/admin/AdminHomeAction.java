@@ -6,6 +6,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.Configuration;
 import org.itracker.model.PermissionType;
 import org.itracker.model.util.ReportUtilities;
 import org.itracker.services.*;
@@ -91,21 +92,21 @@ public class AdminHomeAction extends ItrackerBaseAction {
 
         Integer numberOfStatuses = configurationService
                 .getConfigurationItemsByType(
-                        SystemConfigurationUtilities.TYPE_STATUS).size();
+                        Configuration.Type.status).size();
         request.setAttribute("numberOfStatuses", numberOfStatuses);
         logTimeMillies("execute: looked up numberOfStatuses", time_millies,
                 log, Level.INFO);
 
         Integer numberOfSeverities = configurationService
                 .getConfigurationItemsByType(
-                        SystemConfigurationUtilities.TYPE_SEVERITY).size();
+                        Configuration.Type.severity).size();
         request.setAttribute("numberOfSeverities", numberOfSeverities);
         logTimeMillies("execute: looked up numberOfSeverities", time_millies,
                 log, Level.INFO);
 
         Integer numberOfResolutions = configurationService
                 .getConfigurationItemsByType(
-                        SystemConfigurationUtilities.TYPE_RESOLUTION).size();
+                        Configuration.Type.resolution).size();
         request.setAttribute("numberOfResolutions", numberOfResolutions);
         logTimeMillies("execute: looked up numberOfResolutions", time_millies,
                 log, Level.INFO);

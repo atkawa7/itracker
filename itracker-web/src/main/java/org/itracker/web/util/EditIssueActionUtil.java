@@ -173,21 +173,30 @@ public class EditIssueActionUtil {
         for (CustomField projectField : projectFields) {
             if (projectField.getFieldType() == CustomField.Type.LIST) {
                 listOptions.put(projectField.getId(), Convert
-                        .customFieldOptionsToNameValuePairs(projectField.getOptions()));
+                        .customFieldOptionsToNameValuePairs(projectField, locale));
             }
         }
 
         return listOptions;
     }
 
-    public static List<NameValuePair> fieldOptions(CustomField field) {
+    private static List<NameValuePair> fieldOptions(CustomField field) {
         return Convert.customFieldOptionsToNameValuePairs(field.getOptions());
     }
+
     public static Map<Integer, List<NameValuePair>> mappedFieldOptions(List<CustomField> fields ) {
         Map<Integer, List<NameValuePair>> options = new HashMap<Integer, List<NameValuePair>>(fields.size());
         for (CustomField field: fields) {
-            options.put(field.getId(), fieldOptions(field));
+
+            List<NameValuePair> listOptions = fieldOptions(field);
+            if (field.isSortOptionsByName()) {
+                Collections.sort(listOptions, NameValuePair.KEY_COMPARATOR);
+            }
+
+            options.put(field.getId(), listOptions);
         }
+
+
 
         return options;
     }

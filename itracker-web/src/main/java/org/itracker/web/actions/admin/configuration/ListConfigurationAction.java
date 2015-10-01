@@ -25,9 +25,9 @@ public class ListConfigurationAction extends ItrackerBaseAction {
 
         ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
 
-        List<Configuration> resolutions = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_RESOLUTION);
-        List<Configuration> severities = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_SEVERITY);
-        List<Configuration> statuses = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_STATUS);
+        List<Configuration> resolutions = configurationService.getConfigurationItemsByType(Configuration.Type.resolution);
+        List<Configuration> severities = configurationService.getConfigurationItemsByType(Configuration.Type.severity);
+        List<Configuration> statuses = configurationService.getConfigurationItemsByType(Configuration.Type.status);
         List<CustomField> customfields = configurationService.getCustomFields();
 
         request.setAttribute("resolutions", resolutions);

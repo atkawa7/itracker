@@ -31,15 +31,24 @@ public class SystemConfigurationUtilities {
     private static final Logger log = Logger.getLogger(SystemConfigurationUtilities.class);
 
 
+    @Deprecated
     public static final int TYPE_INITIALIZED = Configuration.Type.initialized.getCode();
+    @Deprecated
     public static final int TYPE_LOCALE = Configuration.Type.locale.getCode();
+    @Deprecated
     public static final int TYPE_STATUS = Configuration.Type.status.getCode();
+    @Deprecated
     public static final int TYPE_SEVERITY = Configuration.Type.severity.getCode();
+    @Deprecated
     public static final int TYPE_RESOLUTION = Configuration.Type.resolution.getCode();
+    @Deprecated
     public static final int TYPE_CUSTOMFIELD = Configuration.Type.customfield.getCode();
 
+    @Deprecated
     public static final int ACTION_CREATE = 1;
+    @Deprecated
     public static final int ACTION_UPDATE = 2;
+    @Deprecated
     public static final int ACTION_REMOVE = 3;
 
     public static final int LOCALE_TYPE_INVALID = -1;
@@ -62,6 +71,7 @@ public class SystemConfigurationUtilities {
         return "";
     }
 
+    @Deprecated
     public static String getTypeName(int type) {
 
         return Configuration.Type.valueOf(type).name();

@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.SystemConfigurationException;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.model.Language;
@@ -131,7 +132,7 @@ public class EditCustomFieldAction extends ItrackerBaseAction {
             }
             try {
                 // Now reset the cached versions in IssueUtilities
-                configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
+                configurationService.resetConfigurationCache(Configuration.Type.customfield);
             } catch (Exception e) {
                 log.info("execute: resetConfigurationCache trowed exception, caught", e);
             }

@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.SystemConfigurationException;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
 import org.itracker.model.util.CustomFieldUtilities;
 import org.itracker.model.util.SystemConfigurationUtilities;
@@ -71,7 +72,7 @@ public class RemoveCustomFieldAction extends ItrackerBaseAction {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
             }
 
-            configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
+            configurationService.resetConfigurationCache(Configuration.Type.customfield);
             if (!errors.isEmpty()) {
                 saveErrors(request, errors);
                 return mapping.getInputForward();

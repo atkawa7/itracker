@@ -77,7 +77,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                     String currConfigValue = configItem.getValue();
                     String newConfigValue = null;
 
-                    List<Configuration> configItems = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_SEVERITY);
+                    List<Configuration> configItems = configurationService.getConfigurationItemsByType(Configuration.Type.severity);
                     for (int i = 0; i < configItems.size(); i++) {
                         if (configItems.get(i) != null && configId.equals(configItems.get(i).getId())) {
                             if (i == 0 && (i + 1) < configItems.size()) {
@@ -121,7 +121,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                     String currConfigValue = configItem.getValue();
                     String newConfigValue = null;
 
-                    List<Configuration> configItems = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_STATUS);
+                    List<Configuration> configItems = configurationService.getConfigurationItemsByType(Configuration.Type.status);
                     for (int i = 0; i < configItems.size(); i++) {
                         if (configItems.get(i) != null && configId.equals(configItems.get(i).getId())) {
                             if (i == 0 && (i + 1) < configItems.size()) {

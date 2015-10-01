@@ -22,6 +22,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.model.Language;
@@ -119,7 +120,7 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             if (key != null)
                 ITrackerResources.clearKeyFromBundles(key, true);
             // Now reset the cached versions in IssueUtilities
-            configurationService.resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
+            configurationService.resetConfigurationCache(Configuration.Type.customfield);
             request.setAttribute("action", action);
             String pageTitleKey = "";
             String pageTitleArg = "";

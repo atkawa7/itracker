@@ -425,7 +425,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         }
     }
 
+    @Deprecated
     public void resetConfigurationCache(int type) {
+        logger.warn("resetConfigurationCache: called with deprecated API!");
         resetConfigurationCache(Configuration.Type.valueOf(type));
 
     }
@@ -1039,7 +1041,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
         // Load the basic system configuration
 
-        List<Configuration> resolutions = getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_RESOLUTION);
+        List<Configuration> resolutions = getConfigurationItemsByType(Configuration.Type.resolution);
 
         for (int i = 0; i < resolutions.size(); i++) {
 
@@ -1050,7 +1052,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
         config.setResolutions(resolutions);
 
-        List<Configuration> severities = getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_SEVERITY);
+        List<Configuration> severities = getConfigurationItemsByType(Configuration.Type.severity);
 
         for (int i = 0; i < severities.size(); i++) {
 
@@ -1061,7 +1063,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
         config.setSeverities(severities);
 
-        List<Configuration> statuses = getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_STATUS);
+        List<Configuration> statuses = getConfigurationItemsByType(Configuration.Type.status);
 
         for (int i = 0; i < statuses.size(); i++) {
 

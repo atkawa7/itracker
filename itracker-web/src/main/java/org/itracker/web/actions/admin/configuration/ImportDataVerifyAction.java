@@ -130,9 +130,9 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
 
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
 
-            List<Configuration> statuses = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_STATUS, ImportExportUtilities.EXPORT_LOCALE);
-            List<Configuration> severities = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_SEVERITY, ImportExportUtilities.EXPORT_LOCALE);
-            List<Configuration> resolutions = configurationService.getConfigurationItemsByType(SystemConfigurationUtilities.TYPE_RESOLUTION, ImportExportUtilities.EXPORT_LOCALE);
+            List<Configuration> statuses = configurationService.getConfigurationItemsByType(Configuration.Type.status, ImportExportUtilities.EXPORT_LOCALE);
+            List<Configuration> severities = configurationService.getConfigurationItemsByType(Configuration.Type.severity, ImportExportUtilities.EXPORT_LOCALE);
+            List<Configuration> resolutions = configurationService.getConfigurationItemsByType(Configuration.Type.resolution, ImportExportUtilities.EXPORT_LOCALE);
             List<CustomField> fields = configurationService.getCustomFields();
 
             for (int i = 0; i < severities.size(); i++) {

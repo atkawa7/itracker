@@ -22,6 +22,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.SystemConfigurationException;
+import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.model.util.SystemConfigurationUtilities;
@@ -114,7 +115,7 @@ public class OrderCustomFieldValueAction extends ItrackerBaseAction {
             configurationService.updateCustomField(customField);
 
             configurationService
-                    .resetConfigurationCache(SystemConfigurationUtilities.TYPE_CUSTOMFIELD);
+                    .resetConfigurationCache(Configuration.Type.customfield);
             request.setAttribute("action", action);
             return new ActionForward(mapping.findForward("editcustomfield")
                     .getPath()

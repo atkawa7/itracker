@@ -149,7 +149,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                                        projectFields.get(i).getId(),
                                        Convert
                                                .customFieldOptionsToNameValuePairs(projectFields
-                                                       .get(i).getOptions()));
+                                                       .get(i), locale));
                    }
                }
 

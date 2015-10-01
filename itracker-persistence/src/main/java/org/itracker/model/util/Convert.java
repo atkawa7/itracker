@@ -29,6 +29,7 @@ public class Convert {
      * @param options the array of CustomFieldValueModels to convert
      * @return the new NameValuePair array
      */
+    @Deprecated
     public static List<NameValuePair> customFieldOptionsToNameValuePairs(
             List<CustomFieldValue> options) {
         return customFieldOptionsToNameValuePairs(options, null);
@@ -41,7 +42,7 @@ public class Convert {
      * @param options the array of CustomFieldValueModels to convert
      * @return the new NameValuePair array
      */
-    public static List<NameValuePair> customFieldOptionsToNameValuePairs(
+    private static List<NameValuePair> customFieldOptionsToNameValuePairs(
             List<CustomFieldValue> options, Locale locale) {
         List<NameValuePair> returnValues = new ArrayList<NameValuePair>();
         String name;
@@ -58,9 +59,28 @@ public class Convert {
     }
 
     /**
+     * Returns the options sorted-
+     * @param customField LIST custom-field
+     * @param locale a locale to translate values
+     * @return
+     */
+    public static List<NameValuePair> customFieldOptionsToNameValuePairs(
+            CustomField customField, Locale locale) {
+        List<CustomFieldValue> kvs = customField.getOptions();
+        if (!customField.isSortOptionsByName()) {
+            Collections.sort(kvs, CustomFieldValue.SORT_ORDER_COMPARATOR);
+        }
+        List<NameValuePair> opts = customFieldOptionsToNameValuePairs(customField.getOptions(), locale);
+        if (customField.isSortOptionsByName()) {
+            Collections.sort(opts, NameValuePair.KEY_COMPARATOR);
+        }
+        return opts;
+    }
+
+    /**
      * Converts an array of UserModels to NameValuePairs
      *
-     * @param options the array of UserModels to convert
+     * @param users the array of UserModels to convert
      * @return the new NameValuePair array
      */
     public static List<NameValuePair> usersToNameValuePairs(List<User> users) {
