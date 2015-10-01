@@ -18,7 +18,7 @@
                     unique-key="workflow_script_ak"/>
         </property>
 
-        <property name="script">
+        <property name="script" type="text" length="32000">
             <column name="script_data" not-null="true"/>
         </property>
 
