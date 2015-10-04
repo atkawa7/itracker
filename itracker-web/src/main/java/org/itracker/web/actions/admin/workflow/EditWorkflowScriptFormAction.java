@@ -89,9 +89,12 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
                 workflowScriptForm.setName(workflowScript.getName());
                 workflowScriptForm.setEvent(workflowScript.getEvent());
                 workflowScriptForm.setScript(workflowScript.getScript());
+                workflowScriptForm.setLanguage(workflowScript.getLanguage().name());
 
                 pageTitleArg = workflowScript.getName();
 
+            } else {
+                workflowScriptForm.setLanguage(WorkflowScript.ScriptLanguage.BeanShell.name());
             }
 
             if (workflowScript == null) {
@@ -108,7 +111,7 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
                 request.setAttribute("pageTitleKey", pageTitleKey);
                 request.setAttribute("pageTitleArg", pageTitleArg);
 
-                setupFormEeventTypes(request, getLocale(request));
+                setupFormEventTypes(workflowScriptForm, getLocale(request));
 
                 return mapping.getInputForward();
             }
@@ -129,12 +132,8 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
         return mapping.findForward("error");
     }
 
-    public static final void setupFormEeventTypes(HttpServletRequest request, Locale locale) {
-
-
-        NameValuePair[] eventTypes = WorkflowUtilities.getEvents(locale);
-        request.setAttribute("nameValuePair", Arrays.asList(eventTypes));
-
+    public static void setupFormEventTypes(WorkflowScriptForm form, Locale locale) {
+        form.initEventOptions(locale);
     }
 }
   

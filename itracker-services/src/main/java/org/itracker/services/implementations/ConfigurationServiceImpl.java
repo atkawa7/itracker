@@ -513,6 +513,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editworkflowScript.setName(workflowScript.getName());
         editworkflowScript.setScript(workflowScript.getScript());
         editworkflowScript.setEvent(workflowScript.getEvent());
+        editworkflowScript.setLanguage(workflowScript.getLanguage());
         // save entity
         workflowScriptDAO.save(editworkflowScript);
 
@@ -526,6 +527,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         editworkflowScript.setName(workflowScript.getName());
         editworkflowScript.setScript(workflowScript.getScript());
         editworkflowScript.setEvent(workflowScript.getEvent());
+        editworkflowScript.setLanguage(workflowScript.getLanguage());
         workflowScriptDAO.saveOrUpdate(editworkflowScript);
         return editworkflowScript;
     }

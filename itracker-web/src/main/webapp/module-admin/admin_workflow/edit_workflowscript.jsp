@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ include file="/common/taglibs.jsp"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -12,7 +13,7 @@
     </center>
     <br>
 </logic:messagesPresent>
-<html:form action="/editworkflowscript">
+<html:form action="/editworkflowscript" >
     <html:hidden property="action"/>
     <html:hidden property="id"/>
 
@@ -41,10 +42,13 @@
             <td class="editColumnTitle"><it:message key="itracker.web.attr.event"/>:</td>
             <td>
                 <html:select property="event" styleClass="editColumnText">
+
+                    <html:optionsCollection property="eventOptions" filter="" />
+                    <%--
                     <c:forEach items="${nameValuePair}" var="pair">
                         <html:option value="${pair.value}" styleClass="editColumnText">${pair.name}</html:option>
-                    </c:forEach>
-                    NameValuePair[] eventTypes = WorkflowUtilities.getEvents((java.util.Locale)pageContext.getAttribute("currLocale")); %>
+                    </c:forEach> --%>
+                    <%--NameValuePair[] eventTypes = WorkflowUtilities.getEvents((java.util.Locale)pageContext.getAttribute("currLocale")); --%>
                 </html:select>
             </td>
             <td></td>
@@ -53,11 +57,19 @@
         </tr>
         <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
         <tr>
-            <td class="editColumnTitle" colspan="5"><it:message key="itracker.web.attr.script"/>:</td>
+            <td class="editColumnTitle" ><it:message key="itracker.web.attr.script"/>:</td>
+            <td colspan="4">
+
+                <html:radio property="language" value="BeanShell" styleId="beanshell" title="BeanShell" />
+                <label for="beanshell">BeanShell</label>
+                <html:radio property="language" value="Groovy" styleId="groovy" title="Groovy" />
+                <label for="groovy">Groovy</label>
+            </td>
         </tr>
+
         <tr>
             <td class="editColumnText" colspan="5">
-                <html:textarea rows="20" cols="120" property="script" styleClass="editColumnText"/>
+                <html:textarea rows="20" cols="120" property="script" style="font-family: monospace" styleClass="editColumnText"/>
             </td>
         </tr>
         <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>

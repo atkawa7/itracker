@@ -18,8 +18,6 @@
 
 package org.itracker.web.actions.admin.workflow;
 
-import bsh.ParseException;
-import bsh.Parser;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
@@ -27,6 +25,7 @@ import org.itracker.model.WorkflowScript;
 import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
+import org.itracker.web.forms.WorkflowScriptForm;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
@@ -37,14 +36,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.StringReader;
 
 
 public class EditWorkflowScriptAction extends ItrackerBaseAction {
     private static final Logger log = Logger.getLogger(EditWorkflowScriptAction.class);
 
 
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public ActionForward execute(ActionMapping mapping, final ActionForm actionForm, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
         if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
@@ -60,25 +58,16 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
         }
         resetToken(request);
 
-        WorkflowScript workflowScript = null;
-
         try {
             ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
 
-            // parse the file to check syntax
-            String scriptData = (String) PropertyUtils.getSimpleProperty(form, "script");
-            if (scriptData != null && scriptData.trim().length() > 0) {
-                Parser parser = new Parser(new StringReader(scriptData));
-                boolean eof;
-                while (!(eof = parser.Line())) {
-                }
-            }
-
-            workflowScript = new WorkflowScript();
-            workflowScript.setId((Integer) PropertyUtils.getSimpleProperty(form, "id"));
-            workflowScript.setName((String) PropertyUtils.getSimpleProperty(form, "name"));
-            workflowScript.setEvent(((Integer) PropertyUtils.getSimpleProperty(form, "event")).intValue());
-            workflowScript.setScript(scriptData);
+            WorkflowScript workflowScript = new WorkflowScript();
+            WorkflowScriptForm form = (WorkflowScriptForm)actionForm;
+            workflowScript.setId(form.getId());
+            workflowScript.setName(form.getName());
+            workflowScript.setEvent(form.getEvent());
+            workflowScript.setScript(form.getScript());
+            workflowScript.setLanguage(WorkflowScript.ScriptLanguage.valueOf(form.getLanguage()));
 
             String action = (String) PropertyUtils.getSimpleProperty(form, "action");
 
@@ -89,6 +78,9 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
                 workflowScript = configurationService.updateWorkflowScript(workflowScript);
             }
 
+            if (log.isDebugEnabled()) {
+                log.debug("updated workflowscript was: " + workflowScript);
+            }
             if (workflowScript == null) {
                 throw new Exception("Error creating/updating workflow script.");
             }
@@ -97,15 +89,9 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
             request.setAttribute("action", action);
             saveToken(request);
             return new ActionForward(mapping.findForward("listworkflow").getPath() + "?id=" + workflowScript.getId() + "&action=update");
-        } catch (ParseException pe) {
-            log.info("Error parsing script.  Redisplaying form for correction.", pe);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidscriptdata", pe.getMessage()));
-            saveErrors(request, errors);
-            return toInputForward(request, mapping);
         } catch (DataAccessException dae) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system.message",
                     dae.getRootCause().getMessage(), "Data"));
-
             saveErrors(request, errors);
             return toInputForward(request, mapping);
         } catch (Exception e) {
@@ -119,8 +105,9 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
         return mapping.findForward("error");
     }
 
+
+
     private ActionForward toInputForward(HttpServletRequest request, ActionMapping mapping) {
-        EditWorkflowScriptFormAction.setupFormEeventTypes(request, getLocale(request));
         saveToken(request);
         return mapping.getInputForward();
     }

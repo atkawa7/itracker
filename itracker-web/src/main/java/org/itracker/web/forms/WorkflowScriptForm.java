@@ -18,12 +18,25 @@
 
 package org.itracker.web.forms;
 
+import bsh.Parser;
+import groovy.lang.GroovyShell;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.util.LabelValueBean;
 import org.apache.struts.validator.ValidatorForm;
+import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.WorkflowScript;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
+import static org.itracker.model.util.WorkflowUtilities.*;
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
  *
@@ -33,12 +46,41 @@ public class WorkflowScriptForm extends ValidatorForm {
     /**
      *
      */
+    private static final Logger log = LoggerFactory.getLogger(WorkflowScriptForm.class);
     private static final long serialVersionUID = 1L;
     String action;
     Integer id;
     String name;
     Integer event;
     String script;
+    String language;
+
+    private List<LabelValueBean> eventOptions;
+
+    public void initEventOptions(Locale locale) {
+        if (null != eventOptions) {
+            return;
+        }
+        eventOptions = new ArrayList<>(5);
+        String[] eventTypes = new String[]{String.valueOf(EVENT_FIELD_ONPOPULATE),
+                String.valueOf(EVENT_FIELD_ONSETDEFAULT),
+                String.valueOf(EVENT_FIELD_ONVALIDATE),
+                String.valueOf(EVENT_FIELD_ONPRESUBMIT),
+                String.valueOf(EVENT_FIELD_ONPOSTSUBMIT),
+        };
+
+        for (String eventType : eventTypes) {
+            eventOptions.add(new LabelValueBean(
+                    ITrackerResources.getString(ITrackerResources.KEY_BASE_WORKFLOW_EVENT + eventType, locale),
+                    eventType));
+        }
+
+    }
+
+    public List<LabelValueBean> getEventOptions() {
+        return eventOptions;
+    }
+
 
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         action = null;
@@ -52,7 +94,35 @@ public class WorkflowScriptForm extends ValidatorForm {
                                  HttpServletRequest request) {
         ActionErrors errors = super.validate(mapping, request);
 
+        if (WorkflowScript.ScriptLanguage.Groovy != WorkflowScript.ScriptLanguage.valueOf(getLanguage())) {
+            validateBeanShellScript(errors);
+        } else {
+            validateGroovyScript(errors);
+        }
         return errors;
+    }
+
+    private void validateBeanShellScript(ActionErrors errors) {
+        try {
+            Parser parser = new Parser(new StringReader(getScript()));
+            boolean eof;
+            while (!(eof = parser.Line())) {
+            }
+        } catch (Exception e) {
+            addScriptError(errors, e);
+        }
+    }
+
+    private void validateGroovyScript(ActionErrors errors) {
+        try {
+            new GroovyShell().parse(getScript());
+        } catch (Exception e) {
+            addScriptError(errors, e);
+        }
+    }
+
+    private void addScriptError(ActionErrors errors, Exception e) {
+        errors.add("script", new ActionMessage("itracker.web.error.invalidscriptdata", e.getMessage()));
     }
 
     public String getAction() {
@@ -95,4 +165,11 @@ public class WorkflowScriptForm extends ValidatorForm {
         this.script = script;
     }
 
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 }

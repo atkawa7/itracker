@@ -236,11 +236,11 @@
         </action>
         <action path="/editworkflowscript"
                 type="org.itracker.web.actions.admin.workflow.EditWorkflowScriptAction"
-                name="workflowScriptForm" scope="request"
+                name="workflowScriptForm"
                 input="/admin_workflow/edit_workflowscript.jsp" validate="true" />
         <action path="/editworkflowscriptform"
                 type="org.itracker.web.actions.admin.workflow.EditWorkflowScriptFormAction"
-                name="workflowScriptForm" scope="request"
+                name="workflowScriptForm"
                 input="/admin_workflow/edit_workflowscript.jsp" validate="false">
             <forward name="editworkflowscriptform" path="/admin_workflow/edit_workflowscript.jsp"
                      module="/module-admin"/>

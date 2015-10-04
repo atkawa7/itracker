@@ -20,6 +20,9 @@ package org.itracker.web.forms;
 
 import bsh.EvalError;
 import bsh.Interpreter;
+import groovy.lang.Binding;
+import groovy.lang.GroovyShell;
+import groovy.lang.Script;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -125,17 +128,12 @@ public class IssueForm extends ITrackerForm {
                         optionValues.put(currentScript.getFieldId(), options);
                     }
                 } else {
-                    if (currentScript.getFieldType() == Configuration.Type.status) {
-                        options = IssueUtilities.getStatuses(ITrackerResources.getLocale());
-                    } else if (currentScript.getFieldType() == Configuration.Type.resolution) {
-                        options = IssueUtilities.getResolutions(ITrackerResources.getLocale());
-                    } else if (currentScript.getFieldType() == Configuration.Type.severity) {
-                        options = IssueUtilities.getSeverities(ITrackerResources.getLocale());
-                    } else {
-                        // TODO owner?
+                    if (!optionValues.containsKey(currentScript.getFieldType().getLegacyCode())){
                         options = Collections.emptyList();
+                        optionValues.put(currentScript.getFieldType().getLegacyCode(), options);
+                    } else {
+                        options = optionValues.get(currentScript.getFieldType().getLegacyCode());
                     }
-                    optionValues.put(currentScript.getFieldType().getLegacyCode(), options);
                 }
 
                 currentValue = processFieldScript(currentScript, event,
@@ -213,21 +211,11 @@ public class IssueForm extends ITrackerForm {
         String result = currentValue;
 
         try {
-            Interpreter bshInterpreter = new Interpreter();
-            bshInterpreter.set("event", event);
-            bshInterpreter.set("fieldId", (projectScript.getFieldType()== Configuration.Type.customfield?
-                projectScript.getFieldId():projectScript.getFieldType().getLegacyCode()));
-            currentValue = StringUtils.defaultString(currentValue);
-            bshInterpreter.set("currentValue", currentValue);
-            bshInterpreter.set("optionValues", optionValues);
-            bshInterpreter.set("currentErrors", currentErrors);
-            bshInterpreter.set("currentForm", this);
-
-            Object obj = bshInterpreter.eval(projectScript.getScript().getScript());
-            if (obj instanceof CharSequence) {
-                result = String.valueOf(obj);
+            if (projectScript.getScript().getLanguage() != WorkflowScript.ScriptLanguage.Groovy) {
+                result = processBeanShellScript(projectScript, currentValue, optionValues, currentErrors, event);
+            } else {
+                result = processGroovyScript(projectScript, currentValue, optionValues, currentErrors, event);
             }
-
             if (log.isDebugEnabled()) {
                 log.debug("processFieldScript: Script returned current value of '" + optionValues + "' (" + (optionValues != null ? optionValues.getClass().getName() : "NULL") + ")");
             }
@@ -248,6 +236,68 @@ public class IssueForm extends ITrackerForm {
             log.debug("processFieldScript: returning " + result + ", errors: " + currentErrors);
         }
         return result;
+    }
+
+    private String processGroovyScript(final ProjectScript projectScript,
+                                       final String currentValue,
+                                       final List<NameValuePair> optionValues,
+                                       final ActionMessages currentErrors,
+                                       final int event) {
+
+        final Map<String,Object> ctx = new HashMap<>(8);
+        ctx.put("currentValue", StringUtils.defaultString(currentValue));
+        ctx.put("event", event);
+        ctx.put("fieldId", (projectScript.getFieldType() == Configuration.Type.customfield ?
+                projectScript.getFieldId() : projectScript.getFieldType().getLegacyCode()));
+
+        ctx.put("optionValues", Collections.unmodifiableList(optionValues));
+        ctx.put("currentErrors", currentErrors);
+        ctx.put("currentForm", this);
+
+        final Binding binding = new Binding(ctx);
+
+        GroovyShell shell = new GroovyShell();
+        Script script = shell.parse(projectScript.getScript().getScript(),
+                        projectScript.getScript().getName());
+        script.setBinding(binding);
+        Object ret = script.run();
+        if (!currentErrors.isEmpty()) {
+            return currentValue;
+        }
+        return returnScriptResult(ret, ctx.get("currentValue"), currentValue);
+    }
+
+    private String processBeanShellScript(final ProjectScript projectScript,
+                                          final String currentValue,
+                                          final List<NameValuePair> optionValues,
+                                          final ActionMessages currentErrors,
+                                          final int event) throws EvalError {
+        Interpreter bshInterpreter = new Interpreter();
+        bshInterpreter.set("event", event);
+        bshInterpreter.set("fieldId", (projectScript.getFieldType()== Configuration.Type.customfield?
+            projectScript.getFieldId():projectScript.getFieldType().getLegacyCode()));
+        bshInterpreter.set("currentValue", StringUtils.defaultString(currentValue));
+        bshInterpreter.set("optionValues", optionValues);
+        bshInterpreter.set("currentErrors", currentErrors);
+        bshInterpreter.set("currentForm", this);
+
+        Object obj = bshInterpreter.eval(projectScript.getScript().getScript());
+        if (!currentErrors.isEmpty()) {
+            return currentValue;
+        }
+        return returnScriptResult(obj, bshInterpreter.get("currentValue"), currentValue);
+    }
+
+    private static String returnScriptResult(Object returned, Object assigned, String currentValue) {
+        if (! (returned instanceof CharSequence)) {
+            log.debug("script did not return a value");
+            returned = assigned;
+        }
+        if (returned instanceof CharSequence) {
+            return String.valueOf(returned);
+        }
+        log.debug("failed to get value from script, returning previous value");
+        return currentValue;
     }
 
     public final Issue processFullEdit(Issue issue, Project project, User user,
