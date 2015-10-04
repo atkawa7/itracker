@@ -39,6 +39,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import javax.mail.internet.InternetAddress;
+import java.net.MalformedURLException;
 import java.util.*;
 
 public class NotificationServiceImpl implements NotificationService, ApplicationContextAware {
@@ -185,7 +186,7 @@ public class NotificationServiceImpl implements NotificationService, Application
 
             if (logger.isDebugEnabled()) {
                 logger
-                        .debug("handleIssueNotificationhandleIssueNotification: called with issue: "
+                        .debug("handleIssueNotification: called with issue: "
                                 + issue
                                 + ", type: "
                                 + type
@@ -321,9 +322,7 @@ public class NotificationServiceImpl implements NotificationService, Application
                             .getString(
                                     "itracker.email.issue.body.reminder",
                                     new Object[]{
-                                            url
-                                                    + "/module-projects/view_issue.do?id="
-                                                    + issue.getId(),
+                                            IssueUtilities.getIssueURL(issue, url).toExternalForm(),
                                             issue.getProject().getName(),
                                             issue.getDescription(),
                                             IssueUtilities.getStatusName(issue
@@ -651,9 +650,7 @@ public class NotificationServiceImpl implements NotificationService, Application
                                         "itracker.email.issue.body.reminder",
                                         currentLocale,
                                         new Object[]{
-                                                url
-                                                        + "/module-projects/view_issue.do?id="
-                                                        + issue.getId(),
+                                                IssueUtilities.getIssueURL(issue, url).toExternalForm(),
                                                 issue.getProject().getName(),
                                                 issue.getDescription(),
                                                 IssueUtilities.getStatusName(issue
@@ -755,6 +752,8 @@ public class NotificationServiceImpl implements NotificationService, Application
         } catch (RuntimeException e) {
             logger.error("handleNotification: failed to notify: " + issue + " (locales: " + localeRecipients.keySet() + ")", e);
 
+        } catch (MalformedURLException e) {
+            logger.error("handleNotification: URL was not well-formed", e);
         }
 
 
