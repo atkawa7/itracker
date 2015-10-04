@@ -53,6 +53,10 @@ public class WorkflowScript extends AbstractEntity {
      */
     private static final long serialVersionUID = 1L;
 
+    public enum ScriptLanguage {
+        BeanShell,
+        Groovy
+    }
     private String name;
 
     private String script;
@@ -63,6 +67,7 @@ public class WorkflowScript extends AbstractEntity {
     // private Collection projectFields;
     private int numUses;
 
+    private ScriptLanguage language;
     /*
       * This class used to have a <code>projectFields</code> attribute, which
       * was a Collection<ProjectScript>. This has been removed because the
@@ -108,10 +113,18 @@ public class WorkflowScript extends AbstractEntity {
         numUses = value;
     }
 
+    public ScriptLanguage getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(ScriptLanguage language) {
+        this.language = language;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("id", getId()).append("name", getName())
-                .append("event", getEvent()).append("numberUses", getNumberUses()).append(
+                .append("event", getEvent()).append("language", getLanguage()).append("numberUses", getNumberUses()).append(
                         "script", getScript()).toString();
     }
 

@@ -22,6 +22,14 @@
             <column name="script_data" not-null="true"/>
         </property>
 
+        <property name="language">
+            <column name="script_language" default="'BeanShell'"/>
+
+            <type name="org.itracker.persistence.dao.EnumNameUserType">
+                <param name="enumClassName">org.itracker.model.WorkflowScript$ScriptLanguage</param>
+            </type>
+        </property>
+
         <property name="event">
             <column name="event_type" not-null="true"/>
         </property>
