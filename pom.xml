@@ -112,7 +112,7 @@
     </properties>
     <issueManagement>
         <system>SourceForge</system>
-        <url>https://sourceforge.net/apps/trac/itracker/</url>
+        <url>http://sourceforge.net/p/itracker/_list/tickets/</url>
     </issueManagement>
     <inceptionYear>2002</inceptionYear>
     <mailingLists>
@@ -361,6 +361,8 @@
                 </plugin>
 
                 <plugin>
+                    <configuration>
+                    </configuration>
                     <artifactId>maven-site-plugin</artifactId>
                     <version>${maven-site-plugin.version}</version>
                     <dependencies>
@@ -634,6 +636,11 @@
                 <groupId>bsh</groupId>
                 <artifactId>bsh</artifactId>
                 <version>${bsh.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy</artifactId>
+                <version>2.4.5</version>
             </dependency>
             <dependency>
                 <groupId>antlr</groupId>
@@ -927,6 +934,11 @@
             <plugin>
                 <artifactId>maven-changes-plugin</artifactId>
                 <version>${maven-changes-plugin.version}</version>
+                <configuration>
+                    <releaseDateFormat>yyyy-M-d</releaseDateFormat>
+                    <publishDateFormat>yyyy-M-d</publishDateFormat>
+                    <issueLinkTemplate>https://sourceforge.net/tracker2/?func=detail&amp;aid=%ISSUE%&amp;group_id=54141&amp;atid=472807</issueLinkTemplate>
+                </configuration>
 
             </plugin>
             <plugin>
