@@ -18,10 +18,13 @@
 
 package org.itracker.model.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -834,6 +837,20 @@ public class IssueUtilities {
         }
 
         return false;
+    }
+
+    public static URL getIssueURL(Issue issue, String baseURL) throws MalformedURLException {
+        return getIssueURL(issue, new URL(baseURL + (StringUtils.endsWith(baseURL, "/")? "":"/")
+                 ));
+    }
+    public static URL getIssueURL(Issue issue, URL base) {
+        try {
+            if ( null != base && null != issue )
+            return new URL(base, "module-projects/view_issue.do?id=" + issue.getId());
+        } catch (MalformedURLException e) {
+            log.error("could not create URL", e);
+        }
+        return null;
     }
 }
 
