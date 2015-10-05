@@ -18,7 +18,7 @@ hr {
 }
 
 pre, .pre {
-    font: monospace;
+    font-family: monospace;
     border: solid thin #666;
     color: #666;
     padding: 0.5em;
@@ -386,4 +386,23 @@ Calender Styles
     color: #666;
     float: right;
     margin-right: 2%;
+}
+
+#languageForm textarea.long {
+    width: 40em;
+    height: 100%;
+}
+#languageForm .shadeList td {
+    padding: 1em;
+}
+#languageForm .long pre {
+    overflow: auto;
+    width: 30em;
+}
+#languageForm .long pre,
+#languageForm code {
+    display: block;
+    border: none;
+    margin: 0;
+    padding: 0;
 }

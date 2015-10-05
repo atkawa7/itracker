@@ -39,7 +39,7 @@
           <c:if test="${ isUpdate == 'true'}" >
             <c:set var="readOnly" value="true" />
           </c:if>
-          
+
           <!-- if localeType == SystemConfigurationUtilities.LOCALE_TYPE_LOCALE -->
           <c:if test="${ localeType == 3}" >
             <c:set var="afterTd" value="" />
@@ -82,23 +82,44 @@
                <bean:define name="itemlangs" property="value" id="value" type="java.lang.String"/>
                
                <c:set var="propertyKey" value="items(${ key })" />
-               <c:set var="styleClass" value="${ (i % 2 == 1) ? 'listRowShaded' : 'listRowUnshaded' }" />
+
+              <c:set var="isLongString" value="${ it:ITrackerResources_IsLongString(key) }" />
+               <c:set var="styleClass" value="${ (i % 2 == 1) ? 'listRowShaded' : 'listRowUnshaded'}${ (isLongString?' long':'') }" />
                <c:set var="i" value="${ i + 1 }" />
                
                <c:if test="${ (key != 'itracker.locales') &&  (key != 'itracker.locale.name') }" >
                  <tr class="${ styleClass }">
-                  <td valign="top">${ key }</td>
+                  <td valign="top"><code>${ key }</code></td>
                   <!-- localeType != SystemConfigurationUtilities.LOCALE_TYPE_BASE -->
                   <c:if test="${ localeType != 1 }" >
-                  	<td valign="top"><it:message key="${ key }" locale="BASE"/></td>
+                  	<td valign="top">
+                        <c:choose>
+                            <c:when test="${ isLongString }">
+                                <pre class="pre localization"><it:message key="${ key }" locale="BASE"/></pre>
+                            </c:when>
+                            <c:otherwise>
+                                <code class="pre localization"><it:message key="${ key }" locale="BASE"/></code>
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
                   </c:if>
                   <!-- localeType != SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE -->
-                  <c:if test="${ localeType != 2 }" >
-                  	<td valign="top"><it:message key="${ key }" locale="${languageForm.parentLocale}"/></td>
+                  <c:if test="${ localeType != 2 }">
+                     <td valign="top">
+                         <c:choose>
+                             <c:when test="${ isLongString }">
+                                 <pre class="pre localization localizationSub"><it:message key="${ key }" locale="${languageForm.parentLocale}"/></pre>
+                             </c:when>
+                             <c:otherwise>
+                                 <code class="pre localization localizationSub"><it:message key="${ key }"
+                                                               locale="${languageForm.parentLocale}"/></code>
+                             </c:otherwise>
+                         </c:choose>
+                     </td>
                   </c:if>
                   <c:choose>
-		          	<c:when test="${ it:ITrackerResources_IsLongString(key) }" >
-                    	<td valign="top"><html:textarea indexed="false" name="languageForm"  rows="4" cols="40" property="${ propertyKey }" value="${ value }" styleClass="${ styleClass }"/></td>
+		          	<c:when test="${ isLongString }" >
+                    	<td valign="top"><html:textarea indexed="false" name="languageForm"  rows="6" cols="40" property="${ propertyKey }" value="${ value }" styleClass="${ styleClass }"/></td>
 		          	</c:when>
 		          	<c:otherwise>
                     	<td valign="top"><html:text indexed="false" name="languageForm" property="${ propertyKey }" value="${ value }" size="40" styleClass="${ styleClass }"/></td>

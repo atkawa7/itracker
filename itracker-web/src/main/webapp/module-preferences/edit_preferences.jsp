@@ -234,10 +234,11 @@
 					key="itracker.web.editprefs.savelogin" />:</td>
 				<c:choose>
 					<c:when test="${allowPreferenceUpdate}">
-						<td class="editColumnText"><html:radio property="saveLogin"
-							value="true" /><it:message key="itracker.web.generic.yes" />
-						&nbsp;&nbsp;&nbsp;&nbsp; <html:radio property="saveLogin"
-							value="false" /><it:message key="itracker.web.generic.no" /></td>
+						<td class="editColumnText">
+							<html:radio property="saveLogin" value="true" styleId="saveLogin_1" />
+							<label for="saveLogin_1" ><it:message key="itracker.web.generic.yes" /></label>
+						    <html:radio property="saveLogin" value="false" styleId="saveLogin_false" />
+							<label for="saveLogin_false"><it:message key="itracker.web.generic.no" /></label></td>
 					</c:when>
 					<c:otherwise>
 						<td class="editColumnText">${ getSaveLoginLocalized }</td>
@@ -280,11 +281,12 @@
 				key="itracker.web.editprefs.showclosed" />:</td>
 			<c:choose>
 				<c:when test="${allowPreferenceUpdate}">
-					<td class="editColumnText"><html:radio
-						property="showClosedOnIssueList" value="true" /><it:message
-						key="itracker.web.generic.yes" /> &nbsp;&nbsp;&nbsp;&nbsp; <html:radio
-						property="showClosedOnIssueList" value="false" /><it:message
-						key="itracker.web.generic.no" /></td>
+					<td class="editColumnText">
+						<html:radio property="showClosedOnIssueList" value="true" styleId="showClosedOnIssueList_1" />
+						<label for="showClosedOnIssueList_1"><it:message
+						key="itracker.web.generic.yes" /></label>
+						<html:radio property="showClosedOnIssueList" value="false" styleId="showClosedOnIssueList_0"/>
+						<label for="showClosedOnIssueList_0"><it:message key="itracker.web.generic.no" /></label></td>
 				</c:when>
 				<c:otherwise>
 					<td class="editColumnText">${showClosedOnIssueListLocalized}</td>
@@ -350,11 +352,12 @@
 				key="itracker.web.editprefs.remembersearch" />:</td>
 			<c:choose>
 				<c:when test="${allowPreferenceUpdate}">
-					<td class="editColumnText"><html:radio
-						property="rememberLastSearch" value="true" /><it:message
-						key="itracker.web.generic.yes" /> &nbsp;&nbsp;&nbsp;&nbsp; <html:radio
-						property="rememberLastSearch" value="false" /><it:message
-						key="itracker.web.generic.no" /></td>
+					<td class="editColumnText">
+						<html:radio property="rememberLastSearch" value="true" styleId="rememberLastSearch_1" />
+						<label for="rememberLastSearch_1"><it:message key="itracker.web.generic.yes" /></label>
+						<html:radio property="rememberLastSearch" value="false" styleId="rememberLastSearch_0" />
+						<label for="rememberLastSearch_0"><it:message key="itracker.web.generic.no" /></label>
+					</td>
 				</c:when>
 				<c:otherwise>
 					<td class="editColumnText">${getRememberLastSearchLocalized}</td>
@@ -370,11 +373,12 @@
 				key="itracker.web.editprefs.usetextactions" />:</td>
 			<c:choose>
 				<c:when test="${allowPreferenceUpdate}">
-					<td class="editColumnText"><html:radio
-						property="useTextActions" value="true" /><it:message
-						key="itracker.web.generic.yes" /> &nbsp;&nbsp;&nbsp;&nbsp; <html:radio
-						property="useTextActions" value="false" /><it:message
-						key="itracker.web.generic.no" /></td>
+					<td class="editColumnText">
+						<html:radio	property="useTextActions" value="true" styleId="useTextActions_1" />
+						<label for="useTextActions_1"> <it:message key="itracker.web.generic.yes" /></label>
+						<html:radio property="useTextActions" value="false" styleId="useTextActions_0" />
+						<label for="useTextActions_0"><it:message key="itracker.web.generic.no" /></label>
+					</td>
 				</c:when>
 				<c:otherwise>
 					<td class="editColumnText">${getRememberLastSearchLocalized}</td>

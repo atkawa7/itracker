@@ -130,8 +130,10 @@
                   </c:when>
                   <c:otherwise>
                       <td class="editColumnText">
-                        <html:radio property="superUser" value="true"/><it:message key="itracker.web.generic.yes"/> &nbsp;&nbsp;&nbsp;&nbsp;
-                        <html:radio property="superUser" value="false"/><it:message key="itracker.web.generic.no"/>
+                        <html:radio property="superUser" value="true" styleId="superUser_1"/>
+                        <label for="superUser_1"><it:message key="itracker.web.generic.yes"/></label>
+                        <html:radio property="superUser" value="false" styleId="superUser_0"/>
+                        <label for="superUser_0"><it:message key="itracker.web.generic.no"/></label>
                       </td>
                   </c:otherwise>
               </c:choose>

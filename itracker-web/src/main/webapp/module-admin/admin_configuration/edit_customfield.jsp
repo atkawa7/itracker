@@ -52,7 +52,8 @@
                 <tr>
                     <td class="editColumnTitle"><it:message key="itracker.web.attr.required"/>:</td>
                     <td class="editColumnText">
-                    	<html:checkbox property="required" value="true"><it:message key="itracker.web.generic.yes"/></html:checkbox>
+                    	<html:checkbox property="required" value="true" styleId="required"/>
+                        <label for="required"><it:message key="itracker.web.generic.yes"/></label>
                         <%--<html:select property="required" styleClass="editColumnText">
                             <html:option value="false" styleClass="editColumnText"><it:message key="itracker.web.generic.no"/></html:option>
                             <html:option value="true" styleClass="editColumnText"><it:message key="itracker.web.generic.yes"/></html:option>
@@ -65,11 +66,8 @@
                 <tr>
                     <td class="editColumnTitle"><it:message key="itracker.web.attr.sortoptions"/>:</td>
                     <td class="editColumnText">
-                    	<html:checkbox property="sortOptionsByName" value="true"><it:message key="itracker.web.generic.yes"/></html:checkbox>
-                        <%--<html:select property="sortOptionsByName" styleClass="editColumnText">
-                            <html:option value="false" styleClass="editColumnText"><it:message key="itracker.web.generic.no"/></html:option>
-                            <html:option value="true" styleClass="editColumnText"><it:message key="itracker.web.generic.yes"/></html:option>
-                        </html:select>--%>
+                    	<html:checkbox property="sortOptionsByName" value="true" styleId="sortOptionsByName" />
+                        <label for="sortOptionsByName"><it:message key="itracker.web.generic.yes"/></label>
                     </td>
                     <td></td>
                     <td class="editColumnTitle"><it:message key="itracker.web.attr.dateformat"/>:</td>
@@ -83,14 +81,8 @@
                 </tr>
                 <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
                 <tr>
-                    <td colspan="5">
+                    <td colspan="4">
                         <table width="100%" cellspacing="0" cellpadding="1" border="0" class="shadeList">
-                            <tr>
-                              <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
-                              <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
-                              <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
-                              <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
-                            </tr>
                             <tr><td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.translations"/>:</td></tr>
                             <tr class="listHeading"><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
                             <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="4"/></td></tr>
@@ -133,8 +125,7 @@
 
                                   </tr>
                           		<c:forEach var="locale" items="${languageNameValue.value }" varStatus="itLStatus">
-                                      <c:set var="listRowClass" value="${ (i % 2 == 1) ? 'listRowShaded' : 'listRowUnshaded' }" />
-                                      <c:set var="i" value="${ i + 1 }" />
+                                      <c:set var="listRowClass" value="${ (itLStatus.index % 2 == 1) ? 'listRowShaded' : 'listRowUnshaded' }" />
 
                                       <tr class="${listRowClass} level2">
                                         <td></td>
@@ -181,12 +172,11 @@
                             </c:forEach> --%>
                         </table>
                     </td>
-                    <td></td>
-          
+
                     
                 <c:if test="${field.fieldType.code == CustomFieldType_List}">
-                    <td colspan="2" valign="top">
-                        <table cellspacing="0" cellspacing="1" border="0">
+                    <td colspan="4" valign="top">  <br />
+                        <table width="100%" cellspacing="0" cellpadding="1" border="0" class="shadeList">
                             <tr>
                                 <td align="right" colspan="2" class="editColumnTitle"><it:message key="itracker.web.attr.fieldoptions"/>:</td>
                                 <td align="right" class="listRowUnshaded"><span align="right"><it:link action="editcustomfieldvalueform" targetAction="create" paramName="id" paramValue="${field.id}" titleKey="itracker.web.admin.editcustomfield.option.create.alt"><it:message key="itracker.web.admin.editcustomfield.option.create"/></it:link></span></td>
@@ -194,9 +184,10 @@
                             <tr class="listHeading"><td colspan="3"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
                             <tr><td colspan="3"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="4"/></td></tr>
                             <c:forEach items="${options}" var="option" varStatus="i">
-                                
-                                <tr>
-                                    <td class="listRowUnshaded" style="white-space: nowrap;" nowrap="nowrap">
+                                <c:set var="listRowClass" value="${ (i.index % 2 == 1) ? 'listRowShaded' : 'listRowUnshaded' }" />
+
+                                <tr class="${listRowClass}">
+                                    <td style="white-space: nowrap;" nowrap="nowrap">
                                         <it:link action="editcustomfieldvalueform" targetAction="update" paramName="id" paramValue="${option.id}" titleKey="itracker.web.admin.editcustomfield.option.edit.alt"><it:message key="itracker.web.admin.editcustomfield.option.edit"/></it:link>
                                         <it:link action="removecustomfieldvalue" targetAction="delete" paramName="id" paramValue="${option.id}" titleKey="itracker.web.admin.editcustomfield.option.delete.alt"><it:message key="itracker.web.admin.editcustomfield.option.delete"/></it:link>
                                         <c:if test="${i.index != 0}">
@@ -210,6 +201,7 @@
                                             </it:link>
                                         </c:if>
                                         <html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="5" height="1"/>
+
                                     </td>
                                     
                                     <td align="right" colspan="2" class="editColumnText">

@@ -42,16 +42,16 @@
             <td></td>
           </tr>
           <tr>
-            <td class="editColumnText"><html:checkbox property="optionreuseusers" value="true"/></td>
-            <td class="editColumnText"><it:message key="itracker.web.admin.import.options.reuseusers"/></td>
+            <td class="editColumnText"><html:checkbox property="optionreuseusers" value="true" styleId="optionreuseusers"/></td>
+            <td class="editColumnText"><label for="optionreuseusers"><it:message key="itracker.web.admin.import.options.reuseusers"/></label></td>
           </tr>
           <tr>
-            <td class="editColumnText"><html:checkbox property="optionreuseprojects" value="true"/></td>
-            <td class="editColumnText"><it:message key="itracker.web.admin.import.options.reuseprojects"/></td>
+            <td class="editColumnText"><html:checkbox property="optionreuseprojects" value="true" styleId="optionreuseprojects"/></td>
+            <td class="editColumnText"><label for="optionreuseprojects"><it:message key="itracker.web.admin.import.options.reuseprojects"/></label></td>
           </tr>
           <tr>
-            <td class="editColumnText"><html:checkbox property="optioncreatepasswords" value="true"/></td>
-            <td class="editColumnText"><it:message key="itracker.web.admin.import.options.createpasswords"/></td>
+            <td class="editColumnText"><html:checkbox property="optioncreatepasswords" value="true" styleId="optioncreatepasswords"/></td>
+            <td class="editColumnText"><label for="optioncreatepasswords"><it:message key="itracker.web.admin.import.options.createpasswords"/></label></td>
           </tr>
         </table>
       </td>
@@ -62,12 +62,12 @@
             <td></td>
           </tr>
           <tr>
-            <td class="editColumnText"><html:checkbox property="optionreuseconfig" value="true"/></td>
-            <td class="editColumnText"><it:message key="itracker.web.admin.import.options.reuseconfig"/></td>
+            <td class="editColumnText"><html:checkbox property="optionreuseconfig" value="true" styleId="optionreuseconfig"/></td>
+            <td class="editColumnText"><label for="optionreuseconfig"><it:message key="itracker.web.admin.import.options.reuseconfig"/></label></td>
           </tr>
           <tr>
-            <td class="editColumnText"><html:checkbox property="optionreusefields" value="true"/></td>
-            <td class="editColumnText"><it:message key="itracker.web.admin.import.options.reusefields"/></td>
+            <td class="editColumnText"><html:checkbox property="optionreusefields" value="true" styleId="optionreusefields"/></td>
+            <td class="editColumnText"><label for="optionreusefields"><it:message key="itracker.web.admin.import.options.reusefields"/></label></td>
           </tr>
         </table>
       </td>
