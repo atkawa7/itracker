@@ -224,8 +224,9 @@
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
-                    <goals>deploy site:site assembly:single site:deploy</goals>
-                    <preparationGoals>clean verify</preparationGoals>
+                    <goals>deploy site-deploy assembly:single</goals>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <preparationGoals>clean install</preparationGoals>
                 </configuration>
             </plugin>
             <plugin>
