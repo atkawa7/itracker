@@ -153,6 +153,15 @@
 				</li>
 
 				<li>
+					<strong>allow_workflowscripts</strong>
+					Set to false to deny execution of workflowscripts for the system.
+					Be sure that your system is protected against injection of
+					malicious scripts when enabled. (type : Boolean)
+					<br />
+					<em>default: true</em>
+				</li>
+
+				<li>
 					<strong>authenticator_class</strong>
                     This parameter sets the class to use for authentication.
                     The class must be resident in the classpath that the ear is loaded in,

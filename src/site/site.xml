@@ -82,7 +82,9 @@
 
 
             <item name="Install" href="/install.html"/>
-            <item name="Configuration" href="/configuration.html"/>
+            <item name="Configuration" href="/configuration.html" collapse="true">
+                <item name="Workflow Scripts" href="/workflow-script.html" />
+            </item>
             <item name="Build Instructions" href="/build-instructions.html"/>
 
             <item name="Data Migration from 2.4" href="/migration/migrate2.4-3.0.html"/>
