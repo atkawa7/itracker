@@ -91,7 +91,7 @@ public class IssueForm extends ITrackerForm {
      * @param currentErrors       is a container for errors.
      */
     public void processFieldScripts(List<ProjectScript> projectScriptModels, int event, Map<Integer, String> currentValues, Map<Integer, List<NameValuePair>> optionValues, ActionMessages currentErrors) throws WorkflowException {
-        if (projectScriptModels == null || projectScriptModels.size() == 0)
+        if ((!isWorkflowScriptsAllowed()) || projectScriptModels == null || projectScriptModels.size() == 0)
             return;
         log.debug("Processing " + projectScriptModels.size() + " field scripts for project " + projectScriptModels.get(0).getProject().getId());
 
@@ -206,6 +206,10 @@ public class IssueForm extends ITrackerForm {
         }
         if (currentErrors == null) {
             throw new WorkflowException("Errors was null.", WorkflowException.INVALID_ARGS);
+        }
+
+        if (!isWorkflowScriptsAllowed()) {
+            return currentValue;
         }
 
         String result = currentValue;
@@ -1302,6 +1306,14 @@ public class IssueForm extends ITrackerForm {
 
         invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONVALIDATE, errors);
 
+    }
+
+    public static boolean isWorkflowScriptsAllowed() {
+        Boolean val = ServletContextUtils.getItrackerServices().getConfigurationService().getBooleanProperty("allow_workflowscripts", true);
+        if (log.isDebugEnabled()) {
+            log.debug("isWorkflowScriptsAllowed: {}allowed by configuration 'allow_workflowscripts'", !val?"NOT ":"");
+        }
+        return val;
     }
 
 }
