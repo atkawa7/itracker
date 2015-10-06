@@ -25,7 +25,7 @@
     <skin>
         <groupId>org.itracker.site</groupId>
         <artifactId>skin-itracker</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.2</version>
     </skin>
 
     <poweredBy>
