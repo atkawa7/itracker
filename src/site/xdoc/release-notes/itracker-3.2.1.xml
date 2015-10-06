@@ -19,6 +19,7 @@
             </p>
             <ul>
                 <li>split the single WAR project to a multi-project to separate the web from other layers</li>
+                <li>fixes in workflow scripts and support for Groovy scripts</li>
             </ul>
 
 
