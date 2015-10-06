@@ -21,7 +21,7 @@ Building itracker from Sources
 
   There are some relevant build properties available, depending on your needs, you find more details in the pom.xml:
 
-* Tomcat Plugin
+* Cargo Plugin
 
 ** <<Tomcat run>> with profile <<<itracker.tomcat>>>:
 
@@ -38,24 +38,39 @@ Building itracker from Sources
     []
 
     start the build, eg: \
-    <<<mvn package tomcat6:run -Pitracker.tomcat>>>\
-    <<<mvn package tomcat7:run -Dapplication.port=8080 -Pitracker.tomcat>>>
+    <<<mvn package cargo:run -Dcargo.container=tomcat6x -Pitracker.tomcat>>>\
+    <<<mvn package cargo:run -Dcargo.container=tomcat7x -Dapplication.port=8080 -Pitracker.tomcat>>>\
+    <<<mvn package cargo:run -Dcargo.container=tomcat8x -Dapplication.port=8080 -Pitracker.tomcat>>>
 
 
-** Tomcat deploy:
+** Tomcat deploy using the Cargo Plugin
 
-    * <<<tomcat.deploy.path>>> override the deployment-path
+    * <<<cargo.remote.username>>> remote manager username
 
-    * <<<tomcat.deploy.server>>> override the server for credentials to be used
+    * <<<cargo.remote.password>>> remote manager password
 
-    * <<<tomcat.deploy.url>>> the tomcat-manager URL
+    * <<<cargo.remote.uri>>> the tomcat-manager URI
 
-    * {{{http://tomcat.apache.org/maven-plugin-2.0/tomcat6-maven-plugin/deploy-mojo.html}deploy reference}}
+*** Tomcat 6.x:
+
+    * {{{https://codehaus-cargo.github.io/cargo/Tomcat+6.x.html}Tomcat 6 deploy reference}}
 
     []
 
     eg:\
-    <<<mvn package tomcat6:deploy -Dtomcat.deploy.server=itracker-host -Dtomcat.deploy.url=http://itracker:8080/manager>>>
+    <<<mvn package cargo:deploy -Dcargo.remote.uri=http://itracker-host:8080/manager -Dcargo.remote.username=manager -Dcargo.remote.password=admin>>>
+
+
+*** Tomcat 7.x/8.x:
+
+    * {{{https://codehaus-cargo.github.io/cargo/Tomcat+7.x.html}Tomcat 7 deploy reference}}
+
+    * {{{https://codehaus-cargo.github.io/cargo/Tomcat+8.x.html}Tomcat 8 deploy reference}}
+
+    []
+
+    eg:\
+    <<<mvn package cargo:deploy -Dcargo.remote.uri=http://itracker-host:8080/manager/text -Dcargo.remote.username=manager -Dcargo.remote.password=admin>>>
 
 
 * Jetty Plugin
@@ -87,7 +102,7 @@ Building itracker from Sources
     <<<mvn clean verify -Pselenium -Dselenium.browser=firefox>>>
 
     Run tests in slow-motion:\
-    <<<mvn clean verify -Pselenium -selenium.speed=2000>>>
+    <<<mvn clean verify -Pselenium>>>
 
     <If you cancel the build running Selenium Tests, some processes might be left and blocking some ports, you must find and kill them manually.>
 
