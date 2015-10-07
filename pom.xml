@@ -224,9 +224,11 @@
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
-                    <goals>deploy site-deploy assembly:single</goals>
+                    <goals>deploy site:site assembly:single site-deploy</goals>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <preparationGoals>clean install</preparationGoals>
+                    <!-- TODO: cobertura issue: https://github.com/checkstyle/checkstyle/issues/916 -->
+                    <arguments>-Pselenium -Ditracker.it.skip=false -Dcobertura.skip=true</arguments>
                 </configuration>
             </plugin>
             <plugin>
@@ -338,7 +340,7 @@
                     <configuration>
                         <descriptors>
                             <descriptor>src/main/assembly/assembly-src.xml</descriptor>
-                            <descriptor>src/main/assembly/assembly-bin.xml</descriptor>
+                            <descriptor>itracker-web/src/main/assembly/assembly-bin.xml</descriptor>
                         </descriptors>
                         <attach>false</attach>
                         <finalName>${project.artifactId}-${project.version}</finalName>
