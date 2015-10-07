@@ -82,7 +82,7 @@ public class DisplayReportActionIT extends AbstractDependencyInjectionTest {
 
         ActionForward forward = action.execute(actionMapping, form, request, response);
 
-        assertNull("expected outcome when reportId == ReportUtilities.REPORT_EXPORT_XML is null", forward);
+        assertNull("forward when reportId == ReportUtilities.REPORT_EXPORT_XML", forward);
         assertEquals("unexpected response header", "attachment; filename=\"issue_export.xml\"", response.getHeader("Content-Disposition"));
     }
 

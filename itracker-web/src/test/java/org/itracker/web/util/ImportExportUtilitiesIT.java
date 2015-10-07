@@ -4,12 +4,11 @@
  */
 package org.itracker.web.util;
 
+import org.dom4j.*;
 import org.itracker.AbstractDependencyInjectionTest;
 import org.itracker.ImportExportException;
-import org.itracker.model.AbstractEntity;
-import org.itracker.model.CustomField.Type;
 import org.itracker.model.*;
-import org.itracker.model.SystemConfiguration;
+import org.itracker.model.CustomField.Type;
 import org.itracker.model.util.IssueUtilities;
 import org.itracker.model.util.ProjectUtilities;
 import org.junit.Ignore;
@@ -22,7 +21,9 @@ import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static junit.framework.Assert.*;
+import static org.itracker.Assert.*;
+
+
 /**
  * FIXME: reimplement this test as soon we got an XML Import/Export
  *
@@ -315,7 +316,7 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
     }
 
     @Test
-    public void testExportModel() {
+    public void testExportModel() throws DocumentException {
         try {
             final User creator = new User();
             creator.setId(1);
@@ -373,7 +374,7 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
                     "<issue-attachment-filename><![CDATA[]]></issue-attachment-filename>" +
                     "<issue-attachment-origfile><![CDATA[file.txt]]></issue-attachment-origfile>" +
                     "<issue-attachment-size><![CDATA[0]]></issue-attachment-size>" +
-                    "<issue-attachment-type><![CDATA[null]]></issue-attachment-type>" +
+                    "<issue-attachment-type><![CDATA[application/octet-stream]]></issue-attachment-type>" +
                     "<issue-attachment-creator><![CDATA[user1]]></issue-attachment-creator>" +
                     "</issue-attachment>" +
                     "</issue-attachments>" +
@@ -381,8 +382,12 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
                     "<history-entry creator-id=\"user1\" date=\"" + ImportExportTags.DATE_FORMATTER.format(dateCreate) + "\" status=\"100\"><![CDATA[some description]]></history-entry>" +
                     "</issue-history>" +
                     "</issue>";
-            assertEquals(flatXml(expected),
-                    flatXml(ImportExportUtilities.exportModel(issue)));
+
+            final String xml = ImportExportUtilities.exportModel(issue);
+            assertNotNull("xml", xml);
+            assertContainsAll("xml", DocumentHelper.parseText(flatXml(expected)),
+                    DocumentHelper.parseText(flatXml(xml)));
+
         } catch (final ImportExportException ex) {
             assertTrue(ex.getMessage(), false);
         }
@@ -405,8 +410,12 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
                     "</component>" +
                     "</components>" +
                     "</project>";
-            assertEquals(flatXml(expected),
-                    flatXml(ImportExportUtilities.exportModel(project)));
+
+            final String xml = ImportExportUtilities.exportModel(project);
+            assertNotNull("xml", xml);
+            assertContainsAll("xml", DocumentHelper.parseText(expected),
+                    DocumentHelper.parseText(xml));
+
         } catch (final ImportExportException ex) {
             assertTrue(ex.getMessage(), false);
         }
@@ -424,8 +433,11 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
                     "<user-status>0</user-status>" +
                     "<super-user>false</super-user>" +
                     "</user>";
-            assertEquals(flatXml(expected),
-                    flatXml(ImportExportUtilities.exportModel(user)));
+            final String xml = ImportExportUtilities.exportModel(user);
+            assertNotNull("xml", xml);
+            assertContainsAll("xml", DocumentHelper.parseText(expected),
+                    DocumentHelper.parseText(xml));
+
         } catch (final ImportExportException ex) {
             assertTrue(ex.getMessage(), false);
         }
@@ -455,7 +467,7 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
      * TODO: Not a valid XML..
      */
     @Test
-    public void testGetConfigurationXML() {
+    public void testGetConfigurationXML() throws DocumentException {
 
         String got = ImportExportUtilities.getConfigurationXML(null);
         assertNotNull(got);
@@ -488,11 +500,15 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
 
         config.getStatuses().add(new Configuration(Configuration.Type.status, "status"));
 
-        final String expected = readXmlString("org/itracker/services/util/testGetConfigurationXMLExpected.xml");
+        final String expected = "<root>"
+                + readXmlString("org/itracker/services/util/testGetConfigurationXMLExpected.xml")
+                + "</root>";
 
-        String string = ImportExportUtilities.getConfigurationXML(config);
-        assertEquals("xml", flatXml(expected),
-                flatXml(string));
+        final String xml = "<root>" + ImportExportUtilities.getConfigurationXML(config) + "</root>";
+        assertNotNull("xml", xml);
+        assertContainsAll("xml", DocumentHelper.parseText(flatXml(expected)),
+                DocumentHelper.parseText(flatXml(xml)));
+
     }
 
     private String readXmlString(String filename) {
@@ -518,7 +534,7 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
 
     @Test
     // Cannot test this it's not a real test, String is not XML anyway! (XML is structured, String is pain)
-    public void testGetIssueXML() {
+    public void testGetIssueXML() throws DocumentException {
 
         String got = ImportExportUtilities.getIssueXML(null);
         assertNotNull(got);
@@ -595,7 +611,7 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
                 "<issue-attachment-filename><![CDATA[]]></issue-attachment-filename>" +
                 "<issue-attachment-origfile><![CDATA[file.txt]]></issue-attachment-origfile>" +
                 "<issue-attachment-size><![CDATA[0]]></issue-attachment-size>" +
-                "<issue-attachment-type><![CDATA[null]]></issue-attachment-type>" +
+                "<issue-attachment-type><![CDATA[application/octet-stream]]></issue-attachment-type>" +
                 "<issue-attachment-creator><![CDATA[user1]]></issue-attachment-creator>" +
                 "</issue-attachment>" +
                 "</issue-attachments>" +
@@ -604,14 +620,18 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
                 "</issue-history>" +
                 "</issue>";
 
-        assertEquals(flatXml(expected),
-                flatXml(ImportExportUtilities.getIssueXML(issue)));
+
+        final String xml = ImportExportUtilities.getIssueXML(issue);
+        assertNotNull("xml", xml);
+        assertContainsAll("xml", DocumentHelper.parseText(flatXml(expected)),
+                DocumentHelper.parseText(flatXml(xml)));
+
 
 
     }
 
     @Test
-    public void testGetProjectXML() {
+    public void testGetProjectXML() throws DocumentException {
 
         String got = ImportExportUtilities.getProjectXML(null);
         assertNotNull(got);
@@ -647,12 +667,14 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
                 "</version-number><version-description><![CDATA[]]></version-description></version></versions>" +
                 "</project>";
 
-        assertEquals(flatXml(expected), flatXml(ImportExportUtilities.getProjectXML(project)));
-
+        final String xml = ImportExportUtilities.getProjectXML(project);
+        assertNotNull("xml", xml);
+        assertContainsAll("xml", DocumentHelper.parseText(expected),
+                DocumentHelper.parseText(xml));
     }
 
     @Test
-    public void testGetUserXML() {
+    public void testGetUserXML() throws DocumentException {
         String got = ImportExportUtilities.getUserXML(null);
         assertNotNull(got);
         assertEquals("", got);
@@ -669,11 +691,12 @@ public class ImportExportUtilitiesIT extends AbstractDependencyInjectionTest {
                 "<user-status>0</user-status>" +
                 "<super-user>false</super-user>" +
                 "</user>";
-        assertEquals(flatXml(expected),
-                flatXml(ImportExportUtilities.getUserXML(user)));
+        final String xml = ImportExportUtilities.getUserXML(user);
+        assertNotNull("xml", xml);
+        assertContainsAll("xml", DocumentHelper.parseText(expected),
+                DocumentHelper.parseText(xml));
 
     }
-
 
     /**
      * Defines a set of datafiles to be uploaded into database.

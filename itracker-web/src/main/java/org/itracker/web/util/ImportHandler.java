@@ -48,23 +48,25 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
 
     public ImportHandler() {
         this.logger = Logger.getLogger(getClass());
-        this.items = new ArrayList<AbstractEntity>();
+        this.items = new ArrayList<>();
         this.endException = null;
     }
 
     public AbstractEntity[] getModels() {
-        AbstractEntity[] modelsArray = items.toArray(new AbstractEntity[]{});
-        return modelsArray;
+        return items.toArray(new AbstractEntity[items.size()]);
     }
 
+    @Override
     public void startDocument() {
         logger.debug("Started import xml parsing.");
     }
 
+    @Override
     public void endDocument() {
         logger.debug("Completed import xml parsing.");
     }
 
+    @Override
     public void startElement(String uri, String name, String qName, Attributes atts) throws SAXException {
         logger.debug("Parsing import tag " + qName);
 
@@ -85,7 +87,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                 childModel = new Component((Project) parentModel, atts.getValue(ATTR_ID));
                 childModel.setId(new Integer(id));
             } else if (TAG_COMPONENTS.equals(qName)) {
-                itemList = new ArrayList<Object>();
+                itemList = new ArrayList<>();
             } else if (TAG_CONFIGURATION.equals(qName)) {
                 parentModel = new SystemConfiguration();
             } else if (TAG_CUSTOM_FIELD.equals(qName)) {
@@ -99,13 +101,13 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if (TAG_CUSTOM_FIELD_OPTION.equals(qName)) {
                 tempStorage = ITrackerResources.unescapeUnicodeString(atts.getValue(ATTR_VALUE));
             } else if (TAG_CUSTOM_FIELDS.equals(qName)) {
-                itemList = new ArrayList<Object>();
+                itemList = new ArrayList<>();
             } else if (TAG_HISTORY_ENTRY.equals(qName)) {
                 String creatorId = atts.getValue(ATTR_CREATOR_ID);
                 String date = atts.getValue(ATTR_DATE);
                 String status = atts.getValue(ATTR_STATUS);
                 if (creatorId == null) {
-                    throw new SAXException("Attribute creatorId was null for issue history.");
+                    throw new SAXException("Attribute " + ATTR_CREATOR_ID + " was null for issue history.");
                 } else if (date == null) {
                     throw new SAXException("Attribute date was null for issue history.");
                 }
@@ -136,11 +138,11 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                 }
                 childModel = new IssueField((Issue) parentModel, (CustomField) findModel(id));
             } else if (TAG_ISSUE_FIELDS.equals(qName)) {
-                itemList = new ArrayList<Object>();
+                itemList = new ArrayList<>();
             } else if (TAG_ISSUE_HISTORY.equals(qName)) {
-                itemList = new ArrayList<Object>();
+                itemList = new ArrayList<>();
             } else if (TAG_ISSUE_VERSIONS.equals(qName)) {
-                itemList = new ArrayList<Object>();
+                itemList = new ArrayList<>();
             } else if (TAG_PROJECT.equals(qName)) {
                 String id = atts.getValue(ATTR_SYSTEMID);
                 if (id == null) {
@@ -150,9 +152,9 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                 parentModel = new Project();
                 parentModel.setId(new Integer(id));
             } else if (TAG_PROJECT_FIELDS.equals(qName)) {
-                itemList = new ArrayList<Object>();
+                itemList = new ArrayList<>();
             } else if (TAG_PROJECT_OWNERS.equals(qName)) {
-                itemList = new ArrayList<Object>();
+                itemList = new ArrayList<>();
             } else if (TAG_RESOLUTION.equals(qName)) {
                 String value = atts.getValue(ATTR_VALUE);
                 String order = atts.getValue(ATTR_ORDER);
@@ -189,7 +191,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                 childModel = new Version((Project) parentModel, atts.getValue(ATTR_ID));
                 childModel.setId(new Integer(id));
             } else if (TAG_VERSIONS.equals(qName)) {
-                itemList = new ArrayList<Object>();
+                itemList = new ArrayList<>();
             } else {
                 tagBuffer = new StringBuffer();
             }
@@ -198,11 +200,9 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
         }
     }
 
+    @Override
     public void endElement(String uri, String name, String qName) throws SAXException {
         logger.debug("Completing import tag " + qName);
-
-        //logger.debug("ParentModel: " + parentModel);
-        //logger.debug("ChildModel: " + childModel);
 
         try {
             if (TAG_ISSUE.equals(qName) || TAG_PROJECT.equals(qName) || TAG_USER.equals(qName) || TAG_CONFIGURATION.equals(qName)) {
@@ -232,18 +232,18 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                 itemList.add(childModel.clone());
                 childModel = null;
             } else if (TAG_COMPONENTS.equals(qName)) {
-                List<Component> itemListArray = new ArrayList<Component>();
-                for (int i = 0; i < itemList.size(); i++) {
-                    itemListArray.add((Component) itemList.get(i));
+                List<Component> itemListArray = new ArrayList<>();
+                for (Object anItemList : itemList) {
+                    itemListArray.add((Component) anItemList);
                 }
                 ((Project) parentModel).setComponents(itemListArray);
             } else if (TAG_COMPONENT_DESCRIPTION.equals(qName)) {
                 ((Component) childModel).setDescription(getBuffer());
             } else if (TAG_COMPONENT_ID.equals(qName)) {
                 if (itemList == null) {
-                    itemList = new ArrayList<Object>();
+                    itemList = new ArrayList<>();
                 }
-                itemList.add((Component) findModel(getBuffer()));
+                itemList.add(findModel(getBuffer()));
             } else if (TAG_COMPONENT_NAME.equals(qName)) {
                 ((Component) childModel).setName(getBuffer());
             } else if (TAG_CONFIGURATION_VERSION.equals(qName)) {
@@ -253,9 +253,9 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if (TAG_CREATOR.equals(qName)) {
                 ((Issue) parentModel).setCreator((User) findModel(getBuffer()));
             } else if (TAG_CUSTOM_FIELDS.equals(qName)) {
-                List<CustomField> itemListArray = new ArrayList<CustomField>();
-                for (int i = 0; i < itemList.size(); i++) {
-                    itemListArray.add((CustomField) itemList.get(i));
+                List<CustomField> itemListArray = new ArrayList<>();
+                for (Object anItemList : itemList) {
+                    itemListArray.add((CustomField) anItemList);
                 }
                 ((SystemConfiguration) parentModel).setCustomFields(itemListArray);
             } else if (TAG_CUSTOM_FIELD_DATEFORMAT.equals(qName)) {
@@ -266,9 +266,9 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if (TAG_CUSTOM_FIELD_OPTION.equals(qName)) {
                 ((CustomField) childModel).addOption(tempStorage, getBuffer());
             } else if (TAG_CUSTOM_FIELD_REQUIRED.equals(qName)) {
-                ((CustomField) childModel).setRequired(("true".equalsIgnoreCase(getBuffer()) ? true : false));
+                ((CustomField) childModel).setRequired(("true".equalsIgnoreCase(getBuffer())));
             } else if (TAG_CUSTOM_FIELD_SORTOPTIONS.equals(qName)) {
-                ((CustomField) childModel).setSortOptionsByName(("true".equalsIgnoreCase(getBuffer()) ? true : false));
+                ((CustomField) childModel).setSortOptionsByName(("true".equalsIgnoreCase(getBuffer())));
             } else if (TAG_CUSTOM_FIELD_TYPE.equals(qName)) {
                 final String s = getBuffer();
                 try {
@@ -287,9 +287,9 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if (TAG_FIRST_NAME.equals(qName)) {
                 ((User) parentModel).setFirstName(getBuffer());
             } else if (TAG_ISSUE_ATTACHMENTS.equals(qName)) {
-                List<IssueAttachment> itemListArray = new ArrayList<IssueAttachment>();
-                for (int i = 0; i < itemList.size(); i++) {
-                    itemListArray.add((IssueAttachment) itemList.get(i));
+                List<IssueAttachment> itemListArray = new ArrayList<>();
+                for (Object anItemList : itemList) {
+                    itemListArray.add((IssueAttachment) anItemList);
                 }
                 ((Issue) parentModel).setAttachments(itemListArray);
             } else if (TAG_ISSUE_ATTACHMENT_CREATOR.equals(qName)) {
@@ -305,21 +305,21 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if (TAG_ISSUE_ATTACHMENT_TYPE.equals(qName)) {
                 ((IssueAttachment) childModel).setType(getBuffer());
             } else if (TAG_ISSUE_COMPONENTS.equals(qName)) {
-                List<Component> itemListArray = new ArrayList<Component>();
-                for (int i = 0; i < itemList.size(); i++) {
-                    itemListArray.add((Component) itemList.get(i));
+                List<Component> itemListArray = new ArrayList<>();
+                for (Object anItemList : itemList) {
+                    itemListArray.add((Component) anItemList);
                 }
                 ((Issue) parentModel).setComponents(itemListArray);
             } else if (TAG_ISSUE_DESCRIPTION.equals(qName)) {
                 ((Issue) parentModel).setDescription(getBuffer());
             } else if (TAG_ISSUE_FIELDS.equals(qName)) {
-                List<IssueField> itemListArray = new ArrayList<IssueField>();
+                List<IssueField> itemListArray = new ArrayList<>();
                 for (int i = 0; i < itemList.size(); i++) {
                     itemListArray.add(i, (IssueField) itemList.get(i));
                 }
                 ((Issue) parentModel).setFields(itemListArray);
             } else if (TAG_ISSUE_HISTORY.equals(qName)) {
-                List<IssueHistory> itemListArray = new ArrayList<IssueHistory>();
+                List<IssueHistory> itemListArray = new ArrayList<>();
                 for (int i = 0; i < itemList.size(); i++) {
                     itemListArray.add(i, (IssueHistory) itemList.get(i));
                 }
@@ -333,7 +333,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if (TAG_ISSUE_STATUS.equals(qName)) {
                 ((Issue) parentModel).setStatus(getBufferAsInt());
             } else if (TAG_ISSUE_VERSIONS.equals(qName)) {
-                List<Version> itemListArray = new ArrayList<Version>();
+                List<Version> itemListArray = new ArrayList<>();
                 for (int i = 0; i < itemList.size(); i++) {
                     itemListArray.add(i, (Version) itemList.get(i));
                 }
@@ -351,23 +351,23 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
             } else if (TAG_PROJECT_DESCRIPTION.equals(qName)) {
                 ((Project) parentModel).setDescription(getBuffer());
             } else if (TAG_PROJECT_FIELDS.equals(qName)) {
-                List<CustomField> itemListArray = new ArrayList<CustomField>();
+                List<CustomField> itemListArray = new ArrayList<>();
                 for (int i = 0; i < itemList.size(); i++) {
                     itemListArray.add(i, (CustomField) itemList.get(i));
                 }
                 ((Project) parentModel).setCustomFields(itemListArray);
             } else if (TAG_PROJECT_FIELD_ID.equals(qName)) {
-                itemList.add((CustomField) findModel(getBuffer()));
+                itemList.add(findModel(getBuffer()));
             } else if (TAG_PROJECT_OPTIONS.equals(qName)) {
                 ((Project) parentModel).setOptions(getBufferAsInt());
             } else if (TAG_PROJECT_OWNERS.equals(qName)) {
-                List<User> itemListArray = new ArrayList<User>();
+                List<User> itemListArray = new ArrayList<>();
                 for (int i = 0; i < itemList.size(); i++) {
                     itemListArray.add(i, (User) itemList.get(i));
                 }
                 ((Project) parentModel).setOwners(itemListArray);
             } else if (TAG_PROJECT_OWNER_ID.equals(qName)) {
-                itemList.add((User) findModel(getBuffer()));
+                itemList.add(findModel(getBuffer()));
             } else if (TAG_PROJECT_STATUS.equals(qName)) {
                 // By default activate the project
                 ((Project) parentModel).setStatus(Status.ACTIVE);
@@ -377,7 +377,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                     // ok, it is active.
                 }
             } else if (TAG_SUPER_USER.equals(qName)) {
-                ((User) parentModel).setSuperUser(("true".equalsIgnoreCase(getBuffer()) ? true : false));
+                ((User) parentModel).setSuperUser(("true".equalsIgnoreCase(getBuffer())));
             } else if (TAG_TARGET_VERSION_ID.equals(qName)) {
                 ((Issue) parentModel).setTargetVersion((Version) findModel(getBuffer()));
             } else if (TAG_USER_STATUS.equals(qName)) {
@@ -389,17 +389,16 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                     ((User)parentModel).setStatus(Integer.parseInt(currBuffer));
                 } catch (RuntimeException re) {
                     HashMap<String, String> userStatuses = UserUtilities.getStatusNames(EXPORT_LOCALE);
-                   for (Iterator<String> iter = userStatuses.keySet().iterator(); iter.hasNext(); ) {
-                       String key = (String) iter.next();
-                       String keyValue = (String) userStatuses.get(key);
-                       if (keyValue != null && keyValue.equalsIgnoreCase(currBuffer)) {
-                           ((User) parentModel).setStatus(Integer.parseInt(key));
-                           break;
-                       }
-                   }
+                    for (String key : userStatuses.keySet()) {
+                        String keyValue = userStatuses.get(key);
+                        if (keyValue != null && keyValue.equalsIgnoreCase(currBuffer)) {
+                            ((User) parentModel).setStatus(Integer.parseInt(key));
+                            break;
+                        }
+                    }
                 }
             } else if (TAG_VERSIONS.equals(qName)) {
-                List<Version> itemListArray = new ArrayList<Version>();
+                List<Version> itemListArray = new ArrayList<>();
                 for (int i = 0; i < itemList.size(); i++) {
                     itemListArray.add(i, (Version) itemList.get(i));
                 }
@@ -408,9 +407,9 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
                 ((Version) childModel).setDescription(getBuffer());
             } else if (TAG_VERSION_ID.equals(qName)) {
                 if (itemList == null) {
-                    itemList = new ArrayList<Object>();
+                    itemList = new ArrayList<>();
                 }
-                itemList.add((Version) findModel(getBuffer()));
+                itemList.add(findModel(getBuffer()));
             } else if (TAG_VERSION_NUMBER.equals(qName)) {
                 ((Version) childModel).setVersionInfo(getBuffer());
             }
@@ -429,6 +428,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
         tagBuffer = null;
     }
 
+    @Override
     public void characters(char[] ch, int start, int length) {
         logger.debug("Read " + ch.length + " Start: " + start + " Length: " + length);
         logger.debug("String: " + new String(ch, start, length));
@@ -471,8 +471,7 @@ public class ImportHandler extends DefaultHandler implements ImportExportTags {
 
     private AbstractEntity findModel(String itemTypeId) {
         if (itemTypeId != null && !itemTypeId.equals("")) {
-            for (int i = 0; i < items.size(); i++) {
-                AbstractEntity model = (AbstractEntity) items.get(i);
+            for (AbstractEntity model : items) {
                 if (getModelTypeIdString(model).equalsIgnoreCase(itemTypeId)) {
                     return model;
                 }
