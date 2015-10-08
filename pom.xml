@@ -171,7 +171,7 @@
     <scm>
         <connection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/trunk/</connection>
         <developerConnection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/trunk/</developerConnection>
-        <url>http://svn.code.sf.net/p/itracker/code/itracker/trunk/</url>
+        <url>http://sourceforge.net/p/%69tracker/code/HEAD/tree/itracker/trunk</url>
     </scm>
     <organization>
         <name>itracker</name>
