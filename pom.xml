@@ -340,7 +340,7 @@
                     <configuration>
                         <descriptors>
                             <descriptor>src/main/assembly/assembly-src.xml</descriptor>
-                            <descriptor>itracker-web/src/main/assembly/assembly-bin.xml</descriptor>
+                            <descriptor>src/main/assembly/assembly-bin.xml</descriptor>
                         </descriptors>
                         <attach>false</attach>
                         <finalName>${project.artifactId}-${project.version}</finalName>
