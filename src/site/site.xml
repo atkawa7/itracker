@@ -142,10 +142,10 @@
             </item>
         </menu>
         <menu name="itracker Modules" inherit="top">
-            <item name="itracker Core" href="/itracker-core"/>
-            <item name="itracker Persistence" href="/itracker-persistence"/>
-            <item name="itracker Services" href="/itracker-services"/>
-            <item name="itracker Web" href="/itracker-web"/>
+            <item name="itracker Core" href="/itracker-core/index.html"/>
+            <item name="itracker Persistence" href="/itracker-persistence/index.html"/>
+            <item name="itracker Services" href="/itracker-services/index.html"/>
+            <item name="itracker Web" href="/itracker-web/index.html"/>
         </menu>
 
 

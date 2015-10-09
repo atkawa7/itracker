@@ -7,39 +7,63 @@
     <fileSets>
         <fileSet>
             <directory>src/site</directory>
-            <outputDirectory></outputDirectory>
+            <outputDirectory>.</outputDirectory>
             <includes>
                 <include>GPL.txt</include>
                 <include>LGPL.txt</include>
-                <include>INSTALL.txt</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>itracker-web/target</directory>
-            <outputDirectory></outputDirectory>
+            <outputDirectory>./</outputDirectory>
             <includes>
                 <include>*.war</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>target/site</directory>
-            <outputDirectory>site</outputDirectory>
+            <outputDirectory>./site</outputDirectory>
+            <includes>
+                <include>
+                    **/*
+                </include>
+            </includes>
         </fileSet>
         <fileSet>
             <directory>itracker-core/target/site</directory>
-            <outputDirectory>site/itracker-core</outputDirectory>
+            <outputDirectory>./site/itracker-core</outputDirectory>
+            <includes>
+                <include>
+                    **/*
+                </include>
+            </includes>
         </fileSet>
         <fileSet>
             <directory>itracker-persistence/target/site</directory>
-            <outputDirectory>site/itracker-persistence</outputDirectory>
+            <outputDirectory>./site/itracker-persistence</outputDirectory>
+            <includes>
+                <include>
+                    **/*
+                </include>
+            </includes>
         </fileSet>
         <fileSet>
             <directory>itracker-services/target/site</directory>
-            <outputDirectory>site/itracker-services</outputDirectory>
+            <outputDirectory>./site/itracker-services</outputDirectory>
+            <includes>
+                <include>
+                    **/*
+                </include>
+            </includes>
         </fileSet>
         <fileSet>
             <directory>itracker-web/target/site</directory>
-            <outputDirectory>site/itracker-web</outputDirectory>
+            <outputDirectory>./site/itracker-web</outputDirectory>
+            <includes>
+                <include>
+                    **/*
+                </include>
+            </includes>
         </fileSet>
     </fileSets>
 </assembly>
