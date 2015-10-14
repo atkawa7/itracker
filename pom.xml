@@ -1016,5 +1016,28 @@
         </snapshotRepository>
     </distributionManagement>
 
+    <profiles>
+        <profile>
+            <id>itracker-site</id>
+            <properties>
+                <forkCount>1</forkCount>
+                <itracker.it.skip>false</itracker.it.skip>
+                <maven.site.deploy.skip>false</maven.site.deploy.skip>
+                <dependency.locations.enabled>true</dependency.locations.enabled>
+                <maven.ssh.args>-t</maven.ssh.args>
+            </properties>
+        </profile>
+        <profile>
+            <id>itracker-release</id>
+            <properties>
+                <forkCount>1</forkCount>
+                <itracker.it.skip>false</itracker.it.skip>
+                <maven.site.deploy.skip>false</maven.site.deploy.skip>
+                <dependency.locations.enabled>true</dependency.locations.enabled>
+                <cobertura.skip>true</cobertura.skip>
+                <arguments>-Pselenium -Pitracker-release</arguments>
+            </properties>
+        </profile>
+    </profiles>
 </project>
 
