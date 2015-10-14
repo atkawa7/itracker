@@ -18,52 +18,47 @@
                     To apply to the database without loosing existing user preferences,
                     you will have to stop itracker and apply the following query (MySQL):
                     <br />
-                    <code><pre>
+                    <pre>        ALTER TABLE userpreferencesbean ADD COLUMN newid INT(11) NOT NULL  AFTER id;
 
-                        ALTER TABLE userpreferencesbean ADD COLUMN newid INT(11) NOT NULL  AFTER id;
-
-                        UPDATE userpreferencesbean, userbean
-                           SET userpreferencesbean.newid = userbean.id
-                         WHERE userpreferencesbean.id = userbean.preferences_id;
+        UPDATE userpreferencesbean, userbean
+           SET userpreferencesbean.newid = userbean.id
+         WHERE userpreferencesbean.id = userbean.preferences_id;
 
 
-                        ALTER TABLE userbean DROP FOREIGN KEY <strong>`&gt;foreign key name&lt;`</strong> ;
+        ALTER TABLE userbean DROP FOREIGN KEY <strong>`&gt;foreign key name&lt;`</strong> ;
 
-                        ALTER TABLE userpreferencesbean
-                          CHANGE COLUMN id id INT(11) NOT NULL;
+        ALTER TABLE userpreferencesbean
+          CHANGE COLUMN id id INT(11) NOT NULL;
 
-                        ALTER TABLE userpreferencesbean DROP PRIMARY KEY;
+        ALTER TABLE userpreferencesbean DROP PRIMARY KEY;
 
-                        ALTER TABLE userpreferencesbean ADD PRIMARY KEY (newid),
-                          CHANGE COLUMN newid newid INT(11) NOT NULL AUTO_INCREMENT;
+        ALTER TABLE userpreferencesbean ADD PRIMARY KEY (newid),
+          CHANGE COLUMN newid newid INT(11) NOT NULL AUTO_INCREMENT;
 
-                        ALTER TABLE userbean DROP COLUMN preferences_id;
+        ALTER TABLE userbean DROP COLUMN preferences_id;
 
-                        UPDATE userpreferencesbean
-                           SET id = newid;
+        UPDATE userpreferencesbean
+           SET id = newid;
 
-                        ALTER TABLE userpreferencesbean
-                          CHANGE COLUMN id id INT(11) NOT NULL AUTO_INCREMENT ,
-                          CHANGE COLUMN newid newid INT(11) NOT NULL ,
-                          DROP PRIMARY KEY,
-                          ADD PRIMARY KEY (id);
+        ALTER TABLE userpreferencesbean
+          CHANGE COLUMN id id INT(11) NOT NULL AUTO_INCREMENT ,
+          CHANGE COLUMN newid newid INT(11) NOT NULL ,
+          DROP PRIMARY KEY,
+          ADD PRIMARY KEY (id);
 
-                        ALTER TABLE userpreferencesbean
-                          ADD CONSTRAINT user_fk
-                          FOREIGN KEY (id)
-                          REFERENCES  userbean (id)
-                          ON DELETE RESTRICT
-                          ON UPDATE RESTRICT;
+        ALTER TABLE userpreferencesbean
+          ADD CONSTRAINT user_fk
+          FOREIGN KEY (id)
+          REFERENCES  userbean (id)
+          ON DELETE RESTRICT
+          ON UPDATE RESTRICT;
 
-                        ALTER TABLE userpreferencesbean DROP COLUMN newid;
-
-
-                    </pre></code>
+        ALTER TABLE userpreferencesbean DROP COLUMN newid;</pre>
 
 
                     Alternatively, shutdown itracker, drop the table userpreferences, upgrade itracker and start.
                     <br />
-                    -> Be aware: By doing this, all user-preferences will be reset!
+                    <em>-> Be aware: By doing this, all user-preferences will be reset!</em>
 
                 </li>
             </ul>
