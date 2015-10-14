@@ -77,7 +77,7 @@ Workflow Script
  * Logging values (BeanShell):
 
 -----
-    def log = org.slf4j.LoggerFactory.getLogger("com.mycompany.ScriptExample");
+    log = org.slf4j.LoggerFactory.getLogger("com.mycompany.ScriptExample");
     log.info("Workflow called with event: {} , \n fieldId: {} , "
       + "\n currentValue: {} , \n optionValues: {} , \n currentErrors: {} , \n currentForm: {}",
       new Object[]{event , fieldId , currentValue, optionValues , currentErrors , currentForm});
