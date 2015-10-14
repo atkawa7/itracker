@@ -33,7 +33,7 @@ Building itracker from Sources
 
     * <<<application.port>>> to run on an http-port other than 8888.
 
-    * {{{http://tomcat.apache.org/maven-plugin-2.0/tomcat6-maven-plugin/run-mojo.html}reference}}
+    * {{{https://codehaus-cargo.github.io/cargo/Maven2+Plugin+Reference+Guide.html}cargo plugin reference}}
 
     []
 
