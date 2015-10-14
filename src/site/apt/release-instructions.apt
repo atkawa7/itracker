@@ -35,11 +35,11 @@ Releasing itracker from Sources
 
   [[3]] Run the prepare release goal:
 
-  <<<mvn release:prepare>>>
+  <<<mvn release:prepare -Pitracker-release>>>
 
   [[4]] Run the perform release goal:
 
-  <<<mvn release:perform>>>
+  <<<mvn release:perform -Pitracker-release>>>
 
   [[5]] Upload the files to Sourceforge (3 -- Stable_Production/itracker-#RELEASE_VERSION#)
 
@@ -75,6 +75,6 @@ Staging the Maven generated Site
 
   [[4]] Generate and deploy the staging site separated to have code-coverage executed.
 
-  <<<mvn site site:stage-deploy -Dmaven.ssh.args=-t>>>
+  <<<mvn site site:stage-deploy -Pitracker-site>>>
 
   []
