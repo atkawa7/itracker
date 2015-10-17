@@ -79,7 +79,7 @@ public class EditProjectAction extends ItrackerBaseAction {
                 Project project = projectService.getProject((Integer) PropertyUtils
                         .getSimpleProperty(form, "id"));
                 if (!UserUtilities.hasPermission(userPermissions, project
-                        .getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
+                        .getId(), PermissionType.PRODUCT_ADMIN)) {
                     return mapping.findForward("unauthorized");
                 }
                 AdminProjectUtilities.setFormProperties(project,

@@ -71,7 +71,7 @@ public class ImportDataVerifyAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
 
 
-        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(PermissionType.USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 

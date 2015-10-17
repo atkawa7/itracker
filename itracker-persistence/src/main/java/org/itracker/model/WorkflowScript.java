@@ -105,13 +105,6 @@ public class WorkflowScript extends AbstractEntity {
         this.script = script;
     }
 
-    public int getNumberUses() {
-        return numUses;
-    }
-
-    public void setNumberUses(int value) {
-        numUses = value;
-    }
 
     public ScriptLanguage getLanguage() {
         return language;
@@ -124,7 +117,7 @@ public class WorkflowScript extends AbstractEntity {
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("id", getId()).append("name", getName())
-                .append("event", getEvent()).append("language", getLanguage()).append("numberUses", getNumberUses()).append(
+                .append("event", getEvent()).append("language", getLanguage()).append(
                         "script", getScript()).toString();
     }
 

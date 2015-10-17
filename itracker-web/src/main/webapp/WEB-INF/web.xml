@@ -53,8 +53,12 @@
             org.springframework.orm.hibernate3.support.OpenSessionInViewFilter
         </filter-class>
     </filter>
-
     <filter>
+      <filter-name>springSecurityFilterChain</filter-name>
+      <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+
+    <!--filter>
         <description>
             This Filter checks authentication for every request and
             redirects pre-action to login, caches the initial
@@ -78,7 +82,7 @@
                 .*/selfregister.*\.do, .*/error\.do, .*/logoff\.do, .*/unauthorized\.do
             </param-value>
         </init-param>
-    </filter>
+    </filter-->
 
     <!-- NTLM HTTP Authentication -->
     <!--
@@ -99,10 +103,16 @@
         <filter-name>SetRequestCharacterEncoding</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
     <filter-mapping>
+      <filter-name>springSecurityFilterChain</filter-name>
+      <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!--<filter-mapping>
         <filter-name>ExecuteAlways</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    </filter-mapping>-->
     <!-- Initialize Log4J using log4j.xml in a custom location.
          - preferred to use fom classpath to add simplicity
          <listener>

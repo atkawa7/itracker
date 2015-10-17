@@ -21,10 +21,8 @@ package org.itracker.web.actions.admin.attachment;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.IssueAttachment;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
-import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
@@ -44,10 +42,6 @@ public class ExportAttachmentsAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
 
 
-        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
-            return mapping.findForward("unauthorized");
-        }
-
         try {
             IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
 
@@ -58,13 +52,13 @@ public class ExportAttachmentsAction extends ItrackerBaseAction {
                 ServletOutputStream out = response.getOutputStream();
                 ZipOutputStream zipOut = new ZipOutputStream(out);
                 try {
-                    for (int i = 0; i < attachments.size(); i++) {
-                        log.debug("Attempting export for: " + attachments.get(i));
-                        byte[] attachmentData = issueService.getIssueAttachmentData(attachments.get(i).getId());
+                    for (IssueAttachment attachment : attachments) {
+                        log.debug("Attempting export for: " + attachment);
+                        byte[] attachmentData = issueService.getIssueAttachmentData(attachment.getId());
                         if (attachmentData.length > 0) {
-                            ZipEntry zipEntry = new ZipEntry(attachments.get(i).getFileName());
+                            ZipEntry zipEntry = new ZipEntry(attachment.getFileName());
                             zipEntry.setSize(attachmentData.length);
-                            zipEntry.setTime(attachments.get(i).getLastModifiedDate().getTime());
+                            zipEntry.setTime(attachment.getLastModifiedDate().getTime());
                             zipOut.putNextEntry(zipEntry);
                             zipOut.write(attachmentData, 0, attachmentData.length);
                             zipOut.closeEntry();

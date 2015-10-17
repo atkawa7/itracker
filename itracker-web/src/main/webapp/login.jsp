@@ -1,5 +1,5 @@
 <%@ include file="/common/taglibs.jsp"%>
-<html:form action="/login" focus="login">
+<html:form action="/security_check" focus="login" method="post">
 
   <input type="hidden" name="authtype" value="1">
 

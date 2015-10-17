@@ -87,7 +87,7 @@ public class EditComponentAction extends ItrackerBaseAction {
                 } else {
                     boolean authorised = UserUtilities.hasPermission(
                             userPermissionsMap, project.getId(),
-                            UserUtilities.PERMISSION_PRODUCT_ADMIN);
+                            PermissionType.PRODUCT_ADMIN);
 
                     if (!authorised) {
                         return mapping.findForward("unauthorized");

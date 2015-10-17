@@ -587,6 +587,8 @@ public class IssueUtilities {
         return canViewIssue(issue, user.getId(), permissions);
     }
 
+
+
     /**
      * Returns true if the user has permission to view the requested issue.
      *
@@ -596,6 +598,7 @@ public class IssueUtilities {
      */
     public static boolean canViewIssue(Issue issue, Integer userId,
                                        Map<Integer, Set<PermissionType>> permissions) {
+
         if (issue == null || userId == null || permissions == null) {
             if (log.isInfoEnabled()) {
                 log.info("canViewIssue: missing argument. issue: " + issue
@@ -606,8 +609,7 @@ public class IssueUtilities {
         }
 
         if (UserUtilities.hasPermission(permissions,
-                issue.getProject().getId(), PermissionType.ISSUE_VIEW_ALL
-                .getCode())) {
+                issue.getProject().getId(), PermissionType.ISSUE_VIEW_ALL)) {
             if (log.isInfoEnabled()) {
                 log.info("canViewIssue: issue: " + issue + ", user: " + userId
                         + ", permission: " + PermissionType.ISSUE_VIEW_ALL);
@@ -615,6 +617,7 @@ public class IssueUtilities {
             return true;
         }
 
+        boolean isUsersIssue = false;
         // I think owner & creator should always be able to view the issue
         // otherwise it makes no sense of creating the issue itself.
         // So put these checks before checking permissions for the whole project.
@@ -623,7 +626,7 @@ public class IssueUtilities {
                 log.info("canViewIssue: issue: " + issue + ", user: " + userId
                         + ", permission: is creator");
             }
-            return true;
+            isUsersIssue = true;
         }
 
         if (issue.getOwner() != null) {
@@ -633,19 +636,19 @@ public class IssueUtilities {
                     log.info("canViewIssue: issue: " + issue + ", user: "
                             + userId + ", permission: is owner");
                 }
-                return true;
+                isUsersIssue = true;
             }
         }
 
-        if (!UserUtilities.hasPermission(permissions, issue.getProject()
-                .getId(), PermissionType.ISSUE_VIEW_USERS.getCode())) {
+        if (isUsersIssue && UserUtilities.hasPermission(permissions, issue.getProject()
+                        .getId(), PermissionType.ISSUE_VIEW_USERS)) {
             if (log.isInfoEnabled()) {
-                log.info("canViewIssue: issue: " + issue + ", user: " + userId
-                        + ", permission: " + PermissionType.ISSUE_VIEW_USERS);
+                log.info("canViewIssue: issue: " + issue + ", user: "
+                        + userId + ", permission: isUsersIssue");
             }
-
-            return false;
+            return true;
         }
+
 
         if (log.isInfoEnabled()) {
             log.info("canViewIssue: issue: " + issue + ", user: " + userId
@@ -675,8 +678,7 @@ public class IssueUtilities {
 
 
         if (UserUtilities.hasPermission(permissions,
-                issue.getProject().getId(), PermissionType.ISSUE_EDIT_ALL
-                .getCode())) {
+                issue.getProject().getId(), PermissionType.ISSUE_EDIT_ALL)) {
 
             if (log.isDebugEnabled()) {
                 log.debug("canEditIssue: user " + userId
@@ -686,7 +688,7 @@ public class IssueUtilities {
             return true;
         }
         if (!UserUtilities.hasPermission(permissions, issue.getProject()
-                .getId(), PermissionType.ISSUE_EDIT_USERS.getCode())) {
+                .getId(), PermissionType.ISSUE_EDIT_USERS)) {
             if (log.isDebugEnabled()) {
                 log.debug("canEditIssue: user " + userId
                         + " has not permission  to edit issue " + issue.getId()
@@ -733,18 +735,15 @@ public class IssueUtilities {
         }
 
         if (UserUtilities.hasPermission(permissions,
-                issue.getProject().getId(), PermissionType.ISSUE_EDIT_ALL
-                .getCode())) {
+                issue.getProject().getId(), PermissionType.ISSUE_EDIT_ALL)) {
             return true;
         }
         if (UserUtilities.hasPermission(permissions,
-                issue.getProject().getId(), PermissionType.ISSUE_EDIT_USERS
-                .getCode())) {
+                issue.getProject().getId(), PermissionType.ISSUE_EDIT_USERS)) {
             if (issue.getCreator().getId().equals(userId)) {
                 return true;
             } else if (UserUtilities.hasPermission(permissions, issue
-                    .getProject().getId(), PermissionType.ISSUE_ASSIGNABLE
-                    .getCode())) {
+                    .getProject().getId(), PermissionType.ISSUE_ASSIGNABLE)) {
                 return true;
             } else if (issue.getOwner().getId() != null
                     && issue.getOwner().getId().equals(userId)) {
@@ -769,14 +768,13 @@ public class IssueUtilities {
         }
 
         if (UserUtilities.hasPermission(permissions,
-                issue.getProject().getId(), PermissionType.ISSUE_ASSIGN_OTHERS
-                .getCode())) {
+                issue.getProject().getId(), PermissionType.ISSUE_ASSIGN_OTHERS)) {
             return true;
         }
         if (issue.getOwner() != null
                 && userId.equals(issue.getOwner().getId())
                 && UserUtilities.hasPermission(permissions, issue.getProject()
-                .getId(), PermissionType.ISSUE_UNASSIGN_SELF.getCode())) {
+                .getId(), PermissionType.ISSUE_UNASSIGN_SELF)) {
             return true;
         }
 

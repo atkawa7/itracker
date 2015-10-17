@@ -12,8 +12,12 @@ import org.itracker.services.NotificationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
 import org.itracker.web.util.IssueNavigationUtil;
+import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -77,10 +81,9 @@ public class ViewIssueAction extends ItrackerBaseAction {
 			log.info("ViewIssueAction: Forward: error");
 			return mapping.findForward("error");
 		} else {
-			boolean canViewIssue = IssueUtilities.canViewIssue(issue,
-					currUserId, permissions);
 
-			if (project == null || !canViewIssue) {
+			if (project == null || !LoginUtilities.canViewIssue(issue,
+					LoginUtilities.getPrincipal())) {
 				log.info("ViewIssueAction: Forward: unauthorized");
 				return mapping.findForward("unauthorized");
 			}
@@ -147,7 +150,7 @@ public class ViewIssueAction extends ItrackerBaseAction {
 		request.setAttribute("canCreateIssue",
 				(project.getStatus() == Status.ACTIVE && UserUtilities
 						.hasPermission(permissions, project.getId(),
-								UserUtilities.PERMISSION_CREATE)));
+								PermissionType.ISSUE_CREATE)));
 		request.setAttribute("issueStatusName",issueStatusName);
 		request.setAttribute("issueSeverityName",issueSeverityName);
 		request.setAttribute("issueOwnerName",(issue.getOwner() == null ? ITrackerResources.getString("itracker.web.generic.unassigned", locale) : issue.getOwner().getFirstName() + " " + issue.getOwner().getLastName()) );

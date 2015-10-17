@@ -48,7 +48,8 @@
 <%
             }
 
-            possibleContributors = uh.getUsersWithAnyProjectPermission(query.getProjectId(), new int[]{UserUtilities.PERMISSION_CREATE, UserUtilities.PERMISSION_EDIT, UserUtilities.PERMISSION_EDIT_USERS});
+            possibleContributors = uh.getUsersWithAnyProjectPermission(query.getProjectId(),
+                    new int[]{UserUtilities.PERMISSION_CREATE, UserUtilities.PERMISSION_EDIT, UserUtilities.PERMISSION_EDIT_USERS});
             Collections.sort(possibleContributors, User.NAME_COMPARATOR);
         }
 %>

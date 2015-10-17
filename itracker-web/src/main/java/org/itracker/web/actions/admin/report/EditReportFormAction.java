@@ -48,11 +48,7 @@ public class EditReportFormAction extends ItrackerBaseAction {
 
             HttpSession session = request.getSession(true);
             String action = request.getParameter("action");
-            Map<Integer, Set<PermissionType>> userPermissionsMap = RequestHelper.getUserPermissions(session);
 
-            if (!UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_USER_ADMIN)) {
-                return mapping.findForward("unauthorized");
-            }
             Report report;
             String pageTitleKey;
             String pageTitleArg = "";

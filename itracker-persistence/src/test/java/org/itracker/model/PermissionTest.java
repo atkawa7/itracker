@@ -33,9 +33,9 @@ public class PermissionTest {
         User userB = new User("bbb", "", "b", "b", "b@b.com", false);
         Project projectA = new Project("a");
         Project projectB = new Project("b");
-        Permission entityA = new Permission(UserUtilities.PERMISSION_PRODUCT_ADMIN, userA);
+        Permission entityA = new Permission(PermissionType.PRODUCT_ADMIN, userA);
         entityA.setProject(projectA);
-        Permission entityB = new Permission(UserUtilities.PERMISSION_CREATE, userA);
+        Permission entityB = new Permission(PermissionType.ISSUE_CREATE, userA);
         entityB.setProject(projectA);
 
         assertEntityComparator("permission comparator", Permission.PERMISSION_PROPERTIES_COMPARATOR, entityA, entityB);

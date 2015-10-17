@@ -20,10 +20,7 @@ package org.itracker.web.actions.admin.user;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
-import org.itracker.model.NameValuePair;
-import org.itracker.model.Permission;
-import org.itracker.model.Project;
-import org.itracker.model.User;
+import org.itracker.model.*;
 import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
@@ -52,10 +49,6 @@ public class EditUserFormAction extends ItrackerBaseAction {
             throws ServletException, IOException {
 
         ActionMessages errors = new ActionMessages();
-
-        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
-            return mapping.findForward("unauthorized");
-        }
 
         HttpSession session = request.getSession(true);
         String action = request.getParameter("action");
@@ -139,7 +132,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
 
                             //if getPermissionType returned -1, this is a SuperUser. He will still be able to set project permissions.  
 
-                            if (permissionList.size() > 0 && permissionList.get(0).getPermissionType() == -1) {
+                            if (permissionList.size() > 0 && permissionList.get(0).getPermissionType() == PermissionType.USER_ADMIN) {
 
                                 if (permissionList.size() > 1 && i != 0) {
 
@@ -152,7 +145,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
 
                                     formPermissions.put("Perm" + permissionList.get(i).getPermissionType() + "Proj" + permissionList.get(i).getProject().getId(), "on");
 
-                                    Integer permissionType = permissionList.get(i).getPermissionType();
+                                    PermissionType permissionType = permissionList.get(i).getPermissionType();
 
                                     Permission thisPermission = permissionList.get(i);
                                     HashMap<String, Permission> permissionHashMap = ((HashMap<String, Permission>) userPermissions.get(projectId));
@@ -171,7 +164,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
 
                                 formPermissions.put("Perm" + permissionList.get(i).getPermissionType() + "Proj" + permissionList.get(i).getProject().getId(), "on");
 
-                                Integer permissionType = permissionList.get(i).getPermissionType();
+                                PermissionType permissionType = permissionList.get(i).getPermissionType();
 
                                 Permission thisPermission = permissionList.get(i);
                                 HashMap<String, Permission> permissionHashMap = ((HashMap<String, Permission>) userPermissions.get(projectId));

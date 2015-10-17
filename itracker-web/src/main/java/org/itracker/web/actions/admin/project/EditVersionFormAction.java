@@ -91,7 +91,7 @@ public class EditVersionFormAction extends ItrackerBaseAction {
                         errors.add(ActionMessages.GLOBAL_MESSAGE,
                                 new ActionMessage("itracker.web.error.invalidproject"));
                     } else if (!UserUtilities.hasPermission(userPermissions,
-                            project.getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
+                            project.getId(), PermissionType.PRODUCT_ADMIN)) {
                         return mapping.findForward("unauthorized");
                     } else {
                         version = new Version();
@@ -112,7 +112,7 @@ public class EditVersionFormAction extends ItrackerBaseAction {
                 if (version == null) {
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidversion"));
                 } else {
-                    if (!UserUtilities.hasPermission(userPermissions, version.getProject().getId(), UserUtilities.PERMISSION_PRODUCT_ADMIN)) {
+                    if (!UserUtilities.hasPermission(userPermissions, version.getProject().getId(), PermissionType.PRODUCT_ADMIN)) {
                         return mapping.findForward("unauthorized");
                     } else {
                         versionForm.setAction("update");

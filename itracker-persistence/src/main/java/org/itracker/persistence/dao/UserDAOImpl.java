@@ -150,7 +150,7 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
                     permissionsByProjectId.put(projectId, projectPermissions);
                 } //else { // Add the permission to the existing set of permissions for the project. }
 
-                PermissionType permissionType = PermissionType.fromCode(permission.getPermissionType());
+                PermissionType permissionType = permission.getPermissionType();
                 projectPermissions.add(permissionType);
             }
         } catch (HibernateException ex) {
@@ -159,9 +159,22 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
         return permissionsByProjectId;
     }
 
+
     @SuppressWarnings("unchecked")
     public List<User> findUsersForProjectByAllPermissionTypeList(Integer projectID, Integer[] permissionTypes) {
+        PermissionType[] permissions = null;
+        if (null != permissionTypes) {
+            permissions = new PermissionType[permissionTypes.length];
+            int c = 0;
+            for (int p : permissionTypes) {
+                permissions[c++] = PermissionType.valueOf(p);
+            }
+        }
+        return findUsersForProjectByAllPermissionTypeList(projectID, permissions);
+    }
 
+    @Override
+    public List<User> findUsersForProjectByAllPermissionTypeList(Integer projectID, PermissionType[] permissionTypes) {
         List<User> users = new ArrayList<User>();
 
         try {
@@ -169,6 +182,7 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
             DetachedCriteria userCriteria = DetachedCriteria.forClass(User.class);
             userCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             DetachedCriteria permissionCriteria = userCriteria.createCriteria("permissions");
+
             permissionCriteria.add(Restrictions.in("permissionType", permissionTypes));
             permissionCriteria.add(Restrictions.eq("project.id", projectID));
 
@@ -188,7 +202,7 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
 
     }
 
-    private boolean hasAllPermissions(Collection<Permission> permissions, Integer[] required) {
+    private boolean hasAllPermissions(Collection<Permission> permissions, PermissionType[] required) {
         if (null == required || required.length == 0) {
             return true;
         }
@@ -196,8 +210,8 @@ public class UserDAOImpl extends BaseHibernateDAOImpl<User> implements UserDAO {
             return false;
         }
 
-        Collection<Integer> requiredPermissions = Arrays.asList(required);
-        Collection<Integer> userPermissionTypes = new HashSet<Integer>(permissions.size());
+        Collection<PermissionType> requiredPermissions = Arrays.asList(required);
+        Collection<PermissionType> userPermissionTypes = new HashSet<>(permissions.size());
 
         Iterator<Permission> permsIt = permissions.iterator();
         while (permsIt.hasNext()) {

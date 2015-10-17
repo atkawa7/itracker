@@ -141,9 +141,9 @@ public class MoveIssueFormAction extends ItrackerBaseAction {
             if (projects.get(i).getId() != null
                     && !projects.get(i).equals(issue.getProject())) {
                 if (UserUtilities.hasPermission(userPermissions,
-                        projects.get(i).getId(), new int[]{
-                        UserUtilities.PERMISSION_EDIT,
-                        UserUtilities.PERMISSION_CREATE})) {
+                        projects.get(i).getId(), new PermissionType[]{
+                        PermissionType.ISSUE_EDIT_ALL,
+                        PermissionType.ISSUE_CREATE})) {
                     availableProjects.add(projects.get(i));
                 }
             }

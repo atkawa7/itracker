@@ -51,7 +51,7 @@ public class PermissionDAOImplIT extends AbstractDependencyInjectionTest {
         assertNotNull(foundPermission);
         assertNotNull(foundUser);
         assertNotNull(foundProject);
-        assertEquals(2, foundPermission.getPermissionType().intValue());
+        assertEquals(Integer.valueOf(2), foundPermission.getPermissionType().getCode());
         assertEquals("admin_test1", foundUser.getLogin());
         assertEquals("test_name", foundProject.getName());
 

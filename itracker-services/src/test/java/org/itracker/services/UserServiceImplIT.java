@@ -47,9 +47,9 @@ public class UserServiceImplIT extends AbstractServicesIntegrationTest {
         User user = userDAO.findByPrimaryKey(userId);
 
         List<Permission> assertedPermissions = new ArrayList<Permission>();
-        assertedPermissions.add(new Permission(1, user, project));
-        assertedPermissions.add(new Permission(2, user, project));
-        assertedPermissions.add(new Permission(3, user, project));
+        assertedPermissions.add(new Permission(PermissionType.valueOf(1), user, project));
+        assertedPermissions.add(new Permission(PermissionType.valueOf(2), user, project));
+        assertedPermissions.add(new Permission(PermissionType.valueOf(3), user, project));
 
         currentPermissions = userService.getPermissionsByUserId(userId);
         assertEquals(assertedPermissions.get(0).getProject().getName(),
@@ -96,7 +96,7 @@ public class UserServiceImplIT extends AbstractServicesIntegrationTest {
 
         Project project = projectDAO.findByPrimaryKey(projectId);
 
-        Permission permission = new Permission(UserUtilities.PERMISSION_CLOSE, user, project);
+        Permission permission = new Permission(PermissionType.ISSUE_CLOSE, user, project);
         permission.setCreateDate(new Date());
         permission.setLastModifiedDate(new Date());
 
@@ -120,7 +120,7 @@ public class UserServiceImplIT extends AbstractServicesIntegrationTest {
 
         Project project = projectDAO.findByPrimaryKey(projectId);
 
-        Permission permission = new Permission(4, user, project);
+        Permission permission = new Permission(PermissionType.valueOf(4), user, project);
         permission.setCreateDate(new Date());
         permission.setLastModifiedDate(new Date());
 
@@ -134,7 +134,7 @@ public class UserServiceImplIT extends AbstractServicesIntegrationTest {
         newPermissions.clear();
         userService.setUserPermissions(userId, newPermissions);
 
-        permission = new Permission(7, user, project);
+        permission = new Permission(PermissionType.valueOf(7), user, project);
 //        permission.setCreateDate(new Date());
 //        permission.setLastModifiedDate(new Date());
 
@@ -146,7 +146,7 @@ public class UserServiceImplIT extends AbstractServicesIntegrationTest {
         while (it.hasNext()) {
             Permission permission2 = (Permission) it.next();
             assertNotNull(permission2);
-            if (permission2.getPermissionType() == 7) {
+            if (permission2.getPermissionType().getCode() == 7) {
                 contains7 = true;
             }
         }
@@ -346,8 +346,8 @@ public class UserServiceImplIT extends AbstractServicesIntegrationTest {
         p1.setProject(proj1);
         p2.setProject(proj1);
 
-        p1.setPermissionType(1);
-        p2.setPermissionType(2);
+        p1.setPermissionType(PermissionType.valueOf(1));
+        p2.setPermissionType(PermissionType.valueOf(2));
         assertEquals(1, userService.getPermissionsByUserId(2).size());
 
         added = userService.addUserPermissions(2, permissions);
@@ -384,7 +384,8 @@ public class UserServiceImplIT extends AbstractServicesIntegrationTest {
     @Test
     public void testGetUsersWithAnyProjectPermission() {
 
-        List<User> users = userService.getUsersWithAnyProjectPermission(2, new int[]{1});
+        List<User> users = userService.getUsersWithAnyProjectPermission(2,
+                PermissionType.valueOf(new int[]{1}));
         assertNotNull(users);
         assertEquals("user 2,3", 2, users.size());
         assertTrue("user 2,3", users.get(0).getId() == 2 || users.get(0).getId() == 3);

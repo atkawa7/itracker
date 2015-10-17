@@ -24,10 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
-import org.itracker.model.Configuration;
-import org.itracker.model.Project;
-import org.itracker.model.ProjectScript;
-import org.itracker.model.WorkflowScript;
+import org.itracker.model.*;
 import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ProjectService;
@@ -54,7 +51,7 @@ public class EditProjectScriptAction extends ItrackerBaseAction {
 
         ActionMessages errors = new ActionMessages();
 
-        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
+        if (!LoginUtilities.hasPermission(PermissionType.USER_ADMIN, request, response)) {
             return mapping.findForward("unauthorized");
         }
 

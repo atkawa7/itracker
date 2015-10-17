@@ -5,7 +5,7 @@
 <tiles-definitions>
 
 
-    <definition name="mainLayout" path="/themes/defaulttheme/defaultlayout.jsp">
+    <definition name="mainLayout" template="/themes/defaulttheme/defaultlayout.jsp">
         <put name="title" type="string" value="iTracker"/>
         <put name="pageTitleKey" type="string" value="itracker.web.index.title" />
         <put name="pageTitleArg" type="string" value="" />

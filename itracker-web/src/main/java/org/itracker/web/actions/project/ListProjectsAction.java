@@ -31,14 +31,14 @@ public class ListProjectsAction extends ItrackerBaseAction {
 	 * @return
 	 */
 	protected static List<ProjectPTO> getAllPTOs(ProjectService projectService,
-			int[] permissionFlags,
+			PermissionType[] permissionFlags,
 			final Map<Integer, Set<PermissionType>> permissions) {
 		List<Project> projects = projectService.getAllProjects();
 
 		ArrayList<Project> projects_tmp = new ArrayList<Project>(projects);
 		Iterator<Project> projectIt = projects.iterator();
 		while (projectIt.hasNext()) {
-			Project project = (Project) projectIt.next();
+			Project project = projectIt.next();
 			if (!UserUtilities.hasPermission(permissions, project.getId(),
 					permissionFlags)) {
 				projects_tmp.remove(project);
@@ -48,7 +48,7 @@ public class ListProjectsAction extends ItrackerBaseAction {
 		projects = projects_tmp;
 		Collections.sort(projects, new Project.ProjectComparator());
 
-		ArrayList<ProjectPTO> ptos = new ArrayList<ProjectPTO>(projects_tmp
+		ArrayList<ProjectPTO> ptos = new ArrayList<>(projects_tmp
 				.size());
 
 		projectIt = projects.iterator();
@@ -61,16 +61,8 @@ public class ListProjectsAction extends ItrackerBaseAction {
 		return ptos;
 	}
 
-	/**
-	 * returns PTOs of all AVAILABLE projects, ensured permissions are set.
-	 * 
-	 * @param projectService
-	 * @param permissionFlags
-	 * @param permissions
-	 * @return
-	 */
 	protected static List<ProjectPTO> getPTOs(ProjectService projectService,
-			int[] permissionFlags,
+			PermissionType[] permissionFlags,
 			final Map<Integer, Set<PermissionType>> permissions) {
 		List<Project> projects = projectService.getAllAvailableProjects();
 
@@ -110,10 +102,11 @@ public class ListProjectsAction extends ItrackerBaseAction {
 		ProjectService projectService = ServletContextUtils.getItrackerServices()
 				.getProjectService();
 
-		request.setAttribute("projects", getPTOs(projectService, new int[] {
-				UserUtilities.PERMISSION_VIEW_ALL,
-				UserUtilities.PERMISSION_VIEW_USERS }, permissions));
+		request.setAttribute("projects", getPTOs(projectService, new PermissionType[] {
+				PermissionType.ISSUE_VIEW_ALL,
+				PermissionType.ISSUE_VIEW_USERS }, permissions));
 
+		// TODO add a secure token to feed-URL
         request.setAttribute("rssFeed", "/servlets/issues/");
 
 		String pageTitleKey = "itracker.web.listprojects.title";
@@ -126,35 +119,35 @@ public class ListProjectsAction extends ItrackerBaseAction {
 		return mapping.findForward("list_projects");
 	}
 
-//	private static final void setupNumberOfIssues(ProjectPTO pto,
-//			ProjectService service) {
-//		pto.setTotalNumberIssues(service.getTotalNumberIssuesByProject(pto
-//				.getId()));
-//	}
-//
-//	private static final void setupNumberOfOpenIssues(ProjectPTO pto,
-//			ProjectService service) {
-//		pto.setTotalOpenIssues(service.getTotalNumberOpenIssuesByProject(pto
-//				.getId()));
-//	}
-//
-//	private static final void setupNumberOfResolvedIssues(ProjectPTO pto,
-//			ProjectService service) {
-//		pto.setTotalResolvedIssues(service
-//				.getTotalNumberResolvedIssuesByProject(pto.getId()));
-//	}
-//
-//	private static final void setupCanCreate(ProjectPTO pto,
-//			final Map<Integer, Set<PermissionType>> permissions) {
-//		pto.setCanCreate(UserUtilities.hasPermission(permissions, pto.getId(),
-//				UserUtilities.PERMISSION_CREATE));
-//	}
-//
-//	private static final void setupLastIssueUpdateDate(ProjectPTO pto,
-//			ProjectService service) {
-//		pto.setLastUpdatedIssueDate(service
-//				.getLatestIssueUpdatedDateByProjectId(pto.getId()));
-//	}
+	private static void setupNumberOfIssues(ProjectPTO pto,
+			ProjectService service) {
+		pto.setTotalNumberIssues(service.getTotalNumberIssuesByProject(pto
+				.getId()));
+	}
+
+	private static void setupNumberOfOpenIssues(ProjectPTO pto,
+			ProjectService service) {
+		pto.setTotalOpenIssues(service.getTotalNumberOpenIssuesByProject(pto
+				.getId()));
+	}
+
+	private static void setupNumberOfResolvedIssues(ProjectPTO pto,
+			ProjectService service) {
+		pto.setTotalResolvedIssues(service
+				.getTotalNumberResolvedIssuesByProject(pto.getId()));
+	}
+
+	private static void setupCanCreate(ProjectPTO pto,
+			final Map<Integer, Set<PermissionType>> permissions) {
+		pto.setCanCreate(UserUtilities.hasPermission(permissions, pto.getId(),
+				PermissionType.ISSUE_CREATE));
+	}
+
+	private static void setupLastIssueUpdateDate(ProjectPTO pto,
+			ProjectService service) {
+		pto.setLastUpdatedIssueDate(service
+				.getLatestIssueUpdatedDateByProjectId(pto.getId()));
+	}
 
 	/**
 	 * 
@@ -166,29 +159,24 @@ public class ListProjectsAction extends ItrackerBaseAction {
 	 *            - project-service
 	 * @param permissions
 	 *            - users permissions
-	 * @param stats
-	 *            - if true, additional stats will be generated
-	 *            (performance-problem):
-	 *            <ul>
-	 *            <li>no. open issues</li>
-	 *            <li>no. closed issues</li>
-	 *            <li>lasst updated issues updated-date</li>
-	 *            </ul>
+
 	 * @return
 	 */
-	private static final ProjectPTO createProjectPTO(Project project,
+	private static ProjectPTO createProjectPTO(Project project,
 			ProjectService projectService,
 			final Map<Integer, Set<PermissionType>> permissions) {
-		ProjectPTO pto = new ProjectPTO(project, projectService, permissions);
-//		if (stats) {
-//			setupNumberOfOpenIssues(pto, projectService);
-//			setupNumberOfResolvedIssues(pto, projectService);
-//			setupLastIssueUpdateDate(pto, projectService);
-//		} else {
-//			// just add a total-numbers issuess
-//			setupNumberOfIssues(pto, projectService);
-//		}
-//		setupCanCreate(pto, permissions);
+		ProjectPTO pto = new ProjectPTO();
+		pto.setCreateDate(project.getCreateDate());
+		pto.setModifiedDate(project.getLastModifiedDate());
+		pto.setId(project.getId());
+		pto.setDescription(project.getDescription());
+		pto.setName(project.getName());
+		pto.setStatus(project.getStatus());
+		setupCanCreate(pto, permissions);
+		setupLastIssueUpdateDate(pto, projectService);
+		setupNumberOfIssues(pto, projectService);
+		setupNumberOfOpenIssues(pto, projectService);
+		setupNumberOfResolvedIssues(pto, projectService);
 		return pto;
 	}
 }

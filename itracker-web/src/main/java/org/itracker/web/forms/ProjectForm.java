@@ -98,7 +98,7 @@ public class ProjectForm extends ValidatorForm {
 
         Set<User> owners = new TreeSet<User>(User.NAME_COMPARATOR);
         if (!project.isNew()) {
-            owners.addAll(userService.getUsersWithProjectPermission(project.getId(), UserUtilities.PERMISSION_VIEW_ALL));
+            owners.addAll(userService.getUsersWithProjectPermission(project.getId(), PermissionType.ISSUE_VIEW_ALL));
         } else {
             owners.addAll(userService.getSuperUsers());
         }
@@ -106,7 +106,7 @@ public class ProjectForm extends ValidatorForm {
         request.setAttribute("owners", owners);
 
         boolean allowPermissionUpdateOption = allowPermissionUpdate == null ? false
-                : allowPermissionUpdate && UserUtilities.hasPermission(permissions, new Integer(-1), UserUtilities.PERMISSION_USER_ADMIN);
+                : allowPermissionUpdate && UserUtilities.hasPermission(permissions, new Integer(-1), PermissionType.USER_ADMIN);
         request.setAttribute("allowPermissionUpdateOption", allowPermissionUpdateOption);
 
         if (project.isNew()) {

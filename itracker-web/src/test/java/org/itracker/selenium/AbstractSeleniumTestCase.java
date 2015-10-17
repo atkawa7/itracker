@@ -106,8 +106,7 @@ public abstract class AbstractSeleniumTestCase
         assertElementPresent(By.name("password")).sendKeys(password);
         assertElementPresent(By.xpath("//*[@value='Login']")).click();
         waitForPageToLoad();
-
-        assertNotNull("Login failed: 'itracker' Cookie was not found", driver.manage().getCookieNamed("itracker"));
+        assertElementPresent(By.name("lookupForm"));
 
         log.debug("loginUser, logged in " + username + ", cookies: " + driver.manage().getCookies());
     }

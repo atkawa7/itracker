@@ -1,6 +1,7 @@
 package org.itracker.persistence.dao;
 
 import org.itracker.model.Permission;
+import org.itracker.model.PermissionType;
 
 import java.util.List;
 
@@ -23,6 +24,10 @@ public interface PermissionDAO extends BaseDAO<Permission> {
      * @param permissionType type of permissions to return
      * @return list of permissions, in unspecified order
      */
+
+    List<Permission> findByProjectIdAndPermission(Integer projectId,
+                                                  PermissionType permissionType);
+    @Deprecated
     List<Permission> findByProjectIdAndPermission(Integer projectId,
                                                   int permissionType);
 

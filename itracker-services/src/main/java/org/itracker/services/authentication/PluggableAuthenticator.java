@@ -19,6 +19,7 @@
 package org.itracker.services.authentication;
 
 import org.itracker.model.Permission;
+import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 import org.itracker.services.exceptions.AuthenticatorException;
 
@@ -72,6 +73,25 @@ public interface PluggableAuthenticator {
      * @return an array of UserModels
      * @throws AuthenticatorException an error occurs
      */
+    List<User> getUsersWithProjectPermission(Integer projectId,
+                                             PermissionType[] permissionTypes, boolean requireAll,
+                                             boolean activeOnly, int reqSource)
+            throws AuthenticatorException;
+
+    /**
+     * This method should return an array of users that have certain permissions in the
+     * authentication system.  This list must always include all super users, even if they
+     * do not explicitly have the required permission.
+     *
+     * @param projectId       id of the project on which the users return have permissions
+     * @param permissionTypes types of permissions required
+     * @param requireAll      true is the user must possess any of the permissions, false if only one is required
+     * @param activeOnly      true if only users listed as active should be returned
+     * @param reqSource       the source of the request (eg web, api)
+     * @return an array of UserModels
+     * @throws AuthenticatorException an error occurs
+     */
+    @Deprecated
     List<User> getUsersWithProjectPermission(Integer projectId,
                                              int[] permissionTypes, boolean requireAll,
                                              boolean activeOnly, int reqSource)

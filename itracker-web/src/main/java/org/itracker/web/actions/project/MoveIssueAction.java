@@ -142,7 +142,7 @@ public class MoveIssueAction extends ItrackerBaseAction {
             log.debug("User not authorized to move issue " + issue.getProject().getId());
             return false;
         }
-        if (!UserUtilities.hasPermission(userPermissions, issue.getProject().getId(), new int[]{UserUtilities.PERMISSION_EDIT, UserUtilities.PERMISSION_CREATE})) {
+        if (!UserUtilities.hasPermission(userPermissions, issue.getProject().getId(), new PermissionType[]{PermissionType.ISSUE_EDIT_ALL, PermissionType.ISSUE_CREATE})) {
             log.debug("User attempted to move issue " + issue.getId() + " to unauthorized project.");
             return false;
         }

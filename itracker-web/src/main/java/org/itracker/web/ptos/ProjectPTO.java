@@ -2,39 +2,30 @@ package org.itracker.web.ptos;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.itracker.model.PermissionType;
-import org.itracker.model.Project;
 import org.itracker.model.Status;
 import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ProjectService;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
 public class ProjectPTO {
 
-    private final Project project;
-
     private Long totalOpenIssues = null;
     private Long totalResolvedIssues = null;
     private Date lastUpdatedIssueDate = null;
     private Boolean canCreate = null;
+    private Date createDate;
+    private Boolean viewable;
+    private String description;
+    private Integer id;
+    private Date modifiedDate;
+    private Status status;
+    private String name;
 
-    private final ProjectService projectService;
-    private final Map<Integer, Set<PermissionType>> permissions;
 
-    public ProjectPTO(Project project, ProjectService projectService, final Map<Integer, Set<PermissionType>> permissions) {
-        if (null == project) {
-            throw new IllegalArgumentException("Project must not be null");
-        }
-        this.project = project;
-        this.projectService = projectService;
-        this.permissions = Collections.unmodifiableMap(permissions);
-    }
-
-    public Project getProject() {
-        return project;
+    public ProjectPTO() {
     }
 
     public Long getTotalNumberIssues() {
@@ -51,9 +42,6 @@ public class ProjectPTO {
     }
 
     public Long getTotalOpenIssues() {
-        if (null == totalOpenIssues) {
-            setupNumberOfOpenIssues(this, projectService);
-        }
         return totalOpenIssues;
     }
 
@@ -62,9 +50,6 @@ public class ProjectPTO {
     }
 
     public Long getTotalResolvedIssues() {
-        if (null == totalResolvedIssues) {
-            setupNumberOfResolvedIssues(this, projectService);
-        }
         return totalResolvedIssues;
     }
 
@@ -72,42 +57,42 @@ public class ProjectPTO {
      * @see org.itracker.model.AbstractEntity#getCreateDate()
      */
     public Date getCreateDate() {
-        return project.getCreateDate();
+        return createDate;
     }
 
     /**
      * @see org.itracker.model.Project#getDescription()
      */
     public String getDescription() {
-        return project.getDescription();
+        return description;
     }
 
     /**
      * @see org.itracker.model.AbstractEntity#getId()
      */
     public Integer getId() {
-        return project.getId();
+        return id;
     }
 
     /**
      * @see org.itracker.model.AbstractEntity#getLastModifiedDate()
      */
     public Date getLastModifiedDate() {
-        return project.getLastModifiedDate();
+        return modifiedDate;
     }
 
     /**
      * @see org.itracker.model.Project#getName()
      */
     public String getName() {
-        return project.getName();
+        return name;
     }
 
     /**
      * @see org.itracker.model.Project#getStatus()
      */
     public Status getStatus() {
-        return project.getStatus();
+        return this.status;
     }
 
     public Boolean getActive() {
@@ -119,7 +104,7 @@ public class ProjectPTO {
     }
 
     public Boolean getViewable() {
-        return getProject().getStatus() == Status.VIEWABLE;
+        return viewable;
     }
 
     public Boolean isViewable() {
@@ -127,9 +112,6 @@ public class ProjectPTO {
     }
 
     public Boolean getCanCreate() {
-        if (null == this.canCreate) {
-            setupCanCreate(this, permissions);
-        }
         return this.canCreate;
     }
 
@@ -143,9 +125,6 @@ public class ProjectPTO {
 
 
     public void setLastUpdatedIssueDate(Date lastUpdatedIssueDate) {
-        if (null == lastUpdatedIssueDate) {
-            setupLastIssueUpdateDate(this, projectService);
-        }
         this.lastUpdatedIssueDate = lastUpdatedIssueDate;
     }
 
@@ -155,39 +134,34 @@ public class ProjectPTO {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("project", getProject()).toString();
+        return new ToStringBuilder(this).append(getName()).toString();
     }
 
-    //TODO: Code Cleanup: this method is not used and I don't like the name (what does setup stand for?)
-    //TODO: Decide if this code is really needed and document for what
-    @SuppressWarnings("unused")
-    private static final void setupNumberOfIssues(ProjectPTO pto,
-                                                  ProjectService service) {
-        pto.setTotalNumberIssues(service.getTotalNumberIssuesByProject(pto
-                .getId()));
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
-    private static final void setupNumberOfOpenIssues(ProjectPTO pto,
-                                                      ProjectService service) {
-        pto.setTotalOpenIssues(service.getTotalNumberOpenIssuesByProject(pto
-                .getId()));
+    public void setViewable(Boolean viewable) {
+        this.viewable = viewable;
     }
 
-    private static final void setupNumberOfResolvedIssues(ProjectPTO pto,
-                                                          ProjectService service) {
-        pto.setTotalResolvedIssues(service
-                .getTotalNumberResolvedIssuesByProject(pto.getId()));
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    private static final void setupCanCreate(ProjectPTO pto,
-                                             final Map<Integer, Set<PermissionType>> permissions) {
-        pto.setCanCreate(UserUtilities.hasPermission(permissions, pto.getId(),
-                UserUtilities.PERMISSION_CREATE));
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    private static final void setupLastIssueUpdateDate(ProjectPTO pto,
-                                                       ProjectService service) {
-        pto.setLastUpdatedIssueDate(service
-                .getLatestIssueUpdatedDateByProjectId(pto.getId()));
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

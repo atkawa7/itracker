@@ -4,6 +4,7 @@ import org.itracker.model.*;
 import org.itracker.model.util.UserUtilities;
 import org.itracker.services.IssueService;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -50,6 +51,7 @@ public class IssueNavigationUtilTest {
         final HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getSession()).thenReturn(session);
         when(req.getAttribute("currUser")).thenReturn(admin);
+        when(req.getRemoteUser()).thenReturn(admin.getLogin());
         when(req.getParameter("caller")).thenReturn(null);
 
         final IssueService svc = mock(IssueService.class);
@@ -139,6 +141,7 @@ public class IssueNavigationUtilTest {
         final HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getSession()).thenReturn(session);
         when(req.getAttribute("currUser")).thenReturn(admin);
+        when(req.getRemoteUser()).thenReturn(admin.getLogin());
         when(req.getParameter("caller")).thenReturn("index");
 
         final IssueService svc = mock(IssueService.class);
@@ -192,6 +195,7 @@ public class IssueNavigationUtilTest {
         final HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getSession()).thenReturn(session);
         when(req.getAttribute("currUser")).thenReturn(admin);
+        when(req.getRemoteUser()).thenReturn(admin.getLogin());
         when(req.getParameter("caller")).thenReturn("searchissue");
 
         final IssueService  svc = null;
@@ -247,6 +251,7 @@ public class IssueNavigationUtilTest {
         final HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getSession()).thenReturn(session);
         when(req.getAttribute("currUser")).thenReturn(admin);
+        when(req.getRemoteUser()).thenReturn(null);
         when(req.getParameter("caller")).thenReturn("searchissue");
 
         final IssueService  svc = null;
@@ -288,7 +293,7 @@ public class IssueNavigationUtilTest {
         admin.setLogin("admin_123");
         admin.setId(193);
         final Set<Permission> permissions = new HashSet<>();
-        permissions.add(new Permission(UserUtilities.PERMISSION_USER_ADMIN, admin));
+        permissions.add(new Permission(PermissionType.USER_ADMIN, admin));
         admin.setPermissions(permissions);
         admin.setPreferences(new UserPreferences());
         Set<PermissionType> permissionsSet = new HashSet<>();

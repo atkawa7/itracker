@@ -508,11 +508,11 @@ public class UserUtilitiesIT extends AbstractDependencyInjectionTest {
         assertTrue("UserUtilities.hasPermission(permissionMap, " +
                 "PERMISSION_PRODUCT_ADMIN)",
                 UserUtilities.hasPermission(permissionMap,
-                        UserUtilities.PERMISSION_PRODUCT_ADMIN));
+                        PermissionType.valueOf(UserUtilities.PERMISSION_PRODUCT_ADMIN)));
         assertFalse("UserUtilities.hasPermission(permissionMap, " +
                 "PERMISSION_ASSIGN_SELF)",
                 UserUtilities.hasPermission(permissionMap,
-                        UserUtilities.PERMISSION_ASSIGN_SELF));
+                        PermissionType.valueOf(UserUtilities.PERMISSION_ASSIGN_SELF)));
     }
 
     /**
@@ -529,18 +529,18 @@ public class UserUtilitiesIT extends AbstractDependencyInjectionTest {
         assertTrue("UserUtilities.hasPermission(permissionMap, " +
                 "{PERMISSION_PRODUCT_ADMIN})",
                 UserUtilities.hasPermission(permissionMap,
-                        new int[]{
-                                UserUtilities.PERMISSION_PRODUCT_ADMIN
+                        new PermissionType[]{
+                                PermissionType.valueOf(UserUtilities.PERMISSION_PRODUCT_ADMIN)
                         }));
         assertTrue("UserUtilities.hasPermission(permissionMap, " +
                 "{PERMISSION_USER_ADMIN, " +
                 "PERMISSION_PRODUCT_ADMIN, " +
                 "PERMISSION_CLOSE}",
                 UserUtilities.hasPermission(permissionMap,
-                        new int[]{
-                                UserUtilities.PERMISSION_USER_ADMIN,
-                                UserUtilities.PERMISSION_PRODUCT_ADMIN,
-                                UserUtilities.PERMISSION_CLOSE
+                        new PermissionType[]{
+                                PermissionType.valueOf(UserUtilities.PERMISSION_USER_ADMIN),
+                                PermissionType.valueOf(UserUtilities.PERMISSION_PRODUCT_ADMIN),
+                                PermissionType.valueOf(UserUtilities.PERMISSION_CLOSE)
                         }));
     }
 
@@ -556,11 +556,11 @@ public class UserUtilitiesIT extends AbstractDependencyInjectionTest {
         permissionMap.put(10, permissions);
         permissions.add(PermissionType.PRODUCT_ADMIN);
         assertTrue(UserUtilities.hasPermission(permissionMap, 10,
-                UserUtilities.PERMISSION_PRODUCT_ADMIN));
+                PermissionType.PRODUCT_ADMIN));
         assertFalse(UserUtilities.hasPermission(permissionMap, 11,
-                UserUtilities.PERMISSION_PRODUCT_ADMIN));
+                PermissionType.PRODUCT_ADMIN));
         assertFalse(UserUtilities.hasPermission(permissionMap, 10,
-                UserUtilities.PERMISSION_ASSIGNABLE));
+                PermissionType.ISSUE_ASSIGNABLE));
     }
 
     @Override

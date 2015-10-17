@@ -85,6 +85,10 @@ public interface UserDAO extends BaseDAO<User> {
      * @param permissionTypes array of permission types
      * @return users having the required permissions
      */
+
+    List<User> findUsersForProjectByAllPermissionTypeList(Integer projectID, PermissionType[] permissionTypes);
+
+    @Deprecated
     List<User> findUsersForProjectByAllPermissionTypeList(Integer projectID, Integer[] permissionTypes);
 
 }

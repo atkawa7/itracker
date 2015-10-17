@@ -73,9 +73,6 @@ public class EditReportAction extends ItrackerBaseAction {
         try {
 
             Map<Integer, Set<PermissionType>> userPermissionsMap = RequestHelper.getUserPermissions(session);
-            if (!UserUtilities.hasPermission(userPermissionsMap, UserUtilities.PERMISSION_USER_ADMIN)) {
-                return mapping.findForward("unauthorized");
-            }
 
             if (null != reportForm.getId() && reportForm.getId() != -1) {
                 // TODO cleanup the service.

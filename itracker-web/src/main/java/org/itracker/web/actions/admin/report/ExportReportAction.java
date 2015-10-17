@@ -46,10 +46,6 @@ public class ExportReportAction extends ItrackerBaseAction {
         String pageTitleKey = "";
         String pageTitleArg = "";
 
-        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
-            return mapping.findForward("unauthorized");
-        }
-
         try {
             Integer reportId = new Integer((request.getParameter("id") == null ? "-1" : request.getParameter("id")));
             if (reportId == null || reportId.intValue() < 0) {

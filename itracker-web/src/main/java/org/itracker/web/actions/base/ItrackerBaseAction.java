@@ -63,6 +63,13 @@ public abstract class ItrackerBaseAction extends Action {
     /**
      * @deprecated moved to {@link org.itracker.web.util.LoginUtilities}
      */
+    protected boolean hasPermission(PermissionType permissionNeeded,
+                                    HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        return LoginUtilities.hasPermission(permissionNeeded, request, response);
+    }
+
+    @Deprecated
     protected boolean hasPermission(int permissionNeeded,
                                     HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {

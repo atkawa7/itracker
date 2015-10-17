@@ -39,10 +39,6 @@ public class LockUserAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
-            return mapping.findForward("unauthorized");
-        }
-
         try {
             UserService userService = ServletContextUtils.getItrackerServices().getUserService();
 

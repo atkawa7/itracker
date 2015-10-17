@@ -2,12 +2,9 @@ package org.itracker.web.filters;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
-import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.PermissionType;
-import org.itracker.model.User;
 import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ITrackerServices;
@@ -16,10 +13,10 @@ import org.itracker.web.util.*;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Configurations:
@@ -37,39 +34,20 @@ public class ExecuteAlwaysFilter implements Filter {
      */
     private static final Logger log = Logger
             .getLogger(ExecuteAlwaysFilter.class);
-    private static final String DEFAULT_LOGIN_FORWARD = "/login.do";
-    /**
-     * Name for session key for forward after successful authentication.
-     */
-    private static final String SES_KEY_REDIRECT_ON_SUCCESS = ExecuteAlwaysFilter.class
-            .getName()
-            + "/REDIRECT_ON_SUCCESS";
 
     private ITrackerServices iTrackerServices;
-    /**
-     * this match paths which are not protected
-     */
-    private Set<Pattern> unprotectedPatterns = null;
 
-    private String loginForwardPath;
 
     public void destroy() {
-        this.unprotectedPatterns = null;
     }
 
     public void doFilter(ServletRequest servletRequest,
                          ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
-        if (null == this.unprotectedPatterns) {
-            RuntimeException re = new IllegalStateException(
-                    "Filter has not been initialized yet.");
-            log.error("doFilter: failed, not initialized", re);
-            throw re;
-        }
 
         if (!(servletRequest instanceof HttpServletRequest)) {
             RuntimeException re = new IllegalArgumentException(
-                    "Usupported servlet-request of type: "
+                    "Unsupported servlet-request of type: "
                             + servletRequest.getClass().getName());
             log.error("doFilter: failed, invalid request type", re);
             throw re;
@@ -88,109 +66,23 @@ public class ExecuteAlwaysFilter implements Filter {
             log
                     .debug("doFilter: setting the common request attributes, (coming from the former header.jsp)");
         }
-        ConfigurationService configurationService = getITrackerServices()
-                .getConfigurationService();
 
-        boolean protect = isProtected(path, this.unprotectedPatterns);
-
-        // do not protect the login-page itself.
-        if (protect && this.loginForwardPath.equals(path)) {
-            protect = false;
+        setupCommonReqAttributes(request, ServletContextUtils.getItrackerServices().getConfigurationService());
+        if (SessionManager.getSessionNeedsReset(request.getRemoteUser())) {
+            // logout and go to login
+            request.getSession().invalidate();
+            ((HttpServletResponse) response).sendRedirect(request.getContextPath());
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("doFilter: protecting '" + path + "': " + protect);
-        }
-
-
-        User currUser = LoginUtilities.getCurrentUser(request);
-
-        if (null != currUser && this.loginForwardPath.equals(path)) {
-            redirectToOnLoginSuccess(request, (HttpServletResponse) response);
-        }
-
-
-        if (null == currUser && protect) {
-//			check for autologin
-            if (LoginUtilities.checkAutoLogin(request, configurationService.getBooleanProperty(
-                    "allow_save_login", true))) {
-
-                String login = String.valueOf(request.getAttribute(Constants.AUTH_LOGIN_KEY));
-                currUser = LoginUtilities.setupSession(login, request, (HttpServletResponse) response);
-
-                try {
-                    SessionManager.createSession(login);
-                } catch (Exception e) {
-                    handleError(e, request, response);
-                }
-
-            }
-        }
-
-        setupCommonReqAttributes(request, configurationService);
-
-        if (null != currUser) {
-            if (log.isDebugEnabled()) {
-                log.debug("doFilter: found user in session");
-            }
-            String currLogin = currUser.getLogin();
-
-            log.info("Login found...: " + currLogin);
-            if (SessionManager.getSessionNeedsReset(currLogin)) {
-                // RESET THE SESSION STUFF
-                HttpSession session = request.getSession();
-                log.info("Resetting the Session stuff...");
-                session.removeAttribute(Constants.USER_KEY);
-                session.removeAttribute(Constants.PERMISSIONS_KEY);
-                currUser = null;
-                String newLogin = SessionManager.checkRenamedLogin(currLogin);
-                if (response instanceof HttpServletResponse) {
-                    currUser = LoginUtilities.setupSession((newLogin == null ? currLogin
-                            : newLogin), request, (HttpServletResponse) response);
-                }
-                SessionManager.removeRenamedLogin(currLogin);
-                if (currUser == null
-                        || currUser.getStatus() != UserUtilities.STATUS_ACTIVE) {
-                    ActionMessages errors = new ActionMessages();
-                    errors.add(ActionMessages.GLOBAL_MESSAGE,
-                            new ActionMessage(
-                                    "itracker.web.error.login.inactive"));
-                    saveErrors(request, errors);
-//					request.setAttribute(Globals.ERROR_KEY, errors);
-
-                    log.info("doFilter: forwarding to login");
-                    forwardToLogin(path
-                            + (request.getQueryString() != null ? "?"
-                            + request.getQueryString() : ""), request,
-                            (HttpServletResponse) response);
-                }
-            }
-
-            request.setAttribute("currLogin", currLogin);
-        } else if (!protect) {
-            // request.setAttribute("permissions", permissions);
-            // TODO: itracker.web.generic.unknown for unknown user?
-            request.setAttribute("currLogin", ITrackerResources
-                    .getString("itracker.web.header.guest"));
-        } else {
-            // unauthenticated.. forward to login
-            log.info("doFilter: forwarding to login");
-            forwardToLogin(path
-                    + (request.getQueryString() != null ? "?"
-                    + request.getQueryString() : ""), request,
-                    (HttpServletResponse) response);
-            return;
-        }
         setupCommonReqAttributesEx(request);
+
         try {
-            if (log.isDebugEnabled()) {
-                log.info("doFilter: executing chain..");
-            }
+            log.info("doFilter: executing chain..");
+
             chain.doFilter(request, response);
 
-            if (log.isDebugEnabled()) {
-                log.info("doFilter: completed chain execution.");
-            }
+            log.info("doFilter: completed chain execution.");
+
         } catch (RuntimeException e) {
             log.error(
                     "doFilter: failed to execute chain with runtime exception: "
@@ -215,11 +107,11 @@ public class ExecuteAlwaysFilter implements Filter {
         }
     }
 
-    private final void handleError(Throwable error, ServletRequest request, ServletResponse response) throws ServletException {
+    private static void handleError(Throwable error, ServletRequest request, ServletResponse response) throws ServletException {
 
         if (null == error) {
             log.info("handleError: called with null throwable");
-            error = new RuntimeException(error);
+            throw new IllegalArgumentException("null error");
         }
 
         log.info("handleError: called with " + error.getClass().getSimpleName(), error);
@@ -238,11 +130,9 @@ public class ExecuteAlwaysFilter implements Filter {
 
         saveErrors((HttpServletRequest) request, errors);
         try {
-//			response.sendError(500, "Internal Server Error");
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/error.do");
         } catch (IOException e) {
             log.fatal("handleError: failed to redirect to error-page");
-            return;
         }
     }
 
@@ -256,7 +146,7 @@ public class ExecuteAlwaysFilter implements Filter {
      * @param errors  Error messages object
      * @since Struts 1.2
      */
-    protected void saveErrors(HttpServletRequest request, ActionMessages errors) {
+    protected static void saveErrors(HttpServletRequest request, ActionMessages errors) {
 
         // Remove any error messages attribute if none are required
         if ((errors == null) || errors.isEmpty()) {
@@ -275,7 +165,7 @@ public class ExecuteAlwaysFilter implements Filter {
     }
 
 
-    private static final void setupCommonReqAttributes(
+    private static void setupCommonReqAttributes(
             HttpServletRequest request,
             ConfigurationService configurationService) {
         boolean allowForgotPassword = true;
@@ -307,11 +197,9 @@ public class ExecuteAlwaysFilter implements Filter {
                     + ":" + request.getServerPort() + request.getContextPath();
             log.warn("setupCommonReqAttributes: not found system_base_url configuration, setting from request: " + baseURL);
         }
-        request.setAttribute("allowForgotPassword", Boolean
-                .valueOf(allowForgotPassword));
-        request.setAttribute("allowSelfRegister", Boolean
-                .valueOf(allowSelfRegister));
-        request.setAttribute("allowSaveLogin", Boolean.valueOf(allowSaveLogin));
+        request.setAttribute("allowForgotPassword", allowForgotPassword);
+        request.setAttribute("allowSelfRegister", allowSelfRegister);
+        request.setAttribute("allowSaveLogin", allowSaveLogin);
         request.setAttribute("siteLogo", siteLogo);
         request.setAttribute("siteTitle", siteTitle);
         request.setAttribute("baseURL", baseURL);
@@ -330,7 +218,14 @@ public class ExecuteAlwaysFilter implements Filter {
 
     }
 
-    private static final void setupCommonReqAttributesEx(HttpServletRequest request) {
+    private static void setupCommonReqAttributesEx(HttpServletRequest request) {
+        final String path = request.getServletPath();
+        // try save login
+        if (LoginUtilities.allowSaveLogin(request)) {
+            log.info("auto login active");
+            // TODO, should be a separate filter
+        }
+
         final Map<Integer, Set<PermissionType>> permissions = RequestHelper
                 .getUserPermissions(request.getSession());
         request.setAttribute("hasPermissionUserAdmin", UserUtilities.hasPermission(permissions,
@@ -342,134 +237,18 @@ public class ExecuteAlwaysFilter implements Filter {
                         UserUtilities.PERMISSION_VIEW_ALL));
     }
 
-
-    private static final boolean isProtected(String path, Set<Pattern> patterns) {
-        if (null == path) {
-            path = "";
-        }
-
-        Iterator<Pattern> matchPattern = patterns.iterator();
-        Pattern pattern;
-
-        while (matchPattern.hasNext()) {
-            pattern = matchPattern.next();
-            if (log.isDebugEnabled()) {
-                log.debug("isProtected: processing path " + path
-                        + " for pattern " + pattern.pattern());
-            }
-            if (pattern.matcher(path).matches()) {
-                if (log.isDebugEnabled()) {
-                    log.debug("isProtected: matched path: " + path);
-                }
-                return false;
-            }
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("isProtected: protecting " + path);
-        }
-        return true;
-    }
-
-
     /**
      *
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-        if (null != unprotectedPatterns) {
-            throw new IllegalStateException(
-                    "Filter was already initialized before.");
-        }
-        String excludePaths = filterConfig
-                .getInitParameter("AuthExcludedPaths");
 
-        this.loginForwardPath = filterConfig.getInitParameter("LoginForward");
-        if (null == this.loginForwardPath) {
-            this.loginForwardPath = DEFAULT_LOGIN_FORWARD;
-        }
-        this.unprotectedPatterns = new HashSet<Pattern>();
-        if (null != excludePaths) {
-            StringTokenizer tk = new StringTokenizer(excludePaths, ",");
-            while (tk.hasMoreTokens()) {
-                this.unprotectedPatterns.add(Pattern.compile(tk.nextToken().trim()));
-            }
-        }
-        if (log.isInfoEnabled()) {
-            log.info("init: initialized with " + this.loginForwardPath
-                    + ", excludes: " + this.unprotectedPatterns);
-        }
     }
 
     public ITrackerServices getITrackerServices() {
         if (null == this.iTrackerServices) {
-
             this.iTrackerServices = ServletContextUtils.getItrackerServices();
         }
         return iTrackerServices;
     }
 
-    /**
-     * @return String - outcome
-     */
-    private void forwardToLogin(String path, HttpServletRequest request,
-                                HttpServletResponse response) {
-        if (log.isDebugEnabled()) {
-            log.debug("forwardToLogin: called with " + path + " request: "
-                    + request + " response: " + response);
-        }
-        String forwardPath = request.getContextPath() + this.loginForwardPath;
-        if (log.isDebugEnabled()) {
-            log
-                    .debug("forwardToLogin: (formerly Checklogin tag) procedure... to "
-                            + forwardPath);
-        }
-        HttpSession session = request.getSession();
-        try {
-
-            log.info("forwardToLogin: setting redirectURL "
-                    + SES_KEY_REDIRECT_ON_SUCCESS + " = " + path);
-            session.setAttribute(SES_KEY_REDIRECT_ON_SUCCESS, path);
-            session.setAttribute("loginForwarded", true);
-            response.sendRedirect(forwardPath);
-            response.flushBuffer();
-
-        } catch (Exception e) {
-            log.error("forwardToLogin: IOException while checking login", e);
-            response.reset();
-            try {
-                session.setAttribute("loginForwarded", Boolean.TRUE);
-                response.sendRedirect(forwardPath);
-            } catch (IOException e1) {
-                log.error("forwardToLogin: failed to redirect to "
-                        + forwardPath, e1);
-            }
-        }
-    }
-
-    public static void redirectToOnLoginSuccess(HttpServletRequest request,
-                                                HttpServletResponse response) throws IOException {
-        String path = (String) request.getSession().getAttribute(
-                SES_KEY_REDIRECT_ON_SUCCESS);
-        if (null == path) {
-            path = request.getContextPath() + "/";
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("redirectToOnLoginSuccess: sending redirect to " + path);
-        }
-        response.sendRedirect(path);
-    }
-
-    public static ActionForward forwardToOnLoginSuccess(
-            HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        String path = (String) request.getSession().getAttribute(
-                SES_KEY_REDIRECT_ON_SUCCESS);
-        if (null == path) {
-            path = "/";
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("redirectToOnLoginSuccess: sending redirect to " + path);
-        }
-        return new ActionForward(path, true);
-    }
 }

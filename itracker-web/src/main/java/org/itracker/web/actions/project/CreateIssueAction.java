@@ -112,7 +112,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                         "itracker.web.error.projectlocked"));
             } else if (!UserUtilities.hasPermission(userPermissionsMap,
-                    projectId, UserUtilities.PERMISSION_CREATE)) {
+                    projectId, PermissionType.ISSUE_CREATE)) {
                 return mapping.findForward("unauthorized");
             } else {
                 List<ProjectScript> scripts = project.getScripts();
@@ -135,7 +135,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                 // creating issues as another user
 
                 if (UserUtilities.hasPermission(userPermissionsMap,
-                        projectId, UserUtilities.PERMISSION_CREATE_OTHERS)) {
+                        projectId, PermissionType.ISSUE_CREATE_OTHERS)) {
                     creator = null != issueForm.getCreatorId() ? issueForm.getCreatorId() : currUserId;
                     if (log.isDebugEnabled()) {
                         log.debug("New issue creator set to " + creator
@@ -182,10 +182,10 @@ public class CreateIssueAction extends ItrackerBaseAction {
 
                     if (newOwner != null && newOwner.intValue() >= 0) {
                         if (UserUtilities.hasPermission(userPermissionsMap,
-                                UserUtilities.PERMISSION_ASSIGN_OTHERS)
+                                PermissionType.ISSUE_ASSIGN_OTHERS)
                                 || (UserUtilities.hasPermission(
                                 userPermissionsMap,
-                                UserUtilities.PERMISSION_ASSIGN_SELF) && currUserId
+                                PermissionType.ISSUE_ASSIGN_SELF) && currUserId
                                 .equals(newOwner))) {
                             issueService.assignIssue(issue.getId(), newOwner,
                                     currUserId);
@@ -227,24 +227,20 @@ public class CreateIssueAction extends ItrackerBaseAction {
                     }
                     issueService.setIssueFields(issue.getId(), issueFields);
 
-                    HashSet<Integer> components = new HashSet<Integer>();
+                    HashSet<Integer> components = new HashSet<>();
                     Integer[] componentIds = issueForm.getComponents();
 
 
                     if (componentIds != null) {
-                        for (int i = 0; i < componentIds.length; i++) {
-                            components.add(componentIds[i]);
-                        }
+                        Collections.addAll(components, componentIds);
                         issueService.setIssueComponents(issue.getId(),
                                 components, creator);
                     }
-                    HashSet<Integer> versions = new HashSet<Integer>();
+                    HashSet<Integer> versions = new HashSet<>();
                     Integer[] versionIds = issueForm.getVersions();
 
                     if (versionIds != null) {
-                        for (int i = 0; i < versionIds.length; i++) {
-                            versions.add(versionIds[i]);
-                        }
+                        Collections.addAll(versions, versionIds);
                         issueService.setIssueVersions(issue.getId(), versions,
                                 creator);
                     }
@@ -254,7 +250,7 @@ public class CreateIssueAction extends ItrackerBaseAction {
                         IssueRelation.Type relationType = issueForm.getRelationType();
 
                         if (relatedIssueId != null
-                                && relatedIssueId.intValue() > 0
+                                && relatedIssueId > 0
                                 && relationType != null
                                 && relationType.getCode() > 0) {
                             Issue relatedIssue = issueService

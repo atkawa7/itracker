@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Language;
+import org.itracker.model.PermissionType;
 import org.itracker.model.util.PropertiesFileHandler;
 import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.model.util.UserUtilities;
@@ -49,9 +50,6 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
-            return mapping.findForward("unauthorized");
-        }
 
         try {
             ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();

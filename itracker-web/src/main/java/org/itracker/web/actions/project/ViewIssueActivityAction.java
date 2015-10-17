@@ -74,8 +74,8 @@ public class ViewIssueActivityAction extends ItrackerBaseAction {
         User creator = issueService.getIssueCreator(issueId);
 
         if ((project == null ||
-                (!UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_VIEW_ALL)
-                        && !(UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_VIEW_USERS)
+                (!UserUtilities.hasPermission(permissions, project.getId(), PermissionType.ISSUE_VIEW_ALL)
+                        && !(UserUtilities.hasPermission(permissions, project.getId(), PermissionType.ISSUE_VIEW_USERS)
                         && ((owner != null && owner.getId().equals(user.getId())) || (creator != null && creator.getId().equals(user.getId())))
                 )))) {
 
@@ -112,7 +112,6 @@ public class ViewIssueActivityAction extends ItrackerBaseAction {
     }
 
     /**
-     * @param issueId
      * @param issueService
      * @param request
      * @return

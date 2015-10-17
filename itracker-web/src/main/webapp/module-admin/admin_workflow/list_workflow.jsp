@@ -17,7 +17,7 @@
 
 <table border="0" cellspacing="0"  cellpadding="1"  width="100%" class="shadeList">
   <tr>
-    <td class="editColumnTitle" colspan="8"><it:message key="itracker.web.attr.workflowscripts"/>:</td>
+    <td class="editColumnTitle" colspan="6"><it:message key="itracker.web.attr.workflowscripts"/>:</td>
     <td align="right">
       <it:formatImageAction action="editworkflowscriptform" targetAction="create" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.workflowscript.alt" textActionKey="itracker.web.image.create.texttag"/>
     </td>
@@ -28,8 +28,6 @@
     <td><it:message key="itracker.web.attr.name"/></td>
     <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4" height="1"/></td>
     <td><it:message key="itracker.web.attr.event"/></td>
-    <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4" height="1"/></td>
-    <td align="right"><it:message key="itracker.web.attr.numberuses"/></td>
     <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4" height="1"/></td>
     <td align="right"><it:message key="itracker.web.attr.lastmodified"/></td>
   </tr>
@@ -52,8 +50,6 @@
       <td>${aScript.name}</td>
       <td></td>
       <td align="left"><it:message key="itracker.workflow.field.event.${aScript.event}"/></td>
-      <td></td>
-      <td align="right">${aScript.numberUses}</td>
       <td></td>
       <td align="right"><it:formatDate date="${aScript.lastModifiedDate}"/></td>
     </tr>

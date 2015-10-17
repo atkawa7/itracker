@@ -11,26 +11,26 @@ public class PermissionTypeTest {
     @Test
     public void testFromCode() {
         try {
-            PermissionType.fromCode(0);
+            PermissionType.valueOf(0);
             fail("did not throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             assertTrue(true);
         }
         try {
-            PermissionType.fromCode(-2);
+            PermissionType.valueOf(-2);
             fail("did not throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             assertTrue(true);
         }
         try {
-            PermissionType.fromCode(14);
+            PermissionType.valueOf(14);
             fail("did not throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             assertTrue(true);
         }
-        assertEquals("code 1", PermissionType.PRODUCT_ADMIN, PermissionType.fromCode(1));
-        assertEquals("code 5", PermissionType.ISSUE_ASSIGN_SELF, PermissionType.fromCode(5));
-        assertEquals("code -1", PermissionType.USER_ADMIN, PermissionType.fromCode(-1));
+        assertEquals("code 1", PermissionType.PRODUCT_ADMIN, PermissionType.valueOf(1));
+        assertEquals("code 5", PermissionType.ISSUE_ASSIGN_SELF, PermissionType.valueOf(5));
+        assertEquals("code -1", PermissionType.USER_ADMIN, PermissionType.valueOf(-1));
     }
 
 

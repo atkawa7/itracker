@@ -19,7 +19,9 @@
 package org.itracker.services.implementations;
 
 import org.apache.log4j.Logger;
+import org.itracker.PasswordException;
 import org.itracker.UserException;
+import org.itracker.core.AuthenticationConstants;
 import org.itracker.model.*;
 import org.itracker.model.util.ProjectUtilities;
 import org.itracker.model.util.UserUtilities;
@@ -27,10 +29,11 @@ import org.itracker.persistence.dao.*;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
+import org.itracker.services.authentication.ITrackerUserDetails;
 import org.itracker.services.authentication.PluggableAuthenticator;
 import org.itracker.services.exceptions.AuthenticatorException;
-import org.itracker.PasswordException;
-import org.itracker.core.AuthenticationConstants;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.*;
 
@@ -59,13 +62,7 @@ public class UserServiceImpl implements UserService {
     private ProjectService projectService;
     private ConfigurationService configurationService;
 
-    /**
-     * @param configurationService
-     * @param projectService
-     * @param userDAO
-     * @param permissionDAO
-     * @param userPreferencesDAO
-     */
+
     public UserServiceImpl(ConfigurationService configurationService,
                            ProjectService projectService,
                            UserDAO userDAO,
@@ -112,6 +109,11 @@ public class UserServiceImpl implements UserService {
         if (user == null)
             throw new NoSuchEntityException("User " + login + " not found.");
         return user;
+    }
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        final User model = getUserByLogin(username);
+        return new ITrackerUserDetails(model, getPermissionsByUserId(model.getId()));
     }
 
     public String getUserPasswordByLogin(String login) {
@@ -294,7 +296,6 @@ public class UserServiceImpl implements UserService {
             newUserPrefs.setRememberLastSearch(userPrefs.getRememberLastSearch());
             newUserPrefs.setUseTextActions(userPrefs.getUseTextActions());
 
-            // FIXME: it's a bad one-to-one reference, has to be set on both ends. Fix mappings in hibernate.
             newUserPrefs.setUser(user);
 
             if (userPrefs.isNew()) {
@@ -356,11 +357,13 @@ public class UserServiceImpl implements UserService {
         userDAO.save(user);
     }
 
-    public List<User> findUsersForProjectByPermissionTypeList(Integer projectID, Integer[] permissionTypes) {
+    @Override
+    public List<User> findUsersForProjectByPermissionTypeList(Integer projectID, PermissionType[] permissionTypes) {
         return userDAO.findUsersForProjectByAllPermissionTypeList(projectID, permissionTypes);
     }
 
-    public List<User> getUsersWithPermissionLocal(Integer projectId, int permissionType) {
+    @Override
+    public List<User> getUsersWithPermissionLocal(Integer projectId, PermissionType permissionType) {
 
         List<User> users = new ArrayList<User>();
 
@@ -375,7 +378,10 @@ public class UserServiceImpl implements UserService {
         }
 
         return users;
+    }
 
+    public List<User> getUsersWithPermissionLocal(Integer projectId, int permissionType) {
+        return getUsersWithPermissionLocal(projectId, PermissionType.valueOf(permissionType));
     }
 
     public List<Permission> getUserPermissionsLocal(User user) {
@@ -495,6 +501,7 @@ public class UserServiceImpl implements UserService {
      * @param userId         - id of update-user
      * @param newPermissions - set of new permissions for this user
      */
+    @Override
     public boolean setUserPermissions(final Integer userId, final List<Permission> newPermissions) {
 
         boolean hasChanges = false;
@@ -552,6 +559,7 @@ public class UserServiceImpl implements UserService {
         return hasChanges;
     }
 
+    @Override
     public boolean removeUserPermissions(Integer userId, List<Permission> newPermissions) {
         boolean successful = false;
         if (newPermissions == null || newPermissions.size() == 0) {
@@ -574,6 +582,7 @@ public class UserServiceImpl implements UserService {
         return successful;
     }
 
+    @Override
     @Deprecated
     public Map<Integer, Set<PermissionType>> getUsersMapOfProjectIdsAndSetOfPermissionTypes(User user, int reqSource) {
         Map<Integer, Set<PermissionType>> permissionsMap = new HashMap<Integer, Set<PermissionType>>();
@@ -639,38 +648,60 @@ public class UserServiceImpl implements UserService {
         return permissionsMap;
     }
 
+    @Override
+    public List<User> getUsersWithProjectPermission(Integer projectId, PermissionType permission) {
+        return getUsersWithProjectPermission(projectId, permission, true);
+    }
+
+    @Override
     public List<User> getUsersWithProjectPermission(Integer projectId, int permissionType) {
-        return getUsersWithProjectPermission(projectId, permissionType, true);
+        return getUsersWithProjectPermission(projectId, PermissionType.valueOf(permissionType), true);
     }
 
+    @Override
     public List<User> getUsersWithProjectPermission(Integer projectId, int permissionType, boolean activeOnly) {
-        return getUsersWithAnyProjectPermission(projectId, new int[]{permissionType}, activeOnly);
+        return getUsersWithProjectPermission(projectId, PermissionType.valueOf(permissionType), activeOnly);
     }
 
-    public List<User> getUsersWithAnyProjectPermission(Integer projectId, int[] permissionTypes) {
+    @Override
+    public List<User> getUsersWithProjectPermission(Integer projectId, PermissionType permissionType, boolean activeOnly) {
+        return getUsersWithAnyProjectPermission(projectId, new PermissionType[]{permissionType}, activeOnly);
+    }
+
+    @Override
+    public List<User> getUsersWithAnyProjectPermission(Integer projectId, int[] permissions) {
+        return getUsersWithAnyProjectPermission(projectId, PermissionType.valueOf(permissions), true);
+    }
+
+    @Override
+    public List<User> getUsersWithAnyProjectPermission(Integer projectId, PermissionType[] permissions, boolean activeOnly) {
+        return getUsersWithProjectPermission(projectId, permissions, false, activeOnly);
+    }
+
+    @Override
+    public List<User> getUsersWithAnyProjectPermission(Integer projectId, PermissionType[] permissionTypes) {
         return getUsersWithAnyProjectPermission(projectId, permissionTypes, true);
     }
 
-    public Collection<User> getUsersWithAnyProjectPermission(Integer projectId, Integer[] permissionTypes) {
-        int[] perm = new int[permissionTypes.length];
-
-        for (int i = 0; i < permissionTypes.length; i++) {
-            perm[i] = permissionTypes[i];
-        }
-
-        return getUsersWithAnyProjectPermission(projectId, perm, true);
-    }
-
+    @Override
     public List<User> getUsersWithAnyProjectPermission(Integer projectId, int[] permissionTypes, boolean activeOnly) {
         return getUsersWithProjectPermission(projectId, permissionTypes, false, activeOnly);
     }
 
+    @Override
     public List<User> getUsersWithProjectPermission(Integer projectId, int[] permissionTypes, boolean requireAll,
                                                     boolean activeOnly) {
+        return getUsersWithProjectPermission(projectId, PermissionType.valueOf(permissionTypes), requireAll, activeOnly);
+    }
+
+    @Override
+    public List<User> getUsersWithProjectPermission(Integer projectId, PermissionType[] permissionTypes, boolean requireAll,
+                                                        boolean activeOnly) {
+
         List<User> userList = new ArrayList<User>();
 
         try {
-            // TODO: use a factory to hide this. 
+            // TODO: use a factory to hide this.
             PluggableAuthenticator authenticator = (PluggableAuthenticator) authenticatorClass.newInstance();
 
             if (authenticator != null) {
@@ -701,21 +732,21 @@ public class UserServiceImpl implements UserService {
         } catch (AuthenticatorException ae) {
             logger.error("getUsersWithProjectPermission: Authenticator exception caught.", ae);
         }
-
         return userList;
     }
 
+    @Override
     public List<User> getPossibleOwners(Issue issue, Integer projectId, Integer userId) {
         HashSet<User> users = new HashSet<User>();
 
         List<User> editUsers = getUsersWithProjectPermission(projectId, UserUtilities.PERMISSION_EDIT, true);
-        for (int i = 0; i < editUsers.size(); i++) {
-            users.add(editUsers.get(i));
+        for (User editUser : editUsers) {
+            users.add(editUser);
         }
         List<User> otherUsers = getUsersWithProjectPermission(projectId,
                 new int[]{UserUtilities.PERMISSION_EDIT_USERS, UserUtilities.PERMISSION_ASSIGNABLE}, true, true);
-        for (int i = 0; i < otherUsers.size(); i++) {
-            users.add(otherUsers.get(i));
+        for (User otherUser : otherUsers) {
+            users.add(otherUser);
         }
 
         if (issue != null) {
@@ -724,7 +755,7 @@ public class UserServiceImpl implements UserService {
             User creator = issue.getCreator();
 
             if (UserUtilities.hasPermission(getUsersMapOfProjectIdsAndSetOfPermissionTypes(creator, 0), projectId,
-                    UserUtilities.PERMISSION_EDIT_USERS)) {
+                    PermissionType.ISSUE_EDIT_USERS)) {
                 users.add(creator);
             }
             if (issue.getOwner() != null) {
@@ -735,7 +766,7 @@ public class UserServiceImpl implements UserService {
             // New issue, so add in the creator if needed
             User creator = getUser(userId);
             if (UserUtilities.hasPermission(getUsersMapOfProjectIdsAndSetOfPermissionTypes(creator, 0), projectId,
-                    UserUtilities.PERMISSION_EDIT_USERS)) {
+                    PermissionType.ISSUE_EDIT_USERS)) {
                 users.add(creator);
             }
         }

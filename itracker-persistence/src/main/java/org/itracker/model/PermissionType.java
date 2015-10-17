@@ -5,7 +5,7 @@ package org.itracker.model;
  *
  * @author johnny
  */
-public enum PermissionType {
+public enum PermissionType implements IntCodeEnum<PermissionType> {
 
     /**
      * User Admin Permission.
@@ -112,9 +112,9 @@ public enum PermissionType {
     /**
      * Creates a new instance of this enum.
      *
-     * @param value unique value representing this instance
+     * @param code unique value representing this instance
      */
-    private PermissionType(int code) {
+    PermissionType(Integer code) {
         this.code = code;
     }
 
@@ -123,18 +123,35 @@ public enum PermissionType {
      *
      * @return unique value representing this instance
      */
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
+
+    public static PermissionType valueOf(Integer type) {
+        return values()[0].fromCode(type);
+    }
+
+    @Deprecated
+    public static PermissionType[] valueOf(int[] type) {
+        if (null == type) {
+            return null;
+        }
+        final PermissionType[] result = new PermissionType[type.length];
+        int c = 0;
+        for (Integer i: type) {
+            result[c++] = valueOf(i);
+        }
+        return result;
+    }
+
 
     /**
      * Returns the enum instance matching the integer value.
      *
-     * @param value unique value of the enum instance to return
+     * @param code unique value of the enum instance to return
      * @return enum instance matching the int value
-     * @throws IllegalArgumentExeption invalid enum value
      */
-    public static PermissionType fromCode(int code) {
+    public PermissionType fromCode(Integer code) {
         if (code == 0 || code < -1 || code > 13) {
             throw new IllegalArgumentException("Unknown PermissionType code " + code);
         }
@@ -142,6 +159,16 @@ public enum PermissionType {
             return PERMISSION_TYPES[0];
         }
         return PERMISSION_TYPES[code];
+    }
+
+    public String name(Project project) {
+        if (null != project) {
+            if (project.isNew()) {
+                throw new IllegalStateException("New project can't be granted.");
+            }
+            return name() + "#" + project.getId();
+        }
+        return name();
     }
 
 }

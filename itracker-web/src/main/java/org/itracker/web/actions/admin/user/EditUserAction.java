@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.UserException;
 import org.itracker.model.Permission;
+import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
 import org.itracker.model.util.UserUtilities;
@@ -47,9 +48,6 @@ public class EditUserAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
-            return mapping.findForward("unauthorized");
-        }
 
         if (!isTokenValid(request)) {
             log.debug("Invalid request token while editing component.");
@@ -178,8 +176,9 @@ public class EditUserAction extends ItrackerBaseAction {
                     String paramName = iter.next();
                     Integer projectIntValue = new Integer(paramName.substring(paramName.lastIndexOf('j') + 1));
                     Project project = projectService.getProject(projectIntValue);
+                    // TODO change the value type
                     Integer permissionIntValue = Integer.parseInt(paramName.substring(4, paramName.lastIndexOf('P')));
-                    Permission newPermission = new Permission(permissionIntValue, editUser, project);
+                    Permission newPermission = new Permission(PermissionType.valueOf(permissionIntValue), editUser, project);
                     newPermission.setCreateDate(new Date());
                     newPermissions.add(newPermission);
                 }

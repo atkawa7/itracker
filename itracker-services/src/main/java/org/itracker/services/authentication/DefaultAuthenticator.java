@@ -20,6 +20,7 @@ package org.itracker.services.authentication;
 
 import org.apache.log4j.Logger;
 import org.itracker.model.Permission;
+import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 import org.itracker.UserException;
 import org.itracker.services.exceptions.AuthenticatorException;
@@ -155,7 +156,7 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
             List<Permission> augmentedPermissions = new ArrayList<Permission>();
 
             // Super user has access to all projects (represented by the "null" project). 
-            Permission permission = new Permission(-1, user, null);
+            Permission permission = new Permission(PermissionType.USER_ADMIN, user, null);
             augmentedPermissions.add(permission);
             augmentedPermissions.addAll(permissionList);
             return augmentedPermissions;
@@ -165,6 +166,8 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
         }
 
     }
+
+
 
     /**
      * Returns the list of users for a given project. User permissions can be specified.
@@ -176,12 +179,8 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
      * @param reqSource       - not used. TODO: Tagged for removal
      * @return List of users for the project with filters applied.
      */
-    public List<User> getUsersWithProjectPermission(Integer projectId,
-                                                    int[] permissionTypes,
-                                                    boolean requireAll,
-                                                    boolean activeOnly,
-                                                    int reqSource)
-            throws AuthenticatorException {
+    @Override
+    public List<User> getUsersWithProjectPermission(Integer projectId, PermissionType[] permissionTypes, boolean requireAll, boolean activeOnly, int reqSource) throws AuthenticatorException {
 
         List<User> users;
 
@@ -190,12 +189,7 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
 
             if (requireAll) {
 
-                Integer[] types = new Integer[permissionTypes.length];
-                for (int i = 0; i < types.length; i++) {
-                    types[i] = permissionTypes[i];
-                }
-
-                List<User> explicitUsers = getUserService().findUsersForProjectByPermissionTypeList(projectId, types);
+                List<User> explicitUsers = getUserService().findUsersForProjectByPermissionTypeList(projectId, permissionTypes);
 
                 for (User user : explicitUsers) {
                     userMap.put(user.getId(), user);
@@ -235,6 +229,21 @@ public class DefaultAuthenticator extends AbstractPluggableAuthenticator {
         }
 
         return users;
+    }
+    @Override
+    @Deprecated
+    public List<User> getUsersWithProjectPermission(Integer projectId,
+                                                    int[] permissionTypes,
+                                                    boolean requireAll,
+                                                    boolean activeOnly,
+                                                    int reqSource)
+            throws AuthenticatorException {
+
+        return getUsersWithProjectPermission(projectId,
+                PermissionType.valueOf(permissionTypes),
+                requireAll,
+                activeOnly,
+                reqSource);
 
     }
 

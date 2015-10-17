@@ -63,7 +63,7 @@
     boolean shade = true;
     while (projectsIt.hasNext()) {
     	currentProject = projectsIt.next();
-        if(! UserUtilities.hasPermission(permissions, currentProject.getId(), new int[] {UserUtilities.PERMISSION_VIEW_ALL, UserUtilities.PERMISSION_VIEW_USERS})) {
+        if(! UserUtilities.hasPermission(permissions, currentProject.getId(), new PermissionType[] {PermissionType.ISSUE_VIEW_ALL, PermissionType.ISSUE_VIEW_USERS})) {
              continue;
         }
         // update the alternating of row-background

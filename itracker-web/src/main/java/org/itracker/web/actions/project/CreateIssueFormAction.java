@@ -67,7 +67,7 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
             Locale locale = LoginUtilities.getCurrentLocale(request);
 
             if (!UserUtilities.hasPermission(permissions, projectId,
-                    UserUtilities.PERMISSION_CREATE)) {
+                    PermissionType.ISSUE_CREATE)) {
                 log
                         .debug("Unauthorized user requested access to create issue for project "
                                 + projectId);
@@ -113,9 +113,9 @@ public class CreateIssueFormAction extends ItrackerBaseAction {
                     List<User> possibleCreators = userService
                             .getUsersWithAnyProjectPermission(
                                     project.getId(),
-                                    new int[]{
+                                    PermissionType.valueOf(new int[]{
                                             UserUtilities.PERMISSION_VIEW_ALL,
-                                            UserUtilities.PERMISSION_VIEW_USERS});
+                                            UserUtilities.PERMISSION_VIEW_USERS}));
                     Collections.sort(possibleCreators, User.NAME_COMPARATOR);
                     listOptions.put(IssueUtilities.FIELD_CREATOR, Convert
                             .usersToNameValuePairs(possibleCreators));

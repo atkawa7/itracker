@@ -63,13 +63,13 @@ Development Environment Setup
 
   The most interesting are:
 
-  *<<<mvn -Dmaven.test.skip=true clean tomcat6/7:deploy>>> deploy application without tests
+  *<<<mvn -Dmaven.test.skip=true clean cargo:deploy>>> deploy application without tests
 
-  *<<<mvn tomcat6/7:undeploy>>> undeploy application.
+  *<<<mvn cargo:undeploy>>> undeploy application.
 
   []
 
-  More information: {{http://tomcat.apache.org/maven-plugin.html}}
+  More information: {{{https://codehaus-cargo.github.io/cargo/Tomcat+7.x.html}Tomcat 7 deploy reference}}
 
   For application debug you can use RemoteDebug mode.
 
@@ -84,15 +84,15 @@ Development Environment Setup
 **Run Tomcat
 
   To run itracker directly from Maven using tomcat6 or 7 plugin (default 'main' database) use the command \
-  <<<mvn package tomcat6:run -Pitracker.tomcat>>>  \
-  or <<<mvn package tomcat7:run -Pitracker.tomcat>>>
+  <<<mvn package cargo:run -Dcargo.container=tomcat6x -Pitracker.tomcat>>>  \
+  or <<<mvn package cargo:run -Dcargo.container=tomcat6x -Pitracker.tomcat>>>
 
   Configure the file <<<src/main/tomcat/context.xml>>> to change the runtime environment
   which are filtered and copied for runtime to <<<target/tomcat-itracker/>>> or set the appropriate properties in maven POM.
 
   open browser at {{{http://localhost:8888/itracker}http://localhost:8888}}
 
-** Run Jetty
+**Run Jetty
 
   To run directly fom Maven using jetty plugin (in-memory database) use the command <<<mvn package jetty:run >>>
 

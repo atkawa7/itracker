@@ -84,7 +84,7 @@ public abstract class GenericController extends HttpServlet {
         request.setAttribute(Globals.ERROR_KEY, errors);
     }
 
-    protected boolean hasPermission(int[] permissionsNeeded,
+    protected boolean hasPermission(PermissionType[] permissionsNeeded,
                                     HttpServletRequest request,
                                     HttpServletResponse response)
             throws IOException, ServletException {
@@ -100,7 +100,7 @@ public abstract class GenericController extends HttpServlet {
         return false;
     }
 
-    protected boolean hasPermission(int permissionNeeded,
+    protected boolean hasPermission(PermissionType permissionNeeded,
                                     HttpServletRequest request,
                                     HttpServletResponse response)
             throws IOException, ServletException {

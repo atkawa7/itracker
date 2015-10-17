@@ -54,7 +54,7 @@
 	      <td align="left">${ project.totalOpenIssues }</td>
 	      <td align="left">${ project.totalResolvedIssues }</td>
 	      <td align="left">${ project.totalNumberIssues }</td>
-	      <td align="right"><it:formatDate date="${ project.lastModifiedDate }" emptyKey="itracker.web.generic.notapplicable"/></td>
+	      <td align="right"><it:formatDate date="${ project.lastUpdatedIssueDate }" emptyKey="itracker.web.generic.notapplicable"/></td>
 	    </tr>
 	    
   		<c:set var="hasProjects" value="true" />

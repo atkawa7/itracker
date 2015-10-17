@@ -134,15 +134,16 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     
                     Collections.sort(createdIssues, sort_id);
                     Collections.sort(ownedIssues, sort_id);
-                    unassignedIssues.removeAll(CollectionUtils.select(unassignedIssues,
+                    Collections.sort(unassignedIssues, sort_id);
+                    CollectionUtils.removeAll(unassignedIssues, CollectionUtils.select(unassignedIssues,
                         new Predicate() {
                             @Override
                             public boolean evaluate(Object object) {
                                 return object instanceof Issue
                                         && !IssueUtilities.canViewIssue((Issue) object, currUser.getId(), permissions);
                             }
-                        }));
-                    Collections.sort(unassignedIssues, sort_id);
+                        }
+                    ));
                     Collections.sort(watchedIssues, sort_id);
                 }
                 
@@ -193,7 +194,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
 
                     if (!creatorPresent) {
                         for (Permission creatorPermission : issue.getCreator().getPermissions()) {
-                            if (creatorPermission.getPermissionType() == UserUtilities.PERMISSION_EDIT_USERS) {
+                            if (creatorPermission.getPermissionType() == PermissionType.ISSUE_EDIT_USERS) {
                                 possibleIssueOwners.add(userService.getUser(issue.getCreator().getId()));
                                 break;
                             }

@@ -3,6 +3,7 @@ package org.itracker.persistence.dao;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.itracker.model.Permission;
+import org.itracker.model.PermissionType;
 import org.itracker.model.Project;
 import org.itracker.model.User;
 
@@ -30,9 +31,17 @@ public class PermissionDAOImpl extends BaseHibernateDAOImpl<Permission>
         return permissions;
     }
 
+
+    @Deprecated
     @SuppressWarnings("unchecked")
     public List<Permission> findByProjectIdAndPermission(Integer projectId,
                                                          int permissionType) {
+        return findByProjectIdAndPermission(projectId, PermissionType.valueOf(permissionType));
+    }
+
+    @Override
+    public List<Permission> findByProjectIdAndPermission(Integer projectId, PermissionType permissionType) {
+
         List<Permission> permissions;
 
         if (getSession().get(Project.class, projectId) == null) {
@@ -43,7 +52,7 @@ public class PermissionDAOImpl extends BaseHibernateDAOImpl<Permission>
             Query query = getSession().getNamedQuery(
                     "PermissionsByProjectAndTypeQuery");
             query.setInteger("projectId", projectId);
-            query.setInteger("permissionType", permissionType);
+            query.setParameter("permissionType", permissionType);
             permissions = query.list();
         } catch (HibernateException ex) {
             throw convertHibernateAccessException(ex);

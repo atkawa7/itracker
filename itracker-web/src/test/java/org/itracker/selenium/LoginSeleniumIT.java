@@ -15,7 +15,7 @@ public class LoginSeleniumIT extends AbstractSeleniumTestCase {
 
 
     /**
-     * Verifies the successfull login case with valid login/password.
+     * Verifies the successful login case with valid login/password.
      * <p/>
      * 1. Opens login page of an application.
      * 2. Enters correct login and password into appropriate input fields.

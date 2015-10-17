@@ -117,8 +117,8 @@ public class SearchIssuesFormAction extends ItrackerBaseAction {
             List<Integer> selectedProjectsList = new ArrayList<Integer>();
 
             for (Project project : projects) {
-                if (!UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_VIEW_ALL) &&
-                        !UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_VIEW_USERS)) {
+                if (!UserUtilities.hasPermission(userPermissions, project.getId(), PermissionType.ISSUE_VIEW_ALL) &&
+                        !UserUtilities.hasPermission(userPermissions, project.getId(), PermissionType.ISSUE_VIEW_USERS)) {
                     continue;
                 }
 

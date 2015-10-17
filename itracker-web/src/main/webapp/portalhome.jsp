@@ -10,7 +10,7 @@
     </tr>
     <c:choose>
     <c:when test="${empty ownedIssues}">
-        <tr class="listRowUnshaded">
+        <tr>
             <td ></td>
             <td colspan="16">
                 <it:message key="itracker.web.error.noissues"></it:message>
@@ -86,7 +86,7 @@
             <c:otherwise>
 
                 <c:if test="${i.count == userPrefs.numItemsOnIndex + 1}">
-                    <tr class="listRowUnshaded">
+                    <tr>
                         <td class="moreissues" colspan="15"><html:link module="/" action="/portalhome?showAll=true" ><it:message key="itracker.web.index.moreissues"/></html:link></td>
                     </tr>
                 </c:if>
@@ -109,7 +109,7 @@
     </tr>
     <c:choose>
        <c:when test="${empty unassignedIssues}">
-       <tr class="listRowUnshaded">
+       <tr>
         <td ></td>
         <td colspan="16">
             <it:message key="itracker.web.error.noissues"></it:message>
@@ -288,7 +288,7 @@
             <c:otherwise>
 
                 <c:if test="${iCount == userPrefs.numItemsOnIndex + 1}">
-                    <tr class="listRowUnshaded">
+                    <tr>
                         <td class="moreissues" colspan="15"><html:link anchor="unassignedIssues" module="/" action="/portalhome?showAll=true" ><it:message key="itracker.web.index.moreissues"/></html:link></td>
                     </tr>
                 </c:if>
@@ -309,7 +309,7 @@
     </tr>
     <c:choose>
     <c:when test="${empty createdIssues}">
-        <tr class="listRowUnshaded">
+        <tr>
             <td ></td>
             <td colspan="16">
                 <it:message key="itracker.web.error.noissues"></it:message>
@@ -335,7 +335,7 @@
         <td style="text-align:right; white-space: nowrap" ><it:message key="itracker.web.attr.lastmodified"/></td>
     </tr>
     <c:if test="${empty createdIssues}">
-        <tr class="listRowUnshaded">
+        <tr>
             <td ></td>
             <td colspan="16">
                 <it:message key="itracker.web.error.noissues"></it:message>
@@ -406,7 +406,7 @@
             </c:when>
             <c:otherwise>
                 <c:if test="${i.count == userPrefs.numItemsOnIndex + 1}">
-                    <tr class="listRowUnshaded">
+                    <tr>
                         <td class="moreissues" colspan="15"><html:link anchor="createdIssues" module="/" action="/portalhome?showAll=true" ><it:message key="itracker.web.index.moreissues"/></html:link></td>
                     </tr>
                 </c:if>
@@ -438,7 +438,7 @@
     </tr>
     <c:choose>
     <c:when test="${empty watchedIssues}">
-        <tr class="listRowUnshaded">
+        <tr>
             <td ></td>
             <td colspan="16">
                 <it:message key="itracker.web.error.noissues"></it:message>
@@ -537,7 +537,7 @@
             </c:when>
             <c:otherwise>
                 <c:if test="${i.count == userPrefs.numItemsOnIndex + 1}">
-                    <tr class="listRowUnshaded">
+                    <tr>
                         <td class="moreissues" colspan="15"><html:link anchor="watchedIssues" module="/" action="/portalhome?showAll=true" ><it:message key="itracker.web.index.moreissues"/></html:link></td>
                     </tr>
                 </c:if>
@@ -551,14 +551,14 @@
 
 <!-- view hidden sections link -->
     <c:if test="${showAll && userPrefs.numItemsOnIndex > 0}">
-        <tr class="listRowUnshaded">
+        <tr>
             <td class="moreissues" colspan="15">
                 <html:link module="/" action="/portalhome?showAll=false" ><it:message key="itracker.web.index.lessissues"/></html:link>
             </td>
         </tr>
     </c:if>
     <c:if test="${userPrefs.hiddenIndexSections>0}">
-        <tr style="text-align: left;" class="listRowUnshaded">
+        <tr style="text-align: left;"">
             <td colspan="15" style="text-align: left;">
             <c:choose>
                 <c:when test="${!allSections}">

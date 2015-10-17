@@ -26,7 +26,9 @@
         <!--
            <forward name="editissue" module="/module-projects" path="/editissue.do" />
         -->
-        <forward name="error" path="t.error"/>
+        <forward name="error" module="/" path="/error.do"/>
+
+        <!--forward name="error" module="/" path="/error.do"/-->
         <forward name="editcomponent" module="/module-admin" path="/editcomponentform.do"/>
         <forward name="editcustomfield" module="/module-admin" path="/editcustomfieldform.do"/>
 
@@ -35,7 +37,7 @@
         <forward name="forgotpassword" module="/" path="/forgotpasswordform.do"/>
         <forward name="index" module="/" path="/portalhome.do"/>
         <forward name="logoff" module="/" path="/logoff.do"/>
-        <forward name="login" module="/" path="/login.jsp"/>
+        <forward name="login" module="/" path="/login.do"/>
         <forward name="listconfiguration" module="/module-admin" path="/listconfiguration.do"/>
 
         <forward name="listprojectsadmin" module="/module-admin" path="/listprojectsadmin.do"/>
@@ -76,6 +78,11 @@
                 validate="false">
         </action>
         <action path="/unauthorized" type="org.itracker.web.actions.UnauthorizedAction">
+            <forward name="unauthorized" path="t.unauthorized" module="/"/>
+        </action>
+
+        <action path="/security_check" type="org.itracker.web.actions.UnauthorizedAction"
+                name="loginForm">
             <forward name="unauthorized" path="t.unauthorized" module="/"/>
         </action>
 

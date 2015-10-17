@@ -134,7 +134,7 @@ public class ListIssuesActionUtil {
     }
     int numViewable = 0;
     boolean hasIssues = false;
-    boolean hasViewAll = UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_VIEW_ALL);
+    boolean hasViewAll = UserUtilities.hasPermission(userPermissions, project.getId(), PermissionType.ISSUE_VIEW_ALL);
 
     if (!hasViewAll) {
         if (null == userPermissions.get(projectId)) {
@@ -224,7 +224,7 @@ public class ListIssuesActionUtil {
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_PAGE_TITLE_ARG, pageTitleArg);
     final Map<Integer, Set<PermissionType>> permissions = RequestHelper.getUserPermissions(session);
     boolean canCreateIssue = false;
-    if(project.getStatus() == Status.ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), UserUtilities.PERMISSION_EDIT)) {
+    if(project.getStatus() == Status.ACTIVE && UserUtilities.hasPermission(permissions, project.getId(), PermissionType.ISSUE_EDIT_ALL)) {
     	canCreateIssue = true;
     }
     request.setAttribute("canCreateIssue", canCreateIssue);

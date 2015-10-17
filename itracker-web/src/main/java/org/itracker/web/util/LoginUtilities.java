@@ -18,14 +18,20 @@
 
 package org.itracker.web.util;
 
-import org.apache.log4j.Logger;
+import org.itracker.core.AuthenticationConstants;
 import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.Issue;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 import org.itracker.model.UserPreferences;
-import org.itracker.services.UserService;
-import org.itracker.core.AuthenticationConstants;
 import org.itracker.model.util.UserUtilities;
+import org.itracker.services.UserService;
+import org.itracker.services.authentication.ITrackerUserDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -33,11 +39,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.*;
 
 public class LoginUtilities {
 
-    private static final Logger logger = Logger.getLogger(LoginUtilities.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginUtilities.class);
     private static final int DEFAULT_SESSION_TIMEOUT = 30;
 
     public static boolean checkAutoLogin(HttpServletRequest request,
@@ -48,19 +55,18 @@ public class LoginUtilities {
             int authType = getRequestAuthType(request);
 
             // Check for auto login in request
-            if (!foundLogin) {
-                if (authType == AuthenticationConstants.AUTH_TYPE_REQUEST) {
-                    String redirectURL = request.getRequestURI().substring(
-                            request.getContextPath().length())
-                            + (request.getQueryString() != null ? "?"
-                            + request.getQueryString() : "");
-                    request.setAttribute(Constants.AUTH_TYPE_KEY,
-                            AuthenticationConstants.AUTH_TYPE_REQUEST);
-                    request.setAttribute(Constants.AUTH_REDIRECT_KEY,
-                            redirectURL);
-                    request.setAttribute("processLogin", "true");
-                    foundLogin = true;
-                }
+            if (authType == AuthenticationConstants.AUTH_TYPE_REQUEST) {
+                String redirectURL = request.getRequestURI().substring(
+                        request.getContextPath().length())
+                        + (request.getQueryString() != null ? "?"
+                        + request.getQueryString() : "");
+                request.setAttribute(Constants.AUTH_TYPE_KEY,
+                        AuthenticationConstants.AUTH_TYPE_REQUEST);
+                request.setAttribute(Constants.AUTH_REDIRECT_KEY,
+                        redirectURL);
+                request.setAttribute("processLogin", "true");
+                foundLogin = true;
+
             }
 
             // Add in check for client certs
@@ -71,12 +77,12 @@ public class LoginUtilities {
             if (allowSaveLogin && !foundLogin) {
                 Cookie[] cookies = request.getCookies();
                 if (cookies != null) {
-                    for (int i = 0; i < cookies.length; i++) {
-                        if (Constants.COOKIE_NAME.equals(cookies[i].getName())) {
-                            int seperator = cookies[i].getValue().indexOf('~');
+                    for (Cookie cookie : cookies) {
+                        if (Constants.COOKIE_NAME.equals(cookie.getName())) {
+                            int seperator = cookie.getValue().indexOf('~');
                             final String login;
                             if (seperator > 0) {
-                                login = cookies[i].getValue()
+                                login = cookie.getValue()
                                         .substring(0,
                                                 seperator);
                                 if (logger.isDebugEnabled()) {
@@ -94,13 +100,13 @@ public class LoginUtilities {
                                         + request.getQueryString()
                                         : "");
                                 request.setAttribute(Constants.AUTH_LOGIN_KEY,
-                                        cookies[i].getValue().substring(0,
+                                        cookie.getValue().substring(0,
                                                 seperator));
                                 request.setAttribute(Constants.AUTH_TYPE_KEY,
                                         AuthenticationConstants.AUTH_TYPE_PASSWORD_ENC);
 
                                 request.setAttribute(Constants.AUTH_VALUE_KEY,
-                                        cookies[i].getValue().substring(
+                                        cookie.getValue().substring(
                                                 seperator + 1));
                                 request.setAttribute(
                                         Constants.AUTH_REDIRECT_KEY,
@@ -123,8 +129,8 @@ public class LoginUtilities {
 
         try {
             if (request.getAttribute(Constants.AUTH_TYPE_KEY) != null) {
-                authType = ((Integer) request
-                        .getAttribute(Constants.AUTH_TYPE_KEY)).intValue();
+                authType = (Integer) request
+                        .getAttribute(Constants.AUTH_TYPE_KEY);
             }
             if (request.getParameter(Constants.AUTH_TYPE_KEY) != null) {
                 authType = Integer.valueOf(request
@@ -162,10 +168,10 @@ public class LoginUtilities {
 
             requestLocale = (Locale) request.getAttribute(Constants.LOCALE_KEY);
 
-//			if (logger.isDebugEnabled()) {
-//				logger.debug("getCurrentLocale: request-attribute was "
-//						+ requestLocale);
-//			}
+            if (logger.isDebugEnabled()) {
+                logger.debug("getCurrentLocale: request-attribute was {}",
+                        requestLocale);
+            }
 
             if (null == requestLocale) {
                 // get locale from request param
@@ -174,10 +180,10 @@ public class LoginUtilities {
                 if (null != loc && loc.trim().length() > 1) {
                     requestLocale = ITrackerResources.getLocale(loc);
                 }
-//				if (logger.isDebugEnabled()) {
-//					logger.debug("getCurrentLocale: request-parameter was "
-//							+ loc);
-//				}
+
+                logger.debug("getCurrentLocale: request-parameter was {}",
+                        loc);
+
             }
 
             if (null == requestLocale) {
@@ -193,18 +199,18 @@ public class LoginUtilities {
             if (null == requestLocale) {
                 ResourceBundle bundle = ITrackerResources.getBundle(request
                         .getLocale());
-//				if (logger.isDebugEnabled()) {
-//					logger
-//							.debug("getCurrentLocale: trying request header locale "
-//									+ request.getLocale());
-//				}
+                if (logger.isDebugEnabled()) {
+                    logger
+                            .debug("getCurrentLocale: trying request header locale "
+                                    + request.getLocale());
+                }
                 if (bundle.getLocale().getLanguage().equals(
                         request.getLocale().getLanguage())) {
                     requestLocale = request.getLocale();
-//					if (logger.isDebugEnabled()) {
-//						logger.debug("getCurrentLocale: request-locale was "
-//								+ requestLocale);
-//					}
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("getCurrentLocale: request-locale was "
+                                + requestLocale);
+                    }
                 }
             }
 
@@ -216,21 +222,19 @@ public class LoginUtilities {
                 ResourceBundle bundle;
                 Locale locale;
                 while (locales.hasMoreElements()) {
-                    locale = (Locale) locales.nextElement();
+                    locale = locales.nextElement();
                     bundle = ITrackerResources.getBundle(locale);
-//					if (logger.isDebugEnabled()) {
-//						logger
-//								.debug("getCurrentLocale: request-locales prcessing "
-//										+ locale + ", bundle: " + bundle);
-//					}
+
+                    logger.debug("getCurrentLocale: request-locales processing {}, bundle: {}",
+                            locale, bundle);
+
                     if (bundle.getLocale().getLanguage().equals(
                             locale.getLanguage())) {
                         requestLocale = locale;
-//						if (logger.isDebugEnabled()) {
-//							logger
-//									.debug("getCurrentLocale: request-locales locale was "
-//											+ requestLocale);
-//						}
+
+                        logger.debug("getCurrentLocale: request-locales locale was {}",
+                                requestLocale);
+
                     }
                 }
             }
@@ -239,20 +243,18 @@ public class LoginUtilities {
             if (null == requestLocale) {
                 // fall back to default locale
                 requestLocale = ITrackerResources.getLocale();
-//				if (logger.isDebugEnabled()) {
-//					logger
-//							.debug("getCurrentLocale: fallback default locale was "
-//									+ requestLocale);
-//				}
+
+                logger.debug("getCurrentLocale: fallback default locale was {}",
+                        requestLocale);
+
             }
             session.setAttribute(Constants.LOCALE_KEY, requestLocale);
             request.setAttribute(Constants.LOCALE_KEY, requestLocale);
             request.setAttribute("currLocale", requestLocale);
-//			if (logger.isDebugEnabled()) {
-//				logger
-//						.debug("getCurrentLocale: request and session was setup with "
-//								+ requestLocale);
-//			}
+
+            logger.debug("getCurrentLocale: request and session was setup with {}",
+                    requestLocale);
+
         }
 
         return requestLocale;
@@ -264,18 +266,54 @@ public class LoginUtilities {
      * @return current user or null if unauthenticated
      * @throws NullPointerException if the request was null
      */
-    public static final User getCurrentUser(HttpServletRequest request) {
+    @Deprecated
+    public static User getCurrentUser(HttpServletRequest request) {
 
+        final String remoteUser = request.getRemoteUser();
+        if (null == remoteUser) {
+            return null;
+        }
         User currUser = (User) request.getAttribute("currUser");
+        if (null != currUser && currUser.getLogin().equals(remoteUser)) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("found user in request: " + remoteUser);
+            }
+        }
         if (null == currUser) {
             currUser = (User) request.getSession().getAttribute("currUser");
+            if (null != currUser && currUser.getLogin().equals(remoteUser)) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("found user in session: " + remoteUser);
+                }
+            }
+        }
+        if (null == currUser) {
+            currUser = ServletContextUtils.getItrackerServices().getUserService().getUserByLogin(remoteUser);
+            if (null != currUser && currUser.getLogin().equals(remoteUser)) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("found user by login: " + remoteUser);
+                }
+            }
         }
 
         return currUser;
     }
 
-    public static final Boolean allowSaveLogin(HttpServletRequest request) {
-        return Boolean.valueOf((String) request.getAttribute("allowSaveLogin"));
+    /**
+     * Utility for accessing the current logged in user's principal
+     * @return current user principal
+     */
+    public static ITrackerUserDetails getPrincipal() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof ITrackerUserDetails) {
+            return (ITrackerUserDetails)principal;
+        }
+
+        return null;
+    }
+
+    public static Boolean allowSaveLogin(HttpServletRequest request) {
+        return (boolean) request.getAttribute("allowSaveLogin");
     }
 
     public static User setupSession(String login, HttpServletRequest request,
@@ -290,11 +328,11 @@ public class LoginUtilities {
             String encPassword = null;
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
-                for (int i = 0; i < cookies.length; i++) {
-                    if (Constants.COOKIE_NAME.equals(cookies[i].getName())) {
-                        int seperator = cookies[i].getValue().indexOf('~');
+                for (Cookie cookie : cookies) {
+                    if (Constants.COOKIE_NAME.equals(cookie.getName())) {
+                        int seperator = cookie.getValue().indexOf('~');
                         if (seperator > 0) {
-                            encPassword = cookies[i].getValue().substring(
+                            encPassword = cookie.getValue().substring(
                                     seperator + 1);
                         }
                     }
@@ -402,16 +440,21 @@ public class LoginUtilities {
                 .getIntegerProperty("web_session_timeout", DEFAULT_SESSION_TIMEOUT));
     }
 
-    public static final boolean hasPermission(int permissionNeeded,
+    @Deprecated
+    public static boolean hasPermission(int permissionNeeded,
+                                        HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        return hasPermission(PermissionType.valueOf(permissionNeeded), request, response);
+    }
+    public static boolean hasPermission(PermissionType permissionNeeded,
                                               HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
-        return hasPermission(new int[] {permissionNeeded}, request, response);
+        return hasPermission(new PermissionType[]{permissionNeeded}, request, response);
 
     }
 
-    public static final boolean hasPermission(int[] permissionsNeeded,
-                                    HttpServletRequest request, HttpServletResponse response)
+    public static boolean hasPermission(PermissionType[] permissionsNeeded,
+                                        HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         try {
             getCurrentUser(request);
@@ -419,13 +462,63 @@ public class LoginUtilities {
             HttpSession session = request.getSession(false);
             Map<Integer, Set<PermissionType>> permissions = (session == null) ? null
                     : RequestHelper.getUserPermissions(session);
-            if (!UserUtilities.hasPermission(permissions, permissionsNeeded)) {
-                return false;
-            }
-            return true;
+            return UserUtilities.hasPermission(permissions, permissionsNeeded);
         } catch (RuntimeException re) {
             logger.debug("hasPermission: failed to check permission", re);
             return false;
         }
+    }
+
+    /**
+     * Returns true if the user has permission to view the requested issue.
+     *
+     * @param issue       an IssueModel of the issue to check view permission for
+     * @param user        the user principal of the user to check permission for
+     */
+    public static boolean canViewIssue (Issue issue, UserDetails user) {
+        Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
+        for (GrantedAuthority authority: authorities) {
+            if (authority.getAuthority().equals(PermissionType.USER_ADMIN.name())) {
+                // almighty
+                return true;
+            }
+            if (authority.getAuthority().equals(PermissionType.PRODUCT_ADMIN.name(issue.getProject()))) {
+                return true;
+            }
+            if (authority.getAuthority().equals(PermissionType.ISSUE_VIEW_ALL.name(issue.getProject()))) {
+                return true;
+            }
+        }
+
+
+        boolean canViewUsers = false;
+
+        for (GrantedAuthority authority: user.getAuthorities()) {
+            if (authority.getAuthority().equals(PermissionType.ISSUE_VIEW_USERS.name(issue.getProject()))) {
+                canViewUsers = true;
+            }
+        }
+        // I think owner & creator should always be able to view the issue
+        // otherwise it makes no sense of creating the issue itself.
+        // So put these checks before checking permissions for the whole project.
+        if (canViewUsers && issue.getCreator().getLogin().equals(user.getUsername())) {
+            if (logger.isInfoEnabled()) {
+                logger.info("canViewIssue: issue: " + issue + ", user: " + user.getUsername()
+                        + ", permission: is creator");
+            }
+            return true;
+        }
+
+        if (canViewUsers && issue.getOwner() != null) {
+            if (issue.getOwner().getLogin().equals(user.getUsername())) {
+
+                if (logger.isInfoEnabled()) {
+                    logger.info("canViewIssue: issue: " + issue + ", user: "
+                            + user.getUsername() + ", permission: is owner");
+                }
+                return true;
+            }
+        }
+        return false;
     }
 }

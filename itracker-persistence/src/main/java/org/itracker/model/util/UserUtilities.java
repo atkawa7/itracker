@@ -18,10 +18,10 @@
 
 package org.itracker.model.util;
 
-import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.*;
 import org.itracker.PasswordException;
 import org.itracker.core.AuthenticationConstants;
+import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.*;
 import org.itracker.util.Base64Coder;
 
 import java.io.UnsupportedEncodingException;
@@ -223,8 +223,8 @@ public class UserUtilities implements AuthenticationConstants {
                 throw new PasswordException(PasswordException.SYSTEM_ERROR);
             }
         }
-            return hash;
-        }
+        return hash;
+    }
 
     /**
      * Checks to see if the user is a super user.
@@ -243,13 +243,18 @@ public class UserUtilities implements AuthenticationConstants {
         return (permissionTypes != null) && permissionTypes.contains(PermissionType.USER_ADMIN);
     }
 
+    @Deprecated
+    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, int permissionNeeded) {
+        return hasPermission(permissionsMap, PermissionType.valueOf(permissionNeeded));
+    }
+
     /**
      * Returns true if the user has the required permission in any project.
      *
-     * @param permissionsMap      a Map of the user's permissions by project ID
+     * @param permissionsMap   a Map of the user's permissions by project ID
      * @param permissionNeeded the permission to check for
      */
-    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, int permissionNeeded) {
+    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, PermissionType permissionNeeded) {
         if (permissionsMap == null) {
             return false;
         }
@@ -273,10 +278,10 @@ public class UserUtilities implements AuthenticationConstants {
     /**
      * Returns true if the user has any of required permissions in any project.
      *
-     * @param permissionsMap       a HashMap of the user's permissions
+     * @param permissionsMap    a HashMap of the user's permissions
      * @param permissionsNeeded a list of permissions that can fulfill the permission check
      */
-    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, int[] permissionsNeeded) {
+    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, PermissionType[] permissionsNeeded) {
         if (permissionsMap == null) {
             return false;
         }
@@ -297,14 +302,18 @@ public class UserUtilities implements AuthenticationConstants {
         return false;
     }
 
+    @Deprecated
+    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, Integer projectId, int permissionNeeded) {
+        return hasPermission(permissionsMap, projectId, PermissionType.valueOf(permissionNeeded));
+    }
     /**
      * Returns true if the user has the required permission for the given project.
      *
-     * @param permissionsMap      a HashMap of the user's permissions
+     * @param permissionsMap   a HashMap of the user's permissions
      * @param projectId        the project that the permission is required for
      * @param permissionNeeded the permission to check for
      */
-    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, Integer projectId, int permissionNeeded) {
+    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, Integer projectId, PermissionType permissionNeeded) {
         if (permissionsMap == null) {
             return false;
         }
@@ -315,7 +324,7 @@ public class UserUtilities implements AuthenticationConstants {
 
         final Set<PermissionType> permissionTypes = permissionsMap.get(projectId);
 
-        if ((permissionTypes != null) && permissionTypes.contains(PermissionType.fromCode(permissionNeeded))) {
+        if ((permissionTypes != null) && permissionTypes.contains(permissionNeeded)) {
             return true;
         } else {
             return false;
@@ -325,11 +334,11 @@ public class UserUtilities implements AuthenticationConstants {
     /**
      * Returns true if the user has any of required permissions for the given project.
      *
-     * @param permissionsMap       a HashMap of the user's permissions
+     * @param permissionsMap    a HashMap of the user's permissions
      * @param projectId         the project that the permission is required for
      * @param permissionsNeeded a list of permissions that can fulfill the permission check
      */
-    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, Integer projectId, int[] permissionsNeeded) {
+    public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, Integer projectId, PermissionType[] permissionsNeeded) {
         if (permissionsMap == null) {
             return false;
         }
@@ -342,7 +351,7 @@ public class UserUtilities implements AuthenticationConstants {
 
         if (permissionTypes != null) {
             for (int i = 0; i < permissionsNeeded.length; i++) {
-                if (permissionTypes.contains(PermissionType.fromCode(permissionsNeeded[i]))) {
+                if (permissionTypes.contains(permissionsNeeded[i])) {
                     return true;
                 }
             }
@@ -360,11 +369,11 @@ public class UserUtilities implements AuthenticationConstants {
         List<Permission> permissionsList = new ArrayList<Permission>();
 
         if (user.isSuperUser()) {
-            permissionsList.add(new Permission(-1, user, (Project) null));
+            permissionsList.add(new Permission(PermissionType.valueOf(-1), user, (Project) null));
         }
 
         for (int i = 0; i < permissions.length; i++) {
-            permissionsList.add(new Permission(permissions[i], user, project));
+            permissionsList.add(new Permission(PermissionType.valueOf(permissions[i]), user, project));
         }
         permissionsArray = new Permission[permissionsList.size()];
         permissionsArray = permissionsList.toArray(new Permission[]{});
@@ -396,7 +405,7 @@ public class UserUtilities implements AuthenticationConstants {
                 permissionsByProjectId.put(projectId, projectPermissions);
             } //else { // Add the permission to the existing set of permissions for the project. }
 
-            PermissionType permissionType = PermissionType.fromCode(permission.getPermissionType());
+            PermissionType permissionType = permission.getPermissionType();
             projectPermissions.add(permissionType);
         }
         return permissionsByProjectId;
@@ -405,7 +414,7 @@ public class UserUtilities implements AuthenticationConstants {
     /**
      * Returns whether the user is currently hiding a particular section on the myItracker page.
      *
-     * @param section the section to check if it is hidden
+     * @param section  the section to check if it is hidden
      * @param sections an integer of all sections the user is hiding
      * @return true if the current section is hidden
      */

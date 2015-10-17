@@ -16,6 +16,9 @@
         <natural-id mutable="false">
             <property not-null="true" name="permissionType" index="permisionTypeIdx">
                 <column name="permission_type" not-null="true"/>
+                <type name="org.itracker.persistence.dao.EnumCodeUserType">
+                    <param name="enumClassName">org.itracker.model.PermissionType</param>
+                </type>
             </property>
 
             <many-to-one not-null="true" name="project" class="Project" lazy="false">
