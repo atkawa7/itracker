@@ -1,5 +1,8 @@
 <%@ include file="/common/taglibs.jsp" %>
 
+<sec:authorize ifAllGranted="ROLE_USER">
+    <sec:authentication property="principal.username" var="username" />
+</sec:authorize>
 <table border="0" cellspacing="1" cellspacing="0" width="100%">
     <tr>
         <td class="headerText">
@@ -20,11 +23,11 @@
         <td class="headerTextWelcome"><it:message
                 key="itracker.web.header.welcome"/>
             <c:choose>
-                 <c:when test="${ currUser != null}">
+                 <c:when test="${ username != null}">
                      <html:link module="/module-preferences"
                          forward="editpreferences" styleClass="headerTextWelcome"
-                         title="${currUser.login}">
-                         ${ currUser.firstName } ${ currUser.lastName }</html:link>
+                         title="${ userDN }">
+                         ${ userDN }</html:link>
                 </c:when>
                 <c:otherwise>
                     <em><it:message key="itracker.web.header.guest"/></em>
@@ -145,18 +148,28 @@
     </tr>
 </table>
 
-
 <tiles:useAttribute name="isErrorPage" id="isErrorPage" ignore="true" />
 
 <logic:notEqual value="true" name="isErrorPage" >
-<logic:messagesPresent>
 
-    <div id="pageErrors" class="formError">
-        <html:messages id="error">
-           <div><bean:write name="error"/></div>
-        </html:messages>
-        <br />
-    </div>
+    <c:if test="${not empty error}">
+     <div class="errorblock">
+      Your login attempt was not successful, try again.
+    Caused :
+      ${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}
+     </div>
+    </c:if>
+<tiles:useAttribute name="errorHide" id="errorHide" ignore="true" />
+    <c:if test="${not errorHide}">
+        <logic:messagesPresent>
 
-</logic:messagesPresent>
+            <div id="pageErrors" class="formError">
+                <html:messages id="error">
+                    <div><bean:write name="error"/></div>
+                </html:messages>
+                <br/>
+            </div>
+
+        </logic:messagesPresent>
+    </c:if>
 </logic:notEqual>
