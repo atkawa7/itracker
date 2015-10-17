@@ -33,7 +33,6 @@ import org.itracker.model.util.UserUtilities;
 import org.springframework.web.context.ServletConfigAware;
 
 import javax.servlet.ServletConfig;
-import java.util.HashSet;
 import java.util.StringTokenizer;
 
 
