@@ -134,8 +134,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     
                     Collections.sort(createdIssues, sort_id);
                     Collections.sort(ownedIssues, sort_id);
-                    Collections.sort(unassignedIssues, sort_id);
-                    CollectionUtils.removeAll(unassignedIssues, CollectionUtils.select(unassignedIssues,
+                    unassignedIssues.removeAll(CollectionUtils.select(unassignedIssues,
                         new Predicate() {
                             @Override
                             public boolean evaluate(Object object) {
@@ -144,6 +143,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
                             }
                         }
                     ));
+                    Collections.sort(unassignedIssues, sort_id);
                     Collections.sort(watchedIssues, sort_id);
                 }
                 
