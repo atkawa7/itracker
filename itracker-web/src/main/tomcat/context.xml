@@ -1,4 +1,4 @@
-<Context path="itracker" reloadable="true" >
+<Context path="/${application.path}" reloadable="true" >
     <Resource name="itracker/mail/Session"
               auth="Container" 
               type="javax.mail.Session" 
