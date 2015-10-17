@@ -640,8 +640,10 @@ public class IssueUtilities {
             }
         }
 
-        if (isUsersIssue && UserUtilities.hasPermission(permissions, issue.getProject()
-                        .getId(), PermissionType.ISSUE_VIEW_USERS)) {
+        // TODO should be checking for
+        // UserUtilities.hasPermission(permissions, issue.getProject()
+        //             .getId(), PermissionType.ISSUE_VIEW_USERS)
+        if (isUsersIssue) {
             if (log.isInfoEnabled()) {
                 log.info("canViewIssue: issue: " + issue + ", user: "
                         + userId + ", permission: isUsersIssue");
