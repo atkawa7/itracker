@@ -4,13 +4,10 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMessages;
-import org.itracker.model.Permission;
-import org.itracker.model.Project;
-import org.itracker.model.Status;
-import org.itracker.model.User;
+import org.itracker.model.*;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
-import org.itracker.model.util.UserUtilities;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -34,11 +31,11 @@ public class AdminProjectUtilities {
     public static void handleInitialProjectMembers(Project project,
                                                    Set<Integer> userIds, Set<Integer> permissions,
                                                    ProjectService projectService, UserService userService) {
-        List<Permission> userPermissionModels = new ArrayList<Permission>();
+        List<Permission> userPermissionModels;
         if (userIds != null && permissions != null && userIds.size() > 0
                 && permissions.size() > 0) {
 
-            Set<User> users = new HashSet<User>(userIds.size());
+            Set<User> users = new HashSet<>(userIds.size());
             for (Integer userId : userIds)
                 users.add(userService.getUser(userId));
 
@@ -46,18 +43,8 @@ public class AdminProjectUtilities {
             for (User user : users) {
                 userPermissionModels = userService.getUserPermissionsLocal(user);
 
-                // remove all user permissions for current project
-                //				Iterator<Permission> userPIterator = userPermissionModels
-                //						.iterator();
-                //				while (userPIterator.hasNext()) {
-                //					Permission permission = (Permission) userPIterator.next();
-                //					if (project.equals(permission.getProject())) {
-                //						userPermissionModels.remove(permission);
-                //					}
-                //				}
-                // add all needed permissions
                 for (Integer type : permissions)
-                    userPermissionModels.add(new Permission(type, user, project));
+                    userPermissionModels.add(new Permission(PermissionType.valueOf(type), user, project));
 
                 // save the permissions
                 userService.setUserPermissions(user.getId(), userPermissionModels);
@@ -74,9 +61,8 @@ public class AdminProjectUtilities {
      * @param project     the project
      * @param userIds     the user IDs
      * @param userService the user service
-     * @param locale      the user language locale
      */
-    public static final void updateProjectOwners(Project project,
+    public static void updateProjectOwners(Project project,
                                                  Set<Integer> userIds, ProjectService projectService,
                                                  UserService userService) {
         Set<Permission> userPermissionModels;
@@ -89,19 +75,19 @@ public class AdminProjectUtilities {
         for (Integer userId : userIds) {
             User usermodel = userService.getUser(userId);
             boolean newPermissions = false;
-            userPermissionModels = new HashSet<Permission>(userService.getUserPermissionsLocal(usermodel));
+            userPermissionModels = new HashSet<>(userService.getUserPermissionsLocal(usermodel));
             if (log.isDebugEnabled()) {
                 log.debug("updateProjectOwners: setting owner " + usermodel + " to " + project);
             }
             for (Integer permission : UserUtilities.ALL_PERMISSIONS_SET) {
-                if (userPermissionModels.add(new Permission(permission,
+                if (userPermissionModels.add(new Permission(PermissionType.valueOf(permission),
                         usermodel, project))) {
                     newPermissions = true;
                 }
             }
             if (newPermissions) {
                 userService.addUserPermissions(usermodel.getId(),
-                        new ArrayList<Permission>(userPermissionModels));
+                        new ArrayList<>(userPermissionModels));
                 if (log.isDebugEnabled()) {
                     log.debug("updateProjectOwners: updated permissions for " + usermodel + " to " + userPermissionModels);
                 }
@@ -111,7 +97,7 @@ public class AdminProjectUtilities {
         projectService.setProjectOwners(project, userIds);
     }
 
-    public static final void setFormProperties(Project project, ProjectService projectService,
+    public static void setFormProperties(Project project, ProjectService projectService,
                                                ActionForm form, ActionMessages errors)
             throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         project.setDescription((String) PropertyUtils.getSimpleProperty(
@@ -137,15 +123,15 @@ public class AdminProjectUtilities {
                     .getSimpleProperty(form, "options");
             int optionmask = 0;
             if (optionValues != null) {
-                for (int i = 0; i < optionValues.length; i++) {
-                    optionmask += optionValues[i].intValue();
+                for (Integer optionValue : optionValues) {
+                    optionmask += optionValue;
                 }
             }
             project.setOptions(optionmask);
 
             Integer[] fieldsArray = (Integer[]) PropertyUtils.getSimpleProperty(form, "fields");
             Set<Integer> fields = null == fieldsArray ? new HashSet<Integer>(0) :
-                    new HashSet<Integer>(Arrays.asList(fieldsArray));
+                    new HashSet<>(Arrays.asList(fieldsArray));
 
             projectService.setProjectFields(project, fields);
 
