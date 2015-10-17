@@ -134,16 +134,15 @@ public class PortalHomeAction extends ItrackerBaseAction {
                     
                     Collections.sort(createdIssues, sort_id);
                     Collections.sort(ownedIssues, sort_id);
-                    Collections.sort(unassignedIssues, sort_id);
-                    CollectionUtils.removeAll(unassignedIssues, CollectionUtils.select(unassignedIssues,
+                    unassignedIssues.removeAll(CollectionUtils.select(unassignedIssues,
                         new Predicate() {
                             @Override
                             public boolean evaluate(Object object) {
                                 return object instanceof Issue
-                                        && IssueUtilities.canViewIssue((Issue) object, currUser.getId(), permissions);
+                                        && !IssueUtilities.canViewIssue((Issue) object, currUser.getId(), permissions);
                             }
-                        }
-                    ));
+                        }));
+                    Collections.sort(unassignedIssues, sort_id);
                     Collections.sort(watchedIssues, sort_id);
                 }
                 
