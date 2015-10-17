@@ -2,6 +2,7 @@ body {
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 8pt;
     background: #fff;
+    overflow-y: scroll;
 }
 
 .smallbody {
