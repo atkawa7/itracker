@@ -1,5 +1,13 @@
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ include file="/common/taglibs.jsp"%>
+
+<c:set var="update" value="${workflowScriptForm.action == 'update'}" />
+<c:if test="${update}">
+    <c:set var="pageTitleKey" scope="request">itracker.web.admin.editworkflowscript.title.update</c:set>
+    <c:set var="pageTitleArg" scope="request" value="${workflowScriptForm.name}" />
+</c:if>
+<c:if test="${not update}">
+    <c:set var="pageTitleKey" scope="request">itracker.web.admin.editworkflowscript.title.create</c:set>
+</c:if>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
@@ -24,10 +32,10 @@
             <td colspan="2" width="48%"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
         </tr>
 
-        <c:if test="${action == 'update'}">
+        <c:if test="${update}">
             <tr>
                 <td class="editColumnTitle"><it:message key="itracker.web.attr.id"/>:</td>
-                <td class="editColumnText">${workflowscript.id}</td>
+                <td class="editColumnText">${workflowScriptForm.id}</td>
             </tr>
         </c:if>
 
@@ -42,13 +50,7 @@
             <td class="editColumnTitle"><it:message key="itracker.web.attr.event"/>:</td>
             <td>
                 <html:select property="event" styleClass="editColumnText">
-
-                    <html:optionsCollection property="eventOptions" filter="" />
-                    <%--
-                    <c:forEach items="${nameValuePair}" var="pair">
-                        <html:option value="${pair.value}" styleClass="editColumnText">${pair.name}</html:option>
-                    </c:forEach> --%>
-                    <%--NameValuePair[] eventTypes = WorkflowUtilities.getEvents((java.util.Locale)pageContext.getAttribute("currLocale")); --%>
+                    <html:optionsCollection property="eventOptions"/>
                 </html:select>
             </td>
             <td></td>
@@ -69,12 +71,12 @@
 
         <tr>
             <td class="editColumnText" colspan="5">
-                <html:textarea rows="20" cols="120" property="script" style="font-family: monospace" styleClass="editColumnText"/>
+                <html:textarea rows="20" cols="120" property="script" styleClass="pre editColumnText"/>
             </td>
         </tr>
         <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
         <c:choose>
-            <c:when test="${action == 'update'}">
+            <c:when test="${ update }">
                 <tr><td colspan="5" align="left"><html:submit styleClass="button" altKey="itracker.web.button.update.alt" titleKey="itracker.web.button.update.alt"><it:message key="itracker.web.button.update"/></html:submit></td></tr>
             </c:when>
             <c:otherwise>

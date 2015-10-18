@@ -69,7 +69,7 @@ public class EditWorkflowScriptAction extends ItrackerBaseAction {
             workflowScript.setScript(form.getScript());
             workflowScript.setLanguage(WorkflowScript.ScriptLanguage.valueOf(form.getLanguage()));
 
-            String action = (String) PropertyUtils.getSimpleProperty(form, "action");
+            String action = form.getAction();
 
 
             if ("create".equals(action)) {

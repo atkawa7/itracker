@@ -48,13 +48,6 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionMessages errors = new ActionMessages();
 
-        String pageTitleKey = "";
-        String pageTitleArg = "";
-
-        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request, response)) {
-            return mapping.findForward("unauthorized");
-        }
-
         boolean isUpdate = false;
 
         try {
@@ -65,12 +58,6 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
             }
             String action = workflowScriptForm.getAction();
 
-            if (action != null && action.equals("update")) {
-                isUpdate = true;
-                pageTitleKey = "itracker.web.admin.editworkflowscript.title.update";
-            } else {
-                pageTitleKey = "itracker.web.admin.editworkflowscript.title.create";
-            }
 
             WorkflowScript workflowScript = new WorkflowScript();
             if ("update".equals(action)) {
@@ -91,15 +78,11 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
                 workflowScriptForm.setScript(workflowScript.getScript());
                 workflowScriptForm.setLanguage(workflowScript.getLanguage().name());
 
-                pageTitleArg = workflowScript.getName();
 
             } else {
                 workflowScriptForm.setLanguage(WorkflowScript.ScriptLanguage.BeanShell.name());
             }
 
-            if (workflowScript == null) {
-                return mapping.findForward("unauthorized");
-            }
 
             if (errors.isEmpty()) {
                 HttpSession session = request.getSession(true);
@@ -107,9 +90,6 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
                 session.setAttribute(Constants.WORKFLOW_SCRIPT_KEY, workflowScript);
                 request.setAttribute("action", action);
                 saveToken(request);
-
-                request.setAttribute("pageTitleKey", pageTitleKey);
-                request.setAttribute("pageTitleArg", pageTitleArg);
 
                 setupFormEventTypes(workflowScriptForm, getLocale(request));
 
@@ -125,10 +105,6 @@ public class EditWorkflowScriptFormAction extends ItrackerBaseAction {
         if (!errors.isEmpty()) {
             saveErrors(request, errors);
         }
-
-        request.setAttribute("pageTitleKey", pageTitleKey);
-        request.setAttribute("pageTitleArg", pageTitleArg);
-        request.setAttribute("isUpdate", isUpdate);
         return mapping.findForward("error");
     }
 
