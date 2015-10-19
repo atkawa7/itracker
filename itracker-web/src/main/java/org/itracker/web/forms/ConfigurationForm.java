@@ -21,9 +21,12 @@ package org.itracker.web.forms;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorForm;
+import org.itracker.model.NameValuePair;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
@@ -44,6 +47,7 @@ public class ConfigurationForm extends ValidatorForm {
 
     // let's try to put String,String here:
     HashMap<String, String> translations = new HashMap<String, String>();
+    private Map<NameValuePair, List<NameValuePair>> languages;
 
     /*
       * public void reset(ActionMapping mapping, HttpServletRequest request) {
@@ -115,4 +119,11 @@ public class ConfigurationForm extends ValidatorForm {
         this.value = value;
     }
 
+    public void setLanguages(Map<NameValuePair, List<NameValuePair>> languages) {
+        this.languages = languages;
+    }
+
+    public Map<NameValuePair, List<NameValuePair>> getLanguages() {
+        return languages;
+    }
 }

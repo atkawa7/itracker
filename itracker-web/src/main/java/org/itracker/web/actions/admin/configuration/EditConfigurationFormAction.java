@@ -70,11 +70,9 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
 
             String action = configurationForm.getAction();
 
-            String formValue = configurationForm.getValue();
 
             if ("update".equals(action)) {
                 Integer id = configurationForm.getId();
-                formValue = String.valueOf(id);
                 Configuration configItem = configurationService
                         .getConfigurationItem(id);
 
@@ -93,9 +91,9 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
                 List<Language> languageItems = configurationService
                         .getLanguageItemsByKey(configurationForm.getKey());
 
-                for (int i = 0; i < languageItems.size(); i++) {
-                    translations.put(languageItems.get(i).getLocale(),
-                            languageItems.get(i).getResourceValue());
+                for (Language languageItem : languageItems) {
+                    translations.put(languageItem.getLocale(),
+                            languageItem.getResourceValue());
                 }
                 configurationForm.setTranslations(translations);
             }
@@ -118,19 +116,15 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
                 languagesNameValuePair.put(languageNameValuePair,
                         localesNameValuePair);
             }
-            String baseLocaleKey = "translations("
-                    + ITrackerResources.BASE_LOCALE + ")";
 
             String pageTitleKey = "";
             String pageTitleArg = "";
-            boolean isUpdate = false;
 
             if (log.isDebugEnabled()) {
                 log.debug("execute: action was "
                         + configurationForm.getAction());
             }
             if ("update".equals(configurationForm.getAction())) {
-                isUpdate = true;
                 pageTitleKey = "itracker.web.admin.editconfiguration.title.update";
             } else {
                 Locale locale = getLocale(request);
@@ -151,17 +145,12 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
                     return mapping.findForward("unauthorized");
                 }
             }
-            request.setAttribute("isUpdate", Boolean.valueOf(isUpdate));
             request.setAttribute("pageTitleKey", pageTitleKey);
             request.setAttribute("pageTitleArg", pageTitleArg);
 
-            request.setAttribute("languagesNameValuePair",
-                    languagesNameValuePair);
-            request.setAttribute("sc", configurationService);
+            configurationForm.setLanguages(languagesNameValuePair);
+
             request.setAttribute("configurationForm", configurationForm);
-            request.setAttribute("action", action);
-            request.setAttribute("value", formValue);
-            request.setAttribute("baseLocaleKey", baseLocaleKey);
             saveToken(request);
 
             return mapping.getInputForward();

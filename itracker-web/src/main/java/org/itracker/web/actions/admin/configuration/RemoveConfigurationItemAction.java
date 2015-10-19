@@ -29,7 +29,6 @@ import org.itracker.model.User;
 import org.itracker.model.util.IssueUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
-import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
@@ -58,7 +57,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
             ConfigurationService configurationService = getITrackerServices().getConfigurationService();
 
             Integer configId = (Integer) PropertyUtils.getSimpleProperty(form, "id");
-            if (configId == null || configId.intValue() <= 0) {
+            if (configId == null || configId <= 0) {
                 throw new SystemConfigurationException("Invalid configuration id.");
             }
 
@@ -67,7 +66,7 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
                 throw new SystemConfigurationException("Invalid configuration id.");
             }
 
-            String key = null;
+            String key;
             if (configItem.getType() == Configuration.Type.severity) {
                 key = ITrackerResources.KEY_BASE_SEVERITY + configItem.getValue();
 
@@ -163,12 +162,11 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
             }
 
             configurationService.removeConfigurationItem(configItem.getId());
-            // Now reset the cached versions in IssueUtilities
+            // Now reset the cached items of removed item's type
             configurationService.resetConfigurationCache(configItem.getType());
-            if (key != null) {
-                configurationService.removeLanguageKey(key);
-                ITrackerResources.clearKeyFromBundles(key, false);
-            }
+            configurationService.removeLanguageKey(key);
+            ITrackerResources.clearKeyFromBundles(key, false);
+
 
             return mapping.findForward("listconfiguration");
         } catch (SystemConfigurationException sce) {

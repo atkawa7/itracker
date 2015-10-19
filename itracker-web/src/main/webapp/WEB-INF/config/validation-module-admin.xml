@@ -12,6 +12,20 @@
                 <arg0 key="itracker.web.attr.file"/>
             </field>
         </form>
+        <form name="configurationForm">
+            <field property="value" depends="validwhen">
+                <msg key="itracker.web.error.validate.required" name="validwhen"/>
+                <arg0 key="itracker.web.attr.value"/>
+                <var>
+                    <var-name>test</var-name>
+                    <var-value>
+                        ((action != 'createstatus') or (*this* !=
+                        null))
+                    </var-value>
+                </var>
+
+            </field>
+        </form>
 
         <form name="reportForm">
             <field property="name" depends="required">

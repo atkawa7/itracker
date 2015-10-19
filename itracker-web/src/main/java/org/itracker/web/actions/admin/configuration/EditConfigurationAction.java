@@ -18,17 +18,20 @@
 
 package org.itracker.web.actions.admin.configuration;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.SystemConfigurationException;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
+import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
 import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.util.Constants;
+import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
@@ -61,7 +64,6 @@ public class EditConfigurationAction extends ItrackerBaseAction {
             return mapping.getInputForward();
         }
         resetToken(request);
-        HttpSession session = request.getSession(true);
 
         try {
             final ConfigurationService configurationService = ServletContextUtils.getItrackerServices()
@@ -92,10 +94,9 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                         // fix for no existing resolution
                         value = Math.max(value, 0);
                     }
-                    for (int i = 0; i < resolutions.size(); i++) {
-                        value = Math.max(value, Integer.parseInt(resolutions
-                                .get(i).getValue()));
-                        order = resolutions.get(i).getOrder();
+                    for (Configuration resolution : resolutions) {
+                        value = Math.max(value, Integer.parseInt(resolution.getValue()));
+                        order = resolution.getOrder();
                     }
                     if (value > -1) {
                         String version = configurationService
@@ -121,10 +122,9 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                         // fix for no existing severity
                         value = Math.max(value, 0);
                     }
-                    for (int i = 0; i < severities.size(); i++) {
-                        value = Math.max(value, Integer.parseInt(severities
-                                .get(i).getValue()));
-                        order = severities.get(i).getOrder();
+                    for (Configuration severity : severities) {
+                        value = Math.max(value, Integer.parseInt(severity.getValue()));
+                        order = severity.getOrder();
                     }
                     if (value > -1) {
                         String version = configurationService
@@ -141,11 +141,17 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                 }
             } else if ("createstatus".equals(action)) {
                 try {
+                    if (null == formValue) {
+
+                        throw new SystemConfigurationException(
+                                "Supplied status value is null.",
+                                "itracker.web.error.validate.required");
+                    }
                     int value = Integer.parseInt(formValue);
                     List<Configuration> statuses = configurationService
                             .getConfigurationItemsByType(Configuration.Type.status);
-                    for (int i = 0; i < statuses.size(); i++) {
-                        if (value == Integer.parseInt(statuses.get(i)
+                    for (Configuration status : statuses) {
+                        if (value == Integer.parseInt(status
                                 .getValue())) {
                             throw new SystemConfigurationException(
                                     "Supplied status value already equals existing status.",
@@ -187,9 +193,8 @@ public class EditConfigurationAction extends ItrackerBaseAction {
 
                             List<Configuration> statuses = configurationService
                                     .getConfigurationItemsByType(Configuration.Type.status);
-                            for (int i = 0; i < statuses.size(); i++) {
-                                if (newStatus == Integer.parseInt(statuses.get(
-                                        i).getValue())) {
+                            for (Configuration statuse : statuses) {
+                                if (newStatus == Integer.parseInt(statuse.getValue())) {
                                     throw new SystemConfigurationException(
                                             "Supplied status value already equals existing status.",
                                             "itracker.web.error.existingstatus");
@@ -201,11 +206,6 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                             log.debug("Changing issue status values from "
                                     + configItem.getValue() + " to "
                                     + formValue);
-
-                            User currUser = (User) session
-                                    .getAttribute(Constants.USER_KEY);
-                            Integer currUserId = (currUser == null ? Integer
-                                    .valueOf(-1) : currUser.getId());
 
                             IssueService issueService = ServletContextUtils.getItrackerServices()
                                     .getIssueService();
@@ -222,7 +222,8 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                                     // activity.setActivityType(IssueActivityType.SYSTEM_UPDATE);
                                     // activity.setDescription(ITrackerResources.getString("itracker.activity.system.status"));
                                     // issues.get(i).getActivities().add(activity);
-                                    issue = issueService.updateIssue(issues .get(i), currUserId);
+                                    User currUser = LoginUtilities.getCurrentUser(request);
+                                    issue = issueService.systemUpdateIssue(issues .get(i), currUser.getId());
                                     issues.add(issue);
 
                                     // TODO: need to fix this RJST
@@ -296,36 +297,30 @@ public class EditConfigurationAction extends ItrackerBaseAction {
             // Now reset the cached versions in IssueUtilities
             configurationService.resetConfigurationCache(configItem.getType());
 
-            request.setAttribute("action", action);
-            request.setAttribute("value", formValue);
             PropertyUtils.setSimpleProperty(form, "value", formValue);
 
             String pageTitleKey = "";
             String pageTitleArg = "";
-            boolean isUpdate = false;
 
-            if ("update".equals(request.getAttribute("action"))) {
-                isUpdate = true;
+            if ("update".equals(action)) {
                 pageTitleKey = "itracker.web.admin.editconfiguration.title.update";
             } else {
                 Locale locale = getLocale(request);
                 pageTitleKey = "itracker.web.admin.editconfiguration.title.create";
-                if ("createseverity".equals(request.getAttribute("action"))) {
+                if ("createseverity".equals(BeanUtils.getSimpleProperty(form, "action"))) {
                     pageTitleArg = ITrackerResources.getString(
                             "itracker.web.attr.severity", locale);
                 } else if ("createstatus"
-                        .equals(request.getAttribute("action"))) {
+                        .equals(BeanUtils.getSimpleProperty(form, "action"))) {
                     pageTitleArg = ITrackerResources.getString(
                             "itracker.web.attr.status", locale);
-                } else if ("createresolution".equals(request
-                        .getAttribute("action"))) {
+                } else if ("createresolution".equals(BeanUtils.getSimpleProperty(form, "action"))) {
                     pageTitleArg = ITrackerResources.getString(
                             "itracker.web.attr.resolution", locale);
                 } else {
                     return mapping.findForward("unauthorized");
                 }
             }
-            request.setAttribute("isUpdate", Boolean.valueOf(isUpdate));
             request.setAttribute("pageTitleKey", pageTitleKey);
             request.setAttribute("pageTitleArg", pageTitleArg);
             return mapping.findForward("listconfiguration");
