@@ -30,7 +30,7 @@ public class ListIssuesAction extends ItrackerBaseAction {
             }
             if (af != null) return af;
 
-        log.info("execute: Forward was: " + ListIssuesActionUtil.FWD_LIST_ISSUES);
+        log.debug("execute: Forward was: " + ListIssuesActionUtil.FWD_LIST_ISSUES);
         return mapping.findForward(ListIssuesActionUtil.FWD_LIST_ISSUES);
     }
 

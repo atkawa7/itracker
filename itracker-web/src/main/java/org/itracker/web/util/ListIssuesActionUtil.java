@@ -73,7 +73,7 @@ public class ListIssuesActionUtil {
     UserPreferences userPrefs = (UserPreferences) request.getSession().getAttribute(ListIssuesActionUtil.SES_ATT_NAME_PREFERENCES);
 
     Integer projectId = NumberUtils.createInteger(request.getParameter(ListIssuesActionUtil.PARAM_NAME_PROJECT_ID));
-    log.info("execute: " + ListIssuesActionUtil.PARAM_NAME_PROJECT_ID + " was: " + projectId);
+    log.debug("execute: " + ListIssuesActionUtil.PARAM_NAME_PROJECT_ID + " was: " + projectId);
 
     if (null == projectId) {
         messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -91,9 +91,9 @@ public class ListIssuesActionUtil {
                 "itracker.web.error.invalidproject"));
         return mapping.findForward("error");
     }
-    log.info("execute: projectModel_Name: " + project.getName());
+    log.debug("execute: projectModel_Name: " + project.getName());
     List<Issue> listIssues = issueService.getIssuesByProjectId(projectId, status);
-    log.info("execute: issues found for this project: " + listIssues.size());
+    log.debug("execute: issues found for this project: " + listIssues.size());
     // prepare PTOs
     List<IssuePTO> issuePTOs = new ArrayList<IssuePTO>();
     

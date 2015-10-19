@@ -1,6 +1,5 @@
 package org.itracker.web.filters;
 
-import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
@@ -9,6 +8,8 @@ import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.ITrackerServices;
 import org.itracker.web.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -19,12 +20,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Configurations:
- * <ul>
- * <li>AuthExcludedPaths: Comma separated list of Regex url-Patterns (eg.
- * <code>/login.do, /unprotected-path/**</code>)</li>
- * </ul>
- *
  * @author ranks
  */
 public class ExecuteAlwaysFilter implements Filter {
@@ -32,7 +27,7 @@ public class ExecuteAlwaysFilter implements Filter {
     /**
      * Logger for ExecuteAlwaysFilter
      */
-    private static final Logger log = Logger
+    private static final Logger log = LoggerFactory
             .getLogger(ExecuteAlwaysFilter.class);
 
     private ITrackerServices iTrackerServices;
@@ -63,8 +58,7 @@ public class ExecuteAlwaysFilter implements Filter {
 
         // From IrackerBaseAction.executeAlways
         if (log.isDebugEnabled()) {
-            log
-                    .debug("doFilter: setting the common request attributes, (coming from the former header.jsp)");
+            log.debug("doFilter: setting the common request attributes, (coming from the former header.jsp)");
         }
 
         setupCommonReqAttributes(request, ServletContextUtils.getItrackerServices().getConfigurationService());
@@ -77,21 +71,21 @@ public class ExecuteAlwaysFilter implements Filter {
         setupCommonReqAttributesEx(request);
 
         try {
-            log.info("doFilter: executing chain..");
+            log.debug("doFilter: executing chain..");
 
             chain.doFilter(request, response);
 
-            log.info("doFilter: completed chain execution.");
+            log.debug("doFilter: completed chain execution.");
 
         } catch (RuntimeException e) {
             log.error(
-                    "doFilter: failed to execute chain with runtime exception: "
-                            + e.getMessage(), e);
+                    "doFilter: failed to execute chain with runtime exception: {}",
+                            e.getMessage(), e);
             handleError(e, request, response);
 
         } catch (IOException ioe) {
-            log.error("doFilter: failed to execute chain with i/o exception: "
-                    + ioe.getMessage(), ioe);
+            log.error("doFilter: failed to execute chain with i/o exception: {}",
+                    ioe.getMessage(), ioe);
             handleError(ioe, request, response);
 
         } catch (ServletException se) {
@@ -101,7 +95,7 @@ public class ExecuteAlwaysFilter implements Filter {
             handleError(se, request, response);
 
         } catch (Error err) {
-            log.fatal("doFilter: caught fatal error executing filter chain",
+            log.error("doFilter: caught fatal error executing filter chain",
                     err);
             throw err;
         }
@@ -110,11 +104,11 @@ public class ExecuteAlwaysFilter implements Filter {
     private static void handleError(Throwable error, ServletRequest request, ServletResponse response) throws ServletException {
 
         if (null == error) {
-            log.info("handleError: called with null throwable");
+            log.debug("handleError: called with null throwable");
             throw new IllegalArgumentException("null error");
         }
 
-        log.info("handleError: called with " + error.getClass().getSimpleName(), error);
+        log.debug("handleError: called with " + error.getClass().getSimpleName(), error);
 
         if (!(response instanceof HttpServletResponse) || !(request instanceof HttpServletRequest)) {
             log.error("handleError: unknown request/response: " + request + ", " + response, error);
@@ -132,7 +126,7 @@ public class ExecuteAlwaysFilter implements Filter {
         try {
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/error.do");
         } catch (IOException e) {
-            log.fatal("handleError: failed to redirect to error-page");
+            log.error("handleError: failed to redirect to error-page", e);
         }
     }
 
@@ -155,8 +149,8 @@ public class ExecuteAlwaysFilter implements Filter {
             return;
         }
 
-        if (log.isInfoEnabled()) {
-            log.info("saveErrors: saved errors: " + errors);
+        if (log.isDebugEnabled()) {
+            log.debug("saveErrors: saved errors: {}", errors);
         }
         // Save the error messages we need
         request.setAttribute(Globals.ERROR_KEY, errors);
@@ -168,11 +162,11 @@ public class ExecuteAlwaysFilter implements Filter {
     private static void setupCommonReqAttributes(
             HttpServletRequest request,
             ConfigurationService configurationService) {
-        boolean allowForgotPassword = true;
-        boolean allowSelfRegister = false;
-        boolean allowSaveLogin = true;
-        String siteTitle = null;
-        String siteLogo = null;
+        boolean allowForgotPassword;
+        boolean allowSelfRegister;
+        boolean allowSaveLogin;
+        String siteTitle;
+        String siteLogo;
 
         allowForgotPassword = configurationService.getBooleanProperty(
                 "allow_forgot_password", true);
@@ -219,22 +213,15 @@ public class ExecuteAlwaysFilter implements Filter {
     }
 
     private static void setupCommonReqAttributesEx(HttpServletRequest request) {
-        final String path = request.getServletPath();
-        // try save login
-        if (LoginUtilities.allowSaveLogin(request)) {
-            log.info("auto login active");
-            // TODO, should be a separate filter
-        }
-
         final Map<Integer, Set<PermissionType>> permissions = RequestHelper
                 .getUserPermissions(request.getSession());
         request.setAttribute("hasPermissionUserAdmin", UserUtilities.hasPermission(permissions,
-                UserUtilities.PERMISSION_USER_ADMIN));
+                PermissionType.USER_ADMIN));
         request.setAttribute("hasPermissionProductAdmin", UserUtilities.hasPermission(permissions,
-                UserUtilities.PERMISSION_PRODUCT_ADMIN));
+                PermissionType.PRODUCT_ADMIN));
         request.setAttribute("hasPermissionViewAll",
                 UserUtilities.hasPermission(permissions,
-                        UserUtilities.PERMISSION_VIEW_ALL));
+                        PermissionType.ISSUE_VIEW_ALL));
     }
 
     /**

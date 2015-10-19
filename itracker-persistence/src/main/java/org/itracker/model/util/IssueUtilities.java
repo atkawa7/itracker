@@ -130,7 +130,7 @@ public class IssueUtilities {
 
     public static int getFieldType(Integer fieldId) {
         if (fieldId != null) {
-            if (fieldId.intValue() > 0) {
+            if (fieldId > 0) {
                 return FIELD_TYPE_MAP;
             }
 
@@ -144,11 +144,11 @@ public class IssueUtilities {
             return "";
         }
 
-        if (fieldId.intValue() > 0) {
+        if (fieldId > 0) {
             return "customFields";
         }
 
-        switch (fieldId.intValue()) {
+        switch (fieldId) {
             case FIELD_ID:
                 return "id";
             case FIELD_DESCRIPTION:
@@ -189,9 +189,8 @@ public class IssueUtilities {
     public static String getFieldName(Integer fieldId,
                                       List<CustomField> customFields, Locale locale) {
 
-        if (fieldId.intValue() < 0) {
-            return ITrackerResources.getString(getStandardFieldKey(fieldId
-                    .intValue()), locale);
+        if (fieldId < 0) {
+            return ITrackerResources.getString(getStandardFieldKey(fieldId), locale);
         } else {
             return CustomFieldUtilities.getCustomFieldName(fieldId,
                     locale);
@@ -285,38 +284,31 @@ public class IssueUtilities {
     }
 
     public static String componentsToString(Issue issue) {
-        StringBuffer value = new StringBuffer();
+        StringBuilder value = new StringBuilder();
         if (issue != null && issue.getComponents().size() > 0) {
             for (int i = 0; i < issue.getComponents().size(); i++) {
-                value.append((i != 0 ? ", " : "")
-                        + issue.getComponents().get(i).getName());
+                value.append(i != 0 ? ", " : "").append(issue.getComponents().get(i).getName());
             }
         }
         return value.toString();
     }
 
     public static String versionsToString(Issue issue) {
-        StringBuffer value = new StringBuffer();
+        StringBuilder value = new StringBuilder();
         if (issue != null && issue.getVersions().size() > 0) {
             for (int i = 0; i < issue.getVersions().size(); i++) {
-                value.append((i != 0 ? ", " : "")
-                        + issue.getVersions().get(i).getNumber());
+                value.append(i != 0 ? ", " : "").append(issue.getVersions().get(i).getNumber());
             }
         }
         return value.toString();
     }
 
     public static String historyToString(Issue issue, SimpleDateFormat sdf) {
-        StringBuffer value = new StringBuffer();
+        StringBuilder value = new StringBuilder();
         if (issue != null && issue.getHistory().size() > 0 && sdf != null) {
             for (int i = 0; i < issue.getHistory().size(); i++) {
-                value.append((i != 0 ? "," : "")
-                        + issue.getHistory().get(i).getDescription() + ","
-                        + issue.getHistory().get(i).getUser().getFirstName());
-                value.append(" "
-                        + issue.getHistory().get(i).getUser().getLastName()
-                        + ","
-                        + sdf.format(issue.getHistory().get(i)
+                value.append(i != 0 ? "," : "").append(issue.getHistory().get(i).getDescription()).append(",").append(issue.getHistory().get(i).getUser().getFirstName());
+                value.append(" ").append(issue.getHistory().get(i).getUser().getLastName()).append(",").append(sdf.format(issue.getHistory().get(i)
                         .getLastModifiedDate()));
             }
         }
@@ -417,9 +409,9 @@ public class IssueUtilities {
     public static int compareSeverity(Issue issueA, Issue issueB) {
         if (issueA == null && issueB == null) {
             return 0;
-        } else if (issueA == null && issueB != null) {
+        } else if (issueA == null) {
             return -1;
-        } else if (issueA != null && issueB == null) {
+        } else if (issueB == null) {
             return 1;
         } else {
             int issueAIndex = Integer.MAX_VALUE;
@@ -514,7 +506,6 @@ public class IssueUtilities {
     /**
      * Sets the cached array of CustomFieldModels.
      *
-     * @return an array of CustomFieldModels
      */
     public static void setCustomFields(List<CustomField> value) {
         customFields = (value == null ? new ArrayList<CustomField>() : value);
@@ -543,11 +534,11 @@ public class IssueUtilities {
         CustomField retField = null;
 
         try {
-            for (int i = 0; i < customFields.size(); i++) {
-                if (customFields.get(i) != null
-                        && customFields.get(i).getId() != null
-                        && customFields.get(i).getId().equals(id)) {
-                    retField = (CustomField) customFields.get(i).clone();
+            for (CustomField customField : customFields) {
+                if (customField != null
+                        && customField.getId() != null
+                        && customField.getId().equals(id)) {
+                    retField = (CustomField) customField.clone();
                     break;
                 }
             }
@@ -588,7 +579,6 @@ public class IssueUtilities {
     }
 
 
-
     /**
      * Returns true if the user has permission to view the requested issue.
      *
@@ -610,8 +600,8 @@ public class IssueUtilities {
 
         if (UserUtilities.hasPermission(permissions,
                 issue.getProject().getId(), PermissionType.ISSUE_VIEW_ALL)) {
-            if (log.isInfoEnabled()) {
-                log.info("canViewIssue: issue: " + issue + ", user: " + userId
+            if (log.isDebugEnabled()) {
+                log.debug("canViewIssue: issue: " + issue + ", user: " + userId
                         + ", permission: " + PermissionType.ISSUE_VIEW_ALL);
             }
             return true;
@@ -622,8 +612,8 @@ public class IssueUtilities {
         // otherwise it makes no sense of creating the issue itself.
         // So put these checks before checking permissions for the whole project.
         if (issue.getCreator().getId().equals(userId)) {
-            if (log.isInfoEnabled()) {
-                log.info("canViewIssue: issue: " + issue + ", user: " + userId
+            if (log.isDebugEnabled()) {
+                log.debug("canViewIssue: issue: " + issue + ", user: " + userId
                         + ", permission: is creator");
             }
             isUsersIssue = true;
@@ -632,8 +622,8 @@ public class IssueUtilities {
         if (issue.getOwner() != null) {
             if (issue.getOwner().getId().equals(userId)) {
 
-                if (log.isInfoEnabled()) {
-                    log.info("canViewIssue: issue: " + issue + ", user: "
+                if (log.isDebugEnabled()) {
+                    log.debug("canViewIssue: issue: " + issue + ", user: "
                             + userId + ", permission: is owner");
                 }
                 isUsersIssue = true;
@@ -644,16 +634,16 @@ public class IssueUtilities {
         // UserUtilities.hasPermission(permissions, issue.getProject()
         //             .getId(), PermissionType.ISSUE_VIEW_USERS)
         if (isUsersIssue) {
-            if (log.isInfoEnabled()) {
-                log.info("canViewIssue: issue: " + issue + ", user: "
+            if (log.isDebugEnabled()) {
+                log.debug("canViewIssue: issue: " + issue + ", user: "
                         + userId + ", permission: isUsersIssue");
             }
             return true;
         }
 
 
-        if (log.isInfoEnabled()) {
-            log.info("canViewIssue: issue: " + issue + ", user: " + userId
+        if (log.isDebugEnabled()) {
+            log.debug("canViewIssue: issue: " + issue + ", user: " + userId
                     + ", permission: none matched");
         }
         return false;
@@ -676,7 +666,6 @@ public class IssueUtilities {
             }
             return false;
         }
-
 
 
         if (UserUtilities.hasPermission(permissions,
@@ -773,21 +762,18 @@ public class IssueUtilities {
                 issue.getProject().getId(), PermissionType.ISSUE_ASSIGN_OTHERS)) {
             return true;
         }
-        if (issue.getOwner() != null
+        return issue.getOwner() != null
                 && userId.equals(issue.getOwner().getId())
                 && UserUtilities.hasPermission(permissions, issue.getProject()
-                .getId(), PermissionType.ISSUE_UNASSIGN_SELF)) {
-            return true;
-        }
+                .getId(), PermissionType.ISSUE_UNASSIGN_SELF);
 
-        return false;
     }
 
     public static boolean hasIssueRelation(Issue issue, Integer relatedIssueId) {
         if (issue != null) {
             List<IssueRelation> relations = issue.getRelations();
-            for (int i = 0; i < relations.size(); i++) {
-                if (relations.get(i).getRelatedIssue().getId().equals(
+            for (IssueRelation relation : relations) {
+                if (relation.getRelatedIssue().getId().equals(
                         relatedIssueId)) {
                     return true;
                 }
@@ -817,20 +803,18 @@ public class IssueUtilities {
             return true;
         }
 
-        if (project != null && project.getOwners() != null && !project.getOwners().isEmpty()) {
-            Iterator<User> owners = project.getOwners().iterator();
-            while (owners.hasNext()) {
-                if (owners.next().getId().equals(userId)) {
+        if (project != null && project.getOwners() != null) {
+            for (User user : project.getOwners()) {
+                if (user.getId().equals(userId)) {
                     return true;
                 }
             }
         }
 
         Collection<Notification> notifications = issue.getNotifications();
-        if (notifications != null && !notifications.isEmpty()) {
-            Iterator<Notification> notificationsIt = notifications.iterator();
-            while (notificationsIt.hasNext()) {
-                if (notificationsIt.next().getUser().getId().equals(userId)) {
+        if (notifications != null) {
+            for (Notification notification : notifications) {
+                if (notification.getUser().getId().equals(userId)) {
                     return true;
                 }
             }
@@ -840,13 +824,14 @@ public class IssueUtilities {
     }
 
     public static URL getIssueURL(Issue issue, String baseURL) throws MalformedURLException {
-        return getIssueURL(issue, new URL(baseURL + (StringUtils.endsWith(baseURL, "/")? "":"/")
-                 ));
+        return getIssueURL(issue, new URL(baseURL + (StringUtils.endsWith(baseURL, "/") ? "" : "/")
+        ));
     }
+
     public static URL getIssueURL(Issue issue, URL base) {
         try {
-            if ( null != base && null != issue )
-            return new URL(base, "module-projects/view_issue.do?id=" + issue.getId());
+            if (null != base && null != issue)
+                return new URL(base, "module-projects/view_issue.do?id=" + issue.getId());
         } catch (MalformedURLException e) {
             log.error("could not create URL", e);
         }
