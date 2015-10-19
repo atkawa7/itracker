@@ -561,7 +561,7 @@
         </tr>
     </c:if>
     <c:if test="${userPrefs.hiddenIndexSections>0}">
-        <tr style="text-align: left;"">
+        <tr style="text-align: left;">
             <td colspan="15" style="text-align: left;">
             <c:choose>
                 <c:when test="${!allSections}">
