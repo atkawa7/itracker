@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 import java.io.IOException;
-import static org.itracker.Assert.*;
 
 /**
  * Verifies authorization to the system functionality.
@@ -61,6 +60,55 @@ public class LoginSeleniumIT extends AbstractSeleniumTestCase {
             waitForPageToLoad();
             assertElementNotPresent(By.name("id"));
         }
+
+    }
+    @Test
+    public void testRememberMe() throws IOException {
+        closeSession();
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
+                + applicationPath + "/module-preferences/editpreferencesform.do");
+
+        assertElementPresent(By.name("login")).sendKeys("user_test1");
+        assertElementPresent(By.name("password")).sendKeys("user_test1");
+        assertElementPresent(By.name("saveLogin")).click();
+        assertElementPresent(By.xpath("//*[@value='Login']")).click();
+        waitForPageToLoad();
+
+        assertElementPresent(By.name("id"));
+        // expire the current session
+        driver.manage().deleteCookieNamed("JSESSIONID");
+
+        assertElementPresent(By.cssSelector(
+                "a[href='/" + applicationPath + "/module-searchissues/searchissuesform.do']"))
+                .click();
+        waitForPageToLoad();
+
+        assertElementPresent(By.name("id"));
+        assertElementNotPresent(By.name("login"));
+        assertElementNotPresent(By.name("password"));
+    }
+    @Test
+    public void testNotRememberMe() throws IOException {
+        closeSession();
+        driver.get("http://" + applicationHost + ":" + applicationPort + "/"
+                + applicationPath + "/module-preferences/editpreferencesform.do");
+
+        assertElementPresent(By.name("login")).sendKeys("user_test1");
+        assertElementPresent(By.name("password")).sendKeys("user_test1");
+        assertElementPresent(By.xpath("//*[@value='Login']")).click();
+        waitForPageToLoad();
+
+        assertElementPresent(By.name("id"));
+        // expire the current session
+        driver.manage().deleteCookieNamed("JSESSIONID");
+        assertElementPresent(By.cssSelector(
+                "a[href='/" + applicationPath + "/module-searchissues/searchissuesform.do']"))
+                .click();
+        waitForPageToLoad();
+
+        assertElementPresent(By.name("login"));
+        assertElementPresent(By.name("password"));
+        assertElementNotPresent(By.name("id"));
 
     }
 

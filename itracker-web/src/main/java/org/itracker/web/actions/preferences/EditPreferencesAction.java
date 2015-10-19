@@ -173,7 +173,6 @@ public class EditPreferencesAction extends ItrackerBaseAction {
 
                     userPrefs.setUserLocale(userForm.getUserLocale());
 
-                    userPrefs.setSaveLogin(Boolean.valueOf(userForm.getSaveLogin()));
                     try {
                         userPrefs.setNumItemsOnIndex(Integer.valueOf(userForm.getNumItemsOnIndex()));
                     } catch (NumberFormatException nfe) {

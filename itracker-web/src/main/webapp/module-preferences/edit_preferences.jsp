@@ -223,29 +223,6 @@
 				</c:otherwise>
 			</c:choose>
 		</tr>
-
-		<c:if test="${allowSaveLogin}">
-			<tr>
-				<td colspan="2"><html:img module="/"
-					page="/themes/defaulttheme/images/blank.gif" height="3" width="1" /></td>
-			</tr>
-			<tr>
-				<td class="editColumnTitle"><it:message
-					key="itracker.web.editprefs.savelogin" />:</td>
-				<c:choose>
-					<c:when test="${allowPreferenceUpdate}">
-						<td class="editColumnText">
-							<html:radio property="saveLogin" value="true" styleId="saveLogin_1" />
-							<label for="saveLogin_1" ><it:message key="itracker.web.generic.yes" /></label>
-						    <html:radio property="saveLogin" value="false" styleId="saveLogin_false" />
-							<label for="saveLogin_false"><it:message key="itracker.web.generic.no" /></label></td>
-					</c:when>
-					<c:otherwise>
-						<td class="editColumnText">${ getSaveLoginLocalized }</td>
-					</c:otherwise>
-				</c:choose>
-			</tr>
-		</c:if>
 		<tr>
 			<td colspan="2"><html:img module="/"
 				page="/themes/defaulttheme/images/blank.gif" height="3" width="1" /></td>

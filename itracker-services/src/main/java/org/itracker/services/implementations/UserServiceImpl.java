@@ -112,8 +112,12 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final User model = getUserByLogin(username);
-        return new ITrackerUserDetails(model, getPermissionsByUserId(model.getId()));
+        try {
+            final User model = getUserByLogin(username);
+            return new ITrackerUserDetails(model, getPermissionsByUserId(model.getId()));
+        } catch (NoSuchEntityException e) {
+            throw new UsernameNotFoundException(username, e);
+        }
     }
 
     public String getUserPasswordByLogin(String login) {
@@ -285,7 +289,6 @@ public class UserServiceImpl implements UserService {
             if (newUserPrefs == null) {
                 newUserPrefs = new UserPreferences();
             }
-            newUserPrefs.setSaveLogin(userPrefs.getSaveLogin());
             newUserPrefs.setUserLocale(userPrefs.getUserLocale());
             newUserPrefs.setNumItemsOnIndex(userPrefs.getNumItemsOnIndex());
             newUserPrefs.setNumItemsOnIssueList(userPrefs.getNumItemsOnIssueList());
@@ -443,10 +446,7 @@ public class UserServiceImpl implements UserService {
                     throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
                 }
                 successful = true;
-            } catch (IllegalAccessException iae) {
-                logger.error("Authenticator class " + authenticatorClassName + " can not be instantiated.");
-                throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
-            } catch (InstantiationException ie) {
+            } catch (IllegalAccessException | InstantiationException iae) {
                 logger.error("Authenticator class " + authenticatorClassName + " can not be instantiated.");
                 throw new AuthenticatorException(AuthenticatorException.SYSTEM_ERROR);
             } catch (ClassCastException cce) {
@@ -466,7 +466,7 @@ public class UserServiceImpl implements UserService {
     public boolean addUserPermissions(Integer userId, List<Permission> newPermissions) {
         boolean successful = false;
         if (newPermissions == null || newPermissions.size() == 0) {
-            return successful;
+            return false;
         }
 
         try {
@@ -484,11 +484,9 @@ public class UserServiceImpl implements UserService {
     /**
      * private util for collection searching (contains)
      */
-    private static final Permission find(Collection<Permission> permissions, Permission permission) {
+    private static Permission find(Collection<Permission> permissions, Permission permission) {
 
-        Iterator<Permission> permssionsIt = permissions.iterator();
-        while (permssionsIt.hasNext()) {
-            Permission permission2 = permssionsIt.next();
+        for (Permission permission2 : permissions) {
             if (Permission.PERMISSION_PROPERTIES_COMPARATOR.compare(permission, permission2) == 0) {
                 // found in list, return the found object
                 return permission2;

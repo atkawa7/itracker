@@ -204,14 +204,14 @@ public class UserServiceImplIT extends AbstractServicesIntegrationTest {
         UserPreferences userPreferences = userPreferencesDAO.findByUserId(2);
         assertNotNull("userPreferences#2", userPreferences);
 
-        assertTrue("userPreferences#2.saveLogin", userPreferences.getSaveLogin());
+        assertTrue("userPreferences#2.rememberLastSearch", userPreferences.getRememberLastSearch());
 
-        userPreferences.setSaveLogin(false);
+        userPreferences.setRememberLastSearch(false);
 
         UserPreferences updatedUserPreferences = userService.updateUserPreferences(userPreferences);
 
         assertNotNull(updatedUserPreferences);
-        assertFalse(updatedUserPreferences.getSaveLogin());
+        assertFalse(updatedUserPreferences.getRememberLastSearch());
 
 
         User user = userService.getUser(2);

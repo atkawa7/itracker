@@ -12,6 +12,13 @@
       <td align="left" class="editColumnTitle"><it:message key="itracker.web.attr.password"/>:</td>
       <td align="left"><html:password property="password" styleClass="editColumnText" redisplay="false"/></td>
     </tr>
+    <c:if test="${ allowSaveLogin }" >
+      <tr>
+        <td align="left" colspan="2" class="editColumnTitle">
+          <html:checkbox styleId="saveLogin" value="true" property="saveLogin" />
+          <label for="saveLogin"><it:message key="itracker.web.attr.savelogin"/></label></td>
+      </tr>
+    </c:if>
     <tr>
       <td colspan="2" align="left"><html:submit styleClass="button" altKey="itracker.web.button.login.alt" titleKey="itracker.web.button.login.alt"><it:message key="itracker.web.button.login"/></html:submit></td>
     </tr>

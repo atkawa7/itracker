@@ -26,10 +26,9 @@ public class UserForm extends ValidatorForm {
 
     private boolean superUser = false;
 
-    private Map<String, String> permissions = new HashMap<String, String>();
+    private Map<String, String> permissions = new HashMap<>();
 
     private String userLocale = null;
-    private String saveLogin = null;
     private String numItemsOnIndex = null;
     private String numItemsOnIssueList = null;
     private String showClosedOnIssueList = null;
@@ -134,13 +133,6 @@ public class UserForm extends ValidatorForm {
         userLocale = value;
     }
 
-    public String getSaveLogin() {
-        return saveLogin;
-    }
-
-    public void setSaveLogin(String value) {
-        saveLogin = value;
-    }
 
     public String getNumItemsOnIndex() {
         return numItemsOnIndex;
@@ -215,10 +207,9 @@ public class UserForm extends ValidatorForm {
         email = null;
         superUser = false;
 
-        permissions = new HashMap<String, String>();
+        permissions = new HashMap<>();
 
         userLocale = null;
-        saveLogin = null;
         numItemsOnIndex = null;
         numItemsOnIssueList = null;
         showClosedOnIssueList = null;

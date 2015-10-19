@@ -7,6 +7,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:beans="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
@@ -28,16 +29,15 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <constructor-arg ref="reportService"/>
     </bean>
 
-    <bean id="passwordEncoder" class="org.itracker.services.authentication.ITrackerPasswordEncoder">
 
-    </bean>
+
     <security:http pattern="/themes/**" security="none" />
     <security:http auto-config="true" use-expressions="true">
         <security:custom-filter ref="executeAlwaysFilter" after="SECURITY_CONTEXT_FILTER" />
-        <security:intercept-url pattern="/login.*" access="isAnonymous()" />
-        <security:intercept-url pattern="/selfregister*.*" access="isAnonymous()" />
-        <security:intercept-url pattern="/forgotpassword*.*" access="isAnonymous()" />
-        <security:intercept-url pattern="/module-admin/**" access="hasAnyRole('USER_ADMIN')" />
+        <security:intercept-url pattern="/login.do" access="isAnonymous()" />
+        <security:intercept-url pattern="/selfregister*.do" access="isAnonymous()" />
+        <security:intercept-url pattern="/forgotpassword*.do" access="isAnonymous()" />
+        <security:intercept-url pattern="/module-admin/**/*.do" access="hasAnyRole('USER_ADMIN')" />
         <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER')" />
         <security:access-denied-handler  ref="accessDeniedHandler" />
         <security:form-login login-page="/login.do"
@@ -46,17 +46,23 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
                 authentication-success-handler-ref="loginHandler"
                 authentication-failure-handler-ref="authenticationErrorHandler"/>
         <security:logout logout-url="/logoff.do" invalidate-session="true" delete-cookies="itracker" />
-
+        <security:remember-me key="#{configurationService.getProperty('save_login_key','itracker')}"
+                remember-me-parameter="saveLogin"
+                token-validity-seconds="#{configurationService.getIntegerProperty('save_login_timeout', 2592000)}"
+                use-secure-cookie="false" user-service-ref="userService"
+                authentication-success-handler-ref="rememberMeLoginHandler"/>
     </security:http>
-    <security:authentication-manager>
-        <security:authentication-provider user-service-ref="userService" >
+    <security:authentication-manager >
+        <security:authentication-provider user-service-ref="userService">
             <security:password-encoder ref="passwordEncoder" />
         </security:authentication-provider>
     </security:authentication-manager>
-
     <bean id="executeAlwaysFilter" class="org.itracker.web.filters.ExecuteAlwaysFilter" />
-
+    <bean id="passwordEncoder" class="org.itracker.services.authentication.ITrackerPasswordEncoder" />
     <bean id="loginHandler" class="org.itracker.web.security.LoginHandler" />
+    <bean id="rememberMeLoginHandler" class="org.itracker.web.security.LoginHandler">
+        <property name="isAutologinSuccessHandler" value="true" />
+    </bean>
     <bean id="accessDeniedHandler" class="org.itracker.web.security.DefaultAccessDeniedHandler" >
         <property name="unauthorizedUrl" value="/unauthorized.do" />
     </bean>

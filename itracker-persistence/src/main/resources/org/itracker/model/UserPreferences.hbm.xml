@@ -15,10 +15,6 @@
             </generator>
         </id>
 
-        <property name="saveLogin">
-            <column name="save_login" not-null="true"/>
-        </property>
-
         <property name="userLocale">
             <column name="user_locale" not-null="true"/>
         </property>

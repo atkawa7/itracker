@@ -108,8 +108,6 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
             userForm.setUserLocale((userLocale == null ? ITrackerResources
                     .getDefaultLocale() : userLocale.toString()));
             userForm
-                    .setSaveLogin((userPrefs.getSaveLogin() ? "true" : "false"));
-            userForm
                     .setNumItemsOnIndex((userPrefs.getNumItemsOnIndex() < 1 ? ITrackerResources
                             .getString("itracker.web.generic.all", userLocale)
                             : Integer.toString(userPrefs.getNumItemsOnIndex())));
@@ -139,12 +137,7 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
             String userLocaleAsString = ITrackerResources.getString(
                     "itracker.locale.name", userPrefs.getUserLocale());
             request.setAttribute("userLocaleAsString", userLocaleAsString);
-            String getSaveLoginLocalized = ITrackerResources.getString(
-                    (userPrefs.getSaveLogin() ? "itracker.web.generic.yes"
-                            : "itracker.web.generic.no"), locale);
-            request
-                    .setAttribute("getSaveLoginLocalized",
-                            getSaveLoginLocalized);
+
             String showClosedOnIssueListLocalized = ITrackerResources
                     .getString(
                             (userPrefs.getShowClosedOnIssueList() ? "itracker.web.generic.yes"

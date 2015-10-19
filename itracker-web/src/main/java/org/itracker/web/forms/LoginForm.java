@@ -36,7 +36,7 @@ public class LoginForm extends ValidatorForm {
     private static final long serialVersionUID = 1L;
     private String login = null;
     private String password = null;
-    private boolean skip = false;
+    private boolean saveLogin;
 
     public String getLogin() {
         return login;
@@ -54,17 +54,19 @@ public class LoginForm extends ValidatorForm {
         this.password = password;
     }
 
+
+    public boolean isSaveLogin() {
+        return saveLogin;
+    }
+
+    public void setSaveLogin(boolean saveLogin) {
+        this.saveLogin = saveLogin;
+    }
+
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         login = null;
         password = null;
 
-    }
-
-    /**
-     * Skip login authentication.
-     */
-    public boolean isSkip() {
-        return skip;
     }
 
     public ActionErrors validate(ActionMapping mapping,
@@ -85,7 +87,6 @@ public class LoginForm extends ValidatorForm {
             errors = super.validate(mapping, request);
         } else {
             request.getSession().removeAttribute("loginForwarded");
-            this.skip = true;
             return new ActionErrors();
         }
         return errors;

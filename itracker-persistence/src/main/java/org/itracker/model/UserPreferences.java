@@ -42,7 +42,6 @@ public class UserPreferences extends AbstractEntity {
      */
     private User user;
 
-    private boolean saveLogin = false;
 
     private String userLocale = ITrackerResources.getDefaultLocale();
 
@@ -92,14 +91,6 @@ public class UserPreferences extends AbstractEntity {
         this.rememberLastSearch = rememberLastSearch;
     }
 
-    public boolean getSaveLogin() {
-        return saveLogin;
-    }
-
-    public void setSaveLogin(boolean saveLogin) {
-        this.saveLogin = saveLogin;
-    }
-
     public boolean getShowClosedOnIssueList() {
         return showClosedOnIssueList;
     }
@@ -144,7 +135,7 @@ public class UserPreferences extends AbstractEntity {
     public String toString() {
         return new ToStringBuilder(this).append("id", getId()).append("user", getUser())
                 .append("userLocale", getUserLocale()).append("useTextActions",
-                        getUseTextActions()).append("saveLogin", getSaveLogin()).append(
+                        getUseTextActions()).append(
                         "rememberLastSearch", getRememberLastSearch()).append(
                         "hiddenIndexSections", getHiddenIndexSections()).append(
                         "numItemsOnIndex", getNumItemsOnIndex()).append(

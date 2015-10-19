@@ -393,27 +393,13 @@ public class LoginUtilities {
         session.setAttribute(Constants.LOCALE_KEY, ITrackerResources
                 .getLocale(userPrefs.getUserLocale()));
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Setting autologin cookie for user " + user.getLogin());
-        }
+        // TODO: cookie could be removed
         Cookie cookie = new Cookie(Constants.COOKIE_NAME, "");
         cookie.setPath(request.getContextPath());
-        if (userPrefs.getSaveLogin()) {
-            if (encPassword != null) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("User allows autologin");
-                }
-                cookie.setComment("ITracker autologin cookie");
-                cookie.setValue(user.getLogin() + "~" + encPassword);
-                cookie.setMaxAge(30 * 24 * 60 * 60);
-            }
-        } else {
-            if (logger.isDebugEnabled()) {
-                logger.debug("User does not allow autologin");
-            }
-            cookie.setValue("");
-            cookie.setMaxAge(0);
-        }
+
+        cookie.setValue("");
+        cookie.setMaxAge(0);
+
         response.addCookie(cookie);
 
         if (logger.isDebugEnabled()) {

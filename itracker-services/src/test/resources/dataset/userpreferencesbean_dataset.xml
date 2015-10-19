@@ -3,7 +3,6 @@
     <table name="userpreferencesbean">
 
         <column>id</column>
-        <column>save_login</column>
         <column>user_locale</column>
         <column>num_items_index</column>
         <column>num_items_issue_list</column>
@@ -17,7 +16,6 @@
 
         <row>
             <value>2</value>
-            <value>1</value>
             <value>en_US</value>
             <value>10</value>
             <value>20</value>
@@ -32,7 +30,6 @@
 
         <row>
             <value>3</value>
-            <value>1</value>
             <value>en_US</value>
             <value>10</value>
             <value>20</value>

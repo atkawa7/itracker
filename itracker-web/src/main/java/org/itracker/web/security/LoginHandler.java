@@ -33,12 +33,13 @@ public class LoginHandler implements AuthenticationSuccessHandler {
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     private String redirectUrl = "/";
+    private boolean isAutologinSuccessHandler = false;
+
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         UserService userService = ServletContextUtils.getItrackerServices().getUserService();
-
 
         log.debug("Creating new session");
 
@@ -79,24 +80,6 @@ public class LoginHandler implements AuthenticationSuccessHandler {
         if (log.isDebugEnabled()) {
             log.debug("Setting autologin cookie for user " + user.getLogin());
         }
-        Cookie cookie = new Cookie(Constants.COOKIE_NAME, "");
-        cookie.setPath(request.getContextPath());
-        if (userPrefs.getSaveLogin() && LoginUtilities.allowSaveLogin(request)) {
-            if (user.getPassword() != null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("User allows autologin");
-                }
-                cookie.setComment("ITracker autologin cookie");
-                cookie.setValue(user.getLogin() + "~" + user.getPassword());
-                cookie.setMaxAge(30 * 24 * 60 * 60);
-            }
-        } else {
-            log.debug("User does not allow autologin");
-
-            cookie.setValue("");
-            cookie.setMaxAge(0);
-        }
-        response.addCookie(cookie);
 
         log.debug("Setting permissions for user {}", user.getLogin());
         Map<Integer, Set<PermissionType>> usersMapOfProjectIdsAndSetOfPermissionTypes = userService
@@ -132,7 +115,9 @@ public class LoginHandler implements AuthenticationSuccessHandler {
                                                 HttpServletResponse response,
                                                 RedirectStrategy redirectStrategy) throws IOException {
 
-        redirectStrategy.sendRedirect(request, response, getRedirectUrl(request));
+        final String path = getRedirectUrl(request);
+
+        redirectStrategy.sendRedirect(request, response, path);
     }
     protected SavedRequest getRequest(HttpServletRequest currentRequest) {
         HttpSession session = currentRequest.getSession(false);
@@ -145,13 +130,19 @@ public class LoginHandler implements AuthenticationSuccessHandler {
     }
     protected String getRedirectUrl(HttpServletRequest request) {
 
+        if (isAutologinSuccessHandler()) {
+
+            return StringUtils.defaultString(request.getServletPath());
+        }
+
         SavedRequest savedRequest = getRequest(request);
-        if(getRequest(request) != null) {
+        if (getRequest(request) != null) {
             return savedRequest.getRedirectUrl();
         }
 
+
         /* return a sane default in case data isn't there */
-        return request.getContextPath() + "/" + getRedirectUrl();
+        return getRedirectUrl();
     }
     public RedirectStrategy getRedirectStrategy() {
         return redirectStrategy;
@@ -163,6 +154,14 @@ public class LoginHandler implements AuthenticationSuccessHandler {
 
     public String getRedirectUrl() {
         return redirectUrl;
+    }
+
+    public boolean isAutologinSuccessHandler() {
+        return isAutologinSuccessHandler;
+    }
+
+    public void setIsAutologinSuccessHandler(boolean isAutologinSuccessHandler) {
+        this.isAutologinSuccessHandler = isAutologinSuccessHandler;
     }
 
     public void setRedirectUrl(String redirectUrl) {
