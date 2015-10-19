@@ -22,7 +22,7 @@
             <AppenderRef ref="A1"/>
             <AppenderRef ref="STDOUT"/>
         </Logger>
-        <Logger name="org.springframework.security" additivity="false" level="debug">
+        <Logger name="org.springframework.security" additivity="false" level="warn">
             <AppenderRef ref="A1"/>
             <AppenderRef ref="STDOUT"/>
         </Logger>
@@ -31,10 +31,6 @@
             <AppenderRef ref="STDOUT"/>
         </Logger>
         <Logger name="org.itracker"        additivity="false" level="info">
-            <AppenderRef ref="A1"/>
-            <AppenderRef ref="STDOUT"/>
-        </Logger>
-        <Logger name="org.itracker.web"    additivity="false" level="debug">
             <AppenderRef ref="A1"/>
             <AppenderRef ref="STDOUT"/>
         </Logger>
