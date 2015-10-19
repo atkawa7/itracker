@@ -168,7 +168,8 @@ a.headerLinks:visited {
     text-decoration: none;
 }
 
-.listHeading {
+.listHeading,
+.listHeading a {
     font-weight: bold;
     text-align: left;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
@@ -176,6 +177,10 @@ a.headerLinks:visited {
     color: white;
     background-color: #555555;
     text-decoration: none;
+}
+
+.listHeading a {
+    text-decoration: underline;
 }
 
 tr.listHeading td, tr.listHeading th {
@@ -406,4 +411,8 @@ Calender Styles
     border: none;
     margin: 0;
     padding: 0;
+}
+
+.assignIssueForm select {
+    width: 100%;
 }
