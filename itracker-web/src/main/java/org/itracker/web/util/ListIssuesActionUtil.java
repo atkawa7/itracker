@@ -145,8 +145,8 @@ public class ListIssuesActionUtil {
     if(hasViewAll) {
         numViewable = listIssues.size();
     } else {
-        for(int i = 0; i < listIssues.size(); i++) {
-            if(IssueUtilities.canViewIssue(listIssues.get(i), currUserId, userPermissions)) {
+        for (Issue listIssue : listIssues) {
+            if (IssueUtilities.canViewIssue(listIssue, currUserId, userPermissions)) {
                 numViewable++;
             }
         }

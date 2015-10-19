@@ -253,8 +253,8 @@ public class IssueUtilities {
 
 
     public static String getRelationName(IssueRelation.Type value, Locale locale) {
-        return ITrackerResources.getString(
-                ITrackerResources.KEY_BASE_ISSUE_RELATION + value.getCode(), locale);
+        return StringUtils.defaultIfBlank(ITrackerResources.getString(
+                ITrackerResources.KEY_BASE_ISSUE_RELATION + value.getCode(), locale), value.name());
     }
 
     public static IssueRelation.Type getMatchingRelationType(IssueRelation.Type relationType) {
@@ -324,8 +324,8 @@ public class IssueUtilities {
     }
 
     public static String getStatusName(String value, Locale locale) {
-        return ITrackerResources.getString(ITrackerResources.KEY_BASE_STATUS
-                + value, locale);
+        return StringUtils.defaultIfBlank(ITrackerResources.getString(ITrackerResources.KEY_BASE_STATUS
+                + value, locale), value);
     }
 
     /**
@@ -336,14 +336,11 @@ public class IssueUtilities {
     }
 
     public static List<NameValuePair> getStatuses(Locale locale) {
-        NameValuePair[] statusStrings = new NameValuePair[statuses.size()];
-        for (int i = 0; i < statuses.size(); i++) {
-            statusStrings[i] = new NameValuePair(ITrackerResources.getString(
-                    ITrackerResources.KEY_BASE_STATUS
-                            + statuses.get(i).getValue(), locale), statuses
-                    .get(i).getValue());
+        List<NameValuePair> statusStrings = new ArrayList<>(statuses.size());
+        for (Configuration status : statuses) {
+            statusStrings.add(new NameValuePair(getStatusName(status.getValue(), locale), status.getValue()));
         }
-        return Arrays.asList(statusStrings);
+        return statusStrings;
     }
 
     public static void setStatuses(List<Configuration> value) {
@@ -355,16 +352,16 @@ public class IssueUtilities {
     }
 
     public static String getSeverityName(Integer value) {
-        return getSeverityName(value, ITrackerResources.getLocale());
+        return StringUtils.defaultIfBlank(getSeverityName(value, ITrackerResources.getLocale()), String.valueOf(value));
     }
 
     public static String getSeverityName(Integer value, Locale locale) {
-        return getSeverityName(Integer.toString(value), locale);
+        return StringUtils.defaultIfBlank(getSeverityName(Integer.toString(value), locale), String.valueOf(value));
     }
 
     public static String getSeverityName(String value, Locale locale) {
-        return ITrackerResources.getString(ITrackerResources.KEY_BASE_SEVERITY
-                + value, locale);
+        return StringUtils.defaultIfBlank(ITrackerResources.getString(ITrackerResources.KEY_BASE_SEVERITY
+                + value, locale), String.valueOf(value));
     }
 
     /**
@@ -376,15 +373,12 @@ public class IssueUtilities {
      * @param locale the locale to return the severities as
      */
     public static List<NameValuePair> getSeverities(Locale locale) {
-        List<NameValuePair> severityStrings = new ArrayList<NameValuePair>();
+        List<NameValuePair> severityStrings = new ArrayList<>();
 
-        for (int i = 0; i < severities.size(); i++) {
-            String string1 = ITrackerResources.getString(
-                    ITrackerResources.KEY_BASE_SEVERITY
-                            + severities.get(i).getValue(), locale);
-            String string2 = severities.get(i).getValue();
-            NameValuePair nvp = new NameValuePair(string1, string2);
-            severityStrings.add(i, nvp);
+        for (Configuration severity : severities) {
+            NameValuePair nvp = new NameValuePair(getSeverityName(severity.getValue(), locale),
+                    severity.getValue());
+            severityStrings.add(nvp);
         }
         return severityStrings;
     }
@@ -466,15 +460,13 @@ public class IssueUtilities {
      * @param locale the locale to return the resolutions as
      */
     public static List<NameValuePair> getResolutions(Locale locale) {
-        NameValuePair[] resolutionStrings = new NameValuePair[resolutions
-                .size()];
-        for (int i = 0; i < resolutions.size(); i++) {
-            resolutionStrings[i] = new NameValuePair(ITrackerResources
-                    .getString(ITrackerResources.KEY_BASE_RESOLUTION
-                            + resolutions.get(i).getValue(), locale),
-                    resolutions.get(i).getValue());
+        final List<NameValuePair> resolutionStrings = new ArrayList<>(resolutions.size());
+        for (Configuration resolution : resolutions) {
+            resolutionStrings.add(new NameValuePair(
+                    getResolutionName(resolution.getValue(), locale),
+                    resolution.getValue()));
         }
-        return Arrays.asList(resolutionStrings);
+        return resolutionStrings;
     }
 
     /**
@@ -489,8 +481,8 @@ public class IssueUtilities {
     }
 
     public static String getActivityName(IssueActivityType type, Locale locale) {
-        return ITrackerResources.getString("itracker.activity."
-                + String.valueOf(type.name()), locale);
+        return StringUtils.defaultIfBlank(ITrackerResources.getString("itracker.activity."
+                + String.valueOf(type.name()), locale), type.name());
     }
 
     /**

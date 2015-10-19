@@ -629,7 +629,7 @@ public class IssueForm extends ITrackerForm {
     /**
      * method needed to prepare request for edit_issue.jsp
      */
-    public static final void setupJspEnv(ActionMapping mapping,
+    public static void setupJspEnv(ActionMapping mapping,
                                          IssueForm issueForm, HttpServletRequest request, Issue issue,
                                          IssueService issueService, UserService userService,
                                          Map<Integer, Set<PermissionType>> userPermissions,
