@@ -163,6 +163,8 @@ public class RemoveConfigurationItemAction extends ItrackerBaseAction {
             }
 
             configurationService.removeConfigurationItem(configItem.getId());
+            // Now reset the cached versions in IssueUtilities
+            configurationService.resetConfigurationCache(configItem.getType());
             if (key != null) {
                 configurationService.removeLanguageKey(key);
                 ITrackerResources.clearKeyFromBundles(key, false);
