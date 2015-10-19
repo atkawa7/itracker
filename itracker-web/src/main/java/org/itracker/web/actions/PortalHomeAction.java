@@ -2,7 +2,6 @@ package org.itracker.web.actions;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -15,6 +14,8 @@ import org.itracker.services.UserService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.ptos.IssuePTO;
 import org.itracker.web.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,13 +26,13 @@ import java.util.*;
 
 public class PortalHomeAction extends ItrackerBaseAction {
 
-    static final Logger LOGGER = Logger.getLogger(PortalHomeAction.class);
+    static final Logger log = LoggerFactory.getLogger(PortalHomeAction.class);
     
     @SuppressWarnings("unchecked")
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        LOGGER.info("Stepping up into the loginRouter method");
+        log.debug("Stepping up into the loginRouter method");
 
 		// maybe wrong the next line... setting a default forward...
 		ActionForward forward = mapping.findForward("portalhome");
@@ -40,7 +41,7 @@ public class PortalHomeAction extends ItrackerBaseAction {
 			return null;
 		} else {
             
-            LOGGER.info("Found forward, let's go and check if this forward is portalhome...");
+            log.debug("Found forward, let's go and check if this forward is portalhome...");
 
             if (forward.getName().equals("portalhome")
 					|| forward.getName().equals("index")) {
@@ -115,37 +116,42 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 }
                 
                 // SORTING ISSUES ACCORDING TO USER PREFS
-                if (null!=userPrefs) {
-                    String order = userPrefs.getSortColumnOnIssueList();
-                    Comparator sort_id = Issue.STATUS_COMPARATOR;
+                String order;
+                if (null != request.getParameter("sortKey")) {
+                    order = request.getParameter("sortKey");
+                } else {
+                    order = userPrefs.getSortColumnOnIssueList();
+                }
+                Comparator sort_id = Issue.ID_COMPARATOR;
                  //TODO: since repeating code, set a common Comparator variable to contain the Comparator to use and
                  //      execute the sort pre issue type only once.
-                    if("id".equals(order)) {
-                        sort_id = Issue.ID_COMPARATOR;
-                    } else if("sev".equals(order)) {
-                        sort_id = Issue.SEVERITY_COMPARATOR;
-                    } else if("stat".equals(order)) {
-                        sort_id = Issue.STATUS_COMPARATOR;
-                    } else if("lm".equals(order)) {
-                        sort_id = Issue.LAST_MODIFIED_DATE_COMPARATOR;
-                    } else if("own".equals(order)) {
-                        sort_id = Issue.OWNER_AND_STATUS_COMPARATOR;
-                    }
-                    
-                    Collections.sort(createdIssues, sort_id);
-                    Collections.sort(ownedIssues, sort_id);
-                    unassignedIssues.removeAll(CollectionUtils.select(unassignedIssues,
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate(Object object) {
-                                return object instanceof Issue
-                                        && !IssueUtilities.canViewIssue((Issue) object, currUser.getId(), permissions);
-                            }
-                        }
-                    ));
-                    Collections.sort(unassignedIssues, sort_id);
-                    Collections.sort(watchedIssues, sort_id);
+
+                if("id".equals(order)) {
+                    sort_id = Issue.ID_COMPARATOR;
+                } else if("sev".equals(order)) {
+                    sort_id = Issue.SEVERITY_COMPARATOR;
+                } else if("stat".equals(order)) {
+                    sort_id = Issue.STATUS_COMPARATOR;
+                } else if("lm".equals(order)) {
+                    sort_id = Issue.LAST_MODIFIED_DATE_COMPARATOR;
+                } else if("own".equals(order)) {
+                    sort_id = Issue.OWNER_AND_STATUS_COMPARATOR;
                 }
+
+                Collections.sort(createdIssues, sort_id);
+                Collections.sort(ownedIssues, sort_id);
+                unassignedIssues.removeAll(CollectionUtils.select(unassignedIssues,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate(Object object) {
+                            return object instanceof Issue
+                                    && !IssueUtilities.canViewIssue((Issue) object, currUser.getId(), permissions);
+                        }
+                    }
+                ));
+                Collections.sort(unassignedIssues, sort_id);
+                Collections.sort(watchedIssues, sort_id);
+
                 
                 // COPYING MODELS INTO PTOS
                 
@@ -207,29 +213,24 @@ public class PortalHomeAction extends ItrackerBaseAction {
 
 
                 // PUTTING ISSUES INTO THE REQUEST SCOPE
-				LOGGER.info("ownedIssues Size: " + ownedIssuePTOs.size());
+				log.debug("ownedIssues Size: {}", ownedIssuePTOs.size());
 				request.setAttribute("ownedIssues", ownedIssuePTOs);
 
-				LOGGER.info("unassignedIssues Size:  " + unassignedIssuePTOs.size());
+				log.debug("unassignedIssues Size: {}", unassignedIssuePTOs.size());
 				request.setAttribute("unassignedIssues", unassignedIssuePTOs);
 
-				LOGGER.info("createdIssues Size: " + createdIssuePTOs.size());
+				log.debug("createdIssues Size: {}", createdIssuePTOs.size());
 				request.setAttribute("createdIssues", createdIssuePTOs);
 
-				LOGGER.info("watchedIssues Size: " + watchedIssuePTOs.size());
+				log.debug("watchedIssues Size: {}", watchedIssuePTOs.size());
 				request.setAttribute("watchedIssues", watchedIssuePTOs);
                 
                 
                 
-                LOGGER.info("Found forward: " + forward.getName() + " and stepped into action method that's populating portalhome");
+                log.debug("Found forward: {} and stepped into action method that's populating portalhome",
+                        forward.getName());
 
-//
-//                String pageTitleKey = "itracker.web.index.title";
-//                String pageTitleArg = "";
-//                request.setAttribute(Constants.PAGE_TITLE_KEY,pageTitleKey);
-//                request.setAttribute(Constants.PAGE_TITLE_ARG,pageTitleArg);
-
-                request.setAttribute("ih",issueService);
+                request.setAttribute("ih", issueService);
                 request.setAttribute("ph",projectService);
                 request.setAttribute("uh",userService);
                 request.setAttribute("userPrefs",userPrefs);
@@ -245,13 +246,13 @@ public class PortalHomeAction extends ItrackerBaseAction {
                 	showAll=true;
                 }
                 
-                LOGGER.info("userPrefs.getNumItemsOnIndex(): " + userPrefs.getNumItemsOnIndex() + ", showAll: " + showAll);
+                log.debug("userPrefs.getNumItemsOnIndex(): {}, showAll: {}", userPrefs.getNumItemsOnIndex(), showAll);
 
                 request.getSession().setAttribute(Constants.SHOW_ALL_KEY, showAll);
 
                 request.getSession().setAttribute(Constants.ALL_SECTIONS_KEY, allSections);
-                
-                LOGGER.info("Action is trying to forward portalhome");
+
+                log.debug("Action is trying to forward portalhome");
             }
             return forward;
         }
@@ -266,9 +267,8 @@ public class PortalHomeAction extends ItrackerBaseAction {
         Locale locale = getLocale(request);
         
         List<IssuePTO> issuePTOs = new ArrayList<IssuePTO>();
-        
-        for (int i=0;i<issues.size();i++) {
-            Issue issue = issues.get(i);
+
+        for (Issue issue : issues) {
             IssuePTO issuePTO = new IssuePTO(issue);
             issuePTO.setSeverityLocalizedString(IssueUtilities.getSeverityName(issue.getSeverity(), locale));
             issuePTO.setStatusLocalizedString(IssueUtilities.getStatusName(issue.getStatus(), locale));

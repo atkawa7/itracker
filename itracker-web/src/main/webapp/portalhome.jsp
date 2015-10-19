@@ -18,23 +18,23 @@
         </tr>
     </c:when>
     <c:otherwise>
-    <tr style="text-align: left" class="listHeading">
-        <td style="width:50px;" ></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.id"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.project"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.status"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.severity"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.description"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.owner"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="text-align:right; white-space: nowrap" ><it:message key="itracker.web.attr.lastmodified"/></td>
-    </tr>
+        <tr style="text-align: left" class="listHeading">
+            <td style="width:50px;" ></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=id"><it:message key="itracker.web.attr.id"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><it:message key="itracker.web.attr.project"/></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=stat"><it:message key="itracker.web.attr.status"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=sev"><it:message key="itracker.web.attr.severity"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><it:message key="itracker.web.attr.description"/></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=own"><it:message key="itracker.web.attr.owner"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="text-align:right; white-space: nowrap" ><html:link action="/portalhome?sortKey=lm"><it:message key="itracker.web.attr.lastmodified"/></html:link></td>
+        </tr>
 
     <c:forEach items="${ownedIssues}" var="ownedIssue" step="1" varStatus="i">
 
@@ -117,23 +117,24 @@
        </tr>
     </c:when>
     <c:otherwise>
-    <tr style="text-align: left" class="listHeading">
-        <td style="width:50px;" ></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.id"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.project"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.status"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.severity"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.description"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.owner"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="text-align:right; white-space: nowrap" ><it:message key="itracker.web.attr.lastmodified"/></td>
-    </tr>
+
+        <tr style="text-align: left" class="listHeading">
+            <td style="width:50px;" ></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=id"><it:message key="itracker.web.attr.id"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><it:message key="itracker.web.attr.project"/></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=stat"><it:message key="itracker.web.attr.status"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=sev"><it:message key="itracker.web.attr.severity"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><it:message key="itracker.web.attr.description"/></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=own"><it:message key="itracker.web.attr.owner"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="text-align:right; white-space: nowrap" ><html:link action="/portalhome?sortKey=lm"><it:message key="itracker.web.attr.lastmodified"/></html:link></td>
+        </tr>
 
     <c:forEach items="${unassignedIssues}" var="unassignedIssue" step="1" varStatus="i">
         <c:set var="iCount" value="${i.index +1}" />
@@ -194,7 +195,7 @@
                             test="${unassignedIssue.userHasPermission_PERMISSION_ASSIGN_OTHERS}">
 
                             <td>
-                                <html:form action="/assignissue">
+                                <html:form action="/assignissue" styleClass="assignIssueForm">
                                     <html:hidden property="issueId"
                                                  value="${unassignedIssue.issue.id}"/>
                                     <html:hidden property="projectId"
@@ -241,7 +242,7 @@
                                 <c:when
                                     test="${unassignedIssue.userHasPermission_PERMISSION_ASSIGN_SELF}">
                                     <td style="white-space: nowrap;">
-                                        <html:form action="/assignissue">
+                                        <html:form action="/assignissue" styleClass="assignIssueForm">
                                             <html:hidden property="issueId"
                                                          value="${unassignedIssue.issue.id}"/>
                                             <html:hidden property="projectId"
@@ -317,23 +318,24 @@
         </tr>
     </c:when>
     <c:otherwise>
-    <tr style="text-align: left" class="listHeading">
-        <td style="width:50px;" ></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.id"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.project"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.status"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.severity"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.description"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.owner"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="text-align:right; white-space: nowrap" ><it:message key="itracker.web.attr.lastmodified"/></td>
-    </tr>
+
+        <tr style="text-align: left" class="listHeading">
+            <td style="width:50px;" ></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=id"><it:message key="itracker.web.attr.id"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><it:message key="itracker.web.attr.project"/></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=stat"><it:message key="itracker.web.attr.status"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=sev"><it:message key="itracker.web.attr.severity"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><it:message key="itracker.web.attr.description"/></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=own"><it:message key="itracker.web.attr.owner"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="text-align:right; white-space: nowrap" ><html:link action="/portalhome?sortKey=lm"><it:message key="itracker.web.attr.lastmodified"/></html:link></td>
+        </tr>
     <c:if test="${empty createdIssues}">
         <tr>
             <td ></td>
@@ -446,23 +448,24 @@
         </tr>
     </c:when>
     <c:otherwise>
-    <tr style="text-align: left" class="listHeading">
-        <td style="width:50px;" ></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.id"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.project"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.status"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.severity"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.description"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="white-space: nowrap"><it:message key="itracker.web.attr.owner"/></td>
-        <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-        <td style="text-align:right; white-space: nowrap" ><it:message key="itracker.web.attr.lastmodified"/></td>
-    </tr>
+
+        <tr style="text-align: left" class="listHeading">
+            <td style="width:50px;" ></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=id"><it:message key="itracker.web.attr.id"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><it:message key="itracker.web.attr.project"/></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=stat"><it:message key="itracker.web.attr.status"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=sev"><it:message key="itracker.web.attr.severity"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><it:message key="itracker.web.attr.description"/></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="white-space: nowrap"><html:link action="/portalhome?sortKey=own"><it:message key="itracker.web.attr.owner"/></html:link></td>
+            <td><html:img page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
+            <td style="text-align:right; white-space: nowrap" ><html:link action="/portalhome?sortKey=lm"><it:message key="itracker.web.attr.lastmodified"/></html:link></td>
+        </tr>
 
 
     <c:forEach items="${watchedIssues}" var="watchedIssue" step="1"
