@@ -26,7 +26,7 @@ public class UserForm extends ValidatorForm {
 
     private boolean superUser = false;
 
-    private Map<String, String> permissions = new HashMap<>();
+    private Map<String, Boolean> permissions = new HashMap<>();
 
     private String userLocale = null;
     private String numItemsOnIndex = null;
@@ -117,11 +117,11 @@ public class UserForm extends ValidatorForm {
         superUser = value;
     }
 
-    public Map<String, String> getPermissions() {
+    public Map<String, Boolean> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(Map<String, String> value) {
+    public void setPermissions(Map<String, Boolean> value) {
         permissions = value;
     }
 

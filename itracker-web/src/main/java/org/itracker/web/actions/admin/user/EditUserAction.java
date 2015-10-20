@@ -167,7 +167,7 @@ public class EditUserAction extends ItrackerBaseAction {
             }
 
             if (errors.isEmpty() && userService.allowPermissionUpdates(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
-                Map<String, String> permissionsMap = userForm.getPermissions();
+                Map<String, Boolean> permissionsMap = userForm.getPermissions();
                 List<Permission> newPermissions = new ArrayList<Permission>();
 
 
@@ -184,7 +184,7 @@ public class EditUserAction extends ItrackerBaseAction {
                 }
 
                 boolean successful = userService.setUserPermissions(editUser.getId(), newPermissions);
-                if (successful == true) {
+                if (successful) {
                     log.debug("User Permissions have been nicely set.");
 
                 } else {

@@ -28,7 +28,8 @@
         <br>
       </logic:messagesPresent>
 
-      <html:form action="/edituser" method="post" acceptCharset="UTF-8" enctype="multipart/form-data">
+      <html:form action="/edituser" method="post" acceptCharset="UTF-8" enctype="multipart/form-data"
+                 onsubmit="return validateForm()">
         <html:hidden property="action"/>
         <html:hidden property="id"/>
 
@@ -216,7 +217,7 @@
 									<html:hidden property="${ keyName }" />
 								</c:when>
 								<c:otherwise>
-									<html:checkbox property="${ keyName }" value="on" />
+									<html:checkbox property="${ keyName }" />
 								</c:otherwise>
 							</c:choose></td>
 							<td>${ permissionName.name }</td>
@@ -248,7 +249,7 @@
                 <c:when test="${isUpdate}">
                 <tr>
                     <td colspan="4" align="left">
-                        <html:submit styleClass="button" altKey="itracker.web.button.update.alt" titleKey="itracker.web.button.update.alt" onclick="validateForm()">
+                        <html:submit styleClass="button" altKey="itracker.web.button.update.alt" titleKey="itracker.web.button.update.alt" >
                             <it:message key="itracker.web.button.update"/>
                         </html:submit>
                     </td>

@@ -111,7 +111,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
                         userForm.setSuperUser(editUser.isSuperUser());
 
                         List<Permission> permissionList = userService.getPermissionsByUserId(editUser.getId());
-                        HashMap<String, String> formPermissions = new HashMap<String, String>();
+                        HashMap<String, Boolean> formPermissions = new HashMap<>();
 
                         boolean allowProfileUpdate = userService.allowProfileUpdates(editUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB);
                         request.setAttribute("allowProfileUpdate", allowProfileUpdate);
@@ -143,7 +143,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
                                         userPermissions.put(permissionList.get(i).getProject().getId(), projectPermissions);
                                     }
 
-                                    formPermissions.put("Perm" + permissionList.get(i).getPermissionType() + "Proj" + permissionList.get(i).getProject().getId(), "on");
+                                    formPermissions.put("Perm" + permissionList.get(i).getPermissionType().getCode() + "Proj" + permissionList.get(i).getProject().getId(), true);
 
                                     PermissionType permissionType = permissionList.get(i).getPermissionType();
 
@@ -162,12 +162,12 @@ public class EditUserFormAction extends ItrackerBaseAction {
                                     userPermissions.put(permissionList.get(i).getProject().getId(), projectPermissions);
                                 }
 
-                                formPermissions.put("Perm" + permissionList.get(i).getPermissionType() + "Proj" + permissionList.get(i).getProject().getId(), "on");
+                                formPermissions.put("Perm" + permissionList.get(i).getPermissionType().getCode() + "Proj" + permissionList.get(i).getProject().getId(), true);
 
                                 PermissionType permissionType = permissionList.get(i).getPermissionType();
 
                                 Permission thisPermission = permissionList.get(i);
-                                HashMap<String, Permission> permissionHashMap = ((HashMap<String, Permission>) userPermissions.get(projectId));
+                                HashMap<String, Permission> permissionHashMap =  userPermissions.get(projectId);
                                 permissionHashMap.put(String.valueOf(permissionType), thisPermission);
 
                             }
