@@ -37,6 +37,12 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <security:intercept-url pattern="/login.do" access="isAnonymous()" />
         <security:intercept-url pattern="/selfregister*.do" access="isAnonymous()" />
         <security:intercept-url pattern="/forgotpassword*.do" access="isAnonymous()" />
+
+        <security:intercept-url pattern="/module-admin/listprojectsadmin*.do" access="hasAnyRole('PRODUCT_ADMIN')" />
+        <security:intercept-url pattern="/module-admin/editproject*.do" access="hasAnyRole('PRODUCT_ADMIN')" />
+        <security:intercept-url pattern="/module-admin/*version*.do" access="hasAnyRole('PRODUCT_ADMIN')" />
+        <security:intercept-url pattern="/module-admin/*component*.do" access="hasAnyRole('PRODUCT_ADMIN')" />
+
         <security:intercept-url pattern="/module-admin/**/*.do" access="hasAnyRole('USER_ADMIN')" />
         <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER')" />
         <security:access-denied-handler  ref="accessDeniedHandler" />
