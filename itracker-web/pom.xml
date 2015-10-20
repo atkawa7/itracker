@@ -41,9 +41,8 @@
             <artifactId>standard</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-web</artifactId>
         </dependency>
         <dependency>
             <artifactId>commons-beanutils</artifactId>
@@ -145,6 +144,11 @@
             <groupId>org.itracker</groupId>
             <artifactId>itracker-persistence</artifactId>
             <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
