@@ -58,6 +58,17 @@ public class UserPreferences extends AbstractEntity {
     private boolean rememberLastSearch = false;
 
     private boolean useTextActions = false;
+    private boolean saveLogin;
+
+    @Deprecated
+    public boolean getSaveLogin() {
+        return saveLogin;
+    }
+
+    @Deprecated
+    public void setSaveLogin(boolean saveLogin) {
+        this.saveLogin = saveLogin;
+    }
 
     public int getHiddenIndexSections() {
         return hiddenIndexSections;
