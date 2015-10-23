@@ -79,36 +79,37 @@ public class EditLanguageAction extends ItrackerBaseAction {
             if (locale == null || "".equals(locale.trim())) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidlocale"));
             } else if ("disable".equals(action)) {
-
-                Language languageItem = null;
-                // This will update the Base Locale to remove the new language.
-                languageItem = configurationService.getLanguageItemByKey("itracker.locales", null);
-                String localeString = languageItem.getResourceValue();
-                StringTokenizer t = new StringTokenizer(localeString, ",");
-                StringBuffer newLocales = new StringBuffer();
-                while (t.hasMoreTokens()) {
-                    String s = t.nextToken();
-                    if (!locale.equals(s)) {
-                        newLocales.append(s).append(',');
-                    }
-                }
-                if (newLocales.length() == 0) {
-                    newLocales.append(ITrackerResources.getDefaultLocale());
-                }
-                newLocales.deleteCharAt(newLocales.lastIndexOf(","));
-                languageItem.setResourceValue(newLocales.toString());
-                configurationService.updateLanguageItem(languageItem);
-
-                List<Configuration> localeConfigs = configurationService.getConfigurationItemsByType(Configuration.Type.locale);
-
-                for (Configuration configuration: localeConfigs) {
-                    if (configuration.getValue().equals(locale)) {
-                        configurationService.removeConfigurationItem(configuration.getId());
-                    }
-                }
-                ITrackerResources.clearBundles();
-                clearSessionObjects(session);
-                return mapping.findForward("listlanguages");
+                throw new UnsupportedOperationException("disable");
+//                Language languageItem = null;
+//                // This will update the Base Locale to remove the new language.
+//                configurationService.getAvailableLanguages();
+//                String localeString = languageItem.getResourceValue();
+//                configurationService.getAvailableLanguages();
+//                StringTokenizer t = new StringTokenizer(localeString, ",");
+//                StringBuffer newLocales = new StringBuffer();
+//                while (t.hasMoreTokens()) {
+//                    String s = t.nextToken();
+//                    if (!locale.equals(s)) {
+//                        newLocales.append(s).append(',');
+//                    }
+//                }
+//                if (newLocales.length() == 0) {
+//                    newLocales.append(ITrackerResources.getDefaultLocale());
+//                }
+//                newLocales.deleteCharAt(newLocales.lastIndexOf(","));
+//                languageItem.setResourceValue(newLocales.toString());
+//                configurationService.updateLanguageItem(languageItem);
+//
+//                List<Configuration> localeConfigs = configurationService.getConfigurationItemsByType(Configuration.Type.locale);
+//
+//                for (Configuration configuration: localeConfigs) {
+//                    if (configuration.getValue().equals(locale)) {
+//                        configurationService.removeConfigurationItem(configuration.getId());
+//                    }
+//                }
+//                ITrackerResources.clearBundles();
+//                clearSessionObjects(session);
+//                return mapping.findForward("listlanguages");
 
             } else if ("create".equals(action)) {
 

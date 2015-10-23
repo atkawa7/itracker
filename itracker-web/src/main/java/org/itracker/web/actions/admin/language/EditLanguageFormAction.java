@@ -23,15 +23,12 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Language;
-import org.itracker.model.PermissionType;
 import org.itracker.model.util.PropertiesFileHandler;
 import org.itracker.model.util.SystemConfigurationUtilities;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.LanguageForm;
 import org.itracker.web.util.Constants;
-import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
@@ -66,7 +63,7 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
             if (localeType == SystemConfigurationUtilities.LOCALE_TYPE_INVALID) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidlocale"));
             } else {
-                if ("create".equals((String) PropertyUtils.getSimpleProperty(form, "action"))) {
+                if ("create".equals(PropertyUtils.getSimpleProperty(form, "action"))) {
                     // The locale passed in on a create action is actually the parent locale.  Reset the parent
                     // locale, increment the type (since we are creating the next type, and clear the locale
                     localeType++;
@@ -79,16 +76,11 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                 }
 
                 String[] sortedKeys = configurationService.getSortedKeys();
-                // Fix for bug in beanutils.  Can remove this logic here and in EditLanguageAction
-                // once the bug is fixed.
-                //for (int i = 0; i < sortedKeys.length; i++) {
-                //    sortedKeys[i] = sortedKeys[i].replace('.', '/');
-                //}
 
-                Map<String, String> baseItems = new HashMap<String, String>();
-                Map<String, String> langItems = new HashMap<String, String>();
-                Map<String, String> locItems = new HashMap<String, String>();
-                Map<String, String> items = new HashMap<String, String>();
+                Map<String, String> baseItems = new HashMap<>();
+                Map<String, String> langItems = new HashMap<>();
+                Map<String, String> locItems = new HashMap<>();
+                Map<String, String> items = new HashMap<>();
 
                 log.debug("Loading language elements for edit.  Edit type is " + localeType);
 
@@ -120,14 +112,14 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                 }
 
                 if (!"create".equals(PropertyUtils.getSimpleProperty(form, "action"))) {
-                    Map<String, String> formItems = new HashMap<String, String>();
+                    Map<String, String> formItems = new HashMap<>();
                     for (Enumeration<String> en = ITrackerResources.getBundle(locale).getKeys(); en.hasMoreElements(); ) {
                         String key = en.nextElement();
                         formItems.put(key, "");
                     }
                     formItems.putAll(items);
 
-                    languageForm.setItems(new TreeMap<String, String>(formItems));
+                    languageForm.setItems(new TreeMap<>(formItems));
                 } else {
                     String parentLocale = null;
 
@@ -136,7 +128,7 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                     }
                     langItems = configurationService.getDefinedKeys(parentLocale);
 
-                    Map<String, String> formItems = new HashMap<String, String>();
+                    Map<String, String> formItems = new HashMap<>();
                     if (log.isDebugEnabled()) {
                         log.debug("putPropertiesKeys: items: " + items);
                     }
@@ -147,7 +139,7 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
 
                     formItems.putAll(items);
 
-                    languageForm.setItems(new TreeMap<String, String>(formItems));
+                    languageForm.setItems(new TreeMap<>(formItems));
 
                 }
                 Locale curLocale = ITrackerResources.getLocale(locale);
@@ -172,16 +164,7 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                 saveToken(request);
                 return mapping.getInputForward();
             }
-        } catch (RuntimeException e) {
-            log.error("Exception while creating edit language form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        } catch (IllegalAccessException e) {
-            log.error("Exception while creating edit language form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        } catch (InvocationTargetException e) {
-            log.error("Exception while creating edit language form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        } catch (NoSuchMethodException e) {
+        } catch (RuntimeException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             log.error("Exception while creating edit language form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
@@ -203,7 +186,7 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                     log.debug("putPropertiesKeys: loading: " + path);
                 }
                 p = new PropertiesFileHandler(path).getProperties();
-                p = new Hashtable<Object, Object>(p);
+                p = new Hashtable<>(p);
 
                 if (log.isDebugEnabled()) {
                     log.debug("putPropertiesKeys: loaded properties: " + p);

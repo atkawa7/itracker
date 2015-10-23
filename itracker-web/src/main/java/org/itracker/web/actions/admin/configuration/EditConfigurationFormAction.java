@@ -51,13 +51,6 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
         if (log.isDebugEnabled()) {
             log.debug("execute: called");
         }
-        if (!LoginUtilities.hasPermission(UserUtilities.PERMISSION_USER_ADMIN, request,
-                response)) {
-            log.warn("execute: user has not permissue user-admin: " + LoginUtilities.getCurrentUser(request)
-                    + ", forwarding to unauthorized!");
-
-            return mapping.findForward("unauthorized");
-        }
 
         try {
             ConfigurationService configurationService = ServletContextUtils.getItrackerServices()
@@ -87,7 +80,7 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
                 configurationForm.setTypeKey(SystemConfigurationUtilities.getTypeLanguageKey(configItem));
                 configurationForm.setOrder(configItem.getOrder());
 
-                HashMap<String, String> translations = new HashMap<String, String>();
+                HashMap<String, String> translations = new HashMap<>();
                 List<Language> languageItems = configurationService
                         .getLanguageItemsByKey(configurationForm.getKey());
 
@@ -99,11 +92,11 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
             }
             Map<String, List<String>> languages = configurationService
                     .getAvailableLanguages();
-            Map<NameValuePair, List<NameValuePair>> languagesNameValuePair = new HashMap<NameValuePair, List<NameValuePair>>();
+            Map<NameValuePair, List<NameValuePair>> languagesNameValuePair = new HashMap<>();
             for (Map.Entry<String, List<String>> entry : languages.entrySet()) {
                 String language = entry.getKey();
                 List<String> locales = entry.getValue();
-                List<NameValuePair> localesNameValuePair = new ArrayList<NameValuePair>();
+                List<NameValuePair> localesNameValuePair = new ArrayList<>();
                 for (String locale : locales) {
                     NameValuePair localeNameValuePair = new NameValuePair(
                             locale, ITrackerResources.getString(

@@ -20,24 +20,22 @@ package org.itracker.web.actions.admin.configuration;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.SystemConfigurationException;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
-import org.itracker.model.util.UserUtilities;
+import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
-import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
-import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -56,6 +54,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
         ActionMessages errors = new ActionMessages();
         // TODO: Action Cleanup
 
+        User currUser = LoginUtilities.getCurrentUser(request);
         if (!isTokenValid(request)) {
             log.debug("Invalid request token while editing configuration.");
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -213,21 +212,17 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                             List<Issue> issues = issueService
                                     .getIssuesWithStatus(currStatus);
                             Issue issue;
-                            for (int i = 0; i < issues.size(); i++) {
-                                if (issues.get(i) != null) {
-                                    issues.get(i).setStatus(newStatus);
-                                    // TODO, set correct activity?
-                                    // IssueActivity activity = new
-                                    // IssueActivity();
-                                    // activity.setActivityType(IssueActivityType.SYSTEM_UPDATE);
-                                    // activity.setDescription(ITrackerResources.getString("itracker.activity.system.status"));
-                                    // issues.get(i).getActivities().add(activity);
-                                    User currUser = LoginUtilities.getCurrentUser(request);
-                                    issue = issueService.systemUpdateIssue(issues .get(i), currUser.getId());
+                            for (Issue i : issues) {
+                                if (i != null) {
+                                    i.setStatus(newStatus);
+                                    IssueActivity activity = new
+                                            IssueActivity();
+                                    activity.setActivityType(IssueActivityType.SYSTEM_UPDATE);
+                                    activity.setDescription(ITrackerResources.getString("itracker.activity.system.status"));
+                                    i.getActivities().add(activity);
+                                    activity.setIssue(i);
+                                    issue = issueService.systemUpdateIssue(i, currUser.getId());
                                     issues.add(issue);
-
-                                    // TODO: need to fix this RJST
-                                    // activity.setIssue(issues.get(i));
                                 }
                             }
                         } catch (NumberFormatException nfe) {
@@ -264,7 +259,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                     .getLanguageKey(configItem);
             log.debug("Processing translations for configuration item "
                     + configItem.getId() + " with key " + key);
-            if (translations != null && key != null && !key.equals("")) {
+            if (translations != null && StringUtils.isNotBlank(key)) {
                 String locale, translation;
                 Iterator<String> iter = translations.keySet().iterator();
                 configurationService.removeLanguageKey(key);
@@ -272,7 +267,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                     locale = iter.next();
                     if (locale != null) {
                         translation = translations.get(locale);
-                        if (translation != null && !translation.equals("")) {
+                        if (StringUtils.isNotBlank(translation)) {
                             log.debug("Adding new translation for locale "
                                     + locale + " for " + configItem);
                             configurationService
@@ -283,8 +278,10 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                 }
                 String baseValue = translations
                         .get(ITrackerResources.BASE_LOCALE);
-                configurationService.updateLanguageItem(new Language(
-                        ITrackerResources.BASE_LOCALE, key, baseValue));
+                if (StringUtils.isNotBlank(baseValue)) {
+                    configurationService.updateLanguageItem(new Language(
+                            ITrackerResources.BASE_LOCALE, key, baseValue));
+                }
                 // remove old languageItems if resource key has changed
                 if (initialLanguageKey != null
                         && !initialLanguageKey.equals(key)) {
