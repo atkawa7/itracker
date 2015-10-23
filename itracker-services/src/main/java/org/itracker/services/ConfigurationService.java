@@ -489,5 +489,5 @@ public interface ConfigurationService extends ITrackerResourcesProvider {
      * @param forceReload          if true, it will reload the languages from the property files
      *                             even if they are listed as being up to date
      */
-    public void initializeAllLanguages(boolean forceReload);
+    void initializeAllLanguages(boolean forceReload);
 }

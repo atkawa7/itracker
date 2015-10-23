@@ -17,13 +17,13 @@ public interface ITrackerResourcesProvider {
     Properties getLanguageProperties(Locale locale);
 
     /**
-     * Load translation by key for a locale.
+     * Load the exact translation by key for a locale.
      *
      * @param key the key
      * @param locale the locale
      * @return the language value
      */
-    String getLanguageValue(String key, Locale locale);
+    String getLanguageEntry(String key, Locale locale);
 
     String getProperty(String name, String defaultValue);
 }

@@ -219,7 +219,7 @@ public abstract class AbstractDependencyInjectionTest extends
 
         String definedLocalesString;
 
-        definedLocalesString = ITrackerResources.getString(ITrackerResources.DEFINED_LOCALES_KEY);
+        definedLocalesString = getConfigurationProperties().getProperty("available_locales", ITrackerResources.getDefaultLocale());
 
         if (definedLocalesString != null) {
             StringTokenizer token = new StringTokenizer(definedLocalesString, ",");
@@ -276,7 +276,7 @@ public abstract class AbstractDependencyInjectionTest extends
                 }
 
                 @Override
-                public String getLanguageValue(String key, Locale locale) {
+                public String getLanguageEntry(String key, Locale locale) {
 
                     return getLanguageProperties(locale).getProperty(key);
                 }

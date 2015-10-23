@@ -475,6 +475,55 @@
             <value>en_key</value>
             <value>en_value</value>
         </row>
+        <row>
+            <value>22223</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>en_GB</value>
+            <value>en_key</value>
+            <value>en_value-en_GB</value>
+        </row>
+
+        <row>
+            <value>22224</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>en_US</value>
+            <value>itracker.resolution.1</value>
+            <value>Fixed_US</value>
+        </row>
+        <row>
+            <value>22225</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>en_GB</value>
+            <value>itracker.resolution.1</value>
+            <value>Fixed_GB</value>
+        </row>
+        <row>
+            <value>22226</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>en</value>
+            <value>itracker.resolution.1</value>
+            <value>Fixed_en</value>
+        </row>
+        <row>
+            <value>22227</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>es</value>
+            <value>itracker.resolution.1</value>
+            <value>Fixed_es</value>
+        </row>
+        <row>
+            <value>22228</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>es_MX</value>
+            <value>itracker.resolution.1</value>
+            <value>Fixed_MX</value>
+        </row>
 
         <row>
             <value>5555555555555555</value>

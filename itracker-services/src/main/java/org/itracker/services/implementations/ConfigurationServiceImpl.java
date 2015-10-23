@@ -23,7 +23,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.functors.NotNullPredicate;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
 import org.itracker.model.util.CustomFieldUtilities;
@@ -32,6 +31,8 @@ import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.persistence.dao.*;
 import org.itracker.services.ConfigurationService;
 import org.itracker.util.NamingUtilites;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.naming.InitialContext;
 import java.util.*;
@@ -44,7 +45,7 @@ import java.util.*;
 
 public class ConfigurationServiceImpl implements ConfigurationService {
 
-    private static final Logger logger = Logger.getLogger(ConfigurationServiceImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(ConfigurationServiceImpl.class.getName());
 
     private final Properties props;
     private ConfigurationDAO configurationDAO;
@@ -760,43 +761,56 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         return getLanguageItemByKey(key, locale).getResourceValue();
     }
 
+    @Override
+    public String getLanguageEntry(String key, Locale locale) {
+        try {
+            Language l = getLanguageItemByKey(key, locale);
+            return l.getResourceValue();
+        } catch (NoSuchEntityException e) {
+            logger.debug("failed to get entry", e);
+        }
+        throw new MissingResourceException("Entry doesn't exist.", Language.class.getName(), key);
+    }
 
+    @Override
     public Language getLanguageItemByKey(String key, Locale locale) {
-        Language languageItem;
-        try {
-            languageItem = languageDAO.findByKeyAndLocale(key, ITrackerResources.BASE_LOCALE);
-        } catch (RuntimeException e) {
-            languageItem = null;
+        String localeString = ITrackerResources.BASE_LOCALE;
+        if (null != locale
+                && !locale.equals(ITrackerResources.getLocale(ITrackerResources.BASE_LOCALE))) {
+            localeString = locale.toString();
         }
-
-        if (null == locale) {
-
-            locale = ITrackerResources.getLocale(ITrackerResources.BASE_LOCALE);
-
-        }
-        try {
-            return languageDAO.findByKeyAndLocale(key, locale.getLanguage());
-        } catch (RuntimeException re) {
-            if (null == languageItem) {
-                languageItem = new Language(locale.getDisplayName(), key, ITrackerResources.getBundle(locale.getLanguage()).getString(key));
-            }
-        }
-        if (!"".equals(locale.getCountry())) {
-            try {
-                return languageDAO.findByKeyAndLocale(key, locale.toString());
-            } catch (RuntimeException ex) {
-                if (null == languageItem) {
-                    return new Language(locale.getDisplayName(), key, ITrackerResources.getBundle(locale).getString(key));
-                }
-            }
-        }
+        Language languageItem = languageDAO.findByKeyAndLocale(key, localeString);
+        // TODO: obsolete code:
+//        try {
+//            languageItem = languageDAO.findByKeyAndLocale(key, ITrackerResources.BASE_LOCALE);
+//        } catch (RuntimeException e) {
+//            logger.debug("could not find {} with BASE", key);
+//            languageItem = null;
+//        }
+//
+//        if (null == locale) {
+//            logger.debug("locale was null, returning BASE: {}", languageItem);
+//            return languageItem;
+//        }
+//        try {
+//            languageItem = languageDAO.findByKeyAndLocale(key, locale.getLanguage());
+//        } catch (RuntimeException re) {
+//            logger.debug("could not find {} with language {}", key, locale.getLanguage());
+//        }
+//        if (StringUtils.isNotEmpty(locale.getCountry())) {
+//            try {
+//                languageItem = languageDAO.findByKeyAndLocale(key, locale.toString());
+//            } catch (RuntimeException ex) {
+//                logger.debug("could not find {} with locale {}", key, locale);
+//            }
+//        }
 
         return languageItem;
 
     }
 
     public List<Language> getLanguageItemsByKey(String key) {
-        List<Language> languageItems = languageDAO.findByKey(key);
+            List<Language> languageItems = languageDAO.findByKey(key);
 
         return languageItems;
     }
@@ -1262,10 +1276,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         String definedLocalesString;
         try {
             definedLocalesString =
-                    getLanguageItemByKey(ITrackerResources.DEFINED_LOCALES_KEY,
-                            null).getResourceValue();
+                    getProperty("available_locales", ITrackerResources.getDefaultLocale());
         } catch (RuntimeException e) {
-            definedLocalesString = ITrackerResources.getString(ITrackerResources.DEFINED_LOCALES_KEY);
+            definedLocalesString = ITrackerResources.getString(ITrackerResources.getDefaultLocale());
         }
         if (definedLocalesString != null) {
             StringTokenizer token = new StringTokenizer(definedLocalesString, ",");

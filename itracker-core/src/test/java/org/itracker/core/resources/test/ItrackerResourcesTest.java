@@ -1,5 +1,7 @@
-package org.itracker.core.resources;
+package org.itracker.core.resources.test;
 
+import org.itracker.core.resources.ITrackerResourceBundle;
+import org.itracker.core.resources.ITrackerResources;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

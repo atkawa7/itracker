@@ -170,19 +170,19 @@ public class ConfigurationServiceIT extends
     @Test
     public void testResetConfigurationCache() {
         //SystemConfigurationUtilities.TYPE_RESOLUTION, value 4
-        configurationService.resetConfigurationCache(4);
+        configurationService.resetConfigurationCache(Configuration.Type.resolution);
         assertEquals(1, IssueUtilities.getResolutions(Locale.ENGLISH).size());
 
         //SystemConfigurationUtilities.TYPE_SEVERITY, value 3
-        configurationService.resetConfigurationCache(3);
+        configurationService.resetConfigurationCache(Configuration.Type.severity);
         assertEquals(1, IssueUtilities.getSeverities(Locale.ENGLISH).size());
 
         //SystemConfigurationUtilities.TYPE_STATUS, value 2
-        configurationService.resetConfigurationCache(2);
+        configurationService.resetConfigurationCache(Configuration.Type.status);
         assertEquals(1, IssueUtilities.getStatuses(Locale.ENGLISH).size());
 
         //SystemConfigurationUtilities.TYPE_CUSTOMFIELD, value 5
-        configurationService.resetConfigurationCache(5);
+        configurationService.resetConfigurationCache(Configuration.Type.customfield);
         assertEquals(4, IssueUtilities.getCustomFields().size());
     }
 

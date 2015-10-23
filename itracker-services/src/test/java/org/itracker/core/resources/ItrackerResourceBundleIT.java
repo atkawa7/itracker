@@ -41,11 +41,11 @@ public class ItrackerResourceBundleIT extends AbstractServicesIntegrationTest {
         resourceBundle.removeValue("itracker.web.attr.admin", true);
         assertTrue(resourceBundle.isDirty("itracker.web.attr.admin"));
         resourceBundle.removeValue("itracker.web.attr.admin", false);
+        assertFalse(resourceBundle.isDirty("itracker.web.attr.admin"));
         try {
             assertNotNull(resourceBundle.getString("itracker.web.attr.admin"));
             assertEquals("itracker.web.attr.admin", ResourceBundle.getBundle(ITrackerResources.RESOURCE_BUNDLE_NAME, resourceBundle.getLocale()).getString("itracker.web.attr.admin"),
                     resourceBundle.getString("itracker.web.attr.admin"));
-//			fail("Should throw MissingResourceException");
         } catch (RuntimeException exception) {
             fail("should fall back to properties resource, but throwed " + exception.getClass() + ", " + exception.getMessage());
         }

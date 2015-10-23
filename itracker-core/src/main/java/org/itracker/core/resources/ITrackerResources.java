@@ -18,9 +18,11 @@
 
 package org.itracker.core.resources;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.itracker.ITrackerDirtyResourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -31,12 +33,10 @@ import java.util.*;
  */
 public class ITrackerResources {
 
-    private static final Logger logger = Logger
+    private static final Logger logger = LoggerFactory
             .getLogger(ITrackerResources.class);
 
     public static final String RESOURCE_BUNDLE_NAME = "org.itracker.core.resources.ITracker";
-
-    public static final String DEFINED_LOCALES_KEY = "itracker.locales";
 
     public static final String DEFAULT_LOCALE = "en_US";
 
@@ -197,7 +197,7 @@ public class ITrackerResources {
 
 
         return locale.getDisplayName()
-                + (!locale.equals(displayLocale)? " (" + locale.getDisplayLanguage(locale) + ")":"");
+                + (!locale.equals(displayLocale) ? " (" + locale.getDisplayLanguage(locale) + ")" : "");
 
     }
 
@@ -205,7 +205,7 @@ public class ITrackerResources {
         try {
             return getString(KEY_BASE_LOCALE_NAME, locale);
         } catch (MissingResourceException e) {
-			return locale.getDisplayName(locale);
+            return locale.getDisplayName(locale);
         }
     }
 
@@ -258,16 +258,12 @@ public class ITrackerResources {
                 Properties languageItems = configurationService
                         .getLanguageProperties(locale);
                 bundle = ITrackerResourceBundle.loadBundle(locale, languageItems);
-                if (logger.isDebugEnabled()) {
-                    logger.debug("getBundle: got loaded for locale " + locale
-                            + " with items " + languageItems + " from the database.");
-                }
+                logger.info("getBundle: got loaded for locale {} with items {} from the database.", locale, null == languageItems ? null : CollectionUtils.size(languageItems));
+                logger.debug("getBundle: got loaded for locale {} with items {} from the database.", locale, languageItems);
+
             }
-            if (bundle != null) {
-                putBundle(locale, bundle);
-            } else if (!locale.toString().equals(getDefaultLocale())) {
-                bundle = getBundle(getLocale());
-            }
+            putBundle(locale, bundle);
+
         }
 
         return bundle;
@@ -283,12 +279,7 @@ public class ITrackerResources {
         Properties languageItems = configurationService.getLanguageProperties(
                 locale);
         bundle = ITrackerResourceBundle.loadBundle(locale, languageItems);
-        if (bundle != null) {
-            putBundle(locale, bundle);
-        } else if (!locale.toString().equals(getDefaultLocale())) {
-            bundle = getBundle(getLocale());
-        }
-
+        putBundle(locale, bundle);
         return bundle;
     }
 
@@ -360,30 +351,62 @@ public class ITrackerResources {
         return getString(key, getLocale(locale));
     }
 
-    public static String getString(String key, Locale locale) {
+    private static String handleMissingResourceException(final MissingResourceException ex, final String key, final Locale locale) {
+
+        logger.warn(
+                "no value while retrieving translation key '{}' for locale {}", key, locale);
+        Locale l = locale;
+        if (StringUtils.isNotEmpty(locale.getCountry())) {
+            l = new Locale(locale.getLanguage());
+        } else if (StringUtils.isNotEmpty(locale.getLanguage())) {
+            l = new Locale("");
+        }
+        if (l != locale) {
+            logger.debug("resolving {} from parent bundle ()", key, l);
+            return getString(key, l);
+        }
+        throw ex;
+
+    }
+    private static String handleDirtyResourceException(final ITrackerDirtyResourceException e, final String key, final Locale locale) {
+
+        logger.debug(
+                "handleDirtyResourceException: key '{}' for locale {}", key, locale, e);
+        ITrackerResourceBundle bundle = (ITrackerResourceBundle)getBundle(locale);
+        try {
+            final String languageItem = configurationService
+                    .getLanguageEntry(key, locale);
+            bundle.updateValue(key, languageItem);
+            return languageItem;
+        } catch (MissingResourceException e2) {
+            bundle.removeValue(key, false);
+            try {
+                return bundle.getString(key);
+            } catch (MissingResourceException e3) {
+                return handleMissingResourceException(e2, key, locale);
+            }
+        }
+    }
+
+    public static String getString(final String key, final Locale locale) {
         if (key == null) {
             return "";
         }
 
         if (locale == null) {
-            locale = getLocale(getDefaultLocale());
+            return getString(key, getDefaultLocale());
         }
         String val;
         try {
+            final ResourceBundle bundle = getBundle(locale);
             try {
-                val = getBundle(locale).getString(key);
-                if (null != val) {
-                    return val;
-                } else {
-                    val = ITrackerResources.getString(key);
-                }
-            } catch (ITrackerDirtyResourceException idre) {
-                String languageItem = configurationService
-                        .getLanguageValue(key, locale);
-                ResourceBundle bundle = getBundle(locale);
-                ((ITrackerResourceBundle) bundle)
-                        .updateValue(key, languageItem);
                 val = bundle.getString(key);
+                return val;
+
+            } catch (ITrackerDirtyResourceException e) {
+                val = handleDirtyResourceException(e, key, locale);
+            } catch (MissingResourceException e) {
+                val = handleMissingResourceException(e, key, locale);
             }
             return val;
         } catch (NullPointerException ex) {
@@ -391,10 +414,12 @@ public class ITrackerResources {
                     "Unable to get any resources.  The requested locale was "
                             + locale, ex);
             return "MISSING BUNDLE: " + locale;
+
         } catch (MissingResourceException ex) {
             logger.warn(
-                    "MissingResourceException caught while retrieving translation key '"
-                            + key + "' for locale " + locale, ex);
+                    "MissingResourceException caught while retrieving translation key '{}' for locale {}", key, locale);
+            logger.debug(
+                    "MissingResourceException was", ex);
             return "MISSING KEY: " + key;
         } catch (RuntimeException ex) {
             logger.info("getString: not found " + key + " locale: " + locale,
@@ -403,8 +428,8 @@ public class ITrackerResources {
                 return getEditBundle(locale).getString(key);
             } catch (Exception ex2) {
                 logger.warn(
-                        "getString: caught while retrieving translation key '"
-                                + key + "' for locale " + locale, ex2);
+                        "Exception caught while retrieving translation key '{}' for locale {}: {}", key, locale, ex2.getMessage());
+                logger.debug("Exception was", ex2);
                 return "MISSING KEY: " + key;
             }
         }
@@ -446,7 +471,7 @@ public class ITrackerResources {
         } catch (ITrackerDirtyResourceException idre) {
             return getString(key, locale);
         } catch (NullPointerException ex) {
-            logger.error("Unable to get ResourceBundle for locale " + locale,
+            logger.debug("Unable to get ResourceBundle for locale " + locale,
                     ex);
             throw new MissingResourceException("MISSING LOCALE: " + locale,
                     "ITrackerResources", key);

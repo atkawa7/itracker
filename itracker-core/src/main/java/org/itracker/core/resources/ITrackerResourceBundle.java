@@ -17,15 +17,14 @@
  */
 
 package org.itracker.core.resources;
-
-import org.apache.log4j.Logger;
 import org.itracker.ITrackerDirtyResourceException;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.*;
 
 public class ITrackerResourceBundle extends ResourceBundle {
 
-    private static final Logger log = Logger
+    private static final Logger log = LoggerFactory
             .getLogger(ITrackerResourceBundle.class);
     private final Properties data = new Properties();
 
@@ -60,7 +59,8 @@ public class ITrackerResourceBundle extends ResourceBundle {
                     .getDefaultLocale());
         }
         this.propertiesBundle = ResourceBundle.getBundle(
-                ITrackerResources.RESOURCE_BUNDLE_NAME, locale);
+                ITrackerResources.RESOURCE_BUNDLE_NAME, locale,
+                Control.getNoFallbackControl(Control.FORMAT_DEFAULT));
 
         if (!locale.equals(ITrackerResources
                 .getLocale(ITrackerResources.BASE_LOCALE))) {
@@ -108,7 +108,7 @@ public class ITrackerResourceBundle extends ResourceBundle {
             synchronized (data) {
                 data.clear();
                 for (int i = 0; i < content[0].length; i++) {
-                    data.put((String) content[0][i], content[1][i]);
+                    data.put(content[0][i], content[1][i]);
                 }
             }
         }
@@ -188,7 +188,7 @@ public class ITrackerResourceBundle extends ResourceBundle {
      * enumerator.
      */
     public Enumeration<String> getKeys() {
-        Set set = new TreeSet(data.keySet());
+                Set set = new TreeSet(data.keySet());
         if (null != parent) {
             Enumeration<String> keys = parent.getKeys();
             String key;
