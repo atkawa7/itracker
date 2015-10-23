@@ -115,8 +115,8 @@
         </c:if> <c:if test="${currUser == null}">
 
             <c:if test="${fn:length(locales) gt 1}">
-                <div class="locales"><c:forEach items="${locales}" var="locMap">
-                    <span> | <a href="?loc=${locMap.key}" class="${locMap.key}_loc">${locMap.key}</a></span>
+                <div class="locales"><c:forEach items="${locales}" varStatus="status" var="locMap">
+                    <span><c:if test="${not status.first}"> | </c:if><a href="?loc=${locMap.key}" class="${locMap.key}_loc">${locMap.key}</a></span>
                     <c:forEach items="${locMap.value}" var="loc"> <span> | <a href="?loc=${loc}"
                                                                               class="${loc}_loc">${loc}</a></span></c:forEach>
                 </c:forEach></div>
