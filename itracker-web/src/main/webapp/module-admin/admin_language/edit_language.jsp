@@ -1,12 +1,23 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<c:set var="isUpdate" value="false" />
+
+<c:set var="isUpdate" value="${ languageForm.action == 'update' }" />
 <c:set var="localeType" value="${editlangtype}" />
 
 <bean:parameter id="action" name="action"/>
 <bean:parameter id="locale" name="locale"/>
 <bean:parameter id="parentLocale" name="parentLocale" value="BASE"/>
-   
+
+<c:choose>
+    <c:when test="${ isUpdate }">
+        <c:set var="pageTitleKey" scope="request">itracker.web.admin.editlanguage.title.update</c:set>
+    </c:when>
+    <c:otherwise>
+        <c:set var="pageTitleKey" scope="request">itracker.web.admin.editlanguage.title.create</c:set>
+    </c:otherwise>
+</c:choose>
+<c:set var="pageTitleArg" value="${ languageForm.localeTitle }" scope="request" />
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
      <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
@@ -24,9 +35,9 @@
       <html:form method="post" action="/editlanguage">
         <html:hidden property="action"/>
         <html:hidden property="parentLocale"/>
-        <c:if test="${ languageForm.action == 'update' }" >
+
+        <c:if test="${ isUpdate }" >
         	<html:hidden property="locale"/>
-        	<c:set var="isUpdate" value="true" />
         </c:if>
 
        <table border="0" cellspacing="0"  cellpadding="1"  width="100%" class="shadeList">
@@ -36,7 +47,7 @@
           <c:set var="afterTd" value="<td> </td>" />
           <c:set var="beforeTd" value="" />
           <c:set var="readOnly" value="false" />
-          <c:if test="${ isUpdate == 'true'}" >
+          <c:if test="${ isUpdate }" >
             <c:set var="readOnly" value="true" />
           </c:if>
 
@@ -133,7 +144,7 @@
           
           <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="12" width="1"/></td></tr>
           <c:choose>
-          	<c:when test="${ isUpdate == 'true' }" >
+          	<c:when test="${ isUpdate }" >
           	  <tr><td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.update.alt" titleKey="itracker.web.button.update.alt"><it:message key="itracker.web.button.update"/></html:submit></td></tr>
           	</c:when>
           	<c:otherwise>
