@@ -25,11 +25,6 @@ public class ListReportsAction extends ItrackerBaseAction {
         request.setAttribute("ph", projectService);
         request.setAttribute("rh", reportService);
 
-        String pageTitleKey = "itracker.web.admin.listreports.title";
-        String pageTitleArg = "";
-        request.setAttribute("pageTitleKey", pageTitleKey);
-        request.setAttribute("pageTitleArg", pageTitleArg);
-
         List<Report> reports = reportService.getAllReports();
         request.setAttribute("reports", reports);
 

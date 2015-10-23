@@ -19,6 +19,16 @@
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<c:choose>
+    <c:when test="${ reportForm.action == 'update' }">
+        <c:set var="pageTitleKey" scope="request">itracker.web.admin.editreport.title.update</c:set>
+    </c:when>
+    <c:otherwise>
+        <c:set var="pageTitleKey" scope="request">itracker.web.admin.editreport.title.create</c:set>
+    </c:otherwise>
+</c:choose>
+<c:set var="pageTitleArg" value="" scope="request" />
+
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
       <logic:messagesPresent>

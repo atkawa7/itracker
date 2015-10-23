@@ -50,15 +50,6 @@ public class EditReportFormAction extends ItrackerBaseAction {
             String action = request.getParameter("action");
 
             Report report;
-            String pageTitleKey;
-            String pageTitleArg = "";
-            if (action != null && action.equals("update")) {
-                pageTitleKey = "itracker.web.admin.editreport.title.update";
-            } else {
-                pageTitleKey = "itracker.web.admin.editreport.title.create";
-            }
-            request.setAttribute("pageTitleKey", pageTitleKey);
-            request.setAttribute("pageTitleArg", pageTitleArg);
 
             report = null;
 
@@ -101,16 +92,7 @@ public class EditReportFormAction extends ItrackerBaseAction {
                 saveToken(request);
                 return mapping.getInputForward();
             }
-        } catch (RuntimeException e) {
-            log.error("Exception while creating edit report form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        } catch (IllegalAccessException e) {
-            log.error("Exception while creating edit report form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        } catch (InvocationTargetException e) {
-            log.error("Exception while creating edit report form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        } catch (NoSuchMethodException e) {
+        } catch (RuntimeException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             log.error("Exception while creating edit report form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
@@ -122,7 +104,7 @@ public class EditReportFormAction extends ItrackerBaseAction {
         return mapping.findForward("error");
     }
 
-    public static final String getAsString(byte[] xmlBytes, ActionMessages errors) {
+    public static String getAsString(byte[] xmlBytes, ActionMessages errors) {
 
         try {
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
@@ -136,23 +118,14 @@ public class EditReportFormAction extends ItrackerBaseAction {
 
         } catch (SAXException e) {
             log.debug("Exception while creating edit report form.", e);
-        } catch (ParserConfigurationException e) {
-            log.error("Exception while creating edit report form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        } catch (TransformerConfigurationException e) {
-            log.error("Exception while creating edit report form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        } catch (TransformerException e) {
-            log.error("Exception while creating edit report form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        } catch (IOException e) {
+        } catch (ParserConfigurationException | TransformerException | IOException e) {
             log.error("Exception while creating edit report form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }
         return null;
     }
 
-    public static final byte[] getAsXmlBytes (String xmlString, ActionMessages errors) {
+    public static byte[] getAsXmlBytes (String xmlString, ActionMessages errors) {
 
         try {
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
@@ -165,19 +138,10 @@ public class EditReportFormAction extends ItrackerBaseAction {
 
             return os.toByteArray();
 
-        } catch (SAXException e) {
+        } catch (SAXException | ParserConfigurationException e) {
             log.debug("Exception while creating edit report form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.details", e.getMessage()));
-        } catch (ParserConfigurationException e) {
-            log.debug("Exception while creating edit report form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.details", e.getMessage()));
-        } catch (TransformerConfigurationException e) {
-            log.error("Exception while creating edit report form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        } catch (TransformerException e) {
-            log.error("Exception while creating edit report form.", e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-        } catch (IOException e) {
+        } catch (TransformerException | IOException e) {
             log.error("Exception while creating edit report form.", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
         }

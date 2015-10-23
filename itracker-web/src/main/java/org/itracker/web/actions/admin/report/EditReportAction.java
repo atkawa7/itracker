@@ -72,8 +72,6 @@ public class EditReportAction extends ItrackerBaseAction {
         Report editreport;
         try {
 
-            Map<Integer, Set<PermissionType>> userPermissionsMap = RequestHelper.getUserPermissions(session);
-
             if (null != reportForm.getId() && reportForm.getId() != -1) {
                 // TODO cleanup the service.
                 editreport = reportService.getReportDAO().findByPrimaryKey(reportForm.getId());

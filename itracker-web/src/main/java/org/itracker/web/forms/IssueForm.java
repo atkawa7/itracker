@@ -673,7 +673,6 @@ public class IssueForm extends ITrackerForm {
 
         request.setAttribute("pageTitleKey", pageTitleKey);
         request.setAttribute("pageTitleArg", pageTitleArg);
-//		request.setAttribute("wrap", wrap);
         request.getSession().setAttribute(Constants.LIST_OPTIONS_KEY,
                 listOptions);
         request.setAttribute("targetVersions", targetVersion);
@@ -908,10 +907,8 @@ public class IssueForm extends ITrackerForm {
             try {
                 issue.setResolution(IssueUtilities.checkResolutionName(issue
                         .getResolution(), locale));
-            } catch (MissingResourceException mre) {
+            } catch (MissingResourceException | NumberFormatException mre) {
                 log.error(mre.getMessage());
-            } catch (NumberFormatException nfe) {
-                log.error(nfe.getMessage());
             }
         }
 
@@ -927,9 +924,9 @@ public class IssueForm extends ITrackerForm {
 
         List<IssueField> fields = issue.getFields();
         HashMap<String, String> customFields = new HashMap<String, String>();
-        for (int i = 0; i < fields.size(); i++) {
-            customFields.put(fields.get(i).getCustomField().getId().toString(),
-                    fields.get(i).getValue(locale));
+        for (IssueField field : fields) {
+            customFields.put(field.getCustomField().getId().toString(),
+                    field.getValue(locale));
         }
 
         setCustomFields(customFields);
@@ -938,19 +935,19 @@ public class IssueForm extends ITrackerForm {
                 .getIssueComponentIds(issue.getId());
         if (selectedComponents != null) {
             Integer[] componentIds;
-            ArrayList<Integer> components = new ArrayList<Integer>(
+            ArrayList<Integer> components = new ArrayList<>(
                     selectedComponents);
-            componentIds = components.toArray(new Integer[]{});
+            componentIds = components.toArray(new Integer[components.size()]);
             setComponents(componentIds);
         }
 
         HashSet<Integer> selectedVersions = issueService
                 .getIssueVersionIds(issue.getId());
         if (selectedVersions != null) {
-            Integer[] versionIds = null;
-            ArrayList<Integer> versions = new ArrayList<Integer>(
+            Integer[] versionIds;
+            ArrayList<Integer> versions = new ArrayList<>(
                     selectedVersions);
-            versionIds = versions.toArray(new Integer[]{});
+            versionIds = versions.toArray(new Integer[versions.size()]);
             setVersions(versionIds);
         }
 
@@ -1271,17 +1268,13 @@ public class IssueForm extends ITrackerForm {
             Locale locale = LoginUtilities.getCurrentLocale(request);
 
             ResourceBundle bundle = ITrackerResources.getBundle(locale);
-            Iterator<CustomField> it = projectFields.iterator();
-            while (it.hasNext()) {
-                CustomField customField = it.next();
+            for (CustomField customField : projectFields) {
                 String fieldValue = request.getParameter("customFields("
                         + customField.getId() + ")");
                 if (fieldValue != null && !fieldValue.equals("")) {
 
                     // Don't create an IssueField only so that we can call
                     // setValue to validate the value!
-                    // IssueField issueField = new
-                    // IssueField(projectFields.get(i));
                     try {
                         customField.checkAssignable(fieldValue, locale, bundle);
                     } catch (IssueException ie) {
