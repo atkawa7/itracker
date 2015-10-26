@@ -83,7 +83,7 @@
 
         <action path="/security_check" type="org.itracker.web.actions.UnauthorizedAction"
                 name="loginForm">
-            <forward name="unauthorized" path="t.unauthorized" module="/"/>
+            <forward name="unauthorized" path="t.error" module="/"/>
         </action>
 
         <action path="/login" type="org.itracker.web.actions.user.LoginAction"

@@ -43,8 +43,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT"/>
     <meta http-equiv="Pragma" content="no-cache"/>
-    <!-- script type="text/javascript"
-	src="${contextPath}/themes/defaulttheme/includes/calendar.js"></script -->
 
     <!-- Include calendar resources -->
     <script src="${contextPath}${themePath}/includes/calendar/javascripts/prototype.js"
@@ -62,12 +60,8 @@
 </head>
 <body>
 
-<tiles:useAttribute name="isErrorPage" id="isErrorPage" ignore="true" ></tiles:useAttribute>
-<logic:empty name="isErrorPage"><c:set var="isErrorPage" value="false" />
-</logic:empty>
 <tiles:insert attribute="header" flush="false">
     <tiles:put name="title" beanName="pageTitle" />
-    <tiles:put name="isErrorPage" beanName="isErrorPage" />
 </tiles:insert>
 
 <tiles:insert attribute="body" />

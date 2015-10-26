@@ -148,18 +148,7 @@
     </tr>
 </table>
 
-<tiles:useAttribute name="isErrorPage" id="isErrorPage" ignore="true" />
-
-<logic:notEqual value="true" name="isErrorPage" >
-
-    <c:if test="${not empty error}">
-     <div class="errorblock">
-      Your login attempt was not successful, try again.
-    Caused :
-      ${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}
-     </div>
-    </c:if>
-<tiles:useAttribute name="errorHide" id="errorHide" ignore="true" />
+    <tiles:useAttribute name="errorHide" id="errorHide" ignore="true" />
     <c:if test="${not errorHide}">
         <logic:messagesPresent>
 
@@ -172,4 +161,3 @@
 
         </logic:messagesPresent>
     </c:if>
-</logic:notEqual>

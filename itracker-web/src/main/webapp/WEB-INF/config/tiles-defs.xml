@@ -15,11 +15,11 @@
     </definition>
 
     <definition name="t.error"  extends="mainLayout">
+        <put name="pageTitleKey" type="string" value="errorPage.heading" />
         <put name="body" value="/error.jsp" />
-        <put name="isErrorPage" value="true" type="string" />
     </definition>
-    <definition name="t.unauthorized" extends="mainLayout">
-        <put name="body" value="/unauthorized.jsp" />
+    <definition name="t.unauthorized"  extends="t.error">
+        <put name="pageTitleKey" type="string" value="itracker.web.unauthorized.title" />
     </definition>
 
     <definition name="t.portalhome" extends="mainLayout">
