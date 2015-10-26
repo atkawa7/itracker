@@ -1283,7 +1283,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         if (definedLocalesString != null) {
             StringTokenizer token = new StringTokenizer(definedLocalesString, ",");
             while (token.hasMoreTokens()) {
-                String locale = token.nextToken();
+                String locale = StringUtils.trim(token.nextToken());
                 if (locale.length() == 5 && locale.indexOf('_') == 2) {
                     definedLocales.add(locale.substring(0, 2));
                 }
