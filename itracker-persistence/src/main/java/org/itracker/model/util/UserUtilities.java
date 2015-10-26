@@ -226,12 +226,14 @@ public class UserUtilities implements AuthenticationConstants {
         return hash;
     }
 
+
     /**
      * Checks to see if the user is a super user.
      *
      * @param permissionsMap map of user permissions by project Id
      * @return true is the user is a super user
      */
+    @Deprecated
     public static boolean isSuperUser(Map<Integer, Set<PermissionType>> permissionsMap) {
         if (permissionsMap == null) {
             return false;
@@ -254,6 +256,7 @@ public class UserUtilities implements AuthenticationConstants {
      * @param permissionsMap   a Map of the user's permissions by project ID
      * @param permissionNeeded the permission to check for
      */
+    @Deprecated
     public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, PermissionType permissionNeeded) {
         if (permissionsMap == null) {
             return false;
@@ -281,6 +284,7 @@ public class UserUtilities implements AuthenticationConstants {
      * @param permissionsMap    a HashMap of the user's permissions
      * @param permissionsNeeded a list of permissions that can fulfill the permission check
      */
+    @Deprecated
     public static boolean hasPermission(Map<Integer, Set<PermissionType>> permissionsMap, PermissionType[] permissionsNeeded) {
         if (permissionsMap == null) {
             return false;

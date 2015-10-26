@@ -18,7 +18,6 @@ import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 import org.springframework.security.web.savedrequest.SavedRequest;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -94,6 +93,7 @@ public class LoginHandler implements AuthenticationSuccessHandler {
         SessionManager.clearSessionNeedsReset(user.getLogin());
         log.debug("User session data updated.");
 
+        SessionManager.createSession(user.getLogin());
 
         redirectToOnLoginSuccess(request, response, getRedirectStrategy());
 

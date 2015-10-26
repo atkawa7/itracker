@@ -20,10 +20,7 @@ package org.itracker.web.util;
 
 import org.itracker.core.AuthenticationConstants;
 import org.itracker.core.resources.ITrackerResources;
-import org.itracker.model.Issue;
-import org.itracker.model.PermissionType;
-import org.itracker.model.User;
-import org.itracker.model.UserPreferences;
+import org.itracker.model.*;
 import org.itracker.model.util.UserUtilities;
 import org.itracker.services.UserService;
 import org.itracker.services.authentication.ITrackerUserDetails;
@@ -439,11 +436,13 @@ public class LoginUtilities {
 
     }
 
+
+    @Deprecated
     public static boolean hasPermission(PermissionType[] permissionsNeeded,
                                         HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         try {
-            getCurrentUser(request);
+            UserDetails user = LoginUtilities.getPrincipal();
 
             HttpSession session = request.getSession(false);
             Map<Integer, Set<PermissionType>> permissions = (session == null) ? null
@@ -456,34 +455,97 @@ public class LoginUtilities {
     }
 
     /**
+     * Returns true if the user has any of required permissions for the project.
+     */
+    public static boolean hasAnyPermission(Project project, PermissionType[] permissionsNeeded) {
+
+
+        if (null == permissionsNeeded || permissionsNeeded.length == 0) {
+            permissionsNeeded = PermissionType.values();
+        }
+        for (PermissionType permissionType: permissionsNeeded) {
+            if (hasPermission(project, permissionType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns true if the user has all of required permissions for the project.
+     */
+    public static boolean hasPermission(Project project, PermissionType[] permissionsNeeded) {
+
+        for (PermissionType permissionType: permissionsNeeded) {
+            if (!hasPermission(project, permissionType)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * Returns true if the user has all the required permissions.
+     *
+     * @param permissionNeeded the permission to check for
+     */
+    public static boolean hasPermission(PermissionType permissionNeeded) {
+        return hasPermission(null, permissionNeeded);
+    }
+    /**
+     * Returns true if the user has the required permission for the given project.
+     *
+     * @param project project to which permission is checked for
+     * @param permissionNeeded the permission to check for
+     */
+    public static boolean hasPermission(Project project, PermissionType permissionNeeded) {
+        UserDetails user = getPrincipal();
+        if (null == user) {
+            return false;
+        }
+        if (permissionNeeded != PermissionType.USER_ADMIN
+                && hasPermission(PermissionType.USER_ADMIN)) {
+            return true;
+        } else if (null != project && permissionNeeded != PermissionType.PRODUCT_ADMIN
+            && hasPermission(project, PermissionType.PRODUCT_ADMIN)) {
+            return true;
+        }
+        Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
+        String permissionName = permissionNeeded.name(project);
+        for (GrantedAuthority authority: authorities) {
+            if (authority.getAuthority().equals(permissionName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Returns true if the user has permission to view the requested issue.
+     *
+     * @param issue       an IssueModel of the issue to check view permission for
+     */
+    public static boolean canViewIssue (Issue issue) {
+        return  canViewIssue(issue, getPrincipal());
+    }
+
+    /**
      * Returns true if the user has permission to view the requested issue.
      *
      * @param issue       an IssueModel of the issue to check view permission for
      * @param user        the user principal of the user to check permission for
      */
     public static boolean canViewIssue (Issue issue, UserDetails user) {
-        Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
-        for (GrantedAuthority authority: authorities) {
-            if (authority.getAuthority().equals(PermissionType.USER_ADMIN.name())) {
-                // almighty
-                return true;
-            }
-            if (authority.getAuthority().equals(PermissionType.PRODUCT_ADMIN.name(issue.getProject()))) {
-                return true;
-            }
-            if (authority.getAuthority().equals(PermissionType.ISSUE_VIEW_ALL.name(issue.getProject()))) {
-                return true;
-            }
+        if (hasAnyPermission(issue.getProject(), new PermissionType[] {
+                  PermissionType.PRODUCT_ADMIN, PermissionType.ISSUE_VIEW_ALL})) {
+            return true;
         }
 
+        // TODO option on project that all users can view own issues
+        boolean canViewUsers = true;// hasPermission(issue.getProject(), PermissionType.ISSUE_VIEW_USERS);
 
-        boolean canViewUsers = false;
-
-        for (GrantedAuthority authority: user.getAuthorities()) {
-            if (authority.getAuthority().equals(PermissionType.ISSUE_VIEW_USERS.name(issue.getProject()))) {
-                canViewUsers = true;
-            }
-        }
         // I think owner & creator should always be able to view the issue
         // otherwise it makes no sense of creating the issue itself.
         // So put these checks before checking permissions for the whole project.
@@ -507,4 +569,51 @@ public class LoginUtilities {
         }
         return false;
     }
+
+    public static boolean canEditIssue(Issue issue) {
+        return canEditIssue(issue, getPrincipal());
+    }
+
+    public static boolean canEditIssue(Issue issue, UserDetails user) {
+           if (issue == null ) {
+               return false;
+           }
+
+            if (hasAnyPermission(issue.getProject(), new PermissionType[] {
+                      PermissionType.ISSUE_EDIT_ALL})) {
+                return true;
+            }
+
+           if (!hasPermission(issue.getProject(), PermissionType.ISSUE_EDIT_USERS)) {
+               if (logger.isDebugEnabled()) {
+                   logger.debug("canEditIssue: user " + user.getUsername()
+                           + " has not permission  to edit issue " + issue.getId()
+                           + ":" + PermissionType.ISSUE_EDIT_USERS);
+               }
+               return false;
+           }
+
+           if (issue.getCreator().getLogin().equals(user.getUsername())) {
+               if (logger.isDebugEnabled()) {
+                   logger.debug("canEditIssue: user " + user.getUsername()
+                           + " is creator of issue " + issue.getId());
+               }
+               return true;
+           }
+           if (issue.getOwner() != null) {
+               if (issue.getOwner().getLogin().equals(user.getUsername())) {
+                   if (logger.isDebugEnabled()) {
+                       logger.debug("canEditIssue: user " + user.getUsername()
+                               + " is owner of issue " + issue.getId());
+                   }
+                   return true;
+               }
+           }
+
+           if (logger.isDebugEnabled()) {
+               logger.debug("canEditIssue: user " + user.getUsername()
+                       + " could not match permission, denied");
+           }
+           return false;
+       }
 }
