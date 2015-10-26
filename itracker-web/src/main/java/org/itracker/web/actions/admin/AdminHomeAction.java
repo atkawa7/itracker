@@ -7,13 +7,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
-import org.itracker.model.PermissionType;
 import org.itracker.model.util.ReportUtilities;
 import org.itracker.services.*;
-import org.itracker.model.util.SystemConfigurationUtilities;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
-import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
 import org.itracker.web.util.SessionManager;
 
@@ -28,15 +24,6 @@ public class AdminHomeAction extends ItrackerBaseAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                  HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        final Map<Integer, Set<PermissionType>> permissions = RequestHelper
-                .getUserPermissions(request.getSession());
-
-
-        if (!UserUtilities.hasPermission(permissions,
-                UserUtilities.PERMISSION_USER_ADMIN)) {
-
-            mapping.findForward("listprojectadmin");
-        }
 
         execSetupJspEnv(request);
 
@@ -47,7 +34,7 @@ public class AdminHomeAction extends ItrackerBaseAction {
     /**
      * This utility has to be called for any page forwarding to the admin-home, before forwarding. Else the page will contain no data.
      */
-    public static final void execSetupJspEnv(HttpServletRequest request) {
+    public static void execSetupJspEnv(HttpServletRequest request) {
         Date time_millies = new Date(System.currentTimeMillis());
 
         IssueService issueService = ServletContextUtils.getItrackerServices()
@@ -74,9 +61,6 @@ public class AdminHomeAction extends ItrackerBaseAction {
                         numberOfWorkflowScripts);
         logTimeMillies("execute: looked up numberOfWorkflowScripts",
                 time_millies, log, Level.INFO);
-
-        Map<String, String> numberDefinedKeys = configurationService
-                .getDefinedKeys(null);
 
         ResourceBundle bundle = ITrackerResources.getBundle(ITrackerResources.BASE_LOCALE);
         Enumeration<String> keysEnum = bundle.getKeys();
@@ -163,25 +147,12 @@ public class AdminHomeAction extends ItrackerBaseAction {
         }
         logTimeMillies("execute: looked up allIssueAttachmentsTotalSize",
                 time_millies, log, Level.INFO);
-        // Locale locale = getCurrLocale(request);
-        // SimpleDateFormat sdf = new
-        // SimpleDateFormat(ITrackerResources.getString("itracker.dateformat.full"),
-        // locale);
-        String lastRun = null;// (Scheduler.getLastRun() == null ? "-" :
-        // sdf.format(Scheduler.getLastRun()));
 
         /* set objects needed to render output in request object */
         request.setAttribute("projectService", projectService2);
         request.setAttribute("exportReport", exportReport);
         request.setAttribute("sizeps", projectService2.getAllProjects().size());
-        request.setAttribute("lastRun", lastRun);
         request.setAttribute("numberIssues", numberIssues);
-
-//		request.setAttribute("ih", issueService);
-//		request.setAttribute("ph", projectService);
-//		request.setAttribute("rh", reportService);
-//		request.setAttribute("sc", configurationService);
-//		request.setAttribute("uh", userService);
 
 
         request.setAttribute("numberAvailableLanguages", configurationService.getNumberAvailableLanguages());
