@@ -21,6 +21,7 @@ package org.itracker.web.servlets;
 import org.apache.log4j.Logger;
 import org.itracker.model.Report;
 import org.itracker.services.ReportService;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -46,20 +47,11 @@ public class ReportDownloadController extends GenericController {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (!isLoggedInWithRedirect(request, response)) {
-            return;
-        }
-
-        // TODO: the 2-3 lines are most propably not used; commented, task added
-        // Commented more not used lines, but added a task for testing. 
-        // HttpSession session = request.getSession();
-        // UserModel user = (UserModel) session.getAttribute("user");
-        // User user = (session == null ? null : (User) session.getAttribute(Constants.USER_KEY));
 
         try {
-            ReportService reportService = getITrackerServices(getServletContext()).getReportService();
+            ReportService reportService = ServletContextUtils.getItrackerServices().getReportService();
 
-            Integer reportId = null;
+            Integer reportId;
             Report report = null;
 
             try {
@@ -83,7 +75,5 @@ public class ReportDownloadController extends GenericController {
         } catch (IOException ioe) {
             logger.info("Unable to display report.", ioe);
         }
-
-        return;
     }
 }   

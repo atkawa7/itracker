@@ -24,15 +24,15 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.itracker.model.IssueAttachment;
-import org.itracker.model.User;
 import org.itracker.services.IssueService;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -55,14 +55,8 @@ public class AttachmentDownloadController extends GenericController {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletOutputStream out = null;
 
-        if (!isLoggedInWithRedirect(request, response)) {
-            return;
-        }
-
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
         try {
-            IssueService issueService = getITrackerServices(request.getSession().getServletContext()).getIssueService();
+            IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
 
             Integer attachmentId = null;
             IssueAttachment attachment = null;
@@ -84,7 +78,7 @@ public class AttachmentDownloadController extends GenericController {
                 return;
             }
 
-            if (!issueService.canViewIssue(attachment.getIssue().getId(), user)) {
+            if (!LoginUtilities.canViewIssue(attachment.getIssue())) {
                 forward("/unauthorized.do", request, response);
                 return;
             }
@@ -113,7 +107,5 @@ public class AttachmentDownloadController extends GenericController {
                 out.close();
             }
         }
-
-        return;
     }
 }   

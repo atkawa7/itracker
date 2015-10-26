@@ -40,9 +40,6 @@ public class ReportChartController extends GenericController {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (!isLoggedIn(request, response)) {
-            return;
-        }
 
         HttpSession session = request.getSession(false);
         if (session == null) {
