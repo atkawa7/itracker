@@ -3,30 +3,36 @@ package org.itracker.web.servlets;
 import com.sun.syndication.feed.module.DCModuleImpl;
 import com.sun.syndication.feed.module.SyModuleImpl;
 import com.sun.syndication.feed.rss.*;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.feed.synd.SyndFeedImpl;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.config.ForwardConfig;
 import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.util.ModuleUtils;
-import org.itracker.model.*;
+import org.itracker.core.resources.ITrackerResources;
+import org.itracker.model.Issue;
+import org.itracker.model.IssueHistory;
+import org.itracker.model.PermissionType;
+import org.itracker.model.Project;
 import org.itracker.model.util.IssueUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
 import org.itracker.services.ProjectService;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.HTMLUtilities;
+import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.ServletContextUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.feed.RssChannelHttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpResponse;
 
+import javax.mail.internet.InternetAddress;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,11 +40,7 @@ import java.util.regex.Pattern;
 
 public class RssFeedController extends GenericController {
 
-
-    public RssFeedController() {
-        super();    //To change body of overridden methods use File | Settings | File Templates.
-    }
-
+    final private static Pattern URL_PATTERN = Pattern.compile("(?i).*/issues/p?([0-9]*)/?i?([0-9]*)");
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -48,18 +50,16 @@ public class RssFeedController extends GenericController {
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
 
-        ServletServerHttpResponse sr = new ServletServerHttpResponse(resp);
 
         RssChannelHttpMessageConverter conv = new RssChannelHttpMessageConverter();
-        try {
-            Matcher uriMatcher = Pattern.compile("(?i).*/issues/p?([0-9]+)/?i?([0-9]*)")
-                    .matcher(req.getRequestURI());
+        try (ServletServerHttpResponse sr = new ServletServerHttpResponse(resp)) {
+            Matcher uriMatcher = URL_PATTERN.matcher(req.getRequestURI());
 
             Integer projectId = null;
             Integer issueId = null;
             try {
                 if (uriMatcher.matches()) {
-                    projectId = Integer.valueOf(uriMatcher.group(1));
+                    projectId = uriMatcher.group(1).equals("") ? null : Integer.valueOf(uriMatcher.group(1));
                     issueId = uriMatcher.group(2).equals("") ? null : Integer.valueOf(uriMatcher.group(2));
 
                 }
@@ -69,12 +69,9 @@ public class RssFeedController extends GenericController {
                 return;
             }
 
-            User um = (User) req.getSession().getAttribute(Constants.USER_KEY);
-            Integer currUserId = um.getId();
-
-            final IssueService is = getITrackerServices(getServletContext()).getIssueService();
-            final ProjectService ps = getITrackerServices(getServletContext()).getProjectService();
-            final ConfigurationService cs = getITrackerServices(getServletContext()).getConfigurationService();
+            final IssueService is = ServletContextUtils.getItrackerServices().getIssueService();
+            final ProjectService ps = ServletContextUtils.getItrackerServices().getProjectService();
+            final ConfigurationService cs = ServletContextUtils.getItrackerServices().getConfigurationService();
 
             final String baseURL = cs.getSystemBaseURL();
             final String generator = cs.getProperty("notification_from_text",
@@ -83,9 +80,6 @@ public class RssFeedController extends GenericController {
 
 
             Channel c = new Channel(conv.getSupportedMediaTypes().get(0).getType());
-
-
-            final SyndFeed f = new SyndFeedImpl();
 
 
             c.setGenerator(generator);
@@ -98,81 +92,83 @@ public class RssFeedController extends GenericController {
 
 
             c.setFeedType("rss_2.0");
-
-            final Map<Integer, Set<PermissionType>> userPermissions = getPermissions(req.getSession(false));
+            c.setLink(cs.getSystemBaseURL() + req.getServletPath());
 
             if (null != issueId) {
                 Issue i = is.getIssue(issueId);
-                if (!IssueUtilities.canViewIssue(i, currUserId, userPermissions)) {
+                if (!LoginUtilities.canViewIssue(i)) {
                     deny(sr);
                     return;
                 }
 
-                toChannel(c, i, req, baseURL);
+                toChannel(c, i, baseURL);
             } else if (null != projectId) {
                 Project p = ps.getProject(projectId);
                 if (null == p) {
                     deny(sr);
                     return;
                 }
-                if (!UserUtilities.hasPermission(userPermissions, p.getId(), UserUtilities.PERMISSION_VIEW_USERS)) {
+                if (!LoginUtilities.hasPermission(p, PermissionType.ISSUE_VIEW_USERS)) {
                     deny(sr);
                     return;
                 }
 
-                toChannel(c, p, currUserId, is, userPermissions, req, baseURL);
+                toChannel(c, p, is, req, baseURL);
 
             } else {
 
-                toChannel(c, userPermissions, ps, req, baseURL);
+                toChannel(c, ps, req, baseURL);
             }
 
             conv.write(c, conv.getSupportedMediaTypes().get(0), sr);
-        } finally {
-            sr.close();
         }
+
+
 
     }
 
-    private void toChannel(Channel c, Map<Integer, Set<PermissionType>> userPermissions, ProjectService ps, HttpServletRequest req, String baseURL) {
+    private void toChannel(Channel c, ProjectService ps, HttpServletRequest req, String baseURL) {
         List<Project> projects = ps.getAllAvailableProjects();
-        c.setTitle("Projects Overview");
-        c.setDescription("Projects for " + baseURL);
+        c.setTitle(ITrackerResources.getString("itracker.feed.projects.title"));
+        c.setDescription(ITrackerResources.getString("itracker.feed.projects.description", baseURL));
         c.setLink(baseURL);
         c.setUri(baseURL);
         for (Project p : projects) {
-            if (userPermissions.containsKey(p.getId())
-                    && UserUtilities.hasPermission(userPermissions, p.getId(), UserUtilities.PERMISSION_VIEW_USERS)) {
+            if (LoginUtilities.hasAnyPermission(p, null)) {
                 Item pi = new Item();
-                pi.setLink(getProjectURL(p, null, req, getServletContext(), baseURL));
+                pi.setLink(getProjectURL(p, req, getServletContext(), baseURL));
 
                 pi.setTitle(p.getName());
+                Guid guid = new Guid();
+                guid.setValue(pi.getLink());
+                guid.setPermaLink(true);
+
+                pi.setGuid(guid);
 
                 Description desc = new Description();
                 desc.setType(Content.TEXT);
-                desc.setValue("Project " + p.getId());
+                desc.setValue(p.getDescription());
                 pi.setDescription(desc);
 
                 Content content = new Content();
                 content.setType(Content.HTML);
 
                 content.setValue(
-//                        HtmlUtils.htmlEscape(
                         p.getDescription()
-//                )
                 );
+                pi.setPubDate(ps.getLatestIssueUpdatedDateByProjectId(p.getId()));
 
                 c.getItems().add(pi);
             }
         }
     }
 
-    private void toChannel(Channel channel, Project project, Integer currUserId, IssueService is, Map<Integer, Set<PermissionType>> userPermissions, HttpServletRequest req, String baseURL) {
+    private void toChannel(Channel channel, Project project, IssueService is, HttpServletRequest req, String baseURL) throws MalformedURLException {
         List<Issue> listIssues;
-        if (!UserUtilities.hasPermission(userPermissions, project.getId(), UserUtilities.PERMISSION_VIEW_ALL)) {
-            listIssues = new ArrayList<Issue>();
+        if (!LoginUtilities.hasPermission(project, PermissionType.ISSUE_VIEW_ALL)) {
+            listIssues = new ArrayList<>();
             for (Issue issue : is.getIssuesByProjectId(project.getId())) {
-                if (IssueUtilities.canViewIssue(issue, currUserId, userPermissions)) {
+                if (LoginUtilities.canViewIssue(issue)) {
                     listIssues.add(issue);
                 }
             }
@@ -180,24 +176,24 @@ public class RssFeedController extends GenericController {
             listIssues = is.getIssuesByProjectId(project.getId());
         }
 
-        channel.setDescription("Project Feed for " + project.getId());
-        channel.setTitle("Project#" + project.getId() + ": " + project.getDescription());
-        channel.setLink(getProjectURL(project, null, req, getServletContext(), baseURL));
+        channel.setDescription(ITrackerResources.getString("itracker.feed.project.description", project.getName()));
+        channel.setTitle(ITrackerResources.getString("itracker.feed.project.title ", project.getName(), project.getDescription()));
+        channel.setLink(getProjectURL(project, req, getServletContext(), baseURL));
 
-        channel.setTitle(project.getId() + " - " + project.getDescription());
         is.getIssuesByProjectId(project.getId());
-        List<Item> sItems = projectIssueItems(req, baseURL, project, listIssues);
+        List<Item> sItems = projectIssueItems(req, baseURL, listIssues);
 
         channel.setItems(sItems);
     }
 
-    private void toChannel(Channel channel, Issue issue, HttpServletRequest req, String baseURL) {
-        channel.setDescription("Issue Feed for " + issue.getId());
-        channel.setTitle("Issue#" + issue.getId() + ": " + issue.getDescription());
-        channel.setLink(getIssueURL(issue, null, req, getServletContext(), baseURL));
+    private void toChannel(Channel channel, Issue issue, String baseURL) throws MalformedURLException {
+        channel.setDescription( ITrackerResources.getString("itracker.feed.issue.description.description", String.valueOf(issue.getId())));
+        channel.setTitle(ITrackerResources.getString("itracker.feed.issue.title",
+                String.valueOf(issue.getId()), issue.getDescription()));
+        channel.setLink(getIssueURL(issue, baseURL));
 
         channel.setTitle(issue.getId() + " - " + issue.getDescription());
-        List<Item> sItems = issueHistoryItems(req, baseURL, issue);
+        List<Item> sItems = issueHistoryItems(baseURL, issue);
 
         channel.setItems(sItems);
     }
@@ -208,34 +204,13 @@ public class RssFeedController extends GenericController {
         sr.setStatusCode(HttpStatus.FORBIDDEN);
     }
 
-    private List<Item> projectIssueItems(HttpServletRequest req, String baseURL, Project p, List<Issue> listIssues) {
-//
-//        int numViewable = 0;
-//        boolean hasIssues = false;
-//        final Map<Integer, Set<PermissionType>> userPermissions = getPermissions(req.getSession(false));
+    private List<Item> projectIssueItems(HttpServletRequest req, String baseURL, List<Issue> listIssues) throws MalformedURLException {
 
+        List<Item> sItems = new ArrayList<>(listIssues.size());
 
-//        final User currentUser = LoginUtilities.getCurrentUser(req);
-//        final boolean hasViewAll = UserUtilities.hasPermission(userPermissions, p.getId(), UserUtilities.PERMISSION_VIEW_ALL);
-
-//        final Locale locale = getLocale(req);
-//        if (hasViewAll) {
-//            numViewable = listIssues.size();
-//        } else {
-//            for (Issue listIssue : listIssues) {
-//                if (IssueUtilities.canViewIssue(listIssue, currentUser.getId(), userPermissions)) {
-//                    numViewable++;
-//                }
-//            }
-//        }
-        List<Item> sItems = new ArrayList<Item>(listIssues.size());
-
-//        int row = 0;
-//        int k = 0;
         final Iterator<Issue> issuesIt = listIssues.iterator();
 // start copying from Models to PTOs
         Issue issue;
-        String statusLocalizedString, severityLocalizedString, componentsSize;
         Item current;
 
         while (issuesIt.hasNext()) {
@@ -243,7 +218,7 @@ public class RssFeedController extends GenericController {
             issue = issuesIt.next();
             current = new Item();
             current.setUri(baseURL + req.getServletPath());
-            current.setLink(getIssueURL(issue, null, req, getServletContext(), baseURL));
+            current.setLink(getIssueURL(issue, baseURL));
 
             Guid guid = new Guid();
             guid.setValue(current.getLink());
@@ -266,62 +241,64 @@ public class RssFeedController extends GenericController {
             );
             current.setContent(c);
 
-// TODO semantic style
-//            statusLocalizedString = IssueUtilities.getStatusName(issue.getStatus(), locale);
-//            severityLocalizedString = IssueUtilities.getSeverityName(issue.getSeverity(), locale);
-//            if (issue.getComponents().size() == 0) {
-//                componentsSize = ITrackerResources.getString(
-//                        ListIssuesActionUtil.RES_KEY_UNKNOWN, locale);
-//            } else {
-//                componentsSize = issue.getComponents().get(0).getName()
-//                        + (issue.getComponents().size() > 1 ? " (+)" : "");
-//            }
-
-//            current.setStatusLocalizedString(statusLocalizedString);
-//            current.setSeverityLocalizedString(severityLocalizedString);
-//            current.setComponentsSize(componentsSize);
-//            if (issue.getOwner() == null) {
-//                current.setUnassigned(true);
-//            }
-//            if (p.getStatus() == Status.ACTIVE && !IssueUtilities.hasIssueNotification(issue, p, currentUser.getId())) {
-//                current.setUserHasIssueNotification(true);
-//            }
-//            if (p.getStatus() == Status.ACTIVE) {
-//                if (IssueUtilities.canEditIssue(issue, currentUser.getId(), userPermissions)) {
-//                    current.setUserCanEdit(true);
-//                }
-//            }
-
             sItems.add(current);
         }
         return sItems;
     }
 
-    private List<Item> issueHistoryItems(HttpServletRequest req, String baseURL, Issue i) {
-        List<Item> sItems = new ArrayList<Item>(i.getHistory().size());
+    private List<Item> issueHistoryItems(String baseURL, Issue i) throws MalformedURLException {
+        List<Item> sItems = new ArrayList<>(i.getHistory().size());
         Item current;
 
-        for (IssueHistory ih : i.getHistory()) {
+        StringBuilder author = new StringBuilder();
+        List<IssueHistory> history = new LinkedList<>(i.getHistory());
+        Collections.reverse(history);
+        for (IssueHistory ih : history) {
+            int index = ( history.indexOf(ih)+1 );
+            if (index > 10) {
+                // limited to newest 10 issues
+                break;
+            }
+
             current = new Item();
             Content content = new Content();
 
-            current.setLink(getIssueURL(i, ih, req, getServletContext(), baseURL));
+            current.setLink(getIssueURL(i, baseURL));
 
             Guid guid = new Guid();
-            guid.setValue(current.getLink());
+            guid.setValue(current.getLink() + "#h" + index);
             guid.setPermaLink(true);
             current.setGuid(guid);
 
-            current.setTitle("History entry " + (sItems.size() + 1));
+            current.setTitle(ITrackerResources.getString("itracker.feed.history.title",
+                    String.valueOf(history.size() + 1 - index)));
+
+            Description desc = new Description();
+            desc.setType(Content.TEXT);
+            desc.setValue(HTMLUtilities.removeMarkup( ih.getDescription() ));
+            current.setDescription(desc);
 
             content.setType(Content.HTML);
+
             content.setValue(
                     "<p>" + HTMLUtilities.removeMarkup( ih.getDescription() ) + "</p>"
             );
             current.setContent(content);
             current.setPubDate(ih.getCreateDate());
 
-            current.setAuthor(ih.getUser().getLogin());
+            author.setLength(0);
+            InternetAddress authorAddress = ih.getUser().getEmailAddress();
+            if (StringUtils.isNotBlank(authorAddress.getAddress())) {
+                author.append(authorAddress.getAddress());
+                if (StringUtils.isNotBlank(authorAddress.getPersonal())) {
+                    author.append(' ')
+                            .append('(')
+                            .append(authorAddress.getPersonal())
+                            .append(')');
+                }
+                current.setAuthor(String.valueOf(author));
+            }
+
 
             sItems.add(current);
         }
@@ -329,30 +306,18 @@ public class RssFeedController extends GenericController {
     }
 
 
-    private String getIssueURL(Issue i,  IssueHistory ih, HttpServletRequest req, ServletContext context, String baseUrl) {
-        ModuleConfig conf = ModuleUtils.getInstance().getModuleConfig(
-                "/module-projects",
-                req,
-                context);
+    private String getIssueURL(Issue i, String baseUrl) throws MalformedURLException {
+        return String.valueOf(IssueUtilities.getIssueURL(i, baseUrl));
 
-        ForwardConfig forwardConfig = conf.findForwardConfig("viewissue");
-        return
-                baseUrl + TagUtils.getInstance().pageURL(req, forwardConfig.getPath(), conf)
-                        + "?id=" + i.getId()
-
-                ;
     }
 
-    private String getProjectURL(Project p, Issue i, HttpServletRequest req, ServletContext context, String baseUrl) {
+    private String getProjectURL(Project p, HttpServletRequest req, ServletContext context, String baseUrl) {
         ModuleConfig conf = ModuleUtils.getInstance().getModuleConfig(
                 "/module-projects",
                 req,
                 context);
 
         ForwardConfig forwardConfig = conf.findForwardConfig("listissues");
-        return
-                baseUrl + TagUtils.getInstance().pageURL(req, forwardConfig.getPath(), conf) + "?projectId=" + p.getId()
-
-                ;
+        return baseUrl + TagUtils.getInstance().pageURL(req, forwardConfig.getPath(), conf) + "?projectId=" + p.getId();
     }
 }

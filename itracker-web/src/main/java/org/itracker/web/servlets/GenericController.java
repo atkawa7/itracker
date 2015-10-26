@@ -28,6 +28,7 @@ import org.itracker.services.ITrackerServices;
 import org.itracker.model.util.UserUtilities;
 import org.itracker.web.util.Constants;
 import org.itracker.web.util.LoginUtilities;
+import org.itracker.web.util.RequestHelper;
 import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.RequestDispatcher;
@@ -67,15 +68,7 @@ public abstract class GenericController extends HttpServlet {
     public GenericController() {
     }
 
-    @SuppressWarnings("unchecked")
-    protected Map<Integer, Set<PermissionType>> getPermissions(HttpSession session) {
-        if (session == null) {
-            return null;
-        }
-        return (Map<Integer, Set<PermissionType>>) session.getAttribute("permissions");
-    }
-
-    protected void saveMessages(HttpServletRequest request, ActionErrors errors) {
+    protected static void saveMessages(HttpServletRequest request, ActionErrors errors) {
 
         if ((errors == null) || errors.isEmpty()) {
             request.removeAttribute(Globals.ERROR_KEY);
@@ -84,63 +77,7 @@ public abstract class GenericController extends HttpServlet {
         request.setAttribute(Globals.ERROR_KEY, errors);
     }
 
-    protected boolean hasPermission(PermissionType[] permissionsNeeded,
-                                    HttpServletRequest request,
-                                    HttpServletResponse response)
-            throws IOException, ServletException {
-        if (isLoggedIn(request, response)) {
-            HttpSession session = request.getSession(false);
-            Map<Integer, Set<PermissionType>> permissions = getPermissions(session);
-            if (!UserUtilities.hasPermission(permissions, permissionsNeeded)) {
-                forward("/unauthorized.jsp", request, response);
-                return false;
-            }
-            return true;
-        }
-        return false;
-    }
-
-    protected boolean hasPermission(PermissionType permissionNeeded,
-                                    HttpServletRequest request,
-                                    HttpServletResponse response)
-            throws IOException, ServletException {
-        if (isLoggedIn(request, response)) {
-            HttpSession session = request.getSession(false);
-            Map<Integer, Set<PermissionType>> permissionsMap = getPermissions(session);
-            if (!UserUtilities.hasPermission(permissionsMap, permissionNeeded)) {
-                forward("/unauthorized.jsp", request, response);
-                return false;
-            }
-            return true;
-        }
-        return false;
-    }
-
-    protected boolean isLoggedIn(HttpServletRequest request,
-                                 HttpServletResponse response)
-            throws IOException, ServletException {
-        HttpSession session = request.getSession(false);
-        User user = (session == null ? null : (User) session.getAttribute("user"));
-        String login = (user == null ? null : user.getLogin());
-
-        return !StringUtils.isEmpty(login);
-    }
-
-    protected boolean isLoggedInWithRedirect(HttpServletRequest request,
-                                             HttpServletResponse response)
-            throws IOException, ServletException {
-        if (!isLoggedIn(request, response)) {
-            String requestPath = request.getRequestURI();
-            if (!requestPath.endsWith("/login.jsp")) {
-                String redirectURL = request.getRequestURI().substring(request.getContextPath().length());
-                forward("/login.jsp?" + Constants.AUTH_REDIRECT_KEY + "=" + redirectURL, request, response);
-            }
-            return false;
-        }
-        return true;
-    }
-
-    protected void forward(String url, HttpServletRequest request, HttpServletResponse response)
+    protected static void forward(String url, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         RequestDispatcher rd = request.getRequestDispatcher(url);
         if (rd == null) {
@@ -150,7 +87,7 @@ public abstract class GenericController extends HttpServlet {
         rd.forward(request, response);
     }
 
-    protected void redirect(String url, HttpServletRequest request, HttpServletResponse response)
+    protected static void redirect(String url, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
         String baseURL = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
@@ -159,15 +96,8 @@ public abstract class GenericController extends HttpServlet {
         response.sendRedirect(baseURL + url);
     }
 
-    public Locale getLocale(HttpServletRequest request) {
-        Locale
-                locale = LoginUtilities.getCurrentLocale(request);
-
-        return locale;
-    }
-
-    protected ITrackerServices getITrackerServices(ServletContext context) {
-        return ServletContextUtils.getItrackerServices();
+    public static Locale getLocale(HttpServletRequest request) {
+        return LoginUtilities.getCurrentLocale(request);
     }
 
 

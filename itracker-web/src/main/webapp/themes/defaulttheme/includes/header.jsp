@@ -10,12 +10,12 @@
 	key="${pageTitleKey}" arg0="${pageTitleArg}" /></title>
 <link rel="STYLESHEET" type="text/css"
 	href="${contextPath}/themes/defaulttheme/includes/styles.css" />
+<c:if test="${not empty rssFeed}">
+    <link href="${contextPath}${rssFeed}" rel="alternate" type="application/rss+xml" title="${pageTitle} RSS" />
+</c:if>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
 <meta http-equiv="Pragma" content="no-cache" />
-<!-- script type="text/javascript"
-	src="${contextPath}/themes/defaulttheme/includes/calendar.js"></script -->
-
 <!-- Include calendar resources -->
     <script src="${contextPath}/themes/defaulttheme/includes/calendar/javascripts/prototype.js" type="text/javascript"></script>
     <script src="${contextPath}/themes/defaulttheme/includes/calendar/javascripts/effects.js" type="text/javascript"></script>
@@ -29,6 +29,6 @@
 <body>
   <!-- inserted header -->
 <tiles:insert template="default.header.jsp" >
-	<tiles:put name="title"><it:message key="${ pageTitleKey }" arg0="${ pageTitleArg }" /></tiles:put>
-  <tiles:put name="errorHide" value="${true}" />
+      <tiles:put name="title"><it:message key="${ pageTitleKey }" arg0="${ pageTitleArg }" /></tiles:put>
+      <tiles:put name="errorHide" value="${true}" />
 </tiles:insert>

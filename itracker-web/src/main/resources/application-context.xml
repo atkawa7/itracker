@@ -46,6 +46,7 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <security:intercept-url pattern="/module-admin/**/*.do" access="hasAnyRole('USER_ADMIN')" />
         <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER')" />
         <security:access-denied-handler  ref="accessDeniedHandler" />
+        <security:http-basic  />
         <security:form-login login-page="/login.do"
                 login-processing-url="/security_check.do"
                 password-parameter="password" username-parameter="login"
