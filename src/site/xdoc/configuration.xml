@@ -97,6 +97,13 @@
                 </li>
 
 				<li>
+					<strong>available_locales</strong>
+					Comma-separated list of available locales to the frontend.
+					<br />
+					<em>default: current default_locale from the configuration</em>
+				</li>
+
+				<li>
 					<strong>default_locale</strong>
 					Set to the default locale of the server. This controls the default
 					language
@@ -150,6 +157,18 @@
 					to use this feature. (type : Boolean)
 					<br />
 					<em>default: true</em>
+				</li>
+				<li>
+					<strong>save_login_key</strong>
+					The "key" used to identify cookies from a specific token-based
+					remember-me application.
+					<br />
+					<em>default: itracker</em>
+				</li>
+				<li>
+					<strong>save_login_timeout</strong>
+					The period (in seconds) for which the remember-me cookie should be valid.
+					<em>default: 2592000 (30 days)</em>
 				</li>
 
 				<li>
