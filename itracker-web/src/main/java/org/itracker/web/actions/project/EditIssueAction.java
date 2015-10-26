@@ -22,17 +22,12 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.*;
-import org.itracker.model.util.IssueUtilities;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.model.util.WorkflowUtilities;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.IssueForm;
-import org.itracker.web.util.Constants;
-import org.itracker.web.util.EditIssueActionUtil;
-import org.itracker.web.util.RequestHelper;
-import org.itracker.web.util.ServletContextUtils;
+import org.itracker.web.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +49,6 @@ public class EditIssueAction extends ItrackerBaseAction {
         Date logDate = new Date();
         Date startDate = new Date();
         logTimeMillies("execute: called", logDate, log, Level.DEBUG);
-        // TODO: can we make this token optional (configurable) and probably by form, not over the whole app..
         if (!isTokenValid(request)) {
             log.debug("execute: Invalid request token while editing issue.");
 
@@ -63,7 +57,6 @@ public class EditIssueAction extends ItrackerBaseAction {
             saveErrors(request, errors);
             log.info("execute: return to edit-issue");
             saveToken(request);
-            //			return mapping.findForward("error");
             return mapping.getInputForward();
         }
         resetToken(request);
@@ -80,34 +73,43 @@ public class EditIssueAction extends ItrackerBaseAction {
             User currUser = (User) session.getAttribute(Constants.USER_KEY);
 
             Map<Integer, Set<PermissionType>> userPermissions = RequestHelper.getUserPermissions(session);
-
-            Integer currUserId = currUser.getId();
             IssueForm issueForm = (IssueForm) form;
             int previousStatus = -1;
-            Issue issue = issueService.getIssue(issueForm.getId());
-            logTimeMillies("execute: got issue", logDate, log, Level.DEBUG);
+            Issue issue;
+            try {
+                issue = issueService.getIssue(issueForm.getId());
+            } catch (Exception e) {
+                if (log.isDebugEnabled()) {
+                    log.debug("could not load issue #" + issueForm.getId(), e);
+                }
+                issue = null;
+            }
 
             if (issue == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                         "itracker.web.error.invalidissue"));
+                saveErrors(request, errors);
                 log.info("execute: invalidissue " + issueForm.getId() + ", Forward: Error");
                 return mapping.findForward("error");
             }
+
+            logTimeMillies("execute: got issue", logDate, log, Level.DEBUG);
 
             Project project = issue.getProject();
             logTimeMillies("execute: got project", logDate, log, Level.DEBUG);
             if (project == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                         "itracker.web.error.invalidproject"));
+                saveErrors(request, errors);
                 log.info("execute: Forward: Error");
                 return mapping.findForward("error");
             } else if (project.getStatus() != Status.ACTIVE) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                         "itracker.web.error.projectlocked"));
+                saveErrors(request, errors);
                 log.info("execute: Forward: Error");
                 return mapping.findForward("error");
-            } else if (!IssueUtilities.canEditIssue(issue, currUserId,
-                    userPermissions)) {
+            } else if (!LoginUtilities.canEditIssue(issue)) {
                 log.info("execute: Forward: unauthorized");
                 return mapping.findForward("unauthorized");
             }
@@ -121,8 +123,8 @@ public class EditIssueAction extends ItrackerBaseAction {
             if (errors.isEmpty()) {
                 previousStatus = issue.getStatus();
                 try {
-                    if (UserUtilities.hasPermission(userPermissions, project.getId(),
-                            UserUtilities.PERMISSION_EDIT_FULL)) {
+                    if (LoginUtilities.hasPermission(project,
+                            PermissionType.ISSUE_EDIT_FULL)) {
                         if (log.isDebugEnabled()) {
                             log.debug("execute: process full, " + issue);
                         }
@@ -138,7 +140,7 @@ public class EditIssueAction extends ItrackerBaseAction {
                         logTimeMillies("execute: processed limited edit", logDate, log, Level.DEBUG);
                     }
                 } catch (Exception e) {
-                    log.warn("execute: failed to update " + issue, e);
+                    log.warn("execute: failed to update", e);
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.other"));
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(e.getMessage(), false));
                 }
@@ -173,7 +175,6 @@ public class EditIssueAction extends ItrackerBaseAction {
             saveToken(request);
 
             return mapping.getInputForward();
-            //			return null;//mapping.findForward("editissueform");
         }
 
         log.info("execute: Forward: Error");

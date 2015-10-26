@@ -32,7 +32,8 @@ public class ViewIssueAction extends ItrackerBaseAction {
 			throws Exception {
 
 		IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
-		
+
+		ActionMessages errors = new ActionMessages();
 		Locale locale = getLocale(request);
 
 		String pageTitleKey = "itracker.web.viewissue.title";
@@ -43,32 +44,28 @@ public class ViewIssueAction extends ItrackerBaseAction {
 		try {
 			issueId = Integer.valueOf(request.getParameter("id"));
 		} catch (RuntimeException re) {
-			getErrors(request).add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noissue"));
-			saveErrors(request, getErrors(request));
-			return mapping.findForward("index");
+			errors.add(ActionMessages.GLOBAL_MESSAGE,
+					new ActionMessage("itracker.web.error.noissue"));
+			saveErrors(request, errors);
+			return mapping.findForward("error");
 		}
 
 		HttpSession session = request.getSession();
-		final Map<Integer, Set<PermissionType>> permissions = RequestHelper
-				.getUserPermissions(session);
 		User um = RequestHelper.getCurrentUser(session);
 
 		NotificationService notificationService = ServletContextUtils.getItrackerServices().getNotificationService();
 
 		Issue issue;
 
-		Integer currUserId = um.getId();
-//		TODO verify this code.
 		try {
-			issueId = new Integer((request.getParameter("id") == null ? "-1"
-					: (request.getParameter("id"))));
 			issue = issueService.getIssue(issueId);
 		} catch (Exception ex) {
 			issue = null;
 		}
 		if (issue == null) {
-			this.getErrors(request).add(ActionMessages.GLOBAL_MESSAGE,
-					new ActionMessage("itracker.web.error.noissue"));
+			errors.add(ActionMessages.GLOBAL_MESSAGE,
+					new ActionMessage("itracker.web.error.invalidissue"));
+			saveErrors(request, errors);
 			log.info("ViewIssueAction: Forward: error");
 			return mapping.findForward("error");
 		}
@@ -76,14 +73,14 @@ public class ViewIssueAction extends ItrackerBaseAction {
 		Project project = issue.getProject();
 		if (project != null && project.getStatus() != Status.ACTIVE
 				&& project.getStatus() != Status.VIEWABLE) {
-			this.getErrors(request).add(ActionMessages.GLOBAL_MESSAGE,
+			errors.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("itracker.web.error.projectlocked"));
+			saveErrors(request, errors);
 			log.info("ViewIssueAction: Forward: error");
 			return mapping.findForward("error");
 		} else {
 
-			if (project == null || !LoginUtilities.canViewIssue(issue,
-					LoginUtilities.getPrincipal())) {
+			if (project == null || !LoginUtilities.canViewIssue(issue)) {
 				log.info("ViewIssueAction: Forward: unauthorized");
 				return mapping.findForward("unauthorized");
 			}
@@ -97,7 +94,7 @@ public class ViewIssueAction extends ItrackerBaseAction {
 		 * Get issue history, sort on create date.
 		 */
 		List<IssueHistory> issueHistories = issue.getHistory();
-		List<IssueHistory> histories = new ArrayList<IssueHistory>();
+		List<IssueHistory> histories = new ArrayList<>();
 		Collections.sort(issueHistories, IssueHistory.CREATE_DATE_COMPARATOR);
 		for (IssueHistory history : issueHistories) {
 			if (history.getStatus() == IssueUtilities.HISTORY_STATUS_AVAILABLE) {
@@ -143,13 +140,12 @@ public class ViewIssueAction extends ItrackerBaseAction {
 		request.setAttribute("histories", histories);
 		request.setAttribute("project", project);
         request.setAttribute("rssFeed", "/servlets/issues/p" + project.getId() + "/i" + issue.getId());
-		request.setAttribute("hasIssueNotification", !notificationService.hasIssueNotification(
-				issue, currUserId));
-		request.setAttribute("canEditIssue", IssueUtilities.canEditIssue(issue,
-				currUserId, permissions));
+		request.setAttribute("hasIssueNotification", notificationService.hasIssueNotification(
+				issue, request.getRemoteUser()));
+		request.setAttribute("canEditIssue", LoginUtilities.canEditIssue(issue));
 		request.setAttribute("canCreateIssue",
-				(project.getStatus() == Status.ACTIVE && UserUtilities
-						.hasPermission(permissions, project.getId(),
+				(project.getStatus() == Status.ACTIVE && LoginUtilities
+						.hasPermission(project,
 								PermissionType.ISSUE_CREATE)));
 		request.setAttribute("issueStatusName",issueStatusName);
 		request.setAttribute("issueSeverityName",issueSeverityName);

@@ -1,10 +1,8 @@
-<%@ taglib prefix="hrml" uri="http://struts.apache.org/tags-html-el" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="/common/taglibs.jsp"%>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<bean:define id="pageTitleKey" value="itracker.web.editissue.title"/>
-<bean:define id="pageTitleArg" value="${issue.id}"/>
+<!DOCTYPE HTML>
+<c:set var="pageTitleKey" value="itracker.web.editissue.title" scope="request" />
+<c:set var="pageTitleArg" value="${issue.id}" scope="request" />
 
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 

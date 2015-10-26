@@ -78,9 +78,6 @@
             <forward name="viewissue" path="/view_issue.do" redirect="true"/>
         </action>
 
-        <action path="/unauthorized" type="org.itracker.web.actions.UnauthorizedAction">
-            <forward name="unauthorized" path="/unauthorized.do" module="/" redirect="true"/>
-        </action>
 
         <action path="/moveissueform" type="org.itracker.web.actions.project.MoveIssueFormAction"
                 name="moveIssueForm" scope="request" input="/move_issue.jsp" validate="false"/>
@@ -111,7 +108,7 @@
         </action>
 
         <action path="/editissueform" type="org.itracker.web.actions.project.EditIssueFormAction"
-                name="editIssueForm" scope="request" input="/edit_issue.jsp" validate="true">
+                name="editIssueForm" scope="request" input="/edit_issue.jsp" validate="false">
             <forward name="editissueform" path="/edit_issue.jsp" redirect="true"/>
         </action>
 

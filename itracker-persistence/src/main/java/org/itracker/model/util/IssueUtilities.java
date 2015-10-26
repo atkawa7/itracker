@@ -648,6 +648,7 @@ public class IssueUtilities {
      * @param userId      the userId of the user to check permission for
      * @param permissions a HashMap of the users permissions
      */
+    @Deprecated
     public static boolean canEditIssue(Issue issue, Integer userId,
                                        Map<Integer, Set<PermissionType>> permissions) {
         if (issue == null || userId == null || permissions == null) {
@@ -711,6 +712,7 @@ public class IssueUtilities {
      * @param userId      the userId of the user to check permission for
      * @param permissions a HashMap of the users permissions
      */
+    @Deprecated
     public static boolean canBeAssignedIssue(Issue issue, Integer userId,
                                              Map<Integer, Set<PermissionType>> permissions) {
         if (issue == null || userId == null || permissions == null) {

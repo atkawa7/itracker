@@ -65,15 +65,21 @@ public class EditIssueFormAction extends ItrackerBaseAction {
                     (request.getParameter("id") == null ? "-1" : (request
                             .getParameter("id"))));
 
-            Issue issue = issueService.getIssue(issueId);
-            Project project = issueService.getIssueProject(issueId);
-
+            Issue issue;
+            try {
+                issue = issueService.getIssue(issueId);
+            } catch (Exception ex) {
+                issue = null;
+            }
             if (issue == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                         "itracker.web.error.invalidissue"));
                 saveErrors(request, errors);
                 return mapping.findForward("error");
-            } else if (project == null) {
+            }
+            Project project = issueService.getIssueProject(issueId);
+
+            if (project == null) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                         "itracker.web.error.invalidproject"));
             } else if (project.getStatus() != Status.ACTIVE) {

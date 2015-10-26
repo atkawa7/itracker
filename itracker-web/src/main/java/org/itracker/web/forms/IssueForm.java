@@ -1169,8 +1169,13 @@ public class IssueForm extends ITrackerForm {
 
         try {
             if (null != getId()) {
-                Issue issue = getITrackerServices().getIssueService().getIssue(
-                        getId());
+                Issue issue;
+                try {
+                    issue = getITrackerServices().getIssueService().getIssue(
+                            getId());
+                } catch (Exception e) {
+                    return errors;
+                }
 
                 Locale locale = (Locale) request.getSession().getAttribute(
                         Constants.LOCALE_KEY);
