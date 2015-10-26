@@ -232,6 +232,11 @@ tr.listRowUnshaded {
     text-decoration: none;
 }
 
+tr.listRowShaded td,
+tr.listRowUnshaded td {
+    height: 1.5em;
+    padding: .2em;
+}
 .shadeList tr.listRowShaded:hover {
     background-color: #cfc;
 }
