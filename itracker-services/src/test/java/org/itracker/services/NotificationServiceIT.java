@@ -139,7 +139,7 @@ public class NotificationServiceIT extends AbstractServicesIntegrationTest {
 
         // Passing null
         assertFalse(notificationService.hasIssueNotification(null, 2));
-        assertFalse(notificationService.hasIssueNotification(issue1, null));
+        assertFalse(notificationService.hasIssueNotification(issue1, (Integer)null));
 
         //
         // Issue 1

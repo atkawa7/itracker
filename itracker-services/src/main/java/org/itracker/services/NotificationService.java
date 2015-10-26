@@ -74,7 +74,9 @@ public interface NotificationService {
      */
     boolean hasIssueNotification(Issue issue, Integer userId);
 
-    public boolean hasIssueNotification(Issue issue, Integer userId, Role role);
+    boolean hasIssueNotification(Issue issue, String login);
+    boolean hasIssueNotification(Issue issue, String login, Role role);
+    boolean hasIssueNotification(Issue issue, Integer userId, Role role);
 
     /**
      * @param notification

@@ -18,6 +18,7 @@
 
 package org.itracker.services.implementations;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.*;
@@ -923,6 +924,39 @@ public class NotificationServiceImpl implements NotificationService, Application
         return hasIssueNotification(issue, userId, Role.ANY);
     }
 
+    @Override
+    public boolean hasIssueNotification(Issue issue, String login) {
+
+        return hasIssueNotification(issue, login, Role.ANY);
+    }
+
+    @Override
+    public boolean hasIssueNotification(Issue issue, String login, Role role) {
+
+        if (issue != null && StringUtils.isNotBlank(login)) {
+
+            List<Notification> notifications = getIssueNotifications(issue,
+                    false, false);
+
+            for (Notification notification : notifications) {
+
+                if (role == Role.ANY || notification.getRole() == role) {
+
+                    if (StringUtils.equals(login, notification.getUser().getLogin())) {
+
+                        return true;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return false;
+    }
+
     /**
      * @param issue
      * @param userId
@@ -936,11 +970,11 @@ public class NotificationServiceImpl implements NotificationService, Application
             List<Notification> notifications = getIssueNotifications(issue,
                     false, false);
 
-            for (int i = 0; i < notifications.size(); i++) {
+            for (Notification notification : notifications) {
 
-                if (role == Role.ANY || notifications.get(i).getRole() == role) {
+                if (role == Role.ANY || notification.getRole() == role) {
 
-                    if (notifications.get(i).getUser().getId().equals(userId)) {
+                    if (notification.getUser().getId().equals(userId)) {
 
                         return true;
 
