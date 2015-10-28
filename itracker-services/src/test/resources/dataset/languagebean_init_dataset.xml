@@ -22185,14 +22185,6 @@
             <value><![CDATA[2009-01-26 23:10:33.0]]></value>
         </row>
         <row>
-            <value>2741</value>
-            <value>es_MX</value>
-            <value>itracker.web.attr.arguements</value>
-            <value>Argumentos</value>
-            <value><![CDATA[2009-01-26 23:10:33.0]]></value>
-            <value><![CDATA[2009-01-26 23:10:33.0]]></value>
-        </row>
-        <row>
             <value>2742</value>
             <value>es_MX</value>
             <value>itracker.web.admin.scheduler.task.reminder</value>
@@ -46959,14 +46951,6 @@
             <value>es</value>
             <value>itracker.web.button.create</value>
             <value>Crear</value>
-            <value><![CDATA[2009-01-26 23:11:07.0]]></value>
-            <value><![CDATA[2009-01-26 23:11:07.0]]></value>
-        </row>
-        <row>
-            <value>5807</value>
-            <value>es</value>
-            <value>itracker.web.attr.arguements</value>
-            <value>Argumentos</value>
             <value><![CDATA[2009-01-26 23:11:07.0]]></value>
             <value><![CDATA[2009-01-26 23:11:07.0]]></value>
         </row>
