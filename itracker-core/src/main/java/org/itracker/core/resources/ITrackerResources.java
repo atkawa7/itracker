@@ -81,6 +81,7 @@ public class ITrackerResources {
     private static HashMap<Locale, ResourceBundle> languages = new HashMap<Locale, ResourceBundle>();
 
     private static ITrackerResourcesProvider configurationService;
+    private static Collection<String> availableLocales;
 
     private static boolean initialized = false;
 
@@ -244,8 +245,9 @@ public class ITrackerResources {
 
     public static ResourceBundle getBundle(Locale locale) {
         if (locale == null) {
-            locale = getLocale(getDefaultLocale());
+            locale = getLocale();
         }
+
         ResourceBundle bundle = languages.get(locale);
         if (bundle == null) {
             if (logger.isDebugEnabled()) {
@@ -255,14 +257,18 @@ public class ITrackerResources {
             if (!isInitialized()) {
                 return ITrackerResourceBundle.loadBundle(locale);
             } else {
+
                 Properties languageItems = configurationService
                         .getLanguageProperties(locale);
+
+                logger.info("lazy loading locale bundle resources: {}", locale);
+
                 bundle = ITrackerResourceBundle.loadBundle(locale, languageItems);
-                logger.info("getBundle: got loaded for locale {} with items {} from the database.", locale, null == languageItems ? null : CollectionUtils.size(languageItems));
+                logger.info("getBundle: got loaded for locale {} with {} items from the database.", locale, null == languageItems ? "no" : CollectionUtils.size(languageItems));
                 logger.debug("getBundle: got loaded for locale {} with items {} from the database.", locale, languageItems);
 
+                putBundle(locale, bundle);
             }
-            putBundle(locale, bundle);
 
         }
 
@@ -356,9 +362,12 @@ public class ITrackerResources {
         logger.warn(
                 "no value while retrieving translation key '{}' for locale {}", key, locale);
         Locale l = locale;
-        if (StringUtils.isNotEmpty(locale.getCountry())) {
-            l = new Locale(locale.getLanguage());
-        } else if (StringUtils.isNotEmpty(locale.getLanguage())) {
+        if (null == l) {
+            l = getLocale(getDefaultLocale());
+        }
+        if (StringUtils.isNotEmpty(l.getCountry())) {
+            l = new Locale(l.getLanguage());
+        } else if (StringUtils.isNotEmpty(l.getLanguage())) {
             l = new Locale("");
         }
         if (l != locale) {
@@ -393,9 +402,6 @@ public class ITrackerResources {
             return "";
         }
 
-        if (locale == null) {
-            return getString(key, getDefaultLocale());
-        }
         String val;
         try {
             final ResourceBundle bundle = getBundle(locale);
@@ -559,8 +565,14 @@ public class ITrackerResources {
             throw new IllegalStateException("Service is already set up.");
         }
         configurationService = service;
-
+        String[] availableLocales = StringUtils.split(configurationService.getProperty("available_locales", getDefaultLocale()), ',');
+        ArrayList<String> locales = new ArrayList<>(availableLocales.length);
+        for (String l: availableLocales) {
+            locales.add(StringUtils.trim(l));
+        }
+        ITrackerResources.availableLocales = locales;
         ITrackerResources.setDefaultLocale(configurationService.getProperty("default_locale", ITrackerResources.DEFAULT_LOCALE));
+
         logger.info("Set system default locale to '" + ITrackerResources.getDefaultLocale() + "'");
         setInitialized(true);
 

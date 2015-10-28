@@ -29,7 +29,7 @@ public class ITrackerMessageResourcesFactory extends MessageResourcesFactory {
     private static final long serialVersionUID = 1L;
 
     public MessageResources createResources(String config) {
-        return new ITrackerMessageResources(this, config, this.returnNull);
+        return ITrackerMessageResources.getMessageResources( config );
     }
 
 }

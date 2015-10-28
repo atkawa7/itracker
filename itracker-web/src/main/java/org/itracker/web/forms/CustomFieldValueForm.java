@@ -45,10 +45,8 @@ public class CustomFieldValueForm extends ValidatorForm {
 
     private String value;
     private Integer sortOrder;
-    // let's try to put String,String here:
     private HashMap<String, String> translations = new HashMap<String, String>();
 
-    // private Map<String, String> translations;
 
     public String getAction() {
         return action;

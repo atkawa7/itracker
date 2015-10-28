@@ -5,6 +5,10 @@ document.observe("dom:loaded", function() {
     $$('.deleteButton').each(function(elem) {
         elem.observe("click", function(event) { if (!confirm(elem.title + "?")) { event.stop() }; });
     });
+    $$('input[name=placeholder]').each(function(elem) {
+        var next = elem.next()
+        next.setAttribute('placeholder', elem.getAttribute('value'))
+    });
     $$('a.HTTP_POST[href], .HTTP_POST a[href]').each(function(elem) {
         elem.observe("click", function(event) {
             var hr = elem.href

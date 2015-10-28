@@ -454,7 +454,7 @@ public interface ConfigurationService extends ITrackerResourcesProvider {
      */
     @Deprecated
     List<Language> getLanguage(Locale locale);
-    public Properties getLanguageProperties(Locale locale);
+    Properties getLanguageProperties(Locale locale);
 
     void updateLanguage(Locale locale, List<Language> languages);
 

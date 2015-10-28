@@ -78,6 +78,7 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
 
             String action = customFieldValueForm.getAction();
 
+            String messageKey;
             if ("update".equals(action)) {
                 Integer id = customFieldValueForm.getId();
                 customFieldValue = configurationService.getCustomFieldValue(id);
@@ -91,46 +92,48 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
 
                 customFieldValueForm.setSortOrder(customFieldValue.getSortOrder());
 
-                HashMap<String, String> translations = new HashMap<String, String>();
-                List<Language> languageItems = configurationService
-                        .getLanguageItemsByKey(CustomFieldUtilities
-                                .getCustomFieldOptionLabelKey(customFieldValue
+                HashMap<String, String> translations = new HashMap<>();
+                messageKey = CustomFieldUtilities
+                        .getCustomFieldOptionLabelKey(customFieldValue
                                         .getCustomField().getId(),
-                                        customFieldValue.getId()));
+                                customFieldValue.getId());
+                List<Language> languageItems = configurationService
+                        .getLanguageItemsByKey(messageKey);
 
-                for (int i = 0; i < languageItems.size(); i++) {
-                    translations.put(languageItems.get(i).getLocale(),
-                            languageItems.get(i).getResourceValue());
+                for (Language languageItem : languageItems) {
+                    translations.put(languageItem.getLocale(),
+                            languageItem.getResourceValue());
                 }
                 customFieldValueForm.setTranslations(translations);
-            }
-            CustomField field = (CustomField) session
-                    .getAttribute(Constants.CUSTOMFIELD_KEY);
-            if (field == null) {
-                return mapping.findForward("unauthorized");
-
             } else {
-                String pageTitleKey = "";
-                String pageTitleArg = "";
-                pageTitleKey = "itracker.web.admin.editcustomfield.title.create";
-                if (action == "update") {
-                    pageTitleKey = "itracker.web.admin.editcustomfield.title.update";
-                }
-
-                request.setAttribute("languages", configurationService.getAvailableLanguages());
-                request.setAttribute("pageTitleKey", pageTitleKey);
-                request.setAttribute("pageTitleArg", pageTitleArg);
-
-                request.setAttribute("languages", languages);
-                request.setAttribute("customFieldValueForm", customFieldValueForm);
-                request.setAttribute("action", action);
-                session.setAttribute(Constants.CUSTOMFIELDVALUE_KEY,
-                        customFieldValue);
-                session.setAttribute("field", field);
-                saveToken(request);
-                setRequestEnvironment(request, configurationService);
-                return mapping.getInputForward();
+                customFieldValue.setCustomField((CustomField) session.getAttribute(Constants.CUSTOMFIELD_KEY));
+                messageKey = "";
             }
+
+            CustomField field = customFieldValue.getCustomField();
+
+            String pageTitleKey = "";
+            String pageTitleArg = "";
+            pageTitleKey = "itracker.web.admin.editcustomfield.title.create";
+            if ("update".equals(action)) {
+                pageTitleKey = "itracker.web.admin.editcustomfield.title.update";
+            }
+
+            request.setAttribute("languages", configurationService.getAvailableLanguages());
+            request.setAttribute("pageTitleKey", pageTitleKey);
+            request.setAttribute("pageTitleArg", pageTitleArg);
+
+            request.setAttribute("messageKey", messageKey);
+            request.setAttribute("languages", languages);
+            request.setAttribute("customFieldValueForm", customFieldValueForm);
+            request.setAttribute("action", action);
+            session.setAttribute(Constants.CUSTOMFIELDVALUE_KEY,
+                    customFieldValue);
+            session.setAttribute("field", field);
+            saveToken(request);
+            setRequestEnvironment(request, configurationService);
+            return mapping.getInputForward();
+
 
 
         } catch (SystemConfigurationException sce) {

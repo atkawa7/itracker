@@ -1,24 +1,9 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<%-- <nitrox:var name="action" type="java.lang.String"/> --%>
-<!-- bean:define id="action" name="action" type="java.lang.String" scope="request"/ -->
-
-<bean:define id="pageTitleKey" value="itracker.web.admin.editcustomfieldvalue.title.create"/>
-<bean:define id="pageTitleArg" value=""/>
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
-
-<logic:messagesPresent>
-    <center>
-        <span class="formError">
-            <html:messages id="error">
-                <bean:write name="error"/><br/>
-            </html:messages>
-        </span>
-    </center>
-    <br>
-</logic:messagesPresent>
+<!DOCTYPE HTML >
+<tiles:insert page="/themes/defaulttheme/includes/header.jsp">
+    <tiles:put name="errorHide" value="${ false }" />
+</tiles:insert>
 
 <html:form action="/editcustomfieldvalue">
     <html:hidden property="action"/>
@@ -40,41 +25,86 @@
         <tr><td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.translations"/>:</td></tr>
         <tr class="listHeading"><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
         <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="4"/></td></tr>
-        <tr class="listRowUnshaded">
-            <td colspan="3">
-                <it:message key="itracker.web.attr.baselocale"/>
-            </td>
-            <td>
-               
-            <html:text property="translations(${baseLocale})" styleClass="editColumnText"/></td>
-            
-        </tr>
-       
-        <c:forEach var="languageNameValue" items="${languagesNameValuePair}">
-            <tr class="listRowUnshaded">
-                <td></td>
-                <td colspan="2">
-                	${languageNameValue.key.value}
+        <tr><td colspan="4"><table width="100%" cellspacing="0" cellpadding="1" border="0" class="shadeList">
+            <tr class="listRowShaded">
+                <td colspan="3">
+                    <label for="BASE">
+                    <it:message key="itracker.web.attr.baselocale"/>
+
+                    (<it:link action="editlanguageform" targetAction="update#${ messageKey }"
+                              paramName="locale" paramValue="BASE"
+                              titleKey="itracker.web.admin.listlanguages.update.alt" arg0="BASE"
+                              styleClass="pre">BASE</it:link>)
+                    </label>
                 </td>
                 <td>
-                <html:text property="translations(${languageNameValue.key.name })" styleClass="editColumnText"/></td>
+                    <c:if test="${ not empty messageKey }">
+                        <c:set var="placeholder"><it:message key="${ messageKey }" locale="BASE"/></c:set>
+                        <input type="hidden" name="placeholder" value="${fn:escapeXml(placeholder)}" />
+                    </c:if>
+                    <html:text property="translations(BASE)" styleClass="editColumnText" styleId="BASE"/>
+                </td>
 
             </tr>
-            
-            <c:forEach var="locale" items="${languageNameValue.value}">
-                  <tr class="listRowUnshaded">
+            <c:set var="i" value="0"/>
+            <c:forEach var="languageNameValue" items="${languagesNameValuePair}">
+                <c:set var="listRowClass" value="${ (i % 2 == 1) ? 'listRowShaded' : 'listRowUnshaded' }"/>
+                <c:set var="i" value="${ i + 1 }"/>
+
+                <tr class="${listRowClass}">
                     <td></td>
-                    <td></td>
-                    <td>
-                        ${locale.value }
+                    <td colspan="2">
+                        <label for="${ languageNameValue.key.name }">
+                            ${languageNameValue.key.value}
+                            (<it:link action="editlanguageform" targetAction="update#${ messageKey }"
+                                      paramName="locale" paramValue="${ languageNameValue.key.name }"
+                                      titleKey="itracker.web.admin.listlanguages.update.alt" arg0="${ languageNameValue.key.name }"
+                                      styleClass="pre">${ languageNameValue.key.name }</it:link>)
+                        </label>
                     </td>
                     <td>
-                    <html:text property="translations(${locale.name})" styleClass="editColumnText"/></td>
+                        <c:if test="${ not empty messageKey }">
+                            <c:set var="placeholder"><it:message key="${ messageKey }"
+                                                                 locale="${languageNameValue.key.name}"/></c:set>
+                            <input type="hidden" name="placeholder" value="${fn:escapeXml(placeholder)}"/>
+                        </c:if>
+                        <html:text property="translations(${languageNameValue.key.name })" styleClass="editColumnText" styleId="${ languageNameValue.key.name }"/>
+                    </td>
 
                 </tr>
-        
-        </c:forEach>
-        </c:forEach>
+
+                <c:forEach var="locale" items="${languageNameValue.value}">
+                    <c:set var="listRowClass" value="${ (i % 2 == 1) ? 'listRowShaded' : 'listRowUnshaded' }"/>
+                    <c:set var="i" value="${ i + 1 }"/>
+
+                    <tr class="${listRowClass} level1">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <label for="${ locale.name }">
+                                ${locale.value }
+                                    (<it:link action="editlanguageform" targetAction="update#${ messageKey }"
+                                              paramName="locale" paramValue="${ locale.name }"
+                                              titleKey="itracker.web.admin.listlanguages.update.alt" arg0="${ locale.name }"
+                                              styleClass="pre">${ locale.name }</it:link>)
+                            </label>
+                        </td>
+                        <td>
+                            <c:if test="${ not empty messageKey }">
+                                <c:set var="placeholder"><it:message key="${ messageKey }"
+                                                                     locale="${locale.name}"/></c:set>
+                                <input type="hidden" name="placeholder" value="${fn:escapeXml(placeholder)}"/>
+                            </c:if>
+                            <html:text property="translations(${locale.name})" styleClass="editColumnText" styleId="${ locale.name }"/>
+                        </td>
+
+                    </tr>
+
+                </c:forEach>
+            </c:forEach>
+        </table>
+        </td>
+        </tr>
         <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
         <%-- <nitrox:var name="isUpdate" type="java.lang.Boolean"/> --%>
         <c:choose>

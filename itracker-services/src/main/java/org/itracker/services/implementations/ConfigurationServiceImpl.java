@@ -1291,6 +1291,13 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             }
         }
 
+//        // apply configuration locales
+//        for (Configuration c: getConfigurationItemsByType(Configuration.Type.locale)) {
+//            if (!definedLocales.contains(c.getValue())) {
+//                logger.info("removing language configuration from database: {}, not in: {}", c, definedLocales);
+//                removeConfigurationItems(c);
+//            }
+//        }
         for (String locale : definedLocales) {
             initializeLocale(locale, forceReload);
         }

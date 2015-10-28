@@ -18,19 +18,10 @@
 </c:choose>
 <c:set var="pageTitleArg" value="${ languageForm.localeTitle }" scope="request" />
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-     <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
-
-      <logic:messagesPresent>
-        <center>
-          <span class="formError">
-           <html:messages id="error">
-              <bean:write name="error"/><br/>
-           </html:messages>
-          </span>
-        </center>
-        <br>
-      </logic:messagesPresent>
+<!DOCTYPE HTML>
+<tiles:insert page="/themes/defaulttheme/includes/header.jsp">
+    <tiles:put name="errorHide" value="${ false }" />
+</tiles:insert>
 
       <html:form method="post" action="/editlanguage">
         <html:hidden property="action"/>
@@ -46,15 +37,21 @@
           <c:set var="locMsg" value="itracker.web.attr.language" />
           <c:set var="afterTd" value="<td> </td>" />
           <c:set var="beforeTd" value="" />
+
+           <c:set var="locHead"><it:message key="itracker.web.attr.baselocale"/></c:set>
           <c:set var="readOnly" value="false" />
           <c:if test="${ isUpdate }" >
             <c:set var="readOnly" value="true" />
           </c:if>
-
-          <!-- if localeType == SystemConfigurationUtilities.LOCALE_TYPE_LOCALE -->
+           <c:if test="${ localeType == 2 }" >
+               <c:set var="beforeTd" value="<td>${locHead}</td>" />
+           </c:if>
+          <%-- if localeType == SystemConfigurationUtilities.LOCALE_TYPE_LOCALE --%>
           <c:if test="${ localeType == 3}" >
             <c:set var="afterTd" value="" />
-            <c:set var="beforeTd" value="<td> </td>" />
+
+              <c:set var="locHead2"><it:message key="${locMsg}"/> ( <c:out value="${ languageForm.parentLocale }" /> )</c:set>
+            <c:set var="beforeTd" value="<td>${locHead}</td><td>${locHead2}</td>" />
             <c:set var="locMsg" value="itracker.web.attr.locale" />
             <c:set var="maxLength" value="5" />
             <c:set var="maxSize" value="5" />
@@ -80,7 +77,6 @@
           </tr>
           <tr align="left" class="listHeading">
             <td><it:message key="itracker.web.attr.key"/></td>
-            <td><it:message key="itracker.web.attr.baselocale"/></td>
             ${ beforeTd }
             <td><it:message key="${ locMsg }"/></td>
             ${ afterTd }
@@ -99,11 +95,12 @@
                <c:set var="i" value="${ i + 1 }" />
                
                <c:if test="${ (key != 'itracker.locales') &&  (key != 'itracker.locale.name') }" >
-                 <tr class="${ styleClass }">
-                  <td valign="top"><code>${ key }</code></td>
-                  <!-- localeType != SystemConfigurationUtilities.LOCALE_TYPE_BASE -->
-                  <c:if test="${ localeType != 1 }" >
+                 <tr class="${ styleClass }" >
+                  <td valign="top"><label for="${ key }"><code>${ key }</code></label></td>
+                  <%-- localeType != SystemConfigurationUtilities.LOCALE_TYPE_BASE --%>
+                  <c:if test="${ localeType > 1 }" >
                   	<td valign="top">
+                        <c:set var="pl" value="BASE" />
                         <c:choose>
                             <c:when test="${ isLongString }">
                                 <pre class="pre localization"><it:message key="${ key }" locale="BASE"/></pre>
@@ -114,9 +111,11 @@
                         </c:choose>
                     </td>
                   </c:if>
-                  <!-- localeType != SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE -->
-                  <c:if test="${ localeType != 2 }">
+                  <%-- localeType != SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE --%>
+                  <c:if test="${ localeType > 2 }">
                      <td valign="top">
+                         <c:set var="pl" value="${languageForm.parentLocale}" />
+
                          <c:choose>
                              <c:when test="${ isLongString }">
                                  <pre class="pre localization localizationSub"><it:message key="${ key }" locale="${languageForm.parentLocale}"/></pre>
@@ -128,14 +127,25 @@
                          </c:choose>
                      </td>
                   </c:if>
-                  <c:choose>
-		          	<c:when test="${ isLongString }" >
-                    	<td valign="top"><html:textarea indexed="false" name="languageForm"  rows="6" cols="40" property="${ propertyKey }" value="${ value }" styleClass="${ styleClass }"/></td>
-		          	</c:when>
-		          	<c:otherwise>
-                    	<td valign="top"><html:text indexed="false" name="languageForm" property="${ propertyKey }" value="${ value }" size="40" styleClass="${ styleClass }"/></td>
-		          	</c:otherwise>
-          		   </c:choose>
+                     <c:set var="lc" value="${isUpdate?languageForm.locale:pl}" />
+
+                  <c:set var="loadedString"><it:message key="${key}" locale="${lc}"/></c:set>
+
+                     <td valign="top">
+                         <input type="hidden" name="placeholder" value="${fn:escapeXml(loadedString)}"/>
+                         <c:choose>
+                             <c:when test="${ isLongString }">
+                                 <html:textarea indexed="false" name="languageForm" rows="6" cols="40"
+                                                property="${ propertyKey }" value="${ value }"
+                                                styleClass="${ styleClass }" styleId="${ key }"/>
+                             </c:when>
+                             <c:otherwise>
+                                 <html:text indexed="false" name="languageForm" property="${ propertyKey }"
+                                            value="${ value }" size="40" styleClass="${ styleClass }" styleId="${ key }"
+                                            title=""/>
+                             </c:otherwise>
+                         </c:choose>
+                     </td>
           		   ${ afterTd } 
                 </tr>
                

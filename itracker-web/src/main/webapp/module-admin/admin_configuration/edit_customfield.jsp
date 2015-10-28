@@ -3,26 +3,16 @@
 <bean:define id="pageTitleKey" value="itracker.web.admin.editcustomfield.title.create"/>
 <bean:define id="pageTitleArg" value=""/>
 <%--   redirect logic moved to Action --%>
-        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-        <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
-        
-        <logic:messagesPresent>
-            
-            <span class="formError"> 
-                <html:messages id="error">
-                    <bean:write name="error"/><br/>
-                </html:messages> 
-            </span>
-            
-            <br/><br/><br/>
-            
-        </logic:messagesPresent>
-        
+<!DOCTYPE HTML>
+<tiles:insert page="/themes/defaulttheme/includes/header.jsp">
+    <tiles:put name="errorHide" value="${ false }" />
+</tiles:insert>
+
         <html:form action="/editcustomfield">
             <html:hidden property="action"/>
             <html:hidden property="id"/>
-            
-            
+
+
             <table border="0" cellspacing="0" cellpadding="0" width="100%">
                 <tr>
                     <td colspan="2" width="48%"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
@@ -74,7 +64,7 @@
                     <td>
                         <html:select property="dateFormat" styleClass="editColumnText">
                             <html:option value="${dateFormatDateOnly}" styleClass="editColumnText"><it:message key="itracker.web.attr.date.dateonly"/> (<it:message key="itracker.dateformat.dateonly"/>)</html:option>
-<!--                            <html:option value="${dateFormatTimeonly}" styleClass="editColumnText"><it:message key="itracker.web.attr.date.timeonly"/> (<it:message key="itracker.dateformat.timeonly"/>)</html:option>-->
+<%--                            <html:option value="${dateFormatTimeonly}" styleClass="editColumnText"><it:message key="itracker.web.attr.date.timeonly"/> (<it:message key="itracker.dateformat.timeonly"/>)</html:option>--%>
                             <html:option value="${dateFormatFull}" styleClass="editColumnText"><it:message key="itracker.web.attr.date.full"/> (<it:message key="itracker.dateformat.full"/>)</html:option>
                         </html:select>
                     </td>
@@ -89,15 +79,18 @@
                             <tr class="listRowShaded">
 
                                 <td colspan="3" >
-                                    <span class="systemDefault"><it:message key="itracker.customfield.${ field.id }.label" locale="BASE"/></span>
                                     <label for="BASE">
                                         <it:message key="itracker.web.attr.baselocale"/>
-                                        (<it:link action="editlanguageform" targetAction="update"
+                                        (<it:link action="editlanguageform" targetAction="update#itracker.customfield.${ field.id }.label"
                                           paramName="locale" paramValue="BASE"
                                           titleKey="itracker.web.admin.listlanguages.update.alt" arg0="${ languageNameValue.key.name }"
                                           styleClass="pre">BASE</it:link>)
                                     </label>
-                                <td colspan="2" >
+                                <td colspan="2">
+                                    <c:set var="placeholder"><it:message key="itracker.customfield.${ field.id }.label"
+                                                                         locale="BASE"/></c:set>
+                                    <input type="hidden" name="placeholder" value="${fn:escapeXml(placeholder)}"/>
+
                                     <html:text property="${baseLocaleKey}" styleId="BASE" styleClass="editColumnText"/>
                                 </td>
                             </tr>
@@ -111,69 +104,48 @@
                                    <tr class="${listRowClass} level1">
                                     <td></td>
                                     <td colspan="2">
-                                        <span class="systemDefault"><it:message key="itracker.customfield.${ field.id }.label" locale="${languageNameValue.key.name}"/></span>
                                         <label for="${languageNameValue.key.name}">
                                           ${languageNameValue.key.value}
-                                              (<it:link action="editlanguageform" targetAction="update"
+                                              (<it:link action="editlanguageform" targetAction="update#itracker.customfield.${ field.id }.label"
                                                 paramName="locale" paramValue="${ languageNameValue.key.name }"
                                                 titleKey="itracker.web.admin.listlanguages.update.alt" arg0="${ languageNameValue.key.name }"
                                                 styleClass="pre">${languageNameValue.key.name}</it:link>)
                                         </label>
                                     </td>
                                     <td>
-                                      <html:text property="translations(${languageNameValue.key.name})" styleId="${languageNameValue.key.name}" styleClass="editColumnText"/></td>
-
+                                      <c:set var="placeholder"><it:message key="itracker.customfield.${ field.id }.label" locale="${languageNameValue.key.name}"/></c:set>
+                                      <input type="hidden" name="placeholder" value="${fn:escapeXml(placeholder)}" />
+                                      <html:text property="translations(${languageNameValue.key.name})" styleId="${languageNameValue.key.name}" styleClass="editColumnText"/>
+                                    </td>
                                   </tr>
                           		<c:forEach var="locale" items="${languageNameValue.value }" varStatus="itLStatus">
-                                      <c:set var="listRowClass" value="${ (itLStatus.index % 2 == 1) ? 'listRowShaded' : 'listRowUnshaded' }" />
-
+                                    <c:set var="listRowClass" value="${ (i % 2 == 1) ? 'listRowShaded' : 'listRowUnshaded' }" />
+                                    <c:set var="i" value="${ i + 1 }" />
                                       <tr class="${listRowClass} level2">
                                         <td></td>
                                         <td></td>
-                                        <td>
-                                            <span class="systemDefault"><it:message key="itracker.customfield.${ field.id }.label" locale="${locale.name}"/></span>
+                                          <td>
                                             <label for="${locale.name}">
                                               ${locale.value}
-                                                  (<it:link action="editlanguageform" targetAction="update"
+                                                  (<it:link action="editlanguageform" targetAction="update#itracker.customfield.${ field.id }.label"
                                                     paramName="locale" paramValue="${ locale.name }"
                                                     titleKey="itracker.web.admin.listlanguages.update.alt" arg0="${ locale.name }"
                                                     styleClass="pre">${locale.name}</it:link>)
                                             </label>
                                         </td>
                                         <td>
-                                          <html:text property="translations(${locale.name})" styleId="${locale.name}" styleClass="editColumnText"/></td>
-
+                                          <c:set var="placeholder"><it:message key="itracker.customfield.${ field.id }.label" locale="${locale.name}"/></c:set>
+                                          <input type="hidden" name="placeholder" value="${fn:escapeXml(placeholder)}" />
+                                          <html:text property="translations(${locale.name})" styleId="${locale.name}" styleClass="editColumnText"/>
+                                        </td>
                                       </tr>
                           	    </c:forEach>
                             </c:forEach>
 
-                            <%-- REMOVE:
-
-                            <c:forEach var="languageNameValue" items="${languagesNameValuePair}">
-                            <tr class="listRowUnshaded">
-                            	<td colspan="2" valign="top">
-                                	${languageNameValue.key.value}
-                                </td>
-                                
-                                <td colspan="2" valign="top">
-                                    <html:textarea rows="2" cols="60" property="translations(${languageNameValue.key.name})"  styleClass="editColumnText"/>
-                                </td>
-                            </tr>
-                           
-                            <c:forEach var="locale" items="${languageNameValue.value }">
-                            <tr class="listRowUnshaded">
-                                <td colspan="2" valign="top">${locale.value}</td>
-                                <td colspan="2" valign="top">
-                                    <html:textarea rows="2" cols="60" property="translations(${locale.name})" styleClass="editColumnText"/>
-                                </td>
-                            </tr>
-                            
-                            	</c:forEach>
-                            </c:forEach> --%>
                         </table>
                     </td>
 
-                    
+
                 <c:if test="${field.fieldType.code == CustomFieldType_List}">
                     <td colspan="4" valign="top">  <br />
                         <table width="100%" cellspacing="0" cellpadding="1" border="0" class="shadeList">
@@ -201,19 +173,17 @@
                                             </it:link>
                                         </c:if>
                                         <html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="5" height="1"/>
-
                                     </td>
-                                    
                                     <td align="right" colspan="2" class="editColumnText">
-                                    	${ optionsMap[option.id]  } (${  option.value }) 
+                                    	${ optionsMap[option.id]  } (${  option.value })
                                     </td>
                                 </tr>
-                                
+
                             </c:forEach>
                         </table>
                     </td>
                 </c:if>
-                
+
                 <tr><td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
                 <c:choose>
                     <c:when test="${action == 'update'}">
@@ -225,8 +195,8 @@
                 </c:choose>
             </table>
         </html:form>
-        
-        
+
+
         <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
  
 

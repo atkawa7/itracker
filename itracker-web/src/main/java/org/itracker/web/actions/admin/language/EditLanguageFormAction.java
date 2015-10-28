@@ -86,8 +86,8 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
 
                 if (localeType >= SystemConfigurationUtilities.LOCALE_TYPE_BASE) {
                     baseItems = configurationService.getDefinedKeys(null);
-                    putPropertiesKeys(baseItems, ITrackerResources.BASE_LOCALE);
-                    items = baseItems;
+//                    putPropertiesKeys(baseItems, ITrackerResources.BASE_LOCALE);
+                    items = new HashMap<>();
                     log.debug("Base Locale has " + baseItems.size() + " keys defined.");
                 }
 
@@ -96,16 +96,16 @@ public class EditLanguageFormAction extends ItrackerBaseAction {
                         String parentLocale = SystemConfigurationUtilities.getLocalePart(locale, SystemConfigurationUtilities.LOCALE_TYPE_LANGUAGE);
                         languageForm.setParentLocale(parentLocale);
                         langItems = configurationService.getDefinedKeys(parentLocale);
-                        putPropertiesKeys(langItems, parentLocale);
+//                        putPropertiesKeys(langItems, parentLocale);
 
-                        items = langItems;
+                        items = new HashMap<>();
                         log.debug("Language " + parentLocale + " has " + langItems.size() + " keys defined.");
                     }
                 }
 
                 if (localeType == SystemConfigurationUtilities.LOCALE_TYPE_LOCALE) {
                     locItems = configurationService.getDefinedKeys(locale);
-                    putPropertiesKeys(locItems, locale);
+//                    putPropertiesKeys(locItems, locale);
 
                     items = locItems;
                     log.debug("Locale " + locale + " has " + locItems.size() + " keys defined.");
