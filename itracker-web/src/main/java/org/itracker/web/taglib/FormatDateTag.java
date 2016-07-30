@@ -18,9 +18,12 @@
 
 package org.itracker.web.taglib;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.web.util.LoginUtilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -34,6 +37,7 @@ public class FormatDateTag extends TagSupport {
      *
      */
     private static final long serialVersionUID = 1L;
+    final static Logger log = LoggerFactory.getLogger(FormatDateTag.class);
     private String emptyKey = "itracker.web.generic.unavailable";
     private String format;
     private Date date;
@@ -72,8 +76,7 @@ public class FormatDateTag extends TagSupport {
     }
 
     public int doEndTag() throws JspException {
-        String value = "";
-        SimpleDateFormat sdf;
+        String value;
         Locale locale = null;
         if (pageContext.getRequest() instanceof HttpServletRequest) {
             locale = LoginUtilities.getCurrentLocale((HttpServletRequest) pageContext.getRequest());
@@ -82,26 +85,34 @@ public class FormatDateTag extends TagSupport {
             locale = ITrackerResources.getLocale();
         }
 
-        if (date == null) {
-            value = ITrackerResources.getString(emptyKey, locale);
-        } else {
+        value = ITrackerResources.getString(getEmptyKey(), locale);
+        if (null != getDate()) {
             try {
-                if ("short".equalsIgnoreCase(format)) {
-                    sdf = new SimpleDateFormat(ITrackerResources.getString(
-                            "itracker.dateformat.short", locale), locale);
-                } else if ("notime".equalsIgnoreCase(format)) {
-                    sdf = new SimpleDateFormat(ITrackerResources.getString(
-                            "itracker.dateformat.dateonly", locale), locale);
-                } else {
-                    sdf = new SimpleDateFormat(ITrackerResources.getString(
-                            "itracker.dateformat.full", locale), locale);
+                String f = getFormat();
+                if (StringUtils.isEmpty(f)) {
+                    f = "full";
+                } else if (StringUtils.equalsIgnoreCase("notime", f)) {
+                    f = "dateonly";
+                } else if (StringUtils.equalsIgnoreCase(f, "short")
+                        || StringUtils.equalsIgnoreCase(f, "dateonly")
+                        || StringUtils.equalsIgnoreCase(f, "full")) {
+                    f = StringUtils.lowerCase(f);
                 }
-                value = sdf.format(date);
+                final SimpleDateFormat sdf;
+                final String k = "itracker.dateformat." + f;
+                if (ITrackerResources.getBundle().containsKey(k)) {
+                    sdf = new SimpleDateFormat(ITrackerResources.getString(k, locale), locale);
+                } else if (ITrackerResources.getBundle().containsKey(f)) {
+                    sdf = new SimpleDateFormat(ITrackerResources.getString(f, locale), locale);
+                } else {
+                    sdf = new SimpleDateFormat(f);
+                }
+                value = sdf.format(getDate());
             } catch (Exception e) {
-                value = ITrackerResources.getString(emptyKey, locale);
+                log.debug("failed to format date '{}' with pattern '{}'", getDate(), getFormat());
             }
         }
-        // ResponseUtils.write(pageContext, value);
+
         TagUtils.getInstance().write(pageContext, value);
         clearState();
         return EVAL_PAGE;

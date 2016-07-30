@@ -182,14 +182,14 @@
 
 				<li>
 					<strong>reminder_notification_days</strong>
-					Defines the number of days after which reminder notifications will
+					Defines the number of days after which issue reminder notifications will
 					be sent.<br />
-					Set to 0 to disable reminder notifications. (type : Integer)
+					Set to <code>0</code> to disable reminder notifications. (type : Integer)
 					<br />
 					<em>default: 30</em>
 					<br />
 					<em>
-					To configure when reminders are sent, see application.prperties reminder_cron.defaultObject
+					To configure when reminders are sent, see application.properties reminder_cron.defaultObject
 					</em>
 				</li>
 

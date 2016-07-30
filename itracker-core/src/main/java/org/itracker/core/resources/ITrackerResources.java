@@ -380,7 +380,7 @@ public class ITrackerResources {
     private static String handleDirtyResourceException(final ITrackerDirtyResourceException e, final String key, final Locale locale) {
 
         logger.debug(
-                "handleDirtyResourceException: key '{}' for locale {}", key, locale, e);
+                "handleDirtyResourceException: key '{}' for locale {}", new Object[]{key, locale, e});
         ITrackerResourceBundle bundle = (ITrackerResourceBundle)getBundle(locale);
         try {
             final String languageItem = configurationService
@@ -434,7 +434,7 @@ public class ITrackerResources {
                 return getEditBundle(locale).getString(key);
             } catch (Exception ex2) {
                 logger.warn(
-                        "Exception caught while retrieving translation key '{}' for locale {}: {}", key, locale, ex2.getMessage());
+                        "Exception caught while retrieving translation key '{}' for locale {}: {}", new Object[]{key, locale, ex2.getMessage()});
                 logger.debug("Exception was", ex2);
                 return "MISSING KEY: " + key;
             }
