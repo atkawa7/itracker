@@ -22,23 +22,23 @@ package org.itracker.web.scheduler.tasks;
 import org.apache.log4j.Logger;
 import org.itracker.model.Issue;
 import org.itracker.model.Notification;
-import org.itracker.model.Notification.Type;
 import org.itracker.model.util.IssueUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.services.IssueService;
 import org.itracker.services.NotificationService;
 import org.itracker.web.util.ServletContextUtils;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.internet.InternetAddress;
 import java.util.*;
 
 /**
  * This class can be used to send reminder emails to owners/admins
  * that issues need their attention.
  *
- * @see SchedulableTask
  */
-public class ReminderNotification extends BaseJob {
+public class ReminderNotification extends BaseJob implements Runnable {
 
     public static final String DEFAULT_BASE_URL = "http://localhost:8080/itracker";
     public static final int DEFAULT_ISSUE_AGE = 30;
@@ -47,6 +47,18 @@ public class ReminderNotification extends BaseJob {
 
     public ReminderNotification() {
         this.logger = Logger.getLogger(getClass());
+    }
+
+    @Override
+    @Transactional
+    public void run() {
+        this.performTask(new String[]{});
+    }
+
+    @Override
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        super.execute(context);
+        this.performTask((String[]) context.get("args"));
     }
 
     /**
@@ -67,15 +79,17 @@ public class ReminderNotification extends BaseJob {
      * to send the notification for.
      *
      * @param args optional arguments to configure the notification messages
-     * @see SchedulableTask#performTask
      */
     public void performTask(String[] args) {
-        List<Issue> issues;
-        String baseURL = DEFAULT_BASE_URL;
-        int issueAge = DEFAULT_ISSUE_AGE;
+        final List<Issue> issues;
+        final ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
+
+        String baseURL = configurationService.getSystemBaseURL();
+        int notificationDays = configurationService.getIntegerProperty("reminder_notification_days",
+                        DEFAULT_ISSUE_AGE);
+
         int projectId = -1;
         int severity = -1;
-        ConfigurationService configurationService = ServletContextUtils.getItrackerServices().getConfigurationService();
 
         // Process arguments.
         if (args != null) {
@@ -84,11 +98,11 @@ public class ReminderNotification extends BaseJob {
             }
 
             if (null == baseURL) {
-                baseURL = configurationService.getSystemBaseURL();
+                baseURL = DEFAULT_BASE_URL;
             }
             if (args.length > 1) {
                 try {
-                    issueAge = Integer.parseInt(args[1]);
+                    notificationDays = Integer.parseInt(args[1]);
                 } catch (NumberFormatException nfe) {
                     logger.debug("Invalid issue age specified in ReminderNotification task.");
                 }
@@ -108,15 +122,18 @@ public class ReminderNotification extends BaseJob {
                 }
             }
         }
-        logger.debug("Reminder Notifications being sent for project " + projectId + " with issues over " + issueAge + " days old with severity " + severity + ".  Base URL = " + baseURL);
+        if (notificationDays < 1) {
+            logger.info("Reminder notifications are disabled for project " + projectId );
+            return;
+        }
+        logger.debug("Reminder notifications being sent for project " + projectId + " with issues over " + notificationDays + " days old with severity " + severity + ".  Base URL = " + baseURL);
 
         try {
             IssueService issueService = ServletContextUtils.getItrackerServices().getIssueService();
             NotificationService notificationService = ServletContextUtils.getItrackerServices().getNotificationService();
             GregorianCalendar cal = new GregorianCalendar();
-            cal.add(Calendar.DAY_OF_MONTH, 0 - issueAge);
-            Date oldDate = cal.getTime();
-            Date currentDate = new Date();
+            cal.add(Calendar.DAY_OF_MONTH, 0 - notificationDays);
+            Date threshold = cal.getTime();
 
             if (projectId > 0) {
                 issues = issueService.getIssuesByProjectId(projectId, IssueUtilities.STATUS_RESOLVED);
@@ -124,29 +141,22 @@ public class ReminderNotification extends BaseJob {
                 issues = issueService.getIssuesWithStatusLessThan(IssueUtilities.STATUS_RESOLVED);
             }
             if (issues != null && issues.size() > 0) {
-                for (int i = 0; i < issues.size(); i++) {
-                    if (severity >= 0 && issues.get(i).getSeverity() != severity) {
+                for (Issue issue : issues) {
+                    if (severity >= 0 && issue.getSeverity() != severity) {
                         continue;
                     }
-                    if (issues.get(i).getLastModifiedDate() != null && issues.get(i).getLastModifiedDate().before(oldDate)) {
-                        HashSet<InternetAddress> addresses = new HashSet<InternetAddress>();
-                        long numMillis = currentDate.getTime() - issues.get(i).getLastModifiedDate().getTime();
-                        int numDays = (int) (numMillis / (24 * 60 * 60 * 1000));
+                    if (issue.getLastModifiedDate() != null && issue.getLastModifiedDate().before(threshold)) {
+                        List<Notification> notifications = notificationService.getPrimaryIssueNotifications(issue);
+                        for (Notification notification : notifications) {
+                            if (notification.getUser().getEmail() != null
+                                    && notification.getUser().getEmail().indexOf('@') >= 0) {
+                                if (logger.isDebugEnabled()) {
+                                    logger.debug("Sending reminder notification for issue " + issue.getId() + " to " + notification.getUser() + " users.");
+                                }
+                                notificationService.sendReminder(issue, notification.getUser(), baseURL, notificationDays);
 
-                        List<Notification> notifications = notificationService.getPrimaryIssueNotifications(issues.get(i));
-                        for (int j = 0; j < notifications.size(); j++) {
-                            if (notifications.get(j).getUser().getEmail() != null
-                                    && notifications.get(j).getUser().getEmail().indexOf('@') >= 0) {
-                                addresses.add(notifications.get(j).getUser().getEmailAddress());
                             }
                         }
-                        InternetAddress[] addressesArray = new ArrayList<InternetAddress>(addresses).toArray(new InternetAddress[]{});
-
-                        if (logger.isDebugEnabled()) {
-                            logger.debug("Sending reminder notification for issue " + issues.get(i).getId() + " to " + addressesArray.length + " users.");
-                        }
-                        notificationService.sendNotification(issues.get(i), Type.ISSUE_REMINDER, baseURL, addressesArray, numDays);
-
                     }
                 }
             }

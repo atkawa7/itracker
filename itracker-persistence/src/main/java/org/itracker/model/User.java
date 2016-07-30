@@ -18,6 +18,7 @@
 
 package org.itracker.model;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
@@ -144,6 +145,12 @@ public class User extends AbstractEntity implements Comparable<Entity> {
 
     public void setLastName(String value) {
         this.lastName = value;
+    }
+
+    public String getFullName() {
+        return (StringUtils.isNotBlank(getFirstName()) ? getFirstName() : "")
+                + (StringUtils.isNotBlank(getLastName()) ?
+                StringUtils.isNotBlank(getFirstName()) ? " " : "" + getLastName(): "");
     }
 
     public String getEmail() {

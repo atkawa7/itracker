@@ -61,7 +61,8 @@
 
         <junit.version>4.5</junit.version>
         <dbunit.version>2.2</dbunit.version>
-        <selenium.version>2.47.1</selenium.version>
+        <!-- selenium.version 2.5.30 and 2.53.1 are not working.. -->
+        <selenium.version>2.52.0</selenium.version>
         <subethamail.version>3.1.7</subethamail.version>
         <mockito.version>1.10.19</mockito.version>
         <mysql-connector-java.version>5.1.6</mysql-connector-java.version>
@@ -808,6 +809,7 @@
                   <version>${selenium.version}</version>
                   <scope>test</scope>
             </dependency>
+
             <dependency>
                  <groupId>org.seleniumhq.selenium</groupId>
                  <artifactId>selenium-server</artifactId>

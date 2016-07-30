@@ -128,6 +128,11 @@ public class IssueUtilities {
     public IssueUtilities() {
     }
 
+    public static String getOwnerName(User owner, Locale locale) {
+        return (null != owner? owner.getFullName():
+                ITrackerResources.getString("itracker.web.generic.unassigned", locale));
+    }
+
     public static int getFieldType(Integer fieldId) {
         if (fieldId != null) {
             if (fieldId > 0) {

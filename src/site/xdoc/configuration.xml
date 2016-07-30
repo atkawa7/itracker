@@ -181,6 +181,19 @@
 				</li>
 
 				<li>
+					<strong>reminder_notification_days</strong>
+					Defines the number of days after which reminder notifications will
+					be sent.<br />
+					Set to 0 to disable reminder notifications. (type : Integer)
+					<br />
+					<em>default: 30</em>
+					<br />
+					<em>
+					To configure when reminders are sent, see application.prperties reminder_cron.defaultObject
+					</em>
+				</li>
+
+				<li>
 					<strong>authenticator_class</strong>
                     This parameter sets the class to use for authentication.
                     The class must be resident in the classpath that the ear is loaded in,
@@ -214,7 +227,7 @@
 
 				<li>
 					<strong>notification_from_text</strong>
-					From address text for email notifications to use
+					<em>Deprecated: </em> From address text for email notifications to use
 					<br />
 					<em>default: ITracker Notification System</em>
 				</li>
@@ -222,7 +235,7 @@
 				<li>
 					<strong>notification_replyto_address
 					</strong>
-					ReplyTo address for email notifications to use, if not set,
+					<em>Deprecated: </em> ReplyTo address for email notifications to use, if not set,
 					the notification_from_address value will be used.
 					<br />
 					<em>default: mail.from as defined in mail-session</em>

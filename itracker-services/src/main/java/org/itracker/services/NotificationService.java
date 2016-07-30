@@ -22,6 +22,7 @@ import org.itracker.model.Issue;
 import org.itracker.model.Notification;
 import org.itracker.model.Notification.Role;
 import org.itracker.model.Notification.Type;
+import org.itracker.model.User;
 
 import javax.mail.internet.InternetAddress;
 import java.util.List;
@@ -36,14 +37,14 @@ public interface NotificationService {
      * This should encompass the list of people that should be notified so that action
      * can be taken on an issue that needs immediate attention.
      *
-     * @param issueId the id of the issue to find notifications for
+     * @param issue the issue to find notifications for
      */
     List<Notification> getPrimaryIssueNotifications(Issue issue);
 
     /**
      * Retrieves all notifications for an issue where the notification's user is also active.
      *
-     * @param issueId the id of the issue to find notifications for
+     * @param issue the issue to find notifications for
      */
     List<Notification> getIssueNotifications(Issue issue);
 
@@ -52,15 +53,12 @@ public interface NotificationService {
      * is the creator and owner of the issue, all project admins for the issue's project,
      * and anyone else that has a notfication on file.
      *
-     * @param issueId    the id of the issue to find notifications for
-     * @param pimaryOnly only include the primary notifications
-     * @param activeOnly only include the notification if the user is currently active (not locked or deleted)
-     * @see org.itracker.services.implementations.IssueServiceImpl#getPrimaryIssueNotifications
+     * @param notificationId id of the notification
      */
     boolean removeIssueNotification(Integer notificationId);
 
     /**
-     * @param issueId
+     * @param issue
      * @param primaryOnly
      * @param activeOnly
      * @return
@@ -68,7 +66,7 @@ public interface NotificationService {
     List<Notification> getIssueNotifications(Issue issue, boolean primaryOnly, boolean activeOnly);
 
     /**
-     * @param issueId
+     * @param issue
      * @param userId
      * @return
      */
@@ -93,12 +91,14 @@ public interface NotificationService {
     void sendNotification(Issue issue, Type type, String baseURL);
 
     /**
-     * @param issueId
+     * @param issue
      * @param type
      * @param baseURL
      * @param receipients
      * @param lastModifiedDays
+     * @deprecated
      */
+    @Deprecated
     void sendNotification(Issue issue, Type type, String baseURL, InternetAddress[] receipients, Integer lastModifiedDays);
 
     /**
@@ -107,4 +107,6 @@ public interface NotificationService {
      * Moved from {@link IssueService}, could not find out the purpose of this method. What will happen with this added {@link Notification}?
      */
     boolean addIssueNotification(Notification notification);
+
+    void sendReminder(Issue issue, User user, String baseURL, int issueAge);
 }
