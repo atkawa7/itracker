@@ -82,7 +82,7 @@ public class NamingUtilites {
      * @throws IllegalArgumentException -
      *                                  if any argument is null, or the lookup name was empty
      */
-    public static final Object lookup(Context ctx, String lookupName) {
+    public static Object lookup(Context ctx, String lookupName) {
         if (null == ctx) {
             throw new IllegalArgumentException("context must not be null");
         }

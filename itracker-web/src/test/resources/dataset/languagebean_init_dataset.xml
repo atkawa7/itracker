@@ -7499,7 +7499,7 @@
             <value>930</value>
             <value>zh</value>
             <value>itracker.web.attr.number</value>
-            <value/>
+            <value>Number</value>
             <value><![CDATA[2009-01-26 23:10:15.0]]></value>
             <value><![CDATA[2009-01-26 23:10:15.0]]></value>
         </row>
@@ -7851,7 +7851,7 @@
             <value>974</value>
             <value>zh</value>
             <value>itracker.web.image.search.issue</value>
-            <value/>
+            <value>Test</value>
             <value><![CDATA[2009-01-26 23:10:16.0]]></value>
             <value><![CDATA[2009-01-26 23:10:16.0]]></value>
         </row>

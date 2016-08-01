@@ -14,6 +14,7 @@ import org.itracker.core.resources.ITrackerResources;
 import org.itracker.core.resources.ITrackerResourcesProvider;
 import org.itracker.model.Language;
 import org.itracker.persistence.dao.LanguageDAO;
+import org.itracker.util.NamingUtilites;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.orm.hibernate3.SessionHolder;
@@ -125,7 +126,7 @@ public abstract class AbstractDependencyInjectionTest extends
 
     private Properties getLanguageProperties(String locale) {
         final LanguageDAO dao = (LanguageDAO) applicationContext.getBean("languageDAO");
-        final List<Language> languages = dao.findByLocale(locale.toString());
+        final List<Language> languages = dao.findByLocale(locale);
         final Properties properties = new Properties();
         for (Language language : languages) {
             properties.setProperty(language.getResourceKey(), language.getResourceValue());
@@ -136,13 +137,13 @@ public abstract class AbstractDependencyInjectionTest extends
     @Deprecated
     public void onSetUp() throws Exception {
         // this does nothing
-        log.debug("onSetUp called + " + getClass());
+        log.debug("onSetUp called " + getClass());
     }
 
     @Deprecated
     public void onTearDown() throws Exception {
         // this does nothing
-        log.debug("onSetUp onTearDown + " + getClass());
+        log.debug("onTearDown called " + getClass());
     }
 
     public String getProperty(String name) {
@@ -159,7 +160,7 @@ public abstract class AbstractDependencyInjectionTest extends
 
             }
             try {
-                value = (String) lookup(new InitialContext(),
+                value = (String) NamingUtilites.lookup(new InitialContext(),
                         jndiPropertiesOverridePrefix + "/" + name);
                 if (null == value) {
                     if (logger.isDebugEnabled()) {
@@ -181,38 +182,6 @@ public abstract class AbstractDependencyInjectionTest extends
         return value;
     }
 
-    /**
-     * savely get object from naming context
-     *
-     * @return Object - value
-     * @throws IllegalArgumentException -
-     *                                  if any argument is null, or the lookup name was empty
-     */
-    public static final Object lookup(Context ctx, String lookupName) {
-        if (null == ctx) {
-            throw new IllegalArgumentException("context must not be null");
-        }
-        if (null == lookupName || lookupName.trim().length() == 0) {
-            throw new IllegalArgumentException(
-                    "lookup name must not be empty, got: "
-                            + ((null == lookupName) ? "<null>" : "'"
-                            + lookupName + "'"));
-        }
-        try {
-            return ctx.lookup(lookupName);
-        } catch (NamingException e) {
-            if (e instanceof NameNotFoundException) {
-                if (log.isDebugEnabled()) {
-                    log.debug("lookup: failed to lookup " + lookupName
-                            + ": name not found");
-                }
-            } else {
-                log.warn("lookup: failed to lookup " + lookupName
-                        + " in context " + ctx, e);
-            }
-            return null;
-        }
-    }
 
     private Set<String> getDefinedLocales() {
         final HashSet<String> definedLocales = new HashSet<>();
