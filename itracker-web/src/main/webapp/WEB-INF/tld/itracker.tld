@@ -290,6 +290,21 @@
                 <rtexprvalue>true</rtexprvalue>
             </attribute>
             <attribute>
+                <name>styleClass</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>iconClass</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>styleId</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
                 <name>arg0</name>
                 <required>false</required>
                 <rtexprvalue>true</rtexprvalue>

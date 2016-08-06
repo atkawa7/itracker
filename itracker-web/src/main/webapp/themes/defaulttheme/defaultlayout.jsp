@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <%@ include file="/common/taglibs.jsp"%>
 
 
@@ -35,8 +35,18 @@
 <head>
 
     <title><c:out value="${ pageTitle }" /></title>
-    <link rel="STYLESHEET" type="text/css"
+    <link rel="stylesheet" href="${contextPath}/webjars/bootstrap/3.1.0/css/bootstrap.min.css"
+          type="text/css" media="screen"/>
+    <link rel="stylesheet" href="${contextPath}/webjars/bootstrap-datepicker/1.6.1/css/bootstrap-datepicker.min.css"
+          type="text/css" media="screen"/>
+    <link rel="stylesheet" href="${contextPath}/webjars/font-awesome/4.6.3/css/font-awesome.css"
+          type="text/css" media="screen"/>
+    <link rel="stylesheet" type="text/css"
+          href="${contextPath}${themePath}/includes/bootstrap-theme.css"/>
+
+    <link rel="stylesheet" type="text/css"
           href="${contextPath}${themePath}/includes/styles.css"/>
+
     <c:if test="${not empty rssFeed}">
         <link href="${contextPath}${rssFeed}" rel="alternate" type="application/rss+xml" title="${pageTitle} RSS" />
     </c:if>
@@ -44,19 +54,9 @@
     <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT"/>
     <meta http-equiv="Pragma" content="no-cache"/>
 
-    <!-- Include calendar resources -->
-    <script src="${contextPath}${themePath}/includes/calendar/javascripts/prototype.js"
-            type="text/javascript"></script>
-    <script src="${contextPath}${themePath}/includes/calendar/javascripts/effects.js"
-            type="text/javascript"></script>
-    <script src="${contextPath}${themePath}/includes/calendar/javascripts/scal.js"
-            type="text/javascript"></script>
-    <link rel="stylesheet" href="${contextPath}${themePath}/includes/calendar/styles/scaltables.css"
-          type="text/css" media="screen"/>
-
-    <script type="text/javascript"
-            src="${contextPath}${themePath}/includes/scripts.js"></script>
-
+    <script src="${contextPath}/webjars/jquery/1.9.0/jquery.min.js" ></script>
+    <script src="${contextPath}/webjars/bootstrap/3.1.0/js/bootstrap.min.js" ></script>
+    <script src="${contextPath}/webjars/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js" ></script>
 </head>
 <body>
 

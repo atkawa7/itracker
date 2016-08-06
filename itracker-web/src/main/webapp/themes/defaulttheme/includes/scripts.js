@@ -1,38 +1,52 @@
+(function ($) {
+    function query(string) {
+        var pairs = string.match(/^\??(.*)$/)[1].split('&');
+        return pairs.inject({}, function (params, pairString) {
+            var pair = pairString.split('=');
+            params[pair[0]] = pair[1];
+            return params;
+        });
+    }
 
-
-
-document.observe("dom:loaded", function() {
-    $$('.deleteButton').each(function(elem) {
-        elem.observe("click", function(event) { if (!confirm(elem.title + "?")) { event.stop() }; });
+    $(document).ready(function () {
+        $('.input-group.date').each(function () {
+            $(this).datepicker({
+                format: $(this).data('format')
+            })
+        })
     });
-    $$('input[name=placeholder]').each(function(elem) {
-        var next = elem.next()
-        next.setAttribute('placeholder', elem.getAttribute('value'))
-    });
-    $$('a.HTTP_POST[href], .HTTP_POST a[href]').each(function(elem) {
-        elem.observe("click", function(event) {
-            var hr = elem.href
-            var x = hr.indexOf("?")
-            if (x>-1) {
-                event.stop()
-                var f = new Element("form")
-                f.setAttribute("action", hr.substr(0,x))
-                f.setAttribute("method", "post")
-                $$("body").first().insert(f)
-                var v = hr.substr(x+1).parseQuery()
-                $H(v).each(function(x){
-                    var h = new Element('input')
-                    h.setAttribute('type', 'hidden')
-                    h.setAttribute('name', x.key)
-                    h.setAttribute('value',x.value)
+    $(window).load(function () {
+
+        $('.deleteButton').each(function(elem) {
+            elem.observe("click", function(event) { if (!confirm(elem.title + "?")) { event.stop() } });
+        });
+        $('input[name=placeholder]').each(function(ix,elem) {
+            var next = $(elem).next();
+            next.attr('placeholder', $(elem).attr('value'))
+        });
+        $('a.HTTP_POST[href], .HTTP_POST a[href]').click(function (event) {
+            var elem = this;
+            var hr = elem.href;
+            var x = hr.indexOf("?");
+            if (x > -1) {
+                event.stop();
+                var f = $("<form>");
+                f.attr("action", hr.substr(0, x));
+                f.attr("method", "post");
+                $("body").first().append(f);
+                var v = query(hr.substr(x + 1));
+                $(v).each(function (x) {
+                    var h = $('<input>');
+                    h.attr('type', 'hidden');
+                    h.attr('name', x.key);
+                    h.attr('value', x.value);
                     f.insert(h)
-                })
+                });
                 f.submit()
             }
-        });
-    });
-});
-
+        })
+    })
+}(jQuery));
 /**
   * Toggle checked flag of checkboxes with name field name, inside same form as clicked-element.
   *
@@ -42,7 +56,7 @@ document.observe("dom:loaded", function() {
 			clicked.form.elements[fieldname][i].checked = clicked.checked;
 		}
 	}
-	
+
 	function toggleProjectPermissionsChecked(clicked) {
 		form = clicked.form;
 		for (var i = 0; i < form.elements.length; i++) {
@@ -51,11 +65,3 @@ document.observe("dom:loaded", function() {
 			}
 		}
 	}
-
-	
-
-    function toggleCalendar(cal) {
-
-    	cal.toggleCalendar();
-    }
-    

@@ -1,12 +1,25 @@
 body {
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 8pt;
+    font-size: 10pt;
     background: #fff;
     overflow-y: scroll;
 }
+header, footer {
+    margin: 2em 0;
+}
+
+a .glyphicon {
+    font-size: 180%;
+}
+
+a.icon,
+a.icon:link,
+a.icon:visited,
+a .glyphicon {
+    margin: 0 .1em;
+    color: #555;
+}
 
 .smallbody {
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 1em;
     background: #fff;
 }
@@ -77,7 +90,6 @@ a.history:visited {
 .pageHeader {
     font-weight: bold;
     text-align: left;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 1.2em;
     color: black;
     background-color: white;
@@ -101,12 +113,10 @@ a.next {
 
 .headerText,
 .headerTextWelcome {
-    width: auto;
 }
 
 .headerText, .headerTextWelcome, .headerTextPageTitle {
     font-weight: bold;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 1.2em;
     color: black;
     background-color: white;
@@ -126,7 +136,6 @@ a.next {
 
 .headerLinks {
     font-weight: normal;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 1em;
     color: #9999FF;
     background-color: white;
@@ -150,8 +159,7 @@ a.headerLinks:visited {
 
 .lookupBox {
     font-weight: normal;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 1em;
+    font-size: 8pt;
     color: black;
     background-color: white;
     text-decoration: none;
@@ -161,7 +169,6 @@ a.headerLinks:visited {
     clear: both;
     font-weight: normal;
     text-align: left;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: .75em;
     color: black;
     background-color: white;
@@ -172,7 +179,6 @@ a.headerLinks:visited {
 .listHeading a {
     font-weight: bold;
     text-align: left;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 1em;
     color: white;
     background-color: #555555;
@@ -198,7 +204,6 @@ tr.listHeading td, tr.listHeading th {
 .listSubHeading {
     font-weight: normal;
     text-align: left;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 1em;
     color: black;
     background-color: #555555;
@@ -212,42 +217,28 @@ a.listHeading:link {
     text-decoration: underline;
 }
 
-tr.listRowShaded {
-    font-weight: normal;
-    text-align: left;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 1em;
-    color: black;
+.table-striped>tbody>tr:nth-child(odd)>td,
+.table-striped>tbody>tr:nth-child(odd)>th,
+.listRowShaded {
     background-color: #DDDDFF;
-    text-decoration: none;
 }
 
-tr.listRowUnshaded {
-    font-weight: normal;
-    text-align: left;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: 1em;
-    color: black;
-    background-color: white;
-    text-decoration: none;
-}
 
 tr.listRowShaded td,
 tr.listRowUnshaded td {
     height: 1.5em;
     padding: .2em;
 }
-.shadeList tr.listRowShaded:hover {
-    background-color: #cfc;
-}
-
 .shadeList tr.listRowUnshaded:hover {
     background-color: #efe;
 }
 
+.shadeList tr.listRowShaded:hover {
+    background-color: #cfc;
+}
+
 .listRowText {
     font-weight: normal;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 1em;
 }
 
@@ -280,7 +271,6 @@ a.listRow:link {
 .tableNote {
     font-weight: normal;
     text-align: left;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 1em;
     color: black;
     background-color: white;
@@ -290,7 +280,6 @@ a.listRow:link {
 .editColumnTitle {
     font-weight: bold;
     text-align: left;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 1em;
 
     color: black;
@@ -301,7 +290,6 @@ a.listRow:link {
 .editColumnText {
     font-weight: normal;
     text-align: left;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 1em;
     color: black;
     background-color: white;
@@ -313,7 +301,6 @@ div.errors,
 .formError {
     font-weight: normal;
     text-align: center;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     color: red;
     background-color: white;
     text-decoration: none;
@@ -340,7 +327,6 @@ table.portalhomeMain {
 .help {
     font-weight: normal;
     text-align: left;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 1em;
     color: black;
     background-color: white;
@@ -420,4 +406,8 @@ Calender Styles
 
 .assignIssueForm select {
     width: 100%;
+}
+
+#login, #forgotpassword {
+    margin: 10% 0;
 }

@@ -142,6 +142,8 @@ public class ViewIssueAction extends ItrackerBaseAction {
         request.setAttribute("rssFeed", "/servlets/issues/p" + project.getId() + "/i" + issue.getId());
 		request.setAttribute("hasIssueNotification", notificationService.hasIssueNotification(
 				issue, request.getRemoteUser()));
+		request.setAttribute("hasHardIssueNotification", IssueUtilities.hasHardNotification(
+				issue, project, um.getId()));
 		request.setAttribute("canEditIssue", LoginUtilities.canEditIssue(issue));
 		request.setAttribute("canCreateIssue",
 				(project.getStatus() == Status.ACTIVE && LoginUtilities

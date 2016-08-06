@@ -104,7 +104,7 @@
             <tr class="listRowUnshaded" align="left">
               <td colspan="15" align="left">
 
-                  <bean:define id="pageCount" value="${(numViewable / preferences.numItemsOnIssueList)}"/>
+                  <bean:define id="pageCount" value="${(numViewable / preferences.numItemsOnIssueList) + (numViewable > preferences.numItemsOnIssueList && numViewable % preferences.numItemsOnIssueList > 0 ? 1:0)}"/>
 
                   <bean:define id="pageNr" value="${(start / preferences.numItemsOnIssueList)}"/>
                   <bean:define id="pageNr" value="${pageNr + (1 - (pageNr % 1))}"/>

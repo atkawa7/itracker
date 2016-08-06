@@ -42,6 +42,9 @@ public final class FormatIconActionTag extends TagSupport {
     private String paramName = null;
     private String paramValue = null;
     private String icon = null;
+    private String styleClass = null;
+    private String iconClass = null;
+    private String styleId = null;
     private String arg0 = null;
     private String textActionKey = null;
     private String info = null;
@@ -95,6 +98,30 @@ public final class FormatIconActionTag extends TagSupport {
     }
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public String getStyleClass() {
+        return styleClass;
+    }
+
+    public void setStyleClass(String styleClass) {
+        this.styleClass = styleClass;
+    }
+
+    public String getIconClass() {
+        return iconClass;
+    }
+
+    public void setIconClass(String iconClass) {
+        this.iconClass = iconClass;
+    }
+
+    public String getStyleId() {
+        return styleId;
+    }
+
+    public void setStyleId(String styleId) {
+        this.styleId = styleId;
     }
 
     public Object getArg0() {
@@ -194,8 +221,15 @@ public final class FormatIconActionTag extends TagSupport {
         if (target != null) {
             buf.append(" target=\"" + target + "\"");
         }
+
+        if (styleId != null) {
+            buf.append(" id=\"" + styleId + "\"");
+        }
         String styleClass = icon;
 
+        if (this.styleClass != null) {
+            styleClass += " "  + this.styleClass;
+        }
 
         buf.append(" title=\"" + HTMLUtilities.escapeTags( ITrackerResources.getString(info, locale,
                             (arg0 == null ? "" : arg0)) ) + "\"");
@@ -216,12 +250,12 @@ public final class FormatIconActionTag extends TagSupport {
             buf.append(">");
             if (square) {
                 buf.append("<span class=\"fa-stack\"><i class=\"fa fa-square fa-stack-2x\" aria-hidden=\"true\"></i>");
-                buf.append("<i class=\"fa fa-" + icon)
+                buf.append("<i class=\"fa fa-" + icon + (null!=iconClass?" " + iconClass:""))
                         .append(" fa-stack-1x fa-inverse\" aria-hidden=\"true\"");
                 buf.append(" ></i></span>");
             } else {
 
-                buf.append("<i class=\"fa fa-" + icon)
+                buf.append("<i class=\"fa fa-" + icon+ (null!=iconClass?" " + iconClass:""))
                         .append("\" aria-hidden=\"true\"");
                 buf.append(" ></i>");
             }
@@ -248,6 +282,9 @@ public final class FormatIconActionTag extends TagSupport {
         paramName = null;
         paramValue = null;
         icon = null;
+        styleClass = null;
+        iconClass = null;
+        styleId = null;
         arg0 = null;
         textActionKey = null;
         square = false;

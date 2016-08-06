@@ -45,24 +45,24 @@
                 <tr class="${listRowClass}">
                      <td style="white-space: nowrap">
                         <c:if test="${ownedIssue.userCanViewIssue}">
-                            <it:formatImageAction
+                            <it:formatIconAction
                                 forward="viewissue" module="/module-projects"
                                 paramName="id"
                                 paramValue="${ownedIssue.issue.id}"
                                 caller="index"
-                                src="/themes/defaulttheme/images/view.gif"
-                                altKey="itracker.web.image.view.issue.alt"
+                                icon="tasks" styleClass="fa-lg"
+                                info="itracker.web.image.view.issue.alt"
                                 arg0="${ownedIssue.issue.id}"
                                 textActionKey="itracker.web.image.view.texttag"/>
                         </c:if>
                         <c:if test="${ownedIssue.userCanEdit}">
-                            <it:formatImageAction
+                            <it:formatIconAction
                                     forward="editissue" module="/module-projects"
                                     paramName="id"
                                     paramValue="${ownedIssue.issue.id}"
                                     caller="index"
-                                    src="/themes/defaulttheme/images/edit.gif"
-                                    altKey="itracker.web.image.edit.issue.alt"
+                                    icon="edit" styleClass="fa-lg"
+                                    info="itracker.web.image.edit.issue.alt"
                                     arg0="${ownedIssue.issue.id}"
                                     textActionKey="itracker.web.image.edit.texttag"/>
                         </c:if>
@@ -147,29 +147,29 @@
                     <td style="white-space: nowrap">
                         <c:if test="${not unassignedIssue.userHasIssueNotification}">
                             <span class="HTTP_POST">
-                            <it:formatImageAction forward="watchissue" paramName="id"
+                            <it:formatIconAction forward="watchissue" paramName="id"
                                 paramValue="${unassignedIssue.issue.id}" caller="index"
-                                src="/themes/defaulttheme/images/watch.gif"
-                                altKey="itracker.web.image.watch.issue.alt"
+                                icon="bell" styleClass="fa-lg"
+                                info="itracker.web.image.watch.issue.alt"
                                 arg0="${unassignedIssue.issue.id}"
                                 textActionKey="itracker.web.image.watch.texttag" />
                             </span>
                         </c:if>
-                        <it:formatImageAction
+                        <it:formatIconAction
                             forward="viewissue" module="/module-projects"
                             paramName="id" paramValue="${unassignedIssue.issue.id}"
                             caller="index"
-                            src="/themes/defaulttheme/images/view.gif"
-                            altKey="itracker.web.image.view.issue.alt"
+                            icon="tasks" styleClass="fa-lg"
+                            info="itracker.web.image.view.issue.alt"
                             arg0="${unassignedIssue.issue.id}"
                             textActionKey="itracker.web.image.view.texttag" />
                         <c:if test="${unassignedIssue.userCanEdit}">
-                            <it:formatImageAction
+                            <it:formatIconAction
                                 forward="editissue" module="/module-projects"
                                 paramName="id" paramValue="${unassignedIssue.issue.id}"
                                 caller="index"
-                                src="/themes/defaulttheme/images/edit.gif"
-                                altKey="itracker.web.image.edit.issue.alt"
+                                icon="edit" styleClass="fa-lg"
+                                info="itracker.web.image.edit.issue.alt"
                                 arg0="${unassignedIssue.issue.id}"
                                 textActionKey="itracker.web.image.edit.texttag" />
                         </c:if>
@@ -202,7 +202,7 @@
                                                  value="${unassignedIssue.issue.project.id}"/>
 
                                     <html:select property="userId"
-                                                 styleClass="${listRowClass}" onchange="this.form.submit();">
+                                                 styleClass="form-control input-sm" onchange="this.form.submit();">
                                         <!-- Marky: I commented out the original <C : tags and replaced them with my <C : tages.
                                         I change code to test for unassigned attribute instead of owner, since owner is not set.-->
                                         <c:choose>
@@ -355,24 +355,23 @@
                 <tr id="createdIssue.${i.count}" class="${listRowClass}">
                     <td style="white-space: nowrap">
                         <c:if test="${createdIssue.userCanViewIssue}">
-                            <it:formatImageAction
+                            <it:formatIconAction
                                 forward="viewissue" module="/module-projects"
                                 paramName="id"
                                 paramValue="${createdIssue.issue.id}"
                                 caller="index"
-                                src="/themes/defaulttheme/images/view.gif"
-                                altKey="itracker.web.image.view.issue.alt"
+                                icon="tasks" styleClass="fa-lg"
                                 arg0="${createdIssue.issue.id}"
-                                textActionKey="itracker.web.image.view.texttag" />
+                                textActionKey="itracker.web.image.view.issue.alt" />
 
                                 <c:if test="${createdIssue.userCanEdit}">
-                                    <it:formatImageAction
+                                    <it:formatIconAction
                                         forward="editissue" module="/module-projects"
                                            paramName="id"
                                            paramValue="${createdIssue.issue.id}"
                                            caller="index"
-                                           src="/themes/defaulttheme/images/edit.gif"
-                                           altKey="itracker.web.image.edit.issue.alt"
+                                           icon="edit" styleClass="fa-lg"
+                                           info="itracker.web.image.edit.issue.alt"
                                            arg0="${createdIssue.issue.id}"
                                            textActionKey="itracker.web.image.edit.texttag"/>
 
@@ -480,32 +479,32 @@
                 <tr id="watchedIssue.${i.count}" class="${listRowClass}">
                     <td style="white-space: nowrap">
                         <span class="HTTP_POST">
-                        <it:formatImageAction
+                        <it:formatIconAction
                             forward="watchissue" paramName="id"
                             paramValue="${watchedIssue.issue.id}" caller="index"
-                            src="/themes/defaulttheme/images/unwatch.gif"
-                            altKey="itracker.web.image.unwatch.issue.alt"
+                            icon="bell-slash" styleClass="fa-lg"
+                            info="itracker.web.image.unwatch.issue.alt"
                             arg0="${watchedIssue.issue.id}"
                             textActionKey="itracker.web.image.unwatch.texttag" />
                         </span>
                         <c:if test="${watchedIssue.userCanViewIssue}">
-                            <it:formatImageAction
+                            <it:formatIconAction
                                 forward="viewissue" module="/module-projects"
                                 paramName="id"
                                 paramValue="${watchedIssue.issue.id}"
                                 caller="index"
-                                src="/themes/defaulttheme/images/view.gif"
-                                altKey="itracker.web.image.view.issue.alt"
+                                icon="tasks" styleClass="fa-lg"
+                                info="itracker.web.image.view.issue.alt"
                                 arg0="${watchedIssue.issue.id}"
                                 textActionKey="itracker.web.image.view.texttag" />
                             <c:if test="${watchedIssue.userCanEdit}">
-                                   <it:formatImageAction
+                                   <it:formatIconAction
                                     forward="editissue" module="/module-projects"
                                        paramName="id"
                                        paramValue="${watchedIssue.issue.id}"
                                        caller="index"
-                                       src="/themes/defaulttheme/images/edit.gif"
-                                       altKey="itracker.web.image.edit.issue.alt"
+                                       icon="edit" styleClass="fa-lg"
+                                       info="itracker.web.image.edit.issue.alt"
                                        arg0="${watchedIssue.issue.id}"
                                        textActionKey="itracker.web.image.edit.texttag"/>
                                </c:if>
