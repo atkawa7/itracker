@@ -141,18 +141,13 @@ public class HTMLUtilities extends org.itracker.util.HTMLUtilities {
     }
 
     /**
-     * format a itracker date format for scal datepicker
+     * format a itracker date format for jacascript datepicker
      *
-     * @see http://scal.fieldguidetoprogrammers.com
      */
     public static final String getJSDateFormat(String format) {
 
-
         String f = format.replace('m', 'n');
-
-
-        f = format.toLowerCase();
-
+        f = f.toLowerCase();
         return f;
 
 
