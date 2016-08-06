@@ -205,6 +205,19 @@
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>WebjarsServlet</servlet-name>
+        <servlet-class>org.webjars.servlet.WebjarsServlet</servlet-class>
+        <!--<init-param>-->
+            <!--<param-name>disableCache</param-name>-->
+            <!--<param-value>true</param-value>-->
+        <!--</init-param>-->
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WebjarsServlet</servlet-name>
+        <url-pattern>/webjars/*</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ReportChartController</servlet-name>
         <url-pattern>/servlets/ReportChartController</url-pattern>
