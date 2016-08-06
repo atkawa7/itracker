@@ -27,15 +27,14 @@ import org.itracker.model.NameValuePair;
 import org.itracker.model.util.CustomFieldUtilities;
 import org.itracker.web.util.HTMLUtilities;
 import org.itracker.web.util.LoginUtilities;
-import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public final class FormatCustomFieldTag extends TagSupport {
     /**
@@ -107,29 +106,25 @@ public final class FormatCustomFieldTag extends TagSupport {
                     .getCurrentLocale((HttpServletRequest) pageContext
                             .getRequest());
 
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf
-                    .append("<td class=\""
-                            + (DISPLAY_TYPE_VIEW.equalsIgnoreCase(displayType) ? "editColumnTitle"
-                            : "editColumnTitle") + "\">");
-            buf.append(CustomFieldUtilities.getCustomFieldName(field.getId(),
-                    locale)
-                    + ": ");
-            buf.append("</td>\n");
-            buf.append("<td align=\"left\" class=\"editColumnText\">");
+            .append("<div class=\"form-group\"><label>")
+            .append(CustomFieldUtilities.getCustomFieldName(field.getId(), locale))
+            .append(":")
+            .append("</label>\n");
 
             if (DISPLAY_TYPE_VIEW.equalsIgnoreCase(displayType)) {
+                buf.append("<p class=\"form-control-static\">\n");
                 if (currentValue != null) {
                     if (field.getFieldType() == CustomField.Type.LIST) {
                         buf.append(CustomFieldUtilities
                                 .getCustomFieldOptionName(getField(),
                                         currentValue, locale));
-
                     } else {
-
                         buf.append(currentValue);
                     }
                 }
+                buf.append("</p>");
 
             } else {
                 Object requestValue = TagUtils.getInstance().lookup(
@@ -146,19 +141,19 @@ public final class FormatCustomFieldTag extends TagSupport {
 
                     buf.append("<select name=\"customFields(").append(
                             field.getId()).append(
-                            ")\" class=\"editColumnText\">\n");
-                    for (int i = 0; i < options.size(); i++) {
+                            ")\" class=\"form-control\">\n");
+                    for (CustomFieldValue option : options) {
                         buf.append("<option value=\"").append(
-                                HTMLUtilities.escapeTags(options.get(i)
+                                HTMLUtilities.escapeTags(option
                                         .getValue())).append("\"");
                         if (currentValue != null
-                                && currentValue.equals(options.get(i)
+                                && currentValue.equals(option
                                 .getValue())) {
                             buf.append(" selected=\"selected\"");
                         }
                         buf.append(" class=\"editColumnText\">");
                         buf.append(CustomFieldUtilities
-                                .getCustomFieldOptionName(options.get(i),
+                                .getCustomFieldOptionName(option,
                                         locale));
                         buf.append("</option>\n");
                     }
@@ -174,106 +169,37 @@ public final class FormatCustomFieldTag extends TagSupport {
                     }
 
                     String fieldName = "customFields(" + field.getId() + ")";
-                    String cf = "cf" + field.getId();
-                    buf.append("<input type=\"text\" name=\"")
+                    buf.append("<div class=\"input-group date\" data-format=\"")
+                            .append(HTMLUtilities.getJSDateFormat(df))
+                            .append("\">");
+                    buf.append("<input  type=\"text\" name=\"")
                             .append(fieldName).append("\" id=\"")
                             .append(fieldName).append("\"");
                     buf.append((currentValue != null
                             && !currentValue.equals("") ? " value=\""
                             + currentValue + "\"" : ""));
-                    buf.append(" class=\"editColumnText\" />&nbsp;");
-                    buf.append("<img onmouseup=\"toggleCalendar(" + cf + ")\"");
-                    buf.append("id=\"").append(cf).append(
-                            "Pos\" name=\"").append(cf).append(
-                            "Pos\" width=\"19\" height=\"19\" src=\"");
-                    buf.append(ServletContextUtils.getItrackerServices()
-                            .getConfigurationService().getSystemBaseURL());
-                    buf.append("/themes/defaulttheme/images/calendar.gif");
-                    buf.append("\" align=\"top\" border=\"0\" />");
-                    buf.append("<div class=\"scal tinyscal\" id=\"").append(cf).append(
-                            "\"></div>");
-
-                    SimpleDateFormat monthDf = new SimpleDateFormat("MMMMM", locale);
-                    SimpleDateFormat dayDf = new SimpleDateFormat("E", locale);
-                    Calendar cal = new GregorianCalendar(locale);
-                    cal.set(Calendar.MONTH, 0);
-                    cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-
-                    Date date = null;
-                    try {
-                        DateFormat df1 = new SimpleDateFormat(df);
-                        date = df1.parse(currentValue);
-                    } catch (ParseException e) {
-
-                    } catch (RuntimeException e) {
-
-                    }
-
-                    buf.append("    <script type=\"text/javascript\" language=\"javascript\">");
-                    buf.append("    /* <![CDATA[*/\n");
-                    buf.append("Object.extend(Date.prototype, {");
-                    buf.append("monthnames: [\"");
-                    for (int i = 0; i < 12; i++) {
-                        cal.set(Calendar.MONTH, i);
-                        buf.append(monthDf.format(cal.getTime()));
-                        if (i == 11) {
-                            buf.append("\"]");
-                        } else {
-                            buf.append("\",\n \"");
-                        }
-                    }
-                    buf.append(",\n");
-                    buf.append("daynames: [\"");
-                    for (int i = 1; i < 8; i++) {
-                        cal.set(Calendar.DAY_OF_WEEK, i);
-                        buf.append(dayDf.format(cal.getTime()));
-                        if (i == 7) {
-                            buf.append("\"]");
-                        } else {
-                            buf.append("\",\n \"");
-                        }
-                    }
-                    buf.append("});\n");
-
-                    buf.append("        var options = Object.extend({\n");
-                    buf.append("            titleformat:'mmmm yyyy',\n");
-                    buf.append("            updateformat:'" + HTMLUtilities.getJSDateFormat(df) + "',\n");
-                    buf.append("            dayheadlength:2,\n");
-                    buf.append("            weekdaystart:1,\n");
-                    buf.append("            tabular: true,\n");
-                    buf.append("            closebutton:'x',\n");
-                    buf.append("            planner: false,\n");
-                    buf.append("            expanded: false\n");
-                    buf.append("        });\n");
-                    buf.append("\nvar " + cf + " = new scal('" + cf + "', '" + fieldName + "', options);");
-
-                    if (null != date) {
-                        Calendar cal1 = GregorianCalendar.getInstance();
-                        cal1.setTime(date);
-                        buf.append("\n " + cf + ".setCurrentDate(new Date(" + cal1.get(Calendar.YEAR) + ", " + cal1.get(Calendar.MONTH) + ", " + cal1.get(Calendar.DAY_OF_MONTH) + "));");
-                    }
-                    buf.append("// ]]>");
-                    buf.append("</script>");
+                    buf.append(" class=\"form-control\" />")
+                    .append("<span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-th\"></i></span>")
+                    .append("</div>");
 
                 } else  if (null != getListOptions() && null != getListOptions().get(field.getId())
                         && !getListOptions().get(field.getId()).isEmpty()) {
                     List<NameValuePair> options = getListOptions().get(field.getId());
                     buf.append("<select name=\"customFields(").append(
                                field.getId()).append(
-                               ")\" class=\"editColumnText\">\n");
-                       for (int i = 0; i < options.size(); i++) {
-                           buf.append("<option value=\"").append(
-                                   HTMLUtilities.escapeTags(options.get(i)
-                                           .getValue())).append("\"");
-                           if (currentValue != null
-                                   && currentValue.equals(options.get(i)
-                                   .getValue())) {
-                               buf.append(" selected=\"selected\"");
-                           }
-                           buf.append(" class=\"editColumnText\">");
-                           buf.append(options.get(i).getName());
-                           buf.append("</option>\n");
-                       }
+                               ")\" class=\"form-control\">\n");
+                    for (NameValuePair option : options) {
+                        buf.append("<option value=\"").append(
+                                HTMLUtilities.escapeTags(option
+                                        .getValue())).append("\"");
+                        if (currentValue != null
+                                && currentValue.equals(option
+                                .getValue())) {
+                            buf.append(" selected=\"selected\"");
+                        }
+                        buf.append(option.getName());
+                        buf.append("</option>\n");
+                    }
                        buf.append("</select>\n");
                 } else {
                     buf.append("<input type=\"text\" name=\"customFields(")
@@ -281,10 +207,10 @@ public final class FormatCustomFieldTag extends TagSupport {
                     buf.append((currentValue != null
                             && !currentValue.equals("") ? " value=\""
                             + currentValue + "\"" : ""));
-                    buf.append(" class=\"editColumnText\">");
+                    buf.append(" class=\"form-control\">");
                 }
             }
-            buf.append("</td>\n");
+            buf.append("</div>");
 
             TagUtils.getInstance().write(pageContext, buf.toString());
         }
