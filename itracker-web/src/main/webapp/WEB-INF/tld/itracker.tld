@@ -35,34 +35,6 @@
     </tag>
     <tag>
         <description>
-            Validate that there is a currently logged on user, by
-            checking for the existence of a session-scope bean under the
-            specified name. name - Name of the session-scope bean to
-            check for [user] page - Context-relative path to the logon
-            page [/logon.jsp] permission - permission required for the
-            page
-        </description>
-        <name>checkLogin</name>
-        <tag-class>org.itracker.web.taglib.CheckLoginTag</tag-class>
-        <body-content>scriptless</body-content>
-        <attribute>
-            <name>name</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>page</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>permission</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-    <tag>
-        <description>
             Clears the errors from the session. name - Name of the
             session-scope bean to clear [ERROR_KEY]
         </description>
@@ -266,6 +238,94 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+
+    <tag>
+            <description>
+                Formats the link for use with glyph icon actions. action
+                - the action to use in the url [action or forward required]
+                module - The module to use. forward - the forward to use in
+                the url [action or forward required] paramName - name of
+                parameter to pass if any paramValue - value of parameter to
+                pass if any icon - the glyphicon name
+                textActionKey - the key value for the text tag to be used if
+                the preferences are set to use text vs. icons arg0 - the first
+                replacement arg for the alt text caller - add a caller
+                parameter to the url with the specified value targetAction -
+                add an action parameter to the url with the specifed value
+                target - the html window to target
+            </description>
+            <name>formatIconAction</name>
+            <tag-class>
+                org.itracker.web.taglib.FormatIconActionTag
+            </tag-class>
+            <body-content>empty</body-content>
+            <attribute>
+                <name>forward</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>action</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>module</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>paramName</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>paramValue</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>icon</name>
+                <required>true</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>arg0</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>textActionKey</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>info</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>square</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>caller</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>target</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>targetAction</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+            </attribute>
+        </tag>
+
     <tag>
         <description>
             Formats the date supplied in the format specified for the

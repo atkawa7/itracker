@@ -18,7 +18,6 @@
 
 package org.itracker.web.taglib;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.UserPreferences;
@@ -46,7 +45,7 @@ public final class FormatIconActionTag extends TagSupport {
     private String arg0 = null;
     private String textActionKey = null;
     private String info = null;
-    private String border = null;
+    private boolean square = false;
     private String caller = null;
     private String targetAction = null;
     private String target = null;
@@ -122,12 +121,12 @@ public final class FormatIconActionTag extends TagSupport {
         this.info = info;
     }
 
-    public String getBorder() {
-        return border;
+    public boolean isSquare() {
+        return square;
     }
 
-    public void setBorder(String value) {
-        border = value;
+    public void setSquare(boolean square) {
+        this.square = square;
     }
 
     public String getCaller() {
@@ -212,14 +211,20 @@ public final class FormatIconActionTag extends TagSupport {
                                 (arg0 == null ? "" : arg0)) ));
         } else {
 
-            buf.append(" class=\"").append( styleClass ).append("\"");
+            buf.append(" class=\"icon ").append( styleClass ).append("\"");
 
             buf.append(">");
-            buf.append("<i class=\"fa fa-" + icon)
-                    .append("\" aria-hidden=\"true\"");
-            if (border != null)
-            buf.append(" style=\"border:" + border + "px" + ";\"");
-            buf.append(" ></i>");
+            if (square) {
+                buf.append("<span class=\"fa-stack\"><i class=\"fa fa-square fa-stack-2x\" aria-hidden=\"true\"></i>");
+                buf.append("<i class=\"fa fa-" + icon)
+                        .append(" fa-stack-1x fa-inverse\" aria-hidden=\"true\"");
+                buf.append(" ></i></span>");
+            } else {
+
+                buf.append("<i class=\"fa fa-" + icon)
+                        .append("\" aria-hidden=\"true\"");
+                buf.append(" ></i>");
+            }
             buf.append("<span class=\"sr-only\">"+HTMLUtilities.escapeTags( ITrackerResources.getString(textActionKey, locale,
                                 (arg0 == null ? "" : arg0)) )+"</span>");
 
@@ -245,7 +250,7 @@ public final class FormatIconActionTag extends TagSupport {
         icon = null;
         arg0 = null;
         textActionKey = null;
-        border = null;
+        square = false;
         caller = null;
         target = null;
         targetAction = null;
