@@ -51,7 +51,7 @@ public class EditIssueSeleniumIT extends AbstractSeleniumTestCase {
                 "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]")).click();
         waitForPageToLoad();
 
-        assertElementPresent(By.xpath("//td[@id='actions']/a[2]")).click();
+        assertElementPresent(By.cssSelector(".actions a.edit")).click();
         waitForPageToLoad();
 
         assertElementPresent(By.name("description")).sendKeys(" (updated)");
@@ -68,16 +68,12 @@ public class EditIssueSeleniumIT extends AbstractSeleniumTestCase {
         assertTrue(smtpMessageBody.contains("test_description (updated)"));
 
         assertElementPresent(By.id("issues"));
-        assertElementCountEquals(4, By.xpath("//tr[starts-with(@id, 'issue.')]"));
+        assertElementCountEquals(4, By.xpath("//*[starts-with(@id, 'issue.')]"));
 
         assertTrue(driver.getPageSource().contains("test_description (updated)"));
 
-        assertElementNotPresent(By.xpath("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='1']/../td[11][text()='test_description']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]"));
-        assertElementPresent(By.xpath("//tr[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='1']/../td[11][text()='test_description (updated)']/.." +
-                "/td[13][contains(text(),'A. admin lastname')]"));
+        assertElementNotPresent(By.xpath("//*[text()='test_description']"));
+        assertElementPresent(By.xpath("//*[text()='test_description (updated)']"));
     }
 
     /**
@@ -162,19 +158,24 @@ public class EditIssueSeleniumIT extends AbstractSeleniumTestCase {
 
         login("admin_test1", "admin_test1");
 
+        log.info("logged in at URL: " + driver.getCurrentUrl());
         assertElementPresent(By.name("listprojects")).click();
         waitForPageToLoad();
 
+        log.info("loaded projects-list with URL: " + driver.getCurrentUrl());
         // Click view issue link (usually it's named "View").
         assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]" +
                 "/td[3][text()='test_name']/../td[1]/a[1]")).click();
+
+        log.info("loaded project with URL: " + driver.getCurrentUrl());
         waitForPageToLoad();
 
-        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]" +
-                "/td[3][text()='1']/../td[11][text()='test_description']/../td[1]/a[1]")).click();
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]//a[@title='View Issue 1']")).click();
         waitForPageToLoad();
 
-        assertElementPresent(By.xpath("//td[@id='actions']/a[3]")).click();
+        log.info("loaded issue with URL: " + driver.getCurrentUrl());
+
+        assertElementPresent(By.cssSelector(".actions a.moveIssue")).click();
         waitForPageToLoad();
 
         int received = wiser.getMessages().size();
@@ -182,12 +183,16 @@ public class EditIssueSeleniumIT extends AbstractSeleniumTestCase {
         assertElementPresent(By.name("projectId"))
         .findElement(By.xpath("option[text()='test_name2']")).click();
         assertElementPresent(By.xpath("//input[@type='submit']")).click();
+
         waitForPageToLoad();
+        log.info("moved issue with URL: " + driver.getCurrentUrl());
 
         // no message sent?
         assertEquals("wiser.receivedEmailSize", received, wiser.getMessages().size());
-        assertElementPresent(By.xpath("//td[@id='actions']/a[1]")).click();
+        assertElementPresent(By.cssSelector(".maincontent a.issuelist")).click();
         waitForPageToLoad();
+
+        log.info("moved issue with URL: " + driver.getCurrentUrl());
 
         assertElementPresent(By.id("issues"));
         assertElementCountEquals(1, By.xpath("//*[starts-with(@id, 'issue.')]"));
@@ -235,9 +240,9 @@ public class EditIssueSeleniumIT extends AbstractSeleniumTestCase {
         assertElementTextEquals("test_description 2",
                 By.id("description"));
         assertElementTextEquals("admin firstname admin lastname",
-                By.id("ownerName"));
+                By.id("owner"));
 
-        assertElementPresent(By.xpath("//*[@id='actions']/a[2]"))
+        assertElementPresent(By.cssSelector(".actions a.edit"))
                 .click();
         waitForPageToLoad();
 

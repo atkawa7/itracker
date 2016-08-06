@@ -59,26 +59,24 @@ public class CreateIssueSeleniumIT extends AbstractSeleniumTestCase {
         assertElementPresent(By.name("severity"));
         assertElementPresent(By.name("versions"));
 
-        assertElementPresent(By.id("description"))
-                .findElement(By.tagName("input"))
+        assertElementPresent(By.name("description"))
                 .sendKeys(descriptionValue);
         assertElementPresent(By.name("history"))
                 .sendKeys(historyValue);
 
         log.debug(driver.getPageSource());
 
-        assertElementPresent(By.cssSelector("#ownerId select option[value='-1']"))
-                .click();
+        assertElementPresent(By.cssSelector("select[name='ownerId'] option[value='-1']")).click();
         final UserDAO userDao = (UserDAO) applicationContext.getBean("userDAO");
         final User user = userDao.findByLogin("admin_test1");
         assertTrue(null != user);
         final long userId = user.getId();
-        assertElementPresent(By.cssSelector("#creatorId select option[value='" + userId + "']"))
+        assertElementPresent(By.cssSelector("select[name='creatorId'] option[value='" + userId + "']"))
         .click();
 
         int received = wiser.getMessages().size();
 
-        assertElementPresent(By.cssSelector("#submit input"))
+        assertElementPresent(By.cssSelector("input[type='submit']"))
             .click();
         waitForPageToLoad();
 
@@ -158,13 +156,13 @@ public class CreateIssueSeleniumIT extends AbstractSeleniumTestCase {
         final User user = userDao.findByLogin("admin_test1");
         assertTrue("user #admin_test1", null != user);
         final long userId = user.getId();
-        assertElementPresent(By.cssSelector("#ownerId select option[value='" + userId + "']"))
+        assertElementPresent(By.cssSelector("select[name='ownerId'] option[value='" + userId + "']"))
         .click();
-        assertElementPresent(By.cssSelector("#creatorId select option[value='" + userId + "']"))
+        assertElementPresent(By.cssSelector("select[name='creatorId'] option[value='" + userId + "']"))
         .click();
 
         int received = wiser.getMessages().size();
-        assertElementPresent(By.cssSelector("#submit input"))
+        assertElementPresent(By.cssSelector("input[type='submit']"))
         .click();
         waitForPageToLoad();
 

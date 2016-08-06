@@ -104,7 +104,7 @@ public abstract class AbstractSeleniumTestCase
 
         assertElementPresent(By.name("login")).sendKeys(username);
         assertElementPresent(By.name("password")).sendKeys(password);
-        assertElementPresent(By.xpath("//*[@value='Login']")).click();
+        assertElementPresent(By.id("btn-login")).click();
         waitForPageToLoad();
         assertElementPresent(By.name("lookupForm"));
 

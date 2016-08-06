@@ -38,14 +38,14 @@ public class ForgotPasswordSeleniumIT extends AbstractSeleniumTestCase {
         assertElementPresent(By.name("login")).clear();
         assertElementPresent(By.name("lastName")).clear();
 
-        assertElementNotPresent(By.cssSelector("#pageErrors"));
+        assertElementNotPresent(By.id("pageErrors"));
 
-        assertElementPresent(By.xpath("//input[@type='submit']")).click();
+        assertElementPresent(By.id("btn-submit")).click();
         waitForPageToLoad();
 
         assertElementTextEquals("Login is required\n" +
                 "Last Name is required",
-                By.className("formError"));
+                By.id("pageErrors"));
     }
 
     /**
@@ -68,10 +68,10 @@ public class ForgotPasswordSeleniumIT extends AbstractSeleniumTestCase {
         assertElementPresent(By.name("login"));
         assertElementPresent(By.name("lastName")).sendKeys("user");
 
-        assertElementPresent(By.xpath("//input[@type='submit']")).click();
+        assertElementPresent(By.id("btn-submit")).click();
         waitForPageToLoad();
 
-        assertElementTextEquals("Login is required", By.className("formError"));
+        assertElementTextEquals("Login is required", By.id("pageErrors"));
     }
 
     /**
@@ -93,10 +93,10 @@ public class ForgotPasswordSeleniumIT extends AbstractSeleniumTestCase {
         assertElementPresent(By.name("login")).sendKeys("user");
         assertElementPresent(By.name("lastName"));
 
-        assertElementPresent(By.xpath("//input[@type='submit']")).click();
+        assertElementPresent(By.id("btn-submit")).click();
         waitForPageToLoad();
 
-        assertElementTextEquals("Last Name is required", By.className("formError"));
+        assertElementTextEquals("Last Name is required", By.id("pageErrors"));
 
     }
 
@@ -131,7 +131,7 @@ public class ForgotPasswordSeleniumIT extends AbstractSeleniumTestCase {
 
         int received = wiser.getMessages().size();
 
-        assertElementPresent(By.xpath("//input[@type='submit']")).click();
+        assertElementPresent(By.id("btn-submit")).click();
         waitForPageToLoad();
 
         assertElementPresent(By.name("login"));

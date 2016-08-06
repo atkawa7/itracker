@@ -43,7 +43,7 @@ public class ViewIssueSeleniumIT extends AbstractSeleniumTestCase {
         waitForPageToLoad();
 
         assertElementTextEquals("test_description", By.id("description"));
-        assertElementTextEquals("admin firstname admin lastname", By.id("ownerName"));
+        assertElementTextEquals("admin firstname admin lastname", By.id("owner"));
     }
 
     /**
@@ -74,7 +74,7 @@ public class ViewIssueSeleniumIT extends AbstractSeleniumTestCase {
         waitForPageToLoad();
 
         assertElementTextEquals("test_description 2", By.id("description"));
-        assertElementTextEquals("admin firstname admin lastname", By.id("ownerName"));
+        assertElementTextEquals("admin firstname admin lastname", By.id("owner"));
     }
 
     @Override
