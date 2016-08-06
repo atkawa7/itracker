@@ -74,7 +74,7 @@ public class IssueForm extends ITrackerForm {
     transient private FormFile attachment = null;
     private String history = null;
     // lets try to put Integer,String here:
-    private HashMap<String, String> customFields = new HashMap<String, String>();
+    private HashMap<String, String> customFields = new HashMap<>();
     private IssueRelation.Type relationType = null;
     private Integer relatedIssueId = null;
 
@@ -95,7 +95,7 @@ public class IssueForm extends ITrackerForm {
             return;
         log.debug("Processing " + projectScriptModels.size() + " field scripts for project " + projectScriptModels.get(0).getProject().getId());
 
-        List<ProjectScript> scriptsToRun = new ArrayList<ProjectScript>(projectScriptModels.size());
+        List<ProjectScript> scriptsToRun = new ArrayList<>(projectScriptModels.size());
         for (ProjectScript model : projectScriptModels) {
             if (model.getScript().getEvent() == event) {
                 scriptsToRun.add(model);
@@ -162,13 +162,15 @@ public class IssueForm extends ITrackerForm {
                 switch (script.getFieldType()) {
                     case status:
                         val = currentValues.get(Configuration.Type.status.getLegacyCode());
-                        if (null != val)
-                        setStatus(Integer.valueOf(val));
+                        try {
+                            setStatus(Integer.valueOf(val));
+                        } catch (RuntimeException re) {/* OK */}
                         break;
                     case severity:
                         val = currentValues.get(Configuration.Type.severity.getLegacyCode());
-                        if (null != val)
-                        setSeverity(Integer.valueOf(currentValues.get(Configuration.Type.severity.getLegacyCode())));
+                        try {
+                            setSeverity(Integer.valueOf(val));
+                        } catch (RuntimeException re) {/* OK */}
                         break;
                     case resolution:
                         val = currentValues.get(Configuration.Type.resolution.getLegacyCode());
@@ -319,11 +321,11 @@ public class IssueForm extends ITrackerForm {
         }
 
         needReloadIssue = issueService.setIssueVersions(issue.getId(),
-                new HashSet<Integer>(Arrays.asList(getVersions())),
+                new HashSet<>(Arrays.asList(getVersions())),
                 user.getId());
 
         needReloadIssue = needReloadIssue | issueService.setIssueComponents(issue.getId(),
-                new HashSet<Integer>(Arrays.asList(getComponents())),
+                new HashSet<>(Arrays.asList(getComponents())),
                 user.getId());
 
         // reload issue for further updates
@@ -380,7 +382,7 @@ public class IssueForm extends ITrackerForm {
                 }
             } else if (issue.getStatus() >= IssueUtilities.STATUS_CLOSED
                     && !UserUtilities.hasPermission(userPermissions, project
-                    .getId(), UserUtilities.PERMISSION_CLOSE)) {
+                    .getId(), PermissionType.ISSUE_CLOSE)) {
                 issue.setStatus(IssueUtilities.STATUS_RESOLVED);
             }
         }
@@ -398,7 +400,7 @@ public class IssueForm extends ITrackerForm {
                 log.debug("processFullEdit: status >= STATUS_END: " + issue.getStatus());
             }
             if (!UserUtilities.hasPermission(userPermissions, project.getId(),
-                    UserUtilities.PERMISSION_CLOSE)) {
+                    PermissionType.ISSUE_CLOSE)) {
                 issue.setStatus(IssueUtilities.STATUS_RESOLVED);
             } else {
                 issue.setStatus(IssueUtilities.STATUS_CLOSED);
@@ -455,7 +457,6 @@ public class IssueForm extends ITrackerForm {
         }
 
         ResourceBundle bundle = ITrackerResources.getBundle(locale);
-//		List<IssueField> issueFieldsList = new ArrayList<IssueField>(projectCustomFields.size());
         Iterator<CustomField> customFieldsIt = projectCustomFields.iterator();
         // declare iteration fields
         CustomField field;
@@ -502,7 +503,7 @@ public class IssueForm extends ITrackerForm {
 
     private static IssueField getIssueField(Issue issue, CustomField field) {
         Iterator<IssueField> it = issue.getFields().iterator();
-        IssueField issueField = null;
+        IssueField issueField;
         while (it.hasNext()) {
             issueField = it.next();
             if (issueField.getCustomField().equals(field)) {
@@ -537,8 +538,7 @@ public class IssueForm extends ITrackerForm {
                 .equals(ownerId))
                 || (UserUtilities.hasPermission(userPermissionsMap,
                 UserUtilities.PERMISSION_UNASSIGN_SELF)
-                && user.getId().equals(currentOwner) && ownerId
-                .intValue() == -1)) {
+                && user.getId().equals(currentOwner) && ownerId == -1)) {
             User newOwner = ServletContextUtils.getItrackerServices().getUserService().getUser(ownerId);
             if (log.isDebugEnabled()) {
                 log.debug("setOwner: setting new owner " + newOwner + " to " + issue);
@@ -678,8 +678,9 @@ public class IssueForm extends ITrackerForm {
         request.setAttribute("targetVersions", targetVersion);
         request.setAttribute("components", components);
         request.setAttribute("versions", versions);
-        request.setAttribute("hasIssueNotification", !notificationService
+        request.setAttribute("hasIssueNotification", notificationService
                 .hasIssueNotification(issue, um.getId()));
+        request.setAttribute("hasHardIssueNotification", IssueUtilities.hasHardNotification(issue, issue.getProject(), um.getId()));
         request.setAttribute("hasEditIssuePermission", UserUtilities
                 .hasPermission(userPermissions, issue.getProject().getId(),
                         UserUtilities.PERMISSION_EDIT));
@@ -957,7 +958,7 @@ public class IssueForm extends ITrackerForm {
 
     public void invokeProjectScripts(Project project, int event, final Map<Integer, List<NameValuePair>> options, ActionMessages errors)
             throws WorkflowException {
-        final Map<Integer, String> values = new HashMap<Integer, String>(options.size());
+        final Map<Integer, String> values = new HashMap<>(options.size());
         for (CustomField field: project.getCustomFields()) {
             values.put(field.getId()
                     , getCustomFields().get(String.valueOf(field.getId())));

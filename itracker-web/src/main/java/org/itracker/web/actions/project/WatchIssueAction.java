@@ -70,26 +70,31 @@ public class WatchIssueAction extends ItrackerBaseAction {
             }
 
             Notification notification = new Notification();
-            notification.setUser(currUser);
-            notification.setIssue(issue);
-            notification.setRole(Role.IP);
 
-            boolean UserHasIssueNotification = false;
+
+            boolean userHasIssueNotification = false;
             List<Notification> notifications = issue.getNotifications();
 
             for (Iterator<Notification> nIterator = notifications.iterator(); nIterator.hasNext(); ) {
                 Notification issue_notification = nIterator.next();
                 if (issue_notification.getUser().getId().equals(currUser.getId())) {
-                    notification = issue_notification;
-                    UserHasIssueNotification = true;
-                    nIterator.remove();
-                    break;
+                    userHasIssueNotification = true;
+                    if (issue_notification.getRole() == Role.IP) {
+                        notification = issue_notification;
+                        nIterator.remove();
+                        break;
+                    }
                 }
             }
-            if (UserHasIssueNotification) {
-                issue.setNotifications(notifications);
-                notificationService.removeIssueNotification(notification.getId());
+            if (userHasIssueNotification) {
+                if (null!=notification.getId()) {
+                    issue.setNotifications(notifications);
+                    notificationService.removeIssueNotification(notification.getId());
+                }
             } else {
+                notification.setUser(currUser);
+                notification.setIssue(issue);
+                notification.setRole(Role.IP);
                 notificationService.addIssueNotification(notification);
             }
             String caller = request.getParameter("caller");
