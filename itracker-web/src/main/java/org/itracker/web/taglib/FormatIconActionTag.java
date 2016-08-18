@@ -18,6 +18,8 @@
 
 package org.itracker.web.taglib;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.apache.struts.taglib.TagUtils;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.UserPreferences;
@@ -26,271 +28,293 @@ import org.itracker.web.util.HTMLUtilities;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.net.MalformedURLException;
 import java.util.Locale;
 
-public final class FormatIconActionTag extends TagSupport {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
+public final class FormatIconActionTag extends BodyTagSupport {
+   /**
+    *
+    */
+   private static final long serialVersionUID = 1L;
 
-    private String action = null;
-    private String forward = null;
-    private String module = null;
-    private String paramName = null;
-    private String paramValue = null;
-    private String icon = null;
-    private String styleClass = null;
-    private String iconClass = null;
-    private String styleId = null;
-    private String arg0 = null;
-    private String textActionKey = null;
-    private String info = null;
-    private boolean square = false;
-    private String caller = null;
-    private String targetAction = null;
-    private String target = null;
+   private String action = null;
+   private String forward = null;
+   private String module = null;
+   private String paramName = null;
+   private String paramValue = null;
+   private String icon = null;
+   private String styleClass = null;
+   private String iconClass = null;
+   private String styleId = null;
+   private String arg0 = null;
+   private String textActionKey = null;
+   private String info = null;
+   private String caller = null;
+   private String targetAction = null;
+   private String target = null;
 
-    public String getAction() {
-        return action;
-    }
+   public String getAction() {
+      return action;
+   }
 
-    public void setAction(String value) {
-        action = value;
-    }
+   public void setAction(String value) {
+      action = value;
+   }
 
-    public String getForward() {
-        return forward;
-    }
+   public String getForward() {
+      return forward;
+   }
 
-    public void setForward(String value) {
-        forward = value;
-    }
+   public void setForward(String value) {
+      forward = value;
+   }
 
-    public String getModule() {
-        return module;
-    }
+   public String getModule() {
+      return module;
+   }
 
-    public void setModule(String module) {
-        this.module = module;
-    }
+   public void setModule(String module) {
+      this.module = module;
+   }
 
-    public String getParamName() {
-        return paramName;
-    }
+   public String getParamName() {
+      return paramName;
+   }
 
-    public void setParamName(String value) {
-        paramName = value;
-    }
+   public void setParamName(String value) {
+      paramName = value;
+   }
 
-    public Object getParamValue() {
-        return paramValue;
-    }
+   public Object getParamValue() {
+      return paramValue;
+   }
 
-    public void setParamValue(Object value) {
-        paramValue = (value != null ? value.toString() : null);
-    }
+   public void setParamValue(Object value) {
+      paramValue = (value != null ? value.toString() : null);
+   }
 
-    public String getIcon() {
-        return icon;
-    }
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
+   public String getIcon() {
+      return icon;
+   }
 
-    public String getStyleClass() {
-        return styleClass;
-    }
+   public void setIcon(String icon) {
+      this.icon = icon;
+   }
 
-    public void setStyleClass(String styleClass) {
-        this.styleClass = styleClass;
-    }
+   public String getStyleClass() {
+      return styleClass;
+   }
 
-    public String getIconClass() {
-        return iconClass;
-    }
+   public void setStyleClass(String styleClass) {
+      this.styleClass = styleClass;
+   }
 
-    public void setIconClass(String iconClass) {
-        this.iconClass = iconClass;
-    }
+   public String getIconClass() {
+      return iconClass;
+   }
 
-    public String getStyleId() {
-        return styleId;
-    }
+   public void setIconClass(String iconClass) {
+      this.iconClass = iconClass;
+   }
 
-    public void setStyleId(String styleId) {
-        this.styleId = styleId;
-    }
+   public String getStyleId() {
+      return styleId;
+   }
 
-    public Object getArg0() {
-        return arg0;
-    }
+   public void setStyleId(String styleId) {
+      this.styleId = styleId;
+   }
 
-    public void setArg0(Object value) {
-        arg0 = (value != null ? value.toString() : null);
-    }
+   public Object getArg0() {
+      return arg0;
+   }
 
-    public String getTextActionKey() {
-        return textActionKey;
-    }
+   public void setArg0(Object value) {
+      arg0 = (value != null ? value.toString() : null);
+   }
 
-    public void setTextActionKey(String value) {
-        textActionKey = value;
-    }
+   public String getTextActionKey() {
+      return textActionKey;
+   }
 
-    public String getInfo() {
-        return info;
-    }
+   public void setTextActionKey(String value) {
+      textActionKey = value;
+   }
 
-    public void setInfo(String info) {
-        this.info = info;
-    }
+   public String getInfo() {
+      return info;
+   }
 
-    public boolean isSquare() {
-        return square;
-    }
+   public void setInfo(String info) {
+      this.info = info;
+   }
 
-    public void setSquare(boolean square) {
-        this.square = square;
-    }
+   public String getCaller() {
+      return caller;
+   }
 
-    public String getCaller() {
-        return caller;
-    }
+   public void setCaller(String value) {
+      caller = value;
+   }
 
-    public void setCaller(String value) {
-        caller = value;
-    }
+   public String getTargetAction() {
+      return targetAction;
+   }
 
-    public String getTargetAction() {
-        return targetAction;
-    }
+   public void setTargetAction(String value) {
+      targetAction = value;
+   }
 
-    public void setTargetAction(String value) {
-        targetAction = value;
-    }
+   public String getTarget() {
+      return target;
+   }
 
-    public String getTarget() {
-        return target;
-    }
+   public void setTarget(String value) {
+      target = value;
+   }
 
-    public void setTarget(String value) {
-        target = value;
-    }
+   public int doStartTag() throws JspException {
+      boolean useTextActions = false;
 
-    public int doStartTag() throws JspException {
-        return SKIP_BODY;
-    }
+      HttpSession session = pageContext.getSession();
+      if (session != null) {
+         UserPreferences currUserPrefs = (UserPreferences) session
+                 .getAttribute(Constants.PREFERENCES_KEY);
+         useTextActions = (currUserPrefs != null
+                 && currUserPrefs.getUseTextActions());
+      }
 
-    public int doEndTag() throws JspException {
-        boolean hasParams = false;
-        boolean useTextActions = false;
-        Locale locale = null;
+      if (!useTextActions) {
+         textActionKey = null;
+      }
+      if (Strings.isBlank(textActionKey))
+         return EVAL_BODY_BUFFERED;
+      return SKIP_BODY;
+   }
 
-        HttpSession session = pageContext.getSession();
-        if (session != null) {
-            locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
-            UserPreferences currUserPrefs = (UserPreferences) session
-                    .getAttribute(Constants.PREFERENCES_KEY);
-            useTextActions = (currUserPrefs != null ? currUserPrefs
-                    .getUseTextActions() : false);
-        }
+   public int doEndTag() throws JspException {
+      Locale locale = null;
+      HttpSession session = pageContext.getSession();
+      if (session != null) {
+         locale = (Locale) session.getAttribute(Constants.LOCALE_KEY);
+      }
+      styleClass = StringUtils.defaultIfEmpty(styleClass, "");
 
-        StringBuffer buf = new StringBuffer("<a href=\"");
-        try {
-            buf.append(TagUtils.getInstance().computeURL(pageContext, forward,
-                    null, null, action, module, null, null, false));
-        } catch (MalformedURLException murle) {
-            buf.append(HTMLUtilities.escapeTags(forward));
-        }
-        if (paramName != null && paramValue != null) {
-            buf.append("?" + paramName + "=" + paramValue);
-            hasParams = true;
-        }
-        if (caller != null) {
-            buf.append((hasParams ? "&amp;" : "?") + "caller=" + HTMLUtilities.escapeTags(caller));
-            hasParams = true;
-        }
-        if (targetAction != null) {
-            buf.append((hasParams ? "&amp;" : "?") + "action=" + HTMLUtilities.escapeTags(targetAction));
-            hasParams = true;
-        }
-        buf.append("\"");
-        if (target != null) {
-            buf.append(" target=\"" + target + "\"");
-        }
+      StringBuilder buf = new StringBuilder();
+      appendStartTag(locale, buf);
+      appendBody(locale, buf);
+      appendEndTag(buf);
+      return EVAL_PAGE;
+   }
 
-        if (styleId != null) {
-            buf.append(" id=\"" + styleId + "\"");
-        }
-        String styleClass = icon;
+   private void appendBody(Locale locale, StringBuilder buf) {
+      boolean hasBody = bodyContent != null && !StringUtils.isBlank(bodyContent.getString());
+      if (hasBody) {
+         icon = null;
+         buf.append(bodyContent.getString());
+      } else {
+         if (!StringUtils.isBlank(textActionKey)) {
+            buf.append(HTMLUtilities.escapeTags(ITrackerResources.getString(textActionKey, locale,
+                    (arg0 == null ? "" : arg0))));
+         } else if (!StringUtils.isBlank(icon)) {
+            appendIcon(locale, buf);
+         } else {
+            buf.append("???");
+         }
+      }
+   }
 
-        if (this.styleClass != null) {
-            styleClass += " "  + this.styleClass;
-        }
+   private void appendEndTag(StringBuilder buf) throws JspException {
+      buf.append("</a>");
+      TagUtils.getInstance().write(pageContext, buf.toString());
+      clearState();
+   }
 
-        buf.append(" title=\"" + HTMLUtilities.escapeTags( ITrackerResources.getString(info, locale,
-                            (arg0 == null ? "" : arg0)) ) + "\"");
+   private void appendIcon(Locale locale, StringBuilder buf) {
 
-        if (useTextActions) {
+      buf.append("<i class=\"fa fa-").append(icon).append(null != iconClass ? " " + iconClass : "")
+              .append("\" aria-hidden=\"true\"")
+              .append(" ></i>");
 
-            styleClass += " action";
+      buf.append("<span class=\"sr-only\">")
+              .append(HTMLUtilities.escapeTags(ITrackerResources
+                      .getString(textActionKey, locale,
+                              (arg0 == null ? "" : arg0))))
+              .append("</span>");
+   }
 
-            buf.append(" class=\"").append( styleClass ).append("\"");
+   private void appendStartTag(Locale locale, StringBuilder buf) {
+      buf.append("<a href=\"");
+      appendUrl(buf, pageContext, forward, action, module, paramName, paramValue, caller, targetAction);
+      buf.append("\"");
+      if (!StringUtils.isBlank(target)) {
+         buf.append(" target=\"" + target + "\"");
+      }
+      if (!StringUtils.isBlank(styleId)) {
+         buf.append(" id=\"" + styleId + "\"");
+      }
 
-            buf.append(">");
-            buf.append(HTMLUtilities.escapeTags( ITrackerResources.getString(textActionKey, locale,
-                                (arg0 == null ? "" : arg0)) ));
-        } else {
+      buf.append(" title=\"").append(
+              HTMLUtilities.escapeTags(
+                      ITrackerResources.getString(info, locale, StringUtils.trimToEmpty(arg0))
+              ))
+              .append("\"");
 
-            buf.append(" class=\"icon ").append( styleClass ).append("\"");
+      styleClass += " action";
+      if (!Strings.isBlank(icon) && Strings.isBlank(textActionKey)) {
+         styleClass += " icon " + icon;
+      }
+      buf.append(!StringUtils.isBlank(StringUtils.trimToNull(styleClass)) ? " class=\"" + styleClass + "\"" : "")
+              .append(">");
+   }
 
-            buf.append(">");
-            if (square) {
-                buf.append("<span class=\"fa-stack\"><i class=\"fa fa-square fa-stack-2x\" aria-hidden=\"true\"></i>");
-                buf.append("<i class=\"fa fa-" + icon + (null!=iconClass?" " + iconClass:""))
-                        .append(" fa-stack-1x fa-inverse\" aria-hidden=\"true\"");
-                buf.append(" ></i></span>");
-            } else {
+   private static void appendUrl(StringBuilder buf, PageContext pageContext, String forward, String action, String module, String paramName, String paramValue, String caller, String targetAction) {
+      boolean hasParams = false;
+      try {
+         buf.append(TagUtils.getInstance().computeURL(pageContext, forward,
+                 null, null, action, module, null, null, false));
+      } catch (MalformedURLException x) {
+         buf.append(HTMLUtilities.escapeTags(forward));
+      }
+      if (paramName != null && paramValue != null) {
+         buf.append("?" + paramName + "=" + paramValue);
+         hasParams = true;
+      }
+      if (caller != null) {
+         buf.append(hasParams ? "&amp;" : "?")
+                 .append("caller=")
+                 .append(HTMLUtilities.escapeTags(caller));
+         hasParams = true;
+      }
+      if (targetAction != null) {
+         buf.append(hasParams ? "&amp;" : "?")
+                 .append("action=")
+                 .append(HTMLUtilities.escapeTags(targetAction));
+      }
+   }
 
-                buf.append("<i class=\"fa fa-" + icon+ (null!=iconClass?" " + iconClass:""))
-                        .append("\" aria-hidden=\"true\"");
-                buf.append(" ></i>");
-            }
-            buf.append("<span class=\"sr-only\">"+HTMLUtilities.escapeTags( ITrackerResources.getString(textActionKey, locale,
-                                (arg0 == null ? "" : arg0)) )+"</span>");
 
-        }
-        buf.append("</a>");
-        // ResponseUtils.write(pageContext, buf.toString());
-        TagUtils.getInstance().write(pageContext, buf.toString());
-        clearState();
-        return (EVAL_PAGE);
-    }
+   public void release() {
+      super.release();
+      clearState();
+   }
 
-
-    public void release() {
-        super.release();
-        clearState();
-    }
-
-    private void clearState() {
-        action = null;
-        forward = null;
-        paramName = null;
-        paramValue = null;
-        icon = null;
-        styleClass = null;
-        iconClass = null;
-        styleId = null;
-        arg0 = null;
-        textActionKey = null;
-        square = false;
-        caller = null;
-        target = null;
-        targetAction = null;
-        module = null;
-    }
+   private void clearState() {
+      action = null;
+      forward = null;
+      paramName = null;
+      paramValue = null;
+      icon = null;
+      styleClass = null;
+      iconClass = null;
+      styleId = null;
+      arg0 = null;
+      textActionKey = null;
+      caller = null;
+      target = null;
+      targetAction = null;
+      module = null;
+   }
 }

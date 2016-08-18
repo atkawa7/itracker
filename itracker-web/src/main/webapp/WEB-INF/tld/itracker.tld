@@ -258,7 +258,7 @@
             <tag-class>
                 org.itracker.web.taglib.FormatIconActionTag
             </tag-class>
-            <body-content>empty</body-content>
+            <body-content>JSP</body-content>
             <attribute>
                 <name>forward</name>
                 <required>false</required>
@@ -286,7 +286,7 @@
             </attribute>
             <attribute>
                 <name>icon</name>
-                <required>true</required>
+                <required>false</required>
                 <rtexprvalue>true</rtexprvalue>
             </attribute>
             <attribute>
@@ -316,11 +316,6 @@
             </attribute>
             <attribute>
                 <name>info</name>
-                <required>false</required>
-                <rtexprvalue>true</rtexprvalue>
-            </attribute>
-            <attribute>
-                <name>square</name>
                 <required>false</required>
                 <rtexprvalue>true</rtexprvalue>
             </attribute>
