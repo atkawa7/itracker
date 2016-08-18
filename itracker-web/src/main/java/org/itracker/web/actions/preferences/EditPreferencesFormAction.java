@@ -150,6 +150,14 @@ public class EditPreferencesFormAction extends ItrackerBaseAction {
                                     : "itracker.web.generic.no"), locale);
             request.setAttribute("getRememberLastSearchLocalized",
                     getRememberLastSearchLocalized);
+
+           String getUseTextActionsLocalized = ITrackerResources
+                   .getString(
+                           (userPrefs.getUseTextActions() ? "itracker.web.generic.yes"
+                                   : "itracker.web.generic.no"), locale);
+           request.setAttribute("getUseTextActionsLocalized",
+                   getUseTextActionsLocalized);
+
             request.setAttribute("preferencesForm", userForm);
             session.setAttribute(Constants.EDIT_USER_KEY, user);
             session.setAttribute(Constants.EDIT_USER_PREFS_KEY, userPrefs);
