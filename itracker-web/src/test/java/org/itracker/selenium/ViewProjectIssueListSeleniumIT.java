@@ -30,20 +30,33 @@ public class ViewProjectIssueListSeleniumIT extends AbstractSeleniumTestCase {
         waitForPageToLoad();
 
         // Click view issue link (usually it's named "View").
-        assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name']/../*[1]/a[1]")).click();
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]" +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td/a[1]")).click();
 
         waitForPageToLoad();
 
         assertElementCountEquals(4, By.xpath("//*[starts-with(@id, 'issue.')]"));
 
-        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]/*[3][text()='1']/../*[11][text()='test_description']" +
-                "/../*[13][contains(text(),'A. admin lastname')]"));
-        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]/*[3][text()='2']/../*[11][text()='test_description 2']" +
-                "/../*[13][contains(text(),'A. admin lastname')]"));
-        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]/*[3][text()='3']/../*[11][text()='test_description 3']" +
-                "/../*[13][contains(text(),'A. admin lastname')]"));
-        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]/*[3][text()='4']/../*[11][text()='test_description 4']" +
-                "/../*[13][contains(text(),'A. admin lastname')]"));
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.1')]" +
+                "/td[contains(text(),'1')]/.." +
+                "/td[normalize-space(text())='test_description']/.." +
+                "/td[contains(text(),'A. admin lastname')]"));
+
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.2')]" +
+                "/td[contains(text(),'2')]/.." +
+                "/td[normalize-space(text())='test_description 2']/.." +
+                "/td[contains(text(),'A. admin lastname')]"));
+
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.3')]" +
+                "/td[contains(text(),'3')]/.." +
+                "/td[normalize-space(text())='test_description 3']/.." +
+                "/td[contains(text(),'A. admin lastname')]"));
+
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.4')]" +
+                "/td[contains(text(),'4')]/.." +
+                "/td[normalize-space(text())='test_description 4']/.." +
+                "/td[contains(text(),'A. admin lastname')]"));
     }
 
     @Override

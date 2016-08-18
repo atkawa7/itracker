@@ -7,7 +7,9 @@ import org.itracker.persistence.dao.UserDAO;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.subethamail.wiser.WiserMessage;
-import static org.itracker.Assert.*;
+
+import static org.itracker.Assert.assertEquals;
+import static org.itracker.Assert.assertTrue;
 
 /**
  * Verifies the functionality of new issue creation.
@@ -99,18 +101,21 @@ public class CreateIssueSeleniumIT extends AbstractSeleniumTestCase {
         // Check that the total number of issues is 5 now (4 from db + 1 our).
         assertElementPresent(By.id("issues"));
         assertElementCountEquals(5, By.xpath("//*[starts-with(@id, 'issue.')]"));
-        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]" +
-                "/*[11][text()='" + descriptionValue + "']"));
+
+        assertElementPresent(By.xpath("//tr[starts-with(@id, 'issue.')]" +
+                "/td[normalize-space(text())=normalize-space('" + descriptionValue + "')]"));
 
         driver.get(applicationURL + "/portalhome.do");
 
         // Check that just created issue has appeared in "Unassigned" area.
-        assertElementPresent(By.xpath("//*[starts-with(@id,'unassignedIssue.')]" +
-                "/*[5][text()='test_name']/../*[11][text()='" + descriptionValue + "']"));
+        assertElementPresent(By.xpath("//tr[starts-with(@id,'unassignedIssue.')]" +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td[normalize-space(text())=normalize-space('" + descriptionValue + "')]"));
 
         // Check that just created issue has appeared in "Created" area.
-        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.')]" +
-                "/*[5][text()='test_name']/../*[11][text()='" + descriptionValue + "']"));
+        assertElementPresent(By.xpath("//tr[starts-with(@id,'createdIssue.')]" +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td[normalize-space(text())=normalize-space('" + descriptionValue + "')]"));
 
         // Check that number of watched items is 0.
         assertElementNotPresent(By.xpath("//*[starts-with(@id, 'watchedIssue.')]"));
@@ -186,16 +191,21 @@ public class CreateIssueSeleniumIT extends AbstractSeleniumTestCase {
         // Checking that our new issue has appeared in "View Issues".
         assertElementPresent(By.id("issues"));
         assertElementCountEquals(5, By.xpath("//*[starts-with(@id, 'issue.')]"));
-        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]/*[11][text()='" + descriptionValue + "']"));
+
+        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]" +
+                "/td[normalize-space(text())=normalize-space('" + descriptionValue + "')]"));
 
         driver.get(applicationURL + "/portalhome.do");
 
         // Checking that our new issue has not appeared in "Unassigned" area.
-        assertElementNotPresent(By.xpath("//*[starts-with(@id,'unassignedIssue.')]" +
-                        "/*[5][text()='test_name']/../*[11][text()='" + descriptionValue + "']"));
+        assertElementNotPresent(By.xpath("//tr[starts-with(@id,'unassignedIssue.')]" +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td[normalize-space(text())=normalize-space('" + descriptionValue + "')]"));
+
         // Checking that our new issue has appeared in "Created" area.
-        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.')]" +
-                "/*[5][text()='test_name']/../*[11][text()='" + descriptionValue + "']"));
+        assertElementPresent(By.xpath("//tr[starts-with(@id,'createdIssue.')]" +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td[normalize-space(text())=normalize-space('" + descriptionValue + "')]"));
 
         // Check that "Watched" area is still empty.
         assertElementNotPresent(By.xpath("//*[starts-with(@id, 'watchedIssue.')]"));

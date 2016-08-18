@@ -4,8 +4,6 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 import java.io.IOException;
-
-import static org.itracker.Assert.*;
 /**
  * Verifies the functionality of View Issue page.
  *
@@ -33,12 +31,16 @@ public class ViewIssueSeleniumIT extends AbstractSeleniumTestCase {
         waitForPageToLoad();
 
         // Click view issue link (usually it's named "View").
-        assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name']/../*[1]/a[1]")).click();
+        assertElementPresent(By.xpath("//tr[starts-with(@id, 'project.')]" +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td/a[1]")).click();
 
         waitForPageToLoad();
 
-        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]/*[3][text()='1']" +
-                "/../*[11][text()='test_description']/../*[1]/a[1]")).click();
+        assertElementPresent(By.xpath("//tr[starts-with(@id, 'issue.')]" +
+                "/td[normalize-space(text())='1']/.." +
+                "/td[normalize-space(text())='test_description']/.." +
+                "/td/a[1]")).click();
 
         waitForPageToLoad();
 
@@ -66,11 +68,15 @@ public class ViewIssueSeleniumIT extends AbstractSeleniumTestCase {
         waitForPageToLoad();
 
         // Click view issue link (usually it's named "View").
-        assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name']/../*[1]/a[1]")).click();
+        assertElementPresent(By.xpath("//tr[starts-with(@id, 'project.')]" +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td/a[1]")).click();
         waitForPageToLoad();
 
-        assertElementPresent(By.xpath("//*[starts-with(@id, 'issue.')]/*[3][text()='2']" +
-                "/../*[11][text()='test_description 2']/../*[1]/a[1]")).click();
+        assertElementPresent(By.xpath("//tr[starts-with(@id, 'issue.')]" +
+                "/td[normalize-space(text())='2']/.." +
+                "/td[normalize-space(text())='test_description 2']/.." +
+                "/td/a[1]")).click();
         waitForPageToLoad();
 
         assertElementTextEquals("test_description 2", By.id("description"));

@@ -12,6 +12,10 @@
     <Logger name="org.apache.log4j.xml"    additivity="false" level="debug">
       <AppenderRef ref="STDOUT"/>
     </Logger>
+    <!--<Logger name="org.itracker.selenium.ViewProjectIssueListSeleniumIT"-->
+            <!--additivity="false" level="debug">-->
+      <!--<AppenderRef ref="A1"/>-->
+    <!--</Logger>-->
     <Root level="info">
       <AppenderRef ref="A1"/>
     </Root>

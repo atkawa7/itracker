@@ -8,9 +8,9 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.subethamail.wiser.Wiser;
 
-import static org.itracker.Assert.*;
-
 import java.util.concurrent.TimeUnit;
+
+import static org.itracker.Assert.*;
 
 /**
  * It is a base class for all Selenium-based test cases.
@@ -117,6 +117,10 @@ public abstract class AbstractSeleniumTestCase
         driver.findElement(by);
         return true;
       } catch (NoSuchElementException e) {
+         if (log.isDebugEnabled())
+            log.debug("isElementPresent: not present " + by + "\n in:\n<"
+                    + driver.getCurrentUrl() + ">\n"
+                    + driver.getPageSource());
         return false;
       } finally {
           driver.manage().timeouts().implicitlyWait(Long.valueOf(SE_TIMEOUT), TimeUnit.MILLISECONDS);
