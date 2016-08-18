@@ -18,6 +18,9 @@ a .glyphicon {
     margin: 0 .1em;
     color: #555;
 }
+a.icon .fa-stack {
+   vertical-align: text-bottom;
+}
 
 .smallbody {
     font-size: 1em;
@@ -137,23 +140,7 @@ a.next {
 .headerLinks {
     font-weight: normal;
     font-size: 1em;
-    color: #9999FF;
     background-color: white;
-    text-decoration: none;
-}
-
-a.headerLinks:hover {
-    color: #5555FF;
-    text-decoration: none;
-}
-
-a.headerLinks:link {
-    color: #5555FF;
-    text-decoration: none;
-}
-
-a.headerLinks:visited {
-    color: #5555FF;
     text-decoration: none;
 }
 
@@ -217,8 +204,6 @@ a.listHeading:link {
     text-decoration: underline;
 }
 
-.table-striped>tbody>tr:nth-child(odd)>td,
-.table-striped>tbody>tr:nth-child(odd)>th,
 .listRowShaded {
     background-color: #DDDDFF;
 }
@@ -277,6 +262,11 @@ a.listRow:link {
     text-decoration: none;
 }
 
+h4 {
+   border-bottom: solid 2px black;
+   padding-bottom: .2em;
+}
+
 .editColumnTitle {
     font-weight: bold;
     text-align: left;
@@ -315,9 +305,9 @@ table.portalhomeMain {
     border: none;
 }
 
-.portalhomeMain.shadeList tr {
-    height: 2.5em;
-}
+/*.portalhomeMain.shadeList tr {*/
+    /*height: 2.5em;*/
+/*}*/
 
 .historyName {
     font-style: italic;

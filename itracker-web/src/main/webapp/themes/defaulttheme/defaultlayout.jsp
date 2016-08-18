@@ -35,14 +35,14 @@
 <head>
 
     <title><c:out value="${ pageTitle }" /></title>
-    <link rel="stylesheet" href="${contextPath}/webjars/bootstrap/3.1.0/css/bootstrap.min.css"
+    <link rel="stylesheet" href="${contextPath}${themePath}/includes/bootstrap/bootstrap.min.css"
           type="text/css" media="screen"/>
     <link rel="stylesheet" href="${contextPath}/webjars/bootstrap-datepicker/1.6.1/css/bootstrap-datepicker.min.css"
           type="text/css" media="screen"/>
     <link rel="stylesheet" href="${contextPath}/webjars/font-awesome/4.6.3/css/font-awesome.css"
           type="text/css" media="screen"/>
     <link rel="stylesheet" type="text/css"
-          href="${contextPath}${themePath}/includes/bootstrap-theme.css"/>
+          href="${contextPath}${themePath}/includes/bootstrap/bootstrap-theme.css"/>
 
     <link rel="stylesheet" type="text/css"
           href="${contextPath}${themePath}/includes/styles.css"/>
@@ -55,7 +55,7 @@
     <meta http-equiv="Pragma" content="no-cache"/>
 
     <script src="${contextPath}/webjars/jquery/1.9.0/jquery.min.js" ></script>
-    <script src="${contextPath}/webjars/bootstrap/3.1.0/js/bootstrap.min.js" ></script>
+    <script src="${contextPath}${themePath}/includes/bootstrap/bootstrap.min.js" ></script>
     <script src="${contextPath}/webjars/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js" ></script>
 </head>
 <body>

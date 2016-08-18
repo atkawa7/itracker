@@ -18,7 +18,9 @@
     $(window).load(function () {
 
         $('.deleteButton').each(function(elem) {
-            elem.observe("click", function(event) { if (!confirm(elem.title + "?")) { event.stop() } });
+            $(this).click( function(event) {
+                if ( !confirm($(this).attr('title') + "?") ) { event.preventDefault() }
+            });
         });
         $('input[name=placeholder]').each(function(ix,elem) {
             var next = $(elem).next();
@@ -29,7 +31,6 @@
             var hr = elem.href;
             var x = hr.indexOf("?");
             if (x > -1) {
-                event.stop();
                 var f = $("<form>");
                 f.attr("action", hr.substr(0, x));
                 f.attr("method", "post");
@@ -58,7 +59,7 @@
 	}
 
 	function toggleProjectPermissionsChecked(clicked) {
-		form = clicked.form;
+		var form = clicked.form;
 		for (var i = 0; i < form.elements.length; i++) {
 			if (form.elements[i].name.indexOf(clicked.name) > -1) {
 				form.elements[i].checked = clicked.checked;
