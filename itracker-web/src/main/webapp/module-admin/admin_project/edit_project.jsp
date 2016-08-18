@@ -262,14 +262,14 @@
 <tr>
     <td class="editColumnTitle" colspan="4"><it:message key="itracker.web.attr.scripts"/>:</td>
     <td align="right">
-        <it:formatImageAction action="editprojectscriptform"
-                              paramName="projectId"
-                              paramValue="${ project.id }"
-                              targetAction="update"
-                              src="/themes/defaulttheme/images/create.gif"
-                              altKey="itracker.web.image.create.projectscript.alt"
-                              arg0="${ project.name }"
-                              textActionKey="itracker.web.image.create.texttag"/>
+		<it:formatIconAction action="editprojectscriptform"
+							  paramName="projectId"
+							  paramValue="${ project.id }"
+							  targetAction="update"
+							 icon="plus"
+							 info="itracker.web.image.create.projectscript.alt"
+							  arg0="${ project.name }"
+							 textActionKey="itracker.web.image.create.texttag"/>
     </td>
 </tr>
 </c:if>
@@ -297,11 +297,11 @@
 		    </td>
             <td style="text-align: right;" >
                 <c:if test="${currUser.superUser}" >
-      		        <it:formatImageAction action="removeprojectscript"
+      		        <it:formatIconAction action="removeprojectscript"
       		                              paramName="delId"
       		                              paramValue="${ script.script.id }"
-      		                              src="/themes/defaulttheme/images/delete.gif"
-      		                              altKey="itracker.web.image.delete.projectscript.alt"
+										 icon="remove"
+										 info="itracker.web.image.delete.projectscript.alt"
       		                              textActionKey="itracker.web.image.delete.texttag"/>
                 </c:if>
             </td>
@@ -315,12 +315,13 @@
 				<tr>
 					<td class="editColumnTitle" colspan="4">
 						<it:message key="itracker.web.attr.versions" />:</td>
-					<td align="right"><it:formatImageAction
-						action="editversionform" paramName="projectId"
-						paramValue="${project.id}" targetAction="create"
-						src="/themes/defaulttheme/images/create.gif"
-						altKey="itracker.web.image.create.version.alt"
-						arg0="${project.name}"
+					<td align="right"><it:formatIconAction action="editversionform"
+											  icon="plus"
+											  paramName="projectId"
+											  paramValue="${ project.id }"
+											  targetAction="update"
+											  info="itracker.web.image.create.version.alt"
+											  arg0="${ project.name }"
 						textActionKey="itracker.web.image.create.texttag" /></td>
 				</tr>
 
@@ -340,11 +341,11 @@
 						<td class="listRowSmall" align="left">${version.description}</td>
 						<td class="listRowSmall" align="left"><it:formatDate date="${version.date}" /></td>
 						<td class="listRowSmall" align="right">${version.count}</td>
-						<td align="right"><it:formatImageAction
+						<td align="right"><it:formatIconAction
 							action="editversionform" paramName="id"
 							paramValue="${version.id}" targetAction="update"
-							src="/themes/defaulttheme/images/edit.gif"
-							altKey="itracker.web.image.edit.version.alt"
+							icon="pencil"
+							info="itracker.web.image.edit.version.alt"
 							arg0="${version.number}"
 							textActionKey="itracker.web.image.edit.texttag" /></td>
 					</tr>
@@ -357,11 +358,11 @@
 				<tr>
 					<td class="editColumnTitle" colspan="4">
 						<it:message key="itracker.web.attr.components" />:</td>
-					<td align="right"><it:formatImageAction
+					<td align="right"><it:formatIconAction
 						action="editcomponentform" paramName="projectId"
 						paramValue="${project.id}" targetAction="create"
-						src="/themes/defaulttheme/images/create.gif"
-						altKey="itracker.web.image.create.component.alt"
+						icon="plus"
+						info="itracker.web.image.create.component.alt"
 						arg0="${project.name}"
 						textActionKey="itracker.web.image.create.texttag" /></td>
 				</tr>
@@ -381,11 +382,11 @@
 						<td class="listRowSmall" align="left">${component.description}</td>
 						<td class="listRowSmall" align="left"><it:formatDate date="${component.date}" /></td>
 						<td class="listRowSmall" align="right">${component.count}</td>
-						<td align="right"><it:formatImageAction
+						<td align="right"><it:formatIconAction
 							action="editcomponentform" paramName="id"
 							paramValue="${component.id}" targetAction="update"
-							src="/themes/defaulttheme/images/edit.gif"
-							altKey="itracker.web.image.edit.component.alt"
+							icon="pencil"
+							info="itracker.web.image.edit.component.alt"
 							arg0="${component.name}"
 							textActionKey="itracker.web.image.edit.texttag" /></td>						
 					</tr>

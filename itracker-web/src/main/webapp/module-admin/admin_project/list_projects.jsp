@@ -1,86 +1,108 @@
-<%@ include file="/common/taglibs.jsp"%>
+<%@ include file="/common/taglibs.jsp" %>
 
 <bean:define id="pageTitleKey" value="itracker.web.admin.listprojects.title"/>
 <bean:define id="pageTitleArg" value=""/>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
-<table border="0" cellspacing="0"  cellpadding="1"  width="100%" class="shadeList">
-  <tr>
-    <td class="editColumnTitle" colspan="5"><it:message key="itracker.web.attr.projects"/>:</td>
-    <c:if test="${ isSuperUser }">
-         <td align="right">
-         	<c:choose>
-         		<c:when test="${ showAll }">
-         			<html:link module="/module-admin" action="/listprojectsadmin?showAll=false"><it:message key="itracker.web.listprojects.locked.hide"/></html:link>
-         			<%-- TODO: better icon for show/hide closed projects
-         			<it:formatImageAction action="/listprojectsadmin?showAll=false" src="/themes/defaulttheme/images/unwatch.gif" altKey="itracker.web.listprojects.locked.hide" textActionKey="itracker.web.listprojects.locked.hide"/>--%>
-         		</c:when>
-         		<c:otherwise>
-         			<html:link module="/module-admin" action="/listprojectsadmin?showAll=true"><it:message key="itracker.web.listprojects.locked.show"/></html:link>
-         			<%-- <it:formatImageAction action="/listprojectsadmin?showAll=true" src="/themes/defaulttheme/images/watch.gif" altKey="itracker.web.listprojects.locked.show" textActionKey="itracker.web.listprojects.locked.show"/>--%>
-         			
-         		</c:otherwise>
-         	</c:choose>
-         	
-           <it:formatImageAction action="editprojectform" targetAction="create" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.project.alt" textActionKey="itracker.web.image.create.texttag"/>
-           <it:formatImageAction forward="listattachments" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.attachments.alt" textActionKey="itracker.web.image.view.texttag"/>
-         </td>
-    </c:if>
-  </tr>
-  
-  <c:choose>
-  <c:when test="${not empty projects}">
-  <tr style="text-align: left" class="listHeading">
-    <td width="1"></td>
-    <td style="white-space: nowrap"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4"/></td>
-    <td style="white-space: nowrap"><it:message key="itracker.web.attr.name"/></td>
-    <td style="white-space: nowrap"><it:message key="itracker.web.attr.description"/></td>
-    <td  style="text-align: right; white-space: nowrap"><it:message key="itracker.web.attr.created"/></td>
-    <td style="text-align: right; white-space: nowrap"><it:message key="itracker.web.attr.lastmodified"/></td>
-   <%-- <td align="left"><it:message key="itracker.web.attr.issues"/></td> --%>
-  </tr>
+<div class="maincontent container-fluid">
+   <div class="row">
+      <div class="col-xs-12">
+         <c:if test="${ isSuperUser }">
+            <div class="pull-right">
+               <c:choose>
+                  <c:when test="${ showAll }">
+                     <it:formatIconAction icon="fa-lock" styleClass="unlock" action="/listprojectsadmin?showAll=false"
+                                          info="itracker.web.listprojects.locked.hide.alt"
+                                          textActionKey="itracker.web.listprojects.locked.hide.texttag">
+                     <span class="fa fa-stack fa-1x">
+                        <i class="fa fa-ban fa-stack-2x" aria-hidden="true"></i>
+                        <i class="fa fa-lock fa-stack-1x " aria-hidden="true"></i>
+                     </span>
+                     </it:formatIconAction>
+                  </c:when>
+                  <c:otherwise>
+                     <it:formatIconAction icon="fa-lock" styleClass="lock" action="/listprojectsadmin?showAll=true"
+                                          info="itracker.web.listprojects.locked.show.alt"
+                                          textActionKey="itracker.web.listprojects.locked.show.texttag">
+                     <span class="fa fa-stack fa-1x">
+                        <i class="fa fa-circle fa-stack-2x" aria-hidden="true"></i>
+                        <i class="fa fa-lock fa-stack-1x fa-inverse " aria-hidden="true"></i>
+                     </span>
+                     </it:formatIconAction>
+                  </c:otherwise>
+               </c:choose>
 
-	<c:forEach var="project" varStatus="i" items="${ projects }" step="1">
+               <it:formatIconAction action="editprojectform" targetAction="create" icon="plus" iconClass="fa-2x"
+                                    info="itracker.web.image.create.project.alt"
+                                    textActionKey="itracker.web.image.create.texttag"/>
+               <it:formatIconAction forward="listattachments" icon="paperclip" iconClass="fa-2x"
+                                    info="itracker.web.image.view.attachments.alt"
+                                    textActionKey="itracker.web.image.view.texttag"/>
+            </div>
+         </c:if>
 
-		<tr
-			class="${ i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded' }"
-			style="${ project.active ? '':  project.viewable ? 'color: orange' : 'color: red' }">
+         <h4 class="editColumnTitle"><it:message key="itracker.web.attr.projects"/>:</h4>
 
-			<td>
-				<it:formatImageAction action="editprojectform"
-					paramName="id" paramValue="${ project.id }"
-					targetAction="update" src="/themes/defaulttheme/images/edit.gif"
-					altKey="itracker.web.image.edit.project.alt"
-					arg0="${ project.name }"
-					textActionKey="itracker.web.image.edit.texttag" />
-			</td>
-			<td>
-			</td>
-			<td>${ project.name }</td>
-			<td>${ project.description }</td>
-			<td style="text-align: right; white-space: nowrap"><it:formatDate date="${ project.createDate }" /></td>
-			<td style="text-align: right; white-space: nowrap"><it:formatDate
-				date="${ project.lastModifiedDate }" /></td>
-			<%-- <td align="left">${ project.totalNumberIssues }</td> --%>
-		</tr>
+      </div>
 
-	</c:forEach>
+   </div>
 
-	<tr>
-		<td colspan="6"><html:img height="3" src="../themes/defaulttheme/images/blank.gif" /></td>
-	</tr>
-	<tr><td colspan="6" class="tableNote"><it:message key="itracker.web.admin.listprojects.note"/></td></tr>
+   <div class="row">
+      <div class="col-xs-12">
+         <div class="table-responsive">
+            <c:choose>
+               <c:when test="${not empty projects}">
+                  <table border="0" cellspacing="0" cellpadding="1" width="100%" class="table table-striped">
+                     <thead>
+                     <tr>
+                        <th></th>
+                        <th><it:message key="itracker.web.attr.name"/></th>
+                        <th><it:message key="itracker.web.attr.description"/></th>
+                        <th><it:message key="itracker.web.attr.created"/></th>
+                        <th class="text-right"><it:message key="itracker.web.attr.lastmodified"/></th>
+                           <%-- <td align="left"><it:message key="itracker.web.attr.issues"/></td> --%>
+                     </tr>
+                     </thead>
+                     <tbody>
+                     <c:forEach var="project" varStatus="i" items="${ projects }" step="1">
 
-	</c:when>
-	<c:otherwise>
-		<tr align="left">
-			<td colspan="6" class="listRowUnshaded" style="text-align: center;"><strong><it:message
-				key="itracker.web.error.noprojects" /></strong></td>
-		</tr>
-	</c:otherwise>
-	</c:choose>
-</table>
+                        <tr class="${ project.active ? '':  project.viewable ? 'warning' : 'danger' }">
 
+                           <td>
+                              <it:formatIconAction action="editprojectform"
+                                                   paramName="id" paramValue="${ project.id }"
+                                                   targetAction="update" icon="edit" iconClass="fa-lg"
+                                                   info="itracker.web.image.edit.project.alt"
+                                                   arg0="${ project.name }"
+                                                   textActionKey="itracker.web.image.edit.texttag"/>
+                           </td>
+                           <td>${ project.name }</td>
+                           <td>${ project.description }</td>
+                           <td><it:formatDate date="${ project.createDate }"/></td>
+                           <td class="text-right"><it:formatDate date="${ project.lastModifiedDate }"/></td>
+                              <%-- <td align="left">${ project.totalNumberIssues }</td> --%>
+                        </tr>
+
+                     </c:forEach>
+                     </tbody>
+                     <tfoot>
+                     <tr>
+                        <td colspan="5" class="tableNote"><it:message key="itracker.web.admin.listprojects.note"/></td>
+                     </tr>
+                     </tfoot>
+                  </table>
+               </c:when>
+               <c:otherwise>
+                  <div class="alert alert-info">
+                     <strong><it:message key="itracker.web.error.noprojects"/></strong>
+                  </div>
+               </c:otherwise>
+            </c:choose>
+         </div>
+      </div>
+   </div>
+
+</div>
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
