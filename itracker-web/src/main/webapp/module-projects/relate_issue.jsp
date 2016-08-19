@@ -18,18 +18,15 @@
 
         <html:javascript formName="issueRelationForm"/>
 
-        <logic:messagesPresent>
-          <center>
-            <span class="formError">
-             <html:messages id="error">
-                <bean:write name="error"/><br/>
-             </html:messages>
-            </span>
-          </center>
-          <br>
-        </logic:messagesPresent>
-
-        <br/>
+           <logic:messagesPresent>
+              <div class="alert alert-danger">
+                 <div id="pageErrors" class="text-center">
+                    <html:messages id="error">
+                       <div><bean:write name="error"/></div>
+                    </html:messages>
+                 </div>
+              </div>
+           </logic:messagesPresent>
         <html:hidden property="issueId" value="<%= issueId %>"/>
         <html:hidden property="caller" value="<%= (String) request.getParameter("caller") %>"/>
         <table width="100%" cellspacing="1"  cellspacing="0"  border="0" align="left">

@@ -7,18 +7,18 @@
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 <html:javascript formName="issueForm"/>
+<logic:messagesPresent>
+   <div class="alert alert-danger">
+      <div id="pageErrors" class="text-center">
+         <html:messages id="error">
+            <div><bean:write name="error"/></div>
+         </html:messages>
+      </div>
+   </div>
+</logic:messagesPresent>
 
 <div class="container-fluid maincontent">
-   <logic:messagesPresent>
-      <div class="alert alert-danger">
-         <div id="pageErrors" class="text-center">
-            <html:messages id="error">
-               <div><bean:write name="error"/></div>
-            </html:messages>
-            <br/>
-         </div>
-      </div>
-   </logic:messagesPresent>
+
 
    <html:form action="/editissue" method="post" enctype="multipart/form-data">
       <html:hidden property="id"/>

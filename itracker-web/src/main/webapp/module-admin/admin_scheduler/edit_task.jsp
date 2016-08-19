@@ -1,10 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<%@ page import="org.itracker.model.*" %>
-<%@ page import="org.itracker.web.scheduler.*" %>
-<%@ page import="org.itracker.web.util.*" %>
-
-<% // TODO : move redirect logic to the Action class. 
+<% // TODO : move redirect logic to the Action class.
   //  ScheduledTask task = (ScheduledTask) session.getAttribute(Constants.TASK_KEY);
    // if(task == null) {
 %>
@@ -19,16 +15,14 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
-
 <logic:messagesPresent>
-  <center>
-    <span class="formError">
-     <html:messages id="error">
-        <bean:write name="error"/><br/>
-     </html:messages>
-    </span>
-  </center>
-  <br>
+   <div class="alert alert-danger">
+      <div id="pageErrors" class="text-center">
+         <html:messages id="error">
+            <div><bean:write name="error"/></div>
+         </html:messages>
+      </div>
+   </div>
 </logic:messagesPresent>
       <html:form action="/edittask">
         <html:hidden property="action"/>

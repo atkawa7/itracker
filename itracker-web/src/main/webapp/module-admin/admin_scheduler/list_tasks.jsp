@@ -11,14 +11,13 @@
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 <logic:messagesPresent>
-  <center>
-    <span class="formError">
-     <html:messages id="error">
-        <bean:write name="error"/><br/>
-     </html:messages>
-    </span>
-  </center>
-  <br>
+   <div class="alert alert-danger">
+      <div id="pageErrors" class="text-center">
+         <html:messages id="error">
+            <div><bean:write name="error"/></div>
+         </html:messages>
+      </div>
+   </div>
 </logic:messagesPresent>
 
 <table border="0" cellspacing="0" cellspacing="1" width="100%">

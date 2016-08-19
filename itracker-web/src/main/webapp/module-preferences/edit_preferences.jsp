@@ -13,7 +13,6 @@
          <html:messages id="error">
             <div><bean:write name="error"/></div>
          </html:messages>
-         <br/>
       </div>
    </div>
 </logic:messagesPresent>
