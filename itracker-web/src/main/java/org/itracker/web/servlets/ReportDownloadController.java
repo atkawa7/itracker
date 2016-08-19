@@ -70,7 +70,7 @@ public class ReportDownloadController extends GenericController {
 
             response.setHeader("Content-Disposition", "attachment; filename=report" + report.getId() + "\"");
             ServletOutputStream out = response.getOutputStream();
-            //out.write(reportService.getReportFile(reportId));
+            out.write(report.getFileData());
             out.close();
         } catch (IOException ioe) {
             logger.info("Unable to display report.", ioe);

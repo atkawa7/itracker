@@ -63,6 +63,7 @@ public class DownloadReportAction extends ItrackerBaseAction {
                     response.setHeader("Content-Disposition", "attachment; filename=\"ITracker_report_" + report.getId() + ".def\"");
                     ServletOutputStream out = response.getOutputStream();
                     log.debug("Attempting export for: " + report);
+                    out.write(report.getFileData());
                     out.flush();
                     out.close();
                     return null;

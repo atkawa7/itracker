@@ -21,10 +21,8 @@ package org.itracker.web.actions.admin.report;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.itracker.model.Report;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ReportService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
-import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
@@ -34,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+@Deprecated
 public class ExportReportAction extends ItrackerBaseAction {
     private static final Logger log = Logger.getLogger(ExportReportAction.class);
 
