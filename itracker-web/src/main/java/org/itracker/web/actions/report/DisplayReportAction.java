@@ -86,20 +86,17 @@ public class DisplayReportAction extends ItrackerBaseAction {
                 if (projectIds != null && projectIds.length > 0) {
                     // This wasn't a regular search.  So instead, take all the selected projects and find all the
                     // issues for them, check which ones the user can see, and then create a new array of issues
-                    List<Issue> reportDataList = new ArrayList<Issue>();
+                    List<Issue> reportDataList = new ArrayList<>();
 
-                    Iterator<Issue> issuesIt = null;
-                    Issue currentIssue = null;
                     List<Issue> issues;
-                    for (int i = 0; i < projectIds.length; i++) {
-                        issues = issueService.getIssuesByProjectId(projectIds[i]);
-                        issuesIt = issues.iterator();
-                        while (issuesIt.hasNext()) {
-                            currentIssue = issuesIt.next();
-                            reportDataList.add(currentIssue);
+                   for (Integer projectId : projectIds) {
+                      issues = issueService.getIssuesByProjectId(projectId);
+                      for (Issue issue: issues) {
+                         if (LoginUtilities.canViewIssue(issue))
+                             reportDataList.add(issue);
 
-                        }
-                    }
+                      }
+                   }
                     reportingIssues = reportDataList;
                     Collections.sort(reportingIssues, Issue.ID_COMPARATOR);
 
