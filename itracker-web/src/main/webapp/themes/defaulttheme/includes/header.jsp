@@ -28,7 +28,7 @@
     <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT"/>
     <meta http-equiv="Pragma" content="no-cache"/>
 
-    <script src="${contextPath}/webjars/jquery/1.9.0/jquery.min.js" ></script>
+    <script src="${contextPath}/webjars/jquery/2.2.4/jquery.min.js" ></script>
     <script src="${contextPath}/themes/defaulttheme/includes/bootstrap/bootstrap.min.js" ></script>
     <script src="${contextPath}/webjars/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js" ></script>
 
