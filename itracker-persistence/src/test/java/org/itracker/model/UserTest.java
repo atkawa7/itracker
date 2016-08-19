@@ -7,6 +7,7 @@ import org.junit.Test;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import static junit.framework.Assert.assertEquals;
 import static org.itracker.Assert.assertEntityComparator;
 import static org.itracker.Assert.assertEntityComparatorEquals;
 import static org.junit.Assert.*;
@@ -23,6 +24,47 @@ public class UserTest {
             assertTrue(true);
         }
     }
+
+   @Test
+   public void testGetFullName() {
+      user.setEmail("jerrycong@hotmail.com");
+      user.setFirstName("jerry");
+      user.setLastName("jun");
+      assertEquals("fullName", "jerry jun", user.getFullName());
+      assertEquals("fullName", user.getEmailAddress().getPersonal(), user.getFullName());
+
+      user.setFirstName("");
+      assertEquals("fullName", user.getLastName(), user.getFullName());
+      assertEquals("fullName", user.getEmailAddress().getPersonal(), user.getFullName());
+      user.setFirstName(null);
+      assertEquals("fullName", user.getLastName(), user.getFullName());
+      assertEquals("fullName", user.getEmailAddress().getPersonal(), user.getFullName());
+
+      user.setFirstName("jerry");
+      user.setLastName("");
+      assertEquals("fullName", user.getFirstName(), user.getFullName());
+      assertEquals("fullName", user.getEmailAddress().getPersonal(), user.getFullName());
+      user.setLastName(null);
+      assertEquals("fullName", user.getFirstName(), user.getFullName());
+      assertEquals("fullName", user.getEmailAddress().getPersonal(), user.getFullName());
+
+      user.setFirstName("");
+      user.setLastName("");
+      assertEquals("fullName", user.getLogin(), user.getFullName());
+      assertEquals("fullName", user.getEmailAddress().getPersonal(), user.getFullName());
+      user.setLastName(null);
+      assertEquals("fullName", user.getLogin(), user.getFullName());
+      assertEquals("fullName", user.getEmailAddress().getPersonal(), user.getFullName());
+      user.setLastName("");
+      user.setFirstName(null);
+      assertEquals("fullName", user.getLogin(), user.getFullName());
+      assertEquals("fullName", user.getEmailAddress().getPersonal(), user.getFullName());
+      user.setLastName(null);
+      assertEquals("fullName", user.getLogin(), user.getFullName());
+      assertEquals("fullName", user.getEmailAddress().getPersonal(), user.getFullName());
+
+
+   }
 
     @Test
     public void testGetEmailAddress() {
