@@ -23,8 +23,9 @@ final public class ITrackerUserDetails implements UserDetails {
     private final boolean credentialsNonExpired;
     private final boolean accountNonLocked;
     private final boolean accountNonExpired;
+   private final String displayName;
 
-    public ITrackerUserDetails(User model, Collection<Permission> permissions) {
+   public ITrackerUserDetails(User model, Collection<Permission> permissions) {
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
         for (Permission p : permissions) {
@@ -34,13 +35,16 @@ final public class ITrackerUserDetails implements UserDetails {
                 if (p.getPermissionType() == PermissionType.PRODUCT_ADMIN) {
                     authorities.add(new SimpleGrantedAuthority(p.getPermissionType().name()));
                 }
-                authorities.add(new SimpleGrantedAuthority(
-                        p.getPermissionType().name(p.getProject())));
+                else if (p.getPermissionType() == PermissionType.ISSUE_VIEW_ALL) {
+                    authorities.add(new SimpleGrantedAuthority(p.getPermissionType().name()));
+                }
+                authorities.add(new SimpleGrantedAuthority(p.getPermissionType().name(p.getProject())));
             }
         }
 
         username = model.getLogin();
         password = model.getPassword();
+        displayName = model.getFullName();
         credentialsNonExpired = StringUtils.isNotEmpty(model.getPassword());
         accountNonLocked = model.getStatus() != UserUtilities.STATUS_LOCKED;
         accountNonExpired = model.getStatus() == UserUtilities.STATUS_ACTIVE;
@@ -63,7 +67,11 @@ final public class ITrackerUserDetails implements UserDetails {
         return username;
     }
 
-    @Override
+    public String getDisplayName() {
+      return displayName;
+    }
+
+   @Override
     public boolean isAccountNonExpired() {
         return accountNonExpired;
     }

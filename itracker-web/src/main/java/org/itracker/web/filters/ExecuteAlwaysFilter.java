@@ -212,6 +212,11 @@ public class ExecuteAlwaysFilter implements Filter {
 
     }
 
+   /**
+    * @deprecated this should not be necessary anymore (default.header.jsp).
+    * @param request
+    */
+   @Deprecated
     private static void setupCommonReqAttributesEx(HttpServletRequest request) {
         final Map<Integer, Set<PermissionType>> permissions = RequestHelper
                 .getUserPermissions(request.getSession());
