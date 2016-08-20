@@ -20,10 +20,10 @@
    <tr>
       <td class="editColumnTitle" colspan="6"><it:message key="itracker.web.attr.workflowscripts"/>:</td>
       <td align="right">
-         <it:formatImageAction action="editworkflowscriptform" targetAction="create"
-                               src="/themes/defaulttheme/images/create.gif"
-                               altKey="itracker.web.image.create.workflowscript.alt"
-                               textActionKey="itracker.web.image.create.texttag"/>
+         <it:formatIconAction action="editworkflowscriptform" targetAction="create"
+                              icon="plus" iconClass="fa-2x"
+                              info="itracker.web.image.create.workflowscript.alt"
+                              textActionKey="itracker.web.image.create.texttag"/>
       </td>
    </tr>
    <tr align="left" class="listHeading">
@@ -47,14 +47,16 @@
       </c:choose>
 
       <td>
-         <it:formatImageAction action="editworkflowscriptform" paramName="id" paramValue="${aScript.id}"
-                               targetAction="update" src="/themes/defaulttheme/images/edit.gif"
-                               altKey="itracker.web.image.edit.workflowscript.alt" arg0="${aScript.name}"
-                               textActionKey="itracker.web.image.edit.texttag"/>
-         <it:formatImageAction action="removeworkflowscript" paramName="id" paramValue="${aScript.id}"
-                               src="/themes/defaulttheme/images/delete.gif"
-                               altKey="itracker.web.image.delete.workflowscript.alt" arg0="${aScript.name}"
-                               textActionKey="itracker.web.image.delete.texttag"/>
+         <it:formatIconAction action="editworkflowscriptform" paramName="id"
+                              paramValue="${aScript.id}" targetAction="update" arg0="${aScript.name}"
+                              icon="edit" iconClass="fa-lg"
+                              info="itracker.web.image.edit.workflowscript.alt"
+                              textActionKey="itracker.web.image.edit.texttag"/>
+         <it:formatIconAction action="removeworkflowscript" paramName="id"
+                              paramValue="${aScript.id}" arg0="${aScript.name}"
+                              icon="remove" iconClass="fa-lg" styleClass="deleteButton"
+                              info="itracker.web.image.delete.workflowscript.alt"
+                              textActionKey="itracker.web.image.delete.texttag"/>
       </td>
       <td></td>
       <td>${aScript.name}</td>

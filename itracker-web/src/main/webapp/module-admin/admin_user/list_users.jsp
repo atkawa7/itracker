@@ -23,9 +23,9 @@
       </td>
       <c:if test="${allowProfileCreation}">
          <td align="right">
-            <it:formatImageAction action="edituserform" targetAction="create"
-                                  src="/themes/defaulttheme/images/create.gif"
-                                  altKey="itracker.web.image.create.user.alt"
+            <it:formatIconAction action="edituserform" targetAction="create"
+                                  icon="plus" iconClass="fa-2x"
+                                  info="itracker.web.image.create.user.alt"
                                   textActionKey="itracker.web.image.create.texttag"/>
          </td>
       </c:if>
@@ -42,44 +42,52 @@
    </tr>
 
    <c:forEach items="${users}" var="aUser" varStatus="i">
-      <c:set var="style" value=""/>
+      <c:set var="class" value=""/>
       <c:if test="${aUser.statusLocked}">
-         <c:set var="style" value="color: red;"/>
-      </c:if>
-      <c:if test="${aUser.regisrationTypeSelf}">
-         <c:set var="style" value="${style}font-style: italic;"/>
+         <c:set var="class" value="text-danger"/>
       </c:if>
 
       <c:choose>
          <c:when test="${i.count % 2 == 1}">
-            <tr align="right" class="listRowUnshaded" style="${style}">
+            <tr align="right" class="listRowUnshaded ${class}">
          </c:when>
          <c:otherwise>
-            <tr align="right" class="listRowShaded" style="${style}">
+            <tr align="right" class="listRowShaded ${class}">
          </c:otherwise>
       </c:choose>
 
       <td>
-         <it:formatImageAction action="edituserform" paramName="id" paramValue="${aUser.user.id}" targetAction="update"
-                               src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.user.alt"
-                               arg0="${aUser.user.login}" textActionKey="itracker.web.image.edit.texttag"/>
+         <it:formatIconAction action="edituserform" paramName="id"
+                              paramValue="${aUser.user.id}" targetAction="update"
+                              icon="edit" iconClass="fa-lg"
+                              info="itracker.web.image.edit.user.alt"
+                              arg0="${aUser.user.login}" textActionKey="itracker.web.image.edit.texttag"/>
          <c:choose>
             <c:when test="${aUser.statusLocked}">
-               <it:formatImageAction action="unlockuser" paramName="id" paramValue="${aUser.user.id}"
-                                     src="/themes/defaulttheme/images/unlock.gif"
-                                     altKey="itracker.web.image.unlock.user.alt" arg0="${aUser.user.login}"
-                                     textActionKey="itracker.web.image.unlock.texttag"/>
+               <it:formatIconAction action="unlockuser" paramName="id" paramValue="${aUser.user.id}"
+                                    icon="key" iconClass="fa-lg text-success"
+                                    info="itracker.web.image.unlock.user.alt"
+                                    arg0="${aUser.user.login}"
+                                    textActionKey="itracker.web.image.unlock.texttag"/>
             </c:when>
             <c:otherwise>
-               <it:formatImageAction action="lockuser" paramName="id" paramValue="${aUser.user.id}"
-                                     src="/themes/defaulttheme/images/lock.gif"
-                                     altKey="itracker.web.image.lock.user.alt" arg0="${aUser.user.login}"
-                                     textActionKey="itracker.web.image.lock.texttag"/>
+               <it:formatIconAction action="lockuser" paramName="id" paramValue="${aUser.user.id}"
+                                    icon="lock" iconClass="fa-lg text-danger"
+                                    info="itracker.web.image.lock.user.alt" arg0="${aUser.user.login}"
+                                    textActionKey="itracker.web.image.lock.texttag"/>
             </c:otherwise>
          </c:choose>
       </td>
       <td></td>
-      <td>${aUser.user.login}</td>
+      <c:set var="tdClass" value="${class}" />
+      <c:if test="${aUser.regisrationTypeSelf}">
+         <c:set var="tdClass" value="${tdClass} text-warning"/>
+      </c:if>
+      <c:set var="tdStyle" value="" />
+      <c:if test="${aUser.regisrationTypeSelf}">
+         <c:set var="tdStyle" value="font-style: italic"/>
+      </c:if>
+      <td class="${tdClass}" style="${tdStyle}">${aUser.user.login}</td>
       <td>${aUser.user.firstName} ${aUser.user.lastName}</td>
       <td>${aUser.user.email}</td>
       <td align="left">

@@ -48,16 +48,17 @@
                ${userStatus}
             <c:choose>
                <c:when test="${ edituser.status != 1 }">
-                  <it:formatImageAction action="unlockuser" paramName="id" paramValue="${edituser.id}"
-                                        src="/themes/defaulttheme/images/unlock.gif"
-                                        altKey="itracker.web.image.unlock.user.alt" arg0="${edituser.login}"
-                                        textActionKey="itracker.web.image.unlock.texttag"/>
+                  <it:formatIconAction action="unlockuser" paramName="id" paramValue="${edituser.id}"
+                                       icon="lock"
+                                       info="itracker.web.image.unlock.user.alt" arg0="${edituser.login}"
+                                       textActionKey="itracker.web.image.unlock.texttag">
+                  </it:formatIconAction>
                </c:when>
                <c:otherwise>
-                  <it:formatImageAction action="lockuser" paramName="id" paramValue="${edituser.id}"
-                                        src="/themes/defaulttheme/images/lock.gif"
-                                        altKey="itracker.web.image.lock.user.alt" arg0="${edituser.login}"
-                                        textActionKey="itracker.web.image.lock.texttag"/>
+                  <it:formatIconAction action="lockuser" paramName="id" paramValue="${edituser.id}"
+                                       icon="lock"
+                                       info="itracker.web.image.lock.user.alt" arg0="${edituser.login}"
+                                       textActionKey="itracker.web.image.lock.texttag"/>
                </c:otherwise>
             </c:choose></td>
       </tr>

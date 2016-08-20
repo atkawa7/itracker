@@ -42,20 +42,20 @@
 
       <tr id="project.${i.count}" class="${ i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded' }">
          <td nowrap>
-            <it:formatImageAction forward="listissues" paramName="projectId" paramValue="${ project.id }"
-                                  src="/themes/defaulttheme/images/view.gif"
-                                  altKey="itracker.web.image.view.project.alt" arg0="${ project.name }"
-                                  textActionKey="itracker.web.image.view.texttag"/>
+            <it:formatIconAction forward="listissues" paramName="projectId" paramValue="${ project.id }"
+                                 icon="tasks" iconClass="fa-lg"
+                                 info="itracker.web.image.view.project.alt" arg0="${ project.name }"
+                                 textActionKey="itracker.web.image.view.texttag"/>
             <c:if test="${ project.active && project.canCreate }">
-               <it:formatImageAction forward="createissue" paramName="projectId" paramValue="${ project.id }"
-                                     src="/themes/defaulttheme/images/create.gif"
-                                     altKey="itracker.web.image.create.issue.alt" arg0="${ project.name }"
-                                     textActionKey="itracker.web.image.create.texttag"/>
+               <it:formatIconAction forward="createissue" paramName="projectId" paramValue="${ project.id }"
+                                    icon="plus" iconClass="fa-lg"
+                                    info="itracker.web.image.create.issue.alt" arg0="${ project.name }"
+                                    textActionKey="itracker.web.image.create.texttag"/>
             </c:if>
-            <it:formatImageAction forward="searchissues" paramName="projectId" paramValue="${ project.id }"
-                                  src="/themes/defaulttheme/images/search.gif"
-                                  altKey="itracker.web.image.search.issue.alt" arg0="${ project.name }"
-                                  textActionKey="itracker.web.image.search.texttag"/>
+            <it:formatIconAction forward="searchissues" paramName="projectId" paramValue="${ project.id }"
+                                 icon="search" iconClass="fa-lg"
+                                 info="itracker.web.image.search.issue.alt" arg0="${ project.name }"
+                                 textActionKey="itracker.web.image.search.texttag"/>
          </td>
          <td></td>
          <td>${ project.name }</td>

@@ -5,9 +5,9 @@
 <%@ page import="org.itracker.model.util.IssueUtilities" %>
 <%@ page import="org.itracker.model.util.ProjectUtilities" %>
 <%@ page import="org.itracker.model.util.ReportUtilities" %>
+<%@ page import="org.itracker.model.util.UserUtilities" %>
 <%@ page import="org.itracker.services.ReportService" %>
 <%@ page import="org.itracker.services.UserService" %>
-<%@ page import="org.itracker.model.util.UserUtilities" %>
 <%@ page import="org.itracker.web.util.Constants" %>
 <%@ page import="org.itracker.web.util.LoginUtilities" %>
 <%@ page import="org.itracker.web.util.RequestHelper" %>
@@ -255,30 +255,30 @@
               <tr align="right" class="<%= (i % 2 == 1 ? "listRowShaded" : "listRowUnshaded" ) %>">
                 <td style="white-space: nowrap">
 
-                  <it:formatImageAction forward="viewissue"
+                  <it:formatIconAction forward="viewissue"
                                         module="/module-projects"
                                         paramName="id"
                                         paramValue="<%= issues.get(i).getId() %>"
-                                        src="/themes/defaulttheme/images/view.gif"
-                                        altKey="itracker.web.image.view.issue.alt"
+                                        icon="tasks" iconClass="fa-lg"
+                                        info="itracker.web.image.view.issue.alt"
                                         arg0="<%= issues.get(i).getId() %>"
                                         caller="searchissue"
                                         textActionKey="itracker.web.image.view.texttag"/>
 
                   <% if(UserUtilities.hasPermission(permissions, issues.get(i).getProject().getId(), UserUtilities.PERMISSION_EDIT)) { %>
-                        <it:formatImageAction forward="editissue"
-                                              module="/module-projects"
-                                              paramName="id"
-                                              paramValue="<%= issues.get(i).getId() %>"
-                                              caller="searchissue"
-                                              src="/themes/defaulttheme/images/edit.gif"
-                                              altKey="itracker.web.image.edit.issue.alt"
-                                              arg0="<%= issues.get(i).getId() %>"
-                                              textActionKey="itracker.web.image.edit.texttag"/>
+                        <it:formatIconAction forward="editissue"
+                                             module="/module-projects"
+                                             paramName="id"
+                                             paramValue="<%= issues.get(i).getId() %>"
+                                             caller="searchissue"
+                                             icon="edit" iconClass="fa-lg"
+                                             info="itracker.web.image.edit.issue.alt"
+                                             arg0="<%= issues.get(i).getId() %>"
+                                             textActionKey="itracker.web.image.edit.texttag"/>
                   <% } %>
                   <% if(! IssueUtilities.hasIssueNotification(issues.get(i), currUserId)) { %>
                     <span class="HTTP_POST">
-                        <it:formatImageAction forward="watchissue" paramName="id" paramValue="<%= issues.get(i).getId() %>" caller="index" src="/themes/defaulttheme/images/watch.gif" altKey="itracker.web.image.watch.issue.alt" arg0="<%= issues.get(i).getId() %>" textActionKey="itracker.web.image.watch.texttag"/>
+                        <it:formatIconAction forward="watchissue" paramName="id" paramValue="<%= issues.get(i).getId() %>" caller="index" icon="bell" iconClass="fa-lg" info="itracker.web.image.watch.issue.alt" arg0="<%= issues.get(i).getId() %>" textActionKey="itracker.web.image.watch.texttag"/>
                     </span>
                   <% } %>
                 </td>

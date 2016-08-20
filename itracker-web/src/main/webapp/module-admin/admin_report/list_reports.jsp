@@ -23,9 +23,9 @@
    <tr>
       <td class="editColumnTitle" colspan="6"><it:message key="itracker.web.attr.reports"/>:</td>
       <td style="text-align: right">
-         <it:formatImageAction action="editreportform" targetAction="create"
-                               src="/themes/defaulttheme/images/create.gif"
-                               altKey="itracker.web.image.create.report.alt"
+         <it:formatIconAction action="editreportform" targetAction="create"
+                               icon="plus" iconClass="fa-2x"
+                               info="itracker.web.image.create.report.alt"
                                textActionKey="itracker.web.image.create.texttag"/>
       </td>
    </tr>
@@ -50,21 +50,18 @@
       </c:choose>
 
       <td>
-         <it:formatImageAction action="editreportform" paramName="id" paramValue="${report.id}" targetAction="update"
-                               src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.report.alt"
-                               arg0="${report.name}" textActionKey="itracker.web.image.edit.texttag"/>
-         <it:formatImageAction action="downloadreport" paramName="id" paramValue="${report.id}"
-                               src="/themes/defaulttheme/images/download.png"
-                               altKey="itracker.web.image.download.report.alt" arg0="${report.name}"
-                               textActionKey="itracker.web.image.download.texttag"/>
-         <%--<it:formatImageAction action="exportreport" paramName="id" paramValue="${report.id}"--%>
-                               <%--src="/themes/defaulttheme/images/export.png"--%>
-                               <%--altKey="itracker.web.image.export.report.alt" arg0="${report.name}"--%>
-                               <%--textActionKey="itracker.web.image.export.texttag"/>--%>
-         <it:formatImageAction action="removereport" paramName="id" paramValue="${report.id}"
-                               src="/themes/defaulttheme/images/delete.gif"
-                               altKey="itracker.web.image.delete.report.alt" arg0="${report.name}"
-                               textActionKey="itracker.web.image.delete.texttag"/>
+         <it:formatIconAction action="editreportform" paramName="id" paramValue="${report.id}" targetAction="update"
+                              icon="edit" info="itracker.web.image.edit.report.alt" iconClass="fa-lg"
+                              arg0="${report.name}" textActionKey="itracker.web.image.edit.texttag"/>
+         <it:formatIconAction action="downloadreport" paramName="id" paramValue="${report.id}"
+                              icon="download" info="itracker.web.image.download.report.alt"
+                              iconClass="fa-lg"
+                              arg0="${report.name}"
+                              textActionKey="itracker.web.image.download.texttag"/>
+         <it:formatIconAction action="removereport" paramName="id" paramValue="${report.id}"
+                              icon="remove" iconClass="fa-lg"
+                              info="itracker.web.image.delete.report.alt" arg0="${report.name}"
+                              textActionKey="itracker.web.image.delete.texttag"/>
       </td>
       <td></td>
       <td>${report.name}</td>

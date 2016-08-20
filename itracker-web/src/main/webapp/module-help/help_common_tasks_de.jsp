@@ -17,7 +17,7 @@
 <p class="help">
     Um einen neuen Eintrag anzulegen, müssen Sie zuerst die "Projekt Liste" im
     Hauptmenü auswählen. Dort können Sie über den Knopf "Neuer Eintrag"
-    (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/create.gif"/>)
+    (<i class="fa fa-plus" aria-hidden="true"></i>)
     neben dem gewünschten Projekt den Eintrag erstellen.<br/>
     <br/>
     Sie müssen dabei die Rechte haben, in dem Projekt neue Einträge anlegen zu können.
@@ -32,18 +32,18 @@
     Es gibt mehrere Wege, einen bestehenden Eintrag zu bearbeiten.<br/>
     <br/>
     Ist der Eintrag auf der myITracker Seite sichtbar, können Sie auf den "Bearbeiten" Knopf
-    (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/edit.gif"/>) neben dem
+    (<i class="fa fa-edit" aria-hidden="true"></i>) neben dem
     Eintrag klicken.<br/>
     <br/>
     Wenn Sie sich gerade die Details eines Eintrags ansehen, wird der "Bearbeiten" Knopf
-    (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/edit.gif"/>) auf der Seite angzeigt.<br/>
+    (<i class="fa fa-edit" aria-hidden="true"></i>) auf der Seite angzeigt.<br/>
     <br/>
     Um einen beliebigen Eintrag zu bearbeiten, können Sie zuerst die "Projekt Liste"
     im Hauptmenü anwählen. Von da aus können Sie den "Einträge ansehen" Knopf
-    (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/view.gif"/>)
+    (<i class="fa fa-tasks" aria-hidden="true"></i>)
     neben dem gewünschten Projekt betätigen, um eine Liste der Einträge zu erhalten.
     In dieser Liste können Sie dann neben dem gewünschten Eintrag auf den
-    "Bearbeiten" Knopf (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/edit.gif"/>) klicken.<br/>
+    "Bearbeiten" Knopf (<i class="fa fa-edit" aria-hidden="true"></i>) klicken.<br/>
     <br/>
     Sie müssen dabei die Rechte haben, in dem Projekt bestehende Einträge bearbeiten zu dürfen.<br/>
 </p>
@@ -55,7 +55,7 @@
 <p class="help">
     Um die Einträge für ein Projekt aufzulisten, müssen Sie zuerst die "Projekt Liste"
     im Hauptmenü anwählen. Von dieser Liste aus können Sie den "Einträge ansehen" Knopf
-    (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/view.gif"/>)
+    (<i class="fa fa-tasks" aria-hidden="true"></i>)
     neben dem gewünschten Projekt betätigen, um eine Liste der Einträge zu erhalten.
     Von dieser Liste aus, können Sie die Details eines Eintrags ansehen, auswählen, dass Sie
     an dem Eintrag interessiert sind (nur falls Sie noch keine Benachrichtigungs E-Mails für
@@ -76,7 +76,7 @@
     haben, können Sie über den "Suchen" Knopf mit der Suche beginnen.
     <br/>
     Sie können auch eine detailliertere Suche innerhalb eines Projekts durchführen, indem Sie
-    den "Suchen" Knopf (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/search.gif"/>)
+    den "Suchen" Knopf (<i class="fa fa-search" aria-hidden="true"></i>)
     eines bestimmten Projekts in der "Projekt Liste" Seite betätigen.
     <br/>
     Von der Liste mit den Suchergebnissen aus können Sie Einträge ansehen oder bearbeiten, sofern

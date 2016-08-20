@@ -11,10 +11,9 @@
 	<tr>
 		<td class="editColumnTitle" colspan="7"><it:message
 			key="itracker.web.attr.attachments" />:</td>
-		<td align="right"><it:formatImageAction
-			action="exportattachments"
-			src="/themes/defaulttheme/images/export.png"
-			altKey="itracker.web.image.export.attachments.alt"
+		<td align="right"><it:formatIconAction
+			action="exportattachments" icon="download" iconClass="fa-2x"
+			info="itracker.web.image.export.attachments.alt"
 			textActionKey="itracker.web.image.export.texttag" /></td>
 	</tr>
 	<tr align="left" class="listHeading">
@@ -38,10 +37,10 @@
 			</c:otherwise>
 		</c:choose>
 
-		<td><it:formatImageAction action="removeattachment"
+		<td><it:formatIconAction action="removeattachment"
 			paramName="id" paramValue="${attachment.id}"
-			src="/themes/defaulttheme/images/delete.gif"
-			altKey="itracker.web.image.delete.attachment.alt"
+			icon="remove" styleClass="deleteButton" iconClass="fa-lg"
+			info="itracker.web.image.delete.attachment.alt"
 			textActionKey="itracker.web.image.delete.texttag" /></td>
 		<td></td>
 		<td><c:out value="${attachment.issue.id}" /></td>

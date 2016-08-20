@@ -24,7 +24,10 @@
   <tr>
     <td class="editColumnTitle" colspan="8"><it:message key="itracker.web.attr.tasks"/>: <span class="listRowText">(<it:message key="itracker.web.admin.listtasks.lastran"/> <%--<it:formatDate date="<%= Scheduler.getLastRun() %>" format="full"/>)--%></span></td>
     <td align="right">
-      <it:formatImageAction action="edittaskform" targetAction="create" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.task.alt" textActionKey="itracker.web.image.create.texttag"/>
+      <it:formatIconAction action="edittaskform" targetAction="create"
+                           icon="edit" iconClass="fa-lg"
+                           info="itracker.web.image.create.task.alt"
+                           textActionKey="itracker.web.image.create.texttag"/>
     </td>
   </tr>
   <tr align="left" class="listHeading">
