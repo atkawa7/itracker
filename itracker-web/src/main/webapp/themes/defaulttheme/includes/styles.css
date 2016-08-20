@@ -352,6 +352,10 @@ table.portalhomeMain {
     font-size: small;
 }
 
+.panel-heading .btn-group.pull-right,
+.panel-heading .btn.pull-right {
+   margin: -10px 0;
+}
 /**
 Calender Styles
 *********************/
