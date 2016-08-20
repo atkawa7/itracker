@@ -101,7 +101,7 @@
         <maven-wagon-ssh-plugin.version>2.10</maven-wagon-ssh-plugin.version>
         <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
-        <maven-build-helper-plugin.version>1.9.1</maven-build-helper-plugin.version>
+        <maven-build-helper-plugin.version>1.12</maven-build-helper-plugin.version>
 
         <tomcat.deploy.server>localhost</tomcat.deploy.server>
         <tomcat.deploy.url>http://localhost:8080/manager</tomcat.deploy.url>
