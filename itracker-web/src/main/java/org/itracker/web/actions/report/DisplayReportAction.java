@@ -124,7 +124,6 @@ public class DisplayReportAction extends ItrackerBaseAction {
             if (null == reportId) {
                 log.debug("Invalid report id: " + reportId + " requested.");
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidreport"));
-                throw new ReportException();
             } else if (ReportUtilities.REPORT_EXPORT_XML == reportId.intValue()) {
                 log.debug("Issue export requested.");
 
@@ -132,9 +131,9 @@ public class DisplayReportAction extends ItrackerBaseAction {
 
                 if (!ImportExportUtilities.exportIssues(reportingIssues, config, request, response)) {
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.system"));
-                    return mapping.getInputForward();
+                } else {
+                   return null;
                 }
-                return null;
             } else if (reportId.intValue() > 0) {
                 log.debug("Defined report (" + reportId + ") requested.");
 
