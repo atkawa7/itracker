@@ -202,11 +202,12 @@
                             class="form-control"><bean:write name="createIssueForm" property="history"/></textarea>
          </div>
       </div>
-
-      <div>
-         <html:submit styleClass="btn btn-primary btn-block" altKey="itracker.web.button.update.alt"
-                      titleKey="itracker.web.button.update.alt"><it:message
-                 key="itracker.web.button.create"/></html:submit><br/><br/>
+      <div class="row">
+         <div class="col-sm-12">
+            <html:submit styleClass="btn btn-primary btn-block" altKey="itracker.web.button.update.alt"
+                         titleKey="itracker.web.button.update.alt">
+               <it:message key="itracker.web.button.create"/></html:submit>
+         </div>
       </div>
    </html:form>
 </div>

@@ -26,38 +26,64 @@
       <html:hidden property="prevStatus"/>
       <html:hidden property="caller"/>
 
-
       <div class="row">
-         <div class="col-sm-2 col-sm-push-6">
+         <div class="col-xs-4 col-xs-push-8">
             <div class="form-group">
-               <label><it:message key="itracker.web.attr.actions"/>:</label>
-               <div id="actions" class="actions form-control-static">
+               <label class="sr-only"><it:message key="itracker.web.attr.actions"/>:</label>
+               <div id="actions" class="actions form-control-static text-right">
+                  <div class="issue-nav pull-right">
+                     <c:if test="${not empty previousIssue}">
+                        <it:formatIconAction action="view_issue"
+                                             module="/module-projects"
+                                             paramName="id" styleClass="previous"
+                                             paramValue="${previousIssue.id}"
+                                             caller="editissue"
+                                             icon="chevron-circle-left" iconClass="fa-lg"
+                                             info="itracker.web.image.previous.issue.alt"
+                                             arg0="${previousIssue.id}"
+                                             textActionKey="itracker.web.image.previous.texttag"/>
+                     </c:if>
+                     <c:choose>
+                        <c:when test="${not empty nextIssue}">
+                           <it:formatIconAction action="view_issue"
+                                                module="/module-projects"
+                                                paramName="id"
+                                                paramValue="${nextIssue.id}"
+                                                caller="editissue" styleClass="next"
+                                                icon="chevron-circle-right" iconClass="fa-lg"
+                                                info="itracker.web.image.next.issue.alt"
+                                                arg0="${nextIssue.id}"
+                                                textActionKey="itracker.web.image.next.texttag"/>
+                        </c:when>
+                     </c:choose>
+                  </div>
+
                   <c:if test="${!hasHardIssueNotification}">
                      <c:if test="${hasIssueNotification}">
-                        <span class="HTTP_POST">
-                            <it:formatIconAction forward="watchissue"
-                                                 module="/module-projects"
-                                                 paramName="id"
-                                                 paramValue="${issue.id}"
-                                                 caller="editissue" styleClass="watch"
-                                                 icon="bell-slash" iconClass="fa-lg"
-                                                 info="itracker.web.image.watch.issue.alt"
-                                                 arg0="${issue.id}"
-                                                 textActionKey="itracker.web.image.watch.texttag"/>
-                        </span>
+                     <span class="HTTP_POST">
+                         <it:formatIconAction forward="watchissue"
+                                              module="/module-projects"
+                                              paramName="id"
+                                              paramValue="${issue.id}"
+                                              caller="editissue" styleClass="watch"
+                                              icon="bell-slash" iconClass="fa-lg"
+                                              info="itracker.web.image.watch.issue.alt"
+                                              arg0="${issue.id}"
+                                              textActionKey="itracker.web.image.watch.texttag"/>
+                     </span>
                      </c:if>
                      <c:if test="${!hasIssueNotification}">
-                        <span class="HTTP_POST">
-                            <it:formatIconAction forward="watchissue"
-                                                 module="/module-projects"
-                                                 paramName="id"
-                                                 paramValue="${issue.id}"
-                                                 caller="editissue" styleClass="watch"
-                                                 icon="bell" iconClass="fa-lg"
-                                                 info="itracker.web.image.watch.issue.alt"
-                                                 arg0="${issue.id}"
-                                                 textActionKey="itracker.web.image.watch.texttag"/>
-                        </span>
+                     <span class="HTTP_POST">
+                         <it:formatIconAction forward="watchissue"
+                                              module="/module-projects"
+                                              paramName="id"
+                                              paramValue="${issue.id}"
+                                              caller="editissue" styleClass="watch"
+                                              icon="bell" iconClass="fa-lg"
+                                              info="itracker.web.image.watch.issue.alt"
+                                              arg0="${issue.id}"
+                                              textActionKey="itracker.web.image.watch.texttag"/>
+                     </span>
                      </c:if>
                   </c:if>
 
@@ -92,66 +118,43 @@
                                           textActionKey="itracker.web.image.create.texttag"/>
                   </c:if>
 
-                  <div class="pull-right">
-                     <c:if test="${not empty previousIssue}">
-                        <it:formatIconAction action="view_issue"
-                                             module="/module-projects"
-                                             paramName="id" styleClass="previous"
-                                             paramValue="${previousIssue.id}"
-                                             caller="viewissue"
-                                             icon="chevron-circle-left" iconClass="fa-lg"
-                                             info="itracker.web.image.previous.issue.alt"
-                                             arg0="${previousIssue.id}"
-                                             textActionKey="itracker.web.image.previous.texttag"/>
-                     </c:if>
-                     <c:choose>
-                        <c:when test="${not empty nextIssue}">
-                           <it:formatIconAction action="view_issue"
-                                                module="/module-projects"
-                                                paramName="id"
-                                                paramValue="${nextIssue.id}"
-                                                caller="viewissue" styleClass="next"
-                                                icon="chevron-circle-right" iconClass="fa-lg"
-                                                info="itracker.web.image.next.issue.alt"
-                                                arg0="${nextIssue.id}"
-                                                textActionKey="itracker.web.image.next.texttag"/>
-                        </c:when>
-                     </c:choose>
-                  </div>
+
                </div>
-               <div><label><it:message key="itracker.web.attr.project"/>:</label>
-                  <p class="form-control-static">
-                     <it:formatIconAction forward="listissues"
-                                          module="/module-projects"
-                                          paramName="projectId"
-                                          paramValue="${project.id}"
-                                          caller="editissue"
-                                          icon="tasks"
-                                          styleClass="issuelist" iconClass="fa-lg"
-                                          info="itracker.web.image.issuelist.issue.alt"
-                                          textActionKey="itracker.web.image.issuelist.texttag"/>
-                        ${issue.project.name}
-                  </p>
-               </div>
+
             </div>
          </div>
-
-         <div class="col-sm-6 col-sm-pull-2">
+      </div>
+      <div class="row">
+         <div class="col-sm-6">
             <div class="form-group">
                <label><it:message key="itracker.web.attr.description"/>:</label>
                <html:text size="80" styleId="description"
                           property="description"
                           styleClass="form-control"/>
             </div>
+            <div class="form-group"><label><it:message key="itracker.web.attr.project"/>:</label>
+               <p class="form-control-static">
+                  <it:formatIconAction forward="listissues"
+                                       module="/module-projects"
+                                       paramName="projectId"
+                                       paramValue="${project.id}"
+                                       caller="editissue"
+                                       icon="tasks"
+                                       styleClass="issuelist" iconClass="fa-lg"
+                                       info="itracker.web.image.issuelist.issue.alt"
+                                       textActionKey="itracker.web.image.issuelist.texttag"/>
+                     ${issue.project.name}
+               </p>
+            </div>
          </div>
-         <div class="col-sm-4">
-
-            <div><label><it:message key="itracker.web.attr.creator"/>:</label>
+         <div class="col-sm-6">
+            <div class="form-group">
+               <label><it:message key="itracker.web.attr.creator"/>:</label>
                <p class="form-control-static" id="creator"><it:formatDate date="${issue.createDate}"/>
                   (${issue.creator.firstName}&nbsp;${issue.creator.lastName})</p>
             </div>
-
-            <div><label><it:message key="itracker.web.attr.lastmodified"/>:</label>
+            <div class="form-group">
+               <label><it:message key="itracker.web.attr.lastmodified"/>:</label>
                <p class="form-control-static" id="lastmodified"><it:formatDate date="${issue.lastModifiedDate}"/></p>
             </div>
          </div>
@@ -478,42 +481,44 @@
       </c:if>
 
       <div class="row">
-         <div class="col-sm-6">
-            <h5><it:message key="itracker.web.attr.history"/></h5>
-         </div>
-         <div class="col-sm-6 text-right">
-
-            <c:if test="${not empty previousIssue}">
-               <it:formatIconAction action="view_issue"
-                                    module="/module-projects"
-                                    paramName="id"
-                                    paramValue="${previousIssue.id}"
-                                    caller="editissue" styleClass="previous"
-                                    icon="chevron-circle-left" iconClass="fa-lg"
-                                    info="itracker.web.image.previous.issue.alt"
-                                    arg0="${previousIssue.id}"
-                                    textActionKey="itracker.web.image.previous.texttag"/>
-            </c:if>
-            <c:choose>
-               <c:when test="${not empty nextIssue}">
-                  <it:formatIconAction action="view_issue"
-                                       module="/module-projects"
+         <div class="col-sm-12">
+            <h5>
+               <div class="pull-right text-right">
+                  <div class="issue-nav pull-right">
+                     <c:if test="${not empty previousIssue}">
+                        <it:formatIconAction action="view_issue"
+                                             module="/module-projects"
+                                             paramName="id" styleClass="previous"
+                                             paramValue="${previousIssue.id}"
+                                             caller="editissue"
+                                             icon="chevron-circle-left" iconClass="fa-lg"
+                                             info="itracker.web.image.previous.issue.alt"
+                                             arg0="${previousIssue.id}"
+                                             textActionKey="itracker.web.image.previous.texttag"/>
+                     </c:if>
+                     <c:choose>
+                        <c:when test="${not empty nextIssue}">
+                           <it:formatIconAction action="view_issue"
+                                                module="/module-projects"
+                                                paramName="id"
+                                                paramValue="${nextIssue.id}"
+                                                caller="editissue" styleClass="next"
+                                                icon="chevron-circle-right" iconClass="fa-lg"
+                                                info="itracker.web.image.next.issue.alt"
+                                                arg0="${nextIssue.id}"
+                                                textActionKey="itracker.web.image.next.texttag"/>
+                        </c:when>
+                     </c:choose>
+                  </div>
+                  <it:formatIconAction forward="view_issue_activity.do"
                                        paramName="id"
-                                       paramValue="${nextIssue.id}"
-                                       caller="editissue" styleClass="next"
-                                       icon="chevron-circle-right" iconClass="fa-lg"
-                                       info="itracker.web.image.next.issue.alt"
-                                       arg0="${nextIssue.id}"
-                                       textActionKey="itracker.web.image.next.texttag"/>
-               </c:when>
-            </c:choose>
-            <it:formatIconAction forward="view_issue_activity.do"
-                                 paramName="id"
-                                 paramValue="${issue.id}"
-                                 styleClass="history"
-                                 icon="history" iconClass="fa-lg"
-                                 info="itracker.web.image.view.activity.alt"
-                                 textActionKey="itracker.web.image.view.texttag"/>
+                                       paramValue="${issue.id}"
+                                       styleClass="history"
+                                       icon="history" iconClass="fa-lg"
+                                       info="itracker.web.image.view.activity.alt"
+                                       textActionKey="itracker.web.image.view.texttag"/>
+               </div>
+               <it:message key="itracker.web.attr.history"/></h5>
          </div>
       </div>
 
@@ -521,10 +526,14 @@
          <div class="col-sm-12">
             <div class="table-responsive">
                <table class="table">
+                  <colgroup>
+                     <col class="col-xs-1">
+                     <col class="col-xs-7">
+                     <col class="col-xs-4">
+                  </colgroup>
                   <thead>
-                  <tr class="">
-                     <th width="15"></th>
-                     <th width="8"></th>
+                  <tr>
+                     <th></th>
                      <th><it:message key="itracker.web.attr.updator"/></th>
                      <th class="text-right"><it:message key="itracker.web.attr.updated"/></th>
                   </tr>
@@ -532,39 +541,34 @@
                   <tbody>
                   <c:forEach items="${issueHistory}" var="historyEntry" varStatus="status">
 
-                     <tr class="">
+                     <tr>
                         <td align="right" valign="bottom">
-
-
-                              ${status.count})
-
-                        </td>
-                        <td>
                            <c:if test="${currUser.superUser}">
 
                               <it:formatIconAction action="removehistory"
                                                    paramName="historyId"
                                                    paramValue="${historyEntry.id}"
                                                    caller="editissue"
-                                                   icon="remove" iconClass="fa-lg" styleClass="deleteButton"
+                                                   icon="remove" iconClass="fa-lg" styleClass="pull-right deleteButton"
                                                    info="itracker.web.image.delete.history.alt"
                                                    textActionKey="itracker.web.image.delete.texttag"/>
 
 
                            </c:if>
+                              ${status.count})
                         </td>
                         <td class="historyName">
                               ${historyEntry.user.firstName}&nbsp;${historyEntry.user.lastName}
                            (<a href="mailto:${historyEntry.user.email}"
                                class="mailto">${historyEntry.user.email}</a>)
                         </td>
-                        <td class="historyName text-right">
+                        <td class="historyDate text-nowrap text-right">
                            <it:formatDate date="${historyEntry.createDate}"/>
                         </td>
                      </tr>
                      <tr>
-                        <td colspan="2"></td>
-                        <td colspan="3">
+                        <td></td>
+                        <td colspan="2">
 
                            <it:formatHistoryEntry
                                    projectOptions="${project.options}">${historyEntry.description}</it:formatHistoryEntry>
@@ -590,10 +594,12 @@
          </div>
       </div>
 
-      <div>
-         <html:submit styleClass="btn btn-primary btn-block" altKey="itracker.web.button.update.alt"
-                      titleKey="itracker.web.button.update.alt"><it:message
-                 key="itracker.web.button.update"/></html:submit><br/><br/>
+      <div class="row">
+         <div class="col-sm-12"><html:submit styleClass="btn btn-primary btn-block"
+                                             altKey="itracker.web.button.update.alt"
+                                             titleKey="itracker.web.button.update.alt">
+            <it:message key="itracker.web.button.update"/></html:submit>
+         </div>
       </div>
 
       <div class="row">

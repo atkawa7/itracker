@@ -305,10 +305,9 @@ table.portalhomeMain {
     border: none;
 }
 
-/*.portalhomeMain.shadeList tr {*/
-    /*height: 2.5em;*/
-/*}*/
-
+.issue-nav {
+   min-width: 4em;
+}
 .historyName {
     font-style: italic;
     font-size: 1em;
@@ -356,19 +355,7 @@ table.portalhomeMain {
 .panel-heading .btn.pull-right {
    margin: -10px 0;
 }
-/**
-Calender Styles
-*********************/
 
-.cal_table {
-    background-color: white;
-    opacity: .8;
-
-}
-
-.tinyscal {
-    position: absolute;
-}
 
 #configurationForm .systemDefault,
 #customFieldForm .systemDefault {

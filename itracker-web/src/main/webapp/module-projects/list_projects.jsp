@@ -16,86 +16,100 @@
    </div>
 </logic:messagesPresent>
 
-<table border="0" cellspacing="0" cellpadding="1" width="100%" class="shadeList">
-   <tr>
-      <td id="projects" class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.projects"/>:</td>
-   </tr>
-   <tr align="left" class="listHeading">
-      <td width="40"></td>
-      <td><html:img width="4" src="../themes/defaulttheme/images/blank.gif"/></td>
-      <td align="left"><it:message key="itracker.web.attr.name"/></td>
-      <td align="left"><it:message key="itracker.web.attr.openissues"/></td>
-      <td align="left"><it:message key="itracker.web.attr.resolvedissues"/></td>
-      <td align="left"><it:message key="itracker.web.attr.totalissues"/></td>
-      <td align="right"><it:message key="itracker.web.attr.lastissueupdate"/></td>
-   </tr>
+<div class="container-fluid maincontent">
+   <div class="row">
+      <div class="col-xs-12">
+         <h4 class="editColumnTitle"><it:message key="itracker.web.attr.projects"/>:</h4>
+      </div>
+   </div>
 
-   <c:set var="hasProjects" value="false"/>
-   <c:set var="totalOpenIssues" value="0"/>
-   <c:set var="totalResolvedIssues" value="0"/>
-   <c:set var="totalNumberProjects" value="0"/>
-   <c:forEach var="project" varStatus="i" items="${ projects }" step="1">
-
-      <c:set var="totalOpenIssues" value="${ project.totalOpenIssues + totalOpenIssues }"/>
-      <c:set var="totalResolvedIssues" value="${ project.totalResolvedIssues + totalResolvedIssues}"/>
-      <c:set var="totalNumberProjects" value="${ totalNumberProjects + 1 }"/>
-
-      <tr id="project.${i.count}" class="${ i.count % 2 == 1 ? 'listRowShaded' : 'listRowUnshaded' }">
-         <td nowrap>
-            <it:formatIconAction forward="listissues" paramName="projectId" paramValue="${ project.id }"
-                                 icon="tasks" iconClass="fa-lg"
-                                 info="itracker.web.image.view.project.alt" arg0="${ project.name }"
-                                 textActionKey="itracker.web.image.view.texttag"/>
-            <c:if test="${ project.active && project.canCreate }">
-               <it:formatIconAction forward="createissue" paramName="projectId" paramValue="${ project.id }"
-                                    icon="plus" iconClass="fa-lg"
-                                    info="itracker.web.image.create.issue.alt" arg0="${ project.name }"
-                                    textActionKey="itracker.web.image.create.texttag"/>
-            </c:if>
-            <it:formatIconAction forward="searchissues" paramName="projectId" paramValue="${ project.id }"
-                                 icon="search" iconClass="fa-lg"
-                                 info="itracker.web.image.search.issue.alt" arg0="${ project.name }"
-                                 textActionKey="itracker.web.image.search.texttag"/>
-         </td>
-         <td></td>
-         <td>${ project.name }</td>
-         <td align="left">${ project.totalOpenIssues }</td>
-         <td align="left">${ project.totalResolvedIssues }</td>
-         <td align="left">${ project.totalNumberIssues }</td>
-         <td align="right"><it:formatDate date="${ project.lastUpdatedIssueDate }"
-                                          emptyKey="itracker.web.generic.notapplicable"/></td>
-      </tr>
-
-      <c:set var="hasProjects" value="true"/>
-
-   </c:forEach>
-
+   <c:set var="hasProjects" value="${ not empty( projects) }"/>
    <c:choose>
       <c:when test="${ hasProjects }">
-         <tr>
-            <td colspan="7"><html:img height="3"
-                                      src="../themes/defaulttheme/images/blank.gif"/></td>
-         </tr>
+         <div class="row">
+            <div class="col-xs-12 table-responsive" id="projects">
+               <table class=" table table-striped table-hover">
+                  <colgroup>
+                     <col class="col-xs-1">
+                     <col class="col-xs-2">
+                     <col class="col-xs-3">
+                     <col class="col-xs-2">
+                     <col class="col-xs-2">
+                     <col class="col-xs-2">
+                  </colgroup>
 
-         <tr class="listRowUnshaded listProjectsTotals">
-            <td colspan="2"></td>
-            <td align="right"><strong><it:message
-                    key="itracker.web.attr.total"/>:&nbsp;<%-- ${ totalNumberProjects }--%></strong></td>
-            <td align="left"><strong>${ totalOpenIssues }</strong></td>
-            <td align="left"><strong>${ totalResolvedIssues }</strong></td>
-            <td align="left"><strong>${ totalOpenIssues + totalResolvedIssues }</strong></td>
-            <td></td>
-         </tr>
+                  <thead>
+                  <tr>
+                     <th></th>
+                     <th><it:message key="itracker.web.attr.name"/></th>
+                     <th class="text-right"><it:message key="itracker.web.attr.openissues"/></th>
+                     <th class="text-right"><it:message key="itracker.web.attr.resolvedissues"/></th>
+                     <th class="text-right"><it:message key="itracker.web.attr.totalissues"/></th>
+                     <th class="text-right"><it:message key="itracker.web.attr.lastissueupdate"/></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <c:set var="totalOpenIssues" value="0"/>
+                  <c:set var="totalResolvedIssues" value="0"/>
+                  <c:set var="totalNumberProjects" value="0"/>
+                  <c:forEach var="project" varStatus="i" items="${ projects }" step="1">
+
+                     <c:set var="totalOpenIssues" value="${ project.totalOpenIssues + totalOpenIssues }"/>
+                     <c:set var="totalResolvedIssues" value="${ project.totalResolvedIssues + totalResolvedIssues}"/>
+                     <c:set var="totalNumberProjects" value="${ totalNumberProjects + 1 }"/>
+
+                     <tr id="project.${project.id}">
+                        <td class="text-nowrap">
+                           <it:formatIconAction forward="listissues" paramName="projectId"
+                                                paramValue="${ project.id }"
+                                                icon="tasks" iconClass="fa-lg"
+                                                info="itracker.web.image.view.project.alt" arg0="${ project.name }"
+                                                textActionKey="itracker.web.image.view.texttag"/>
+                           <c:if test="${ project.active && project.canCreate }">
+                              <it:formatIconAction forward="createissue" paramName="projectId"
+                                                   paramValue="${ project.id }"
+                                                   icon="plus" iconClass="fa-lg"
+                                                   info="itracker.web.image.create.issue.alt"
+                                                   arg0="${ project.name }"
+                                                   textActionKey="itracker.web.image.create.texttag"/>
+                           </c:if>
+                           <it:formatIconAction forward="searchissues" paramName="projectId"
+                                                paramValue="${ project.id }"
+                                                icon="search" iconClass="fa-lg"
+                                                info="itracker.web.image.search.issue.alt" arg0="${ project.name }"
+                                                textActionKey="itracker.web.image.search.texttag"/>
+                        </td>
+                        <td> ${ project.name }</td>
+                        <td class="text-right totalOpenIssues">${ project.totalOpenIssues }</td>
+                        <td class="text-right totalResolvedIssues">${ project.totalResolvedIssues }</td>
+                        <td class="text-right totalNumberIssues">${ project.totalNumberIssues }</td>
+                        <td class="text-right text-nowrap lastUpdatedIssueDate">
+                           <it:formatDate date="${ project.lastUpdatedIssueDate }"
+                                          emptyKey="itracker.web.generic.notapplicable"/></td>
+                     </tr>
+                  </c:forEach>
+                  </tbody>
+                  <tfoot>
+                  <tr class="listProjectsTotals">
+                     <td class="text-right"><strong><it:message
+                             key="itracker.web.attr.total"/>:&nbsp;<%-- ${ totalNumberProjects }--%></strong></td>
+                     <td class="text-right"><strong>${ totalOpenIssues }</strong></td>
+                     <td class="text-right"><strong>${ totalResolvedIssues }</strong></td>
+                     <td class="text-right"><strong>${ totalOpenIssues + totalResolvedIssues }</strong></td>
+                     <td></td>
+                  </tr>
+                  </tfoot>
+               </table>
+            </div>
+         </div>
       </c:when>
       <c:otherwise>
-         <tr align="left">
-            <td colspan="7" class="listRowUnshaded" style="text-align: center;"><strong><it:message
-                    key="itracker.web.error.noprojects"/></strong></td>
-         </tr>
+         <div class="row">
+            <div class="col-xs-12"><strong><it:message key="itracker.web.error.noprojects"/></strong>
+            </div>
+         </div>
       </c:otherwise>
    </c:choose>
-
-
-</table>
-
-<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
+</div>
+<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/>
+</body></html>

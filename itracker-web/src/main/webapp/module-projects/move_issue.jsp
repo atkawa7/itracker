@@ -17,47 +17,67 @@
    </div>
 </logic:messagesPresent>
 
-<it:message key="itracker.web.moveissue.instructions"/>
-<br/>
-<br/>
+<div class="container-fluid maincontent">
+   <div class="panel panel-info">
+      <div class="panel-body">
+         <it:message key="itracker.web.moveissue.instructions"/>
+      </div>
+   </div>
+   <div class="row">
 
-<html:form action="/moveissue" method="post" onsubmit="return validateMoveIssueForm(this);">
-   <html:hidden property="issueId"/>
-   <html:hidden property="caller"/>
 
-   <table border="0" cellspacing="0" cellspacing="1">
-      <tr>
-         <td class="editColumnTitle"><it:message key="itracker.web.attr.issue"/>: &nbsp;</td>
-         <td class="editColumnText"><strong>${issue.id}</strong> ${issue.description} </td>
-      </tr>
-      <tr>
-         <td class="editColumnTitle"><it:message key="itracker.web.generic.from"/>: &nbsp;</td>
-         <td class="editColumnText"><strong>${issue.project.name}</strong></td>
-      </tr>
-      <tr>
-         <td class="editColumnTitle"><it:message key="itracker.web.attr.project"/>: &nbsp;</td>
-         <td class="editColumnText">
-            <html:select property="projectId" styleClass="editColumnText">
-               <option value=""></option>
-               <c:forEach items="${projects}" var="projects" step="1">
-                  <html:option value="${projects.id}">${projects.name}</html:option>
-               </c:forEach>
-            </html:select>
-         </td>
-      </tr>
-      <tr>
-         <td colspan="2"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="18"/></td>
-      </tr>
-      <tr>
-         <td colspan="2" align="left"><html:submit styleClass="button" altKey="itracker.web.button.update.alt"
-                                                   titleKey="itracker.web.button.update.alt"><it:message
-                 key="itracker.web.button.update"/></html:submit></td>
-      </tr>
-   </table>
+      <html:form action="/moveissue" styleClass="" method="post"
+                 onsubmit="return validateMoveIssueForm(this);">
+         <html:hidden property="issueId"/>
+         <html:hidden property="caller"/>
 
-   <br/>
+         <div class="col-sm-4">
+            <div class="form-group ">
+               <label><it:message key="itracker.web.attr.issue"/>:</label>
+               <p class="form-control-static">
+                  <strong>${issue.id}</strong> <em>${issue.description}</em></p>
 
-</html:form>
+            </div>
+         </div>
+
+         <div class="col-sm-4">
+            <div class="form-group">
+               <label><it:message key="itracker.web.generic.from"/>:</label>
+               <p class="form-control-static">
+                  <it:formatIconAction forward="listissues"
+                                       module="/module-projects"
+                                       paramName="projectId"
+                                       paramValue="${issue.project.id}"
+                                       caller="editissue"
+                                       icon="tasks"
+                                       styleClass="issuelist" iconClass="fa-lg"
+                                       info="itracker.web.image.view.project.alt"
+                                       textActionKey="itracker.web.image.issuelist.texttag"/>
+                  <strong>${issue.project.name}</strong></p>
+            </div>
+         </div>
+
+         <div class="col-sm-4">
+            <div class="form-group">
+
+               <label><it:message key="itracker.web.generic.to"/>:</label>
+               <html:select property="projectId" styleClass="form-control">
+                  <c:forEach items="${projects}" var="projects" step="1">
+                     <html:option value="${projects.id}">${projects.name}</html:option>
+                  </c:forEach>
+               </html:select>
+            </div>
+         </div>
+         <div class="col-xs-12">
+            <html:submit styleClass="btn btn-primary btn-block" altKey="itracker.web.button.update.alt"
+                         titleKey="itracker.web.button.update.alt"><it:message
+                    key="itracker.web.button.update"/></html:submit>
+         </div>
+      </html:form>
+
+   </div>
+</div>
+</div>
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
        
         	
