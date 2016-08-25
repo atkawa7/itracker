@@ -44,16 +44,16 @@
       </div>
 
       <div class="row">
-         <c:if test="${username != null}">
-            <div class="col-xs-1">
+         <div class="col-xs-12 text-right headerLinks">
 
-               <form name="lookupForm"
-                     action="<html:rewrite module="/module-projects" forward="viewissue"/>">
-                  <input type="text" name="id" size="5" class="lookupBox"
-                         onchange="document.lookupForm.submit();"></form>
-            </div>
-         </c:if>
-         <div class="${username != null ? 'col-xs-11':'col-xs-12'} text-right headerLinks">
+            <c:if test="${username != null}">
+               <div class="pull-left">
+                  <form name="lookupForm"
+                        action="<html:rewrite module="/module-projects" forward="viewissue"/>">
+                     <input type="text" name="id" size="5" class="lookupBox"
+                            onchange="document.lookupForm.submit();" /></form>
+               </div>
+            </c:if>
             <c:if test="${username != null}">
 
                <html:link styleClass="headerLinks"
