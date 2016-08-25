@@ -50,8 +50,9 @@ public class CreateIssueSeleniumIT extends AbstractSeleniumTestCase {
         waitForPageToLoad();
 
         // Click issue creation link (usually it's named "Create").
-        assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]" +
-                "/*[3][text()='test_name']/../*[1]/a[2]"))
+        assertElementPresent(By.xpath("//tr[starts-with(@id, 'project.')]" +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td//a[2]"))
         .click();
         waitForPageToLoad();
 
@@ -143,8 +144,9 @@ public class CreateIssueSeleniumIT extends AbstractSeleniumTestCase {
         waitForPageToLoad();
 
         // Click issue creation link (usually it's named "Create").
-        assertElementPresent(By.xpath("//*[starts-with(@id, 'project.')]" +
-                "/*[3][text()='test_name']/../*[1]/a[2]"))
+        assertElementPresent(By.xpath("//tr[starts-with(@id, 'project.')]" +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td//a[2]"))
         .click();
         waitForPageToLoad();
 

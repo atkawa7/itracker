@@ -31,16 +31,16 @@ public class ViewIssueSeleniumIT extends AbstractSeleniumTestCase {
         waitForPageToLoad();
 
         // Click view issue link (usually it's named "View").
-        assertElementPresent(By.xpath("//tr[starts-with(@id, 'project.')]" +
+        assertElementPresent(By.xpath("//tr[@id='project.2']" +
                 "/td[normalize-space(text())='test_name']/.." +
-                "/td/a[1]")).click();
+                "/td//a[1]")).click();
 
         waitForPageToLoad();
 
-        assertElementPresent(By.xpath("//tr[starts-with(@id, 'issue.')]" +
-                "/td[normalize-space(text())='1']/.." +
+        assertElementPresent(By.xpath("//tr[@id='issue.1']" +
+                "/td[contains(text(),'1')]/.." +
                 "/td[normalize-space(text())='test_description']/.." +
-                "/td/a[1]")).click();
+                "/td//a[1]")).click();
 
         waitForPageToLoad();
 
@@ -68,15 +68,15 @@ public class ViewIssueSeleniumIT extends AbstractSeleniumTestCase {
         waitForPageToLoad();
 
         // Click view issue link (usually it's named "View").
-        assertElementPresent(By.xpath("//tr[starts-with(@id, 'project.')]" +
+        assertElementPresent(By.xpath("//tr[@id='project.2']" +
                 "/td[normalize-space(text())='test_name']/.." +
-                "/td/a[1]")).click();
+                "/td//a[1]")).click();
         waitForPageToLoad();
 
-        assertElementPresent(By.xpath("//tr[starts-with(@id, 'issue.')]" +
-                "/td[normalize-space(text())='2']/.." +
+        assertElementPresent(By.xpath("//tr[@id='issue.2']" +
+                "/td[contains(text(),'2')]/.." +
                 "/td[normalize-space(text())='test_description 2']/.." +
-                "/td/a[1]")).click();
+                "/td//a[1]")).click();
         waitForPageToLoad();
 
         assertElementTextEquals("test_description 2", By.id("description"));
