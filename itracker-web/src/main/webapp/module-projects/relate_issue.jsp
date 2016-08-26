@@ -11,7 +11,7 @@
         <bean:define id="pageTitleKey" value="itracker.web.relateissue.title"/>
         <bean:define id="pageTitleArg" value="<%= issueId %>"/>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
         <html:form action="/addissuerelation" onsubmit="validateIssueRelationForm(this);">

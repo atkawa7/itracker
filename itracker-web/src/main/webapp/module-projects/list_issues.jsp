@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <bean:define toScope="request" id="pageTitleKey" value="itracker.web.listissues.title"/>
 <bean:define toScope="request" id="pageTitleArg" value="${project.name}"/>
 

@@ -1,9 +1,10 @@
 <%@ include file="/common/taglibs.jsp" %>
 
+<jsp:useBean id="projects" scope="request" type="java.util.Collection"/>
 <bean:define id="pageTitleKey" value="itracker.web.listprojects.title"/>
 <bean:define id="pageTitleArg" value=""/>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 <logic:messagesPresent>
@@ -91,11 +92,12 @@
                   </tbody>
                   <tfoot>
                   <tr class="listProjectsTotals">
-                     <td class="text-right"><strong><it:message
+                     <td class="text-right" colspan="2"><strong><it:message
                              key="itracker.web.attr.total"/>:&nbsp;<%-- ${ totalNumberProjects }--%></strong></td>
-                     <td class="text-right"><strong>${ totalOpenIssues }</strong></td>
-                     <td class="text-right"><strong>${ totalResolvedIssues }</strong></td>
-                     <td class="text-right"><strong>${ totalOpenIssues + totalResolvedIssues }</strong></td>
+                     <td class="text-right totalOpenIssues"><strong>${ totalOpenIssues }</strong></td>
+                     <td class="text-right totalResolvedIssues"><strong>${ totalResolvedIssues }</strong></td>
+                     <td class="text-right totalNumberIssues">
+                        <strong>${ totalOpenIssues + totalResolvedIssues }</strong></td>
                      <td></td>
                   </tr>
                   </tfoot>
