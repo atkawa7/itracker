@@ -1,5 +1,18 @@
 <%@ include file="/common/taglibs.jsp" %>
 
+<jsp:useBean id="project" scope="session" type="org.itracker.model.Project"/>
+<jsp:useBean id="currUser" scope="session" type="org.itracker.model.User"/>
+<jsp:useBean id="statusName" scope="request" type="java.lang.String" />
+<jsp:useBean id="possibleOwners" scope="request" type="java.util.Collection" />
+<jsp:useBean id="possibleCreators" scope="request" type="java.util.Collection" />
+<jsp:useBean id="severities" scope="request" type="java.util.Collection" />
+<jsp:useBean id="components" scope="request" type="java.util.Collection" />
+<jsp:useBean id="versions" scope="request" type="java.util.Collection" />
+<jsp:useBean id="projectFields" scope="request" type="java.util.Collection" />
+<jsp:useBean id="listOptions" scope="request" type="java.util.Map" />
+<jsp:useBean id="hasAttachmentOption" scope="request" type="java.lang.Boolean" />
+
+
 <bean:define id="pageTitleKey" value="itracker.web.createissue.title"/>
 <bean:define id="pageTitleArg" value="${project.name}"/>
 

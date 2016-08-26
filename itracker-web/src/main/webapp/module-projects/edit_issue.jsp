@@ -1,5 +1,39 @@
 <%@ include file="/common/taglibs.jsp" %>
 
+<jsp:useBean id="project" scope="request" type="org.itracker.model.Project"/>
+<jsp:useBean id="currUser" scope="session" type="org.itracker.model.User"/>
+<jsp:useBean id="issue" scope="request" type="org.itracker.model.Issue"/>
+<jsp:useBean id="previousIssue" scope="request" type="org.itracker.model.Issue" class="org.itracker.model.Issue"/>
+<jsp:useBean id="nextIssue" scope="request" type="org.itracker.model.Issue" class="org.itracker.model.Issue" />
+<jsp:useBean id="hasEditIssuePermission" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="canCreateIssue" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="hasHardIssueNotification" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="hasIssueNotification" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="statusName" scope="request" type="java.lang.String" />
+<jsp:useBean id="severityName" scope="request" type="java.lang.String" />
+<jsp:useBean id="issueOwnerName" scope="request" type="java.lang.String" />
+<jsp:useBean id="projectFieldsMap" scope="request" type="java.util.Map" class="java.util.HashMap" />
+<jsp:useBean id="hasPredefinedResolutionsOption" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="hasFullEdit" scope="request" type="java.lang.Boolean" />
+<%--<jsp:useBean id="hasAttachmentOption" scope="request" type="java.lang.Boolean" />--%>
+<jsp:useBean id="hasNoViewAttachmentOption" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="isStatusResolved" scope="request" type="java.lang.Boolean" />
+<%--<jsp:useBean id="attachments" scope="request" type="java.util.Collection" />--%>
+<jsp:useBean id="statuses" scope="request" type="java.util.Collection" />
+<jsp:useBean id="fieldSeverity" scope="request" type="java.util.Collection" />
+<jsp:useBean id="resolutions" scope="request" type="java.util.Collection" />
+<jsp:useBean id="components" scope="request" type="java.util.Collection" />
+<jsp:useBean id="issueComponents" scope="request" type="java.util.Collection" />
+<jsp:useBean id="versions" scope="request" type="java.util.Collection" />
+<jsp:useBean id="issueVersions" scope="request" type="java.util.Collection" />
+<jsp:useBean id="listoptions" scope="request" type="java.util.Map" class="java.util.HashMap"/>
+<%--<jsp:useBean id="histories" scope="request" type="java.util.Collection" />--%>
+<jsp:useBean id="issueHistory" scope="request" type="java.util.Collection" />
+<jsp:useBean id="possibleOwners" scope="request" type="java.util.Collection" />
+<jsp:useBean id="targetVersions" scope="request" type="java.util.Collection" />
+<jsp:useBean id="notifiedUsers" scope="request" type="java.util.Collection" />
+<jsp:useBean id="notificationMap" scope="request" type="java.util.Map" />
+
 <!DOCTYPE HTML>
 <c:set var="pageTitleKey" value="itracker.web.editissue.title" scope="request"/>
 <c:set var="pageTitleArg" value="${issue.id}" scope="request"/>
@@ -32,7 +66,7 @@
                <label class="sr-only"><it:message key="itracker.web.attr.actions"/>:</label>
                <div id="actions" class="actions form-control-static text-right">
                   <div class="issue-nav pull-right">
-                     <c:if test="${not empty previousIssue}">
+                     <c:if test="${previousIssue.id > 0}">
                         <it:formatIconAction action="view_issue"
                                              module="/module-projects"
                                              paramName="id" styleClass="previous"
@@ -44,7 +78,7 @@
                                              textActionKey="itracker.web.image.previous.texttag"/>
                      </c:if>
                      <c:choose>
-                        <c:when test="${not empty nextIssue}">
+                        <c:when test="${nextIssue.id > 0}">
                            <it:formatIconAction action="view_issue"
                                                 module="/module-projects"
                                                 paramName="id"
@@ -432,7 +466,7 @@
 
          <c:choose>
             <c:when test="${not empty issue.attachments}">
-               <div class="row ${rowShading}">
+               <div class="row">
                   <c:forEach items="${issue.attachments}" var="attachment" varStatus="status">
                      <div class="col-sm-6 ">
                         <it:formatIconAction action="downloadAttachment.do"
@@ -485,7 +519,7 @@
             <h5>
                <div class="pull-right text-right">
                   <div class="issue-nav pull-right">
-                     <c:if test="${not empty previousIssue}">
+                     <c:if test="${previousIssue.id > 0}">
                         <it:formatIconAction action="view_issue"
                                              module="/module-projects"
                                              paramName="id" styleClass="previous"
@@ -497,7 +531,7 @@
                                              textActionKey="itracker.web.image.previous.texttag"/>
                      </c:if>
                      <c:choose>
-                        <c:when test="${not empty nextIssue}">
+                        <c:when test="${nextIssue.id > 0}">
                            <it:formatIconAction action="view_issue"
                                                 module="/module-projects"
                                                 paramName="id"

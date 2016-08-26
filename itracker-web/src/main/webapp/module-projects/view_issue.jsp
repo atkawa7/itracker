@@ -1,5 +1,23 @@
 <%@ include file="/common/taglibs.jsp" %>
 
+<jsp:useBean id="project" scope="request" type="org.itracker.model.Project"/>
+<jsp:useBean id="issue" scope="request" type="org.itracker.model.Issue"/>
+<jsp:useBean id="previousIssue" scope="request" type="org.itracker.model.Issue" class="org.itracker.model.Issue"/>
+<jsp:useBean id="nextIssue" scope="request" type="org.itracker.model.Issue" class="org.itracker.model.Issue"/>
+<jsp:useBean id="canEditIssue" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="canCreateIssue" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="hasHardIssueNotification" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="hasIssueNotification" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="issueStatusName" scope="request" type="java.lang.String" />
+<jsp:useBean id="issueSeverityName" scope="request" type="java.lang.String" />
+<jsp:useBean id="issueOwnerName" scope="request" type="java.lang.String" />
+<jsp:useBean id="projectFieldsMap" scope="request" type="java.util.Map" class="java.util.HashMap" />
+<jsp:useBean id="hasAttachmentOption" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="attachments" scope="request" type="java.util.Collection" />
+<jsp:useBean id="histories" scope="request" type="java.util.Collection" />
+<jsp:useBean id="notifiedUsers" scope="request" type="java.util.Collection" />
+<jsp:useBean id="notificationMap" scope="request" type="java.util.Map" />
+
 <bean:define id="pageTitleKey" value="itracker.web.viewissue.title"/>
 <bean:define id="pageTitleArg" value="${issue.id}"/>
 
@@ -14,7 +32,7 @@
          <div class="form-group"><label class="sr-only"><it:message key="itracker.web.attr.actions"/>:</label>
             <div id="actions" class="actions form-control-static text-right">
                <div class="issue-nav pull-right">
-                  <c:if test="${not empty previousIssue}">
+                  <c:if test="${previousIssue.id > 0}">
                      <it:formatIconAction action="view_issue"
                                           module="/module-projects"
                                           paramName="id"
@@ -26,7 +44,7 @@
                                           textActionKey="itracker.web.image.previous.texttag"/>
                   </c:if>
                   <c:choose>
-                     <c:when test="${not empty nextIssue}">
+                     <c:when test="${nextIssue.id > 0}">
                         <it:formatIconAction action="view_issue"
                                              module="/module-projects"
                                              paramName="id"
@@ -294,7 +312,7 @@
 
             <div class="pull-right text-right">
                <div class="issue-nav pull-right">
-                  <c:if test="${not empty previousIssue}">
+                  <c:if test="${previousIssue.id > 0}">
                      <it:formatIconAction action="view_issue"
                                           module="/module-projects"
                                           paramName="id"
@@ -306,7 +324,7 @@
                                           textActionKey="itracker.web.image.previous.texttag"/>
                   </c:if>
                   <c:choose>
-                     <c:when test="${not empty nextIssue}">
+                     <c:when test="${nextIssue.id > 0}">
                         <it:formatIconAction action="view_issue"
                                              module="/module-projects"
                                              paramName="id"
@@ -414,7 +432,7 @@
                      <td>
                         <ul class="list-inline">
                            <c:forEach items="${notificationMap[user]}" var="role">
-                              <li><it:message key="itracker.notification.role.${role.code}"></it:message></li>
+                              <li><it:message key="itracker.notification.role.${role.code}"/></li>
                            </c:forEach>
                         </ul>
                      </td>

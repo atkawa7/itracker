@@ -1,4 +1,18 @@
 <%@ include file="/common/taglibs.jsp" %>
+
+<jsp:useBean id="UserUtilities_PREF_HIDE_ASSIGNED" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="UserUtilities_PREF_HIDE_UNASSIGNED" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="UserUtilities_PREF_HIDE_CREATED" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="UserUtilities_PREF_HIDE_WATCHED" scope="request" type="java.lang.Boolean" />
+<jsp:useBean id="ownedIssues" scope="request" type="java.util.Collection" />
+<jsp:useBean id="unassignedIssues" scope="request" type="java.util.Collection" />
+<jsp:useBean id="createdIssues" scope="request" type="java.util.Collection" />
+<jsp:useBean id="watchedIssues" scope="request" type="java.util.Collection" />
+<jsp:useBean id="userPrefs" scope="request" type="org.itracker.model.UserPreferences" />
+<jsp:useBean id="currUser" scope="session" type="org.itracker.model.User" />
+<jsp:useBean id="allSections" scope="session" type="java.lang.Boolean" />
+<jsp:useBean id="showAll" scope="session" type="java.lang.Boolean" />
+
 <bean:define toScope="request" id="pageTitleKey" value="itracker.web.index.title"/>
 <bean:define toScope="request" id="pageTitleArg" value=""/>
 <!-- assigned issues -->
@@ -233,8 +247,7 @@
                                        </c:when>
                                        <c:otherwise>
                                           <c:choose>
-                                             <c:when
-                                                     test="${unassignedIssue.userHasPermission_PERMISSION_ASSIGN_SELF}">
+                                             <c:when test="${unassignedIssue.userHasPermission_PERMISSION_ASSIGN_SELF}">
                                                 <td>
                                                    <html:form action="/assignissue" styleClass="assignIssueForm">
                                                       <html:hidden property="issueId"
@@ -259,7 +272,7 @@
                                                             </c:otherwise>
                                                          </c:choose>
                                                          <option value="${currUser.id}"
-                                                                 <c:if test="${unassignedIssue.issue.id==currUser.id}">selected</c:if>>
+                                                                 <c:if test="${unassignedIssue.owner.id==currUser.id}">selected</c:if>>
                                                                ${currUser.firstName} ${currUser.lastName}</option>
 
                                                       </html:select>
@@ -297,7 +310,7 @@
 
                <!-- created issues -->
 
-               <c:if test="${(! UserUtilities_PREF_HIDE_CREATED)  || allSections}">
+               <c:if test="${(! UserUtilities_PREF_HIDE_CREATED) || allSections}">
 
                   <thead>
                   <tr id="createdIssues">
