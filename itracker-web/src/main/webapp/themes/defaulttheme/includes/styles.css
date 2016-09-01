@@ -20,6 +20,7 @@ a .glyphicon {
 }
 a.icon .fa-stack {
    vertical-align: text-bottom;
+   font-size: 0.60em;
 }
 
 .smallbody {
