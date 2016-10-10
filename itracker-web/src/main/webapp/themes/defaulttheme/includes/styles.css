@@ -352,9 +352,13 @@ table.portalhomeMain {
     font-size: small;
 }
 
+.pre-scrollable {
+   -ms-word-wrap: initial;word-wrap: initial;
+}
+
 .panel-heading .btn-group.pull-right,
 .panel-heading .btn.pull-right {
-   margin: -10px 0;
+    margin: -10px 0;
 }
 
 
@@ -376,7 +380,7 @@ table.portalhomeMain {
 }
 #languageForm .long pre {
     overflow: auto;
-    width: 30em;
+    word-break: break-all;
 }
 #languageForm .long pre,
 #languageForm code {
@@ -384,6 +388,16 @@ table.portalhomeMain {
     border: none;
     margin: 0;
     padding: 0;
+    word-break: normal;
+    word-wrap: break-word;
+}
+
+.table-language {
+    table-layout: fixed;
+}
+pre.placeholder {
+    background:white;
+    color: #666;
 }
 
 .assignIssueForm select {
