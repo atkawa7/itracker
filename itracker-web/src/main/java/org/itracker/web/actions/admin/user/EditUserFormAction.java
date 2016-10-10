@@ -27,7 +27,6 @@ import org.itracker.services.UserService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
 import org.itracker.web.util.Constants;
-import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
@@ -66,7 +65,7 @@ public class EditUserFormAction extends ItrackerBaseAction {
             User editUser = null;
             HashMap<Integer, HashMap<String, Permission>> userPermissions = new HashMap<Integer, HashMap<String, Permission>>();
 
-            List<NameValuePair> permissionNames = UserUtilities.getPermissionNames(getLocale(request));
+            List<NameValuePair> permissionNames = UserUtilities.getPermissionTypeNames(getLocale(request));
             UserForm userForm = (UserForm) form;
 
             if (userForm == null) {
@@ -139,16 +138,16 @@ public class EditUserFormAction extends ItrackerBaseAction {
                                     Integer projectId = permissionList.get(i).getProject().getId();
 
                                     if (userPermissions.get(projectId) == null) {
-                                        HashMap<String, Permission> projectPermissions = new HashMap<String, Permission>();
+                                        HashMap<String, Permission> projectPermissions = new HashMap<>();
                                         userPermissions.put(permissionList.get(i).getProject().getId(), projectPermissions);
                                     }
 
-                                    formPermissions.put("Perm" + permissionList.get(i).getPermissionType().getCode() + "Proj" + permissionList.get(i).getProject().getId(), true);
+                                    formPermissions.put(permissionList.get(i).getPermissionType().name(permissionList.get(i).getProject()), true);
 
                                     PermissionType permissionType = permissionList.get(i).getPermissionType();
 
                                     Permission thisPermission = permissionList.get(i);
-                                    HashMap<String, Permission> permissionHashMap = ((HashMap<String, Permission>) userPermissions.get(projectId));
+                                    HashMap<String, Permission> permissionHashMap = userPermissions.get(projectId);
                                     permissionHashMap.put(String.valueOf(permissionType), thisPermission);
 
                                 }
@@ -158,11 +157,11 @@ public class EditUserFormAction extends ItrackerBaseAction {
                                 Integer projectId = permissionList.get(i).getProject().getId();
 
                                 if (userPermissions.get(projectId) == null) {
-                                    HashMap<String, Permission> projectPermissions = new HashMap<String, Permission>();
+                                    HashMap<String, Permission> projectPermissions = new HashMap<>();
                                     userPermissions.put(permissionList.get(i).getProject().getId(), projectPermissions);
                                 }
 
-                                formPermissions.put("Perm" + permissionList.get(i).getPermissionType().getCode() + "Proj" + permissionList.get(i).getProject().getId(), true);
+                                formPermissions.put(permissionList.get(i).getPermissionType().name(permissionList.get(i).getProject()), true);
 
                                 PermissionType permissionType = permissionList.get(i).getPermissionType();
 

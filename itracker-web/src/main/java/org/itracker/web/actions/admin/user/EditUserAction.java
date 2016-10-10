@@ -30,7 +30,6 @@ import org.itracker.services.ProjectService;
 import org.itracker.services.UserService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.UserForm;
-import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 import org.itracker.web.util.SessionManager;
 
@@ -73,7 +72,7 @@ public class EditUserAction extends ItrackerBaseAction {
     }
 
 
-    public static final ActionForward setupJspEnv(HttpServletRequest request, UserForm userForm, ActionMessages errors, ActionMapping mapping) {
+    public static ActionForward setupJspEnv(HttpServletRequest request, UserForm userForm, ActionMessages errors, ActionMapping mapping) {
 
         try {
             UserService userService = ServletContextUtils.getItrackerServices().getUserService();
@@ -121,41 +120,39 @@ public class EditUserAction extends ItrackerBaseAction {
                     if (log.isDebugEnabled()) {
                         log.debug("execute: updating existingUser " + existingUser);
                     }
-                    if (existingUser != null) {
-                        previousLogin = existingUser.getLogin();
-                        if (!userService.allowProfileUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
-                            editUser = existingUser;
+
+                     previousLogin = existingUser.getLogin();
+                     if (!userService.allowProfileUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
+                         editUser = existingUser;
 //                            itracker.web.error.noprofileupdates
-                            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprofileupdates"));
-                            return mapping.findForward("error");
-                        }
+                         errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.noprofileupdates"));
+                         return mapping.findForward("error");
+                     }
 
 
-                        if (null != userForm.getPassword() && !userForm.getPassword().equals("")) {
-                            if (userService.allowPasswordUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
+                     if (null != userForm.getPassword() && !userForm.getPassword().equals("")) {
+                         if (userService.allowPasswordUpdates(existingUser, null, UserUtilities.AUTH_TYPE_UNKNOWN, UserUtilities.REQ_SOURCE_WEB)) {
 
-                                editUser.setPassword(UserUtilities.encryptPassword(userForm.getPassword()));
+                             editUser.setPassword(UserUtilities.encryptPassword(userForm.getPassword()));
 
 
-                            } else {
-                                // Passwort was attempted to set, but authenticator is not able to. Exception
-                                editUser = existingUser;
+                         } else {
+                             // Passwort was attempted to set, but authenticator is not able to. Exception
+                             editUser = existingUser;
 //		                            itracker.web.error.nopasswordupdates
-                                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
-                                return mapping.findForward("error");
-                            }
-                        }
+                             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.nopasswordupdates"));
+                             return mapping.findForward("error");
+                         }
+                     }
 
-                        if (log.isDebugEnabled()) {
-                            log.debug("execute: applying updates on user " + editUser);
-                        }
-                        editUser = userService.updateUser(editUser);
-                        if (log.isDebugEnabled()) {
-                            log.debug("execute: applied updates on user " + editUser);
-                        }
-                    } else {
-                        errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invaliduser"));
-                    }
+                     if (log.isDebugEnabled()) {
+                         log.debug("execute: applying updates on user " + editUser);
+                     }
+                     editUser = userService.updateUser(editUser);
+                     if (log.isDebugEnabled()) {
+                         log.debug("execute: applied updates on user " + editUser);
+                     }
+
                 } else {
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidaction"));
                 }
@@ -174,11 +171,10 @@ public class EditUserAction extends ItrackerBaseAction {
                 Iterator<String> iter = permissionsMap.keySet().iterator();
                 while (iter.hasNext()) {
                     String paramName = iter.next();
-                    Integer projectIntValue = new Integer(paramName.substring(paramName.lastIndexOf('j') + 1));
+                    Integer projectIntValue = new Integer(paramName.substring(paramName.lastIndexOf('#') + 1));
                     Project project = projectService.getProject(projectIntValue);
-                    // TODO change the value type
-                    Integer permissionIntValue = Integer.parseInt(paramName.substring(4, paramName.lastIndexOf('P')));
-                    Permission newPermission = new Permission(PermissionType.valueOf(permissionIntValue), editUser, project);
+                    PermissionType permissionType = PermissionType.valueOf(paramName.substring(0, paramName.lastIndexOf('#')));
+                    Permission newPermission = new Permission(permissionType, editUser, project);
                     newPermission.setCreateDate(new Date());
                     newPermissions.add(newPermission);
                 }
