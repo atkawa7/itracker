@@ -469,11 +469,9 @@
                <div class="row">
                   <c:forEach items="${issue.attachments}" var="attachment" varStatus="status">
                      <div class="col-sm-6 ">
-                        <it:formatIconAction action="downloadAttachment.do"
-                                             module="/module-projects"
-                                             paramName="id" styleClass="download"
-                                             paramValue="${attachment.id}"
-                                             icon="download" iconClass="fa-lg"
+                        <it:formatIconAction action="downloadAttachment" module="/module-projects"
+                                             paramName="id" paramValue="${attachment.id}"
+                                             icon="download" styleClass="download" iconClass="fa-lg"
                                              info="itracker.web.image.download.attachment.alt"
                                              textActionKey="itracker.web.image.download.texttag"/>
 

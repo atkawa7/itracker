@@ -20,7 +20,7 @@
 <div class="container-fluid maincontent">
    <div class="row">
       <div class="col-xs-12">
-         <h4 class="editColumnTitle"><it:message key="itracker.web.attr.projects"/>:</h4>
+         <h4><it:message key="itracker.web.attr.projects"/>:</h4>
       </div>
    </div>
 

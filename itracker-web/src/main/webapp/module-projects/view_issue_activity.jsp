@@ -45,11 +45,10 @@
       </c:when>
    </c:choose>
    <c:if test='${empty activities}'>
-
-      <center><span style="color: red;"><it:message key="itracker.web.error.noactivity"/></span></center>
-
+      <div class="alert alert-danger">
+         <it:message key="itracker.web.error.noactivity"/>
+      </div>
    </c:if>
-
 
 </div>
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
