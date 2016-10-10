@@ -19,61 +19,69 @@
    </div>
 </logic:messagesPresent>
 
-<table class="shadeList" style="border: none; padding: 1px; border-spacing: 0; width: 100%">
-   <tr>
-      <td class="editColumnTitle" colspan="6"><it:message key="itracker.web.attr.reports"/>:</td>
-      <td style="text-align: right">
-         <it:formatIconAction action="editreportform" targetAction="create"
-                               icon="plus" iconClass="fa-2x"
-                               info="itracker.web.image.create.report.alt"
-                               textActionKey="itracker.web.image.create.texttag"/>
-      </td>
-   </tr>
-   <tr class="listHeading">
-      <td></td>
-      <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4" height="1"/></td>
-      <td><it:message key="itracker.web.attr.report"/></td>
-      <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4" height="1"/></td>
-      <td><it:message key="itracker.web.attr.description"/></td>
-      <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="4" height="1"/></td>
-      <td><it:message key="itracker.web.attr.lastmodified"/></td>
-   </tr>
+<div class="container-fluid maincontent">
 
-   <c:forEach items="${reports}" var="report" varStatus="i">
-      <c:choose>
-         <c:when test="${i.count % 2 == 1}">
-            <tr class="listRowShaded">
-         </c:when>
-         <c:otherwise>
-            <tr class="listRowUnshaded">
-         </c:otherwise>
-      </c:choose>
+   <div class="row">
+      <div class="col-xs-12">
+         <div class="pull-right">
+            <it:formatIconAction action="editreportform" targetAction="create"
+                                 icon="plus" iconClass="fa-2x"
+                                 info="itracker.web.image.create.report.alt"
+                                 textActionKey="itracker.web.image.create.texttag"/>
+         </div>
+         <h4><it:message key="itracker.web.attr.reports"/>:</h4>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-xs-12">
+         <div class="table-responsive">
+            <table class="table table-striped">
+               <colgroup>
+                  <col class="col-xs-2">
+                  <col class="col-xs-3">
+                  <col class="col-xs-4">
+                  <col class="col-xs-3">
+               </colgroup>
+               <thead>
 
-      <td>
-         <it:formatIconAction action="editreportform" paramName="id" paramValue="${report.id}" targetAction="update"
-                              icon="edit" info="itracker.web.image.edit.report.alt" iconClass="fa-lg"
-                              arg0="${report.name}" textActionKey="itracker.web.image.edit.texttag"/>
-         <it:formatIconAction action="downloadreport" paramName="id" paramValue="${report.id}"
-                              icon="download" info="itracker.web.image.download.report.alt"
-                              iconClass="fa-lg"
-                              arg0="${report.name}"
-                              textActionKey="itracker.web.image.download.texttag"/>
-         <it:formatIconAction action="removereport" paramName="id" paramValue="${report.id}"
-                              icon="remove" iconClass="fa-lg"
-                              info="itracker.web.image.delete.report.alt" arg0="${report.name}"
-                              textActionKey="itracker.web.image.delete.texttag"/>
-      </td>
-      <td></td>
-      <td>${report.name}</td>
-      <td></td>
-      <td><it:formatDescription truncateLength="60">${report.description}</it:formatDescription></td>
-      <td></td>
-      <td style="text-align: right"><it:formatDate date="${report.lastModifiedDate}"/></td>
+               <tr>
+                  <th></th>
+                  <th><it:message key="itracker.web.attr.report"/></th>
+                  <th><it:message key="itracker.web.attr.description"/></th>
+                  <th class="text-right text-nowrap"><it:message key="itracker.web.attr.lastmodified"/></th>
+               </tr>
+               </thead>
 
-      </tr>
+               <c:forEach items="${reports}" var="report" varStatus="i">
+                  <tr>
 
-   </c:forEach>
+                     <td>
+                        <it:formatIconAction action="editreportform" paramName="id" paramValue="${report.id}"
+                                             targetAction="update"
+                                             icon="edit" info="itracker.web.image.edit.report.alt" iconClass="fa-lg"
+                                             arg0="${report.name}" textActionKey="itracker.web.image.edit.texttag"/>
+                        <it:formatIconAction action="downloadreport" paramName="id" paramValue="${report.id}"
+                                             icon="download" info="itracker.web.image.download.report.alt"
+                                             iconClass="fa-lg"
+                                             arg0="${report.name}"
+                                             textActionKey="itracker.web.image.download.texttag"/>
+                        <it:formatIconAction action="removereport" paramName="id" paramValue="${report.id}"
+                                             icon="remove" iconClass="fa-lg" styleClass="deleteButton"
+                                             info="itracker.web.image.delete.report.alt" arg0="${report.name}"
+                                             textActionKey="itracker.web.image.delete.texttag"/>
+                     </td>
+                     <td>${report.name}</td>
+                     <td><it:formatDescription truncateLength="60">${report.description}</it:formatDescription></td>
+                     <td class="text-right text-nowrap"><it:formatDate date="${report.lastModifiedDate}"/></td>
 
-</table>
+                  </tr>
+
+               </c:forEach>
+
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
 
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>

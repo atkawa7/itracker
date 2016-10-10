@@ -40,73 +40,73 @@
    </div>
 </logic:messagesPresent>
 
+<div class="container-fluid maincontent"
 <html:form action="/editreport" enctype="multipart/form-data" acceptCharset="utf-8">
    <html:hidden property="action"/>
    <html:hidden property="id"/>
 
-   <table border="0" cellspacing="0" cellspacing="1" width="100%">
-      <tr>
-         <td class="editColumnTitle"><it:message key="itracker.web.attr.name"/>:</td>
-         <td><html:text property="name" styleClass="editColumnText"/></td>
-         <td class="editColumnTitle"><it:message key="itracker.web.attr.created"/>:</td>
-         <td class="editColumnText"><it:formatDate date="<%= report.getCreateDate() %>"/></td>
-      </tr>
-      <tr>
-         <td class="editColumnTitle"><it:message key="itracker.web.attr.namekey"/>:</td>
-         <td><html:text property="nameKey" styleClass="editColumnText" size="30"/></td>
-         <td class="editColumnTitle"><it:message key="itracker.web.attr.lastmodified"/>:</td>
-         <td class="editColumnText"><it:formatDate date="<%= report.getLastModifiedDate() %>"/></td>
-      </tr>
-      <tr>
-         <td class="editColumnTitle"><it:message key="itracker.web.attr.description"/>:</td>
-         <td colspan="3"><html:text property="description" styleClass="editColumnText" size="80"/></td>
-      </tr>
+   <div class="row">
+      <div class="col-sm-6 col-sm-push-6">
+         <div class="form-group">
+            <label><it:message key="itracker.web.attr.created"/>:</label>
+            <p class="form-control-static text-nowrap"><it:formatDate
+                    date="<%= report.getCreateDate() %>"/></p>
+         </div>
 
-      <tr>
-         <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td>
-      </tr>
-      <tr>
-         <td class="editColumnTitle"><it:message key="itracker.web.attr.reportdefinition"/>:</td>
-         <td colspan="3" classs="editColumnText"><html:file property="fileDataFile" styleClass="editColumnText"/></td>
-      </tr>
-
-      <c:set var="fileData" value="${reportForm.fileData}"/>
-      <logic:notEmpty name="fileData">
-         <tr>
-            <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10"
-                                      width="1"/></td>
-         </tr>
-         <tr>
-            <td class="editColumnTitle"><it:message key="itracker.web.attr.reportcontent"/>:</td>
-            <td colspan="3"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10"
-                                      width="1"/></td>
-         <tr>
-            <td colspan="4" classs="editColumnText">
-
-               <pre style="width: 80em; height: 40em; overflow: scroll;"><c:out value="${fileData}"
-                                                                                escapeXml="true"/></pre>
-                  <%--html:textarea readonly="${true}" cols="120" rows="10" property="fileData" styleClass="editColumnText"/--%>
-            </td>
-         </tr>
-
-      </logic:notEmpty>
-      <tr>
-         <td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="10" width="1"/></td>
-      </tr>
-      <% if (isUpdate) { %>
-      <tr>
-         <td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.update.alt"
-                                                   titleKey="itracker.web.button.update.alt"><it:message
-                 key="itracker.web.button.update"/></html:submit></td>
-      </tr>
-      <% } else { %>
-      <tr>
-         <td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.create.alt"
-                                                   titleKey="itracker.web.button.create.alt"><it:message
-                 key="itracker.web.button.create"/></html:submit></td>
-      </tr>
-      <% } %>
-   </table>
+         <div class="form-group">
+            <label><it:message key="itracker.web.attr.lastmodified"/>:</label>
+            <p class="form-control-static text-nowrap"><it:formatDate
+                    date="<%= report.getLastModifiedDate() %>"/></p>
+         </div>
+      </div>
+      <div class="col-sm-6 col-sm-pull-6">
+         <div class="form-group">
+            <label><it:message key="itracker.web.attr.name"/><sup>*</sup>:</label>
+            <html:text property="name" styleClass="form-control"/>
+         </div>
+         <div class="form-group">
+            <label><it:message key="itracker.web.attr.namekey"/><sup>*</sup>:</label>
+            <html:text property="nameKey" size="30" styleClass="form-control"/>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="form-group">
+            <label><it:message key="itracker.web.attr.description"/>:</label>
+            <html:text property="description" styleClass="form-control"/>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="form-group">
+            <label><it:message key="itracker.web.attr.reportdefinition"/>:</label>
+            <html:file property="fileDataFile" styleClass="editColumnText"/>
+         </div>
+      </div>
+   </div>
+   <c:set var="fileData" value="${reportForm.fileData}"/>
+   <logic:notEmpty name="fileData">
+      <div class="form-group">
+         <label><it:message key="itracker.web.attr.reportcontent"/>:</label>
+         <pre class="form-control-static pre-scrollable"><code><c:out value="${fileData}"
+                     escapeXml="true"/></code></pre>
+      </div>
+   </logic:notEmpty>
+   <div class="row">
+      <div class="col-xs-12">
+         <% if (isUpdate) { %>
+         <html:submit styleClass="btn btn-primary btn-block" altKey="itracker.web.button.update.alt"
+                      titleKey="itracker.web.button.update.alt"><it:message
+                 key="itracker.web.button.update"/></html:submit>
+         <% } else { %>
+         <html:submit styleClass="btn btn-primary btn-block" altKey="itracker.web.button.create.alt"
+                      titleKey="itracker.web.button.create.alt"><it:message
+                 key="itracker.web.button.create"/></html:submit>
+         <% } %>
+      </div>
+   </div>
 </html:form>
 
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
