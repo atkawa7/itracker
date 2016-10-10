@@ -122,7 +122,7 @@
          <section id="config" class="panel panel-default">
             <div class="panel-heading">
                <div class="btn-group pull-right">
-                  <it:link forward="listworkflow" styleClass="btn btn-link">[<it:message
+                  <it:link forward="listconfiguration" styleClass="btn btn-link">[<it:message
                           key="itracker.web.attr.administer"/>]</it:link>
                </div>
                <h3 class="panel-title">
@@ -163,7 +163,7 @@
          <section id="workflow" class="panel panel-default">
             <div class="panel-heading">
                <div class="btn-group pull-right">
-                  <it:link forward="listusers" styleClass="btn btn-link">
+                  <it:link forward="listworkflow" styleClass="btn btn-link">
                      [<it:message key="itracker.web.attr.administer"/>]</it:link>
                </div>
                <h3 class="panel-title">
