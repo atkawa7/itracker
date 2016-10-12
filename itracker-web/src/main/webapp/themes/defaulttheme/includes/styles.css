@@ -353,7 +353,9 @@ table.portalhomeMain {
 }
 
 .pre-scrollable {
-   -ms-word-wrap: initial;word-wrap: initial;
+   overflow-y: auto;
+   -ms-word-wrap: initial;
+   word-wrap: initial;
 }
 
 .panel-heading .btn-group.pull-right,
@@ -371,6 +373,17 @@ table.portalhomeMain {
     margin-right: 2%;
 }
 
+#languageForm .pre-scrollable {
+    white-space: pre;
+    word-wrap: initial;
+    word-break: initial;
+    font-family: monospace;
+    font-size: 13px;
+    padding: .5em;
+    resize: none;
+    min-height: 5em;
+    max-height: 20em;
+}
 #languageForm textarea.long {
     width: 40em;
     height: 100%;
@@ -381,13 +394,14 @@ table.portalhomeMain {
 #languageForm .long pre {
     overflow: auto;
     word-break: break-all;
+    font-size: inherit;
 }
 #languageForm .long pre,
 #languageForm code {
     display: block;
     border: none;
     margin: 0;
-    padding: 0;
+    background: inherit;
     word-break: normal;
     word-wrap: break-word;
 }
@@ -397,7 +411,23 @@ table.portalhomeMain {
 }
 pre.placeholder {
     background:white;
-    color: #666;
+    color: #999999;
+}
+
+#languageForm .tool {
+   position: relative;
+   float: right;
+}
+#languageForm .tool .btn {
+   opacity: .2;
+   position: absolute;
+   right: 2em;
+   top:1em;
+}
+
+#languageForm td:hover .tool .btn,
+pre.placeholder:hover .btn {
+   opacity: 1;
 }
 
 .assignIssueForm select {

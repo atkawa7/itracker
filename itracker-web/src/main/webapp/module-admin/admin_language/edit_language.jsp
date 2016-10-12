@@ -128,7 +128,7 @@
 
                      <c:if test="${ (key != 'itracker.locales') &&  (key != 'itracker.locale.name') }">
                         <tr>
-                           <td><label for="${ key }"><code>${ key }</code></label></td>
+                           <td><label for="${ key }"><code class="pre">${ key }</code></label></td>
                               <%-- localeType != SystemConfigurationUtilities.LOCALE_TYPE_BASE --%>
                            <c:if test="${ localeType > 1 }">
                               <td>
@@ -170,13 +170,12 @@
                                  <c:when test="${ isLongString }">
                                     <html:textarea indexed="false" name="languageForm" rows="6"
                                                    property="${ propertyKey }"
-                                                   styleClass="form-control" styleId="${ key }"/>
+                                                   styleClass="form-control pre-scrollable" styleId="${ key }"/>
                                  </c:when>
                                  <c:otherwise>
                                     <html:text indexed="false" name="languageForm" property="${ propertyKey }"
                                                styleClass="form-control"
-                                               styleId="${ key }"
-                                               title=""/>
+                                               styleId="${ key }"/>
                                  </c:otherwise>
                               </c:choose>
                            </td>

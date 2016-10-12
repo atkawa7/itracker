@@ -24,7 +24,38 @@
         });
         $('input[name=placeholder]').each(function(ix,elem) {
             var next = $(elem).next();
-            next.attr('placeholder', $(elem).attr('value'))
+            if (next.is("textarea")) {
+                var pre = $('<pre class="pre-scrollable form-control-static placeholder">');
+                next.after(pre);
+                pre.text($(elem).attr('value'));
+                var fill = $('<div class="tool"><a class="btn btn-default"><i class="fa fa-clone"></i></a></div>');
+                var fillBtn = fill.find(".btn");
+                pre.before(fill);
+                fillBtn.click(function(e) {pre.click(); next.val(pre.text());});
+
+                function preShow(isShow) {
+                    if (isShow) {
+                        next.hide();
+                        pre.show();
+                        fill.show();
+                    } else {
+                        pre.hide();
+                        fill.hide();
+                        next.show();
+                    }
+                }
+                pre.click(function() {next.innerHeight(pre.outerHeight()); next.focus(); preShow(false)});
+                preShow(!next.val());
+
+                next.change(function() {
+                    preShow(!next.val())
+                });
+                next.blur(function() {
+                    next.change();
+                });
+            } else {
+                next.attr('placeholder', $(elem).attr('value'))
+            }
         });
         $('a.HTTP_POST[href], .HTTP_POST a[href]').click(function (event) {
             var elem = this;
@@ -61,7 +92,7 @@
 	function toggleProjectPermissionsChecked(clicked) {
 		var form = clicked.form;
 		for (var i = 0; i < form.elements.length; i++) {
-			if (form.elements[i].name.indexOf(clicked.name) > -1) {
+			if (form.elements[i].name.indexOf(clicked.name+')') > -1) {
 				form.elements[i].checked = clicked.checked;
 			}
 		}
