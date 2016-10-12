@@ -41,9 +41,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
     private static final Logger log = Logger
@@ -92,7 +92,7 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
 
                 customFieldValueForm.setSortOrder(customFieldValue.getSortOrder());
 
-                HashMap<String, String> translations = new HashMap<>();
+                Map<String, String> translations = new TreeMap<>();
                 messageKey = CustomFieldUtilities
                         .getCustomFieldOptionLabelKey(customFieldValue
                                         .getCustomField().getId(),
@@ -114,9 +114,9 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
 
             String pageTitleKey = "";
             String pageTitleArg = "";
-            pageTitleKey = "itracker.web.admin.editcustomfield.title.create";
+            pageTitleKey = "itracker.web.admin.editcustomfieldvalue.title.create";
             if ("update".equals(action)) {
-                pageTitleKey = "itracker.web.admin.editcustomfield.title.update";
+                pageTitleKey = "itracker.web.admin.editcustomfieldvalue.title.update";
             }
 
             request.setAttribute("languages", configurationService.getAvailableLanguages());
@@ -156,12 +156,12 @@ public class EditCustomFieldValueFormAction extends ItrackerBaseAction {
 
     public static void setRequestEnvironment(HttpServletRequest request, ConfigurationService configurationService) {
         Map<String, List<String>> languages = configurationService.getAvailableLanguages();
-        Map<NameValuePair, List<NameValuePair>> languagesNameValuePair = new HashMap<NameValuePair, List<NameValuePair>>();
+        Map<NameValuePair, List<NameValuePair>> languagesNameValuePair = new TreeMap<>(NameValuePair.KEY_COMPARATOR);
         for (Map.Entry<String, List<String>> entry : languages.entrySet()) {
             String language = entry.getKey();
             List<String> locales = entry.getValue();
 
-            List<NameValuePair> localesNameValuePair = new ArrayList<NameValuePair>();
+            List<NameValuePair> localesNameValuePair = new ArrayList<>();
             for (String locale : locales) {
                 NameValuePair localeNameValuePair = new NameValuePair(locale, ITrackerResources.getString("itracker.locale.name", locale));
                 localesNameValuePair.add(localeNameValuePair);

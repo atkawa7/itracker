@@ -38,8 +38,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 //  TODO: Action Cleanup
 
@@ -84,11 +85,11 @@ public class EditCustomFieldFormAction extends ItrackerBaseAction {
                 customFieldForm.setDateFormat(customField.getDateFormat());
                 customFieldForm.setSortOptionsByName(Boolean.toString(customField.isSortOptionsByName()));
 
-                HashMap<String, String> translations = new HashMap<String, String>();
+                Map<String, String> translations = new TreeMap<>();
                 List<Language> languageItems = configurationService.getLanguageItemsByKey(CustomFieldUtilities.getCustomFieldLabelKey(customField.getId()));
-                for (int i = 0; i < languageItems.size(); i++) {
-                    translations.put(languageItems.get(i).getLocale(), languageItems.get(i).getResourceValue());
-                }
+               for (Language languageItem : languageItems) {
+                  translations.put(languageItem.getLocale(), languageItem.getResourceValue());
+               }
                 customFieldForm.setTranslations(translations);
             }
 

@@ -37,7 +37,7 @@
                <h3 class="panel-title">
                   <it:message key="itracker.web.admin.index.projectadmin"/></h3>
             </div>
-            <div class="container-fluid">
+            <div class="panel-body">
                <div class="row">
                   <div class="col-xs-6">
                      <h5 class="text-nowrap">
@@ -69,7 +69,7 @@
                <h3 class="panel-title">
                   <it:message key="itracker.web.admin.index.useradmin"/></h3>
             </div>
-            <div class="container-fluid">
+            <div class="panel-body">
                <div class="row">
                   <div class="col-xs-6">
                      <h5 class="text-nowrap">
@@ -102,7 +102,7 @@
                <h3 class="panel-title">
                   <it:message key="itracker.web.admin.index.reportadmin"/></h3>
             </div>
-            <div class="container-fluid">
+            <div class="panel-body">
                <div class="row">
                   <div class="col-xs-12">
                      <h5 class="text-nowrap">
@@ -128,7 +128,7 @@
                <h3 class="panel-title">
                   <it:message key="itracker.web.admin.index.configadmin"/></h3>
             </div>
-            <div class="container-fluid">
+            <div class="panel-body">
                <div class="row">
                   <div class="col-xs-6">
                      <h5 class="text-nowrap"><it:message key="itracker.web.attr.statuses"/>:
@@ -169,7 +169,7 @@
                <h3 class="panel-title">
                   <it:message key="itracker.web.admin.index.workflowadmin"/></h3>
             </div>
-            <div class="container-fluid">
+            <div class="panel-body">
                <div class="row">
                   <div class="col-xs-12">
                      <h5 class="text-nowrap">
@@ -203,7 +203,7 @@
                <h3 class="panel-title">
                   <it:message key="itracker.web.admin.index.languageadmin"/></h3>
             </div>
-            <div class="container-fluid">
+            <div class="panel-body">
                <div class="row">
                   <div class="col-xs-6">
                      <h5 class="text-nowrap">
@@ -236,7 +236,7 @@
                <h3 class="panel-title">
                   <it:message key="itracker.web.admin.index.attachmentadmin"/></h3>
             </div>
-            <div class="container-fluid">
+            <div class="panel-body">
 
 
                <div class="row">

@@ -973,9 +973,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         return properties;
     }
 
-    public HashMap<String, List<String>> getAvailableLanguages() {
+    public Map<String, List<String>> getAvailableLanguages() {
 
-        final HashMap<String, List<String>> languages = new HashMap<String, List<String>>();
+        final TreeMap<String, List<String>> languages = new TreeMap<>();
         final List<Configuration> locales = getConfigurationItemsByType(Configuration.Type.locale);
 
         for (int i = 0; i < locales.size(); i++) {
@@ -1010,11 +1010,11 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     public int getNumberAvailableLanguages() {
 
         int numLanguages = 0;
-        HashMap<String, List<String>> availableLanguages = getAvailableLanguages();
+        Map<String, List<String>> availableLanguages = getAvailableLanguages();
 
         for (Iterator iter = availableLanguages.keySet().iterator(); iter.hasNext(); ) {
-            List<List> languages = new ArrayList<List>();
-            List list = availableLanguages.get((String) iter.next());
+            List<List> languages = new ArrayList<>();
+            List list = availableLanguages.get(iter.next());
             languages.add(list);
 
             if (languages != null && languages.size() > 0) {
@@ -1268,7 +1268,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
      *                    even if they are listed as being up to date
      */
     public void initializeAllLanguages(boolean forceReload) {
-        HashSet<String> definedLocales = new HashSet<>();
+        Set<String> definedLocales = new LinkedHashSet<>();
 
         initializeLocale(ITrackerResources.BASE_LOCALE,
                 forceReload);

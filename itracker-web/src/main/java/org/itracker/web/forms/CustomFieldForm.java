@@ -53,7 +53,7 @@ public class CustomFieldForm extends ValidatorForm {
     String sortOptionsByName = null;
     String value = null;
     //	private String base_locale;
-    HashMap<String, String> translations = new HashMap<String, String>();
+    Map<String, String> translations = new HashMap<String, String>();
 
     private static final Logger log = Logger.getLogger(CustomFieldForm.class);
 
@@ -67,11 +67,10 @@ public class CustomFieldForm extends ValidatorForm {
         Map<String, List<String>> languages_map = configurationService.getAvailableLanguages();
         String[] languagesArray = new String[languages_map.size()];
         int idx = 0;
-        for (Iterator<String> iter = languages_map.keySet().iterator(); iter.hasNext(); ) {
-            String language = iter.next();
-            languagesArray[idx] = language;
-            idx++;
-        }
+       for (String language : languages_map.keySet()) {
+          languagesArray[idx] = language;
+          idx++;
+       }
 
         String pageTitleKey = "itracker.web.admin.editcustomfield.title.create";
         String pageTitleArg = "";
@@ -90,7 +89,7 @@ public class CustomFieldForm extends ValidatorForm {
         request.setAttribute("action", action);
 
         Map<String, List<String>> languages = configurationService.getAvailableLanguages();
-        Map<NameValuePair, List<NameValuePair>> languagesNameValuePair = new HashMap<NameValuePair, List<NameValuePair>>();
+        Map<NameValuePair, List<NameValuePair>> languagesNameValuePair = new TreeMap<>(NameValuePair.KEY_COMPARATOR);
         for (Map.Entry<String, List<String>> entry : languages.entrySet()) {
             String language = entry.getKey();
             List<String> locales = entry.getValue();
@@ -112,7 +111,7 @@ public class CustomFieldForm extends ValidatorForm {
             log.debug("setRequestEnv: sorted values by sort order comparator: " + options);
         }
 
-        HashMap<Integer, String> optionsMap = new HashMap<Integer, String>();
+        Map<Integer, String> optionsMap = new TreeMap<>();
         for (CustomFieldValue option : options) {
             String optionName = CustomFieldUtilities.getCustomFieldOptionName(customField.getId(), option.getId(), currentLocale);
             optionsMap.put(option.getId(), optionName);
@@ -218,11 +217,11 @@ public class CustomFieldForm extends ValidatorForm {
         this.sortOptionsByName = sortOptionsByName;
     }
 
-    public HashMap<String, String> getTranslations() {
+    public Map<String, String> getTranslations() {
         return translations;
     }
 
-    public void setTranslations(HashMap<String, String> translations) {
+    public void setTranslations(Map<String, String> translations) {
         this.translations = translations;
     }
 

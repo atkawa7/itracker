@@ -26,11 +26,9 @@ import org.itracker.model.Configuration;
 import org.itracker.model.Language;
 import org.itracker.model.NameValuePair;
 import org.itracker.model.util.SystemConfigurationUtilities;
-import org.itracker.model.util.UserUtilities;
 import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.ConfigurationForm;
-import org.itracker.web.util.LoginUtilities;
 import org.itracker.web.util.ServletContextUtils;
 
 import javax.servlet.ServletException;
@@ -80,10 +78,10 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
                 configurationForm.setTypeKey(SystemConfigurationUtilities.getTypeLanguageKey(configItem));
                 configurationForm.setOrder(configItem.getOrder());
 
-                HashMap<String, String> translations = new HashMap<>();
+                Map<String, String> translations = new TreeMap<>();
                 List<Language> languageItems = configurationService
                         .getLanguageItemsByKey(configurationForm.getKey());
-
+                Collections.sort(languageItems, Language.KEY_COMPARATOR);
                 for (Language languageItem : languageItems) {
                     translations.put(languageItem.getLocale(),
                             languageItem.getResourceValue());
@@ -92,7 +90,7 @@ public class EditConfigurationFormAction extends ItrackerBaseAction {
             }
             Map<String, List<String>> languages = configurationService
                     .getAvailableLanguages();
-            Map<NameValuePair, List<NameValuePair>> languagesNameValuePair = new HashMap<>();
+            Map<NameValuePair, List<NameValuePair>> languagesNameValuePair = new TreeMap<>(NameValuePair.KEY_COMPARATOR);
             for (Map.Entry<String, List<String>> entry : languages.entrySet()) {
                 String language = entry.getKey();
                 List<String> locales = entry.getValue();
