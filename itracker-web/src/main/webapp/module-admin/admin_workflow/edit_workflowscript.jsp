@@ -20,82 +20,88 @@
       </div>
    </div>
 </logic:messagesPresent>
+
+<div class="container-fluid maincontent">
 <html:form action="/editworkflowscript">
    <html:hidden property="action"/>
    <html:hidden property="id"/>
 
-   <table border="0" cellspacing="0" cellspacing="1" width="100%">
-      <tr>
-         <td colspan="2" width="48%"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15"
-                                               height="1"/></td>
-         <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="10" height="1"/></td>
-         <td colspan="2" width="48%"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15"
-                                               height="1"/></td>
-      </tr>
 
-      <c:if test="${update}">
-         <tr>
-            <td class="editColumnTitle"><it:message key="itracker.web.attr.id"/>:</td>
-            <td class="editColumnText">${workflowScriptForm.id}</td>
-         </tr>
-      </c:if>
+   <c:if test="${update}">
+      <div class="row">
+         <div class="col-sm-12">
+            <div class="form-group">
+               <label><it:message key="itracker.web.attr.id"/>:</label>
+               <p class="form-control-static">${workflowScriptForm.id}</p>
+            </div>
+         </div>
+      </div>
+   </c:if>
+   <div class="row">
 
-      <tr>
-         <td class="editColumnTitle"><it:message key="itracker.web.attr.name"/>:</td>
-         <td class="editColumnText"><html:text property="name" size="40" styleClass="editColumnText"/></td>
-         <td></td>
-         <td class="editColumnTitle"><it:message key="itracker.web.attr.created"/>:</td>
-         <td class="editColumnText"><it:formatDate date="${workflowscript.createDate}"/></td>
-      </tr>
-      <tr>
-         <td class="editColumnTitle"><it:message key="itracker.web.attr.event"/>:</td>
-         <td>
-            <html:select property="event" styleClass="editColumnText">
+      <div class="col-sm-6 col-sm-push-6">
+         <div class="form-group">
+            <label><it:message key="itracker.web.attr.created"/>:</label>
+            <p class="form-control-static"><it:formatDate date="${workflowscript.createDate}"/></p>
+         </div>
+         <div class="form-group">
+            <label><it:message key="itracker.web.attr.lastmodified"/>:</label>
+            <p class="form-control-static"><it:formatDate date="${workflowscript.lastModifiedDate}"/></p>
+         </div>
+      </div>
+      <div class="col-sm-6 col-sm-pull-6">
+         <div class="form-group">
+            <label><it:message key="itracker.web.attr.name"/>:</label>
+            <html:text property="name" size="40" styleClass="form-control"/>
+         </div>
+         <div class="form-group">
+            <label><it:message key="itracker.web.attr.event"/>:</label>
+            <html:select property="event" styleClass="form-control">
                <html:optionsCollection property="eventOptions"/>
             </html:select>
-         </td>
-         <td></td>
-         <td class="editColumnTitle"><it:message key="itracker.web.attr.lastmodified"/>:</td>
-         <td class="editColumnText"><it:formatDate date="${workflowscript.lastModifiedDate}"/></td>
-      </tr>
-      <tr>
-         <td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td>
-      </tr>
-      <tr>
-         <td class="editColumnTitle"><it:message key="itracker.web.attr.script"/>:</td>
-         <td colspan="4">
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-xs-12">
+         <div class="form-group">
+            <div class="pull-right">
+               <div class="radio-inline">
+                  <label for="beanshell"><html:radio property="language" value="BeanShell" styleId="beanshell"
+                                                     title="BeanShell"/> BeanShell</label>
+               </div>
+               <div class="radio-inline">
+                  <label for="groovy"><html:radio property="language" value="Groovy" styleId="groovy" title="Groovy"/>
+                     Groovy</label>
+               </div>
+            </div>
+            <label><it:message key="itracker.web.attr.script"/>:
+            </label>
 
-            <html:radio property="language" value="BeanShell" styleId="beanshell" title="BeanShell"/>
-            <label for="beanshell">BeanShell</label>
-            <html:radio property="language" value="Groovy" styleId="groovy" title="Groovy"/>
-            <label for="groovy">Groovy</label>
-         </td>
-      </tr>
+            <html:textarea rows="20" property="script" styleClass="form-control pre"/>
 
-      <tr>
-         <td class="editColumnText" colspan="5">
-            <html:textarea rows="20" cols="120" property="script" styleClass="pre editColumnText"/>
-         </td>
-      </tr>
-      <tr>
-         <td colspan="5"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td>
-      </tr>
-      <c:choose>
-         <c:when test="${ update }">
-            <tr>
-               <td colspan="5" align="left"><html:submit styleClass="button" altKey="itracker.web.button.update.alt"
-                                                         titleKey="itracker.web.button.update.alt"><it:message
-                       key="itracker.web.button.update"/></html:submit></td>
-            </tr>
-         </c:when>
-         <c:otherwise>
-            <tr>
-               <td colspan="5" align="left"><html:submit styleClass="button" altKey="itracker.web.button.create.alt"
-                                                         titleKey="itracker.web.button.create.alt"><it:message
-                       key="itracker.web.button.create"/></html:submit></td>
-            </tr>
-         </c:otherwise>
-      </c:choose>
-   </table>
+         </div>
+      </div>
+   </div>
+
+   <div class="row">
+      <div class="col-xs-12">
+         <c:choose>
+            <c:when test="${update}">
+               <html:submit styleClass="btn btn-primary btn-block"
+                            altKey="itracker.web.button.update.alt"
+                            titleKey="itracker.web.button.update.alt">
+                  <it:message key="itracker.web.button.update"/>
+               </html:submit>
+            </c:when>
+            <c:otherwise>
+               <html:submit styleClass="btn btn-primary btn-block" altKey="itracker.web.button.create.alt"
+                            titleKey="itracker.web.button.create.alt"><it:message
+                       key="itracker.web.button.create"/></html:submit>
+            </c:otherwise>
+         </c:choose>
+      </div>
+   </div>
 </html:form>
+</div>
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
