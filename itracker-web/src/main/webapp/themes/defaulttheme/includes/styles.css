@@ -363,6 +363,10 @@ table.portalhomeMain {
     margin: -10px 0;
 }
 
+.table .btn-group.pull-right .btn {
+   padding: 0 3px;
+   font-size: inherit;
+}
 
 #configurationForm .systemDefault,
 #customFieldForm .systemDefault {
