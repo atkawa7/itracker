@@ -28,7 +28,7 @@
 
       <div class="row">
          <div class="col-xs-12">
-            <h5><it:message key="itracker.web.attr.translations"/>:</h5>
+            <h4><it:message key="itracker.web.attr.translations"/>:</h4>
          </div>
       </div>
 

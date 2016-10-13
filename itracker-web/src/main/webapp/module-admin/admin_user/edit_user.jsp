@@ -27,16 +27,14 @@
    </div>
 </logic:messagesPresent>
 
-<html:form action="/edituser" method="post" acceptCharset="UTF-8" enctype="multipart/form-data"
-           onsubmit="return validateForm()">
-   <html:hidden property="action"/>
-   <html:hidden property="id"/>
+<div class="container-fluid maincontent">
+   <html:form action="/edituser" method="post" acceptCharset="UTF-8" enctype="multipart/form-data"
+              onsubmit="return validateForm()">
+      <html:hidden property="action"/>
+      <html:hidden property="id"/>
 
 
-   <div class="container-fluid">
       <div class="panel-group">
-
-
          <div class="panel panel-default">
             <div class="panel-heading">
                <h3 class="panel-title">
@@ -268,10 +266,10 @@
                         </c:choose>
                         <label for="${ permissionName.value }#${ project.id }">${ permissionName.name }</label>
                      </div>
-                     <%--<c:if test="${ permission != null }">--%>
+                        <%--<c:if test="${ permission != null }">--%>
                         <%--<em class="text-nowrap" title="${titleLastMod}"><it:formatDate--%>
-                                <%--date="${ permission.lastModifiedDate }"/></em>--%>
-                     <%--</c:if>--%>
+                        <%--date="${ permission.lastModifiedDate }"/></em>--%>
+                        <%--</c:if>--%>
                   </div>
                </c:forEach>
             </div>
@@ -296,9 +294,10 @@
             </c:choose>
          </div>
       </div>
-   </div>
 
-</html:form>
+
+   </html:form>
+</div>
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/>
 </body>
 </html>

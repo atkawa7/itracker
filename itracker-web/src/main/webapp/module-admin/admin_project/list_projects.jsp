@@ -55,7 +55,7 @@
          <div class="table-responsive">
             <c:choose>
                <c:when test="${not empty projects}">
-                  <table border="0" cellspacing="0" cellpadding="1" width="100%" class="table table-striped">
+                  <table class="table table-striped">
                      <thead>
                      <tr>
                         <th></th>

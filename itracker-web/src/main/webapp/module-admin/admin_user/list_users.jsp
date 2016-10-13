@@ -35,7 +35,7 @@
    <div class="row">
       <div class="col-xs-12">
          <div class="table-responsive">
-            <table class="table table-striped table-striped">
+            <table class="table table-striped">
                <colgroup>
                   <col class="col-xs-1">
                   <col class="col-xs-2">

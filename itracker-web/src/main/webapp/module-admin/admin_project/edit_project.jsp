@@ -13,7 +13,7 @@
    </div>
 </logic:messagesPresent>
 
-<div class="container-fluid">
+<div class="container-fluid maincontent">
    <html:form action="/editproject" acceptCharset="UTF-8" enctype="multipart/form-data">
       <html:hidden property="action"/>
       <html:hidden property="id"/>

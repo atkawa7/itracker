@@ -94,7 +94,7 @@
                            titleKey="itracker.web.admin.editcustomfield.option.create.alt"><it:message
                           key="itracker.web.admin.editcustomfield.option.create"/></it:link>
                </div>
-               <h5><it:message key="itracker.web.attr.fieldoptions"/>:</h5>
+               <h4><it:message key="itracker.web.attr.fieldoptions"/>:</h4>
             </div>
          </div>
 
@@ -108,25 +108,25 @@
 
                         <tr>
                            <td class="text-nowrap">
-                              <div class="pull-right">
+                              <div class="pull-right btn-group btn-group-sm">
                                  <it:link action="editcustomfieldvalueform" targetAction="update" paramName="id"
-                                          paramValue="${option.id}"
+                                          paramValue="${option.id}" styleClass="btn btn-sm btn-link"
                                           titleKey="itracker.web.admin.editcustomfield.option.edit.alt"><it:message
                                          key="itracker.web.admin.editcustomfield.option.edit"/></it:link>
                                  <it:link action="removecustomfieldvalue" targetAction="delete" paramName="id"
-                                          paramValue="${option.id}"
+                                          paramValue="${option.id}" styleClass="btn btn-sm btn-link"
                                           titleKey="itracker.web.admin.editcustomfield.option.delete.alt"><it:message
                                          key="itracker.web.admin.editcustomfield.option.delete"/></it:link>
                                  <c:if test="${i.index != 0}">
                                     <it:link action="ordercustomfieldvalue" targetAction="up" paramName="id"
-                                             paramValue="${option.id}"
+                                             paramValue="${option.id}" styleClass="btn btn-sm btn-link"
                                              titleKey="itracker.web.admin.editcustomfield.option.orderup.alt">
                                        <it:message key="itracker.web.admin.editcustomfield.option.orderup"/>
                                     </it:link>
                                  </c:if>
                                  <c:if test="${i.index lt fn:length(options)-1 }">
                                     <it:link action="ordercustomfieldvalue" targetAction="down" paramName="id"
-                                             paramValue="${option.id}"
+                                             paramValue="${option.id}" styleClass="btn btn-sm btn-link"
                                              titleKey="itracker.web.admin.editcustomfield.option.orderdown.alt">
                                        <it:message key="itracker.web.admin.editcustomfield.option.orderdown"/>
                                     </it:link>
@@ -148,7 +148,7 @@
 
       <div class="row">
          <div class="col-xs-12">
-            <h5><it:message key="itracker.web.attr.translations"/>:</h5>
+            <h4><it:message key="itracker.web.attr.translations"/>:</h4>
          </div>
       </div>
 

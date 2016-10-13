@@ -25,20 +25,20 @@
                      <it:message key="itracker.web.attr.baselocale"/>
                   </td>
                   <td>
-                     <div class="pull-right">
-                        <it:link action="editlanguageform" targetAction="create" paramName="locale"
+                     <div class="pull-right btn-group btn-group-sm">
+                        <it:link action="editlanguageform" targetAction="create" paramName="locale" styleClass="btn btn-sm btn-link"
                                  paramValue="${ baseLocale }" titleKey="itracker.web.admin.listlanguages.create.alt"
                                  arg0="${ baseLocaleName }"><it:message key="itracker.web.admin.listlanguages.create"
                                                                         arg0="${ baseLocaleName }"/></it:link>
-                        <it:link action="createlanguagekeyform" targetAction="create"
+                        <it:link action="createlanguagekeyform" targetAction="create" styleClass="btn btn-sm btn-link"
                                  titleKey="itracker.web.admin.listlanguages.createkey.alt"><it:message
                                 key="itracker.web.admin.listlanguages.createkey"/></it:link>
-                        <it:link action="editlanguageform" targetAction="update" paramName="locale"
+                        <it:link action="editlanguageform" targetAction="update" paramName="locale" styleClass="btn btn-sm btn-link"
                                  paramValue="${ baseLocale }" titleKey="itracker.web.admin.listlanguages.update.alt"
                                  arg0="${ baseLocaleName }"><it:message key="itracker.web.admin.listlanguages.update"
                                                                         arg0="${ baseLocaleName }"/></it:link>
                         <%--        <it:link action="editlanguage" targetAction="disable" paramName="locale" paramValue="${ language }" titleKey="itracker.web.admin.listlanguages.disable.alt" arg0="${ languageName }"><it:message key="itracker.web.admin.listlanguages.disable"/></it:link>--%>
-                        <it:link action="exportlanguage" targetAction="export" paramName="locale"
+                        <it:link action="exportlanguage" targetAction="export" paramName="locale" styleClass="btn btn-sm btn-link"
                                  paramValue="${ baseLocale }" titleKey="itracker.web.admin.listlanguages.export.alt"
                                  arg0="${ baseLocaleName }"><it:message key="itracker.web.admin.listlanguages.export"
                                                                         arg0="${ baseLocaleName }"/></it:link>
@@ -60,20 +60,20 @@
                         ( ${ localizedName } )
                      </td>
                      <td>
-                        <div class="pull-right">
-                           <it:link action="editlanguageform" targetAction="create" paramName="locale"
+                        <div class="pull-right btn-group btn-group-sm">
+                           <it:link action="editlanguageform" targetAction="create" paramName="locale" styleClass="btn btn-sm btn-link"
                                     paramValue="${ language }" titleKey="itracker.web.admin.listlanguages.create.alt"
                                     arg0="${ languageName }"><it:message
                                    key="itracker.web.admin.listlanguages.create"/></it:link>
-                           <it:link action="editlanguageform" targetAction="update" paramName="locale"
+                           <it:link action="editlanguageform" targetAction="update" paramName="locale" styleClass="btn btn-sm btn-link"
                                     paramValue="${ language }" titleKey="itracker.web.admin.listlanguages.update.alt"
                                     arg0="${ languageName }"><it:message
                                    key="itracker.web.admin.listlanguages.update"/></it:link>
-                           <it:link action="editlanguage" targetAction="disable" paramName="locale"
+                           <it:link action="editlanguage" targetAction="disable" paramName="locale" styleClass="btn btn-sm btn-link"
                                     paramValue="${ language }" titleKey="itracker.web.admin.listlanguages.disable.alt"
                                     arg0="${ languageName }"><it:message
                                    key="itracker.web.admin.listlanguages.disable"/></it:link>
-                           <it:link action="exportlanguage" targetAction="export" paramName="locale"
+                           <it:link action="exportlanguage" targetAction="export" paramName="locale" styleClass="btn btn-sm btn-link"
                                     paramValue="${ language }" titleKey="itracker.web.admin.listlanguages.export.alt"
                                     arg0="${ languageName }"><it:message
                                    key="itracker.web.admin.listlanguages.export"/></it:link>
@@ -92,17 +92,17 @@
                            ( ${ localizedName } )
                         </td>
                         <td>
-                           <div class="pull-right">
-                              <it:link action="editlanguageform" targetAction="update" paramName="locale"
+                           <div class="pull-right btn-group btn-group-sm">
+                              <it:link action="editlanguageform" targetAction="update" paramName="locale" styleClass="btn btn-sm btn-link"
                                        paramValue="${ locale }" titleKey="itracker.web.admin.listlanguages.update.alt"
                                        arg0="${ localeName }"><it:message
                                       key="itracker.web.admin.listlanguages.update"/></it:link>
-                              <it:link action="editlanguage" targetAction="disable" paramName="locale"
+                              <it:link action="editlanguage" targetAction="disable" paramName="locale" styleClass="btn btn-sm btn-link"
                                        paramValue="${ language }"
                                        titleKey="itracker.web.admin.listlanguages.disable.alt"
                                        arg0="${ languageName }"><it:message
                                       key="itracker.web.admin.listlanguages.disable"/></it:link>
-                              <it:link action="exportlanguage" targetAction="export" paramName="locale"
+                              <it:link action="exportlanguage" targetAction="export" paramName="locale" styleClass="btn btn-sm btn-link"
                                        paramValue="${ locale }" titleKey="itracker.web.admin.listlanguages.export.alt"
                                        arg0="${ localeName }"><it:message
                                       key="itracker.web.admin.listlanguages.export"/></it:link>
