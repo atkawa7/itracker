@@ -263,13 +263,13 @@
 
    <div class="row">
       <div class="col-xs-12">
-         <hr>
 
-         <div class="pull-right label label-info text-right">
-            <it:message key="itracker.web.generic.totalissues"
-                        arg0="<%= Integer.toString(issues.size()) %>"/>
-         </div>
+
          <h4>
+            <div class="pull-right label label-info text-right">
+               <it:message key="itracker.web.generic.totalissues"
+                           arg0="<%= Integer.toString(issues.size()) %>"/>
+            </div>
             <it:message key="itracker.web.attr.issues"/></h4>
          <div class="table-responsive">
             <table class="table table-striped table-hover">
