@@ -168,6 +168,8 @@ a.headerLinks:visited {
     text-decoration: none;
 }
 
+thead,
+thead a,
 .listHeading,
 .listHeading a {
     font-weight: bold;
@@ -179,10 +181,13 @@ a.headerLinks:visited {
     text-decoration: none;
 }
 
+thead a,
 .listHeading a {
     text-decoration: underline;
 }
 
+thead tr td,
+thead tr th,
 tr.listHeading td, tr.listHeading th {
     padding: .2em .4em;
 }
@@ -205,6 +210,9 @@ tr.listHeading td, tr.listHeading th {
     text-decoration: none;
 }
 
+thead a:hover,
+thead a:visited,
+thead a:link,
 a.listHeading:hover,
 a.listHeading:visited,
 a.listHeading:link {
