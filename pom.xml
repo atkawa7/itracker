@@ -5,7 +5,7 @@
     <artifactId>itracker</artifactId>
     <packaging>pom</packaging>
     <name>itracker</name>
-    <version>3.3.5-SNAPSHOT</version>
+    <version>3.3.4-SNAPSHOT</version>
     <url>http://itracker.sourceforge.net/</url>
 
     <modules>
