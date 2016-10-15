@@ -1,31 +1,29 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<%-- page import="org.itracker.model.*" --%>
-<%-- page import="org.itracker.core.resources.*" --%>
-<%-- page import="org.itracker.web.scheduler.*" --%>
-
 <bean:define id="pageTitleKey" value="itracker.web.admin.listtasks.title"/>
 <bean:define id="pageTitleArg" value=""/>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
 <logic:messagesPresent>
-  <center>
-    <span class="formError">
-     <html:messages id="error">
-        <bean:write name="error"/><br/>
-     </html:messages>
-    </span>
-  </center>
-  <br>
+   <div class="alert alert-danger">
+      <div id="pageErrors" class="text-center">
+         <html:messages id="error">
+            <div><bean:write name="error"/></div>
+         </html:messages>
+      </div>
+   </div>
 </logic:messagesPresent>
 
 <table border="0" cellspacing="0" cellspacing="1" width="100%">
   <tr>
     <td class="editColumnTitle" colspan="8"><it:message key="itracker.web.attr.tasks"/>: <span class="listRowText">(<it:message key="itracker.web.admin.listtasks.lastran"/> <%--<it:formatDate date="<%= Scheduler.getLastRun() %>" format="full"/>)--%></span></td>
     <td align="right">
-      <it:formatImageAction action="edittaskform" targetAction="create" src="/themes/defaulttheme/images/create.gif" altKey="itracker.web.image.create.task.alt" textActionKey="itracker.web.image.create.texttag"/>
+      <it:formatIconAction action="edittaskform" targetAction="create"
+                           icon="edit" iconClass="fa-lg"
+                           info="itracker.web.image.create.task.alt"
+                           textActionKey="itracker.web.image.create.texttag"/>
     </td>
   </tr>
   <tr align="left" class="listHeading">

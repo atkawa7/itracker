@@ -36,13 +36,10 @@
     <!-- ==================================== Action Mappings    -->
     <action-mappings>
         <action path="/displayreport" type="org.itracker.web.actions.report.DisplayReportAction"
-                name="displayReportForm" scope="request" input="/search_issues_report.jsp"
+                name="displayReportForm" scope="request" input="list_reports"
                 validate="true">
             <forward name="imagesurl" path="/servlets/ReportChartController"/>
         </action>
-        <action path="/searchissues" type="org.itracker.web.actions.issuesearch.SearchIssuesAction"
-                name="searchForm" scope="request" input="/search_issues_report.jsp"
-                validate="true"/>
         <action path="/list_reports" type="org.itracker.web.actions.report.ListReportsAction">
             <forward name="list_reports" path="/list_reports.jsp" module="/module-reports"/>
         </action>

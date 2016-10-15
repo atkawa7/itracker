@@ -1,45 +1,55 @@
-<%@ include file="/common/taglibs.jsp"%>
+<%@ include file="/common/taglibs.jsp" %>
 
 <bean:define toScope="request" id="pageTitleKey" value="itracker.web.issueactivity.title"/>
 <bean:define toScope="request" id="pageTitleArg" value="${issueId}"/>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
-		
-		<c:if test='${empty activities}'> 
 
-   			<center><span style="color: red;"><it:message key="itracker.web.error.noactivity"/></span></center>
-			
-		</c:if>
-		
+<div class="container-fluid maincontent">
+   <c:choose>
+      <c:when test="${not empty activities}">
+         <div class="row">
 
-            <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
-              <tr>
-        <td class="editColumnTitle" colspan="7"><it:message key="itracker.web.attr.activity" />:</td>
-              </tr>
-              <tr align="left" class="listHeading">
-                <td><it:message key="itracker.web.attr.date"/></td>
-                <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="5" height="1"/></td>
-                <td><it:message key="itracker.web.attr.type"/></td>
-                <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="5" height="1"/></td>
-                <td><it:message key="itracker.web.attr.description"/></td>
-                <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="5" height="1"/></td>
-                <td><it:message key="itracker.web.attr.user"/></td>
-              </tr>
-				
-    			<c:forEach var="activity" items="${activities}" varStatus="i"> 
-    			
-                  <tr class="${i.count % 2 == 0 ? 'listRowShaded' : 'listRowUnshaded'}" >
-                    <td valign="top"><it:formatDate date="${activity.key.createDate}"/></td>
-                    <td></td>
-                    <td valign="top">${activity.value}</td>
-                    <td></td>
-                    <td valign="top">${activity.key.description}</td>
-                    <td></td>
-                    <td valign="top">${activity.key.user.firstName}  ${activity.key.user.lastName}</td>
+            <div class="col-xs-12 table-responsive">
+
+               <table class="table table-striped">
+                 
+                  <colgroup>
+                     <col class="col-sm-2" />
+                     <col class="col-sm-4" />
+                     <col class="col-sm-4" />
+                     <col class="col-sm-2" />
+                  </colgroup>
+                  <thead>
+                  <tr>
+                     <th><it:message key="itracker.web.attr.type"/></th>
+                     <th><it:message key="itracker.web.attr.description"/></th>
+                     <th><it:message key="itracker.web.attr.user"/></th>
+                     <th class="text-right"><it:message key="itracker.web.attr.date"/></th>
                   </tr>
-          </c:forEach>
-            </table>
+                  </thead>
+                  <tbody>
+                  <c:forEach var="activity" items="${activities}" varStatus="i">
+                     <tr>
+                        <td>${activity.value}</td>
+                        <td>${activity.key.description}</td>
+                        <td>${activity.key.user.fullName}</td>
+                        <td class="text-right text-nowrap"><it:formatDate date="${activity.key.createDate}"/></td>
+                     </tr>
+                  </c:forEach>   
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </c:when>
+   </c:choose>
+   <c:if test='${empty activities}'>
+      <div class="alert alert-danger">
+         <it:message key="itracker.web.error.noactivity"/>
+      </div>
+   </c:if>
 
-        <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
+</div>
+<tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
 

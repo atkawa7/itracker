@@ -2,10 +2,10 @@ package org.itracker.selenium;
 
 import junit.framework.Assert;
 import org.apache.log4j.Level;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,15 +15,16 @@ import org.slf4j.LoggerFactory;
  */
 public class SeleniumPreTest {
     private final Logger logger = LoggerFactory.getLogger(SeleniumPreTest.class);
-    @Test
+
+   @Test
     public void testITrackerSiteSelenium() throws Exception {
 
         org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(getClass());
         log.log("Test", Level.INFO, "TEST", null);
         log.debug("hello");
-        WebDriver driver = new HtmlUnitDriver(false);
+        WebDriver driver = SeleniumManager.getWebDriver();
         if (logger.isDebugEnabled()) {
-            logger.debug("testITrackerSiteSeleium has a webdriver: {}", driver);
+            logger.debug("testITrackerSiteSelenium has a webdriver: {}", driver);
         }
         driver.get("http://itracker.sourceforge.net");
         driver.findElement(By.cssSelector("body #banner"));

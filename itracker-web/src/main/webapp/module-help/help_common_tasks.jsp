@@ -17,7 +17,7 @@
 <p class="help">
     To create a new issue, first go to the project list screen by clicking "Project List"
     in the top menu. From this screen you can click on create new issue icon
-    (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/create.gif"/>) beside the project you want to
+    (<i class="fa fa-plus" aria-hidden="true"></i>) beside the project you want to
     create
     the issue for.<br/>
     <br/>
@@ -33,17 +33,17 @@
     There are a couple ways to edit an existing issue.<br/>
     <br/>
     If the issue is visible on your myITracker page, you can click the edit
-    (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/edit.gif"/>) icon beside the issue you wish to
+    (<i class="fa fa-edit" aria-hidden="true"></i>) icon beside the issue you wish to
     edit.<br/>
     <br/>
     If you are currently viewing the details of an issue, the edit icon
-    (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/edit.gif"/>) will be displayed in actions area.<br/>
+    (<i class="fa fa-edit" aria-hidden="true"></i>) will be displayed in actions area.<br/>
     <br/>
     To edit an existing issue, first go to the project list screen by clicking "Project List"
     in the top menu. From this screen you can click the view project issues icon
-    (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/view.gif"/>) beside the project you want a list
+    (<i class="fa fa-tasks" aria-hidden="true"></i>) beside the project you want a list
     of issues for. Once you have a list of issues, you can select the edit icon
-    (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/edit.gif"/>) beside the issue you wish to edit.<br/>
+    (<i class="fa fa-edit" aria-hidden="true"></i>) beside the issue you wish to edit.<br/>
     <br/>
     You must have edit permissions for a project before you can edit an existing issue
     for a project.<br/>
@@ -56,7 +56,7 @@
 <p class="help">
     To list the issues for a project, first go to the project list screen by clicking
     "Project List" in the top menu. From this screen you can click the view project
-    issues icon (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/view.gif"/>) beside the
+    issues icon (<i class="fa fa-tasks" aria-hidden="true"></i>) beside the
     project you want a list of issues for. From this screen you can view the details of the
     issue, watch the issue if you aren't already being notified of changes, or edit the issue
     if you have permissions.<br/>
@@ -75,7 +75,7 @@
     and sort criteria specified, just click Search to find all the matches.
     <br/>
     You can also perform a more detailed search within a particular project by clicking on the
-    Project Issue search icon (<html:img styleClass="helpImage" src="../themes/defaulttheme/images/search.gif"/>) beside
+    Project Issue search icon (<i class="fa fa-search" aria-hidden="true"></i>) beside
     the project on the Project List page.
     <br/>
     From the results section you can edit or view the issues if you have permission to do so,

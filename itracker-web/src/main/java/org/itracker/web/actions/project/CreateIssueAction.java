@@ -115,13 +115,10 @@ public class CreateIssueAction extends ItrackerBaseAction {
                     projectId, PermissionType.ISSUE_CREATE)) {
                 return mapping.findForward("unauthorized");
             } else {
-                List<ProjectScript> scripts = project.getScripts();
-
-
                 issueForm.invokeProjectScripts(project, WorkflowUtilities.EVENT_FIELD_ONPRESUBMIT, errors);
 
                 Issue issue = new Issue();
-                issue.setDescription((String) issueForm.getDescription());
+                issue.setDescription(issueForm.getDescription());
                 issue.setSeverity(issueForm.getSeverity());
                 issue.setStatus(IssueUtilities.STATUS_NEW);
                 issue.setResolution("");

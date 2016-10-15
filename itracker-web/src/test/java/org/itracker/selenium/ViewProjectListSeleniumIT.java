@@ -42,23 +42,35 @@ public class ViewProjectListSeleniumIT extends AbstractSeleniumTestCase {
 
         //// project "test_name"
         // Check the number of open issues.
-        assertElementTextEquals("4", By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name']/../*[4]"));
+        assertElementTextEquals("4", By.xpath("//*[starts-with(@id, 'project.')]" +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td[contains(@class,'totalOpenIssues')]"));
 
         // Check the number of resolved issues.
-        assertElementTextEquals("0", By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name']/../*[5]"));
+        assertElementTextEquals("0", By.xpath("//*[starts-with(@id, 'project.')]" +
+                "/td[normalize-space(text())='test_name']/../" +
+                "/td[contains(@class,'totalResolvedIssues')]"));
 
         // Check total number of issues.
-        assertElementTextEquals("4", By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name']/../*[6]"));
+        assertElementTextEquals("4", By.xpath("//*[starts-with(@id, 'project.')]" +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td[contains(@class,'totalNumberIssues')]"));
 
         //// project "test_name2"
         // Check the number of open issues.
-        assertElementTextEquals("0", By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name2']/../*[4]"));
+        assertElementTextEquals("0", By.xpath("//*[starts-with(@id, 'project.')]" +
+                "/td[normalize-space(text())='test_name2']/.." +
+                "/td[contains(@class,'totalOpenIssues')]"));
 
         // Check the number of resolved issues.
-        assertElementTextEquals("0", By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name2']/../*[5]"));
+        assertElementTextEquals("0", By.xpath("//*[starts-with(@id, 'project.')]" +
+                "/td[normalize-space(text())='test_name2']/.." +
+                "/td[contains(@class,'totalResolvedIssues')]"));
 
         // Check total number of issues.
-        assertElementTextEquals("0", By.xpath("//*[starts-with(@id, 'project.')]/*[3][text()='test_name2']/../*[6]"));
+        assertElementTextEquals("0", By.xpath("//*[starts-with(@id, 'project.')]" +
+                "/td[normalize-space(text())='test_name2']/.." +
+                "/td[contains(@class,'totalNumberIssues')]"));
     }
 
     @Override

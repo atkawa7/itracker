@@ -42,64 +42,64 @@ public class UserUtilities implements AuthenticationConstants {
     /**
      * User Admin Permission.  Currently this is equivalent to super user, since the permission can't be granted, and is only available to an admin.
      */
-    public static final int PERMISSION_USER_ADMIN = -1;
+    public static final int PERMISSION_USER_ADMIN = PermissionType.USER_ADMIN.getCode();
     /**
      * Product Admin Permission
      */
-    public static final int PERMISSION_PRODUCT_ADMIN = 1;
+    public static final int PERMISSION_PRODUCT_ADMIN = PermissionType.PRODUCT_ADMIN.getCode();
     /**
      * Issue Create Permission
      */
-    public static final int PERMISSION_CREATE = 2;
+    public static final int PERMISSION_CREATE = PermissionType.ISSUE_CREATE.getCode();
     /**
      * Issue Edit Permission.  Users with this permission can edit any issue in the project.
      */
-    public static final int PERMISSION_EDIT = 3;
+    public static final int PERMISSION_EDIT = PermissionType.ISSUE_EDIT_ALL.getCode();
     /**
      * Issue Close Permission.  Users with this permission can close issues in the project.
      */
-    public static final int PERMISSION_CLOSE = 4;
+    public static final int PERMISSION_CLOSE = PermissionType.ISSUE_CLOSE.getCode();
     /**
      * Issue Assign to Self Permission.  Users with this permission can assign issues to themselves.
      */
-    public static final int PERMISSION_ASSIGN_SELF = 5;
+    public static final int PERMISSION_ASSIGN_SELF = PermissionType.ISSUE_ASSIGN_SELF.getCode();
     /**
      * Issue Assign to Others Permissions.  Users with this permission can assign issues to anyone, given than those users have the ability to recieve the assignment.
      */
-    public static final int PERMISSION_ASSIGN_OTHERS = 6;
+    public static final int PERMISSION_ASSIGN_OTHERS = PermissionType.ISSUE_ASSIGN_OTHERS.getCode();
     /**
      * View All Issues Permission.  Users can view all issues in the project.
      */
-    public static final int PERMISSION_VIEW_ALL = 7;
+    public static final int PERMISSION_VIEW_ALL = PermissionType.ISSUE_VIEW_ALL.getCode();
     /**
      * View Users Issues Permission.  Users can view thier own issues.  This includes ones they are the creator or owner of.
      */
-    public static final int PERMISSION_VIEW_USERS = 8;
+    public static final int PERMISSION_VIEW_USERS = PermissionType.ISSUE_VIEW_USERS.getCode();
     /**
      * Edit Users Issues Permission.  Users with this permission can edit any issue they created or own.
      * They are limited to editing the description, adding history entries, and adding attachments.
      */
-    public static final int PERMISSION_EDIT_USERS = 9;
+    public static final int PERMISSION_EDIT_USERS = PermissionType.ISSUE_EDIT_USERS.getCode();
     /**
      * Issue Unassign Self Permission.  Users with this permission can unassign issues they own.
      */
-    public static final int PERMISSION_UNASSIGN_SELF = 10;
+    public static final int PERMISSION_UNASSIGN_SELF = PermissionType.ISSUE_UNASSIGN_SELF.getCode();
     /**
      * Issue Assignable.  Users with this permission can be assigned any issue in the system.  To determine if a user can
      * be assigned an issue, it will be a combination of users with EDIT_ALL, users with EDIT_USERS if they are the creator,
      * and users with this permission and EDIT_USERS.
      */
-    public static final int PERMISSION_ASSIGNABLE = 11;
+    public static final int PERMISSION_ASSIGNABLE = PermissionType.ISSUE_ASSIGNABLE.getCode();
     /**
      * Create for Others.  Users with this permission are allowed to create issues on behalf of other users.  The system
      * will treat the issue as if the other user had created it.  The actual creator will be logged in the audit log.
      */
-    public static final int PERMISSION_CREATE_OTHERS = 12;
+    public static final int PERMISSION_CREATE_OTHERS = PermissionType.ISSUE_CREATE_OTHERS.getCode();
     /**
      * Full edit permission.  This defines what levelof editing a user has for an issue.  Without this permission, users will
      * be limited to editing only the description, attachments, custom fields, and history of an issue.
      */
-    public static final int PERMISSION_EDIT_FULL = 13;
+    public static final int PERMISSION_EDIT_FULL = PermissionType.ISSUE_EDIT_FULL.getCode();
 
 
     private static final Integer[] ALL_PERMISSIONS = new Integer[]{
@@ -169,7 +169,7 @@ public class UserUtilities implements AuthenticationConstants {
     }
 
     public static List<NameValuePair> getPermissionNames(Locale locale) {
-        List<NameValuePair> permissions = new ArrayList<NameValuePair>();
+        List<NameValuePair> permissions = new ArrayList<>();
         permissions.add(0, new NameValuePair(getPermissionName(PERMISSION_CREATE, locale), Integer.toString(PERMISSION_CREATE)));
         permissions.add(1, new NameValuePair(getPermissionName(PERMISSION_CREATE_OTHERS, locale), Integer.toString(PERMISSION_CREATE_OTHERS)));
         permissions.add(2, new NameValuePair(getPermissionName(PERMISSION_EDIT, locale), Integer.toString(PERMISSION_EDIT)));
@@ -185,11 +185,28 @@ public class UserUtilities implements AuthenticationConstants {
         permissions.add(12, new NameValuePair(getPermissionName(PERMISSION_PRODUCT_ADMIN, locale), Integer.toString(PERMISSION_PRODUCT_ADMIN)));
         return permissions;
     }
+    public static List<NameValuePair> getPermissionTypeNames(Locale locale) {
+        List<NameValuePair> permissions = new ArrayList<>();
+        permissions.add(0, new NameValuePair(getPermissionName(PERMISSION_CREATE, locale), PermissionType.valueOf(PERMISSION_CREATE).name()));
+        permissions.add(1, new NameValuePair(getPermissionName(PERMISSION_CREATE_OTHERS, locale), PermissionType.valueOf(PERMISSION_CREATE_OTHERS).name()));
+        permissions.add(2, new NameValuePair(getPermissionName(PERMISSION_EDIT, locale), PermissionType.valueOf(PERMISSION_EDIT).name()));
+        permissions.add(3, new NameValuePair(getPermissionName(PERMISSION_EDIT_USERS, locale), PermissionType.valueOf(PERMISSION_EDIT_USERS).name()));
+        permissions.add(4, new NameValuePair(getPermissionName(PERMISSION_EDIT_FULL, locale), PermissionType.valueOf(PERMISSION_EDIT_FULL).name()));
+        permissions.add(5, new NameValuePair(getPermissionName(PERMISSION_CLOSE, locale), PermissionType.valueOf(PERMISSION_CLOSE).name()));
+        permissions.add(6, new NameValuePair(getPermissionName(PERMISSION_ASSIGNABLE, locale), PermissionType.valueOf(PERMISSION_ASSIGNABLE).name()));
+        permissions.add(7, new NameValuePair(getPermissionName(PERMISSION_ASSIGN_SELF, locale), PermissionType.valueOf(PERMISSION_ASSIGN_SELF).name()));
+        permissions.add(8, new NameValuePair(getPermissionName(PERMISSION_UNASSIGN_SELF, locale), PermissionType.valueOf(PERMISSION_UNASSIGN_SELF).name()));
+        permissions.add(9, new NameValuePair(getPermissionName(PERMISSION_ASSIGN_OTHERS, locale), PermissionType.valueOf(PERMISSION_ASSIGN_OTHERS).name()));
+        permissions.add(10, new NameValuePair(getPermissionName(PERMISSION_VIEW_ALL, locale), PermissionType.valueOf(PERMISSION_VIEW_ALL).name()));
+        permissions.add(11, new NameValuePair(getPermissionName(PERMISSION_VIEW_USERS, locale), PermissionType.valueOf(PERMISSION_VIEW_USERS).name()));
+        permissions.add(12, new NameValuePair(getPermissionName(PERMISSION_PRODUCT_ADMIN, locale), PermissionType.valueOf(PERMISSION_PRODUCT_ADMIN).name()));
+        return permissions;
+    }
 
     /**
      * Genrates a new random password.  The password that is returned is in plain text.
      *
-     * @return a new ramdon plaintext password
+     * @return a new randon plaintext password
      */
     public static String generatePassword() throws PasswordException {
         StringBuffer buf = new StringBuffer();

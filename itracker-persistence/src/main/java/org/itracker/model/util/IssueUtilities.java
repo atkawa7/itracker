@@ -785,13 +785,7 @@ public class IssueUtilities {
         return hasIssueNotification(issue, issue.getProject(), userId);
     }
 
-    /**
-     * Evaluate if a certain user is notified on issue change.
-     * <p/>
-     * FIXME: Does not work for admin of unassigned-issue-projects owner, see portalhome.do
-     */
-    public static boolean hasIssueNotification(Issue issue, Project project,
-                                               Integer userId) {
+    public static boolean hasHardNotification(Issue issue, Project project, Integer userId) {
         if (issue == null || userId == null) {
             return false;
         }
@@ -808,6 +802,30 @@ public class IssueUtilities {
                     return true;
                 }
             }
+        }
+        Collection<Notification> notifications = issue.getNotifications();
+        if (notifications != null) {
+            for (Notification notification : notifications) {
+                if (notification.getUser().getId().equals(userId) && notification.getRole() != Notification.Role.IP) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    /**
+     * Evaluate if a certain user is notified on issue change.
+     * <p/>
+     * FIXME: Does not work for admin of unassigned-issue-projects owner, see portalhome.do
+     */
+    public static boolean hasIssueNotification(Issue issue, Project project,
+                                               Integer userId) {
+        if (issue == null || userId == null) {
+            return false;
+        }
+
+        if (hasHardNotification(issue, project, userId)) {
+            return true;
         }
 
         Collection<Notification> notifications = issue.getNotifications();

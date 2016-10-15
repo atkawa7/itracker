@@ -21,15 +21,14 @@ package org.itracker.web.actions.admin.configuration;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
+import org.itracker.SystemConfigurationException;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
 import org.itracker.model.CustomField;
 import org.itracker.model.CustomFieldValue;
 import org.itracker.model.Language;
-import org.itracker.SystemConfigurationException;
 import org.itracker.model.util.CustomFieldUtilities;
 import org.itracker.services.ConfigurationService;
-import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.web.actions.base.ItrackerBaseAction;
 import org.itracker.web.forms.CustomFieldValueForm;
 import org.itracker.web.util.Constants;
@@ -39,9 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 
 public class EditCustomFieldValueAction extends ItrackerBaseAction {
     private static final Logger log = Logger.getLogger(EditCustomFieldValueAction.class);
@@ -55,7 +52,6 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                     "itracker.web.error.transaction"));
             saveErrors(request, errors);
-//			return mapping.getInputForward();
             return mapping.findForward("listconfiguration");
         }
         resetToken(request);
@@ -79,7 +75,6 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             CustomFieldValue customFieldValue;
 
             if ("create".equals(action)) {
-                List<CustomFieldValue> currOptions = customField.getOptions();
                 customFieldValue = new CustomFieldValue();
                 customFieldValue.setCustomField(customField);
                 customFieldValue.setValue(customFieldValueForm.getValue());
@@ -88,7 +83,6 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             } else if ("update".equals(action)) {
                 Integer id = (Integer) PropertyUtils.getSimpleProperty(form, "id");
                 customFieldValue = configurationService.getCustomFieldValue(id);
-
                 customFieldValue.setValue(customFieldValueForm.getValue());
                 customFieldValue.setSortOrder(customFieldValueForm.getSortOrder());
                 customFieldValue = configurationService.updateCustomFieldValue(customFieldValue);
@@ -100,20 +94,19 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
                 throw new SystemConfigurationException("Unable to create new custom field value model.");
             }
 
-            HashMap<String, String> translations = customFieldValueForm.getTranslations();
+            Map<String, String> translations = customFieldValueForm.getTranslations();
             String key = CustomFieldUtilities.getCustomFieldOptionLabelKey(customField.getId(), customFieldValue.getId());
             log.debug("Processing label translations for custom field value " + customFieldValue.getId() + " with key " + key);
             if (translations != null && key != null && !key.equals("")) {
-                for (Iterator<String> iter = translations.keySet().iterator(); iter.hasNext(); ) {
-                    String locale = iter.next();
-                    if (locale != null) {
-                        String translation = translations.get(locale);
-                        if (translation != null && !translation.equals("")) {
-                            log.debug("Adding new translation for locale " + locale + " for " + String.valueOf(customFieldValue.getId()));
-                            configurationService.updateLanguageItem(new Language(locale, key, translation));
-                        }
-                    }
-                }
+               for (String locale : translations.keySet()) {
+                  if (locale != null) {
+                     String translation = translations.get(locale);
+                     if (translation != null && !translation.equals("")) {
+                        log.debug("Adding new translation for locale " + locale + " for " + String.valueOf(customFieldValue.getId()));
+                        configurationService.updateLanguageItem(new Language(locale, key, translation));
+                     }
+                  }
+               }
                 String baseValue = translations.get(ITrackerResources.BASE_LOCALE);
                 configurationService.updateLanguageItem(new Language(ITrackerResources.BASE_LOCALE, key, baseValue));
             }
@@ -124,9 +117,9 @@ public class EditCustomFieldValueAction extends ItrackerBaseAction {
             request.setAttribute("action", action);
             String pageTitleKey = "";
             String pageTitleArg = "";
-            pageTitleKey = "itracker.web.admin.editcustomfield.title.create";
-            if (action == "update") {
-                pageTitleKey = "itracker.web.admin.editcustomfield.title.update";
+            pageTitleKey = "itracker.web.admin.editcustomfieldvalue.title.create";
+            if ("update".equals(action)) {
+                pageTitleKey = "itracker.web.admin.editcustomfieldvalue.title.update";
             }
 
             request.setAttribute("languages", configurationService.getAvailableLanguages());

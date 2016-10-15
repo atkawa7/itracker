@@ -28,6 +28,7 @@ import org.itracker.web.util.LoginUtilities;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This is the LoginForm Struts Form. It is used by Login form.
@@ -45,7 +46,7 @@ public class CustomFieldValueForm extends ValidatorForm {
 
     private String value;
     private Integer sortOrder;
-    private HashMap<String, String> translations = new HashMap<String, String>();
+    private Map<String, String> translations = new HashMap<>();
 
 
     public String getAction() {
@@ -65,12 +66,12 @@ public class CustomFieldValueForm extends ValidatorForm {
     }
 
     // let's try to put String,String here:
-    public HashMap<String, String> getTranslations() {
+    public Map<String, String> getTranslations() {
         return translations;
     }
 
     // let's try to put String,String here:
-    public void setTranslations(HashMap<String, String> translations) {
+    public void setTranslations(Map<String, String> translations) {
         this.translations = translations;
     }
 

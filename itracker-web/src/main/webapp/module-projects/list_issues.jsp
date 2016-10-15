@@ -1,144 +1,178 @@
-<%@ include file="/common/taglibs.jsp"%>
+<%@ include file="/common/taglibs.jsp" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <bean:define toScope="request" id="pageTitleKey" value="itracker.web.listissues.title"/>
 <bean:define toScope="request" id="pageTitleArg" value="${project.name}"/>
 
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp"/>
 
-      <table style="border: none; padding: 1px; border-spacing: 0; width: 100%" class="shadeList">
-        <tr>
-          <td id="issues" class="editColumnTitle" colspan="14"><it:message key="itracker.web.attr.issues"/>:</td>
-          <td align="right" style="white-space: nowrap">
+<div class="container-fluid maincontent">
+   <div class="row">
+
+      <div class="col-xs-12">
+
+         <div class="pull-right">
             <c:if test="${canCreateIssue}">
-                  <it:formatImageAction forward="createissue"
-                                        paramName="projectId"
-                                        paramValue="${project.id}"
-                                        src="/themes/defaulttheme/images/create.gif"
-                                        altKey="itracker.web.image.create.issue.alt"
-                                        arg0="${project.name}"
-                                        textActionKey="itracker.web.image.create.texttag"/>
+               <it:formatIconAction forward="createissue"
+                                    paramName="projectId"
+                                    paramValue="${project.id}"
+                                    icon="plus" iconClass="fa-2x"
+                                    info="itracker.web.image.create.issue.alt"
+                                    arg0="${project.name}"
+                                    textActionKey="itracker.web.image.create.texttag"/>
             </c:if>
-            <it:formatImageAction forward="searchissues" paramName="projectId" paramValue="${project.id}" src="/themes/defaulttheme/images/search.gif" altKey="itracker.web.image.search.issue.alt" arg0="${project.name}" textActionKey="itracker.web.image.search.texttag"/>
-          </td>
-        </tr>
-        <tr align="left" class="listHeading">
-          <td width="55"></td>
-          <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-          <td><it:formatPaginationLink page="/list_issues.do" projectId="${project.id}" styleClass="listHeading" order="id"><it:message key="itracker.web.attr.id"/></it:formatPaginationLink></td>
-          <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-          <td><it:formatPaginationLink page="/list_issues.do" projectId="${project.id}" styleClass="listHeading" order="stat"><it:message key="itracker.web.attr.status"/></it:formatPaginationLink></td>
-          <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-          <td><it:formatPaginationLink page="/list_issues.do" projectId="${project.id}" styleClass="listHeading" order="sev"><it:message key="itracker.web.attr.severity"/></it:formatPaginationLink></td>
-          <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-          <td><it:message key="itracker.web.attr.components"/></td>
-          <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-          <td><it:message key="itracker.web.attr.description"/></td>
-          <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-          <td><it:formatPaginationLink page="/list_issues.do" projectId="${project.id}" styleClass="listHeading" order="own"><it:message key="itracker.web.attr.owner"/></it:formatPaginationLink></td>
-          <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="3"/></td>
-          <td><it:formatPaginationLink page="/list_issues.do" projectId="${project.id}" styleClass="listHeading" order="lm"><it:message key="itracker.web.attr.lastmodified"/></it:formatPaginationLink></td>
-        </tr>
- 
-      	<c:forEach items="${issuePTOs}" var="issuePTO" step="1" varStatus="i"><%-- nitrox:varType="org.itracker.web.ptos.IssuePTO" --%>
-           	
-            <tr id="issue.${i.count}" align="right" class="${i.count % 2 == 1 ? 'listRowShaded':'listRowUnshaded'}">
-            <td style="white-space: nowrap">
-              <it:formatImageAction forward="viewissue" module="/module-projects" paramName="id" paramValue="${issuePTO.issue.id}" src="/themes/defaulttheme/images/view.gif" altKey="itracker.web.image.view.issue.alt" arg0="${issuePTO.issue.id}" textActionKey="itracker.web.image.view.texttag"/>
-            	<c:if test="${issuePTO.userCanEdit}">
-            		    <it:formatImageAction action="editissueform"  module="/module-projects" paramName="id" paramValue="${issuePTO.issue.id}" src="/themes/defaulttheme/images/edit.gif" altKey="itracker.web.image.edit.issue.alt" arg0="${issuePTO.issue.id}" textActionKey="itracker.web.image.edit.texttag"/>
-            	</c:if>
-                      
-            	<c:if test="${issuePTO.userHasIssueNotification}">
+            <it:formatIconAction forward="searchissues"
+                                 paramName="projectId"
+                                 paramValue="${project.id}"
+                                 icon="search" iconClass="fa-2x"
+                                 info="itracker.web.image.search.issue.alt"
+                                 arg0="${project.name}"
+                                 textActionKey="itracker.web.image.search.texttag"/>
+         </div>
+         <h5><it:message key="itracker.web.attr.issues"/>:</h5>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-xs-12 table-responsive" id="issues">
+         <table class=" table table-striped table-hover">
+            <colgroup>
+               <col class="col-xs-2">
+               <col class="col-xs-2">
+               <col class="col-xs-1">
+               <col class="col-xs-1">
+               <col class="col-xs-2">
+               <col class="col-xs-2">
+               <col class="col-xs-2">
+            </colgroup>
+            <thead>
+            <tr>
+               <th class="text-right"><it:formatPaginationLink page="/list_issues.do" projectId="${project.id}"
+                                                               styleClass=""
+                                                               order="id"><it:message
+                       key="itracker.web.attr.id"/></it:formatPaginationLink></th>
+               <th><it:formatPaginationLink page="/list_issues.do" projectId="${project.id}" styleClass=""
+                                            order="stat"><it:message
+                       key="itracker.web.attr.status"/></it:formatPaginationLink></th>
+               <th><it:formatPaginationLink page="/list_issues.do" projectId="${project.id}" styleClass=""
+                                            order="sev"><it:message
+                       key="itracker.web.attr.severity"/></it:formatPaginationLink></th>
+               <th><it:message key="itracker.web.attr.components"/></th>
+               <th><it:message key="itracker.web.attr.description"/></th>
+               <th><it:formatPaginationLink page="/list_issues.do" projectId="${project.id}" styleClass=""
+                                            order="own"><it:message
+                       key="itracker.web.attr.owner"/></it:formatPaginationLink></th>
+               <th class="text-right"><it:formatPaginationLink page="/list_issues.do" projectId="${project.id}"
+                                                               styleClass=""
+                                                               order="lm"><it:message
+                       key="itracker.web.attr.lastmodified"/></it:formatPaginationLink></th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+            <c:forEach items="${issuePTOs}" var="issuePTO"
+                       varStatus="i">
+
+               <tr id="issue.${i.count}">
+
+                  <td class="text-right">
+                     <div class="pull-left">
+                        <it:formatIconAction forward="viewissue" module="/module-projects" paramName="id"
+                                             paramValue="${issuePTO.issue.id}"
+                                             icon="tasks" iconClass="fa-lg"
+                                             info="itracker.web.image.view.issue.alt" arg0="${issuePTO.issue.id}"
+                                             textActionKey="itracker.web.image.view.texttag"/>
+                        <c:if test="${issuePTO.userCanEdit}">
+                           <it:formatIconAction action="editissueform" module="/module-projects" paramName="id"
+                                                paramValue="${issuePTO.issue.id}" icon="edit" iconClass="fa-lg"
+                                                info="itracker.web.image.edit.issue.alt" arg0="${issuePTO.issue.id}"
+                                                textActionKey="itracker.web.image.edit.texttag"/>
+                        </c:if>
+
+                        <c:if test="${issuePTO.userHasIssueNotification}">
                     <span class="HTTP_POST">
-            	    <it:formatImageAction forward="watchissue" paramName="id" paramValue="${issuePTO.issue.id}" src="/themes/defaulttheme/images/watch.gif" altKey="itracker.web.image.watch.issue.alt" arg0="${issuePTO.issue.id}" textActionKey="itracker.web.image.watch.texttag" />
+            	    <it:formatIconAction forward="watchissue" paramName="id" paramValue="${issuePTO.issue.id}"
+                                        icon="bell" iconClass="fa-lg"
+                                        info="itracker.web.image.watch.issue.alt" arg0="${issuePTO.issue.id}"
+                                        textActionKey="itracker.web.image.watch.texttag"/>
                     </span>
-            	</c:if>
-         
-            </td>
-            <td></td>
-            <td>${issuePTO.issue.id}</td>
-            <td></td>
-            <td>${issuePTO.statusLocalizedString}</td>
-            <td></td>
-            <td>${issuePTO.severityLocalizedString}</td>
-            <td></td>
-            <td>${issuePTO.componentsSize}</td>
-            <td></td>
-            <td><it:formatDescription>${issuePTO.issue.description}</it:formatDescription></td>
-            <td></td>  <td>
-                <c:choose>
-            		<c:when test="${issuePTO.unassigned}">
-                        <it:message key="itracker.web.generic.unassigned"/>
-            	 	</c:when>
-            		<c:otherwise><%-- ${issuePTO.issue.owner.firstName}. ${issuePTO.issue.owner.lastName}--%>
-            		  <it:formatIssueOwner issue="${issuePTO.issue}" format="short" />
-            		</c:otherwise>
-            	</c:choose>
-       </td>
-            <td></td>
-            <td><it:formatDate date="${issuePTO.issue.lastModifiedDate}"/></td>
-          </tr>
- 
-	
-	
-    
-</c:forEach>
-
- <c:choose>
-           
-
-	<c:when test="${hasIssues}">
-            <tr class="listRowUnshaded" align="left">
-              <td colspan="15"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="10"/></td>
-            </tr>
-            <tr class="listRowUnshaded" align="left">
-              <td colspan="15" align="left">
-
-                <it:message key="itracker.web.generic.totalissues" arg0="${numViewable}"/>
-
-              </td>
-            </tr>
-        <c:if test="${preferences.numItemsOnIssueList > 0}">
-            <tr class="listRowUnshaded" align="left">
-              <td colspan="15" align="left">
-
-                  <bean:define id="pageCount" value="${(numViewable / preferences.numItemsOnIssueList)}"/>
-
-                  <bean:define id="pageNr" value="${(start / preferences.numItemsOnIssueList)}"/>
-                  <bean:define id="pageNr" value="${pageNr + (1 - (pageNr % 1))}"/>
+                        </c:if>
+                     </div>
+                        ${issuePTO.issue.id}</td>
+                  <td class="status"> ${issuePTO.statusLocalizedString}</td>
+                  <td class="severity">${issuePTO.severityLocalizedString}</td>
+                  <td>${issuePTO.componentsSize}</td>
+                  <td><it:formatDescription>${issuePTO.issue.description}</it:formatDescription></td>
+                  <td>
+                     <c:choose>
+                        <c:when test="${issuePTO.unassigned}">
+                           <it:message key="itracker.web.generic.unassigned"/>
+                        </c:when>
+                        <c:otherwise>
+                           <it:formatIssueOwner issue="${issuePTO.issue}" format="short"/>
+                        </c:otherwise>
+                     </c:choose>
+                  </td>
+                  <td class="text-right text-nowrap"><it:formatDate date="${issuePTO.issue.lastModifiedDate}"/></td>
+               </tr>
 
 
-				<c:if test="${pageNr > 1.0}">
-                      <it:formatPaginationLink page="/list_issues.do" projectId="${project.id}" styleClass="prev"
-                                               start="${start - preferences.numItemsOnIssueList}" order="${orderParam}">
-                        <it:message key="itracker.web.generic.prevpage"/>
-                      </it:formatPaginationLink>
-                </c:if>
-				<c:if test="${pageNr < pageCount}">
-                      <it:formatPaginationLink page="/list_issues.do" projectId="${project.id}" styleClass="next"
-                                               start="${start + preferences.numItemsOnIssueList}" order="${orderParam}">
-                        <it:message key="itracker.web.generic.nextpage"/>
-                      </it:formatPaginationLink>
-                </c:if>
+            </c:forEach>
 
-          <div class="paging">
-              (<fmt:formatNumber value="${pageNr}" maxFractionDigits="0"
-                                    />/<fmt:formatNumber
-                                    value="${pageCount}" maxFractionDigits="0" />)
-          </div>
+            </tbody>
+            <tfoot>
+            <c:choose>
 
-              </td>
-            </tr>
-                  </c:if>
-            </c:when>
-            <c:otherwise>
-            	 <tr class="listRowUnshaded" align="left"><td colspan="15" align="left"><it:message key="itracker.web.error.noissues"/></td></tr>
-            </c:otherwise>
+               <c:when test="${hasIssues}">
+                  <tr class="listRowUnshaded" align="left">
+                     <td colspan="7" align="left">
+                        <it:message key="itracker.web.generic.totalissues" arg0="${pagination.total}"/>
+                     </td>
+                  </tr>
+               </c:when>
+               <c:otherwise>
+                  <tr>
+                     <td colspan="7" align="left"><it:message key="itracker.web.error.noissues"/></td>
+                  </tr>
+               </c:otherwise>
+            </c:choose>
+            </tfoot>
 
-</c:choose>
+         </table>
+      </div>
+   </div>
+   <c:if test="${pagination.perPage > 0 && pagination.pageCount > 0}">
+      <div class="row">
+         <div class="col-xs-10 col-xs-offset-1">
 
-      </table>
+            <c:if test="${pagination.currentPage > 1}">
+               <it:formatPaginationLink page="/list_issues.do" projectId="${project.id}" styleClass="pull-left"
+                                        start="${pagination.start - pagination.perPage}"
+                                        order="${orderParam}">
+                  <%--<it:message key="itracker.web.generic.prevpage"/>--%>
+                  <i class="fa fa-2x fa-chevron-left"></i>
 
+               </it:formatPaginationLink>
+            </c:if>
+
+            <c:if test="${pagination.currentPage < pagination.pageCount}">
+               <it:formatPaginationLink page="/list_issues.do" projectId="${project.id}" styleClass="pull-right"
+                                        start="${pagination.start + pagination.perPage}"
+                                        order="${orderParam}">
+                  <i class="fa fa-2x fa-chevron-right"></i>
+                  <%--<it:message key="itracker.web.generic.nextpage"/>--%>
+               </it:formatPaginationLink>
+            </c:if>
+
+            <div class="paging">
+               (<fmt:formatNumber
+                    value="${pagination.currentPage}" maxFractionDigits="0"/>/<fmt:formatNumber
+                    value="${pagination.pageCount}" maxFractionDigits="0"/>)
+            </div>
+
+         </div>
+      </div>
+   </c:if>
+</div>
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>

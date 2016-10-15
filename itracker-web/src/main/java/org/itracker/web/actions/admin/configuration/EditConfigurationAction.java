@@ -37,10 +37,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class EditConfigurationAction extends ItrackerBaseAction {
 
@@ -74,7 +74,7 @@ public class EditConfigurationAction extends ItrackerBaseAction {
                     "value");
 
             String initialLanguageKey = null;
-            HashMap<String, String> translations = (HashMap<String, String>) PropertyUtils
+            Map<String, String> translations = (Map<String, String>) PropertyUtils
                     .getSimpleProperty(form, "translations");
 
             if (action == null) {

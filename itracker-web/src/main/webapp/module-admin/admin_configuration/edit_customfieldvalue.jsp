@@ -1,124 +1,124 @@
-<%@ include file="/common/taglibs.jsp"%>
+<%@ include file="/common/taglibs.jsp" %>
 
 <!DOCTYPE HTML >
 <tiles:insert page="/themes/defaulttheme/includes/header.jsp">
-    <tiles:put name="errorHide" value="${ false }" />
+   <tiles:put name="errorHide" value="${ false }"/>
 </tiles:insert>
 
-<html:form action="/editcustomfieldvalue">
-    <html:hidden property="action"/>
-    <html:hidden property="id"/>
-    <table border="0" cellspacing="0"  cellspacing="1"  width="100%">
-        
-        <tr>
-            <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
-            <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
-            <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
-            <td><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="15" height="1"/></td>
-        </tr>
-        <tr>
-            <td colspan="2"><span class="editColumnTitle"><it:message key="itracker.web.attr.value"/>:</span> <html:text property="value" styleClass="editColumnText"/></td>
-            <td colspan="2"><span class="editColumnTitle"><it:message key="itracker.web.attr.sortorder"/>:</span> <html:text property="sortOrder" styleClass="editColumnText"/></td>
-        </tr>
-        
-        <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
-        <tr><td colspan="4" class="editColumnTitle"><it:message key="itracker.web.attr.translations"/>:</td></tr>
-        <tr class="listHeading"><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" height="2" width="1"/></td></tr>
-        <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="4"/></td></tr>
-        <tr><td colspan="4"><table width="100%" cellspacing="0" cellpadding="1" border="0" class="shadeList">
-            <tr class="listRowShaded">
-                <td colspan="3">
-                    <label for="BASE">
-                    <it:message key="itracker.web.attr.baselocale"/>
+<div class="container-fluid maincontent">
+   <html:form action="/editcustomfieldvalue">
+      <html:hidden property="action"/>
+      <html:hidden property="id"/>
 
-                    (<it:link action="editlanguageform" targetAction="update#${ messageKey }"
-                              paramName="locale" paramValue="BASE"
-                              titleKey="itracker.web.admin.listlanguages.update.alt" arg0="BASE"
-                              styleClass="pre">BASE</it:link>)
-                    </label>
-                </td>
-                <td>
-                    <c:if test="${ not empty messageKey }">
-                        <c:set var="placeholder"><it:message key="${ messageKey }" locale="BASE"/></c:set>
-                        <input type="hidden" name="placeholder" value="${fn:escapeXml(placeholder)}" />
-                    </c:if>
-                    <html:text property="translations(BASE)" styleClass="editColumnText" styleId="BASE"/>
-                </td>
+      <div class="row">
 
-            </tr>
-            <c:set var="i" value="0"/>
-            <c:forEach var="languageNameValue" items="${languagesNameValuePair}">
-                <c:set var="listRowClass" value="${ (i % 2 == 1) ? 'listRowShaded' : 'listRowUnshaded' }"/>
-                <c:set var="i" value="${ i + 1 }"/>
+         <div class="col-sm-6">
+            <div class="form-group">
+               <label><it:message key="itracker.web.attr.value"/>:</label>
+               <html:text property="value" styleClass="form-control"/>
+            </div>
+         </div>
+         <div class="col-sm-6">
+            <div class="form-group">
+               <label><it:message key="itracker.web.attr.sortorder"/>:</label>
+               <html:text property="sortOrder" styleClass="form-control"/>
+            </div>
+         </div>
+      </div>
 
-                <tr class="${listRowClass}">
-                    <td></td>
-                    <td colspan="2">
-                        <label for="${ languageNameValue.key.name }">
-                            ${languageNameValue.key.value}
-                            (<it:link action="editlanguageform" targetAction="update#${ messageKey }"
-                                      paramName="locale" paramValue="${ languageNameValue.key.name }"
-                                      titleKey="itracker.web.admin.listlanguages.update.alt" arg0="${ languageNameValue.key.name }"
-                                      styleClass="pre">${ languageNameValue.key.name }</it:link>)
-                        </label>
-                    </td>
-                    <td>
-                        <c:if test="${ not empty messageKey }">
-                            <c:set var="placeholder"><it:message key="${ messageKey }"
-                                                                 locale="${languageNameValue.key.name}"/></c:set>
-                            <input type="hidden" name="placeholder" value="${fn:escapeXml(placeholder)}"/>
-                        </c:if>
-                        <html:text property="translations(${languageNameValue.key.name })" styleClass="editColumnText" styleId="${ languageNameValue.key.name }"/>
-                    </td>
+      <div class="row">
+         <div class="col-xs-12">
+            <h4><it:message key="itracker.web.attr.translations"/>:</h4>
+         </div>
+      </div>
 
-                </tr>
+      <c:set var="placeholder" value=""/>
+      <div class="row">
+         <div class="col-xs-12">
+            <div class="form-group">
+               <label for="BASE"><it:message key="itracker.web.attr.baselocale"/>
 
-                <c:forEach var="locale" items="${languageNameValue.value}">
-                    <c:set var="listRowClass" value="${ (i % 2 == 1) ? 'listRowShaded' : 'listRowUnshaded' }"/>
-                    <c:set var="i" value="${ i + 1 }"/>
+                  (<it:link action="editlanguageform" targetAction="update#${ messageKey }"
+                            paramName="locale" paramValue="BASE"
+                            titleKey="itracker.web.admin.listlanguages.update.alt" arg0="BASE"
+                            styleClass="pre">BASE</it:link>)</label>
+               <c:if test="${ not empty messageKey }">
+                  <c:set var="placeholder"><it:message key="${ messageKey }" locale="BASE"/></c:set>
+               </c:if>
+               <input type="hidden" name="placeholder" value="${fn:escapeXml(placeholder)}"/>
+               <html:text property="translations(BASE)" styleClass="form-control" styleId="BASE"/>
+            </div>
+         </div>
+      </div>
 
-                    <tr class="${listRowClass} level1">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <label for="${ locale.name }">
-                                ${locale.value }
-                                    (<it:link action="editlanguageform" targetAction="update#${ messageKey }"
-                                              paramName="locale" paramValue="${ locale.name }"
-                                              titleKey="itracker.web.admin.listlanguages.update.alt" arg0="${ locale.name }"
-                                              styleClass="pre">${ locale.name }</it:link>)
-                            </label>
-                        </td>
-                        <td>
-                            <c:if test="${ not empty messageKey }">
-                                <c:set var="placeholder"><it:message key="${ messageKey }"
-                                                                     locale="${locale.name}"/></c:set>
-                                <input type="hidden" name="placeholder" value="${fn:escapeXml(placeholder)}"/>
-                            </c:if>
-                            <html:text property="translations(${locale.name})" styleClass="editColumnText" styleId="${ locale.name }"/>
-                        </td>
+      <c:forEach var="languageNameValue" items="${languagesNameValuePair}">
+         <div class="row">
+            <div class="col-xs-11 col-xs-offset-1">
+               <div class="form-group">
+                  <label for="${ languageNameValue.key.name }">
+                        ${languageNameValue.key.value}
+                     (<it:link action="editlanguageform" targetAction="update#${ messageKey }"
+                               paramName="locale" paramValue="${ languageNameValue.key.name }"
+                               titleKey="itracker.web.admin.listlanguages.update.alt"
+                               arg0="${ languageNameValue.key.name }"
+                               styleClass="pre">${ languageNameValue.key.name }</it:link>)
+                  </label>
+                  <c:if test="${ not empty messageKey }">
+                     <c:set var="placeholder"><it:message key="${ messageKey }"
+                                                          locale="${languageNameValue.key.name}"/></c:set>
+                  </c:if>
+                  <input type="hidden" name="placeholder" value="${fn:escapeXml(placeholder)}"/>
+                  <html:text property="translations(${languageNameValue.key.name })"
+                             styleClass="form-control" styleId="${ languageNameValue.key.name }"/>
+               </div>
+            </div>
+         </div>
 
-                    </tr>
+         <c:forEach var="locale" items="${languageNameValue.value}">
+            <div class="row">
+               <div class="col-xs-10 col-xs-offset-2">
+                  <div class="form-group">
+                     <label for="${ locale.name }">
+                           ${locale.value }
+                        (<it:link action="editlanguageform" targetAction="update#${ messageKey }"
+                                  paramName="locale" paramValue="${ locale.name }"
+                                  titleKey="itracker.web.admin.listlanguages.update.alt"
+                                  arg0="${ locale.name }"
+                                  styleClass="pre">${ locale.name }</it:link>)
+                     </label>
+                     <c:if test="${ not empty messageKey }">
+                        <c:set var="placeholder"><it:message key="${ messageKey }"
+                                                             locale="${locale.name}"/></c:set>
+                     </c:if>
+                     <input type="hidden" name="placeholder" value="${fn:escapeXml(placeholder)}"/>
+                     <html:text property="translations(${locale.name})" styleClass="form-control"
+                                styleId="${ locale.name }"/>
+                  </div>
+               </div>
+            </div>
+         </c:forEach>
+      </c:forEach>
 
-                </c:forEach>
-            </c:forEach>
-        </table>
-        </td>
-        </tr>
-        <tr><td colspan="4"><html:img module="/" page="/themes/defaulttheme/images/blank.gif" width="1" height="12"/></td></tr>
-        <%-- <nitrox:var name="isUpdate" type="java.lang.Boolean"/> --%>
-        <c:choose>
-            <c:when test="${action == 'update'}">
-                <tr><td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.update.alt" titleKey="itracker.web.button.update.alt"><it:message key="itracker.web.button.update"/></html:submit></td></tr>
-            </c:when>
-            <c:otherwise>
-                <tr><td colspan="4" align="left"><html:submit styleClass="button" altKey="itracker.web.button.create.alt" titleKey="itracker.web.button.create.alt"><it:message key="itracker.web.button.create"/></html:submit></td></tr>
-            </c:otherwise>
-        </c:choose>
-        
-        
-    </table>
-</html:form>
 
+      <div class="row">
+         <div class="col-xs-12">
+            <c:choose>
+               <c:when test="${action == 'update'}">
+                  <html:submit styleClass="btn btn-block btn-primary"
+                               altKey="itracker.web.button.update.alt"
+                               titleKey="itracker.web.button.update.alt"><it:message
+                          key="itracker.web.button.update"/></html:submit>
+               </c:when>
+               <c:otherwise>
+                  <html:submit styleClass="button"
+                               altKey="itracker.web.button.create.alt"
+                               titleKey="itracker.web.button.create.alt"><it:message
+                          key="itracker.web.button.create"/></html:submit>
+               </c:otherwise>
+            </c:choose>
+         </div>
+      </div>
+   </html:form>
+</div>
 <tiles:insert page="/themes/defaulttheme/includes/footer.jsp"/></body></html>
 

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.itracker</groupId>
         <artifactId>itracker</artifactId>
-        <version>3.3.3-SNAPSHOT</version>
+        <version>3.3.4-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>itracker-web</artifactId>
@@ -115,6 +115,28 @@
             <groupId>org.apache.struts</groupId>
             <artifactId>struts-el</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-servlet-2.x</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>2.2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap-datepicker</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>font-awesome</artifactId>
+            <version>4.6.3</version>
+        </dependency>
+
         <dependency>
             <groupId>c3p0</groupId>
             <artifactId>c3p0</artifactId>
@@ -177,6 +199,7 @@
             <version>1.1.6</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>

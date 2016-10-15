@@ -4,8 +4,6 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 import java.io.IOException;
-
-import static org.itracker.Assert.*;
 /**
  * Check the content of PortalHome page with some data available.
  *
@@ -41,15 +39,39 @@ public class ViewPortalHomeSeleniumIT extends AbstractSeleniumTestCase {
         assertElementPresent(By.name("id"));
         assertElementPresent(By.id("unassignedIssues"));
         assertElementCountEquals(2, By.xpath("//*[starts-with(@id, 'unassignedIssue.')]"));
-        assertElementPresent(By.xpath("//*[starts-with(@id,'unassignedIssue.')]/*[3][text()='1']/../*[5][text()='test_name']/../*[11][text()='test_description']"));
-        assertElementPresent(By.xpath("//*[starts-with(@id,'unassignedIssue.')]/*[3][text()='2']/../*[5][text()='test_name']/../*[11][text()='test_description 2']"));
+
+       assertElementPresent(By.xpath("//*[starts-with(@id,'unassignedIssue.1')]" +
+               "/td[contains(text(),'1')]/.." +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td[normalize-space(text())='test_description']"));
+
+        assertElementPresent(By.xpath("//*[starts-with(@id,'unassignedIssue.2')]" +
+                "/td[contains(text(),'2')]/.." +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td[normalize-space(text())='test_description 2']"));
 
         assertElementPresent(By.id("createdIssues"));
         assertElementCountEquals(4, By.xpath("//*[starts-with(@id, 'createdIssue.')]"));
-        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.')]/*[3][text()='1']/../*[5][text()='test_name']/../*[11][text()='test_description']"));
-        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.')]/*[3][text()='2']/../*[5][text()='test_name']/../*[11][text()='test_description 2']"));
-        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.')]/*[3][text()='3']/../*[5][text()='test_name']/../*[11][text()='test_description 3']"));
-        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.')]/*[3][text()='4']/../*[5][text()='test_name']/../*[11][text()='test_description 4']"));
+
+        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.1')]" +
+                "/td[contains(text(),'1')]/.." +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td[normalize-space(text())='test_description']"));
+
+        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.2')]" +
+                "/td[contains(text(),'2')]/.." +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td[normalize-space(text())='test_description 2']"));
+
+        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.3')]" +
+                "/td[contains(text(),'3')]/.." +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td[normalize-space(text())='test_description 3']"));
+
+        assertElementPresent(By.xpath("//*[starts-with(@id,'createdIssue.4')]" +
+                "/td[contains(text(),'4')]/.." +
+                "/td[normalize-space(text())='test_name']/.." +
+                "/td[normalize-space(text())='test_description 4']"));
 
         assertElementPresent(By.id("watchedIssues"));
         assertElementNotPresent(By.xpath("//*[starts-with(@id, 'watchedIssue.')]"));

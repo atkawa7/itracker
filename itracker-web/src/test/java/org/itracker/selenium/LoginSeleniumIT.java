@@ -53,7 +53,7 @@ public class LoginSeleniumIT extends AbstractSeleniumTestCase {
         try {
             assertElementPresent(By.name("login")).sendKeys("wrong_login");
             assertElementPresent(By.name("password")).sendKeys("wrong_password");
-            assertElementPresent(By.xpath("//*[@value='Login']")).click();
+            assertElementPresent(By.id("btn-login")).click();
         } catch (Exception e) {
              // fine
         } finally {
@@ -71,7 +71,7 @@ public class LoginSeleniumIT extends AbstractSeleniumTestCase {
         assertElementPresent(By.name("login")).sendKeys("user_test1");
         assertElementPresent(By.name("password")).sendKeys("user_test1");
         assertElementPresent(By.name("saveLogin")).click();
-        assertElementPresent(By.xpath("//*[@value='Login']")).click();
+        assertElementPresent(By.id("btn-login")).click();
         waitForPageToLoad();
 
         assertElementPresent(By.name("id"));
@@ -95,7 +95,7 @@ public class LoginSeleniumIT extends AbstractSeleniumTestCase {
 
         assertElementPresent(By.name("login")).sendKeys("user_test1");
         assertElementPresent(By.name("password")).sendKeys("user_test1");
-        assertElementPresent(By.xpath("//*[@value='Login']")).click();
+        assertElementPresent(By.id("btn-login")).click();
         waitForPageToLoad();
 
         assertElementPresent(By.name("id"));

@@ -5,7 +5,7 @@
     <artifactId>itracker</artifactId>
     <packaging>pom</packaging>
     <name>itracker</name>
-    <version>3.3.3-SNAPSHOT</version>
+    <version>3.3.4-SNAPSHOT</version>
     <url>http://itracker.sourceforge.net/</url>
 
     <modules>
@@ -61,8 +61,9 @@
 
         <junit.version>4.12</junit.version>
         <dbunit.version>2.5.2</dbunit.version>
-        <!-- selenium.version 2.5.30 and 2.53.1 are not working.. -->
+        <!-- selenium.version 2.53.0 and 2.53.1 are not working.. -->
         <selenium.version>2.52.0</selenium.version>
+        <htmlunit.version>2.20</htmlunit.version>
         <subethamail.version>3.1.7</subethamail.version>
         <mockito.version>1.10.19</mockito.version>
         <mysql-connector-java.version>5.1.6</mysql-connector-java.version>
@@ -100,7 +101,7 @@
         <maven-wagon-ssh-plugin.version>2.10</maven-wagon-ssh-plugin.version>
         <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
-        <maven-build-helper-plugin.version>1.9.1</maven-build-helper-plugin.version>
+        <maven-build-helper-plugin.version>1.12</maven-build-helper-plugin.version>
 
         <tomcat.deploy.server>localhost</tomcat.deploy.server>
         <tomcat.deploy.url>http://localhost:8080/manager</tomcat.deploy.url>
@@ -807,6 +808,12 @@
                   <groupId>org.seleniumhq.selenium</groupId>
                   <artifactId>selenium-java</artifactId>
                   <version>${selenium.version}</version>
+                  <scope>test</scope>
+            </dependency>
+            <dependency>
+                  <groupId>net.sourceforge.htmlunit</groupId>
+                  <artifactId>htmlunit</artifactId>
+                  <version>${htmlunit.version}</version>
                   <scope>test</scope>
             </dependency>
 

@@ -66,7 +66,7 @@ public class ExportLanguageAction extends ItrackerBaseAction {
                 response.setHeader("Content-Disposition", "attachment; filename=\"ITracker" + (locale.equals(ITrackerResources.BASE_LOCALE) ? "" : "_" + locale) + ".properties\"");
                 response.setHeader("Content-Type", "application/x-itracker-language-export; charset=UTF-8");
                 ServletOutputStream out = response.getOutputStream();
-                out.println(output.toString());
+                out.print(output.toString());
                 out.flush();
                 return null;
             }

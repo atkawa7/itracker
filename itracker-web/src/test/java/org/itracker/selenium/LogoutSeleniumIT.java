@@ -39,7 +39,7 @@ public class LogoutSeleniumIT extends AbstractSeleniumTestCase {
         assertElementPresent(By.name("login")).sendKeys("user_test1");
         //TODO not use username as password!
         assertElementPresent(By.name("password")).sendKeys("user_test1");
-        assertElementPresent(By.xpath("//*[@type='submit']")).click();
+        assertElementPresent(By.id("btn-login")).click();
 
         waitForPageToLoad();
 

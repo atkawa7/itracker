@@ -24,7 +24,6 @@ public class ListIssuesActionUtil {
 	public static final String ATT_NAME_PAGE_TITLE_KEY = "pageTitleKey";
 	public static final String ATT_NAME_PAGE_TITLE_ARG = "pageTitleArg";
 	public static final String ATT_NAME_HAS_ORDER_PARAM = "hasOrderParam";
-	public static final String ATT_NAME_START = "start";
 
 	public static final String ATT_NAME_ORDER_PARAM = "orderParam";
 
@@ -33,8 +32,7 @@ public class ListIssuesActionUtil {
 	public static final String ATT_NAME_PROJCET_ID = "projectId";
 	public static final String ATT_NAME_HAS_ISSUES = "hasIssues";
 	public static final String ATT_NAME_HAS_VIEW_ALL = "hasViewAll";
-	public static final String ATT_NAME_NUM_VIEWABLE = "numViewable";
-	public static final String ATT_NAME_K = "k";
+
 	public static final String ATT_NAME_UNASSIGNED = "itracker_web_generic_unassigned";
 	
 	public static final String SES_ATT_NAME_CURRENT__USER = "currUser";
@@ -204,16 +202,15 @@ public class ListIssuesActionUtil {
         issuePTOs.add(issuePTO);
     }
 
-    // populate the request
-    request.setAttribute(ListIssuesActionUtil.ATT_NAME_HAS_ORDER_PARAM, new Boolean(hasOrderParam));
-    request.setAttribute(ListIssuesActionUtil.ATT_NAME_START, start);
+    // populate the request$
+    request.setAttribute("pagination", new Pagination(numViewable, start, userPrefs.getNumItemsOnIssueList()));
+    request.setAttribute(ListIssuesActionUtil.ATT_NAME_HAS_ORDER_PARAM, hasOrderParam);
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_ORDER_PARAM, orderParam);
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_ISSUE_PTOS, issuePTOs);
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_PROJECT, project);
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_PROJCET_ID, projectId);
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_HAS_ISSUES, hasIssues);
     request.setAttribute(ListIssuesActionUtil.ATT_NAME_HAS_VIEW_ALL, hasViewAll);
-    request.setAttribute(ListIssuesActionUtil.ATT_NAME_NUM_VIEWABLE, numViewable);
 
 
     request.setAttribute("rssFeed", "/servlets/issues/p" + project.getId());
@@ -231,5 +228,38 @@ public class ListIssuesActionUtil {
 		
 		return null;
 	}
+   /**
+    * TODO temporary pagination helper
+    */
+   public static class Pagination {
+      final private int total, start, perPage, pageCount, currentPage;
+      private Pagination(final int total, final int start, final int perPage) {
+         this.total = total;
+         this.start = start;
+         this.perPage = perPage;
+         pageCount = perPage>0?Double.valueOf(Math.ceil((double)total/perPage)).intValue():1;
+         currentPage = start>0?Double.valueOf(Math.ceil((double)start/perPage)).intValue()+1:1;
+      }
+
+      public int getTotal() {
+         return total;
+      }
+
+      public int getStart() {
+         return start;
+      }
+
+      public int getPerPage() {
+         return perPage;
+      }
+
+      public int getPageCount() {
+         return pageCount;
+      }
+
+      public int getCurrentPage() {
+         return currentPage;
+      }
+   }
 
 }
