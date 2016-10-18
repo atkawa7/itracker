@@ -47,11 +47,11 @@ Releasing itracker from Sources
 
     * Create new Folder following the pattern <<<itracker-#RELEASE_VERSION#>>> using the web-interface (<<check the 'staging' flag!>>)
 
-    * Upload file <<<target/checkout/target/itracker-#RELEASE_VERSION#-bin.zip>>>
+    * Upload file <<<target/checkout/itracker-assembly/target/itracker-#RELEASE_VERSION#-bin.zip>>>
 
     <Set this file as default download for all>
 
-    * Upload file <<<target/checkout/target/itracker-#RELEASE_VERSION#-src.zip>>>
+    * Upload file <<<target/checkout/itracker-assembly/target/itracker-#RELEASE_VERSION#-src.zip>>>
 
     * Uncheck the staging-flag for the folder.
 

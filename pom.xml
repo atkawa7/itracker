@@ -13,6 +13,7 @@
         <module>itracker-persistence</module>
         <module>itracker-services</module>
         <module>itracker-web</module>
+        <module>itracker-assembly</module>
     </modules>
     <properties>
         <clover.maven.charset>UTF-8</clover.maven.charset>
@@ -227,7 +228,7 @@
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
-                    <goals>deploy site:site assembly:single site-deploy</goals>
+                    <goals>deploy site:site site-deploy</goals>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <preparationGoals>clean install</preparationGoals>
                     <!-- TODO: cobertura issue: https://github.com/checkstyle/checkstyle/issues/916 -->
@@ -489,6 +490,12 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.itracker</groupId>
+                <artifactId>itracker-web</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+            </dependency>
+            <dependency>
                 <groupId>org.hsqldb</groupId>
                 <artifactId>hsqldb</artifactId>
                 <version>${hsqldb.version}</version>
@@ -693,21 +700,53 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-web</artifactId>
                 <version>${spring-security.version}</version>
+               <exclusions>
+                  <exclusion>
+                     <artifactId>spring-aop</artifactId>
+                     <groupId>org.springframework</groupId>
+                  </exclusion>
+                  <exclusion>
+                     <artifactId>spring-jdbc</artifactId>
+                     <groupId>org.springframework</groupId>
+                  </exclusion>
+               </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-taglibs</artifactId>
                 <version>${spring-security.version}</version>
+               <exclusions>
+                  <exclusion>
+                     <artifactId>spring-aop</artifactId>
+                     <groupId>org.springframework</groupId>
+                  </exclusion>
+                  <exclusion>
+                     <artifactId>spring-jdbc</artifactId>
+                     <groupId>org.springframework</groupId>
+                  </exclusion>
+               </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
                 <version>${spring-security.version}</version>
+               <exclusions>
+                  <exclusion>
+                     <artifactId>spring-aop</artifactId>
+                     <groupId>org.springframework</groupId>
+                  </exclusion>
+               </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
                 <version>${spring-security.version}</version>
+               <exclusions>
+                  <exclusion>
+                     <artifactId>spring-aop</artifactId>
+                     <groupId>org.springframework</groupId>
+                  </exclusion>
+               </exclusions>
             </dependency>
 
             <dependency>
@@ -809,6 +848,12 @@
                   <artifactId>selenium-java</artifactId>
                   <version>${selenium.version}</version>
                   <scope>test</scope>
+                  <exclusions>
+                     <exclusion>
+                        <artifactId>httpclient</artifactId>
+                        <groupId>org.apache.httpcomponents</groupId>
+                     </exclusion>
+                  </exclusions>
             </dependency>
             <dependency>
                   <groupId>net.sourceforge.htmlunit</groupId>

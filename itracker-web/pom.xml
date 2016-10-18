@@ -130,6 +130,12 @@
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap-datepicker</artifactId>
             <version>1.6.1</version>
+           <exclusions>
+              <exclusion>
+                 <artifactId>jquery</artifactId>
+                 <groupId>org.webjars</groupId>
+              </exclusion>
+           </exclusions>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
