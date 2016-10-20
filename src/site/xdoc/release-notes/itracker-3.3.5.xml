@@ -18,6 +18,7 @@
         <section name="itracker 3.3.5 release-notes - Changes from 3.3.4">
 
             <ul>
+                <li>Minor fixes.</li>
                 <li>Assembly in release-process optimized.</li>
             </ul>
 
