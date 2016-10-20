@@ -9,7 +9,6 @@
    <artifactId>itracker-assembly</artifactId>
    <packaging>pom</packaging>
 
-
    <dependencies>
       <dependency>
          <groupId>org.itracker</groupId>
@@ -20,6 +19,7 @@
    </dependencies>
 
    <build>
+      <finalName>itracker</finalName>
       <plugins>
          <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
@@ -40,18 +40,6 @@
                </execution>
             </executions>
          </plugin>
-         <!--<plugin>-->
-            <!--<artifactId>maven-site-plugin</artifactId>-->
-            <!--<executions>-->
-               <!--<execution>-->
-                  <!--<phase>package</phase>-->
-                  <!--<goals>-->
-                     <!--<goal>jar</goal>-->
-                  <!--</goals>-->
-               <!--</execution>-->
-            <!--</executions>-->
-         <!--</plugin>-->
       </plugins>
-
    </build>
 </project>
