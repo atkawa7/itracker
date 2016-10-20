@@ -30,7 +30,7 @@
                                  arg0="${project.name}"
                                  textActionKey="itracker.web.image.search.texttag"/>
          </div>
-         <h5><it:message key="itracker.web.attr.issues"/>:</h5>
+         <h4><it:message key="itracker.web.attr.issues"/>:</h4>
       </div>
    </div>
    <div class="row">

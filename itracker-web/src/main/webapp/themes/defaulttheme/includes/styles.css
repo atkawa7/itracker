@@ -23,6 +23,10 @@ a.icon .fa-stack {
    font-size: 0.60em;
 }
 
+.pull-right a.icon.stack {
+   margin-bottom: 1em;
+}
+
 .smallbody {
     font-size: 1em;
     background: #fff;

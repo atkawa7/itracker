@@ -10,41 +10,36 @@
    <div class="row">
       <div class="col-xs-12">
          <c:if test="${ isSuperUser }">
-            <h4>
-               <div class="pull-right">
+            <div class="pull-right">
 
                   <c:choose>
                   <c:when test="${ showAll }">
-                  <it:formatIconAction icon="fa-lock" styleClass="unlock" action="/listprojectsadmin?showAll=false"
+                  <it:formatIconAction icon="stack" styleClass="unlock fa fa-stack" action="/listprojectsadmin?showAll=false"
                                        info="itracker.web.listprojects.locked.hide.alt"
                                        textActionKey="itracker.web.listprojects.locked.hide.texttag">
-                     <span class="fa fa-stack ">
                         <i class="fa fa-ban fa-stack-2x" aria-hidden="true"></i>
                         <i class="fa fa-lock fa-stack-1x " aria-hidden="true"></i>
-                     </span>
                   </it:formatIconAction>
                   </c:when>
                   <c:otherwise>
-                  <it:formatIconAction icon="fa-lock" styleClass="lock" action="/listprojectsadmin?showAll=true"
+                  <it:formatIconAction icon="stack" styleClass="lock fa fa-stack" action="/listprojectsadmin?showAll=true"
                                        info="itracker.web.listprojects.locked.show.alt"
                                        textActionKey="itracker.web.listprojects.locked.show.texttag">
-                     <span class="fa fa-stack ">
-                        <i class="fa fa-circle fa-stack-2x" aria-hidden="true"></i>
-                        <i class="fa fa-lock fa-stack-1x fa-inverse " aria-hidden="true"></i>
-                     </span>
+                     <i class="fa fa-circle fa-stack-2x" aria-hidden="true"></i>
+                     <i class="fa fa-lock fa-stack-1x fa-inverse " aria-hidden="true"></i>
                   </it:formatIconAction>
                   </c:otherwise>
                   </c:choose>
 
-                     <it:formatIconAction action="editprojectform" targetAction="create" icon="plus" iconClass="fa-lg"
+                     <it:formatIconAction action="editprojectform" targetAction="create" icon="plus" iconClass="fa-2x"
                                           info="itracker.web.image.create.project.alt"
                                           textActionKey="itracker.web.image.create.texttag"/>
-                     <it:formatIconAction forward="listattachments" icon="paperclip" iconClass="fa-lg"
+                     <it:formatIconAction forward="listattachments" icon="paperclip" iconClass="fa-2x"
                                           info="itracker.web.image.view.attachments.alt"
                                           textActionKey="itracker.web.image.view.texttag"/>
             </div>
          </c:if>
-         <it:message key="itracker.web.attr.projects"/>:</h4>
+         <h4> <it:message key="itracker.web.attr.projects"/>:</h4>
 
       </div>
 
