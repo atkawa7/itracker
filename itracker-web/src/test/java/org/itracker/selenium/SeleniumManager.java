@@ -85,16 +85,28 @@ public class SeleniumManager {
                 Boolean.valueOf(properties.getProperty(PROPERTY_SELENIUM_NO_SERVER, "true"));
         seleniumHost =
                 properties.getProperty(PROPERTY_SELENIUM_HOST, PROPERTY_SELENIUM_HOST_DEFAULT);
-        seleniumPort =
-                Integer.valueOf(properties.getProperty(PROPERTY_SELENIUM_PORT, PROPERTY_SELENIUM_PORT_DEFAULT));
-        applicationHost =
+       try {
+          seleniumPort =
+                  Integer.valueOf(properties.getProperty(PROPERTY_SELENIUM_PORT, PROPERTY_SELENIUM_PORT_DEFAULT));
+       } catch (Exception e) {
+          seleniumPort = Integer.valueOf(PROPERTY_SELENIUM_PORT_DEFAULT);
+       }
+       applicationHost =
                 properties.getProperty(PROPERTY_APPLICATION_HOST, PROPERTY_APPLICATION_HOST_DEFAULT);
-        applicationPort =
-                Integer.valueOf(properties.getProperty(PROPERTY_APPLICATION_PORT, PROPERTY_APPLICATION_PORT_DEFAULT));
-        applicationPath =
+       try {
+          applicationPort =
+                  Integer.valueOf(properties.getProperty(PROPERTY_APPLICATION_PORT, PROPERTY_APPLICATION_PORT_DEFAULT));
+       } catch (Exception e) {
+          applicationPort = Integer.valueOf(PROPERTY_APPLICATION_PORT_DEFAULT);
+       }
+       applicationPath =
                 properties.getProperty(PROPERTY_APPLICATION_PATH, PROPERTY_APPLICATION_PATH_DEFAULT);
-        smtpPort =
-                Integer.valueOf(properties.getProperty(PROPERTY_SELENIUM_SMTP_PORT, PROPERTY_SELENIUM_SMTP_PORT_DEFAULT));
+       try {
+          smtpPort =
+                  Integer.valueOf(properties.getProperty(PROPERTY_SELENIUM_SMTP_PORT, PROPERTY_SELENIUM_SMTP_PORT_DEFAULT));
+       } catch (Exception e) {
+          smtpPort = Integer.valueOf(PROPERTY_SELENIUM_SMTP_PORT_DEFAULT);
+       }
     }
 
 
