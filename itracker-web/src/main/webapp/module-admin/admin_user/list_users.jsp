@@ -58,11 +58,11 @@
                </thead>
                <tbody>
                <c:forEach items="${users}" var="aUser" varStatus="i">
-                  <c:set var="class" value=""/>
+                  <c:set var="trClass" value="" scope="page"/>
                   <c:if test="${aUser.statusLocked}">
-                     <c:set var="class" value="text-danger"/>
+                     <c:set var="trClass" value="text-danger"/>
                   </c:if>
-                  <tr class="${class}">
+                  <tr class="${trClass}">
                      <td>
                         <it:formatIconAction action="edituserform" paramName="id"
                                              paramValue="${aUser.user.id}" targetAction="update"
@@ -86,9 +86,9 @@
                            </c:otherwise>
                         </c:choose>
                      </td>
-                     <c:set var="tdClass" value="${class}"/>
+                     <c:set var="tdClass" value="${trClass}"/>
                      <c:if test="${aUser.regisrationTypeSelf}">
-                        <c:set var="tdClass" value="${tdClass} text-warning"/>
+                        <c:set var="tdClass">${tdClass} text-warning</c:set>
                      </c:if>
                      <c:set var="tdStyle" value=""/>
                      <c:if test="${aUser.regisrationTypeSelf}">
