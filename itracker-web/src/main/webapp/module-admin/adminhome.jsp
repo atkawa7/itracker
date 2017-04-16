@@ -74,13 +74,13 @@
                   <div class="col-xs-6">
                      <h5 class="text-nowrap">
                         <it:message key="itracker.web.attr.totalactive"/>:
-                        <fmt:formatNumber value="${numberofActiveSesssions}"/>
+                        <span id="activeUsers"><fmt:formatNumber value="${numberofActiveSesssions}"/></span>
                      </h5 class="text-nowrap">
                   </div>
                   <div class="col-xs-6">
                      <h5 class="text-nowrap">
                         <it:message key="itracker.web.attr.totalusers"/>:
-                        <fmt:formatNumber value="${numberUsers}"/>
+                        <span id="totalUsers"><fmt:formatNumber value="${numberUsers}"/></span>
                      </h5 class="text-nowrap">
                   </div>
 

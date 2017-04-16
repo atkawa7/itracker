@@ -35,7 +35,7 @@
    <div class="row">
       <div class="col-xs-12">
          <div class="table-responsive">
-            <table class="table table-striped">
+            <table id="users" class="table table-striped">
                <colgroup>
                   <col class="col-xs-1">
                   <col class="col-xs-2">
@@ -63,7 +63,7 @@
                      <c:set var="trClass" value="text-danger"/>
                   </c:if>
                   <tr class="${trClass}">
-                     <td>
+                     <td class="actions">
                         <it:formatIconAction action="edituserform" paramName="id"
                                              paramValue="${aUser.user.id}" targetAction="update"
                                              icon="edit" iconClass="fa-lg"
@@ -94,10 +94,10 @@
                      <c:if test="${aUser.regisrationTypeSelf}">
                         <c:set var="tdStyle" value="font-style: italic"/>
                      </c:if>
-                     <td class="${tdClass}" style="${tdStyle}">${aUser.user.login}</td>
-                     <td>${aUser.user.firstName} ${aUser.user.lastName}</td>
-                     <td>${aUser.user.email}</td>
-                     <td>
+                     <td class="login ${tdClass}" style="${tdStyle}">${aUser.user.login}</td>
+                     <td class="name">${aUser.user.firstName} ${aUser.user.lastName}</td>
+                     <td class="email">${aUser.user.email}</td>
+                     <td class="superuser">
                         <c:choose>
                            <c:when test="${aUser.user.superUser}">
                               <it:message key="itracker.web.generic.yes"/>
@@ -107,8 +107,8 @@
                            </c:otherwise>
                         </c:choose>
                      </td>
-                     <td><it:formatDate date="${aUser.user.lastModifiedDate}" format="notime"/></td>
-                     <td><it:formatDate date="${aUser.lastAccess}" format="short"
+                     <td class="lastModifiedDate"><it:formatDate date="${aUser.user.lastModifiedDate}" format="notime"/></td>
+                     <td class="lastAccess"><it:formatDate date="${aUser.lastAccess}" format="short"
                                         emptyKey="itracker.web.generic.no"/></td>
                   </tr>
                </c:forEach>

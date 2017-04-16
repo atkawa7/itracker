@@ -83,7 +83,7 @@
                <sec:authorize ifAllGranted="USER_ADMIN">
                <%--<c:if test="${hasPermissionUserAdmin}">--%>
                   |
-                  <html:link styleClass="headerLinks"
+                  <html:link linkName="admin" styleClass="headerLinks"
                              titleKey="itracker.web.header.menu.admin.alt"
                              module="/module-admin" action="/adminhome">
                      <it:message key="itracker.web.header.menu.admin"/>
