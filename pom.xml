@@ -5,7 +5,7 @@
     <artifactId>itracker</artifactId>
     <packaging>pom</packaging>
     <name>itracker</name>
-    <version>3.3.6-SNAPSHOT</version>
+    <version>3.3.6</version>
     <url>http://itracker.sourceforge.net/</url>
 
     <modules>
@@ -173,9 +173,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/trunk/</connection>
-        <developerConnection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/trunk/</developerConnection>
-        <url>http://sourceforge.net/p/%69tracker/code/HEAD/tree/itracker/trunk</url>
+        <connection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/tags/itracker-3.3.6</connection>
+        <developerConnection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/tags/itracker-3.3.6</developerConnection>
+        <url>http://sourceforge.net/p/%69tracker/code/HEAD/tree/itracker/tags/itracker-3.3.6</url>
     </scm>
     <organization>
         <name>itracker</name>
