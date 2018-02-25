@@ -1,20 +1,23 @@
 package org.itracker.core.resources;
 
-import org.itracker.services.AbstractServicesIntegrationTest;
 import org.itracker.model.Language;
+import org.itracker.services.AbstractServicesIntegrationTest;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.*;
+
 import static org.itracker.Assert.*;
 
 public class ItrackerResourceBundleIT extends AbstractServicesIntegrationTest {
     private ITrackerResourceBundle resourceBundle;
 
-    @Override
-    public void onSetUp() throws Exception {
-        super.onSetUp();
+    @Before
+    public void setup() {
         resourceBundle = (ITrackerResourceBundle)ITrackerResourceBundle.getBundle(Locale.ENGLISH);
         assertNotNull(resourceBundle);
+
+       resourceBundle.removeValue("itracker.web.attr.admin", false);
     }
 
 
@@ -42,24 +45,22 @@ public class ItrackerResourceBundleIT extends AbstractServicesIntegrationTest {
         assertTrue(resourceBundle.isDirty("itracker.web.attr.admin"));
         resourceBundle.removeValue("itracker.web.attr.admin", false);
         assertFalse(resourceBundle.isDirty("itracker.web.attr.admin"));
-        try {
-            assertNotNull(resourceBundle.getString("itracker.web.attr.admin"));
-            assertEquals("itracker.web.attr.admin", ResourceBundle.getBundle(ITrackerResources.RESOURCE_BUNDLE_NAME, resourceBundle.getLocale()).getString("itracker.web.attr.admin"),
-                    resourceBundle.getString("itracker.web.attr.admin"));
-        } catch (RuntimeException exception) {
-            fail("should fall back to properties resource, but throwed " + exception.getClass() + ", " + exception.getMessage());
-        }
+
+        assertNotNull(resourceBundle.getString("itracker.web.attr.admin"));
+        assertEquals("itracker.web.attr.admin", ResourceBundle.getBundle(ITrackerResources.RESOURCE_BUNDLE_NAME, resourceBundle.getLocale()).getString("itracker.web.attr.admin"),
+                 resourceBundle.getString("itracker.web.attr.admin"));
+
     }
 
     @Test
     public void testGetKeys() {
         Enumeration<String> keys = resourceBundle.getKeys();
         assertNotNull(keys);
-        Set<String> keySet = new HashSet<String>();
+        Set<String> keySet = new HashSet<>();
         keySet.add("itracker.web.attr.admin");
         keySet.add("itracker.web.attr.administer");
 
-        Set<String> resultKeySet = new HashSet<String>();
+        Set<String> resultKeySet = new HashSet<>();
         while (keys.hasMoreElements()) {
             resultKeySet.add(keys.nextElement());
         }
