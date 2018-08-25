@@ -67,7 +67,7 @@
         <htmlunit.version>2.20</htmlunit.version>
         <subethamail.version>3.1.7</subethamail.version>
         <mockito.version>1.10.19</mockito.version>
-        <mysql-connector-java.version>5.1.6</mysql-connector-java.version>
+        <mysql-connector-java.version>8.0.12</mysql-connector-java.version>
         <hsqldb.version>2.0.0</hsqldb.version>
         <h2.version>1.4.192</h2.version>
         <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
@@ -81,7 +81,7 @@
         <maven-pmd-plugin.version>3.5</maven-pmd-plugin.version>
         <maven-checkstyle-plugin.version>2.16</maven-checkstyle-plugin.version>
         <maven-jetty-plugin.version>9.2.15.v20160210</maven-jetty-plugin.version>
-        <maven-cargo-plugin.version>1.4.15</maven-cargo-plugin.version>
+        <maven-cargo-plugin.version>1.6.9</maven-cargo-plugin.version>
         <maven-taglist-plugin.version>2.4</maven-taglist-plugin.version>
         <maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
         <maven-changes-plugin.version>2.11</maven-changes-plugin.version>

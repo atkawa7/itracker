@@ -15,7 +15,7 @@ Releasing itracker from Sources
 
   [[2]] Assign memory to the maven tool (needed for creating the site):
 
-  <<<export MAVEN_OPTS="-Xms512m -Xmx1224m -XX:PermSize=256m -XX:MaxPermSize=512m">>>
+  <<<export MAVEN_OPTS="-Xms512m -Xmx1224m">>>
 
   [[3]] Open an interactive ssh shell for sourceforge:
 
@@ -63,7 +63,7 @@ Staging the Maven generated Site
 
   [[1]] Assign memory to the maven tool (needed for creating the site):
 
-  <<<export MAVEN_OPTS="-Xms512m -Xmx1224m -XX:PermSize=256m -XX:MaxPermSize=512m">>>
+  <<<export MAVEN_OPTS="-Xms512m -Xmx1224m">>>
 
   [[2]] Open an interactive ssh shell for sourceforge:
 

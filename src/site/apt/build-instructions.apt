@@ -40,7 +40,9 @@ Building itracker from Sources
     start the build, eg: \
     <<<mvn package cargo:run -Dcargo.container=tomcat6x -Pitracker.tomcat>>>\
     <<<mvn package cargo:run -Dcargo.container=tomcat7x -Dapplication.port=8080 -Pitracker.tomcat>>>\
-    <<<mvn package cargo:run -Dcargo.container=tomcat8x -Dapplication.port=8080 -Pitracker.tomcat>>>
+    <<<mvn package cargo:run -Dcargo.container=tomcat8x -Dapplication.port=8080 -Pitracker.tomcat>>>\
+    <<<mvn package cargo:run -Dcargo.container=tomcat9x -Dapplication.port=8080 -Pitracker.tomcat>>>
+
 
 
 ** Tomcat deploy using the Cargo Plugin
@@ -66,6 +68,8 @@ Building itracker from Sources
     * {{{https://codehaus-cargo.github.io/cargo/Tomcat+7.x.html}Tomcat 7 deploy reference}}
 
     * {{{https://codehaus-cargo.github.io/cargo/Tomcat+8.x.html}Tomcat 8 deploy reference}}
+
+    * {{{https://codehaus-cargo.github.io/cargo/Tomcat+9.x.html}Tomcat 9 deploy reference}}
 
     []
 
@@ -111,7 +115,7 @@ Building itracker from Sources
 * Site
 
   The site target takes more memory due to intensive reporting, it can be assigned by calling \
-  <<<export MAVEN_OPTS="-Xms512m -Xmx1224m -XX:PermSize=256m -XX:MaxPermSize=512m">>>\
+  <<<export MAVEN_OPTS="-Xms512m -Xmx1224m">>>\
   on the command line.
 
   <<<mvn site>>>
