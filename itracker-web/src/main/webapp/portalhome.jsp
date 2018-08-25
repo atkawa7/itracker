@@ -366,8 +366,9 @@
                                                      paramValue="${createdIssue.issue.id}"
                                                      caller="index"
                                                      icon="tasks" styleClass="fa-lg"
+                                                     info="itracker.web.image.view.issue.alt"
                                                      arg0="${createdIssue.issue.id}"
-                                                     textActionKey="itracker.web.image.view.issue.alt"/>
+                                                     textActionKey="itracker.web.image.view.texttag"/>
 
                                              <c:if test="${createdIssue.userCanEdit}">
                                                 <it:formatIconAction
