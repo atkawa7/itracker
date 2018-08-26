@@ -23,7 +23,7 @@
             <value>text/xml</value>
             <value>Attachment Description 1</value>
             <value>2048</value>
-            <value>Content</value>
+            <value>[TEXT]abc</value>
             <value>2008-01-01</value>
             <value>2008-01-01</value>
         </row>
@@ -37,7 +37,7 @@
             <value>text/xml</value>
             <value>Attachment Description 2</value>
             <value>2048</value>
-            <value>Content</value>
+            <value>[TEXT]dac</value>
             <value>2008-01-01</value>
             <value>2008-01-01</value>
         </row>
@@ -51,7 +51,7 @@
             <value>text/xml</value>
             <value>Attachment Description 3</value>
             <value>2048</value>
-            <value>Content</value>
+            <value>[TEXT]adc</value>
             <value>2008-01-01</value>
             <value>2008-01-01</value>
         </row>
@@ -65,7 +65,7 @@
             <value>text/xml</value>
             <value>Attachment Description 4</value>
             <value>2048</value>
-            <value>Content</value>
+            <value>[TEXT]acd</value>
             <value>2008-01-01</value>
             <value>2008-01-01</value>
         </row>
