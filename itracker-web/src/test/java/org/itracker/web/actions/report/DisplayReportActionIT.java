@@ -3,10 +3,12 @@ package org.itracker.web.actions.report;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.util.TokenProcessor;
 import org.itracker.AbstractDependencyInjectionTest;
+import org.itracker.core.AuthenticationConstants;
+import org.itracker.model.Permission;
 import org.itracker.model.PermissionType;
 import org.itracker.model.User;
 import org.itracker.services.UserService;
-import org.itracker.core.AuthenticationConstants;
+import org.itracker.services.authentication.ITrackerUserDetails;
 import org.itracker.web.forms.DisplayReportForm;
 import org.itracker.web.struts.mock.MockActionMapping;
 import org.itracker.web.util.Constants;
@@ -14,76 +16,92 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
+
 public class DisplayReportActionIT extends AbstractDependencyInjectionTest {
 
-    private MockHttpServletRequest request;
-    private MockHttpServletResponse response;
-    private MockActionMapping actionMapping;
-    private UserService userService;
+   private MockHttpServletRequest request;
+   private MockHttpServletResponse response;
+   private MockActionMapping actionMapping;
+   private UserService userService;
 
-    protected String[] getDataSetFiles() {
-        return new String[]{
-                "dataset/userpreferencesbean_dataset.xml",
-                "dataset/userbean_dataset.xml",
-                "dataset/projectbean_dataset.xml",
-                "dataset/versionbean_dataset.xml",
-                "dataset/permissionbean_dataset.xml",
-                "dataset/issuebean_dataset.xml",
-                "dataset/issueattachmentbean_dataset.xml",
-                "dataset/issueactivitybean_dataset.xml"
-        };
-    }
+   protected String[] getDataSetFiles() {
+      return new String[]{
+              "dataset/userpreferencesbean_dataset.xml",
+              "dataset/userbean_dataset.xml",
+              "dataset/projectbean_dataset.xml",
+              "dataset/versionbean_dataset.xml",
+              "dataset/permissionbean_dataset.xml",
+              "dataset/issuebean_dataset.xml",
+              "dataset/issueattachmentbean_dataset.xml",
+              "dataset/issueactivitybean_dataset.xml"
+      };
+   }
 
-    protected String[] getConfigLocations() {
-        return new String[]{"src/main/resources/application-context.xml"};
-    }
+   protected String[] getConfigLocations() {
+      return new String[]{"src/main/resources/application-context.xml"};
+   }
 
-    @Before
-    public void init() {
-        userService = (UserService) applicationContext.getBean("userService");
+   @Before
+   public void init() {
+      userService = (UserService) applicationContext.getBean("userService");
 
-        request = new MockHttpServletRequest();
-        response = new MockHttpServletResponse();
-        actionMapping = new MockActionMapping();
-    }
+      request = new MockHttpServletRequest();
+      response = new MockHttpServletResponse();
+      actionMapping = new MockActionMapping();
+   }
 
-    @Test
-    public void testDisplayReport() throws ServletException, IOException {
-        DisplayReportAction action = new DisplayReportAction();
+   @Test
+   public void testDisplayReport() throws ServletException, IOException {
+      DisplayReportAction action = new DisplayReportAction();
 
-        String token = TokenProcessor.getInstance().generateToken(request);
+      String token = TokenProcessor.getInstance().generateToken(request);
 
-        HttpSession session = request.getSession(false);
-        session.setAttribute("org.apache.struts.action.TOKEN", token);
-        request.setParameter("org.apache.struts.taglib.html.TOKEN", token);
+      HttpSession session = request.getSession(false);
+      session.setAttribute("org.apache.struts.action.TOKEN", token);
+      request.setParameter("org.apache.struts.taglib.html.TOKEN", token);
 
-        User currentUser = new User();
-        currentUser.setId(4);
-        currentUser.setLogin("project_admin1");
-        request.getSession().setAttribute(Constants.USER_KEY, currentUser);
+      User currentUser = new User();
+      currentUser.setId(4);
+      currentUser.setLogin("project_admin1");
+      request.getSession().setAttribute(Constants.USER_KEY, currentUser);
 
-        Map<Integer, Set<PermissionType>> permissions = userService.getUsersMapOfProjectIdsAndSetOfPermissionTypes(currentUser, AuthenticationConstants.REQ_SOURCE_WEB);
-        request.getSession().setAttribute(Constants.PERMISSIONS_KEY, permissions);
+      Map<Integer, Set<PermissionType>> permissions = userService.getUsersMapOfProjectIdsAndSetOfPermissionTypes(currentUser, AuthenticationConstants.REQ_SOURCE_WEB);
+      request.getSession().setAttribute(Constants.PERMISSIONS_KEY, permissions);
 
-        DisplayReportForm form = new DisplayReportForm();
+      setupSecurityContext(currentUser);
 
-        form.setType("project");
-        form.setProjectIds(new Integer[]{2});
-        form.setReportId(-1);
-        form.setReportOutput("HTML");
+      DisplayReportForm form = new DisplayReportForm();
 
-        ActionForward forward = action.execute(actionMapping, form, request, response);
+      form.setType("project");
+      form.setProjectIds(new Integer[]{2});
+      form.setReportId(-1);
+      form.setReportOutput("HTML");
 
-        assertNull("forward when reportId == ReportUtilities.REPORT_EXPORT_XML", forward);
-        assertEquals("unexpected response header", "attachment; filename=\"issue_export.xml\"", response.getHeader("Content-Disposition"));
-    }
+      ActionForward forward = action.execute(actionMapping, form, request, response);
+
+      assertNull("forward when reportId == ReportUtilities.REPORT_EXPORT_XML", forward);
+      assertEquals("unexpected response header", "attachment; filename=\"issue_export.xml\"", response.getHeader("Content-Disposition"));
+   }
+
+   private void setupSecurityContext(User currentUser) {
+      List<Permission> permissionsByUserId = userService.getPermissionsByUserId(currentUser.getId());
+      SecurityContextImpl context = new SecurityContextImpl();
+      ITrackerUserDetails userDetails = new ITrackerUserDetails(currentUser, permissionsByUserId);
+      context.setAuthentication(new TestingAuthenticationToken(userDetails, null));
+      SecurityContextHolder.setContext(context);
+   }
 
 }
