@@ -75,34 +75,34 @@
         <mail.version>1.4.4</mail.version>
         <c3p0.version>0.9.1.2</c3p0.version>
 
-        <maven-findbugs-plugin.version>3.0.2</maven-findbugs-plugin.version>
+        <maven-findbugs-plugin.version>3.0.5</maven-findbugs-plugin.version>
         <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
-        <maven-project-info-reports-plugin.version>2.8.1</maven-project-info-reports-plugin.version>
-        <maven-pmd-plugin.version>3.5</maven-pmd-plugin.version>
-        <maven-checkstyle-plugin.version>2.16</maven-checkstyle-plugin.version>
+        <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
+        <maven-pmd-plugin.version>3.10.0</maven-pmd-plugin.version>
+        <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
         <maven-jetty-plugin.version>9.2.15.v20160210</maven-jetty-plugin.version>
         <maven-cargo-plugin.version>1.6.9</maven-cargo-plugin.version>
         <maven-taglist-plugin.version>2.4</maven-taglist-plugin.version>
         <maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
-        <maven-changes-plugin.version>2.11</maven-changes-plugin.version>
+        <maven-changes-plugin.version>2.12.1</maven-changes-plugin.version>
         <maven-changelog-plugin.version>2.3</maven-changelog-plugin.version>
-        <maven-surefire-report-plugin.version>2.18.1</maven-surefire-report-plugin.version>
-        <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
-        <maven-failsafe-plugin.version>2.18.1</maven-failsafe-plugin.version>
-        <maven-surefire-plugin.version>2.8.1</maven-surefire-plugin.version>
+        <maven-surefire-report-plugin.version>2.22.0</maven-surefire-report-plugin.version>
+        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+        <maven-failsafe-plugin.version>2.22.0</maven-failsafe-plugin.version>
+        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
         <selenium-maven-plugin.version>2.3</selenium-maven-plugin.version>
         <maven-cobertura-plugin.version>2.7</maven-cobertura-plugin.version>
-        <maven-javadoc-plugin.version>2.8.1</maven-javadoc-plugin.version>
-        <maven-clean-plugin.version>2.2</maven-clean-plugin.version>
-        <maven-assembly-plugin.version>2.6</maven-assembly-plugin.version>
-        <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
-        <maven-war-plugin.version>2.6</maven-war-plugin.version>
-        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+        <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
+        <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
+        <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
+        <maven-jar-plugin.version>3.1.0</maven-jar-plugin.version>
+        <maven-war-plugin.version>3.2.2</maven-war-plugin.version>
+        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-wagon-ssh-plugin.version>2.10</maven-wagon-ssh-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
-        <maven-build-helper-plugin.version>1.12</maven-build-helper-plugin.version>
+        <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
+        <maven-build-helper-plugin.version>3.0.0</maven-build-helper-plugin.version>
 
         <tomcat.deploy.server>localhost</tomcat.deploy.server>
         <tomcat.deploy.url>http://localhost:8080/manager</tomcat.deploy.url>
@@ -420,10 +420,9 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>${maven-javadoc-plugin.version}</version>
                     <configuration>
-                        <source>1.7</source>
-                        <additionalparam>-Xdoclint:none</additionalparam>
-
-                        <encoding>UTF-8</encoding>
+                       <source>1.7</source>
+                       <encoding>UTF-8</encoding>
+                       <doclint>none</doclint>
                     </configuration>
                 </plugin>
             </plugins>
@@ -924,10 +923,10 @@
                             <report>dependency-management</report>
                             <report>plugins</report>
                             <report>plugin-management</report>
-                            <report>project-team</report>
-                            <report>mailing-list</report>
-                            <report>issue-tracking</report>
-                            <report>license</report>
+                            <report>team</report>
+                            <report>mailing-lists</report>
+                            <report>issue-management</report>
+                            <report>licenses</report>
                             <report>scm</report>
                             <report>summary</report>
                         </reports>
@@ -1039,9 +1038,8 @@
                 <version>${maven-javadoc-plugin.version}</version>
                 <configuration>
                     <source>1.7</source>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-
                     <encoding>UTF-8</encoding>
+                    <doclint>none</doclint>
                 </configuration>
             </plugin>
             <plugin>
