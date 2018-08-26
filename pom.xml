@@ -5,7 +5,7 @@
     <artifactId>itracker</artifactId>
     <packaging>pom</packaging>
     <name>itracker</name>
-    <version>3.3.8-SNAPSHOT</version>
+    <version>3.3.7-SNAPSHOT</version>
     <url>http://itracker.sourceforge.net/</url>
 
     <modules>
@@ -176,8 +176,7 @@
         <connection>scm:git:https://git.code.sf.net/p/itracker/git</connection>
         <developerConnection>scm:git:https://git.code.sf.net/p/itracker/git</developerConnection>
         <url>https://sourceforge.net/p/itracker/git/ci/master/tree/</url>
-      <tag>HEAD</tag>
-  </scm>
+    </scm>
     <organization>
         <name>itracker</name>
         <url>http://itracker.sourceforge.net/</url>
