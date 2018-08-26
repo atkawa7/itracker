@@ -67,6 +67,7 @@
         <menu name="Documentation" inherit="top">
 
             <item name="Release Notes" href="/release-notes/index.html" collapse="true">
+                <item name="3.3.7 Release Notes" href="/release-notes/itracker-3.3.7.html"/>
                 <item name="3.3.6 Release Notes" href="/release-notes/itracker-3.3.6.html"/>
                 <item name="3.3.5 Release Notes" href="/release-notes/itracker-3.3.5.html"/>
                 <item name="3.3.4 Release Notes" href="/release-notes/itracker-3.3.4.html"/>
