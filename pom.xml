@@ -415,6 +415,16 @@
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>${maven-build-helper-plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                    <configuration>
+                        <source>1.7</source>
+                        <additionalparam>-Xdoclint:none</additionalparam>
+
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
