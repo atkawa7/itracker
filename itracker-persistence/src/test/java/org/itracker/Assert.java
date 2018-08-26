@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Itracker specific assertions for include static to test-classes.
  */
-public class Assert extends junit.framework.Assert {
+public class Assert extends org.junit.Assert {
 
     private static final Logger log = Logger.getLogger(Assert.class);
 
