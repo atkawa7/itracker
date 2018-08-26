@@ -173,9 +173,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/trunk/</connection>
-        <developerConnection>scm:svn:https://svn.code.sf.net/p/itracker/code/itracker/trunk/</developerConnection>
-        <url>http://sourceforge.net/p/%69tracker/code/HEAD/tree/itracker/trunk</url>
+        <connection>scm:git:https://git.code.sf.net/p/itracker/git</connection>
+        <developerConnection>scm:git:https://git.code.sf.net/p/itracker/git</developerConnection>
+        <url>https://sourceforge.net/p/itracker/git/ci/master/tree/</url>
     </scm>
     <organization>
         <name>itracker</name>
