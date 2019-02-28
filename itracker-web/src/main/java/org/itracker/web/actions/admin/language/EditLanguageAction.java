@@ -24,7 +24,6 @@ import org.apache.struts.action.*;
 import org.itracker.core.resources.ITrackerResources;
 import org.itracker.model.Configuration;
 import org.itracker.model.Language;
-import org.itracker.model.util.SystemConfigurationUtilities;
 import org.itracker.persistence.dao.NoSuchEntityException;
 import org.itracker.services.ConfigurationService;
 import org.itracker.web.actions.base.ItrackerBaseAction;
@@ -36,7 +35,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.MissingResourceException;
 
 
 public class EditLanguageAction extends ItrackerBaseAction {
@@ -81,12 +83,12 @@ public class EditLanguageAction extends ItrackerBaseAction {
             } else if ("disable".equals(action)) {
                 // This will update the Base Locale to remove the new language.
                 configurationService.getAvailableLanguages();
-                configurationService.getAvailableLanguages();
 
                 List<Configuration> localeConfigs = configurationService.getConfigurationItemsByType(Configuration.Type.locale);
 
                 for (Configuration configuration: localeConfigs) {
-                    if (configuration.getValue().startsWith(locale)) {
+                    if (configuration.getValue().equals(locale) ||
+                            configuration.getValue().startsWith(locale + "_")) {
                         configurationService.removeConfigurationItem(configuration.getId());
                         ITrackerResources.clearBundles();
                         return mapping.findForward("listlanguages");
@@ -99,10 +101,6 @@ public class EditLanguageAction extends ItrackerBaseAction {
                 if (locale.length() != 2 && (locale.length() != 5 || locale.indexOf('_') != 2)) {
                     errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("itracker.web.error.invalidlocale"));
                 } else {
-                    Language languageItem = configurationService.getLanguageItemByKey("itracker.locales", null);
-                    String localeString = languageItem.getResourceValue();
-                    languageItem.setResourceValue(localeString + "," + locale);
-                    configurationService.updateLanguageItem(languageItem);
 
                     Configuration localeConfig = new Configuration(Configuration.Type.locale, locale);
                     if (configurationService.configurationItemExists(localeConfig)) {
