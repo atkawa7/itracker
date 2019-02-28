@@ -762,19 +762,6 @@ public class ConfigurationServiceIT extends
 
     }
 
-
-    @Test
-    public void testGetLanguage() {
-        List<Language> languages = configurationService.getLanguage(new Locale("test_locale"));
-        assertNotNull(languages);
-        assertEquals("total languages with test_locale", 1, languages.size());
-
-        languages = configurationService.getLanguage(new Locale("undefined_locale"));
-        assertNotNull(languages);
-        assertEquals("total languages with undefined_locale", 0, languages.size());
-
-    }
-
     private void doTestGetPermissionName(final Locale locale,
                                          final int permissionId, final String expected) {
         final String actual =
