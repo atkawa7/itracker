@@ -98,9 +98,9 @@
                                        arg0="${ localeName }"><it:message
                                       key="itracker.web.admin.listlanguages.update"/></it:link>
                               <it:link action="editlanguage" targetAction="disable" paramName="locale" styleClass="btn btn-sm btn-link"
-                                       paramValue="${ language }"
+                                       paramValue="${ locale }"
                                        titleKey="itracker.web.admin.listlanguages.disable.alt"
-                                       arg0="${ languageName }"><it:message
+                                       arg0="${ localeName }"><it:message
                                       key="itracker.web.admin.listlanguages.disable"/></it:link>
                               <it:link action="exportlanguage" targetAction="export" paramName="locale" styleClass="btn btn-sm btn-link"
                                        paramValue="${ locale }" titleKey="itracker.web.admin.listlanguages.export.alt"
