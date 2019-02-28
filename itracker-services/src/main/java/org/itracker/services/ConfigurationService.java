@@ -449,11 +449,7 @@ public interface ConfigurationService extends ITrackerResourcesProvider {
 
     int getNumberAvailableLanguages();
 
-    /**
-     * returns languages for the locale as list of Language-objects
-     */
-    @Deprecated
-    List<Language> getLanguage(Locale locale);
+
     Properties getLanguageProperties(Locale locale);
 
     void updateLanguage(Locale locale, List<Language> languages);

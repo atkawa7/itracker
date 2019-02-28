@@ -942,7 +942,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     }
 
-    public List<Language> getLanguage(Locale locale) {
+    private List<Language> getLanguage(Locale locale) {
         Map<String, String> language = new HashMap<String, String>();
         if (locale == null) {
             locale = new Locale("");
