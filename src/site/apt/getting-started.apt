@@ -10,7 +10,7 @@ Getting Started
 
 *How to get up and running developing for itracker
 
-  [[1]] {{{/development_environment_setup.html} Setup your Developement Environment}} (recommended: Tomcat 6.x, Eclipse 3.3+ with Maven Integration-/SVN-Plugin)
+  [[1]] {{{/development_environment_setup.html} Setup your Developement Environment}} (recommended: Tomcat 6+, Eclipse with Maven Integration)
   
   [[2]] Run with main (development) database (configured in <<</src/main/tomcat/context.xml>>>) to run in Tomcat from maven (<<<mvn packge tomcat6:run -Pitracker.tomcat>>>)
 

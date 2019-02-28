@@ -14,17 +14,9 @@ Development Environment Setup
 
 *Eclipse
 
-  <<using maven integration plugin for eclipse>>
-
-  * Install the eclipse-plugin 'Eclipse Maven Integration' from eclipse marketplace site {{http://marketplace.eclipse.org}}.
-
-  * Check out itracker from SVN, usually trunk-version.
+  * Check out itracker from GIT.
 
   * Import the checked out project using maven import-wizzard: File > Import ... > General > Maven Projects
-
- []
-
-  More information: {{http://marketplace.eclipse.org/content/maven-integration-eclipse/}}
 
 *IDEA
 
@@ -32,9 +24,7 @@ Development Environment Setup
 
   * VCS > Check out from Version Control > Subversion
 
-  * Connect repository <<https://ranks@svn.code.sf.net/p/itracker/code>>
-
-  * Check out /itracker/trunk
+  * Clone repository <<git clone https://git.code.sf.net/p/itracker/git>>
 
   * Configure the detected Frameworks (Spring, Hibernate, Struts)
 
