@@ -199,7 +199,7 @@
                           key="itracker.web.button.update"/></html:submit>
                </c:when>
                <c:otherwise>
-                  <html:submit styleClass="button"
+                  <html:submit styleClass="btn btn-block btn-primary"
                                altKey="itracker.web.button.create.alt"
                                titleKey="itracker.web.button.create.alt"><it:message
                           key="itracker.web.button.create"/></html:submit>
