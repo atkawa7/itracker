@@ -543,6 +543,14 @@
             <value>BASE_VALUE</value>
         </row>
 
-
+        <row>
+            <value>12345</value>
+            <value>2006-01-01</value>
+            <value>2006-01-01</value>
+            <value>va</value>
+            <value>itracker.locale.name</value>
+            <value>Test</value>
+        </row>
+                  
     </table>
 </dataset>

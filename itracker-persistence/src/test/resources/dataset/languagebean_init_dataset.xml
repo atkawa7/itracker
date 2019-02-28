@@ -905,14 +905,6 @@
             <value><![CDATA[2009-01-26 23:10:06.0]]></value>
         </row>
         <row>
-            <value>113</value>
-            <value>BASE</value>
-            <value>itracker.locales</value>
-            <value>ca,de,en_US,en_GB,es_ES,es_MX,fr,it,pt_BR,pt_PT,ru,tr,zh_TW,zh_ZH</value>
-            <value><![CDATA[2009-01-26 23:10:06.0]]></value>
-            <value><![CDATA[2009-01-26 23:10:06.0]]></value>
-        </row>
-        <row>
             <value>114</value>
             <value>BASE</value>
             <value>itracker.web.attr.updated</value>
@@ -30849,14 +30841,7 @@
             <value><![CDATA[2009-01-26 23:10:46.0]]></value>
             <value><![CDATA[2009-01-26 23:10:46.0]]></value>
         </row>
-        <row>
-            <value>3816</value>
-            <value>zh_TW</value>
-            <value>itracker.locales</value>
-            <value>ca,de,en_US,en_GB,es_ES,es_MX,fr,it,pt,ru,tr,zh,zh_TW</value>
-            <value><![CDATA[2009-01-26 23:10:46.0]]></value>
-            <value><![CDATA[2009-01-26 23:10:46.0]]></value>
-        </row>
+
         <row>
             <value>3817</value>
             <value>zh_TW</value>
