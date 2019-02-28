@@ -3,11 +3,11 @@
           xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
     <properties>
-        <title>itracker 3.3.7 release-notes</title>
+        <title>itracker 3.3.8 release-notes</title>
     </properties>
 
     <body>
-        <section name="Environmental changes since 3.3.6">
+        <section name="Environmental changes since 3.3.7">
             <ul>
                 <li>
                     none
@@ -15,10 +15,10 @@
             </ul>
         </section>
 
-        <section name="itracker 3.3.7 release-notes - Changes from 3.3.6">
+        <section name="itracker 3.3.8 release-notes - Changes from 3.3.7">
 
             <ul>
-                <li>Fixed text-keys in portalhome.</li>
+                <li>Fixed language administration bug which prevented adding locales.</li>
             </ul>
 
         </section>
