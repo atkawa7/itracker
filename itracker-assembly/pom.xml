@@ -19,7 +19,6 @@
    </dependencies>
 
    <build>
-      <finalName>itracker</finalName>
       <plugins>
          <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
@@ -39,6 +38,9 @@
                   <phase>site</phase>
                </execution>
             </executions>
+            <configuration>
+               <finalName>itracker-${project.version}</finalName>
+            </configuration>
          </plugin>
       </plugins>
    </build>
