@@ -7,7 +7,7 @@
    </formats>
    <dependencySets>
       <dependencySet>
-         <useProjectArtifact>false</useProjectArtifact>
+         <useProjectArtifact>true</useProjectArtifact>
          <excludes>
             <exclude>*:*</exclude>
          </excludes>
