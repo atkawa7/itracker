@@ -10,7 +10,7 @@
     <li><a href="#prefs">Editing Preferences</a></li>
 </ul>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="create"></a><span class="editColumnTitle">Creating an Issue</span>
 <a href="#top" class="headerLinks">[top]</a><br/>
 
@@ -25,7 +25,7 @@
     for that project.<br/>
 </p>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="edit"></a><span class="editColumnTitle">Editing an Issue</span>
 <a href="#top" class="headerLinks">[top]</a><br/>
 
@@ -49,7 +49,7 @@
     for a project.<br/>
 </p>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="list"></a><span class="editColumnTitle">Listing Issues</span>
 <a href="#top" class="headerLinks">[top]</a><br/>
 
@@ -63,7 +63,7 @@
 </p>
 
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="search"></a><span class="editColumnTitle">Searching for Issues</span>
 <a href="#top" class="headerLinks">[top]</a><br/>
 
@@ -83,7 +83,7 @@
     <br/>
 </p>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="report"></a><span class="editColumnTitle">Running Reports</span>
 <a href="#top" class="headerLinks">[top]</a><br/>
 
@@ -95,7 +95,7 @@
     selected, a report may take several minutes to run.<br/>
 </p>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="prefs"></a><span class="editColumnTitle">Editing Preferences</span>
 <a href="#top" class="headerLinks">[top]</a><br/>
 

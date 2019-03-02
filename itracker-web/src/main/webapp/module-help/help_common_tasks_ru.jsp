@@ -10,7 +10,7 @@
     <li><a href="#prefs">Изменение настроек</a></li>
 </ul>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="create"></a><span class="editColumnTitle">Создание задания</span>
 <a href="#top" class="headerLinks">[наверх]</a><br/>
 
@@ -24,7 +24,7 @@
     него новое задание.<br/>
 </p>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="edit"></a><span class="editColumnTitle">Редактирование задания</span>
 <a href="#top" class="headerLinks">[наверх]</a><br/>
 
@@ -50,7 +50,7 @@
     редактировать в нём существующие задания.<br/>
 </p>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="list"></a><span class="editColumnTitle">Просмотр заданий</span>
 <a href="#top" class="headerLinks">[наверх]</a><br/>
 
@@ -64,7 +64,7 @@
 </p>
 
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="search"></a><span class="editColumnTitle">Поиск заданий</span>
 <a href="#top" class="headerLinks">[наверх]</a><br/>
 
@@ -84,7 +84,7 @@
     <br/>
 </p>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="report"></a><span class="editColumnTitle">Генерация отчётов</span>
 <a href="#top" class="headerLinks">[наверх]</a><br/>
 
@@ -97,7 +97,7 @@
     <br/>
 </p>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="prefs"></a><span class="editColumnTitle">Изменение настроек</span>
 <a href="#top" class="headerLinks">[наверх]</a><br/>
 

@@ -10,7 +10,7 @@
     <li><a href="#prefs">Voreinstellungen bearbeiten</a></li>
 </ul>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="create"></a><span class="editColumnTitle">Einen Eintrag anlegen</span>
 <a href="#top" class="headerLinks">[top]</a><br/>
 
@@ -24,7 +24,7 @@
     <br/>
 </p>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="edit"></a><span class="editColumnTitle">Einen Eintrag bearbeiten</span>
 <a href="#top" class="headerLinks">[top]</a><br/>
 
@@ -48,7 +48,7 @@
     Sie müssen dabei die Rechte haben, in dem Projekt bestehende Einträge bearbeiten zu dürfen.<br/>
 </p>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="list"></a><span class="editColumnTitle">Einträge auflisten</span>
 <a href="#top" class="headerLinks">[top]</a><br/>
 
@@ -64,7 +64,7 @@
 </p>
 
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="search"></a><span class="editColumnTitle">Einträge suchen</span>
 <a href="#top" class="headerLinks">[top]</a><br/>
 
@@ -83,7 +83,7 @@
     Sie über die entsprechenden Rechte verfügen.<br/>
 </p>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="report"></a><span class="editColumnTitle">Reports Erstellen</span>
 <a href="#top" class="headerLinks">[top]</a><br/>
 
@@ -96,7 +96,7 @@
     dauern.<br/>
 </p>
 
-<hr width="75%" noshade height="1"/>
+<hr/>
 <a name="prefs"></a><span class="editColumnTitle">Voreinstellungen bearbeiten</span>
 <a href="#top" class="headerLinks">[top]</a><br/>
 
