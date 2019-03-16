@@ -428,22 +428,6 @@
             </plugins>
         </pluginManagement>
     </build>
-    <pluginRepositories>
-        <pluginRepository>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots />
-            <id>apache.org</id>
-            <name>Maven Snapshots</name>
-            <url>http://people.apache.org/maven-snapshot-repository</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>atlassian-m2-repository</id>
-            <name>Atlassian Maven 2.x Repository</name>
-            <url>http://repository.atlassian.com/maven2</url>
-        </pluginRepository>
-    </pluginRepositories>
     <dependencyManagement>
         <dependencies>
             <dependency>
