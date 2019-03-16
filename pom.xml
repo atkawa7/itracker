@@ -83,7 +83,7 @@
         <maven-jetty-plugin.version>9.4.15.v20190215</maven-jetty-plugin.version>
         <maven-cargo-plugin.version>1.7.3</maven-cargo-plugin.version>
         <maven-taglist-plugin.version>2.4</maven-taglist-plugin.version>
-        <maven-jxr-plugin.version>3.0</maven-jxr-plugin.version>
+        <maven-jxr-plugin.version>3.0.0</maven-jxr-plugin.version>
         <maven-changes-plugin.version>2.12.1</maven-changes-plugin.version>
         <maven-changelog-plugin.version>2.3</maven-changelog-plugin.version>
         <maven-surefire-report-plugin.version>2.22.0</maven-surefire-report-plugin.version>
