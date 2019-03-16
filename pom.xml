@@ -69,9 +69,9 @@
         <mockito.version>1.10.19</mockito.version>
         <mysql-connector-java.version>8.0.12</mysql-connector-java.version>
         <hsqldb.version>2.0.0</hsqldb.version>
-        <h2.version>1.4.192</h2.version>
+        <h2.version>1.4.198</h2.version>
         <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
-        <derby.version>10.12.1.1</derby.version>
+        <derby.version>10.14.2.0</derby.version>
         <mail.version>1.4.4</mail.version>
         <c3p0.version>0.9.1.2</c3p0.version>
 
@@ -80,8 +80,8 @@
         <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
         <maven-pmd-plugin.version>3.10.0</maven-pmd-plugin.version>
         <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
-        <maven-jetty-plugin.version>9.2.15.v20160210</maven-jetty-plugin.version>
-        <maven-cargo-plugin.version>1.6.9</maven-cargo-plugin.version>
+        <maven-jetty-plugin.version>9.4.15.v20190215</maven-jetty-plugin.version>
+        <maven-cargo-plugin.version>1.7.3</maven-cargo-plugin.version>
         <maven-taglist-plugin.version>2.4</maven-taglist-plugin.version>
         <maven-jxr-plugin.version>3.0</maven-jxr-plugin.version>
         <maven-changes-plugin.version>2.12.1</maven-changes-plugin.version>
@@ -437,19 +437,6 @@
             <id>apache.org</id>
             <name>Maven Snapshots</name>
             <url>http://people.apache.org/maven-snapshot-repository</url>
-        </pluginRepository>
-        <pluginRepository>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots />
-            <id>codehaus.org</id>
-            <name>Codehaus Snapshots</name>
-            <url>http://snapshots.repository.codehaus.org</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>Codehaus Repository</id>
-            <url>http://repository.codehaus.org/</url>
         </pluginRepository>
         <pluginRepository>
             <id>atlassian-m2-repository</id>
