@@ -63,7 +63,7 @@ Building itracker from Sources
     <<<mvn package cargo:deploy -Dcargo.remote.uri=http://itracker-host:8080/manager -Dcargo.remote.username=manager -Dcargo.remote.password=admin>>>
 
 
-*** Tomcat 7.x/8.x:
+*** Tomcat 7.x/8.x/9.x:
 
     * {{{https://codehaus-cargo.github.io/cargo/Tomcat+7.x.html}Tomcat 7 deploy reference}}
 

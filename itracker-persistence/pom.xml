@@ -9,7 +9,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>itracker-persistence</artifactId>
-    <packaging>jar</packaging>
+    <name>itracker Persistence</name>
+    <description>itracker persistence layer, ORM (Hibernate), model and repository (DAO) layer.</description>
 
     <build>
         <finalName>itracker-persistence</finalName>

@@ -9,7 +9,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>itracker-services</artifactId>
-    <packaging>jar</packaging>
+    <name>itracker Services</name>
+    <description>The itracker services layer.</description>
     <build>
         <finalName>itracker-services</finalName>
 
@@ -95,7 +96,7 @@
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
+            <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
 

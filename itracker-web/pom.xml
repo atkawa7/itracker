@@ -10,6 +10,8 @@
     </parent>
     <artifactId>itracker-web</artifactId>
     <packaging>war</packaging>
+    <name>itracker Web</name>
+    <description>The itracker web module to run itracker in the web-container.</description>
 
     <dependencyManagement>
        <dependencies>
@@ -29,7 +31,7 @@
 
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
+            <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -47,8 +49,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
+            <groupId>org.apache.taglibs</groupId>
+            <artifactId>taglibs-standard-spec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.taglibs</groupId>
+            <artifactId>taglibs-standard-impl</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -129,7 +135,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>webjars-servlet-2.x</artifactId>
-            <version>1.1</version>
+            <version>1.5</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>

@@ -9,7 +9,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>itracker-core</artifactId>
-    <packaging>jar</packaging>
+    <name>itracker Core</name>
+    <description>Core classes for the itracker artifacts.</description>
     <build>
         <finalName>itracker-core</finalName>
     </build>

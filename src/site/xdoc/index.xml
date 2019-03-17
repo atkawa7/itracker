@@ -27,6 +27,14 @@
 		<section name="News">
 			<table border="1">
                 <tr>
+                    <td>TBD</td>
+                    <td>
+                        New 3.3.9 Release is available for
+                        <a href="http://sourceforge.net/projects/itracker/files/">download,</a>
+                        <a href="/release-notes/itracker-3.3.9.html">more..</a>
+                    </td>
+                </tr>
+                <tr>
                     <td>2019-2-28</td>
                     <td>
                         New 3.3.8 Release is available for
