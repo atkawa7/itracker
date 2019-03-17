@@ -7,6 +7,8 @@
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>itracker-assembly</artifactId>
+   <name>itracker Assembly</name>
+   <description>Assembly module for the itracker artifacts.</description>
    <packaging>pom</packaging>
 
    <dependencies>
@@ -40,6 +42,11 @@
             </executions>
             <configuration>
                <finalName>itracker-${project.version}</finalName>
+               <descriptors>
+                  <descriptor>src/main/assembly/assembly-bin.xml</descriptor>
+                  <descriptor>src/main/assembly/assembly-site.xml</descriptor>
+                  <descriptor>src/main/assembly/assembly-src.xml</descriptor>
+               </descriptors>
             </configuration>
          </plugin>
       </plugins>

@@ -5,6 +5,14 @@
         <format>zip</format>
     </formats>
     <fileSets>
+       <fileSet>
+          <directory>../src/site</directory>
+          <outputDirectory>.</outputDirectory>
+          <includes>
+             <include>GPL.txt</include>
+             <include>LGPL.txt</include>
+          </includes>
+       </fileSet>
         <fileSet>
            <directory>..</directory>
             <includes>
