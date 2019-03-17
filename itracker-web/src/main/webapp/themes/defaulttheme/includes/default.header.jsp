@@ -112,18 +112,7 @@
                             titleKey="itracker.web.header.menu.logout.alt" module="/">
                <it:message key="itracker.web.header.menu.logout"/>
             </html:link>
-            </c:if> <c:if test="${username == null}">
-
-            <c:if test="${fn:length(locales) gt 1}">
-               <div class="locales"><c:forEach items="${locales}" varStatus="status" var="locMap">
-                    <span><c:if test="${not status.first}"> | </c:if><a href="?loc=${locMap.key}"
-                                                                        class="${locMap.key}_loc">${locMap.key}</a></span>
-                  <c:forEach items="${locMap.value}" var="loc"> <span> | <a href="?loc=${loc}"
-                                                                            class="${loc}_loc">${loc}</a></span></c:forEach>
-               </c:forEach></div>
-            </c:if>
-
-         </c:if>
+            </c:if> 
          </div>
       </div>
       <div class="row">

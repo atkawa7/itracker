@@ -29,6 +29,8 @@
 
             <ul>
                 <li>Fixed maven assembly descriptor and separated.</li>
+                <li>Login screen changed to show locales in the footer and with native names.
+                   If there is country specific locales the base-language is skipped.</li>
             </ul>
 
         </section>

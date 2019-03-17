@@ -115,9 +115,21 @@ a.next {
 }
 
 .locales {
-    float: left;
-    text-align: left;
+   margin: 0 0 2em 0;
 }
+
+.locales span {
+   margin: .5em;
+   white-space: nowrap;
+}
+/**
+  TODO fix in bootstrap v4
+ */
+@media (max-width: 768px) {
+   .text-xs-center {
+      text-align: center;
+    } 
+ }
 
 .headerText,
 .headerTextWelcome {
