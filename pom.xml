@@ -69,7 +69,7 @@
         <dbunit.version>2.5.4</dbunit.version>
         <!-- selenium.version 2.53.0 and 2.53.1 are not working.. -->
         <selenium.version>2.52.0</selenium.version>
-        <htmlunit.version>2.20</htmlunit.version>
+        <htmlunit.version>2.37.0</htmlunit.version>
         <subethamail.version>3.1.7</subethamail.version>
         <mockito.version>1.10.19</mockito.version>
         <mysql-connector-java.version>8.0.12</mysql-connector-java.version>
