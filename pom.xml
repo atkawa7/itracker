@@ -65,7 +65,7 @@
         <commons-fileupload.version>1.3.1</commons-fileupload.version>
         <commons-io.version>2.4</commons-io.version>
 
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <dbunit.version>2.5.4</dbunit.version>
         <!-- selenium.version 2.53.0 and 2.53.1 are not working.. -->
         <selenium.version>2.52.0</selenium.version>
